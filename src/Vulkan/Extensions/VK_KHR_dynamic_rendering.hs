@@ -18,14 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_depth_stencil_resolve@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_depth_stencil_resolve VK_KHR_depth_stencil_resolve>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Deprecation state__]
 --
@@ -588,6 +583,15 @@ instance Zero RenderingFragmentShadingRateAttachmentInfoKHR where
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
 --     /must/ not have been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-apiVersion-07908#
+--     If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview VK_KHR_multiview>
+--     is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, and @imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have a
+--     @layerCount@ equal to @1@
 --
 -- == Valid Usage (Implicit)
 --

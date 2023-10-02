@@ -18,11 +18,7 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Contact__]
 --
@@ -191,8 +187,8 @@
 -- and y offset values and then atomically OR the updated mask bits into
 -- the contents of the corresponding footprint texel.
 --
--- >     uint64_t returnedMask = (uint64_t(footprint.mask.x) | (uint64_t(footprint.mask.y) link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html# 32));
--- >     uint64_t rightMask    = ((0xFF [^] footprint.offset.x) * 0x0101010101010101UL);
+-- >     uint64_t returnedMask = (uint64_t(footprint.mask.x) | (uint64_t(footprint.mask.y) << 32));
+-- >     uint64_t rightMask    = ((0xFF >> footprint.offset.x) * 0x0101010101010101UL);
 -- >     uint64_t bottomMask   = 0xFFFFFFFFFFFFFFFFUL >> (8 * footprint.offset.y);
 -- >     uint64_t bottomRight  = returnedMask & bottomMask & rightMask;
 -- >     uint64_t bottomLeft   = returnedMask & bottomMask & (~rightMask);

@@ -12,12 +12,17 @@ module Vulkan.Core10.FuncPointers  ( PFN_vkInternalAllocationNotification
                                    , FN_vkFreeFunction
                                    , PFN_vkVoidFunction
                                    , FN_vkVoidFunction
+                                   , PFN_vkFaultCallbackFunction
+                                   , FN_vkFaultCallbackFunction
                                    ) where
 
 import Foreign.C.Types (CSize)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
 import Vulkan.NamedType ((:::))
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FaultHandlingFunctionality (FaultData)
 import Vulkan.Core10.Enums.InternalAllocationType (InternalAllocationType)
 import Vulkan.Core10.Enums.SystemAllocationScope (SystemAllocationScope)
 type FN_vkInternalAllocationNotification = ("pUserData" ::: Ptr ()) -> CSize -> InternalAllocationType -> SystemAllocationScope -> IO ()
@@ -171,4 +176,9 @@ type FN_vkVoidFunction = () -> IO ()
 -- 'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr',
 -- 'Vulkan.Core10.DeviceInitialization.getInstanceProcAddr'
 type PFN_vkVoidFunction = FunPtr FN_vkVoidFunction
+
+
+type FN_vkFaultCallbackFunction = ("unrecordedFaults" ::: Bool32) -> ("faultCount" ::: Word32) -> ("pFaults" ::: Ptr FaultData) -> IO ()
+-- No documentation found for TopLevel "PFN_vkFaultCallbackFunction"
+type PFN_vkFaultCallbackFunction = FunPtr FN_vkFaultCallbackFunction
 

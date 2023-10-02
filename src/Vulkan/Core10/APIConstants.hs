@@ -26,6 +26,8 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern REMAINING_MIP_LEVELS
                                    , REMAINING_ARRAY_LAYERS
                                    , pattern REMAINING_ARRAY_LAYERS
+                                   , REMAINING_3D_SLICES_EXT
+                                   , pattern REMAINING_3D_SLICES_EXT
                                    , WHOLE_SIZE
                                    , pattern WHOLE_SIZE
                                    , ATTACHMENT_UNUSED
@@ -203,6 +205,17 @@ type REMAINING_ARRAY_LAYERS = 0xffffffff
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern REMAINING_ARRAY_LAYERS :: Word32
 pattern REMAINING_ARRAY_LAYERS = 0xffffffff
+
+
+type REMAINING_3D_SLICES_EXT = 0xffffffff
+
+-- | VK_REMAINING_3D_SLICES_EXT - Sentinel for all remaining 3D slices
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_sliced_view_of_3d VK_EXT_image_sliced_view_of_3d>
+pattern REMAINING_3D_SLICES_EXT :: Word32
+pattern REMAINING_3D_SLICES_EXT = 0xffffffff
 
 
 type WHOLE_SIZE = 0xffffffffffffffff

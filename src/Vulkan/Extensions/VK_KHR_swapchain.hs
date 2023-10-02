@@ -18,11 +18,7 @@
 --     70
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@ to be enabled for any device-level
---         functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
 -- [__Contact__]
 --
@@ -70,7 +66,7 @@
 --
 --     -   Chia-I Wu, LunarG
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Matthaeus G. Chajdas, AMD
 --
@@ -819,12 +815,12 @@
 --     -   Rename vkQueuePresentKHR()\'s 2nd parameter to “pPresentInfo”,
 --         for consistency with other functions.
 --
--- -   Revision 35, 2015-06-26 (Jason Ekstrand)
+-- -   Revision 35, 2015-06-26 (Faith Ekstrand)
 --
 --     -   Merged the VkRotationFlagBitsKHR and VkMirrorFlagBitsKHR enums
 --         into a single VkSurfaceTransformFlagBitsKHR enum.
 --
--- -   Revision 36, 2015-06-26 (Jason Ekstrand)
+-- -   Revision 36, 2015-06-26 (Faith Ekstrand)
 --
 --     -   Added a VkSurfaceTransformKHR enum that is not a bitmask. Each
 --         value in VkSurfaceTransformKHR corresponds directly to one of
@@ -984,7 +980,7 @@
 --
 --     -   Added error result VK_ERROR_SURFACE_LOST_KHR.
 --
--- -   Revision 61, 2015-10-05 (Jason Ekstrand)
+-- -   Revision 61, 2015-10-05 (Faith Ekstrand)
 --
 --     -   Added the VkCompositeAlpha enum and corresponding structure
 --         fields.

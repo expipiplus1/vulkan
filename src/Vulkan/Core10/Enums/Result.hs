@@ -1,46 +1,52 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "Result"
-module Vulkan.Core10.Enums.Result  (Result( SUCCESS
-                                          , NOT_READY
-                                          , TIMEOUT
-                                          , EVENT_SET
-                                          , EVENT_RESET
-                                          , INCOMPLETE
-                                          , ERROR_OUT_OF_HOST_MEMORY
-                                          , ERROR_OUT_OF_DEVICE_MEMORY
-                                          , ERROR_INITIALIZATION_FAILED
-                                          , ERROR_DEVICE_LOST
-                                          , ERROR_MEMORY_MAP_FAILED
-                                          , ERROR_LAYER_NOT_PRESENT
-                                          , ERROR_EXTENSION_NOT_PRESENT
-                                          , ERROR_FEATURE_NOT_PRESENT
-                                          , ERROR_INCOMPATIBLE_DRIVER
-                                          , ERROR_TOO_MANY_OBJECTS
-                                          , ERROR_FORMAT_NOT_SUPPORTED
-                                          , ERROR_FRAGMENTED_POOL
-                                          , ERROR_UNKNOWN
-                                          , ERROR_COMPRESSION_EXHAUSTED_EXT
-                                          , OPERATION_NOT_DEFERRED_KHR
-                                          , OPERATION_DEFERRED_KHR
-                                          , THREAD_DONE_KHR
-                                          , THREAD_IDLE_KHR
-                                          , ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
-                                          , ERROR_NOT_PERMITTED_KHR
-                                          , ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
-                                          , ERROR_INVALID_SHADER_NV
-                                          , ERROR_VALIDATION_FAILED_EXT
-                                          , ERROR_INCOMPATIBLE_DISPLAY_KHR
-                                          , ERROR_OUT_OF_DATE_KHR
-                                          , SUBOPTIMAL_KHR
-                                          , ERROR_NATIVE_WINDOW_IN_USE_KHR
-                                          , ERROR_SURFACE_LOST_KHR
-                                          , PIPELINE_COMPILE_REQUIRED
-                                          , ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS
-                                          , ERROR_FRAGMENTATION
-                                          , ERROR_INVALID_EXTERNAL_HANDLE
-                                          , ERROR_OUT_OF_POOL_MEMORY
-                                          , ..
-                                          )) where
+module Vulkan.Core10.Enums.Result  ( pattern ERROR_VALIDATION_FAILED_EXT
+                                   , Result( SUCCESS
+                                           , NOT_READY
+                                           , TIMEOUT
+                                           , EVENT_SET
+                                           , EVENT_RESET
+                                           , INCOMPLETE
+                                           , ERROR_OUT_OF_HOST_MEMORY
+                                           , ERROR_OUT_OF_DEVICE_MEMORY
+                                           , ERROR_INITIALIZATION_FAILED
+                                           , ERROR_DEVICE_LOST
+                                           , ERROR_MEMORY_MAP_FAILED
+                                           , ERROR_LAYER_NOT_PRESENT
+                                           , ERROR_EXTENSION_NOT_PRESENT
+                                           , ERROR_FEATURE_NOT_PRESENT
+                                           , ERROR_INCOMPATIBLE_DRIVER
+                                           , ERROR_TOO_MANY_OBJECTS
+                                           , ERROR_FORMAT_NOT_SUPPORTED
+                                           , ERROR_FRAGMENTED_POOL
+                                           , ERROR_UNKNOWN
+                                           , ERROR_INCOMPATIBLE_SHADER_BINARY_EXT
+                                           , ERROR_COMPRESSION_EXHAUSTED_EXT
+                                           , OPERATION_NOT_DEFERRED_KHR
+                                           , OPERATION_DEFERRED_KHR
+                                           , THREAD_DONE_KHR
+                                           , THREAD_IDLE_KHR
+                                           , ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
+                                           , ERROR_NOT_PERMITTED_KHR
+                                           , ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
+                                           , ERROR_INVALID_SHADER_NV
+                                           , ERROR_VALIDATION_FAILED_EXT
+                                           , ERROR_INCOMPATIBLE_DISPLAY_KHR
+                                           , ERROR_OUT_OF_DATE_KHR
+                                           , SUBOPTIMAL_KHR
+                                           , ERROR_NATIVE_WINDOW_IN_USE_KHR
+                                           , ERROR_SURFACE_LOST_KHR
+                                           , ERROR_NO_PIPELINE_MATCH
+                                           , ERROR_INVALID_PIPELINE_CACHE_DATA
+                                           , ERROR_VALIDATION_FAILED
+                                           , PIPELINE_COMPILE_REQUIRED
+                                           , ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS
+                                           , ERROR_FRAGMENTATION
+                                           , ERROR_INVALID_EXTERNAL_HANDLE
+                                           , ERROR_OUT_OF_POOL_MEMORY
+                                           , ..
+                                           )
+                                   ) where
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
@@ -50,6 +56,10 @@ import Foreign.Storable (Storable)
 import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
+
+-- No documentation found for TopLevel "VK_ERROR_VALIDATION_FAILED_EXT"
+pattern ERROR_VALIDATION_FAILED_EXT = ERROR_VALIDATION_FAILED
+
 
 -- | VkResult - Vulkan command return codes
 --
@@ -170,6 +180,10 @@ pattern ERROR_FRAGMENTED_POOL = Result (-12)
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN = Result (-13)
 
+-- | 'ERROR_INCOMPATIBLE_SHADER_BINARY_EXT' The provided binary shader code
+-- is not compatible with this device.
+pattern ERROR_INCOMPATIBLE_SHADER_BINARY_EXT = Result 1000482000
+
 -- | 'ERROR_COMPRESSION_EXHAUSTED_EXT' An image creation failed because
 -- internal resources required for compression are exhausted. This /must/
 -- only be returned when fixed-rate compression is requested.
@@ -237,6 +251,15 @@ pattern ERROR_NATIVE_WINDOW_IN_USE_KHR = Result (-1000000001)
 -- | 'ERROR_SURFACE_LOST_KHR' A surface is no longer available.
 pattern ERROR_SURFACE_LOST_KHR = Result (-1000000000)
 
+-- No documentation found for Nested "VkResult" "VK_ERROR_NO_PIPELINE_MATCH"
+pattern ERROR_NO_PIPELINE_MATCH = Result (-1000298001)
+
+-- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_PIPELINE_CACHE_DATA"
+pattern ERROR_INVALID_PIPELINE_CACHE_DATA = Result (-1000298000)
+
+-- No documentation found for Nested "VkResult" "VK_ERROR_VALIDATION_FAILED"
+pattern ERROR_VALIDATION_FAILED = Result (-1000011001)
+
 -- | 'PIPELINE_COMPILE_REQUIRED' A requested pipeline creation would have
 -- required compilation, but the application requested compilation to not
 -- be performed.
@@ -283,6 +306,7 @@ pattern ERROR_OUT_OF_POOL_MEMORY = Result (-1000069000)
   , ERROR_FORMAT_NOT_SUPPORTED
   , ERROR_FRAGMENTED_POOL
   , ERROR_UNKNOWN
+  , ERROR_INCOMPATIBLE_SHADER_BINARY_EXT
   , ERROR_COMPRESSION_EXHAUSTED_EXT
   , OPERATION_NOT_DEFERRED_KHR
   , OPERATION_DEFERRED_KHR
@@ -298,6 +322,9 @@ pattern ERROR_OUT_OF_POOL_MEMORY = Result (-1000069000)
   , SUBOPTIMAL_KHR
   , ERROR_NATIVE_WINDOW_IN_USE_KHR
   , ERROR_SURFACE_LOST_KHR
+  , ERROR_NO_PIPELINE_MATCH
+  , ERROR_INVALID_PIPELINE_CACHE_DATA
+  , ERROR_VALIDATION_FAILED
   , PIPELINE_COMPILE_REQUIRED
   , ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS
   , ERROR_FRAGMENTATION
@@ -334,6 +361,10 @@ showTableResult =
   , (ERROR_FRAGMENTED_POOL, "ERROR_FRAGMENTED_POOL")
   , (ERROR_UNKNOWN, "ERROR_UNKNOWN")
   ,
+    ( ERROR_INCOMPATIBLE_SHADER_BINARY_EXT
+    , "ERROR_INCOMPATIBLE_SHADER_BINARY_EXT"
+    )
+  ,
     ( ERROR_COMPRESSION_EXHAUSTED_EXT
     , "ERROR_COMPRESSION_EXHAUSTED_EXT"
     )
@@ -363,6 +394,12 @@ showTableResult =
     , "ERROR_NATIVE_WINDOW_IN_USE_KHR"
     )
   , (ERROR_SURFACE_LOST_KHR, "ERROR_SURFACE_LOST_KHR")
+  , (ERROR_NO_PIPELINE_MATCH, "ERROR_NO_PIPELINE_MATCH")
+  ,
+    ( ERROR_INVALID_PIPELINE_CACHE_DATA
+    , "ERROR_INVALID_PIPELINE_CACHE_DATA"
+    )
+  , (ERROR_VALIDATION_FAILED, "ERROR_VALIDATION_FAILED")
   , (PIPELINE_COMPILE_REQUIRED, "PIPELINE_COMPILE_REQUIRED")
   ,
     ( ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS

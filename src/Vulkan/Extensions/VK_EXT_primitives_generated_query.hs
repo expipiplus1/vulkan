@@ -18,11 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_EXT_transform_feedback@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
 --
 -- [__Special Use__]
 --
@@ -47,7 +43,7 @@
 --
 --     -   Piers Daniell, NVIDIA
 --
---     -   Jason Ekstrand, Collabora
+--     -   Faith Ekstrand, Collabora
 --
 --     -   Jan-Harald Fredriksen, Arm
 --

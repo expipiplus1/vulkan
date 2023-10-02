@@ -7,6 +7,7 @@ module Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits  ( pattern EXTERN
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
+                                                                                                     , EXTERNAL_SEMAPHORE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV
                                                                                                      , EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA
                                                                                                      , ..
                                                                                                      )
@@ -122,6 +123,9 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = ExternalSemaphoreHandle
 -- supported by the native system they are running on.
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000010
 
+-- No documentation found for Nested "VkExternalSemaphoreHandleTypeFlagBits" "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV"
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV = ExternalSemaphoreHandleTypeFlagBits 0x00000020
+
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA' specifies a
 -- handle to a Zircon event object. It can be used with any native API that
 -- accepts a Zircon event handle. Zircon event handles are created with
@@ -156,6 +160,10 @@ showTableExternalSemaphoreHandleTypeFlagBits =
   ,
     ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
     , "SYNC_FD_BIT"
+    )
+  ,
+    ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV
+    , "SCI_SYNC_OBJ_BIT_NV"
     )
   ,
     ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA

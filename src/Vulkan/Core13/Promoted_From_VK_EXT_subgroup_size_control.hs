@@ -264,6 +264,12 @@ instance Zero PhysicalDeviceSubgroupSizeControlProperties where
 -- that the pipeline shader stage being compiled has a required subgroup
 -- size.
 --
+-- If a
+-- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderRequiredSubgroupSizeCreateInfoEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT', it
+-- specifies that the shader being compiled has a required subgroup size.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also

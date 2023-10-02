@@ -243,6 +243,7 @@ destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PipelineLayoutCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
 data PushConstantRange = PushConstantRange
   { -- | @stageFlags@ is a set of stage flags describing the shader stages that
@@ -619,6 +620,13 @@ instance Zero PushConstantRange where
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxDescriptorSetUpdateAfterBindInlineUniformBlocks@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-06531# The total
+--     number of descriptors with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
+--     accessible across all shader stages and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Core13.PhysicalDeviceVulkan13Properties'::@maxInlineUniformTotalSize@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pPushConstantRanges-00292# Any two
 --     elements of @pPushConstantRanges@ /must/ not include the same stage

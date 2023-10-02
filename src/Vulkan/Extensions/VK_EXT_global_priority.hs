@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     2
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Deprecation state__]
+-- [__Extension and Version Dependencies__; __Deprecation state__]
 --
 --     -   /Promoted/ to @VK_KHR_global_priority@ extension
 --

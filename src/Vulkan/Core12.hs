@@ -904,10 +904,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     device created with more than one physical device.
 --
 -- -   #features-vulkanMemoryModel# @vulkanMemoryModel@ indicates whether
---     the Vulkan Memory Model is supported, as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
---     This also indicates whether shader modules /can/ declare the
---     @VulkanMemoryModel@ capability.
+--     shader modules /can/ declare the @VulkanMemoryModel@ capability.
 --
 -- -   #features-vulkanMemoryModelDeviceScope#
 --     @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory

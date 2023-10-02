@@ -18,20 +18,13 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
---
---     -   Requires @VK_KHR_buffer_device_address@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_synchronization2@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_EXT_descriptor_indexing@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
 --
 -- [__Contact__]
 --
@@ -2580,9 +2573,10 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 -- == Valid Usage
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-08018# @type@ /must/ not be
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-08019# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',

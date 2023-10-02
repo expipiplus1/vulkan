@@ -47,10 +47,13 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_LINE_STIPPLE_EXT
                                                       , DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
                                                       , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
+                                                      , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV
                                                       , DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
                                                       , DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV
                                                       , DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR
                                                       , DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
+                                                      , DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT
+                                                      , DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT
                                                       , DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
                                                       , DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
                                                       , DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE
@@ -475,11 +478,18 @@ pattern DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR = DynamicState 1000226000
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
--- before any drawing commands. The number of exclusive scissor rectangles
--- used by a pipeline is still specified by the @exclusiveScissorCount@
--- member of
--- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'.
+-- before any drawing commands.
 pattern DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV = DynamicState 1000205001
+
+-- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV' specifies that the the
+-- exclusive scissors /must/ be explicitly enabled with
+-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+-- and the @exclusiveScissorCount@ value in
+-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
+-- will not implicitly enable them. This is available on implementations
+-- that support at least @specVersion@ @2@ of the @VK_NV_scissor_exclusive@
+-- extension.
+pattern DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV = DynamicState 1000205000
 
 -- | 'DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV' specifies that the
 -- coarse sample order state in
@@ -514,16 +524,35 @@ pattern DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR = DynamicState 1000347
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'.
 pattern DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT = DynamicState 1000143000
 
+-- | 'DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT' specifies that the
+-- @discardRectangleMode@ state in
+-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+-- before any draw commands. This is available on implementations that
+-- support at least @specVersion@ @2@ of the @VK_EXT_discard_rectangles@
+-- extension.
+pattern DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT = DynamicState 1000099002
+
+-- | 'DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT' specifies that the presence
+-- of the
+-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'
+-- structure in the 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
+-- chain with a @discardRectangleCount@ greater than zero does not
+-- implicitly enable discard rectangles and they /must/ be enabled
+-- dynamically with
+-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+-- before any draw commands. This is available on implementations that
+-- support at least @specVersion@ @2@ of the @VK_EXT_discard_rectangles@
+-- extension.
+pattern DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT = DynamicState 1000099001
+
 -- | 'DYNAMIC_STATE_DISCARD_RECTANGLE_EXT' specifies that the
 -- @pDiscardRectangles@ state in
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
--- before any draw or clear commands. The
--- 'Vulkan.Extensions.VK_EXT_discard_rectangles.DiscardRectangleModeEXT'
--- and the number of active discard rectangles is still specified by the
--- @discardRectangleMode@ and @discardRectangleCount@ members of
--- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'.
+-- before any draw or clear commands.
 pattern DYNAMIC_STATE_DISCARD_RECTANGLE_EXT = DynamicState 1000099000
 
 -- | 'DYNAMIC_STATE_VIEWPORT_W_SCALING_NV' specifies that the
@@ -702,10 +731,13 @@ pattern DYNAMIC_STATE_CULL_MODE = DynamicState 1000267000
   , DYNAMIC_STATE_LINE_STIPPLE_EXT
   , DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
   , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
+  , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV
   , DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
   , DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV
   , DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR
   , DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
+  , DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT
+  , DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT
   , DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
   , DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
   , DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE
@@ -887,6 +919,10 @@ showTableDynamicState =
     , "EXCLUSIVE_SCISSOR_NV"
     )
   ,
+    ( DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV
+    , "EXCLUSIVE_SCISSOR_ENABLE_NV"
+    )
+  ,
     ( DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
     , "VIEWPORT_COARSE_SAMPLE_ORDER_NV"
     )
@@ -901,6 +937,14 @@ showTableDynamicState =
   ,
     ( DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
     , "SAMPLE_LOCATIONS_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT
+    , "DISCARD_RECTANGLE_MODE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT
+    , "DISCARD_RECTANGLE_ENABLE_EXT"
     )
   ,
     ( DYNAMIC_STATE_DISCARD_RECTANGLE_EXT

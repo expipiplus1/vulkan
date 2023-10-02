@@ -53,6 +53,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroySemaphore))
 import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore (ExportSemaphoreCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_sci_sync (ExportSemaphoreSciSyncInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (ExportSemaphoreWin32HandleInfoKHR)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -62,11 +63,13 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency (QueryLowLatencySupportNV)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.Core10.Handles (Semaphore(..))
 import Vulkan.Core10.Enums.SemaphoreCreateFlags (SemaphoreCreateFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_sci_sync2 (SemaphoreSciSyncCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreTypeCreateInfo)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -260,7 +263,7 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ExportSemaphoreWin32HandleInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalSharedEventInfoEXT',
---     or
+--     'Vulkan.Extensions.VK_NV_low_latency.QueryLowLatencySupportNV', or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
 --
 -- -   #VUID-VkSemaphoreCreateInfo-sType-unique# The @sType@ value of each
@@ -293,9 +296,12 @@ instance Extensible SemaphoreCreateInfo where
   getNext SemaphoreCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SemaphoreCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @QueryLowLatencySupportNV = Just f
     | Just Refl <- eqT @e @ImportMetalSharedEventInfoEXT = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SemaphoreTypeCreateInfo = Just f
+    | Just Refl <- eqT @e @SemaphoreSciSyncCreateInfoNV = Just f
+    | Just Refl <- eqT @e @ExportSemaphoreSciSyncInfoNV = Just f
     | Just Refl <- eqT @e @ExportSemaphoreWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ExportSemaphoreCreateInfo = Just f
     | otherwise = Nothing

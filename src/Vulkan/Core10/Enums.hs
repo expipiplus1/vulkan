@@ -28,6 +28,9 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.DeviceQueueCreateFlagBits
                             , module Vulkan.Core10.Enums.DynamicState
                             , module Vulkan.Core10.Enums.EventCreateFlagBits
+                            , module Vulkan.Core10.Enums.FaultLevel
+                            , module Vulkan.Core10.Enums.FaultQueryBehavior
+                            , module Vulkan.Core10.Enums.FaultType
                             , module Vulkan.Core10.Enums.FenceCreateFlagBits
                             , module Vulkan.Core10.Enums.Filter
                             , module Vulkan.Core10.Enums.Format
@@ -54,12 +57,14 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.PipelineBindPoint
                             , module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineCacheHeaderVersion
+                            , module Vulkan.Core10.Enums.PipelineCacheValidationVersion
                             , module Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
+                            , module Vulkan.Core10.Enums.PipelineMatchControl
                             , module Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits
@@ -124,6 +129,9 @@ import Vulkan.Core10.Enums.DeviceCreateFlags
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits
 import Vulkan.Core10.Enums.DynamicState
 import Vulkan.Core10.Enums.EventCreateFlagBits
+import Vulkan.Core10.Enums.FaultLevel
+import Vulkan.Core10.Enums.FaultQueryBehavior
+import Vulkan.Core10.Enums.FaultType
 import Vulkan.Core10.Enums.FenceCreateFlagBits
 import Vulkan.Core10.Enums.Filter
 import Vulkan.Core10.Enums.Format
@@ -150,12 +158,14 @@ import Vulkan.Core10.Enums.PhysicalDeviceType
 import Vulkan.Core10.Enums.PipelineBindPoint
 import Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
 import Vulkan.Core10.Enums.PipelineCacheHeaderVersion
+import Vulkan.Core10.Enums.PipelineCacheValidationVersion
 import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits
 import Vulkan.Core10.Enums.PipelineCreateFlagBits
 import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
 import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
 import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
+import Vulkan.Core10.Enums.PipelineMatchControl
 import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
 import Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
 import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits

@@ -18,11 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_external_memory_capabilities@ to be enabled for
---         any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>
 --
 -- [__Deprecation state__]
 --
@@ -52,7 +48,7 @@
 --
 -- [__Contributors__]
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Ian Elliott, Google
 --
@@ -72,7 +68,7 @@
 --
 --     -   Ray Smith, ARM
 --
---     -   Chad Versace, Google
+--     -   Lina Versace, Google
 --
 -- == Description
 --

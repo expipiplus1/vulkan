@@ -18,8 +18,9 @@
 --     12
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Special Uses__]
 --
@@ -54,7 +55,7 @@
 --
 --     -   Tobias Hector, AMD
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Spencer Fricke, Samsung Electronics
 --

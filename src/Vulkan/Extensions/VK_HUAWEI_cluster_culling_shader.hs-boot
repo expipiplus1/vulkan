@@ -18,11 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Contact__]
 --
@@ -83,10 +79,13 @@
 -- cluster, in addition, a new built-in function is used to emit these
 -- variables from CCS to IA stage, then IA can use these variables to
 -- fetches vertices of visible cluster and drive vertex shader to shading
--- these vertices. As stated above, both IA and vertex shader are
--- preserved, vertex shader still used for vertices position shading,
--- instead of directly outputting a set of transformed vertices from
--- compute shader, this makes CCS more suitable for mobile GPUs.
+-- these vertices. Note that ccs do not work at the same time with geometry
+-- shader or tessellation shader.
+--
+-- As stated above, both IA and vertex shader are preserved, vertex shader
+-- still used for vertices position shading, instead of directly outputting
+-- a set of transformed vertices from compute shader, this makes CCS more
+-- suitable for mobile GPUs.
 --
 -- == New Commands
 --
@@ -150,7 +149,7 @@
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-firstinstancehuawei FirstInstanceHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clusteridhuawei ClusterIdHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clusteridhuawei ClusterIDHUAWEI>
 --
 -- == New SPIR-V Capability
 --
@@ -234,29 +233,25 @@
 -- >   uint gl_FirstIndexHUAWEI;
 -- >   int  gl_VertexOffsetHUAWEI;
 -- >   uint gl_FirstInstanceHUAWEI;
--- >   uint gl_ClusterIdHUAWEI;
+-- >   uint gl_ClusterIDHUAWEI;
 -- > };
 -- >
 -- >
 -- > layout(binding = GPU_CLUSTER_DESCRIPTOR_BINDING, std430) readonly buffer cluster_descriptor_ssbo
 -- > {
--- > 	ClusterDescriptor cluster_descriptors[];
+-- >         ClusterDescriptor cluster_descriptors[];
 -- > };
 -- >
 -- >
 -- > layout(binding = GPU_DRAW_BUFFER_BINDING, std430) buffer draw_indirect_ssbo
 -- > {
--- > 	DrawElementsCommand draw_commands[];
+-- >         DrawElementsCommand draw_commands[];
 -- > };
 -- >
 -- > layout(binding = GPU_INSTANCE_DESCRIPTOR_BINDING, std430) buffer instance_descriptor_ssbo
 -- > {
--- > 	InstanceDescriptor instance_descriptors[];
+-- >         InstanceDescriptor instance_descriptors[];
 -- > };
--- >
--- > uniform bool disable_frustum_culling;
--- > uniform bool disable_backface_culling;
--- > uniform float debug_value;
 -- >
 -- >
 -- > bool isFrontFaceVisible( vec3 sphere_center, float sphere_radius, vec3 cone_normal, float cone_angle )
@@ -293,16 +288,14 @@
 -- >     InstanceDescriptor inst_desc = instance_descriptors[instance_id];
 -- >
 -- >     //instance based culling
--- >     bool instance_render = (disable_frustum_culling ||
--- >                             !isSphereOutsideFrustum(inst_desc.sphere.center, inst_desc.sphere.radius));
+-- >     bool instance_render = !isSphereOutsideFrustum(inst_desc.sphere.center, inst_desc.sphere.radius);
 -- >
 -- >     if( instance_render)
 -- >     {
 -- >         // cluster based culling
--- >         bool render = (disable_frustum_culling  || !isSphereOutsideFrustum(desc.sphere.center,
--- >         desc.sphere.radius)) && (disable_backface_culling ||
--- >         isFrontFaceVisible(desc.sphere.center, desc.sphere.radius, desc.cone.normal,
--- >         desc.cone.angle));
+-- >         bool render = (!isSphereOutsideFrustum(desc.sphere.center,
+-- >         desc.sphere.radius) && isFrontFaceVisible(desc.sphere.center, desc.sphere.radius, desc.cone.norm
+-- >         al, desc.cone.angle));
 -- >
 -- >         if (render)
 -- >         {
@@ -313,7 +306,7 @@
 -- >             gl_FirstIndexHUAWEI     = draw_commands[cluster_id].firstIndex;
 -- >             gl_VertexOffsetHUAWEI   = draw_commands[cluster_id].vertexoffset;
 -- >             gl_FirstInstanceHUAWEI  = draw_commands[cluster_id].firstInstance;
--- >             gl_ClusterIdHUAWEI      = draw_commands[cluster_id].cluster_id;
+-- >             gl_ClusterIDHUAWEI      = draw_commands[cluster_id].cluster_id;
 -- >
 -- >             // emit built-in output variables as a drawing command to subsequent
 -- >             // rendering pipeline.

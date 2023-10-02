@@ -5,6 +5,8 @@ module Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits  ( ExternalFenceHandl
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
                                                                                              , EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
+                                                                                             , EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_FENCE_BIT_NV
+                                                                                             , EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV
                                                                                              , ..
                                                                                              )
                                                             ) where
@@ -91,6 +93,12 @@ pattern EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalFenceHandleTyp
 -- native system they are running on.
 pattern EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = ExternalFenceHandleTypeFlagBits 0x00000008
 
+-- No documentation found for Nested "VkExternalFenceHandleTypeFlagBits" "VK_EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_FENCE_BIT_NV"
+pattern EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_FENCE_BIT_NV = ExternalFenceHandleTypeFlagBits 0x00000020
+
+-- No documentation found for Nested "VkExternalFenceHandleTypeFlagBits" "VK_EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV"
+pattern EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV = ExternalFenceHandleTypeFlagBits 0x00000010
+
 conNameExternalFenceHandleTypeFlagBits :: String
 conNameExternalFenceHandleTypeFlagBits = "ExternalFenceHandleTypeFlagBits"
 
@@ -114,6 +122,14 @@ showTableExternalFenceHandleTypeFlagBits =
   ,
     ( EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
     , "SYNC_FD_BIT"
+    )
+  ,
+    ( EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_FENCE_BIT_NV
+    , "SCI_SYNC_FENCE_BIT_NV"
+    )
+  ,
+    ( EXTERNAL_FENCE_HANDLE_TYPE_SCI_SYNC_OBJ_BIT_NV
+    , "SCI_SYNC_OBJ_BIT_NV"
     )
   ]
 

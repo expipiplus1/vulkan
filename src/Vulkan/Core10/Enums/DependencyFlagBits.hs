@@ -42,8 +42,8 @@ pattern DEPENDENCY_BY_REGION_BIT = DependencyFlagBits 0x00000001
 -- layout.
 pattern DEPENDENCY_FEEDBACK_LOOP_BIT_EXT = DependencyFlagBits 0x00000008
 
--- | 'DEPENDENCY_VIEW_LOCAL_BIT' specifies that a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
+-- | 'DEPENDENCY_VIEW_LOCAL_BIT' specifies that dependencies will be
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-view-local-dependencies view-local>.
 pattern DEPENDENCY_VIEW_LOCAL_BIT = DependencyFlagBits 0x00000002
 
 -- | 'DEPENDENCY_DEVICE_GROUP_BIT' specifies that dependencies are

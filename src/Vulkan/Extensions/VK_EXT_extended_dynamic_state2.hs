@@ -18,11 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Deprecation state__]
 --
@@ -209,7 +207,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the number of control points per patch for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -219,9 +219,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetPatchControlPointsEXT-None-04873# The
+-- -   #VUID-vkCmdSetPatchControlPointsEXT-None-08574# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState2PatchControlPoints extendedDynamicState2PatchControlPoints>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetPatchControlPointsEXT-patchControlPoints-04874#
 --     @patchControlPoints@ /must/ be greater than zero and less than or
@@ -266,6 +268,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetPatchControlPointsEXT :: forall io
                              . (MonadIO io)
@@ -299,7 +302,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the logical operation for blend state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -308,9 +313,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLogicOpEXT-None-04867# The
+-- -   #VUID-vkCmdSetLogicOpEXT-None-08544# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState2LogicOp extendedDynamicState2LogicOp>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -352,6 +359,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.LogicOp.LogicOp'
 cmdSetLogicOpEXT :: forall io

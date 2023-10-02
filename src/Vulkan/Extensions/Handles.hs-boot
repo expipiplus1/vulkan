@@ -14,6 +14,8 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , MicromapEXT
                                   , OpticalFlowSessionNV
                                   , PerformanceConfigurationINTEL
+                                  , SemaphoreSciSyncPoolNV
+                                  , ShaderEXT
                                   , SurfaceKHR
                                   , SwapchainKHR
                                   , ValidationCacheEXT
@@ -61,6 +63,12 @@ data OpticalFlowSessionNV
 
 
 data PerformanceConfigurationINTEL
+
+
+data SemaphoreSciSyncPoolNV
+
+
+data ShaderEXT
 
 
 data SurfaceKHR

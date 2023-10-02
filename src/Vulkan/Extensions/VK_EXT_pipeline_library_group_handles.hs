@@ -18,14 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.1
---
---     -   Requires @VK_KHR_ray_tracing_pipeline@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_pipeline_library@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_library VK_KHR_pipeline_library>
 --
 -- [__Contact__]
 --

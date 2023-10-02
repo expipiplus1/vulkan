@@ -18,14 +18,9 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_acceleration_structure@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_synchronization2@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
 --
 -- [__Contact__]
 --
@@ -292,14 +287,14 @@
 -- >
 -- >     iw = ~(iu + iv);
 -- >
--- >     if (uf + vf >= 1.0f && iuv < (1u link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html# level) - 1u) --iw;
+-- >     if (uf + vf >= 1.0f && iuv < (1u << level) - 1u) --iw;
 -- >
 -- >     uint32_t b0 = ~(iu ^ iw);
 -- >     b0 &= ((1u << level) - 1u);
 -- >     uint32_t t = (iu ^ iv) & b0;
 -- >
 -- >     uint32_t f = t;
--- >     f ^= f [^] 1u;
+-- >     f ^= f >> 1u;
 -- >     f ^= f >> 2u;
 -- >     f ^= f >> 4u;
 -- >     f ^= f >> 8u;
@@ -426,6 +421,7 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
                                                   , PhysicalDeviceOpacityMicromapPropertiesEXT(..)
                                                   , AccelerationStructureTrianglesOpacityMicromapEXT(..)
                                                   , MicromapTypeEXT( MICROMAP_TYPE_OPACITY_MICROMAP_EXT
+                                                                   , MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV
                                                                    , ..
                                                                    )
                                                   , BuildMicromapFlagsEXT
@@ -2340,12 +2336,16 @@ getMicromapBuildSizesEXT device buildType buildInfo = liftIO . evalContT $ do
 -- level then a 2 byte unsigned integer for the format. In practice,
 -- compilers compile 'MicromapTriangleEXT' to match this pattern.
 --
--- The data at @data@ is packed as either one bit per element for
--- 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' or two bits per element for
--- 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' and is packed from LSB to MSB in
--- each byte. The data at each index in those bytes is interpreted as
--- discussed in
+-- For opacity micromaps, the data at @data@ is packed as either one bit
+-- per element for 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' or two bits per
+-- element for 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' and is packed from LSB
+-- to MSB in each byte. The data at each index in those bytes is
+-- interpreted as discussed in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
+--
+-- For displacement micromaps, the data at @data@ is interpreted as
+-- discussed in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
 --
 -- == Valid Usage
 --
@@ -2362,6 +2362,16 @@ getMicromapBuildSizesEXT device buildType buildInfo = liftIO . evalContT $ do
 --     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' the @format@ member of
 --     'MicromapTriangleEXT' /must/ be a valid value from
 --     'OpacityMicromapFormatEXT'
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-type-08704# If @type@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' the @format@ member of
+--     'MicromapUsageEXT' /must/ be a valid value from
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DisplacementMicromapFormatNV'
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-type-08705# If @type@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' the @format@ member of
+--     'MicromapTriangleEXT' /must/ be a valid value from
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DisplacementMicromapFormatNV'
 --
 -- == Valid Usage (Implicit)
 --
@@ -3080,14 +3090,28 @@ instance Zero MicromapBuildSizesInfoEXT where
 -- -   #VUID-VkMicromapUsageEXT-format-07520# If the 'MicromapTypeEXT' of
 --     the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@ is
 --     'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' then @subdivisionLevel@ /must/
---     be less than or equal to @maxOpacity2StateSubdivisionLevel@ of
---     'PhysicalDeviceOpacityMicromapPropertiesEXT'
+--     be less than or equal to
+--     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity2StateSubdivisionLevel@
 --
 -- -   #VUID-VkMicromapUsageEXT-format-07521# If the 'MicromapTypeEXT' of
 --     the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@ is
 --     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' then @subdivisionLevel@ /must/
---     be less than or equal to @maxOpacity4StateSubdivisionLevel@ of
---     'PhysicalDeviceOpacityMicromapPropertiesEXT'
+--     be less than or equal to
+--     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity4StateSubdivisionLevel@
+--
+-- -   #VUID-VkMicromapUsageEXT-format-08706# If the 'MicromapTypeEXT' of
+--     the micromap is 'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then
+--     @format@ /must/ be
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV',
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV'
+--     or
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV'
+--
+-- -   #VUID-VkMicromapUsageEXT-subdivisionLevel-08707# If the
+--     'MicromapTypeEXT' of the micromap is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then @subdivisionLevel@
+--     /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapPropertiesNV'::@maxDisplacementMicromapSubdivisionLevel@
 --
 -- The @format@ is interpreted based on the @type@ of the micromap using
 -- it.
@@ -3095,6 +3119,7 @@ instance Zero MicromapBuildSizesInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
+-- 'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV',
 -- 'AccelerationStructureTrianglesOpacityMicromapEXT',
 -- 'MicromapBuildInfoEXT'
 data MicromapUsageEXT = MicromapUsageEXT
@@ -3161,14 +3186,28 @@ instance Zero MicromapUsageEXT where
 -- -   #VUID-VkMicromapTriangleEXT-format-07523# If the 'MicromapTypeEXT'
 --     of the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@
 --     is 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' then @subdivisionLevel@
---     /must/ be less than or equal to @maxOpacity2StateSubdivisionLevel@
---     of 'PhysicalDeviceOpacityMicromapPropertiesEXT'
+--     /must/ be less than or equal to
+--     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity2StateSubdivisionLevel@
 --
 -- -   #VUID-VkMicromapTriangleEXT-format-07524# If the 'MicromapTypeEXT'
 --     of the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@
 --     is 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' then @subdivisionLevel@
---     /must/ be less than or equal to @maxOpacity4StateSubdivisionLevel@
---     of 'PhysicalDeviceOpacityMicromapPropertiesEXT'
+--     /must/ be less than or equal to
+--     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity4StateSubdivisionLevel@
+--
+-- -   #VUID-VkMicromapTriangleEXT-format-08708# If the 'MicromapTypeEXT'
+--     of the micromap is 'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then
+--     @format@ /must/ be
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV',
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV'
+--     or
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV'
+--
+-- -   #VUID-VkMicromapTriangleEXT-subdivisionLevel-08709# If the
+--     'MicromapTypeEXT' of the micromap is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then @subdivisionLevel@
+--     /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapPropertiesNV'::@maxDisplacementMicromapSubdivisionLevel@
 --
 -- The @format@ is interpreted based on the @type@ of the micromap using
 -- it.
@@ -3541,19 +3580,36 @@ newtype MicromapTypeEXT = MicromapTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' is a micromap containing data to
--- control the opacity of a triangle
+-- control the opacity of a triangle.
 pattern MICROMAP_TYPE_OPACITY_MICROMAP_EXT = MicromapTypeEXT 0
 
-{-# COMPLETE MICROMAP_TYPE_OPACITY_MICROMAP_EXT :: MicromapTypeEXT #-}
+-- | 'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' is a micromap containing data
+-- to control the displacement of subtriangles within a triangle.
+pattern MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV = MicromapTypeEXT 1000397000
+
+{-# COMPLETE
+  MICROMAP_TYPE_OPACITY_MICROMAP_EXT
+  , MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV ::
+    MicromapTypeEXT
+  #-}
 
 conNameMicromapTypeEXT :: String
 conNameMicromapTypeEXT = "MicromapTypeEXT"
 
 enumPrefixMicromapTypeEXT :: String
-enumPrefixMicromapTypeEXT = "MICROMAP_TYPE_OPACITY_MICROMAP_EXT"
+enumPrefixMicromapTypeEXT = "MICROMAP_TYPE_"
 
 showTableMicromapTypeEXT :: [(MicromapTypeEXT, String)]
-showTableMicromapTypeEXT = [(MICROMAP_TYPE_OPACITY_MICROMAP_EXT, "")]
+showTableMicromapTypeEXT =
+  [
+    ( MICROMAP_TYPE_OPACITY_MICROMAP_EXT
+    , "OPACITY_MICROMAP_EXT"
+    )
+  ,
+    ( MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV
+    , "DISPLACEMENT_MICROMAP_NV"
+    )
+  ]
 
 instance Show MicromapTypeEXT where
   showsPrec =
@@ -3802,6 +3858,12 @@ instance Read BuildMicromapModeEXT where
       BuildMicromapModeEXT
 
 -- | VkOpacityMicromapFormatEXT - Format enum for opacity micromaps
+--
+-- = Description
+--
+-- Note
+--
+-- For compactness, these values are stored as 16-bit in some structures.
 --
 -- = See Also
 --

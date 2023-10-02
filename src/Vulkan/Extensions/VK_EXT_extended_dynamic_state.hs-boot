@@ -18,11 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Deprecation state__]
 --
@@ -56,7 +54,7 @@
 --
 --     -   Jan-Harald Fredriksen, Arm Limited
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Jeff Bolz, NVIDIA
 --
@@ -151,6 +149,16 @@
 -- the EXT suffix omitted. The feature structure is not promoted. Extension
 -- interfaces that were promoted remain available as aliases of the core
 -- functionality.
+--
+-- === Why are the values of @pStrides@ in 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2' limited to be between 0 and the maximum extent of the binding, when this restriction is not present for the same static state?
+--
+-- Implementing these edge cases adds overhead to some implementations that
+-- would require significant cost when calling this function, and the
+-- intention is that this state should be more or less free to change.
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>
+-- allows the stride to be changed freely when supported via
+-- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'[].
 --
 -- == Version History
 --

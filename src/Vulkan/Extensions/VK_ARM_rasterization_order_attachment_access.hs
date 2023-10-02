@@ -18,11 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Deprecation state__]
 --
@@ -50,12 +46,11 @@
 --
 -- == Description
 --
--- Renderpasses, and specifically
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass self-dependencies>
--- enable much of the same functionality as the framebuffer fetch and pixel
--- local storage extensions did for OpenGL ES. But certain techniques such
--- as programmable blending are awkward or impractical to implement with
--- these alone, in part because a self-dependency is required every time a
+-- Render passes, and specifically subpass dependencies, enable much of the
+-- same functionality as the framebuffer fetch and pixel local storage
+-- extensions did for OpenGL ES. But certain techniques such as
+-- programmable blending are awkward or impractical to implement with these
+-- alone, in part because a self-dependency is required every time a
 -- fragment will read a value at a given sample coordinate.
 --
 -- This extension extends the mechanism of input attachments to allow

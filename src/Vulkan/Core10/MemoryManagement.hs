@@ -188,6 +188,15 @@ foreign import ccall
 --     equal to a buffer handle created with identical creation parameters
 --     to @buffer@ and @memoryOffset@ /must/ be zero
 --
+-- -   #VUID-vkBindBufferMemory-apiVersion-07920# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, and @buffer@ was not created with
+--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ not
+--     have been allocated dedicated for a specific buffer or image
+--
 -- -   #VUID-vkBindBufferMemory-memory-02726# If the value of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     used to allocate @memory@ is not @0@, it /must/ include at least one
@@ -455,6 +464,15 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
 --     equal to an image handle created with identical creation parameters
 --     to @image@ and @memoryOffset@ /must/ be zero
+--
+-- -   #VUID-vkBindImageMemory-apiVersion-07921# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, and @image@ was not created with
+--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ not
+--     have been allocated dedicated for a specific buffer or image
 --
 -- -   #VUID-vkBindImageMemory-memory-02728# If the value of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@

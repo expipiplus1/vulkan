@@ -278,6 +278,10 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 -- -   #VUID-VkShaderModuleCreateInfo-codeSize-01085# @codeSize@ /must/ be
 --     greater than 0
 --
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-07912# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_glsl_shader VK_NV_glsl_shader>
+--     extension is not enabled, @pCode@ /must/ be a pointer to SPIR-V code
+--
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-01376# If @pCode@ is a pointer
 --     to SPIR-V code, @codeSize@ /must/ be a multiple of 4
 --

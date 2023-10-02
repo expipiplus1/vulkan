@@ -21,12 +21,15 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-data ApplicationInfo
+type role ApplicationInfo nominal
+data ApplicationInfo (es :: [Type])
 
-instance ToCStruct ApplicationInfo
-instance Show ApplicationInfo
+instance ( Extendss ApplicationInfo es
+         , PokeChain es ) => ToCStruct (ApplicationInfo es)
+instance Show (Chain es) => Show (ApplicationInfo es)
 
-instance FromCStruct ApplicationInfo
+instance ( Extendss ApplicationInfo es
+         , PeekChain es ) => FromCStruct (ApplicationInfo es)
 
 
 data FormatProperties

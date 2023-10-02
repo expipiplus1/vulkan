@@ -6,6 +6,7 @@ module Vulkan.Core10.Enums.VendorId  (VendorId( VENDOR_ID_VIV
                                               , VENDOR_ID_CODEPLAY
                                               , VENDOR_ID_MESA
                                               , VENDOR_ID_POCL
+                                              , VENDOR_ID_MOBILEYE
                                               , ..
                                               )) where
 
@@ -59,13 +60,17 @@ pattern VENDOR_ID_MESA = VendorId 65541
 -- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_POCL"
 pattern VENDOR_ID_POCL = VendorId 65542
 
+-- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_MOBILEYE"
+pattern VENDOR_ID_MOBILEYE = VendorId 65543
+
 {-# COMPLETE
   VENDOR_ID_VIV
   , VENDOR_ID_VSI
   , VENDOR_ID_KAZAN
   , VENDOR_ID_CODEPLAY
   , VENDOR_ID_MESA
-  , VENDOR_ID_POCL ::
+  , VENDOR_ID_POCL
+  , VENDOR_ID_MOBILEYE ::
     VendorId
   #-}
 
@@ -83,6 +88,7 @@ showTableVendorId =
   , (VENDOR_ID_CODEPLAY, "CODEPLAY")
   , (VENDOR_ID_MESA, "MESA")
   , (VENDOR_ID_POCL, "POCL")
+  , (VENDOR_ID_MOBILEYE, "MOBILEYE")
   ]
 
 instance Show VendorId where

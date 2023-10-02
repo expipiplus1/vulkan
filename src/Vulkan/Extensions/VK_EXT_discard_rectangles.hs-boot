@@ -15,14 +15,12 @@
 --     100
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Contact__]
 --
@@ -32,7 +30,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2016-12-22
+--     2023-01-18
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -65,9 +63,22 @@
 -- physical device in a device group by specifying the device mask and
 -- setting discard rectangle dynamic state.
 --
+-- Version 2 of this extension introduces new dynamic states
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+-- and
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT',
+-- and the corresponding functions 'cmdSetDiscardRectangleEnableEXT' and
+-- 'cmdSetDiscardRectangleModeEXT'. Applications that use these dynamic
+-- states must ensure the implementation advertises at least @specVersion@
+-- @2@ of this extension.
+--
 -- == New Commands
 --
 -- -   'cmdSetDiscardRectangleEXT'
+--
+-- -   'cmdSetDiscardRectangleEnableEXT'
+--
+-- -   'cmdSetDiscardRectangleModeEXT'
 --
 -- == New Structures
 --
@@ -96,7 +107,11 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -105,6 +120,11 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT'
 --
 -- == Version History
+--
+-- -   Revision 2, 2023-01-18 (Piers Daniell)
+--
+--     -   Add dynamic states for discard rectangle enable\/disable and
+--         mode.
 --
 -- -   Revision 1, 2016-12-22 (Piers Daniell)
 --
@@ -116,7 +136,8 @@
 -- 'PhysicalDeviceDiscardRectanglePropertiesEXT',
 -- 'PipelineDiscardRectangleStateCreateFlagsEXT',
 -- 'PipelineDiscardRectangleStateCreateInfoEXT',
--- 'cmdSetDiscardRectangleEXT'
+-- 'cmdSetDiscardRectangleEXT', 'cmdSetDiscardRectangleEnableEXT',
+-- 'cmdSetDiscardRectangleModeEXT'
 --
 -- == Document Notes
 --
@@ -127,6 +148,7 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_discard_rectangles  ( PhysicalDeviceDiscardRectanglePropertiesEXT
                                                     , PipelineDiscardRectangleStateCreateInfoEXT
+                                                    , DiscardRectangleModeEXT
                                                     ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -147,4 +169,7 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT
 instance Show PipelineDiscardRectangleStateCreateInfoEXT
 
 instance FromCStruct PipelineDiscardRectangleStateCreateInfoEXT
+
+
+data DiscardRectangleModeEXT
 

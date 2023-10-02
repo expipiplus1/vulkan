@@ -748,7 +748,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     VK_FORMAT_UNDEFINED
 --
 -- -   #VUID-VkAttachmentDescription2-format-06699# If @format@ includes a
---     color or depth aspect and @loadOp@ is
+--     color or depth component and @loadOp@ is
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD', then
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
@@ -827,28 +827,28 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription2-format-06906# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     @initialLayout@ /must/ not be
+--     depth\/stencil format which includes both depth and stencil
+--     components, @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription2-format-06907# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     @finalLayout@ /must/ not be
+--     depth\/stencil format which includes both depth and stencil
+--     components, @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription2-format-03290# If @format@ is a
---     depth\/stencil format which includes only the depth aspect,
+--     depth\/stencil format which includes only the depth component,
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription2-format-03291# If @format@ is a
---     depth\/stencil format which includes only the depth aspect,
+--     depth\/stencil format which includes only the depth component,
 --     @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
@@ -883,24 +883,25 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- -   #VUID-VkAttachmentDescription2-pNext-06704# If the @pNext@ chain
 --     does not include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
---     structure, @format@ includes a stencil aspect, and @stencilLoadOp@
---     is 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD',
---     then @initialLayout@ /must/ not be
+--     structure, @format@ includes a stencil component, and
+--     @stencilLoadOp@ is
+--     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD', then
+--     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
 -- -   #VUID-VkAttachmentDescription2-pNext-06705# If the @pNext@ chain
 --     does includes a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
---     structure, @format@ includes a stencil aspect, and @stencilLoadOp@
---     is 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD',
---     then
+--     structure, @format@ includes a stencil component, and
+--     @stencilLoadOp@ is
+--     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD', then
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'::@stencilInitialLayout@
 --     /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
 -- -   #VUID-VkAttachmentDescription2-format-06249# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     and @initialLayout@ is
+--     depth\/stencil format which includes both depth and stencil
+--     components, and @initialLayout@ is
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
@@ -909,8 +910,8 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     structure
 --
 -- -   #VUID-VkAttachmentDescription2-format-06250# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     and @finalLayout@ is
+--     depth\/stencil format which includes both depth and stencil
+--     components, and @finalLayout@ is
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
@@ -921,7 +922,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- -   #VUID-VkAttachmentDescription2-format-06247# If the @pNext@ chain
 --     does not include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
---     structure and @format@ only includes a stencil aspect,
+--     structure and @format@ only includes a stencil component,
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
@@ -930,8 +931,8 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- -   #VUID-VkAttachmentDescription2-format-06248# If the @pNext@ chain
 --     does not include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
---     structure and @format@ only includes a stencil aspect, @finalLayout@
---     /must/ not be
+--     structure and @format@ only includes a stencil component,
+--     @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
@@ -1893,6 +1894,13 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
 --
+-- -   #VUID-VkSubpassDependency2-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
+--
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -1940,6 +1948,13 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- -   #VUID-VkSubpassDependency2-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @dstStageMask@ /must/ not be @0@
+--
+-- -   #VUID-VkSubpassDependency2-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-VkSubpassDependency2-srcSubpass-03084# @srcSubpass@ /must/ be
 --     less than or equal to @dstSubpass@, unless one of them is
@@ -2353,7 +2368,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
 --     structure, then the element of @pAttachments@ with an index equal to
 --     @attachment@ /must/ not have a @format@ that includes both depth and
---     stencil aspects
+--     stencil components
 --
 -- -   #VUID-VkRenderPassCreateInfo2-attachment-06245# If the @attachment@
 --     member of the @pDepthStencilAttachment@ member of an element of
@@ -2364,7 +2379,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
 --     then the element of @pAttachments@ with an index equal to
 --     @attachment@ /must/ have a @format@ that includes only a stencil
---     aspect
+--     component
 --
 -- -   #VUID-VkRenderPassCreateInfo2-attachment-06246# If the @attachment@
 --     member of the @pDepthStencilAttachment@ member of an element of
@@ -2375,7 +2390,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
 --     then the element of @pAttachments@ with an index equal to
 --     @attachment@ /must/ not have a @format@ that includes only a stencil
---     aspect
+--     component
 --
 -- == Valid Usage (Implicit)
 --

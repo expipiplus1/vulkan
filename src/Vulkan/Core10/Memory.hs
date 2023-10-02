@@ -74,6 +74,7 @@ import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExportMemoryAllocateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExportMemoryAllocateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_sci_buf (ExportMemorySciBufInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ExportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ExportMemoryWin32HandleInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
@@ -84,6 +85,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardw
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (ImportMemoryBufferCollectionFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (ImportMemoryFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (ImportMemoryHostPointerInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_sci_buf (ImportMemorySciBufInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (ImportMemoryZirconHandleInfoFUCHSIA)
@@ -475,6 +477,10 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization Synchronization and Cache Control>
 -- as they are crucial to maintaining memory access ordering.
 --
+-- Calling 'mapMemory' is equivalent to calling
+-- 'Vulkan.Extensions.VK_KHR_map_memory2.mapMemory2KHR' with an empty
+-- @pNext@ chain.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkMapMemory-memory-00678# @memory@ /must/ not be currently
@@ -594,6 +600,12 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DeviceMemory -> IO ()) -> Ptr Device_T -> DeviceMemory -> IO ()
 
 -- | vkUnmapMemory - Unmap a previously mapped memory object
+--
+-- = Description
+--
+-- Calling 'unmapMemory' is equivalent to calling
+-- 'Vulkan.Extensions.VK_KHR_map_memory2.unmapMemory2KHR' with an empty
+-- @pNext@ chain and the flags parameter set to zero.
 --
 -- == Valid Usage
 --
@@ -949,6 +961,16 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     define more than one
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import operation>
 --
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-07897# If the parameters
+--     do not define an
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import or export operation>,
+--     @allocationSize@ /must/ be greater than @0@
+--
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-07899# If the parameters
+--     define an export operation and the handle type is not
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
+--     @allocationSize@ /must/ be greater than @0@
+--
 -- -   #VUID-VkMemoryAllocateInfo-buffer-06380# If the parameters define an
 --     import operation from an
 --     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA', and
@@ -1178,7 +1200,23 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', then @allocationSize@
---     /must/ be @0@, otherwise @allocationSize@ /must/ be greater than @0@
+--     /must/ be @0@
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-07900# If the parameters define an
+--     export operation, the handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
+--     and the @pNext@ does not include a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure, @allocationSize@ /must/ be greater than @0@
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-07901# If the parameters define an
+--     export operation, the handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
+--     and the @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with @buffer@ set to a valid
+--     'Vulkan.Core10.Handles.Buffer' object, @allocationSize@ /must/ be
+--     greater than @0@
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-02386# If the parameters define an
 --     import operation, the external handle is an Android hardware buffer,
@@ -1292,13 +1330,17 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     structure populated by a call to
 --     'Vulkan.Extensions.VK_FUCHSIA_external_memory.getMemoryZirconHandlePropertiesFUCHSIA'
 --
--- -   #VUID-VkMemoryAllocateInfo-allocationSize-04750# If the parameters
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-07902# If the parameters
 --     define an import operation and the external handle type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
---     the value of @allocationSize@ /must/ be greater than @0@ and /must/
---     be less than or equal to the size of the VMO as determined by
---     @zx_vmo_get_size@(@handle@) where @handle@ is the VMO handle to the
---     imported external memory
+--     the value of @allocationSize@ /must/ be greater than @0@
+--
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-07903# If the parameters
+--     define an import operation and the external handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the value of @allocationSize@ /must/ be less than or equal to the
+--     size of the VMO as determined by @zx_vmo_get_size@(@handle@) where
+--     @handle@ is the VMO handle to the imported external memory
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-06780# If the @pNext@ chain
 --     includes a
@@ -1381,6 +1423,8 @@ instance Extensible MemoryAllocateInfo where
     | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ExportMemoryAllocateInfo = Just f
+    | Just Refl <- eqT @e @ImportMemorySciBufInfoNV = Just f
+    | Just Refl <- eqT @e @ExportMemorySciBufInfoNV = Just f
     | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoNV = Just f
     | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoNV = Just f
     | Just Refl <- eqT @e @ExportMemoryAllocateInfoNV = Just f

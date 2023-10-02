@@ -18,10 +18,7 @@
 --     6
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@ to be enabled
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
 -- [__Contact__]
 --
@@ -43,7 +40,7 @@
 --
 --     -   Patrick Doane, Blizzard
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Ian Elliott, LunarG
 --
@@ -164,7 +161,7 @@
 --     -   Updated the surface create function to take a pCreateInfo
 --         structure.
 --
--- -   Revision 6, 2017-02-08 (Jason Ekstrand)
+-- -   Revision 6, 2017-02-08 (Faith Ekstrand)
 --
 --     -   Added the requirement that implementations support
 --         'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR'.

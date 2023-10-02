@@ -192,6 +192,7 @@ import Vulkan.Core10.ImageView (ImageSubresourceRange)
 import Vulkan.Core10.Enums.IndexType (IndexType)
 import Vulkan.Core10.Enums.IndexType (IndexType(..))
 import Vulkan.Core10.OtherTypes (MemoryBarrier)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas (MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM)
 import Vulkan.Core10.FundamentalTypes (Offset3D)
 import Vulkan.Core10.Handles (Pipeline)
 import Vulkan.Core10.Handles (Pipeline(..))
@@ -242,9 +243,13 @@ foreign import ccall
 --
 -- Once bound, a pipeline binding affects subsequent commands that interact
 -- with the given pipeline type in the command buffer until a different
--- pipeline of the same type is bound to the bind point. Commands that do
--- not interact with the given pipeline type /must/ not be affected by the
--- pipeline state.
+-- pipeline of the same type is bound to the bind point, or until the
+-- pipeline bind point is disturbed by binding a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader object>
+-- as described in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects-pipeline-interaction Interaction with Pipelines>.
+-- Commands that do not interact with the given pipeline type /must/ not be
+-- affected by the pipeline state.
 --
 -- -   The pipeline bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE'
@@ -373,8 +378,10 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --     and @pipeline@ was created with
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'
---     structure and its @discardRectangleCount@ member is not @0@, then
---     the pipeline /must/ have been created with
+--     structure and its @discardRectangleCount@ member is not @0@, or the
+--     pipeline was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--     enabled, then the pipeline /must/ have been created with
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 --     enabled
 --
@@ -400,20 +407,6 @@ foreign import ccall
 --     @pipelineBindPoint@ is
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI',
 --     @pipeline@ /must/ be a subpass shading pipeline
---
--- -   #VUID-vkCmdBindPipeline-pipeline-06856# If @pipeline@ is a graphics
---     pipeline, this command has been called inside a render pass instance
---     started with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     and the @pNext@ chain of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
---     includes a
---     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
---     structure with @multisampledRenderToSingleSampledEnable@ equal to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then the value of
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pMultisampleState@::@rasterizationSamples@
---     /must/ be equal to
---     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-06653# If
 --     @pipelineBindPoint@ is
@@ -508,7 +501,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the viewport transformation parameters state for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -629,7 +624,9 @@ foreign import ccall
 -- @scissorCount@).
 --
 -- This command sets the scissor rectangles for subsequent drawing commands
--- when the graphics pipeline is created with
+-- when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -754,7 +751,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the line width for subsequent drawing commands when
--- the graphics pipeline is created with
+-- drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_WIDTH' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -837,7 +836,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the depth bias parameters for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the corresponding
@@ -931,7 +932,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets blend constants for subsequent drawing commands when
--- the graphics pipeline is created with
+-- when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_BLEND_CONSTANTS' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -1020,7 +1023,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the depth bounds range for subsequent drawing commands
--- when the graphics pipeline is created with
+-- when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -1031,12 +1036,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDepthBounds-minDepthBounds-00600# Unless the
---     @VK_EXT_depth_range_unrestricted@ extension is enabled
+-- -   #VUID-vkCmdSetDepthBounds-minDepthBounds-00600# If the
+--     @VK_EXT_depth_range_unrestricted@ extension is not enabled
 --     @minDepthBounds@ /must/ be between @0.0@ and @1.0@, inclusive
 --
--- -   #VUID-vkCmdSetDepthBounds-maxDepthBounds-00601# Unless the
---     @VK_EXT_depth_range_unrestricted@ extension is enabled
+-- -   #VUID-vkCmdSetDepthBounds-maxDepthBounds-00601# If the
+--     @VK_EXT_depth_range_unrestricted@ extension is not enabled
 --     @maxDepthBounds@ /must/ be between @0.0@ and @1.0@, inclusive
 --
 -- == Valid Usage (Implicit)
@@ -1112,7 +1117,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the stencil compare mask for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_COMPARE_MASK'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1204,7 +1211,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the stencil write mask for subsequent drawing commands
--- when the graphics pipeline is created with
+-- when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1299,7 +1308,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the stencil reference value for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1990,6 +2001,14 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
+-- -   #VUID-vkCmdDraw-None-07888# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor is accessed using atomic operations as a result of this
+--     command, then the storage texel buffer’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT'
+--
 -- -   #VUID-vkCmdDraw-None-02692# If a 'Vulkan.Core10.Handles.ImageView'
 --     is sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a
 --     result of this command, then the image view’s
@@ -2062,24 +2081,50 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdDraw-None-02697# For each set /n/ that is statically used
+-- -   #VUID-vkCmdDraw-None-08600# For each set /n/ that is statically used
 --     by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
---     point used by this command, a descriptor set /must/ have been bound
---     to /n/ at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDraw-maintenance4-06425# If the
+-- -   #VUID-vkCmdDraw-None-08601# For each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDraw-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDraw-None-08114# Descriptors in each bound descriptor
@@ -2104,6 +2149,13 @@ foreign import ccall
 --     was created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-vkCmdDraw-None-08604# Descriptors in bound descriptor buffers,
+--     specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command
+--
 -- -   #VUID-vkCmdDraw-None-08117# If the descriptors used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     were specified via
@@ -2117,20 +2169,39 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDraw-None-02700# A valid pipeline /must/ be bound to the
+-- -   #VUID-vkCmdDraw-None-08605# If a descriptor is dynamically used with
+--     a 'Vulkan.Extensions.Handles.ShaderEXT' created with a
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' that was created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident
+--
+-- -   #VUID-vkCmdDraw-None-08606# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDraw-None-02859# There /must/ not have been any calls to
---     dynamic state setting commands for any state not specified as
---     dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command, since that pipeline was
---     bound
+-- -   #VUID-vkCmdDraw-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
 --
--- -   #VUID-vkCmdDraw-None-02702# If the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a 'Vulkan.Core10.Handles.Sampler' object that uses
---     unnormalized coordinates, that sampler /must/ not be used to sample
---     from any 'Vulkan.Core10.Handles.Image' with a
+-- -   #VUID-vkCmdDraw-None-08608# If a pipeline is bound to the pipeline
+--     bind point used by this command, there /must/ not have been any
+--     calls to dynamic state setting commands for any state not specified
+--     as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to
+--     the pipeline bind point used by this command, since that pipeline
+--     was bound
+--
+-- -   #VUID-vkCmdDraw-None-08609# If the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
+--     coordinates, that sampler /must/ not be used to sample from any
+--     'Vulkan.Core10.Handles.Image' with a
 --     'Vulkan.Core10.Handles.ImageView' of the type
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D',
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE',
@@ -2139,21 +2210,23 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   #VUID-vkCmdDraw-None-02703# If the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a 'Vulkan.Core10.Handles.Sampler' object that uses
---     unnormalized coordinates, that sampler /must/ not be used with any
---     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@
---     instructions with @ImplicitLod@, @Dref@ or @Proj@ in their name, in
---     any shader stage
+-- -   #VUID-vkCmdDraw-None-08610# If the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
+--     coordinates, that sampler /must/ not be used with any of the SPIR-V
+--     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
+--     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   #VUID-vkCmdDraw-None-02704# If the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a 'Vulkan.Core10.Handles.Sampler' object that uses
---     unnormalized coordinates, that sampler /must/ not be used with any
---     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@
---     instructions that includes a LOD bias or any offset values, in any
---     shader stage
+-- -   #VUID-vkCmdDraw-None-08611# If the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
+--     coordinates, that sampler /must/ not be used with any of the SPIR-V
+--     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
+--     includes a LOD bias or any offset values, in any shader stage
 --
 -- -   #VUID-vkCmdDraw-uniformBuffers-06935# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -2168,6 +2241,15 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
+-- -   #VUID-vkCmdDraw-None-08612# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
 -- -   #VUID-vkCmdDraw-storageBuffers-06936# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command accesses a storage buffer, and that stage
@@ -2181,24 +2263,40 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
--- -   #VUID-vkCmdDraw-commandBuffer-02707# If @commandBuffer@ is an
+-- -   #VUID-vkCmdDraw-None-08613# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a storage
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
+-- -   #VUID-vkCmdDraw-commandBuffer-08614# If @commandBuffer@ is an
 --     unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
+--     corresponding to the pipeline bind point used by this command /must/
+--     not be a protected resource
 --
--- -   #VUID-vkCmdDraw-None-06550# If the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a 'Vulkan.Core10.Handles.Sampler' or
---     'Vulkan.Core10.Handles.ImageView' object that enables
+-- -   #VUID-vkCmdDraw-None-08615# If the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdDraw-ConstOffset-06551# If the
+-- -   #VUID-vkCmdDraw-ConstOffset-08616# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -2417,11 +2515,43 @@ foreign import ccall
 --     state enabled then 'cmdSetLineWidth' /must/ have been called in the
 --     current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08617# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE',
+--     'cmdSetLineWidth' /must/ have been called in the current command
+--     buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08618# If a shader object is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08619# If a shader object that outputs line
+--     primitives is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--     stage, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07834# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' dynamic
 --     state enabled then 'cmdSetDepthBias' /must/ have been called in the
 --     current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08620# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     in the current command buffer set @depthBiasEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBias' /must/ have
+--     been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDraw-None-07835# If the bound graphics pipeline state was
 --     created with the
@@ -2429,11 +2559,42 @@ foreign import ccall
 --     dynamic state enabled then 'cmdSetBlendConstants' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08621# If a shader object is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer set any element of
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', and
+--     the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     in the current command buffer set the same element of
+--     @pColorBlendEquations@ to an
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendEquationEXT'
+--     structure with any 'Vulkan.Core10.Enums.BlendFactor.BlendFactor'
+--     member with a value of
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA', or
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA',
+--     'cmdSetBlendConstants' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07836# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS'
 --     dynamic state enabled then 'cmdSetDepthBounds' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08622# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     in the current command buffer set @depthBoundsTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBounds' /must/
+--     have been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDraw-None-07837# If the bound graphics pipeline state was
 --     created with the
@@ -2442,17 +2603,41 @@ foreign import ccall
 --     been called in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDraw-None-08623# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilCompareMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07838# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
 --     dynamic state enabled then 'cmdSetStencilWriteMask' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08624# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilWriteMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07839# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE'
 --     dynamic state enabled then 'cmdSetStencilReference' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08625# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilReference'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDraw-maxMultiviewInstanceIndex-02688# If the draw is
 --     recorded in a render pass instance with multiview enabled, the
@@ -2476,10 +2661,35 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08626# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     in the current command buffer set @sampleLocationsEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-sampleLocationsPerPixel-07934# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
 -- -   #VUID-vkCmdDraw-None-07840# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08627# If a shader object is bound to any
+--     graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -2492,11 +2702,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-07842# If the bound graphics pipeline state was
---     created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+-- -   #VUID-vkCmdDraw-None-08628# If a shader object is bound to any
+--     graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetFrontFace'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -2504,6 +2712,12 @@ foreign import ccall
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08629# If a shader object is bound to any
+--     graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -2516,10 +2730,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08630# If a shader object is bound to any
+--     graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07845# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08631# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     in the current command buffer set @depthTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -2532,6 +2761,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08632# If a shader object is bound to any
+--     graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthBounds depthBounds>
+--     feature is enabled, the
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07847# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE'
@@ -2540,10 +2777,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08633# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07848# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08634# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -2591,6 +2849,17 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --
+-- -   #VUID-vkCmdDraw-None-08635# If a shader object is bound to any
+--     graphics stage, then both
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ match the @scissorCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--
 -- -   #VUID-vkCmdDraw-viewportCount-04137# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
@@ -2609,6 +2878,15 @@ foreign import ccall
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
+--     last call to
+--     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDraw-None-08636# If a shader object is bound to any
+--     graphics stage, and the @VK_NV_clip_space_w_scaling@ extension is
+--     enabled on the device, then the @viewportCount@ parameter in the
 --     last call to
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
@@ -2634,6 +2912,16 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
 --     last call to
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDraw-None-08637# If a shader object is bound to any
+--     graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled on the device, then the @viewportCount@ parameter
+--     in the last call to
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
@@ -2665,10 +2953,42 @@ foreign import ccall
 --     to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
+-- -   #VUID-vkCmdDraw-None-07878# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07879# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08638# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     in the current command buffer set any element of
+--     @pExclusiveScissorEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-04876# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08639# If a shader object is bound to any
+--     graphics stage, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -2681,10 +3001,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08640# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-logicOp-04878# If the bound graphics pipeline state
 --     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDraw-None-08641# If a shader object is bound to any
+--     graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled on the device, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command and the @logicOp@ /must/ be a valid
@@ -2705,6 +3046,17 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ be @1@
 --
+-- -   #VUID-vkCmdDraw-primitiveFragmentShadingRateWithMultipleViewports-08642#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, and any shader object bound to a graphics
+--     stage writes to the @PrimitiveShadingRateKHR@ built-in, then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ be @1@
+--
 -- -   #VUID-vkCmdDraw-blendEnable-04727# If rasterization is not disabled
 --     in the bound graphics pipeline, then for each color attachment in
 --     the subpass, if the corresponding image view’s
@@ -2715,15 +3067,43 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDraw-None-08643# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then for each color
+--     attachment in the render pass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the corresponding member of @pColorBlendEnables@ in the most
+--     recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer that affected that attachment index
+--     /must/ have been 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
 -- -   #VUID-vkCmdDraw-multisampledRenderToSingleSampled-07284# If
 --     rasterization is not disabled in the bound graphics pipeline, and
 --     none of the @VK_AMD_mixed_attachment_samples@ extension, the
 --     @VK_NV_framebuffer_mixed_samples@ extension, or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, then
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     /must/ be the same as the current subpass color and\/or
---     depth\/stencil attachments
+--     feature is enabled, then @rasterizationSamples@ for the currently
+--     bound graphics pipeline /must/ be the same as the current subpass
+--     color and\/or depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDraw-None-08644# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the
+--     @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is enabled, then the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     in the current command buffer /must/ have set @rasterizationSamples@
+--     to be the same as the number of samples for the current render pass
+--     color and\/or depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDraw-imageView-06172# If the current render pass instance
 --     was begun with
@@ -2833,6 +3213,17 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08646# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-attachmentCount-07750# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -2842,6 +3233,18 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
 --     of the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDraw-None-08647# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then the @attachmentCount@
+--     parameter of most recent call to
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     in the current command buffer /must/ be greater than or equal to the
+--     number of color attachments in the current render pass instance
+--
 -- -   #VUID-vkCmdDraw-None-07751# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
@@ -2850,6 +3253,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command for each discard rectangle in
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
+--
+-- -   #VUID-vkCmdDraw-None-07880# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08648# If the @VK_EXT_discard_rectangles@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07881# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08649# If the @VK_EXT_discard_rectangles@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     in the current command buffer set @discardRectangleEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDraw-pDepthAttachment-06181# If the current render pass
 --     instance was begun with
@@ -2983,9 +3425,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
---     with a sample count equal to the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline
+--     with a sample count equal to the value of @rasterizationSamples@ for
+--     the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDraw-multisampledRenderToSingleSampled-07286# If the
 --     current render pass instance was begun with
@@ -2999,9 +3440,8 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdDraw-multisampledRenderToSingleSampled-07287# If the
@@ -3016,10 +3456,22 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDraw-pNext-07935# If this command has been called inside
+--     a render pass instance started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and the @pNext@ chain of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--     structure with @multisampledRenderToSingleSampledEnable@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the value of
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-vkCmdDraw-renderPass-06198# If the current render pass
 --     instance was begun with
@@ -3054,10 +3506,13 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-07620# If the bound graphics pipeline state was
---     created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
---     dynamic state enabled then
+-- -   #VUID-vkCmdDraw-None-08650# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClamp depthClamp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3070,10 +3525,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08651# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07622# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08652# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3086,10 +3559,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08653# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07624# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08654# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3102,10 +3593,32 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08655# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07626# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08656# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3118,10 +3631,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08657# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07628# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08658# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     for any attachment set that attachment’s value in
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3134,10 +3668,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08659# If a shader object is bound to any
+--     graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07630# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08660# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryStreams geometryStreams>
+--     feature is enabled, and a shader object is bound to the geometry
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3150,10 +3701,36 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08661# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07632# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08662# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     in the current command buffer set @conservativeRasterizationMode@ to
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT',
+--     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3166,10 +3743,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08663# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipEnable depthClipEnable>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07634# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08664# If the @VK_EXT_sample_locations@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3190,10 +3785,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08665# If the @VK_EXT_provoking_vertex@
+--     extension is enabled, and a shader object is bound to the vertex
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07637# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08666# If the @VK_EXT_line_rasterization@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08667# If the @VK_EXT_line_rasterization@
+--     extension is enabled, and a shader object is bound to the vertex
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08668# If the @VK_EXT_line_rasterization@
+--     extension is enabled, and a shader object that outputs line
+--     primitives is bound to the tessellation evaluation or geometry
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3206,10 +3836,48 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08669# If the @VK_EXT_line_rasterization@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08670# If the @VK_EXT_line_rasterization@
+--     extension is enabled, and a shader object is bound to the vertex
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08671# If the @VK_EXT_line_rasterization@
+--     extension is enabled, and a shader object that outputs line
+--     primitives is bound to the tessellation evaluation or geometry
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07849# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08672# If the @VK_EXT_line_rasterization@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     in the current command buffer set @stippledLineEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3222,10 +3890,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08673# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipControl depthClipControl>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command ifdef::VK_EXT_extended_dynamic_state3
+--
 -- -   #VUID-vkCmdDraw-None-07640# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command endif::VK_EXT_extended_dynamic_state3
+--
+-- -   #VUID-vkCmdDraw-None-08674# If the @VK_NV_clip_space_w_scaling@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3238,10 +3921,24 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08675# If the @VK_NV_viewport_swizzle@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07642# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08676# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3254,10 +3951,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08677# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     in the current command buffer set @coverageToColorEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07644# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08678# If the @VK_NV_framebuffer_mixed_samples@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3270,10 +3985,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08679# If the @VK_NV_framebuffer_mixed_samples@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07646# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08680# If the @VK_NV_framebuffer_mixed_samples@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     in the current command buffer set @coverageModulationTableEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3286,6 +4018,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08681# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07648# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
@@ -3294,10 +4034,26 @@ foreign import ccall
 --     must have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDraw-None-08682# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-representativeFragmentTest representativeFragmentTest>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-None-07649# If the bound graphics pipeline state was
 --     created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-08683# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-coverageReductionMode coverageReductionMode>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -3508,6 +4264,60 @@ foreign import ccall
 --     the fragment shader code /must/ not statically use the extended
 --     instruction @InterpolateAtSample@
 --
+-- -   #VUID-vkCmdDraw-sampleLocationsEnable-07936# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.width@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDraw-sampleLocationsEnable-07937# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.height@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDraw-sampleLocationsEnable-07938# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then, @sampleLocationsInfo.sampleLocationsPerPixel@
+--     /must/ equal @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
 -- -   #VUID-vkCmdDraw-coverageModulationTableEnable-07488# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
@@ -3677,6 +4487,156 @@ foreign import ccall
 --     it /must/ be set in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDraw-None-08684# If there is no bound graphics pipeline,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--
+-- -   #VUID-vkCmdDraw-None-08685# If there is no bound graphics pipeline,
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--
+-- -   #VUID-vkCmdDraw-None-08686# If there is no bound graphics pipeline,
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--
+-- -   #VUID-vkCmdDraw-None-08687# If there is no bound graphics pipeline,
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--
+-- -   #VUID-vkCmdDraw-None-08688# If there is no bound graphics pipeline,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--
+-- -   #VUID-vkCmdDraw-None-08689# If there is no bound graphics pipeline,
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--
+-- -   #VUID-vkCmdDraw-None-08690# If there is no bound graphics pipeline,
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--
+-- -   #VUID-vkCmdDraw-None-08693# If there is no bound graphics pipeline,
+--     and at least one of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features is enabled, one of the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT' or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stages must have a valid 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound, and the other must have no
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDraw-None-08694# If there is no bound graphics pipeline,
+--     and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     without the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, a valid 'Vulkan.Extensions.Handles.ShaderEXT' /must/ be bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDraw-None-08695# If there is no bound graphics pipeline,
+--     and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDraw-None-08696# If there is no bound graphics pipeline,
+--     and a valid 'Vulkan.Extensions.Handles.ShaderEXT' is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound to either the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage or the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDraw-None-08698# If any graphics shader is bound which
+--     was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, then all shaders created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag in the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ also be bound
+--
+-- -   #VUID-vkCmdDraw-None-08699# If any graphics shader is bound which
+--     was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, any stages in between stages whose shaders which did not
+--     create a shader with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag as part of the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ not have any 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDraw-pDynamicStates-08715# If the bound graphics pipeline
+--     state includes a fragment shader stage, was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpDepthAttachmentReadEXT@, the @depthWriteEnable@
+--     parameter in the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDraw-pDynamicStates-08716# If the bound graphics pipeline
+--     state includes a fragment shader stage, was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpStencilAttachmentReadEXT@, the @writeMask@
+--     parameter in the last call to 'cmdSetStencilWriteMask' /must/ be @0@
+--
 -- -   #VUID-vkCmdDraw-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
@@ -3715,13 +4675,21 @@ foreign import ccall
 --     corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
+-- -   #VUID-vkCmdDraw-None-07842# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
+--     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDraw-dynamicPrimitiveTopologyUnrestricted-07500# If the
 --     bound graphics pipeline state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
 --     dynamic state enabled and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
---     @primitiveTopology@ parameter in the last call to
+--     @primitiveTopology@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
@@ -3758,6 +4726,14 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     draw command
+--
+-- -   #VUID-vkCmdDraw-Input-07939# If the bound graphics pipeline state
+--     was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then all variables with the @Input@ storage
+--     class decorated with @Location@ in the @Vertex@ @Execution@ @Model@
+--     @OpEntryPoint@ /must/ contain a location in
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT'::@location@
 --
 -- -   #VUID-vkCmdDraw-None-04875# If the bound graphics pipeline state was
 --     created with the
@@ -3929,6 +4905,14 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
+-- -   #VUID-vkCmdDrawIndexed-None-07888# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor is accessed using atomic operations as a result of this
+--     command, then the storage texel buffer’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT'
+--
 -- -   #VUID-vkCmdDrawIndexed-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
@@ -4002,24 +4986,50 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdDrawIndexed-None-02697# For each set /n/ that is
+-- -   #VUID-vkCmdDrawIndexed-None-08600# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a descriptor set /must/
---     have been bound to /n/ at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexed-maintenance4-06425# If the
+-- -   #VUID-vkCmdDrawIndexed-None-08601# For each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDrawIndexed-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08114# Descriptors in each bound
@@ -4045,6 +5055,13 @@ foreign import ccall
 --     was created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08604# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-08117# If the descriptors used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     were specified via
@@ -4058,18 +5075,37 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDrawIndexed-None-02700# A valid pipeline /must/ be bound
---     to the pipeline bind point used by this command
+-- -   #VUID-vkCmdDrawIndexed-None-08605# If a descriptor is dynamically
+--     used with a 'Vulkan.Extensions.Handles.ShaderEXT' created with a
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' that was created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDrawIndexed-None-02859# There /must/ not have been any
---     calls to dynamic state setting commands for any state not specified
---     as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to
---     the pipeline bind point used by this command, since that pipeline
---     was bound
+-- -   #VUID-vkCmdDrawIndexed-None-08606# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDrawIndexed-None-02702# If the
+-- -   #VUID-vkCmdDrawIndexed-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08608# If a pipeline is bound to the
+--     pipeline bind point used by this command, there /must/ not have been
+--     any calls to dynamic state setting commands for any state not
+--     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command, since that
+--     pipeline was bound
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -4081,17 +5117,21 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   #VUID-vkCmdDrawIndexed-None-02703# If the
+-- -   #VUID-vkCmdDrawIndexed-None-08610# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   #VUID-vkCmdDrawIndexed-None-02704# If the
+-- -   #VUID-vkCmdDrawIndexed-None-08611# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
@@ -4110,6 +5150,15 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08612# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
 -- -   #VUID-vkCmdDrawIndexed-storageBuffers-06936# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command accesses a storage buffer, and that stage
@@ -4123,25 +5172,41 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
--- -   #VUID-vkCmdDrawIndexed-commandBuffer-02707# If @commandBuffer@ is an
+-- -   #VUID-vkCmdDrawIndexed-None-08613# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a storage
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
+-- -   #VUID-vkCmdDrawIndexed-commandBuffer-08614# If @commandBuffer@ is an
 --     unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
+--     corresponding to the pipeline bind point used by this command /must/
+--     not be a protected resource
 --
--- -   #VUID-vkCmdDrawIndexed-None-06550# If the
+-- -   #VUID-vkCmdDrawIndexed-None-08615# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdDrawIndexed-ConstOffset-06551# If the
+-- -   #VUID-vkCmdDrawIndexed-ConstOffset-08616# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -4364,11 +5429,44 @@ foreign import ccall
 --     state enabled then 'cmdSetLineWidth' /must/ have been called in the
 --     current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08617# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE',
+--     'cmdSetLineWidth' /must/ have been called in the current command
+--     buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08618# If a shader object is bound to
+--     the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08619# If a shader object that outputs
+--     line primitives is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--     stage, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07834# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' dynamic
 --     state enabled then 'cmdSetDepthBias' /must/ have been called in the
 --     current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08620# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     in the current command buffer set @depthBiasEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBias' /must/ have
+--     been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-07835# If the bound graphics pipeline
 --     state was created with the
@@ -4376,11 +5474,43 @@ foreign import ccall
 --     dynamic state enabled then 'cmdSetBlendConstants' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08621# If a shader object is bound to
+--     the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer set any element of
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', and
+--     the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     in the current command buffer set the same element of
+--     @pColorBlendEquations@ to an
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendEquationEXT'
+--     structure with any 'Vulkan.Core10.Enums.BlendFactor.BlendFactor'
+--     member with a value of
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA', or
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA',
+--     'cmdSetBlendConstants' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07836# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS'
 --     dynamic state enabled then 'cmdSetDepthBounds' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08622# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     in the current command buffer set @depthBoundsTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBounds' /must/
+--     have been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-07837# If the bound graphics pipeline
 --     state was created with the
@@ -4389,17 +5519,41 @@ foreign import ccall
 --     been called in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08623# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilCompareMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07838# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
 --     dynamic state enabled then 'cmdSetStencilWriteMask' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08624# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilWriteMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07839# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE'
 --     dynamic state enabled then 'cmdSetStencilReference' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08625# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilReference'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-maxMultiviewInstanceIndex-02688# If the draw
 --     is recorded in a render pass instance with multiview enabled, the
@@ -4423,10 +5577,35 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08626# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     in the current command buffer set @sampleLocationsEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-sampleLocationsPerPixel-07934# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07840# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08627# If a shader object is bound to
+--     any graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -4439,11 +5618,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawIndexed-None-07842# If the bound graphics pipeline
---     state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+-- -   #VUID-vkCmdDrawIndexed-None-08628# If a shader object is bound to
+--     any graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetFrontFace'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -4451,6 +5628,12 @@ foreign import ccall
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08629# If a shader object is bound to
+--     any graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -4463,10 +5646,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08630# If a shader object is bound to
+--     any graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07845# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08631# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     in the current command buffer set @depthTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -4479,6 +5677,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08632# If a shader object is bound to
+--     any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthBounds depthBounds>
+--     feature is enabled, the
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07847# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE'
@@ -4487,10 +5693,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08633# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07848# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08634# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -4538,6 +5765,17 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08635# If a shader object is bound to
+--     any graphics stage, then both
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ match the @scissorCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--
 -- -   #VUID-vkCmdDrawIndexed-viewportCount-04137# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
@@ -4556,6 +5794,15 @@ foreign import ccall
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
+--     last call to
+--     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08636# If a shader object is bound to
+--     any graphics stage, and the @VK_NV_clip_space_w_scaling@ extension
+--     is enabled on the device, then the @viewportCount@ parameter in the
 --     last call to
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
@@ -4581,6 +5828,16 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
 --     last call to
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08637# If a shader object is bound to
+--     any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled on the device, then the @viewportCount@ parameter
+--     in the last call to
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
@@ -4612,10 +5869,42 @@ foreign import ccall
 --     to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
+-- -   #VUID-vkCmdDrawIndexed-None-07878# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07879# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08638# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     in the current command buffer set any element of
+--     @pExclusiveScissorEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-04876# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08639# If a shader object is bound to
+--     any graphics stage, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -4628,10 +5917,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08640# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-logicOp-04878# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08641# If a shader object is bound to
+--     any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled on the device, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command and the @logicOp@ /must/ be a valid
@@ -4652,6 +5962,17 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ be @1@
 --
+-- -   #VUID-vkCmdDrawIndexed-primitiveFragmentShadingRateWithMultipleViewports-08642#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, and any shader object bound to a graphics
+--     stage writes to the @PrimitiveShadingRateKHR@ built-in, then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ be @1@
+--
 -- -   #VUID-vkCmdDrawIndexed-blendEnable-04727# If rasterization is not
 --     disabled in the bound graphics pipeline, then for each color
 --     attachment in the subpass, if the corresponding image view’s
@@ -4662,15 +5983,43 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08643# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then for each color
+--     attachment in the render pass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the corresponding member of @pColorBlendEnables@ in the most
+--     recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer that affected that attachment index
+--     /must/ have been 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
 -- -   #VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07284# If
 --     rasterization is not disabled in the bound graphics pipeline, and
 --     none of the @VK_AMD_mixed_attachment_samples@ extension, the
 --     @VK_NV_framebuffer_mixed_samples@ extension, or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, then
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     /must/ be the same as the current subpass color and\/or
---     depth\/stencil attachments
+--     feature is enabled, then @rasterizationSamples@ for the currently
+--     bound graphics pipeline /must/ be the same as the current subpass
+--     color and\/or depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08644# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the
+--     @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is enabled, then the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     in the current command buffer /must/ have set @rasterizationSamples@
+--     to be the same as the number of samples for the current render pass
+--     color and\/or depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawIndexed-imageView-06172# If the current render pass
 --     instance was begun with
@@ -4780,6 +6129,17 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08646# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-attachmentCount-07750# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -4789,6 +6149,18 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
 --     of the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08647# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then the @attachmentCount@
+--     parameter of most recent call to
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     in the current command buffer /must/ be greater than or equal to the
+--     number of color attachments in the current render pass instance
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07751# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
@@ -4797,6 +6169,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command for each discard rectangle in
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07880# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08648# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07881# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08649# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     in the current command buffer set @discardRectangleEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-pDepthAttachment-06181# If the current render
 --     pass instance was begun with
@@ -4930,9 +6341,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
---     with a sample count equal to the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline
+--     with a sample count equal to the value of @rasterizationSamples@ for
+--     the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07286# If
 --     the current render pass instance was begun with
@@ -4946,9 +6356,8 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287# If
@@ -4963,10 +6372,22 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDrawIndexed-pNext-07935# If this command has been called
+--     inside a render pass instance started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and the @pNext@ chain of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--     structure with @multisampledRenderToSingleSampledEnable@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the value of
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-vkCmdDrawIndexed-renderPass-06198# If the current render pass
 --     instance was begun with
@@ -5001,10 +6422,13 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawIndexed-None-07620# If the bound graphics pipeline
---     state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
---     dynamic state enabled then
+-- -   #VUID-vkCmdDrawIndexed-None-08650# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClamp depthClamp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5017,10 +6441,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08651# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07622# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08652# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5033,10 +6475,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08653# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07624# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08654# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5049,10 +6509,32 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08655# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07626# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08656# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5065,10 +6547,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08657# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07628# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08658# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     for any attachment set that attachment’s value in
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5081,10 +6584,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08659# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07630# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08660# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryStreams geometryStreams>
+--     feature is enabled, and a shader object is bound to the geometry
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5097,10 +6617,36 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08661# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07632# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08662# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     in the current command buffer set @conservativeRasterizationMode@ to
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT',
+--     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5113,10 +6659,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08663# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipEnable depthClipEnable>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07634# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08664# If the @VK_EXT_sample_locations@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5137,10 +6701,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08665# If the @VK_EXT_provoking_vertex@
+--     extension is enabled, and a shader object is bound to the vertex
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07637# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08666# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08667# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the vertex stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08668# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the tessellation
+--     evaluation or geometry stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5153,10 +6752,48 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08669# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08670# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the vertex stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08671# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the tessellation
+--     evaluation or geometry stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07849# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08672# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     in the current command buffer set @stippledLineEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5169,10 +6806,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08673# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipControl depthClipControl>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command ifdef::VK_EXT_extended_dynamic_state3
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07640# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command endif::VK_EXT_extended_dynamic_state3
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08674# If the
+--     @VK_NV_clip_space_w_scaling@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5185,10 +6837,24 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08675# If the @VK_NV_viewport_swizzle@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07642# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08676# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5201,10 +6867,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08677# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     in the current command buffer set @coverageToColorEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07644# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08678# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5217,10 +6901,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08679# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07646# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08680# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     in the current command buffer set @coverageModulationTableEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5233,6 +6934,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08681# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07648# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
@@ -5241,10 +6950,26 @@ foreign import ccall
 --     must have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08682# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-representativeFragmentTest representativeFragmentTest>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-None-07649# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08683# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-coverageReductionMode coverageReductionMode>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -5455,6 +7180,60 @@ foreign import ccall
 --     the fragment shader code /must/ not statically use the extended
 --     instruction @InterpolateAtSample@
 --
+-- -   #VUID-vkCmdDrawIndexed-sampleLocationsEnable-07936# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.width@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-sampleLocationsEnable-07937# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.height@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-sampleLocationsEnable-07938# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then, @sampleLocationsInfo.sampleLocationsPerPixel@
+--     /must/ equal @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
 -- -   #VUID-vkCmdDrawIndexed-coverageModulationTableEnable-07488# If the
 --     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
@@ -5625,6 +7404,157 @@ foreign import ccall
 --     it /must/ be set in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDrawIndexed-None-08684# If there is no bound graphics
+--     pipeline, 'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT'
+--     /must/ have been called on the current command buffer with @pStages@
+--     with an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08685# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08686# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08687# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08688# If there is no bound graphics
+--     pipeline, 'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT'
+--     /must/ have been called on the current command buffer with @pStages@
+--     with an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08689# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08690# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08693# If there is no bound graphics
+--     pipeline, and at least one of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features is enabled, one of the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT' or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stages must have a valid 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound, and the other must have no
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08694# If there is no bound graphics
+--     pipeline, and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     without the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, a valid 'Vulkan.Extensions.Handles.ShaderEXT' /must/ be bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08695# If there is no bound graphics
+--     pipeline, and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08696# If there is no bound graphics
+--     pipeline, and a valid 'Vulkan.Extensions.Handles.ShaderEXT' is bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound to either the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage or the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08698# If any graphics shader is bound
+--     which was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, then all shaders created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag in the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ also be bound
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08699# If any graphics shader is bound
+--     which was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, any stages in between stages whose shaders which did not
+--     create a shader with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag as part of the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ not have any 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDrawIndexed-pDynamicStates-08715# If the bound graphics
+--     pipeline state includes a fragment shader stage, was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpDepthAttachmentReadEXT@, the @depthWriteEnable@
+--     parameter in the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndexed-pDynamicStates-08716# If the bound graphics
+--     pipeline state includes a fragment shader stage, was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpStencilAttachmentReadEXT@, the @writeMask@
+--     parameter in the last call to 'cmdSetStencilWriteMask' /must/ be @0@
+--
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
@@ -5663,13 +7593,21 @@ foreign import ccall
 --     within the corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
+-- -   #VUID-vkCmdDrawIndexed-None-07842# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
+--     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexed-dynamicPrimitiveTopologyUnrestricted-07500#
 --     If the bound graphics pipeline state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
 --     dynamic state enabled and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
---     @primitiveTopology@ parameter in the last call to
+--     @primitiveTopology@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
@@ -5706,6 +7644,14 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     draw command
+--
+-- -   #VUID-vkCmdDrawIndexed-Input-07939# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then all variables with the @Input@ storage
+--     class decorated with @Location@ in the @Vertex@ @Execution@ @Model@
+--     @OpEntryPoint@ /must/ contain a location in
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT'::@location@
 --
 -- -   #VUID-vkCmdDrawIndexed-None-04875# If the bound graphics pipeline
 --     state was created with the
@@ -5877,6 +7823,14 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
+-- -   #VUID-vkCmdDrawIndirect-None-07888# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor is accessed using atomic operations as a result of this
+--     command, then the storage texel buffer’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT'
+--
 -- -   #VUID-vkCmdDrawIndirect-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
@@ -5950,24 +7904,50 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdDrawIndirect-None-02697# For each set /n/ that is
+-- -   #VUID-vkCmdDrawIndirect-None-08600# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a descriptor set /must/
---     have been bound to /n/ at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndirect-maintenance4-06425# If the
+-- -   #VUID-vkCmdDrawIndirect-None-08601# For each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDrawIndirect-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08114# Descriptors in each bound
@@ -5993,6 +7973,13 @@ foreign import ccall
 --     was created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08604# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-08117# If the descriptors used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     were specified via
@@ -6006,18 +7993,37 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDrawIndirect-None-02700# A valid pipeline /must/ be bound
---     to the pipeline bind point used by this command
+-- -   #VUID-vkCmdDrawIndirect-None-08605# If a descriptor is dynamically
+--     used with a 'Vulkan.Extensions.Handles.ShaderEXT' created with a
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' that was created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDrawIndirect-None-02859# There /must/ not have been any
---     calls to dynamic state setting commands for any state not specified
---     as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to
---     the pipeline bind point used by this command, since that pipeline
---     was bound
+-- -   #VUID-vkCmdDrawIndirect-None-08606# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDrawIndirect-None-02702# If the
+-- -   #VUID-vkCmdDrawIndirect-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08608# If a pipeline is bound to the
+--     pipeline bind point used by this command, there /must/ not have been
+--     any calls to dynamic state setting commands for any state not
+--     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command, since that
+--     pipeline was bound
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -6029,17 +8035,21 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   #VUID-vkCmdDrawIndirect-None-02703# If the
+-- -   #VUID-vkCmdDrawIndirect-None-08610# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   #VUID-vkCmdDrawIndirect-None-02704# If the
+-- -   #VUID-vkCmdDrawIndirect-None-08611# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
@@ -6058,6 +8068,15 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08612# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
 -- -   #VUID-vkCmdDrawIndirect-storageBuffers-06936# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command accesses a storage buffer, and that stage
@@ -6071,25 +8090,41 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
--- -   #VUID-vkCmdDrawIndirect-commandBuffer-02707# If @commandBuffer@ is
+-- -   #VUID-vkCmdDrawIndirect-None-08613# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a storage
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
+-- -   #VUID-vkCmdDrawIndirect-commandBuffer-08614# If @commandBuffer@ is
 --     an unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
+--     corresponding to the pipeline bind point used by this command /must/
+--     not be a protected resource
 --
--- -   #VUID-vkCmdDrawIndirect-None-06550# If the
+-- -   #VUID-vkCmdDrawIndirect-None-08615# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdDrawIndirect-ConstOffset-06551# If the
+-- -   #VUID-vkCmdDrawIndirect-ConstOffset-08616# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -6313,11 +8348,44 @@ foreign import ccall
 --     state enabled then 'cmdSetLineWidth' /must/ have been called in the
 --     current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08617# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE',
+--     'cmdSetLineWidth' /must/ have been called in the current command
+--     buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08618# If a shader object is bound to
+--     the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08619# If a shader object that outputs
+--     line primitives is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--     stage, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07834# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' dynamic
 --     state enabled then 'cmdSetDepthBias' /must/ have been called in the
 --     current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08620# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     in the current command buffer set @depthBiasEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBias' /must/ have
+--     been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-07835# If the bound graphics pipeline
 --     state was created with the
@@ -6325,11 +8393,43 @@ foreign import ccall
 --     dynamic state enabled then 'cmdSetBlendConstants' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08621# If a shader object is bound to
+--     the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer set any element of
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', and
+--     the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     in the current command buffer set the same element of
+--     @pColorBlendEquations@ to an
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendEquationEXT'
+--     structure with any 'Vulkan.Core10.Enums.BlendFactor.BlendFactor'
+--     member with a value of
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA', or
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA',
+--     'cmdSetBlendConstants' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07836# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS'
 --     dynamic state enabled then 'cmdSetDepthBounds' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08622# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     in the current command buffer set @depthBoundsTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBounds' /must/
+--     have been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-07837# If the bound graphics pipeline
 --     state was created with the
@@ -6338,17 +8438,41 @@ foreign import ccall
 --     been called in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08623# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilCompareMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07838# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
 --     dynamic state enabled then 'cmdSetStencilWriteMask' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08624# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilWriteMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07839# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE'
 --     dynamic state enabled then 'cmdSetStencilReference' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08625# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilReference'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-maxMultiviewInstanceIndex-02688# If the draw
 --     is recorded in a render pass instance with multiview enabled, the
@@ -6372,10 +8496,35 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08626# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     in the current command buffer set @sampleLocationsEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-sampleLocationsPerPixel-07934# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07840# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08627# If a shader object is bound to
+--     any graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6388,11 +8537,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawIndirect-None-07842# If the bound graphics pipeline
---     state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+-- -   #VUID-vkCmdDrawIndirect-None-08628# If a shader object is bound to
+--     any graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetFrontFace'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -6400,6 +8547,12 @@ foreign import ccall
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08629# If a shader object is bound to
+--     any graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6412,10 +8565,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08630# If a shader object is bound to
+--     any graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07845# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08631# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     in the current command buffer set @depthTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6428,6 +8596,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08632# If a shader object is bound to
+--     any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthBounds depthBounds>
+--     feature is enabled, the
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07847# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE'
@@ -6436,10 +8612,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08633# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07848# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08634# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6487,6 +8684,17 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08635# If a shader object is bound to
+--     any graphics stage, then both
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ match the @scissorCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--
 -- -   #VUID-vkCmdDrawIndirect-viewportCount-04137# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
@@ -6505,6 +8713,15 @@ foreign import ccall
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
+--     last call to
+--     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08636# If a shader object is bound to
+--     any graphics stage, and the @VK_NV_clip_space_w_scaling@ extension
+--     is enabled on the device, then the @viewportCount@ parameter in the
 --     last call to
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
@@ -6530,6 +8747,16 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
 --     last call to
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08637# If a shader object is bound to
+--     any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled on the device, then the @viewportCount@ parameter
+--     in the last call to
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
@@ -6561,10 +8788,42 @@ foreign import ccall
 --     to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
+-- -   #VUID-vkCmdDrawIndirect-None-07878# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07879# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08638# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     in the current command buffer set any element of
+--     @pExclusiveScissorEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-04876# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08639# If a shader object is bound to
+--     any graphics stage, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6577,10 +8836,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08640# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-logicOp-04878# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08641# If a shader object is bound to
+--     any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled on the device, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command and the @logicOp@ /must/ be a valid
@@ -6601,6 +8881,17 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ be @1@
 --
+-- -   #VUID-vkCmdDrawIndirect-primitiveFragmentShadingRateWithMultipleViewports-08642#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, and any shader object bound to a graphics
+--     stage writes to the @PrimitiveShadingRateKHR@ built-in, then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ be @1@
+--
 -- -   #VUID-vkCmdDrawIndirect-blendEnable-04727# If rasterization is not
 --     disabled in the bound graphics pipeline, then for each color
 --     attachment in the subpass, if the corresponding image view’s
@@ -6611,15 +8902,43 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08643# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then for each color
+--     attachment in the render pass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the corresponding member of @pColorBlendEnables@ in the most
+--     recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer that affected that attachment index
+--     /must/ have been 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
 -- -   #VUID-vkCmdDrawIndirect-multisampledRenderToSingleSampled-07284# If
 --     rasterization is not disabled in the bound graphics pipeline, and
 --     none of the @VK_AMD_mixed_attachment_samples@ extension, the
 --     @VK_NV_framebuffer_mixed_samples@ extension, or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, then
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     /must/ be the same as the current subpass color and\/or
---     depth\/stencil attachments
+--     feature is enabled, then @rasterizationSamples@ for the currently
+--     bound graphics pipeline /must/ be the same as the current subpass
+--     color and\/or depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08644# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the
+--     @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is enabled, then the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     in the current command buffer /must/ have set @rasterizationSamples@
+--     to be the same as the number of samples for the current render pass
+--     color and\/or depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawIndirect-imageView-06172# If the current render pass
 --     instance was begun with
@@ -6729,6 +9048,17 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08646# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-attachmentCount-07750# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -6738,6 +9068,18 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
 --     of the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08647# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then the @attachmentCount@
+--     parameter of most recent call to
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     in the current command buffer /must/ be greater than or equal to the
+--     number of color attachments in the current render pass instance
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07751# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
@@ -6746,6 +9088,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command for each discard rectangle in
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07880# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08648# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07881# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08649# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     in the current command buffer set @discardRectangleEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-pDepthAttachment-06181# If the current
 --     render pass instance was begun with
@@ -6879,9 +9260,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
---     with a sample count equal to the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline
+--     with a sample count equal to the value of @rasterizationSamples@ for
+--     the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDrawIndirect-multisampledRenderToSingleSampled-07286# If
 --     the current render pass instance was begun with
@@ -6895,9 +9275,8 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdDrawIndirect-multisampledRenderToSingleSampled-07287# If
@@ -6912,10 +9291,22 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDrawIndirect-pNext-07935# If this command has been called
+--     inside a render pass instance started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and the @pNext@ chain of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--     structure with @multisampledRenderToSingleSampledEnable@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the value of
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-vkCmdDrawIndirect-renderPass-06198# If the current render pass
 --     instance was begun with
@@ -6950,10 +9341,13 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawIndirect-None-07620# If the bound graphics pipeline
---     state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
---     dynamic state enabled then
+-- -   #VUID-vkCmdDrawIndirect-None-08650# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClamp depthClamp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6966,10 +9360,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08651# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07622# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08652# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6982,10 +9394,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08653# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07624# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08654# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -6998,10 +9428,32 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08655# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07626# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08656# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7014,10 +9466,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08657# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07628# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08658# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     for any attachment set that attachment’s value in
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7030,10 +9503,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08659# If a shader object is bound to
+--     any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07630# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08660# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryStreams geometryStreams>
+--     feature is enabled, and a shader object is bound to the geometry
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7046,10 +9536,36 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08661# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07632# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08662# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     in the current command buffer set @conservativeRasterizationMode@ to
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT',
+--     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7062,10 +9578,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08663# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipEnable depthClipEnable>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07634# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08664# If the @VK_EXT_sample_locations@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7086,10 +9620,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08665# If the @VK_EXT_provoking_vertex@
+--     extension is enabled, and a shader object is bound to the vertex
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07637# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08666# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08667# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the vertex stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08668# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the tessellation
+--     evaluation or geometry stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7102,10 +9671,48 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08669# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08670# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the vertex stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08671# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the tessellation
+--     evaluation or geometry stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07849# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08672# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     in the current command buffer set @stippledLineEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7118,10 +9725,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08673# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipControl depthClipControl>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command ifdef::VK_EXT_extended_dynamic_state3
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07640# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command endif::VK_EXT_extended_dynamic_state3
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08674# If the
+--     @VK_NV_clip_space_w_scaling@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7134,10 +9756,24 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08675# If the @VK_NV_viewport_swizzle@
+--     extension is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07642# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08676# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7150,10 +9786,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08677# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     in the current command buffer set @coverageToColorEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07644# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08678# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7166,10 +9820,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08679# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07646# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08680# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     in the current command buffer set @coverageModulationTableEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7182,6 +9853,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08681# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07648# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
@@ -7190,10 +9869,26 @@ foreign import ccall
 --     must have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08682# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-representativeFragmentTest representativeFragmentTest>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-None-07649# If the bound graphics pipeline
 --     state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08683# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-coverageReductionMode coverageReductionMode>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -7404,6 +10099,60 @@ foreign import ccall
 --     the fragment shader code /must/ not statically use the extended
 --     instruction @InterpolateAtSample@
 --
+-- -   #VUID-vkCmdDrawIndirect-sampleLocationsEnable-07936# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.width@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-sampleLocationsEnable-07937# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.height@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-sampleLocationsEnable-07938# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then, @sampleLocationsInfo.sampleLocationsPerPixel@
+--     /must/ equal @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
 -- -   #VUID-vkCmdDrawIndirect-coverageModulationTableEnable-07488# If the
 --     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
@@ -7574,6 +10323,157 @@ foreign import ccall
 --     it /must/ be set in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDrawIndirect-None-08684# If there is no bound graphics
+--     pipeline, 'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT'
+--     /must/ have been called on the current command buffer with @pStages@
+--     with an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08685# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08686# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08687# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08688# If there is no bound graphics
+--     pipeline, 'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT'
+--     /must/ have been called on the current command buffer with @pStages@
+--     with an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08689# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08690# If there is no bound graphics
+--     pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08693# If there is no bound graphics
+--     pipeline, and at least one of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features is enabled, one of the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT' or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stages must have a valid 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound, and the other must have no
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08694# If there is no bound graphics
+--     pipeline, and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     without the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, a valid 'Vulkan.Extensions.Handles.ShaderEXT' /must/ be bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08695# If there is no bound graphics
+--     pipeline, and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08696# If there is no bound graphics
+--     pipeline, and a valid 'Vulkan.Extensions.Handles.ShaderEXT' is bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound to either the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage or the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08698# If any graphics shader is bound
+--     which was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, then all shaders created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag in the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ also be bound
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08699# If any graphics shader is bound
+--     which was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, any stages in between stages whose shaders which did not
+--     create a shader with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag as part of the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ not have any 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDrawIndirect-pDynamicStates-08715# If the bound graphics
+--     pipeline state includes a fragment shader stage, was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpDepthAttachmentReadEXT@, the @depthWriteEnable@
+--     parameter in the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndirect-pDynamicStates-08716# If the bound graphics
+--     pipeline state includes a fragment shader stage, was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpStencilAttachmentReadEXT@, the @writeMask@
+--     parameter in the last call to 'cmdSetStencilWriteMask' /must/ be @0@
+--
 -- -   #VUID-vkCmdDrawIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
 --     entry point’s interface /must/ have either valid or
@@ -7590,13 +10490,21 @@ foreign import ccall
 --     within the corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
+-- -   #VUID-vkCmdDrawIndirect-None-07842# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
+--     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndirect-dynamicPrimitiveTopologyUnrestricted-07500#
 --     If the bound graphics pipeline state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
 --     dynamic state enabled and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
---     @primitiveTopology@ parameter in the last call to
+--     @primitiveTopology@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
@@ -7633,6 +10541,14 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     draw command
+--
+-- -   #VUID-vkCmdDrawIndirect-Input-07939# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then all variables with the @Input@ storage
+--     class decorated with @Location@ in the @Vertex@ @Execution@ @Model@
+--     @OpEntryPoint@ /must/ contain a location in
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT'::@location@
 --
 -- -   #VUID-vkCmdDrawIndirect-None-04875# If the bound graphics pipeline
 --     state was created with the
@@ -7833,6 +10749,14 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07888# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor is accessed using atomic operations as a result of this
+--     command, then the storage texel buffer’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
@@ -7906,24 +10830,50 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02697# For each set /n/ that is
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08600# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a descriptor set /must/
---     have been bound to /n/ at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-maintenance4-06425# If the
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08601# For each push constant
+--     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command, or by any of
+--     the 'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08114# Descriptors in each bound
@@ -7949,6 +10899,13 @@ foreign import ccall
 --     was created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08604# Descriptors in bound
+--     descriptor buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08117# If the descriptors used
 --     by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
 --     point were specified via
@@ -7963,18 +10920,38 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02700# A valid pipeline /must/
---     be bound to the pipeline bind point used by this command
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08605# If a descriptor is
+--     dynamically used with a 'Vulkan.Extensions.Handles.ShaderEXT'
+--     created with a 'Vulkan.Core10.Handles.DescriptorSetLayout' that was
+--     created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02859# There /must/ not have
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08606# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08608# If a pipeline is bound to
+--     the pipeline bind point used by this command, there /must/ not have
 --     been any calls to dynamic state setting commands for any state not
 --     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
 --     bound to the pipeline bind point used by this command, since that
 --     pipeline was bound
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02702# If the
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -7986,17 +10963,21 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02703# If the
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08610# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02704# If the
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08611# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
@@ -8015,6 +10996,15 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08612# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-storageBuffers-06936# If any stage of
 --     the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
 --     bind point used by this command accesses a storage buffer, and that
@@ -8028,25 +11018,41 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-commandBuffer-02707# If
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08613# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a storage
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-commandBuffer-08614# If
 --     @commandBuffer@ is an unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
+--     corresponding to the pipeline bind point used by this command /must/
+--     not be a protected resource
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-06550# If the
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08615# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-ConstOffset-06551# If the
+-- -   #VUID-vkCmdDrawIndexedIndirect-ConstOffset-08616# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -8270,11 +11276,44 @@ foreign import ccall
 --     state enabled then 'cmdSetLineWidth' /must/ have been called in the
 --     current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08617# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE',
+--     'cmdSetLineWidth' /must/ have been called in the current command
+--     buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08618# If a shader object is
+--     bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08619# If a shader object that
+--     outputs line primitives is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--     stage, 'cmdSetLineWidth' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07834# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' dynamic
 --     state enabled then 'cmdSetDepthBias' /must/ have been called in the
 --     current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08620# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     in the current command buffer set @depthBiasEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBias' /must/ have
+--     been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07835# If the bound graphics
 --     pipeline state was created with the
@@ -8282,11 +11321,43 @@ foreign import ccall
 --     dynamic state enabled then 'cmdSetBlendConstants' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08621# If a shader object is
+--     bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer set any element of
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', and
+--     the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     in the current command buffer set the same element of
+--     @pColorBlendEquations@ to an
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendEquationEXT'
+--     structure with any 'Vulkan.Core10.Enums.BlendFactor.BlendFactor'
+--     member with a value of
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR',
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA', or
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA',
+--     'cmdSetBlendConstants' /must/ have been called in the current
+--     command buffer prior to this drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07836# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS'
 --     dynamic state enabled then 'cmdSetDepthBounds' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08622# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     in the current command buffer set @depthBoundsTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetDepthBounds' /must/
+--     have been called in the current command buffer prior to this drawing
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07837# If the bound graphics
 --     pipeline state was created with the
@@ -8295,17 +11366,41 @@ foreign import ccall
 --     been called in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08623# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilCompareMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07838# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
 --     dynamic state enabled then 'cmdSetStencilWriteMask' /must/ have been
 --     called in the current command buffer prior to this drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08624# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilWriteMask'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07839# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE'
 --     dynamic state enabled then 'cmdSetStencilReference' /must/ have been
 --     called in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08625# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', 'cmdSetStencilReference'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-maxMultiviewInstanceIndex-02688# If
 --     the draw is recorded in a render pass instance with multiview
@@ -8329,10 +11424,35 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08626# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     in the current command buffer set @sampleLocationsEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-sampleLocationsPerPixel-07934# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07840# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08627# If a shader object is
+--     bound to any graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8345,11 +11465,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-07842# If the bound graphics
---     pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08628# If a shader object is
+--     bound to any graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetFrontFace'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -8357,6 +11475,12 @@ foreign import ccall
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08629# If a shader object is
+--     bound to any graphics stage,
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8369,10 +11493,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08630# If a shader object is
+--     bound to any graphics stage,
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07845# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08631# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
+--     in the current command buffer set @depthTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8385,6 +11524,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08632# If a shader object is
+--     bound to any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthBounds depthBounds>
+--     feature is enabled, the
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07847# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE'
@@ -8393,10 +11540,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08633# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07848# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP' dynamic
 --     state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08634# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
+--     in the current command buffer set @stencilTestEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8444,6 +11612,17 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08635# If a shader object is
+--     bound to any graphics stage, then both
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ match the @scissorCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-viewportCount-04137# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
@@ -8468,6 +11647,15 @@ foreign import ccall
 --     the last call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08636# If a shader object is
+--     bound to any graphics stage, and the @VK_NV_clip_space_w_scaling@
+--     extension is enabled on the device, then the @viewportCount@
+--     parameter in the last call to
+--     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-viewportCount-04139# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
@@ -8487,6 +11675,16 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
 --     last call to
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08637# If a shader object is
+--     bound to any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled on the device, then the @viewportCount@ parameter
+--     in the last call to
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
@@ -8518,10 +11716,42 @@ foreign import ccall
 --     to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07878# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07879# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08638# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
+--     in the current command buffer set any element of
+--     @pExclusiveScissorEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04876# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 --     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08639# If a shader object is
+--     bound to any graphics stage, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8534,10 +11764,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08640# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-logicOp-04878# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08641# If a shader object is
+--     bound to any graphics stage, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled on the device, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command and the @logicOp@ /must/ be a valid
@@ -8558,6 +11809,17 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ be @1@
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-primitiveFragmentShadingRateWithMultipleViewports-08642#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, and any shader object bound to a graphics
+--     stage writes to the @PrimitiveShadingRateKHR@ built-in, then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @viewportCount@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--     /must/ be @1@
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-blendEnable-04727# If rasterization
 --     is not disabled in the bound graphics pipeline, then for each color
 --     attachment in the subpass, if the corresponding image view’s
@@ -8568,15 +11830,43 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08643# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then for each color
+--     attachment in the render pass, if the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     do not contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT',
+--     then the corresponding member of @pColorBlendEnables@ in the most
+--     recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     in the current command buffer that affected that attachment index
+--     /must/ have been 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-multisampledRenderToSingleSampled-07284#
 --     If rasterization is not disabled in the bound graphics pipeline, and
 --     none of the @VK_AMD_mixed_attachment_samples@ extension, the
 --     @VK_NV_framebuffer_mixed_samples@ extension, or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, then
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     /must/ be the same as the current subpass color and\/or
---     depth\/stencil attachments
+--     feature is enabled, then @rasterizationSamples@ for the currently
+--     bound graphics pipeline /must/ be the same as the current subpass
+--     color and\/or depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08644# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the
+--     @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is enabled, then the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     in the current command buffer /must/ have set @rasterizationSamples@
+--     to be the same as the number of samples for the current render pass
+--     color and\/or depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06172# If the current
 --     render pass instance was begun with
@@ -8686,6 +11976,17 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08646# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-attachmentCount-07750# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -8695,6 +11996,18 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
 --     of the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08647# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     feature is enabled on the device, and a shader object is bound to
+--     the fragment stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then the @attachmentCount@
+--     parameter of most recent call to
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     in the current command buffer /must/ be greater than or equal to the
+--     number of color attachments in the current render pass instance
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07751# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
@@ -8703,6 +12016,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command for each discard rectangle in
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07880# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08648# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07881# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08649# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
+--     in the current command buffer set @discardRectangleEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
@@ -8836,9 +12188,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
---     with a sample count equal to the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline
+--     with a sample count equal to the value of @rasterizationSamples@ for
+--     the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-multisampledRenderToSingleSampled-07286#
 --     If the current render pass instance was begun with
@@ -8852,9 +12203,8 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-multisampledRenderToSingleSampled-07287#
@@ -8869,10 +12219,22 @@ foreign import ccall
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pNext-07935# If this command has been
+--     called inside a render pass instance started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and the @pNext@ chain of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--     structure with @multisampledRenderToSingleSampledEnable@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the value of
+--     @rasterizationSamples@ for the currently bound graphics pipeline
+--     /must/ be equal to
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-renderPass-06198# If the current
 --     render pass instance was begun with
@@ -8907,10 +12269,13 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-07620# If the bound graphics
---     pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
---     dynamic state enabled then
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08650# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClamp depthClamp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8923,10 +12288,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08651# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07622# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08652# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8939,10 +12322,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08653# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07624# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08654# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8955,10 +12356,32 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08655# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07626# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08656# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8971,10 +12394,31 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08657# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07628# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08658# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     for any attachment set that attachment’s value in
+--     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -8987,10 +12431,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08659# If a shader object is
+--     bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07630# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08660# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryStreams geometryStreams>
+--     feature is enabled, and a shader object is bound to the geometry
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9003,10 +12464,36 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08661# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07632# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08662# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     in the current command buffer set @conservativeRasterizationMode@ to
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT',
+--     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9019,10 +12506,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08663# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipEnable depthClipEnable>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07634# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08664# If the
+--     @VK_EXT_sample_locations@ extension is enabled, and a shader object
+--     is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
+--     in the current command buffer set @rasterizerDiscardEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9043,10 +12548,45 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08665# If the
+--     @VK_EXT_provoking_vertex@ extension is enabled, and a shader object
+--     is bound to the vertex stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07637# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08666# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08667# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the vertex stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08668# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the tessellation
+--     evaluation or geometry stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9059,10 +12599,48 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08669# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     in the current command buffer set @polygonMode@ to
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08670# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the vertex stage, and the most recent call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     in the current command buffer set @primitiveTopology@ to any line
+--     topology, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08671# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the tessellation
+--     evaluation or geometry stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07849# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08672# If the
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     in the current command buffer set @stippledLineEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9075,10 +12653,25 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08673# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipControl depthClipControl>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command ifdef::VK_EXT_extended_dynamic_state3
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07640# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command endif::VK_EXT_extended_dynamic_state3
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08674# If the
+--     @VK_NV_clip_space_w_scaling@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9091,10 +12684,24 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08675# If the
+--     @VK_NV_viewport_swizzle@ extension is enabled, and a shader object
+--     is bound to any graphics stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07642# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08676# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9107,10 +12714,28 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08677# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
+--     shader object is bound to any graphics stage, and the most recent
+--     call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     in the current command buffer set @coverageToColorEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07644# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08678# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9123,10 +12748,27 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08679# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07646# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08680# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     in the current command buffer set @coverageModulationTableEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9139,6 +12781,14 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08681# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07648# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
@@ -9147,10 +12797,26 @@ foreign import ccall
 --     must have been called in the current command buffer prior to this
 --     drawing command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08682# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-representativeFragmentTest representativeFragmentTest>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07649# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
 --     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08683# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-coverageReductionMode coverageReductionMode>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
@@ -9361,6 +13027,60 @@ foreign import ccall
 --     the fragment shader code /must/ not statically use the extended
 --     instruction @InterpolateAtSample@
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-sampleLocationsEnable-07936# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.width@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-sampleLocationsEnable-07937# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then,
+--     @sampleLocationsInfo.sampleLocationGridSize.height@ /must/ evenly
+--     divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling the value of
+--     @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-sampleLocationsEnable-07938# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state disabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, the @sampleLocationsEnable@ member of a
+--     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     in the bound graphics pipeline is
+--     'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, then, @sampleLocationsInfo.sampleLocationsPerPixel@
+--     /must/ equal @rasterizationSamples@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-coverageModulationTableEnable-07488#
 --     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
@@ -9531,6 +13251,161 @@ foreign import ccall
 --     it /must/ be set in the current command buffer prior to this drawing
 --     command
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08684# If there is no bound
+--     graphics pipeline,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08685# If there is no bound
+--     graphics pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08686# If there is no bound
+--     graphics pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08687# If there is no bound
+--     graphics pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08688# If there is no bound
+--     graphics pipeline,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08689# If there is no bound
+--     graphics pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08690# If there is no bound
+--     graphics pipeline, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     feature is enabled,
+--     'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT' /must/
+--     have been called on the current command buffer with @pStages@ with
+--     an element of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08693# If there is no bound
+--     graphics pipeline, and at least one of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features is enabled, one of the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT' or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stages must have a valid 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound, and the other must have no
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08694# If there is no bound
+--     graphics pipeline, and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     without the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, a valid 'Vulkan.Extensions.Handles.ShaderEXT' /must/ be bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08695# If there is no bound
+--     graphics pipeline, and both the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     features are enabled, and a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' is bound the to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage, and that 'Vulkan.Extensions.Handles.ShaderEXT' was created
+--     with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     flag, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--     to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08696# If there is no bound
+--     graphics pipeline, and a valid 'Vulkan.Extensions.Handles.ShaderEXT'
+--     is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage, there /must/ be no 'Vulkan.Extensions.Handles.ShaderEXT'
+--     bound to either the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage or the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     stage
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08698# If any graphics shader is
+--     bound which was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, then all shaders created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag in the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ also be bound
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08699# If any graphics shader is
+--     bound which was created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag, any stages in between stages whose shaders which did not
+--     create a shader with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     flag as part of the same
+--     'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT' call
+--     /must/ not have any 'Vulkan.Extensions.Handles.ShaderEXT' bound
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pDynamicStates-08715# If the bound
+--     graphics pipeline state includes a fragment shader stage, was
+--     created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpDepthAttachmentReadEXT@, the @depthWriteEnable@
+--     parameter in the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pDynamicStates-08716# If the bound
+--     graphics pipeline state includes a fragment shader stage, was
+--     created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
+--     set in
+--     'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+--     and the fragment shader declares the @EarlyFragmentTests@ execution
+--     mode and uses @OpStencilAttachmentReadEXT@, the @writeMask@
+--     parameter in the last call to 'cmdSetStencilWriteMask' /must/ be @0@
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
 --     entry point’s interface /must/ have either valid or
@@ -9547,13 +13422,21 @@ foreign import ccall
 --     within the corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07842# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
+--     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-dynamicPrimitiveTopologyUnrestricted-07500#
 --     If the bound graphics pipeline state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
 --     dynamic state enabled and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
---     @primitiveTopology@ parameter in the last call to
+--     @primitiveTopology@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
@@ -9590,6 +13473,14 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     draw command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-Input-07939# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then all variables with the @Input@ storage
+--     class decorated with @Location@ in the @Vertex@ @Execution@ @Model@
+--     @OpEntryPoint@ /must/ contain a location in
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT'::@location@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04875# If the bound graphics
 --     pipeline state was created with the
@@ -9800,6 +13691,14 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
+-- -   #VUID-vkCmdDispatch-None-07888# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor is accessed using atomic operations as a result of this
+--     command, then the storage texel buffer’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT'
+--
 -- -   #VUID-vkCmdDispatch-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
@@ -9873,24 +13772,50 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdDispatch-None-02697# For each set /n/ that is statically
+-- -   #VUID-vkCmdDispatch-None-08600# For each set /n/ that is statically
 --     used by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
---     bind point used by this command, a descriptor set /must/ have been
---     bound to /n/ at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatch-maintenance4-06425# If the
+-- -   #VUID-vkCmdDispatch-None-08601# For each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDispatch-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatch-None-08114# Descriptors in each bound descriptor
@@ -9915,6 +13840,13 @@ foreign import ccall
 --     was created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-vkCmdDispatch-None-08604# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command
+--
 -- -   #VUID-vkCmdDispatch-None-08117# If the descriptors used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     were specified via
@@ -9928,18 +13860,37 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDispatch-None-02700# A valid pipeline /must/ be bound to
---     the pipeline bind point used by this command
+-- -   #VUID-vkCmdDispatch-None-08605# If a descriptor is dynamically used
+--     with a 'Vulkan.Extensions.Handles.ShaderEXT' created with a
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' that was created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDispatch-None-02859# There /must/ not have been any calls
---     to dynamic state setting commands for any state not specified as
---     dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command, since that pipeline was
---     bound
+-- -   #VUID-vkCmdDispatch-None-08606# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDispatch-None-02702# If the
+-- -   #VUID-vkCmdDispatch-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
+--
+-- -   #VUID-vkCmdDispatch-None-08608# If a pipeline is bound to the
+--     pipeline bind point used by this command, there /must/ not have been
+--     any calls to dynamic state setting commands for any state not
+--     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command, since that
+--     pipeline was bound
+--
+-- -   #VUID-vkCmdDispatch-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -9951,17 +13902,21 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   #VUID-vkCmdDispatch-None-02703# If the
+-- -   #VUID-vkCmdDispatch-None-08610# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   #VUID-vkCmdDispatch-None-02704# If the
+-- -   #VUID-vkCmdDispatch-None-08611# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
@@ -9980,6 +13935,15 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
+-- -   #VUID-vkCmdDispatch-None-08612# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
 -- -   #VUID-vkCmdDispatch-storageBuffers-06936# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command accesses a storage buffer, and that stage
@@ -9993,25 +13957,41 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
--- -   #VUID-vkCmdDispatch-commandBuffer-02707# If @commandBuffer@ is an
+-- -   #VUID-vkCmdDispatch-None-08613# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a storage
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
+-- -   #VUID-vkCmdDispatch-commandBuffer-08614# If @commandBuffer@ is an
 --     unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
+--     corresponding to the pipeline bind point used by this command /must/
+--     not be a protected resource
 --
--- -   #VUID-vkCmdDispatch-None-06550# If the
+-- -   #VUID-vkCmdDispatch-None-08615# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdDispatch-ConstOffset-06551# If the
+-- -   #VUID-vkCmdDispatch-ConstOffset-08616# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -10311,6 +14291,14 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
+-- -   #VUID-vkCmdDispatchIndirect-None-07888# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor is accessed using atomic operations as a result of this
+--     command, then the storage texel buffer’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT'
+--
 -- -   #VUID-vkCmdDispatchIndirect-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
@@ -10384,24 +14372,50 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02697# For each set /n/ that is
+-- -   #VUID-vkCmdDispatchIndirect-None-08600# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a descriptor set /must/
---     have been bound to /n/ at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatchIndirect-maintenance4-06425# If the
+-- -   #VUID-vkCmdDispatchIndirect-None-08601# For each push constant that
+--     is statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
+--     the pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDispatchIndirect-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-08114# Descriptors in each bound
@@ -10427,6 +14441,13 @@ foreign import ccall
 --     was created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-vkCmdDispatchIndirect-None-08604# Descriptors in bound
+--     descriptor buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command
+--
 -- -   #VUID-vkCmdDispatchIndirect-None-08117# If the descriptors used by
 --     the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
 --     point were specified via
@@ -10441,18 +14462,38 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02700# A valid pipeline /must/ be
---     bound to the pipeline bind point used by this command
+-- -   #VUID-vkCmdDispatchIndirect-None-08605# If a descriptor is
+--     dynamically used with a 'Vulkan.Extensions.Handles.ShaderEXT'
+--     created with a 'Vulkan.Core10.Handles.DescriptorSetLayout' that was
+--     created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02859# There /must/ not have been
---     any calls to dynamic state setting commands for any state not
+-- -   #VUID-vkCmdDispatchIndirect-None-08606# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command
+--
+-- -   #VUID-vkCmdDispatchIndirect-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
+--
+-- -   #VUID-vkCmdDispatchIndirect-None-08608# If a pipeline is bound to
+--     the pipeline bind point used by this command, there /must/ not have
+--     been any calls to dynamic state setting commands for any state not
 --     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
 --     bound to the pipeline bind point used by this command, since that
 --     pipeline was bound
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02702# If the
+-- -   #VUID-vkCmdDispatchIndirect-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -10464,17 +14505,21 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02703# If the
+-- -   #VUID-vkCmdDispatchIndirect-None-08610# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02704# If the
+-- -   #VUID-vkCmdDispatchIndirect-None-08611# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
@@ -10493,6 +14538,15 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
+-- -   #VUID-vkCmdDispatchIndirect-None-08612# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
 -- -   #VUID-vkCmdDispatchIndirect-storageBuffers-06936# If any stage of
 --     the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
 --     bind point used by this command accesses a storage buffer, and that
@@ -10506,25 +14560,41 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
--- -   #VUID-vkCmdDispatchIndirect-commandBuffer-02707# If @commandBuffer@
+-- -   #VUID-vkCmdDispatchIndirect-None-08613# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a storage
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
+-- -   #VUID-vkCmdDispatchIndirect-commandBuffer-08614# If @commandBuffer@
 --     is an unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
+--     corresponding to the pipeline bind point used by this command /must/
+--     not be a protected resource
 --
--- -   #VUID-vkCmdDispatchIndirect-None-06550# If the
+-- -   #VUID-vkCmdDispatchIndirect-None-08615# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdDispatchIndirect-ConstOffset-06551# If the
+-- -   #VUID-vkCmdDispatchIndirect-ConstOffset-08616# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -10990,11 +15060,6 @@ foreign import ccall
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
--- -   #VUID-vkCmdCopyImage-srcImage-01546# If @srcImage@ is non-sparse
---     then the image or /disjoint/ plane to be copied /must/ be bound
---     completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
---
 -- -   #VUID-vkCmdCopyImage-srcImageLayout-00128# @srcImageLayout@ /must/
 --     specify the layout of the image subresources of @srcImage@ specified
 --     in @pRegions@ at the time this command is executed on a
@@ -11010,11 +15075,6 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
---
--- -   #VUID-vkCmdCopyImage-dstImage-01547# If @dstImage@ is non-sparse
---     then the image or /disjoint/ plane that is the destination of the
---     copy /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyImage-dstImageLayout-00133# @dstImageLayout@ /must/
 --     specify the layout of the image subresources of @dstImage@ specified
@@ -11045,28 +15105,6 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyImage-srcImage-00136# The sample count of @srcImage@
 --     and @dstImage@ /must/ match
 --
--- -   #VUID-vkCmdCopyImage-srcSubresource-01696# The
---     @srcSubresource.mipLevel@ member of each element of @pRegions@
---     /must/ be less than the @mipLevels@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@ was created
---
--- -   #VUID-vkCmdCopyImage-dstSubresource-01697# The
---     @dstSubresource.mipLevel@ member of each element of @pRegions@
---     /must/ be less than the @mipLevels@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
---
--- -   #VUID-vkCmdCopyImage-srcSubresource-01698# The
---     @srcSubresource.baseArrayLayer@ + @srcSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @srcImage@ was created
---
--- -   #VUID-vkCmdCopyImage-dstSubresource-01699# The
---     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @dstImage@ was created
---
 -- -   #VUID-vkCmdCopyImage-srcOffset-01783# The @srcOffset@ and @extent@
 --     members of each element of @pRegions@ /must/ respect the image
 --     transfer granularity requirements of @commandBuffer@’s command
@@ -11079,53 +15117,23 @@ foreign import ccall
 --     pool’s queue family, as described in
 --     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
 --
--- -   #VUID-vkCmdCopyImage-dstImage-02542# @dstImage@ and @srcImage@
---     /must/ not have been created with @flags@ containing
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
 -- -   #VUID-vkCmdCopyImage-srcImage-01551# If neither @srcImage@ nor
 --     @dstImage@ has a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
 --     then for each element of @pRegions@, @srcSubresource.aspectMask@ and
 --     @dstSubresource.aspectMask@ /must/ match
 --
--- -   #VUID-vkCmdCopyImage-srcImage-01552# If @srcImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+-- -   #VUID-vkCmdCopyImage-srcImage-08713# If @srcImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 --     then for each element of @pRegions@, @srcSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
+--     /must/ be a single valid
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --
--- -   #VUID-vkCmdCopyImage-srcImage-01553# If @srcImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
---     then for each element of @pRegions@, @srcSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---
--- -   #VUID-vkCmdCopyImage-dstImage-01554# If @dstImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+-- -   #VUID-vkCmdCopyImage-dstImage-08714# If @dstImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 --     then for each element of @pRegions@, @dstSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---
--- -   #VUID-vkCmdCopyImage-dstImage-01555# If @dstImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
---     then for each element of @pRegions@, @dstSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     /must/ be a single valid
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-01556# If @srcImage@ has a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
@@ -11138,6 +15146,17 @@ foreign import ccall
 --     and the @srcImage@ does not have a multi-planar image format, then
 --     for each element of @pRegions@, @srcSubresource.aspectMask@ /must/
 --     be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-vkCmdCopyImage-apiVersion-07932# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, and either @srcImage@ or @dstImage@ is of
+--     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each
+--     element of @pRegions@, @srcSubresource.baseArrayLayer@ and
+--     @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
+--     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
+--     each be @1@
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-04443# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
@@ -11195,6 +15214,13 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyImage-dstImage-01788# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
 --     of @pRegions@, @dstOffset.z@ /must/ be @0@
+--
+-- -   #VUID-vkCmdCopyImage-apiVersion-07933# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, @srcImage@ and @dstImage@ /must/ have the
+--     same 'Vulkan.Core10.Enums.ImageType.ImageType'
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-07743# If @srcImage@ and @dstImage@
 --     have a different 'Vulkan.Core10.Enums.ImageType.ImageType', one
@@ -11275,42 +15301,42 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-01728# For each element of @pRegions@,
 --     if the sum of @srcOffset.x@ and @extent.width@ does not equal the
---     width of the the subresource specified by @srcSubresource@,
+--     width of the subresource specified by @srcSubresource@,
 --     @extent.width@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-01729# For each element of @pRegions@,
 --     if the sum of @srcOffset.y@ and @extent.height@ does not equal the
---     height of the the subresource specified by @srcSubresource@,
+--     height of the subresource specified by @srcSubresource@,
 --     @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-01730# For each element of @pRegions@,
 --     if the sum of @srcOffset.z@ and @extent.depth@ does not equal the
---     depth of the the subresource specified by @srcSubresource@,
+--     depth of the subresource specified by @srcSubresource@,
 --     @extent.depth@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImage-dstImage-01732# For each element of @pRegions@,
 --     if the sum of @dstOffset.x@ and @extent.width@ does not equal the
---     width of the the subresource specified by @dstSubresource@,
+--     width of the subresource specified by @dstSubresource@,
 --     @extent.width@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyImage-dstImage-01733# For each element of @pRegions@,
 --     if the sum of @dstOffset.y@ and @extent.height@ does not equal the
---     height of the the subresource specified by @dstSubresource@,
+--     height of the subresource specified by @dstSubresource@,
 --     @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyImage-dstImage-01734# For each element of @pRegions@,
 --     if the sum of @dstOffset.z@ and @extent.depth@ does not equal the
---     depth of the the subresource specified by @dstSubresource@,
+--     depth of the subresource specified by @dstSubresource@,
 --     @extent.depth@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
@@ -11354,6 +15380,46 @@ foreign import ccall
 --     /must/ have been included in the
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
 --     used to create @dstImage@
+--
+-- -   #VUID-vkCmdCopyImage-srcImage-07966# If @srcImage@ is non-sparse
+--     then the image or the specified /disjoint/ plane /must/ be bound
+--     completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-vkCmdCopyImage-srcSubresource-07967# The
+--     @srcSubresource.mipLevel@ member of each element of @pRegions@
+--     /must/ be less than the @mipLevels@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@ was created
+--
+-- -   #VUID-vkCmdCopyImage-srcSubresource-07968# The
+--     @srcSubresource.baseArrayLayer@ + @srcSubresource.layerCount@ of
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @srcImage@ was created
+--
+-- -   #VUID-vkCmdCopyImage-srcImage-07969# @srcImage@ /must/ not have been
+--     created with @flags@ containing
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   #VUID-vkCmdCopyImage-dstImage-07966# If @dstImage@ is non-sparse
+--     then the image or the specified /disjoint/ plane /must/ be bound
+--     completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-vkCmdCopyImage-dstSubresource-07967# The
+--     @dstSubresource.mipLevel@ member of each element of @pRegions@
+--     /must/ be less than the @mipLevels@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
+--
+-- -   #VUID-vkCmdCopyImage-dstSubresource-07968# The
+--     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @dstImage@ was created
+--
+-- -   #VUID-vkCmdCopyImage-dstImage-07969# @dstImage@ /must/ not have been
+--     created with @flags@ containing
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -11959,6 +16025,46 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07966# If @dstImage@ is
+--     non-sparse then the image or the specified /disjoint/ plane /must/
+--     be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-vkCmdCopyBufferToImage-imageSubresource-07967# The
+--     @imageSubresource.mipLevel@ member of each element of @pRegions@
+--     /must/ be less than the @mipLevels@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
+--
+-- -   #VUID-vkCmdCopyBufferToImage-imageSubresource-07968# The
+--     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @dstImage@ was created
+--
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07969# @dstImage@ /must/ not
+--     have been created with @flags@ containing
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   #VUID-vkCmdCopyBufferToImage-imageSubresource-07970# The image
+--     region specified by each element of @pRegions@ /must/ be contained
+--     within the specified @imageSubresource@ of @dstImage@
+--
+-- -   #VUID-vkCmdCopyBufferToImage-imageSubresource-07971# For each
+--     element of @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
+--     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the width of the specified @imageSubresource@
+--     of @dstImage@
+--
+-- -   #VUID-vkCmdCopyBufferToImage-imageSubresource-07972# For each
+--     element of @pRegions@, @imageOffset.y@ and (@imageExtent.height@ +
+--     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the height of the specified @imageSubresource@
+--     of @dstImage@
+--
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07973# @dstImage@ /must/ have
+--     a sample count equal to
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
+--
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-01828# If @commandBuffer@
 --     is an unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
@@ -11997,7 +16103,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   #VUID-vkCmdCopyBufferToImage-srcImage-00199# If @dstImage@ is of
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07979# If @dstImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
 --     @imageExtent.height@ /must/ be @1@
@@ -12008,7 +16114,7 @@ foreign import ccall
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-srcImage-00201# If @dstImage@ is of
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07980# If @dstImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
@@ -12042,21 +16148,21 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00207# For each element of
 --     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
---     not equal the width of the the subresource specified by
+--     not equal the width of the subresource specified by
 --     @srcSubresource@, @extent.width@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00208# For each element of
 --     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
---     not equal the height of the the subresource specified by
+--     not equal the height of the subresource specified by
 --     @srcSubresource@, @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00209# For each element of
 --     @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
---     not equal the depth of the the subresource specified by
+--     not equal the depth of the subresource specified by
 --     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
@@ -12065,7 +16171,7 @@ foreign import ccall
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
 --     present in @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-07740# If @dstImage@ has a
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07981# If @dstImage@ has a
 --     'Vulkan.Core10.Enums.Format.Format' with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
@@ -12074,7 +16180,7 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
 --
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-07741# If @dstImage@ has a
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07982# If @dstImage@ has a
 --     'Vulkan.Core10.Enums.Format.Format' with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
@@ -12084,10 +16190,10 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
--- -   #VUID-vkCmdCopyBufferToImage-baseArrayLayer-00213# If @dstImage@ is
---     of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each
---     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
---     @0@ and @imageSubresource.layerCount@ /must/ be @1@
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07983# If @dstImage@ is of
+--     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each element
+--     of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be @0@ and
+--     @imageSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-pRegions-07277# For each element of
 --     @pRegions@, @bufferRowLength@ divided by the
@@ -12095,25 +16201,21 @@ foreign import ccall
 --     and then multiplied by the texel block size of @dstImage@ /must/ be
 --     less than or equal to 231-1
 --
--- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01558# If @dstImage@ does
---     not have either a depth\/stencil or a
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07975# If @dstImage@ does not
+--     have either a depth\/stencil or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the format’s texel block size
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --
--- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01559# If @dstImage@ has a
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07976# If @dstImage@ has a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the element size of the compatible format for the format
 --     and the @aspectMask@ of the @imageSubresource@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
 --
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-07273# For each element of
---     @pRegions@, @bufferOffset@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
--- -   #VUID-vkCmdCopyBufferToImage-srcImage-04053# If @dstImage@ has a
+-- -   #VUID-vkCmdCopyBufferToImage-dstImage-07978# If @dstImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of
 --     @pRegions@ /must/ be a multiple of @4@
 --
@@ -12146,14 +16248,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     usage flag
 --
--- -   #VUID-vkCmdCopyBufferToImage-dstImage-00178# If @dstImage@ is
---     non-sparse then it /must/ be bound completely and contiguously to a
---     single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   #VUID-vkCmdCopyBufferToImage-dstImage-00179# @dstImage@ /must/ have
---     a sample count equal to
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
---
 -- -   #VUID-vkCmdCopyBufferToImage-dstImageLayout-00180# @dstImageLayout@
 --     /must/ specify the layout of the image subresources of @dstImage@
 --     specified in @pRegions@ at the time this command is executed on a
@@ -12165,36 +16259,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageSubresource-01701# The
---     @imageSubresource.mipLevel@ member of each element of @pRegions@
---     /must/ be less than the @mipLevels@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
---
--- -   #VUID-vkCmdCopyBufferToImage-imageSubresource-01702# The
---     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @dstImage@ was created
---
--- -   #VUID-vkCmdCopyBufferToImage-dstImage-02543# @dstImage@ /must/ not
---     have been created with @flags@ containing
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-06217# The image region
---     specified by each element of @pRegions@ /must/ be contained within
---     the specified @imageSubresource@ of @dstImage@
---
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-06218# For each element of
---     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
---     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
---     less than or equal to the width of the specified @imageSubresource@
---     of @dstImage@
---
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-06219# For each element of
---     @pRegions@, @imageOffset.y@ and (@imageExtent.height@ +
---     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
---     less than or equal to the height of the specified @imageSubresource@
---     of @dstImage@
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-07931# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_range_unrestricted VK_EXT_depth_range_unrestricted>
+--     is not enabled, for each element of @pRegions@ whose
+--     @imageSubresource@ contains a depth aspect, the data in @srcBuffer@
+--     /must/ be in the range [0,1]
 --
 -- == Valid Usage (Implicit)
 --
@@ -12325,6 +16394,46 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07966# If @srcImage@ is
+--     non-sparse then the image or the specified /disjoint/ plane /must/
+--     be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-imageSubresource-07967# The
+--     @imageSubresource.mipLevel@ member of each element of @pRegions@
+--     /must/ be less than the @mipLevels@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@ was created
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-imageSubresource-07968# The
+--     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @srcImage@ was created
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07969# @srcImage@ /must/ not
+--     have been created with @flags@ containing
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-imageSubresource-07970# The image
+--     region specified by each element of @pRegions@ /must/ be contained
+--     within the specified @imageSubresource@ of @srcImage@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-imageSubresource-07971# For each
+--     element of @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
+--     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the width of the specified @imageSubresource@
+--     of @srcImage@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-imageSubresource-07972# For each
+--     element of @pRegions@, @imageOffset.y@ and (@imageExtent.height@ +
+--     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the height of the specified @imageSubresource@
+--     of @srcImage@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07973# @srcImage@ /must/ have
+--     a sample count equal to
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
+--
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-01831# If @commandBuffer@
 --     is an unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
@@ -12354,7 +16463,7 @@ foreign import ccall
 --     @commandBuffer@’s command pool’s queue family, as described in
 --     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-srcImage-00199# If @srcImage@ is of
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07979# If @srcImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
 --     @imageExtent.height@ /must/ be @1@
@@ -12365,7 +16474,7 @@ foreign import ccall
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-srcImage-00201# If @srcImage@ is of
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07980# If @srcImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
@@ -12399,21 +16508,21 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00207# For each element of
 --     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
---     not equal the width of the the subresource specified by
+--     not equal the width of the subresource specified by
 --     @srcSubresource@, @extent.width@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00208# For each element of
 --     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
---     not equal the height of the the subresource specified by
+--     not equal the height of the subresource specified by
 --     @srcSubresource@, @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00209# For each element of
 --     @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
---     not equal the depth of the the subresource specified by
+--     not equal the depth of the subresource specified by
 --     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
@@ -12422,7 +16531,7 @@ foreign import ccall
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
 --     present in @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07740# If @srcImage@ has a
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07981# If @srcImage@ has a
 --     'Vulkan.Core10.Enums.Format.Format' with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
@@ -12431,7 +16540,7 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07741# If @srcImage@ has a
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07982# If @srcImage@ has a
 --     'Vulkan.Core10.Enums.Format.Format' with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
@@ -12441,10 +16550,10 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-baseArrayLayer-00213# If @srcImage@ is
---     of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each
---     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
---     @0@ and @imageSubresource.layerCount@ /must/ be @1@
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07983# If @srcImage@ is of
+--     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each element
+--     of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be @0@ and
+--     @imageSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07277# For each element of
 --     @pRegions@, @bufferRowLength@ divided by the
@@ -12452,25 +16561,21 @@ foreign import ccall
 --     and then multiplied by the texel block size of @srcImage@ /must/ be
 --     less than or equal to 231-1
 --
--- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01558# If @srcImage@ does
---     not have either a depth\/stencil or a
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07975# If @srcImage@ does not
+--     have either a depth\/stencil or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the format’s texel block size
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --
--- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01559# If @srcImage@ has a
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07976# If @srcImage@ has a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the element size of the compatible format for the format
 --     and the @aspectMask@ of the @imageSubresource@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
 --
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07273# For each element of
---     @pRegions@, @bufferOffset@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
---
--- -   #VUID-vkCmdCopyImageToBuffer-srcImage-04053# If @srcImage@ has a
+-- -   #VUID-vkCmdCopyImageToBuffer-srcImage-07978# If @srcImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of
 --     @pRegions@ /must/ be a multiple of @4@
 --
@@ -12494,10 +16599,6 @@ foreign import ccall
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-srcImage-00187# If @srcImage@ is
---     non-sparse then it /must/ be bound completely and contiguously to a
---     single 'Vulkan.Core10.Handles.DeviceMemory' object
---
 -- -   #VUID-vkCmdCopyImageToBuffer-dstBuffer-00191# @dstBuffer@ /must/
 --     have been created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
@@ -12506,10 +16607,6 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyImageToBuffer-dstBuffer-00192# If @dstBuffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
 --     single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   #VUID-vkCmdCopyImageToBuffer-srcImage-00188# @srcImage@ /must/ have
---     a sample count equal to
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-srcImageLayout-00189# @srcImageLayout@
 --     /must/ specify the layout of the image subresources of @srcImage@
@@ -12521,37 +16618,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
---
--- -   #VUID-vkCmdCopyImageToBuffer-imageSubresource-01703# The
---     @imageSubresource.mipLevel@ member of each element of @pRegions@
---     /must/ be less than the @mipLevels@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@ was created
---
--- -   #VUID-vkCmdCopyImageToBuffer-imageSubresource-01704# The
---     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @srcImage@ was created
---
--- -   #VUID-vkCmdCopyImageToBuffer-srcImage-02544# @srcImage@ /must/ not
---     have been created with @flags@ containing
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06220# The image region
---     specified by each element of @pRegions@ /must/ be contained within
---     the specified @imageSubresource@ of @srcImage@
---
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06221# For each element of
---     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
---     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
---     less than or equal to the width of the specified @imageSubresource@
---     of @srcImage@
---
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06222# For each element of
---     @pRegions@, @imageOffset.y@ and (imageExtent.height +
---     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
---     less than or equal to the height of the specified @imageSubresource@
---     of @srcImage@
 --
 -- == Valid Usage (Implicit)
 --
@@ -12866,6 +16932,14 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
 --     usage flag
+--
+-- -   #VUID-vkCmdFillBuffer-apiVersion-07894# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     extension is not enabled and
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, the 'Vulkan.Core10.Handles.CommandPool'
+--     that @commandBuffer@ was allocated from /must/ support graphics or
+--     compute operations
 --
 -- -   #VUID-vkCmdFillBuffer-dstBuffer-00031# If @dstBuffer@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single
@@ -13457,12 +17531,35 @@ foreign import ccall
 -- If any attachment’s @aspectMask@ to be cleared is not backed by an image
 -- view, the clear has no effect on that aspect.
 --
+-- If an attachment being cleared refers to an image view created with an
+-- @aspectMask@ equal to one of
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' or
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT', it
+-- is considered to be
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' for
+-- purposes of this command, and /must/ be cleared with the
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' aspect
+-- as specified by
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#image-views-plane-promotion image view creation>.
+--
 -- == Valid Usage
 --
--- -   #VUID-vkCmdClearAttachments-pAttachments-07270# For each element of
---     @pAttachments@, the corresponding attachment in the current render
---     pass instance /must/ either not be backed by an image view, or
---     contain each of the aspects specified in @aspectMask@
+-- -   #VUID-vkCmdClearAttachments-aspectMask-07884# If the current render
+--     pass instance does not use dynamic rendering, and the @aspectMask@
+--     member of any element of @pAttachments@ contains
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     the current subpass instance’s depth-stencil attachment /must/ be
+--     either 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' or the
+--     attachment @format@ /must/ contain a depth component
+--
+-- -   #VUID-vkCmdClearAttachments-aspectMask-07885# If the current render
+--     pass instance does not use dynamic rendering, and the @aspectMask@
+--     member of any element of @pAttachments@ contains
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     the current subpass instance’s depth-stencil attachment /must/ be
+--     either 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' or the
+--     attachment @format@ /must/ contain a stencil component
 --
 -- -   #VUID-vkCmdClearAttachments-aspectMask-07271# If the @aspectMask@
 --     member of any element of @pAttachments@ contains
@@ -13719,14 +17816,11 @@ foreign import ccall
 --     /must/ not have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   #VUID-vkCmdResolveImage-srcImage-04446# If either @srcImage@ or
---     @dstImage@ are of type
+-- -   #VUID-vkCmdResolveImage-srcImage-04446# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and
---     @srcSubresource.layerCount@ /must/ be @1@
+--     of @pRegions@, @srcSubresource.layerCount@ /must/ be @1@
 --
--- -   #VUID-vkCmdResolveImage-srcImage-04447# If either @srcImage@ or
---     @dstImage@ are of type
+-- -   #VUID-vkCmdResolveImage-srcImage-04447# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
 --     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @dstSubresource.layerCount@ /must/ be @1@
@@ -13979,6 +18073,13 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @stageMask@ /must/ not be @0@
 --
+-- -   #VUID-vkCmdSetEvent-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
+--
 -- -   #VUID-vkCmdSetEvent-stageMask-06457# Any pipeline stage included in
 --     @stageMask@ /must/ be supported by the capabilities of the queue
 --     family specified by the @queueFamilyIndex@ member of the
@@ -14135,6 +18236,13 @@ foreign import ccall
 -- -   #VUID-vkCmdResetEvent-stageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @stageMask@ /must/ not be @0@
+--
+-- -   #VUID-vkCmdResetEvent-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-vkCmdResetEvent-stageMask-06458# Any pipeline stage included
 --     in @stageMask@ /must/ be supported by the capabilities of the queue
@@ -14440,6 +18548,13 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
 --
+-- -   #VUID-vkCmdWaitEvents-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
+--
 -- -   #VUID-vkCmdWaitEvents-dstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -14487,6 +18602,13 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer
 -- -   #VUID-vkCmdWaitEvents-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @dstStageMask@ /must/ not be @0@
+--
+-- -   #VUID-vkCmdWaitEvents-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-vkCmdWaitEvents-srcAccessMask-02815# The @srcAccessMask@
 --     member of each element of @pMemoryBarriers@ /must/ only include
@@ -14736,8 +18858,8 @@ foreign import ccall
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.DependencyInfo'.
 --
 -- When 'cmdPipelineBarrier' is submitted to a queue, it defines a memory
--- dependency between commands that were submitted before it, and those
--- submitted after it.
+-- dependency between commands that were submitted to the same queue before
+-- it, and those submitted to the same queue after it.
 --
 -- If 'cmdPipelineBarrier' was recorded outside a render pass instance, the
 -- first
@@ -14848,6 +18970,13 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
 --
+-- -   #VUID-vkCmdPipelineBarrier-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
+--
 -- -   #VUID-vkCmdPipelineBarrier-dstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -14895,6 +19024,13 @@ foreign import ccall
 -- -   #VUID-vkCmdPipelineBarrier-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @dstStageMask@ /must/ not be @0@
+--
+-- -   #VUID-vkCmdPipelineBarrier-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-vkCmdPipelineBarrier-srcAccessMask-02815# The @srcAccessMask@
 --     member of each element of @pMemoryBarriers@ /must/ only include
@@ -14948,23 +19084,29 @@ foreign import ccall
 --     @dstStageMask@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
--- -   #VUID-vkCmdPipelineBarrier-pDependencies-02285# If
---     'cmdPipelineBarrier' is called within a render pass instance, the
---     render pass /must/ have been created with at least one
---     'Vulkan.Core10.Pass.SubpassDependency' instance in
---     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pDependencies@ that
---     expresses a dependency from the current subpass to itself, with
+-- -   #VUID-vkCmdPipelineBarrier-None-07889# If 'cmdPipelineBarrier' is
+--     called within a render pass instance using a
+--     'Vulkan.Core10.Handles.RenderPass' object, the render pass /must/
+--     have been created with at least one subpass dependency that
+--     expresses a dependency from the current subpass to itself, does not
+--     include
+--     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_BY_REGION_BIT' if
+--     this command does not, does not include
+--     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
+--     if this command does not, and has
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scopes>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scopes>
 --     that are all supersets of the scopes defined in this command
 --
 -- -   #VUID-vkCmdPipelineBarrier-bufferMemoryBarrierCount-01178# If
---     'cmdPipelineBarrier' is called within a render pass instance, it
---     /must/ not include any buffer memory barriers
+--     'cmdPipelineBarrier' is called within a render pass instance using a
+--     'Vulkan.Core10.Handles.RenderPass' object, it /must/ not include any
+--     buffer memory barriers
 --
 -- -   #VUID-vkCmdPipelineBarrier-image-04073# If 'cmdPipelineBarrier' is
---     called within a render pass instance, the @image@ member of any
+--     called within a render pass instance using a
+--     'Vulkan.Core10.Handles.RenderPass' object, the @image@ member of any
 --     image memory barrier included in this command /must/ be an
 --     attachment used in the current subpass both as an input attachment,
 --     and as either a color or depth\/stencil attachment
@@ -14976,18 +19118,53 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdPipelineBarrier-srcQueueFamilyIndex-01182# If
 --     'cmdPipelineBarrier' is called within a render pass instance, the
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any image
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any
 --     memory barrier included in this command /must/ be equal
+--
+-- -   #VUID-vkCmdPipelineBarrier-None-07890# If 'cmdPipelineBarrier' is
+--     called within a render pass instance, and the source stage masks of
+--     any memory barriers include
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>,
+--     destination stage masks of all memory barriers /must/ only include
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>
+--
+-- -   #VUID-vkCmdPipelineBarrier-dependencyFlags-07891# If
+--     'cmdPipelineBarrier' is called within a render pass instance, and
+--     and the source stage masks of any memory barriers include
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>,
+--     then @dependencyFlags@ /must/ include
+--     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_BY_REGION_BIT'
+--
+-- -   #VUID-vkCmdPipelineBarrier-None-07892# If 'cmdPipelineBarrier' is
+--     called within a render pass instance, the source and destination
+--     stage masks of any memory barriers /must/ only include graphics
+--     pipeline stages
 --
 -- -   #VUID-vkCmdPipelineBarrier-dependencyFlags-01186# If
 --     'cmdPipelineBarrier' is called outside of a render pass instance,
+--     the dependency flags /must/ not include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
---     /must/ not be included in the dependency flags
 --
--- -   #VUID-vkCmdPipelineBarrier-None-06191# If 'cmdPipelineBarrier' is
---     called within a render pass instance, the render pass /must/ not
---     have been started with
+-- -   #VUID-vkCmdPipelineBarrier-None-07893# If 'cmdPipelineBarrier' is
+--     called inside a render pass instance, and there is more than one
+--     view in the current subpass, dependency flags /must/ include
+--     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
+--
+-- -   #VUID-vkCmdPipelineBarrier-shaderTileImageColorReadAccess-08718# If
+--     'cmdPipelineBarrier' is called within a render pass instance and
+--     none of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageColorReadAccess shaderTileImageColorReadAccess>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageDepthReadAccess shaderTileImageDepthReadAccess>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageStencilReadAccess shaderTileImageStencilReadAccess>
+--     features are enabled, the render pass /must/ not have been started
+--     with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--
+-- -   #VUID-vkCmdPipelineBarrier-None-08719# If 'cmdPipelineBarrier' is
+--     called within a render pass instance started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     it /must/ adhere to the restrictions in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-barriers-explicit-renderpass-tileimage Explicit Render Pass Tile Image Access Synchronization>
 --
 -- -   #VUID-vkCmdPipelineBarrier-srcStageMask-06461# Any pipeline stage
 --     included in @srcStageMask@ /must/ be supported by the capabilities
@@ -15297,22 +19474,19 @@ foreign import ccall
 --     the bound video session was created with
 --
 -- -   #VUID-vkCmdBeginQuery-queryType-04862# If the @queryType@ used to
---     create @queryPool@ was
---     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then the
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support
+--     create @queryPool@ was @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@,
+--     then the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@
+--     was allocated from /must/ support
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#video-encode-operations video encode operations>
 --
 -- -   #VUID-vkCmdBeginQuery-queryType-07129# If the @queryType@ used to
---     create @queryPool@ was
---     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then there
---     /must/ be a bound video session
+--     create @queryPool@ was @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@,
+--     then there /must/ be a bound video session
 --
 -- -   #VUID-vkCmdBeginQuery-queryType-07130# If the @queryType@ used to
---     create @queryPool@ was
---     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@ and there is
---     a bound video session, then @queryPool@ /must/ have been created
---     with a
+--     create @queryPool@ was @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@ and
+--     there is a bound video session, then @queryPool@ /must/ have been
+--     created with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
 --     structure included in the @pNext@ chain of
 --     'Vulkan.Core10.Query.QueryPoolCreateInfo' identical to the one
@@ -15322,8 +19496,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBeginQuery-queryType-07131# If the @queryType@ used to
 --     create @queryPool@ was not @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@ or
---     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then there
---     /must/ be no bound video session
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@, then there /must/ be no
+--     bound video session
 --
 -- -   #VUID-vkCmdBeginQuery-queryPool-01922# @queryPool@ /must/ have been
 --     created with a @queryType@ that differs from that of any queries
@@ -15923,6 +20097,13 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE'
+--
+-- -   #VUID-vkCmdWriteTimestamp-rayTracingPipeline-07943# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-vkCmdWriteTimestamp-queryPool-01416# @queryPool@ /must/ have
 --     been created with a @queryType@ of
@@ -17754,7 +21935,35 @@ instance Zero BufferCopy where
 
 -- | VkImageCopy - Structure specifying an image copy operation
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkImageCopy-apiVersion-07940# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
+--     extension is not enabled and
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, the @aspectMask@ member of @srcSubresource@
+--     and @dstSubresource@ /must/ match
+--
+-- -   #VUID-VkImageCopy-apiVersion-07941# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     extension is not enabled and
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, the @layerCount@ member of @srcSubresource@
+--     and @dstSubresource@ /must/ match
+--
+-- -   #VUID-VkImageCopy-extent-06668# @extent.width@ /must/ not be 0
+--
+-- -   #VUID-VkImageCopy-extent-06669# @extent.height@ /must/ not be 0
+--
+-- -   #VUID-VkImageCopy-extent-06670# @extent.depth@ /must/ not be 0
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkImageCopy-srcSubresource-parameter# @srcSubresource@ /must/
+--     be a valid 'ImageSubresourceLayers' structure
+--
+-- -   #VUID-VkImageCopy-dstSubresource-parameter# @dstSubresource@ /must/
+--     be a valid 'ImageSubresourceLayers' structure
 --
 -- = See Also
 --
@@ -17765,15 +21974,11 @@ data ImageCopy = ImageCopy
   { -- | @srcSubresource@ and @dstSubresource@ are 'ImageSubresourceLayers'
     -- structures specifying the image subresources of the images used for the
     -- source and destination image data, respectively.
-    --
-    -- #VUID-VkImageCopy-srcSubresource-parameter# @srcSubresource@ /must/ be a
-    -- valid 'ImageSubresourceLayers' structure
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffset@ and @dstOffset@ select the initial @x@, @y@, and @z@ offsets
     -- in texels of the sub-regions of the source and destination image data.
     srcOffset :: Offset3D
-  , -- | #VUID-VkImageCopy-dstSubresource-parameter# @dstSubresource@ /must/ be a
-    -- valid 'ImageSubresourceLayers' structure
+  , -- No documentation found for Nested "VkImageCopy" "dstSubresource"
     dstSubresource :: ImageSubresourceLayers
   , -- No documentation found for Nested "VkImageCopy" "dstOffset"
     dstOffset :: Offset3D
@@ -18174,6 +22379,17 @@ instance Zero ImageResolve where
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM'::@transform@,
 -- the resulting render area /must/ be equal to the framebuffer dimensions.
 --
+-- If multiview is enabled in @renderPass@, and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-render-areas multiviewPerViewRenderAreas>
+-- feature is enabled, and there is an instance of
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
+-- included in the @pNext@ chain with @perViewRenderAreaCount@ not equal to
+-- @0@, then the elements of
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'::@pPerViewRenderAreas@
+-- override @renderArea@ and define a render area for each view. In this
+-- case, @renderArea@ /must/ be set to an area at least as large as the
+-- union of all the per-view render areas.
+--
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subpassShading subpassShading>
 -- feature is enabled, then @renderArea@ /must/ equal the framebuffer
@@ -18411,6 +22627,20 @@ instance Zero ImageResolve where
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM'::@transform@
 --     /must/ equal the @framebuffer@ dimensions
 --
+-- -   #VUID-VkRenderPassBeginInfo-perViewRenderAreaCount-07859# If the
+--     @perViewRenderAreaCount@ member of a
+--     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
+--     structure included in the @pNext@ chain is not @0@, then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-render-areas multiviewPerViewRenderAreas>
+--     feature /must/ be enabled.
+--
+-- -   #VUID-VkRenderPassBeginInfo-perViewRenderAreaCount-07860# If the
+--     @perViewRenderAreaCount@ member of a
+--     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
+--     structure included in the @pNext@ chain is not @0@, then
+--     @renderArea@ /must/ specify a render area that includes the union of
+--     all per view render areas.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderPassBeginInfo-sType-sType# @sType@ /must/ be
@@ -18420,6 +22650,7 @@ instance Zero ImageResolve where
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
+--     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
 --     'Vulkan.Extensions.VK_EXT_sample_locations.RenderPassSampleLocationsBeginInfoEXT',
 --     or
@@ -18482,6 +22713,7 @@ instance Extensible RenderPassBeginInfo where
   getNext RenderPassBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassBeginInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM = Just f
     | Just Refl <- eqT @e @RenderPassTransformBeginInfoQCOM = Just f
     | Just Refl <- eqT @e @RenderPassAttachmentBeginInfo = Just f
     | Just Refl <- eqT @e @RenderPassSampleLocationsBeginInfoEXT = Just f

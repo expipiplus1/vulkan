@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Contact__]
+-- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Eric Werness
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_clip_space_w_scaling] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NV_clip_space_w_scaling extension* >
@@ -280,7 +276,9 @@ foreign import ccall
 -- for i in [0, @viewportCount@).
 --
 -- This command sets the viewport __W__ scaling for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.

@@ -18,17 +18,13 @@
 --     13
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.1
---
---     -   Requires @VK_EXT_descriptor_indexing@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_buffer_device_address@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_deferred_host_operations@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>
 --
 -- [__Contact__]
 --

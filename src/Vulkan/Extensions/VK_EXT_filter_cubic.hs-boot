@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     3
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Contact__]
+-- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Bill Licea-Kane
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_filter_cubic] @wwlk%0A*Here describe the issue or question you have about the VK_EXT_filter_cubic extension* >

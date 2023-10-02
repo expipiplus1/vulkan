@@ -18,10 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_surface@ to be enabled
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
 -- [__Contact__]
 --
@@ -541,31 +538,9 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
 --     structure /must/ be included in the @pNext@ chain
 --
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pSurfaceInfo-06526# When
---     passed as the @pSurfaceInfo@ parameter of
---     'getPhysicalDeviceSurfaceCapabilities2KHR', if the
---     @VK_GOOGLE_surfaceless_query@ extension is enabled and the @pNext@
---     chain of the @pSurfaceCapabilities@ parameter includes
---     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR',
---     then @surface@ /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
---     Otherwise, @surface@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pSurfaceInfo-06527# When
---     passed as the @pSurfaceInfo@ parameter of
---     'getPhysicalDeviceSurfaceFormats2KHR', if the
---     @VK_GOOGLE_surfaceless_query@ extension is enabled, then @surface@
---     /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Otherwise,
---     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pSurfaceInfo-06528# When
---     passed as the @pSurfaceInfo@ parameter of
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
---     if the @VK_GOOGLE_surfaceless_query@ extension is enabled, then
---     @surface@ /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
---     Otherwise, @surface@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-07919# If the
+--     @VK_GOOGLE_surfaceless_query@ extension is not enabled, @surface@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Valid Usage (Implicit)
 --
@@ -761,6 +736,16 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 
 -- | VkSurfaceFormat2KHR - Structure describing a supported swapchain format
 -- tuple
+--
+-- = Description
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
+-- feature is supported and a
+-- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
+-- structure is included in the @pNext@ chain of this structure, then it
+-- will be filled with the compression properties that are supported for
+-- the @surfaceFormat@.
 --
 -- == Valid Usage
 --

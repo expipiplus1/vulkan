@@ -18,14 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
---
---     -   Requires @VK_EXT_pipeline_creation_cache_control@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control VK_EXT_pipeline_creation_cache_control>
 --
 -- [__Contact__]
 --
@@ -55,7 +50,7 @@
 --
 --     -   Tom Olson, Arm
 --
---     -   Jason Ekstrand, Collabora
+--     -   Faith Ekstrand, Collabora
 --
 -- == Description
 --

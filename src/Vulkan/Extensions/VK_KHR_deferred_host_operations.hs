@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     4
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Contact__]
+-- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Josh Barczak
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_deferred_host_operations] @jbarczak%0A*Here describe the issue or question you have about the VK_KHR_deferred_host_operations extension* >

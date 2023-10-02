@@ -18,14 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
---
---     -   Requires @VK_KHR_buffer_device_address@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
 --
 -- [__Contact__]
 --
@@ -334,8 +329,8 @@ foreign import ccall
 --     is non-sparse then it /must/ be bound completely and contiguously to
 --     a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07666# @dstImage@
---     /must/ have a sample count equal to
+-- -   [[VUID-{refpage}-dstImage-07973]] @dstImage@ /must/ have a sample
+--     count equal to
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImageLayout-07667#

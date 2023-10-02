@@ -284,24 +284,18 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferViewCreateInfo-buffer-00933# If @buffer@ was created
 --     with @usage@ containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT',
---     @format@ /must/ be supported for uniform texel buffers, as specified
---     by the
+--     then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     of @format@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT'
---     flag in
---     'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
---     returned by
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --
 -- -   #VUID-VkBufferViewCreateInfo-buffer-00934# If @buffer@ was created
 --     with @usage@ containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT',
---     @format@ /must/ be supported for storage texel buffers, as specified
---     by the
+--     then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     of @format@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT'
---     flag in
---     'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
---     returned by
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --
 -- -   #VUID-VkBufferViewCreateInfo-buffer-00935# If @buffer@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single

@@ -18,11 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -481,6 +479,7 @@
 module Vulkan.Extensions.VK_KHR_performance_query  ( AcquireProfilingLockInfoKHR
                                                    , PerformanceCounterDescriptionKHR
                                                    , PerformanceCounterKHR
+                                                   , PerformanceQueryReservationInfoKHR
                                                    , PerformanceQuerySubmitInfoKHR
                                                    , PhysicalDevicePerformanceQueryFeaturesKHR
                                                    , PhysicalDevicePerformanceQueryPropertiesKHR
@@ -513,6 +512,14 @@ instance ToCStruct PerformanceCounterKHR
 instance Show PerformanceCounterKHR
 
 instance FromCStruct PerformanceCounterKHR
+
+
+data PerformanceQueryReservationInfoKHR
+
+instance ToCStruct PerformanceQueryReservationInfoKHR
+instance Show PerformanceQueryReservationInfoKHR
+
+instance FromCStruct PerformanceQueryReservationInfoKHR
 
 
 data PerformanceQuerySubmitInfoKHR

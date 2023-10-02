@@ -18,11 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -494,6 +492,7 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                    , QueryPoolPerformanceCreateInfoKHR(..)
                                                    , AcquireProfilingLockInfoKHR(..)
                                                    , PerformanceQuerySubmitInfoKHR(..)
+                                                   , PerformanceQueryReservationInfoKHR(..)
                                                    , PerformanceCounterResultKHR(..)
                                                    , PerformanceCounterScopeKHR( PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR
                                                                                , PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR
@@ -627,6 +626,7 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_QUERY_RESERVATION_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_PROPERTIES_KHR))
@@ -1423,6 +1423,48 @@ instance Storable PerformanceQuerySubmitInfoKHR where
 
 instance Zero PerformanceQuerySubmitInfoKHR where
   zero = PerformanceQuerySubmitInfoKHR
+           zero
+
+
+-- No documentation found for TopLevel "VkPerformanceQueryReservationInfoKHR"
+data PerformanceQueryReservationInfoKHR = PerformanceQueryReservationInfoKHR
+  { -- No documentation found for Nested "VkPerformanceQueryReservationInfoKHR" "maxPerformanceQueriesPerPool"
+    maxPerformanceQueriesPerPool :: Word32 }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceQueryReservationInfoKHR)
+#endif
+deriving instance Show PerformanceQueryReservationInfoKHR
+
+instance ToCStruct PerformanceQueryReservationInfoKHR where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PerformanceQueryReservationInfoKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_QUERY_RESERVATION_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (maxPerformanceQueriesPerPool)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_QUERY_RESERVATION_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct PerformanceQueryReservationInfoKHR where
+  peekCStruct p = do
+    maxPerformanceQueriesPerPool <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pure $ PerformanceQueryReservationInfoKHR
+             maxPerformanceQueriesPerPool
+
+instance Storable PerformanceQueryReservationInfoKHR where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PerformanceQueryReservationInfoKHR where
+  zero = PerformanceQueryReservationInfoKHR
            zero
 
 

@@ -18,20 +18,13 @@
 --     5
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_sampler_ycbcr_conversion@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_external_memory@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_EXT_queue_family_foreign@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_dedicated_allocation@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
 --
 -- [__Contact__]
 --
@@ -50,7 +43,7 @@
 --
 --     -   Ray Smith, ARM
 --
---     -   Chad Versace, Google
+--     -   Lina Versace, Google
 --
 --     -   Jesse Hall, Google
 --

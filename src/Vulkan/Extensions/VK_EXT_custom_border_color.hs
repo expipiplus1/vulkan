@@ -18,8 +18,9 @@
 --     12
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Special Uses__]
 --
@@ -54,7 +55,7 @@
 --
 --     -   Tobias Hector, AMD
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Spencer Fricke, Samsung Electronics
 --
@@ -296,10 +297,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --
 -- Note
 --
--- If @format@ is a combined depth stencil format, the aspect is determined
--- by the value of
--- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor. If
--- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor is
+-- If @format@ is a depth\/stencil format, the aspect is determined by the
+-- value of 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor.
+-- If 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor is
 -- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT', the
 -- depth aspect is considered. If
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor is
@@ -310,7 +310,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --
 -- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-07605# If
 --     @format@ is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' and
---     @format@ is not a combined depth stencil format then the
+--     @format@ is not a depth\/stencil format then the
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ type /must/
 --     match the sampled type of the provided @format@, as shown in the
 --     /SPIR-V Sampled Type/ column of the

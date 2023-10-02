@@ -18,8 +18,7 @@
 --     3
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Deprecation state__]
 --
@@ -62,10 +61,15 @@
 --
 -- == Description
 --
--- The @VK_KHR_vulkan_memory_model@ extension allows use of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model Vulkan Memory Model>,
--- which formally defines how to synchronize memory accesses to the same
--- memory locations performed by multiple shader invocations.
+-- The
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model VK_KHR_vulkan_memory_model>
+-- extension allows use of the features guarded by the @VulkanMemoryModel@,
+-- @VulkanMemoryModelDeviceScope@, and
+-- @VulkanMemoryModelAvailabilityVisibilityChains@ capabilities in shader
+-- modules. The
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model Vulkan Memory Model>
+-- formally defines how to synchronize memory accesses to the same memory
+-- locations performed by multiple shader invocations.
 --
 -- Note
 --

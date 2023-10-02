@@ -695,7 +695,7 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 --     VK_FORMAT_UNDEFINED
 --
 -- -   #VUID-VkAttachmentDescription-format-06699# If @format@ includes a
---     color or depth aspect and @loadOp@ is
+--     color or depth component and @loadOp@ is
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD', then
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
@@ -774,28 +774,28 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription-format-06906# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     @initialLayout@ /must/ not be
+--     depth\/stencil format which includes both depth and stencil
+--     components, @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription-format-06907# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     @finalLayout@ /must/ not be
+--     depth\/stencil format which includes both depth and stencil
+--     components, @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription-format-03290# If @format@ is a
---     depth\/stencil format which includes only the depth aspect,
+--     depth\/stencil format which includes only the depth component,
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription-format-03291# If @format@ is a
---     depth\/stencil format which includes only the depth aspect,
+--     depth\/stencil format which includes only the depth component,
 --     @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
@@ -828,35 +828,35 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
 --
 -- -   #VUID-VkAttachmentDescription-format-06700# If @format@ includes a
---     stencil aspect and @stencilLoadOp@ is
+--     stencil component and @stencilLoadOp@ is
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD', then
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
 -- -   #VUID-VkAttachmentDescription-format-03292# If @format@ is a
---     depth\/stencil format which includes only the stencil aspect,
+--     depth\/stencil format which includes only the stencil component,
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription-format-03293# If @format@ is a
---     depth\/stencil format which includes only the stencil aspect,
+--     depth\/stencil format which includes only the stencil component,
 --     @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription-format-06242# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     @initialLayout@ /must/ not be
+--     depth\/stencil format which includes both depth and stencil
+--     components, @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkAttachmentDescription-format-06243# If @format@ is a
---     depth\/stencil format which includes both depth and stencil aspects,
---     @finalLayout@ /must/ not be
+--     depth\/stencil format which includes both depth and stencil
+--     components, @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
@@ -1646,13 +1646,27 @@ instance Zero SubpassDescription where
 -- = Description
 --
 -- If @srcSubpass@ is equal to @dstSubpass@ then the 'SubpassDependency'
--- describes a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass self-dependency>,
--- and only constrains the pipeline barriers allowed within a subpass
--- instance. Otherwise, when a render pass instance which includes a
--- subpass dependency is submitted to a queue, it defines a memory
--- dependency between the subpasses identified by @srcSubpass@ and
--- @dstSubpass@.
+-- does not directly define a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies dependency>.
+-- Instead, it enables pipeline barriers to be used in a render pass
+-- instance within the identified subpass, where the scopes of one pipeline
+-- barrier /must/ be a subset of those described by one subpass dependency.
+-- Subpass dependencies specified in this way that include
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>
+-- in the @srcStageMask@ /must/ only include
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>
+-- in @dstStageMask@, and /must/ include
+-- 'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_BY_REGION_BIT'. When
+-- a subpass dependency is specified in this way for a subpass that has
+-- more than one view in its view mask, its @dependencyFlags@ /must/
+-- include
+-- 'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'.
+--
+-- If @srcSubpass@ and @dstSubpass@ are not equal, when a render pass
+-- instance which includes a subpass dependency is submitted to a queue, it
+-- defines a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies dependency>
+-- between the subpasses identified by @srcSubpass@ and @dstSubpass@.
 --
 -- If @srcSubpass@ is equal to
 -- 'Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', the first
@@ -1779,6 +1793,13 @@ instance Zero SubpassDescription where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
 --
+-- -   #VUID-VkSubpassDependency-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
+--
 -- -   #VUID-VkSubpassDependency-dstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -1826,6 +1847,13 @@ instance Zero SubpassDescription where
 -- -   #VUID-VkSubpassDependency-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @dstStageMask@ /must/ not be @0@
+--
+-- -   #VUID-VkSubpassDependency-rayTracingPipeline-07949# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
+--     are enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-VkSubpassDependency-srcSubpass-00864# @srcSubpass@ /must/ be
 --     less than or equal to @dstSubpass@, unless one of them is
@@ -2450,7 +2478,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     significant bit set in any of those view masks
 --
 -- -   #VUID-VkFramebufferCreateInfo-renderPass-02747# If @renderPass@ was
---     not specified with non-zero view masks, each element of
+--     specified with all view masks equal to zero, each element of
 --     @pAttachments@ that is referenced by @fragmentDensityMapAttachment@
 --     /must/ have a @layerCount@ equal to @1@
 --

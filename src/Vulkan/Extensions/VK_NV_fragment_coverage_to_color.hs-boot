@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Contact__]
+-- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Jeff Bolz
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_fragment_coverage_to_color] @jeffbolznv%0A*Here describe the issue or question you have about the VK_NV_fragment_coverage_to_color extension* >

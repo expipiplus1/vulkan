@@ -18,14 +18,17 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_create_renderpass2@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Contact__]
 --
@@ -335,8 +338,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the pipeline fragment shading rate and combiner
--- operation for subsequent drawing commands when the graphics pipeline is
--- created with
+-- operation for subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1148,8 +1152,8 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- clamp the fragment shading rate to (1,1).
     fragmentShadingRateWithShaderDepthStencilWrites :: Bool
   , -- | #limits-fragmentShadingRateWithSampleMask#
-    -- @fragmentShadingRateWithSampleMask@ specifies whether the the
-    -- implementation supports setting valid bits of
+    -- @fragmentShadingRateWithSampleMask@ specifies whether the implementation
+    -- supports setting valid bits of
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@pSampleMask@
     -- to @0@ for multi-pixel fragments. If this value is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', zeroing valid bits in the sample

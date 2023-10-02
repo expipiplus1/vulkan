@@ -18,8 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Contact__]
 --
@@ -220,6 +219,8 @@ data PhysicalDeviceInheritedViewportScissorFeaturesNV = PhysicalDeviceInheritedV
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT',
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT',
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT',
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT',
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT',
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' or
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR', from a primary
     -- command buffer.
@@ -278,6 +279,10 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --
 -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
+--
+-- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--
+-- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
 --
 -- as well as the following state, with restrictions on inherited depth
 -- values and viewport count:

@@ -18,11 +18,7 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Contact__]
 --
@@ -48,7 +44,7 @@
 --
 --     -   Jan-Harald Fredriksen, Arm
 --
---     -   Jason Ekstrand, Collabora
+--     -   Faith Ekstrand, Collabora
 --
 --     -   Mike Blumenkrantz, Valve
 --
@@ -452,7 +448,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the origin of the tessellation domain space for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -462,10 +460,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetTessellationDomainOriginEXT-extendedDynamicState3TessellationDomainOrigin-07444#
---     The
+-- -   #VUID-vkCmdSetTessellationDomainOriginEXT-None-08576# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3TessellationDomainOrigin extendedDynamicState3TessellationDomainOrigin>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -510,6 +509,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
 cmdSetTessellationDomainOriginEXT :: forall io
@@ -544,7 +544,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets whether depth clamping is enabled or disabled for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -560,10 +562,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDepthClampEnableEXT-extendedDynamicState3DepthClampEnable-07448#
---     The
+-- -   #VUID-vkCmdSetDepthClampEnableEXT-None-08582# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClampEnable extendedDynamicState3DepthClampEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetDepthClampEnableEXT-depthClamp-07449# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthClamp depthClamp>
@@ -608,6 +611,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthClampEnableEXT :: forall io
@@ -642,7 +646,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the polygon mode for subsequent drawing commands when
--- the graphics pipeline is created with
+-- drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -651,10 +657,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetPolygonModeEXT-extendedDynamicState3PolygonMode-07422#
---     The
+-- -   #VUID-vkCmdSetPolygonModeEXT-None-08566# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3PolygonMode extendedDynamicState3PolygonMode>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetPolygonModeEXT-fillModeNonSolid-07424# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fillModeNonSolid fillModeNonSolid>
@@ -709,6 +716,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.PolygonMode.PolygonMode'
 cmdSetPolygonModeEXT :: forall io
@@ -743,7 +751,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @rasterizationSamples@ for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -753,10 +763,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetRasterizationSamplesEXT-extendedDynamicState3RasterizationSamples-07414#
---     The
+-- -   #VUID-vkCmdSetRasterizationSamplesEXT-None-08552# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationSamples extendedDynamicState3RasterizationSamples>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -800,6 +811,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
 cmdSetRasterizationSamplesEXT :: forall io
@@ -834,7 +846,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the sample mask for subsequent drawing commands when
--- the graphics pipeline is created with
+-- drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
@@ -843,10 +857,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetSampleMaskEXT-extendedDynamicState3SampleMask-07342#
---     The
+-- -   #VUID-vkCmdSetSampleMaskEXT-None-08504# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3SampleMask extendedDynamicState3SampleMask>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -894,6 +909,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'Vulkan.Core10.FundamentalTypes.SampleMask'
@@ -935,7 +951,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @alphaToCoverageEnable@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -945,10 +963,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetAlphaToCoverageEnableEXT-extendedDynamicState3AlphaToCoverageEnable-07343#
---     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToCoverageEnable extendedDynamicState3AlphaToCoverageEnable>
---     feature /must/ be enabled
+-- -   #VUID-vkCmdSetAlphaToCoverageEnableEXT-None-08506# Either the
+--     \<features-extendedDynamicState3AlphaToCoverageEnable,
+--     @extendedDynamicState3AlphaToCoverageEnable@>> feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -988,6 +1007,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetAlphaToCoverageEnableEXT :: forall io
@@ -1022,7 +1042,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @alphaToOneEnable@ state for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1032,10 +1054,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetAlphaToOneEnableEXT-extendedDynamicState3AlphaToOneEnable-07345#
---     The
+-- -   #VUID-vkCmdSetAlphaToOneEnableEXT-None-08508# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToOneEnable extendedDynamicState3AlphaToOneEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetAlphaToOneEnableEXT-alphaToOne-07607# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
@@ -1080,6 +1103,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetAlphaToOneEnableEXT :: forall io
@@ -1114,7 +1138,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets whether logical operations are enabled for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1124,10 +1150,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLogicOpEnableEXT-extendedDynamicState3LogicOpEnable-07365#
---     The
+-- -   #VUID-vkCmdSetLogicOpEnableEXT-None-08542# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LogicOpEnable extendedDynamicState3LogicOpEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetLogicOpEnableEXT-logicOp-07366# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-logicOp logicOp>
@@ -1172,6 +1199,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLogicOpEnableEXT :: forall io
@@ -1206,8 +1234,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the color blending enable of the specified color
--- attachments for subsequent drawing commands when the graphics pipeline
--- is created with
+-- attachments for subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1217,10 +1246,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorBlendEnableEXT-extendedDynamicState3ColorBlendEnable-07355#
---     The
+-- -   #VUID-vkCmdSetColorBlendEnableEXT-None-08536# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEnable extendedDynamicState3ColorBlendEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1267,6 +1297,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetColorBlendEnableEXT :: forall io
@@ -1311,8 +1342,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the color blending factors and operations of the
--- specified attachments for subsequent drawing commands when the graphics
--- pipeline is created with
+-- specified attachments for subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1328,10 +1360,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorBlendEquationEXT-extendedDynamicState3ColorBlendEquation-07356#
---     The
+-- -   #VUID-vkCmdSetColorBlendEquationEXT-None-08538# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEquation extendedDynamicState3ColorBlendEquation>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1378,6 +1411,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'ColorBlendEquationEXT', 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetColorBlendEquationEXT :: forall io
                              . (MonadIO io)
@@ -1422,7 +1456,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the color write masks of the specified attachments for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1432,10 +1468,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorWriteMaskEXT-extendedDynamicState3ColorWriteMask-07364#
---     The
+-- -   #VUID-vkCmdSetColorWriteMaskEXT-None-08540# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorWriteMask extendedDynamicState3ColorWriteMask>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1484,6 +1521,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetColorWriteMaskEXT :: forall io
@@ -1529,7 +1567,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @rasterizationStream@ state for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1539,10 +1579,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetRasterizationStreamEXT-extendedDynamicState3RasterizationStream-07410#
---     The
+-- -   #VUID-vkCmdSetRasterizationStreamEXT-None-08550# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationStream extendedDynamicState3RasterizationStream>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetRasterizationStreamEXT-transformFeedback-07411# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-transformFeedback transformFeedback>
@@ -1595,6 +1636,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetRasterizationStreamEXT :: forall io
                               . (MonadIO io)
@@ -1628,7 +1670,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @conservativeRasterizationMode@ state for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1638,10 +1682,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetConservativeRasterizationModeEXT-extendedDynamicState3ConservativeRasterizationMode-07426#
---     The
+-- -   #VUID-vkCmdSetConservativeRasterizationModeEXT-None-08570# Either
+--     the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ConservativeRasterizationMode extendedDynamicState3ConservativeRasterizationMode>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1686,6 +1732,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_EXT_conservative_rasterization.ConservativeRasterizationModeEXT'
 cmdSetConservativeRasterizationModeEXT :: forall io
@@ -1723,7 +1770,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @extraPrimitiveOverestimationSize@ for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1733,10 +1782,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetExtraPrimitiveOverestimationSizeEXT-extendedDynamicState3ExtraPrimitiveOverestimationSize-07427#
---     The
+-- -   #VUID-vkCmdSetExtraPrimitiveOverestimationSizeEXT-None-08572# Either
+--     the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ExtraPrimitiveOverestimationSize extendedDynamicState3ExtraPrimitiveOverestimationSize>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetExtraPrimitiveOverestimationSizeEXT-extraPrimitiveOverestimationSize-07428#
 --     @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@
@@ -1782,6 +1833,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetExtraPrimitiveOverestimationSizeEXT :: forall io
                                            . (MonadIO io)
@@ -1817,7 +1869,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets whether depth clipping is enabled or disabled for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1832,10 +1886,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDepthClipEnableEXT-extendedDynamicState3DepthClipEnable-07450#
---     The
+-- -   #VUID-vkCmdSetDepthClipEnableEXT-None-08584# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipEnable extendedDynamicState3DepthClipEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetDepthClipEnableEXT-depthClipEnable-07451# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthClipEnable depthClipEnable>
@@ -1879,6 +1934,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthClipEnableEXT :: forall io
@@ -1913,7 +1969,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @sampleLocationsEnable@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -1923,10 +1981,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetSampleLocationsEnableEXT-extendedDynamicState3SampleLocationsEnable-07415#
---     The
+-- -   #VUID-vkCmdSetSampleLocationsEnableEXT-None-08554# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3SampleLocationsEnable extendedDynamicState3SampleLocationsEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1966,6 +2025,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetSampleLocationsEnableEXT :: forall io
@@ -2000,8 +2060,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the advanced blend operation parameters of the
--- specified attachments for subsequent drawing commands when the graphics
--- pipeline is created with
+-- specified attachments for subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2014,10 +2075,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorBlendAdvancedEXT-extendedDynamicState3ColorBlendAdvanced-07504#
---     The
+-- -   #VUID-vkCmdSetColorBlendAdvancedEXT-None-08592# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendAdvanced extendedDynamicState3ColorBlendAdvanced>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2064,6 +2126,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'ColorBlendAdvancedEXT', 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetColorBlendAdvancedEXT :: forall io
                              . (MonadIO io)
@@ -2108,7 +2171,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @provokingVertexMode@ state for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2118,10 +2183,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetProvokingVertexModeEXT-extendedDynamicState3ProvokingVertexMode-07446#
---     The
+-- -   #VUID-vkCmdSetProvokingVertexModeEXT-None-08580# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ProvokingVertexMode extendedDynamicState3ProvokingVertexMode>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetProvokingVertexModeEXT-provokingVertexMode-07447# If
 --     @provokingVertexMode@ is
@@ -2173,6 +2239,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_EXT_provoking_vertex.ProvokingVertexModeEXT'
 cmdSetProvokingVertexModeEXT :: forall io
@@ -2207,7 +2274,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @lineRasterizationMode@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2217,10 +2286,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLineRasterizationModeEXT-extendedDynamicState3LineRasterizationMode-07417#
---     The
+-- -   #VUID-vkCmdSetLineRasterizationModeEXT-None-08558# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LineRasterizationMode extendedDynamicState3LineRasterizationMode>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetLineRasterizationModeEXT-lineRasterizationMode-07418#
 --     If @lineRasterizationMode@ is
@@ -2286,6 +2356,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_EXT_line_rasterization.LineRasterizationModeEXT'
 cmdSetLineRasterizationModeEXT :: forall io
@@ -2320,7 +2391,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @stippledLineEnable@ state for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2330,10 +2403,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLineStippleEnableEXT-extendedDynamicState3LineStippleEnable-07421#
---     The
+-- -   #VUID-vkCmdSetLineStippleEnableEXT-None-08560# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LineStippleEnable extendedDynamicState3LineStippleEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2373,6 +2447,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLineStippleEnableEXT :: forall io
@@ -2407,7 +2482,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @negativeOneToOne@ state for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2417,10 +2494,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDepthClipNegativeOneToOneEXT-extendedDynamicState3DepthClipNegativeOneToOne-07452#
---     The
+-- -   #VUID-vkCmdSetDepthClipNegativeOneToOneEXT-None-08586# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipNegativeOneToOne extendedDynamicState3DepthClipNegativeOneToOne>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetDepthClipNegativeOneToOneEXT-depthClipControl-07453#
 --     The
@@ -2465,6 +2543,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthClipNegativeOneToOneEXT :: forall io
@@ -2499,7 +2578,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @viewportWScalingEnable@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2509,10 +2590,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetViewportWScalingEnableNV-extendedDynamicState3ViewportWScalingEnable-07580#
---     The
+-- -   #VUID-vkCmdSetViewportWScalingEnableNV-None-08594# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ViewportWScalingEnable extendedDynamicState3ViewportWScalingEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2552,6 +2634,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetViewportWScalingEnableNV :: forall io
@@ -2587,7 +2670,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the viewport swizzle state for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2599,10 +2684,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetViewportSwizzleNV-extendedDynamicState3ViewportSwizzle-07445#
---     The
+-- -   #VUID-vkCmdSetViewportSwizzleNV-None-08578# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ViewportSwizzle extendedDynamicState3ViewportSwizzle>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2651,6 +2737,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_NV_viewport_swizzle.ViewportSwizzleNV'
 cmdSetViewportSwizzleNV :: forall io
@@ -2696,7 +2783,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @coverageToColorEnable@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2706,10 +2795,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageToColorEnableNV-extendedDynamicState3CoverageToColorEnable-07347#
---     The
+-- -   #VUID-vkCmdSetCoverageToColorEnableNV-None-08524# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorEnable extendedDynamicState3CoverageToColorEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2749,6 +2839,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageToColorEnableNV :: forall io
@@ -2783,7 +2874,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @coverageToColorLocation@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2793,10 +2886,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageToColorLocationNV-extendedDynamicState3CoverageToColorLocation-07348#
---     The
+-- -   #VUID-vkCmdSetCoverageToColorLocationNV-None-08526# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorLocation extendedDynamicState3CoverageToColorLocation>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2836,6 +2930,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageToColorLocationNV :: forall io
                                  . (MonadIO io)
@@ -2870,7 +2965,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @coverageModulationMode@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2880,10 +2977,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageModulationModeNV-extendedDynamicState3CoverageModulationMode-07350#
---     The
+-- -   #VUID-vkCmdSetCoverageModulationModeNV-None-08530# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationMode extendedDynamicState3CoverageModulationMode>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2928,6 +3026,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.CoverageModulationModeNV'
 cmdSetCoverageModulationModeNV :: forall io
@@ -2963,7 +3062,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @coverageModulationTableEnable@ state for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -2973,10 +3074,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageModulationTableEnableNV-extendedDynamicState3CoverageModulationTableEnable-07351#
---     The
+-- -   #VUID-vkCmdSetCoverageModulationTableEnableNV-None-08532# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTableEnable extendedDynamicState3CoverageModulationTableEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3016,6 +3118,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageModulationTableEnableNV :: forall io
@@ -3052,7 +3155,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the table of modulation factors for subsequent drawing
--- commands when the graphics pipeline is created with
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -3064,10 +3169,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageModulationTableNV-extendedDynamicState3CoverageModulationTable-07352#
---     The
+-- -   #VUID-vkCmdSetCoverageModulationTableNV-None-08534# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTable extendedDynamicState3CoverageModulationTable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3114,6 +3220,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageModulationTableNV :: forall io
                                  . (MonadIO io)
@@ -3152,7 +3259,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @shadingRateImageEnable@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -3162,10 +3271,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetShadingRateImageEnableNV-extendedDynamicState3ShadingRateImageEnable-07416#
---     The
+-- -   #VUID-vkCmdSetShadingRateImageEnableNV-None-08556# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ShadingRateImageEnable extendedDynamicState3ShadingRateImageEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3205,6 +3315,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetShadingRateImageEnableNV :: forall io
@@ -3240,7 +3351,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @coverageReductionMode@ state for subsequent
--- drawing commands when the graphics pipeline is created with
+-- drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -3250,10 +3363,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageReductionModeNV-extendedDynamicState3CoverageReductionMode-07349#
---     The
+-- -   #VUID-vkCmdSetCoverageReductionModeNV-None-08528# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageReductionMode extendedDynamicState3CoverageReductionMode>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3298,6 +3412,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.CoverageReductionModeNV'
 cmdSetCoverageReductionModeNV :: forall io
@@ -3332,7 +3447,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the @representativeFragmentTestEnable@ state for
--- subsequent drawing commands when the graphics pipeline is created with
+-- subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -3342,10 +3459,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetRepresentativeFragmentTestEnableNV-extendedDynamicState3RepresentativeFragmentTestEnable-07346#
---     The
+-- -   #VUID-vkCmdSetRepresentativeFragmentTestEnableNV-None-08522# Either
+--     the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RepresentativeFragmentTestEnable extendedDynamicState3RepresentativeFragmentTestEnable>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3385,6 +3504,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetRepresentativeFragmentTestEnableNV :: forall io
@@ -3928,6 +4048,17 @@ instance Zero PhysicalDeviceExtendedDynamicState3PropertiesEXT where
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_SRC_ATOP_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_DST_ATOP_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_XOR_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_MULTIPLY_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_SCREEN_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_OVERLAY_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_DARKEN_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_LIGHTEN_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_COLORDODGE_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_COLORBURN_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_HARDLIGHT_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_SOFTLIGHT_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_DIFFERENCE_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_EXCLUSION_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_INVERT_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_INVERT_RGB_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_LINEARDODGE_EXT',
@@ -3936,6 +4067,10 @@ instance Zero PhysicalDeviceExtendedDynamicState3PropertiesEXT where
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_LINEARLIGHT_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_PINLIGHT_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_HARDMIX_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_HSL_HUE_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_HSL_SATURATION_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_HSL_COLOR_EXT',
+--     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_HSL_LUMINOSITY_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_PLUS_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_PLUS_CLAMPED_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_PLUS_CLAMPED_ALPHA_EXT',
@@ -3991,6 +4126,7 @@ instance Zero PhysicalDeviceExtendedDynamicState3PropertiesEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Enums.BlendFactor.BlendFactor',
 -- 'Vulkan.Core10.Enums.BlendOp.BlendOp', 'cmdSetColorBlendEquationEXT'
 data ColorBlendEquationEXT = ColorBlendEquationEXT
@@ -4106,6 +4242,7 @@ instance Zero ColorBlendEquationEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Enums.BlendOp.BlendOp',
 -- 'Vulkan.Extensions.VK_EXT_blend_operation_advanced.BlendOverlapEXT',
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'cmdSetColorBlendAdvancedEXT'
