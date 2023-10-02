@@ -818,7 +818,7 @@ bespokeSizes t =
         , ("VkRemoteAddressNV", (8, 8))
         ]
         <> (fst <$> concat
-             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp, metalSized]
+             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp, metalSized, nvscisync, nvscibuf]
            )
     sharedSizes = []
   in
@@ -958,8 +958,8 @@ wsiTypes
   :: (HasErr r, HasRenderParams r) => SpecFlavor -> [Sem r RenderElement]
 wsiTypes = \case
   SpecVk ->
-    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp, metalSized]) <> concat
-      [win32', xcb1, waylandShared, wayland, metalUnsized, android, directfb, screen]
+    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp, metalSized, nvscisync, nvscibuf]) <> concat
+      [win32', xcb1, waylandShared, wayland, metalUnsized, android, directfb, screen, nvscisyncUnsized]
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
     <> concat [win32Xr', xcb1, waylandShared, d3d', jni, timespec]
 
@@ -1137,6 +1137,19 @@ directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
 screen :: HasRenderParams r => [Sem r RenderElement]
 screen = [voidData "_screen_window", voidData "screen_context"]
+
+nvscisyncUnsized :: HasRenderParams r => [Sem r RenderElement]
+nvscisyncUnsized = [voidData "NvSciSyncFence"]
+
+nvscisync :: HasRenderParams r => [BespokeAlias r]
+nvscisync = [ alias (APtr ''()) "NvSciSyncAttrList"
+            , alias (APtr ''()) "NvSciSyncObj"
+            ]
+
+nvscibuf :: HasRenderParams r => [BespokeAlias r]
+nvscibuf = [ alias (APtr ''()) "NvSciBufAttrList"
+           , alias (APtr ''()) "NvSciBufObj"
+           ]
 
 ----------------------------------------------------------------
 -- OpenXR platform stuff

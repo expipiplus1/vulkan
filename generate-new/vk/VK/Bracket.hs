@@ -129,6 +129,7 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cmdBeBracket "TransformFeedbackEXT"
     , cmdBeBracket "QueryIndexedEXT"
     , cmdBeBracket "Rendering"
+    , cdBracket "SemaphoreSciSyncPoolNV"
     ]
 
   --

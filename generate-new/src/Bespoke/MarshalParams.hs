@@ -126,6 +126,9 @@ isDefaultableForeignType t =
            , Ptr CType.Const (TypeName "SECURITY_ATTRIBUTES")
            , TypeName "zx_handle_t"
            , TypeName "IOSurfaceRef"
+           , TypeName "NvSciBufAttrList"
+           , TypeName "NvSciBufObj"
+           , TypeName "NvSciSyncAttrList"
            ]
     )
     || case t of
@@ -156,6 +159,7 @@ isPassAsPointerType' = \case
              , "jobject"
              , "_screen_window"
              , "_screen_context"
+             , "NvSciSyncFence"
              -- This is used in a slightly weird way in
              -- VkGetPipelinePropertiesEXT, Just fall back to having the user
              -- allocate it and assume they know what they're doing
