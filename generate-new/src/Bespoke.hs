@@ -271,6 +271,10 @@ dualPurposeBytestrings = BespokeScheme $ \case
       a | (Ptr NonConst Void) <- type' a, "pInfo" <- name a ->
         Just (Returned ByteString)
       _ -> Nothing
+    | c == "vkGetShaderBinaryDataEXT" -> \case
+      a | (Ptr NonConst Void) <- type' a, "pData" <- name a ->
+        Just (Returned ByteString)
+      _ -> Nothing
   _ -> const Nothing
 
 difficultLengths :: [BespokeScheme]
