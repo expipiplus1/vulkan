@@ -548,6 +548,7 @@ parseRequires n = V.fromList <$> traverseV
       [ nameAttr "require commands" t
       | Element t <- contents r
       , "command" == name t
+      , getAttr "api" t /= Just "vulkansc"
       ]
     rEnumValueNames <- (<> extraEnums) . V.fromList <$> sequenceV
       [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
@@ -658,6 +659,7 @@ parseCommandAliases es =
       | Element ee <- es
       , "command" == name ee
       , Just alias <- pure $ getAttr "alias" ee
+      , getAttr "api" ee /= Just "vulkansc"
       ]
 
 parseConstantAliases :: [Content] -> P (Vector Alias)
@@ -694,6 +696,7 @@ parseHeaderVersion es = do
         | Element n <- es
         , name n == "type"
         , Just "define" <- pure (getAttr "category" n)
+        , getAttr "api" n /= Just "vulkansc"
         ]
   vers <- case sSpecFlavor @t of
     SSpecVk -> flip mapMaybeM defines $ \d -> do
@@ -802,6 +805,7 @@ parseEmptyBitmasks es = fromList <$> traverseV
   , not (isAlias n)
   , Nothing        <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
   , Just "bitmask" <- pure $ getAttr "category" n
+  , getAttr "api" n /= Just "vulkansc"
   ]
  where
   parseEmptyBitmask :: Node -> P Enum'
@@ -830,6 +834,7 @@ parseEnums types es = do
     , not (isAlias n)
     , Just bits      <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
     , Just "bitmask" <- pure $ getAttr "category" n
+    , getAttr "api" n /= Just "vulkansc"
     ]
   fromList . catMaybes <$> traverseV
     (uncurry
@@ -984,7 +989,7 @@ parseStruct aliases =
           sMembers <-
             fmap fromList
             . traverseV (parseStructMember sName)
-            $ [ m | Element m <- contents n, name m == "member" ]
+            $ [ m | Element m <- contents n, name m == "member", getAttr "api" m /= Just "vulkansc" ]
           let sSize        = ()
               sAlignment   = ()
               sExtendedBy  = ()
@@ -1020,7 +1025,9 @@ parseCommands :: [Content] -> P (Vector Command)
 parseCommands es =
   fmap fromList
     . traverseV parseCommand
-    $ [ n | Element n <- es, name n == "command", not (isAlias n) ]
+    $ [ n | Element n <- es, name n == "command", not (isAlias n)
+      , getAttr "api" n /= Just "vulkansc"
+      ]
  where
 
   parseCommand :: Node -> P Command
@@ -1031,7 +1038,8 @@ parseCommands es =
     cName         <- nameElem "command" proto
     cReturnType   <- parseCType (allNonCommentText proto)
     cParameters   <- fromList
-      <$> traverseV (parseParameter cName) (manyChildren "param" n)
+      <$> traverseV (parseParameter cName)
+        [ m | Element m <- contents n, name m == "param", getAttr "api" m /= Just "vulkansc" ]
     let cIsDynamic = True
         cCanBlock =
           "wait"
@@ -1215,6 +1223,8 @@ isForbidden n =
     , "VK_MAKE_VERSION"
     , "VK_MAKE_API_VERSION"
     , "VK_USE_64_BIT_PTR_DEFINES"
+    , "VKSC_API_VARIANT"
+    , "VKSC_API_VERSION_1_0"
     -- TODO: These are really hacky, once bits are defined then they prevent
     -- getting the size of structs.
     -- https://github.com/KhronosGroup/Vulkan-Docs/pull/1556
