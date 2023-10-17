@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.10.5.1] - 2023-10-17
 - Raise upper bound on `vulkan`
 
 ## [0.10.5] - 2022-12-27
