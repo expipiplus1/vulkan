@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+- Bump API version to v1.3.246
+  - VulkanSC is not included
 
 ## [3.24.5] - 2023-02-03
 - Bump API version to v1.3.240
