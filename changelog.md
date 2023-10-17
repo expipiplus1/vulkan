@@ -2,6 +2,8 @@
 
 ## WIP
 
+## [3.26] - 2023-10-17
+
 ## [3.25] - 2023-10-17
 - Bump API version to v1.3.246
   - VulkanSC is not included
