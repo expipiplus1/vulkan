@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --     and
@@ -72,7 +75,7 @@
 -- vkCmdCopyImage2KHR?
 --
 -- __RESOLVED__: No. Use of rotated vkCmdBlitImage2KHR can fully address
--- this use-case.
+-- this use case.
 --
 -- 3) Should this extension add a rotation capability to
 -- vkCmdResolveImage2KHR?

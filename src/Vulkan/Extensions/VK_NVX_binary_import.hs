@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Eric Werness
@@ -80,13 +83,6 @@
 --
 -- -   'NVX_BINARY_IMPORT_SPEC_VERSION'
 --
--- -   Extending
---     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT'
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT'
---
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_CU_FUNCTION_NVX'
@@ -100,6 +96,17 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT'
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT'
 --
 -- == Stub API References
 --

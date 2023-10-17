@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Jeff Leger
@@ -46,7 +49,7 @@
 --
 -- == Description
 --
--- Certain use-cases (e.g., side-by-side VR rendering) use multiview and
+-- Certain use cases (e.g., side-by-side VR rendering) use multiview and
 -- render to distinct regions of the framebuffer for each view. On some
 -- implementations, there may be a performance benefit for providing
 -- per-view render areas to the implementation. Such per-view render areas

@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     4
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
@@ -39,7 +42,13 @@
 --
 -- == Description
 --
--- To be done.
+-- This extension expands 'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR'
+-- to add support for most standard color spaces beyond
+-- 'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_SRGB_NONLINEAR_KHR'. This
+-- extension also adds support for
+-- 'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_PASS_THROUGH_EXT' which
+-- allows applications to use color spaces not explicitly enumerated in
+-- 'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR'.
 --
 -- == New Enum Constants
 --
@@ -87,12 +96,12 @@
 -- __RESOLVED__: Pixel format is independent of color space (though some
 -- color spaces really want \/ need floating point color components to be
 -- useful). Therefore, do not plan on documenting what formats support
--- which colorspaces. An application /can/ call
+-- which color spaces. An application /can/ call
 -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceFormatsKHR' to
 -- query what a particular implementation supports.
 --
 -- 2) How does application determine if HW supports appropriate transfer
--- function for a colorspace?
+-- function for a color space?
 --
 -- __RESOLVED__: Extension indicates that implementation /must/ not do the
 -- OETF encoding if it is not sRGB. That responsibility falls to the
@@ -117,7 +126,7 @@
 --
 -- -   Revision 4, 2019-04-26 (Graeme Leese)
 --
---     -   Clarify colorspace transfer function usage.
+--     -   Clarify color space transfer function usage.
 --
 --     -   Refer to normative definitions in the Data Format Specification.
 --

@@ -312,7 +312,7 @@ instance Zero DeviceBufferMemoryRequirements where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06416# The
+-- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-06416# The
 --     @pCreateInfo@::@pNext@ chain /must/ not contain a
 --     'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'
 --     structure
@@ -328,14 +328,20 @@ instance Zero DeviceBufferMemoryRequirements where
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure with non-zero @externalFormat@
 --
--- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06417# If
+-- -   #VUID-VkDeviceImageMemoryRequirements-pNext-08962# Applications also
+--     /must/ not call 'getDeviceImageMemoryRequirements' with a
+--     'Vulkan.Core10.Image.ImageCreateInfo' whose @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX'
+--     structure with non-zero @externalFormat@
+--
+-- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-06417# If
 --     @pCreateInfo@::@format@ specifies a /multi-planar/ format and
 --     @pCreateInfo@::@flags@ has
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     set then @planeAspect@ /must/ not be
 --     'Vulkan.Extensions.VK_KHR_maintenance4.IMAGE_ASPECT_NONE_KHR'
 --
--- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06419# If
+-- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-06419# If
 --     @pCreateInfo@::@flags@ has
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     set and if the @pCreateInfo@::@tiling@ is
@@ -343,8 +349,9 @@ instance Zero DeviceBufferMemoryRequirements where
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 --     @planeAspect@ /must/ be a single valid
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
--- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06420# If
+-- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-06420# If
 --     @pCreateInfo@::@tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the

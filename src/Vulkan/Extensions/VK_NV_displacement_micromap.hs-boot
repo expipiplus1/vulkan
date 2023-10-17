@@ -15,7 +15,10 @@
 --     398
 --
 -- [__Revision__]
---     1
+--     2
+--
+-- [__Ratification Status__]
+--     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
@@ -32,6 +35,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_displacement_micromap] @pixeljetstream%0A*Here describe the issue or question you have about the VK_NV_displacement_micromap extension* >
 --
 --     -   Eric Werness
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_displacement_micromap] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NV_displacement_micromap extension* >
 --
 -- == Other Extension Metadata
 --
@@ -137,6 +141,10 @@
 -- -   Revision 1, 2023-03-17 (Eric Werness)
 --
 --     -   Initial public revision
+--
+-- -   Revision 2, 2023-07-07 (Eric Werness)
+--
+--     -   Add shader support for decode intrinsics
 --
 -- == See Also
 --

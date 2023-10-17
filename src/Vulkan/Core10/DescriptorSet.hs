@@ -1008,19 +1008,6 @@ updateDescriptorSets device
 -- | VkDescriptorBufferInfo - Structure specifying descriptor buffer
 -- information
 --
--- = Members
---
--- When setting @range@ to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
--- /must/ not be larger than the maximum range for the descriptor type
--- (<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxUniformBufferRange maxUniformBufferRange>
--- or
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxStorageBufferRange maxStorageBufferRange>).
--- This means that 'Vulkan.Core10.APIConstants.WHOLE_SIZE' is not typically
--- useful in the common case where uniform buffer descriptors are
--- suballocated from a buffer that is much larger than
--- @maxUniformBufferRange@.
---
 -- = Description
 --
 -- For
@@ -1079,6 +1066,19 @@ data DescriptorBufferInfo = DescriptorBufferInfo
   , -- | @range@ is the size in bytes that is used for this descriptor update, or
     -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to use the range from @offset@
     -- to the end of the buffer.
+    --
+    -- Note
+    --
+    -- When setting @range@ to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
+    -- /must/ not be larger than the maximum range for the descriptor type
+    -- (<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxUniformBufferRange maxUniformBufferRange>
+    -- or
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxStorageBufferRange maxStorageBufferRange>).
+    -- This means that 'Vulkan.Core10.APIConstants.WHOLE_SIZE' is not typically
+    -- useful in the common case where uniform buffer descriptors are
+    -- suballocated from a buffer that is much larger than
+    -- @maxUniformBufferRange@.
     range :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -1150,13 +1150,13 @@ instance Zero DescriptorBufferInfo where
 --
 -- -   #VUID-VkDescriptorImageInfo-descriptorType-06713# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-image2DViewOf3D image2DViewOf3D>
---     feature is not enabled and @descriptorType@ is
+--     feature is not enabled or @descriptorType@ is not
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     then @imageView@ /must/ not be a 2D view created from a 3D image
 --
 -- -   #VUID-VkDescriptorImageInfo-descriptorType-06714# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sampler2DViewOf3D sampler2DViewOf3D>
---     feature is not enabled and @descriptorType@ is
+--     feature is not enabled or @descriptorType@ is not
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
@@ -1182,6 +1182,7 @@ instance Zero DescriptorBufferInfo where
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
 --     and the @aspectMask@ of the @imageView@ /must/ be a valid
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkDescriptorImageInfo-mutableComparisonSamplers-04450# If the
 --     @VK_KHR_portability_subset@ extension is enabled, and
@@ -1575,21 +1576,21 @@ instance Zero DescriptorImageInfo where
 --     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxStorageBufferRange@
 --
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00334# If @descriptorType@
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-08765# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
---     the 'Vulkan.Core10.Handles.Buffer' that each element of
---     @pTexelBufferView@ was created from /must/ have been created with
+--     the @pTexelBufferView@
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-views-usage buffer view usage>
+--     /must/ include
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
---     set
 --
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00335# If @descriptorType@
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-08766# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
---     the 'Vulkan.Core10.Handles.Buffer' that each element of
---     @pTexelBufferView@ was created from /must/ have been created with
+--     the @pTexelBufferView@
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-views-usage buffer view usage>
+--     /must/ include
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
---     set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00336# If @descriptorType@
 --     is
@@ -1668,7 +1669,7 @@ instance Zero DescriptorImageInfo where
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     either been created without a
 --     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT'
---     present in the @pNext@ chain or with a
+--     included in the @pNext@ chain or with a
 --     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT'::@minLod@
 --     of @0.0@
 --
@@ -2717,7 +2718,7 @@ instance Zero DescriptorPoolSize where
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT', a
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 -- struct in the @pNext@ chain /can/ be used to specify which mutable
--- descriptor types /can/ be allocated from the pool. If present in the
+-- descriptor types /can/ be allocated from the pool. If included in the
 -- @pNext@ chain,
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'::@pMutableDescriptorTypeLists@[i]
 -- specifies which kind of
@@ -2757,8 +2758,20 @@ instance Zero DescriptorPoolSize where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkDescriptorPoolCreateInfo-maxSets-00301# @maxSets@ /must/ be
---     greater than @0@
+-- -   #VUID-VkDescriptorPoolCreateInfo-descriptorPoolOverallocation-09227#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorPoolOverallocation descriptorPoolOverallocation>
+--     feature is not enabled, or @flags@ does not have
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV'
+--     set, @maxSets@ /must/ be greater than @0@
+--
+-- -   #VUID-VkDescriptorPoolCreateInfo-flags-09228# If @flags@ has the
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV'
+--     bits set, then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorPoolOverallocation descriptorPoolOverallocation>
+--     /must/ be enabled
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-flags-04607# If @flags@ has the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
@@ -2922,6 +2935,20 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --     bit set, @descriptorPool@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
+--
+-- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-09380# If
+--     @pSetLayouts@[i] was created with an element of @pBindingFlags@ that
+--     includes
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT',
+--     and
+--     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'
+--     is included in the @pNext@ chain, and
+--     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'::@descriptorSetCount@
+--     is not zero, then
+--     slink::VkDescriptorSetVariableDescriptorCountAllocateInfo::pDescriptorCounts[i]
+--     /must/ be less than or equal to
+--     slink::VkDescriptorSetLayoutBinding::descriptorCount for the
+--     corresponding binding used to create @pSetLayouts@[i]
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-04610# If any element
 --     of @pSetLayouts@ was created with the

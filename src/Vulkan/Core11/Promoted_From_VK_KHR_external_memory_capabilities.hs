@@ -20,8 +20,10 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -33,6 +35,7 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -50,20 +53,31 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
 import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
+import Vulkan.CStruct.Extends (Chain)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits (ExternalMemoryFeatureFlags)
 import Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits (ExternalMemoryHandleTypeFlagBits)
 import Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits (ExternalMemoryHandleTypeFlags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceExternalBufferProperties))
 import Vulkan.Core10.APIConstants (LUID_SIZE)
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES))
@@ -83,7 +97,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceExternalBufferProperties
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr PhysicalDeviceExternalBufferInfo -> Ptr ExternalBufferProperties -> IO ()) -> Ptr PhysicalDevice_T -> Ptr PhysicalDeviceExternalBufferInfo -> Ptr ExternalBufferProperties -> IO ()
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceExternalBufferInfo) -> Ptr ExternalBufferProperties -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceExternalBufferInfo) -> Ptr ExternalBufferProperties -> IO ()
 
 -- | vkGetPhysicalDeviceExternalBufferProperties - Query external handle
 -- types supported by buffers
@@ -95,8 +109,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalBufferProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalBufferInfo'
-getPhysicalDeviceExternalBufferProperties :: forall io
-                                           . (MonadIO io)
+getPhysicalDeviceExternalBufferProperties :: forall a io
+                                           . ( Extendss PhysicalDeviceExternalBufferInfo a
+                                             , PokeChain a
+                                             , MonadIO io )
                                           => -- | @physicalDevice@ is the physical device from which to query the buffer
                                              -- capabilities.
                                              --
@@ -111,7 +127,7 @@ getPhysicalDeviceExternalBufferProperties :: forall io
                                              -- #VUID-vkGetPhysicalDeviceExternalBufferProperties-pExternalBufferInfo-parameter#
                                              -- @pExternalBufferInfo@ /must/ be a valid pointer to a valid
                                              -- 'PhysicalDeviceExternalBufferInfo' structure
-                                             PhysicalDeviceExternalBufferInfo
+                                             (PhysicalDeviceExternalBufferInfo a)
                                           -> io (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferProperties physicalDevice
                                             externalBufferInfo = liftIO . evalContT $ do
@@ -123,7 +139,7 @@ getPhysicalDeviceExternalBufferProperties physicalDevice
   pPExternalBufferProperties <- ContT (withZeroCStruct @ExternalBufferProperties)
   lift $ traceAroundEvent "vkGetPhysicalDeviceExternalBufferProperties" (vkGetPhysicalDeviceExternalBufferProperties'
                                                                            (physicalDeviceHandle (physicalDevice))
-                                                                           pExternalBufferInfo
+                                                                           (forgetExtensions pExternalBufferInfo)
                                                                            (pPExternalBufferProperties))
   pExternalBufferProperties <- lift $ peekCStruct @ExternalBufferProperties pPExternalBufferProperties
   pure $ (pExternalBufferProperties)
@@ -341,7 +357,45 @@ instance Zero ExternalImageFormatProperties where
 -- | VkPhysicalDeviceExternalBufferInfo - Structure specifying buffer
 -- creation parameters
 --
+-- = Description
+--
+-- Only usage flags representable in
+-- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' are
+-- returned in this structure’s @usage@. If a
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+-- structure is present in the @pNext@ chain, all usage flags of the buffer
+-- are returned in
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO'
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-pNext-pNext# @pNext@ /must/
+--     be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-flags-parameter# @flags@
+--     /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
+--     values
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-usage-parameter# @usage@
+--     /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-usage-requiredbitmask#
+--     @usage@ /must/ not be @0@
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-handleType-parameter#
+--     @handleType@ /must/ be a valid
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+--     value
 --
 -- = See Also
 --
@@ -352,79 +406,75 @@ instance Zero ExternalImageFormatProperties where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalBufferProperties',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferPropertiesKHR'
-data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
-  { -- | @flags@ is a bitmask of
+data PhysicalDeviceExternalBufferInfo (es :: [Type]) = PhysicalDeviceExternalBufferInfo
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
     -- describing additional parameters of the buffer, corresponding to
     -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@.
-    --
-    -- #VUID-VkPhysicalDeviceExternalBufferInfo-flags-parameter# @flags@ /must/
-    -- be a valid combination of
-    -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits' values
     flags :: BufferCreateFlags
   , -- | @usage@ is a bitmask of
     -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' describing
     -- the intended usage of the buffer, corresponding to
     -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@.
-    --
-    -- #VUID-VkPhysicalDeviceExternalBufferInfo-usage-parameter# @usage@ /must/
-    -- be a valid combination of
-    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
-    --
-    -- #VUID-VkPhysicalDeviceExternalBufferInfo-usage-requiredbitmask# @usage@
-    -- /must/ not be @0@
     usage :: BufferUsageFlags
   , -- | @handleType@ is a
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- value specifying the memory handle type that will be used with the
     -- memory associated with the buffer.
-    --
-    -- #VUID-VkPhysicalDeviceExternalBufferInfo-handleType-parameter#
-    -- @handleType@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
-    -- value
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceExternalBufferInfo)
+deriving instance Generic (PhysicalDeviceExternalBufferInfo (es :: [Type]))
 #endif
-deriving instance Show PhysicalDeviceExternalBufferInfo
+deriving instance Show (Chain es) => Show (PhysicalDeviceExternalBufferInfo es)
 
-instance ToCStruct PhysicalDeviceExternalBufferInfo where
+instance Extensible PhysicalDeviceExternalBufferInfo where
+  extensibleTypeName = "PhysicalDeviceExternalBufferInfo"
+  setNext PhysicalDeviceExternalBufferInfo{..} next' = PhysicalDeviceExternalBufferInfo{next = next', ..}
+  getNext PhysicalDeviceExternalBufferInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceExternalBufferInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfoKHR = Just f
+    | otherwise = Nothing
+
+instance ( Extendss PhysicalDeviceExternalBufferInfo es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceExternalBufferInfo es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceExternalBufferInfo{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr BufferCreateFlags)) (flags)
-    poke ((p `plusPtr` 20 :: Ptr BufferUsageFlags)) (usage)
-    poke ((p `plusPtr` 24 :: Ptr ExternalMemoryHandleTypeFlagBits)) (handleType)
-    f
+  pokeCStruct p PhysicalDeviceExternalBufferInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr BufferCreateFlags)) (flags)
+    lift $ poke ((p `plusPtr` 20 :: Ptr BufferUsageFlags)) (usage)
+    lift $ poke ((p `plusPtr` 24 :: Ptr ExternalMemoryHandleTypeFlagBits)) (handleType)
+    lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 20 :: Ptr BufferUsageFlags)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr ExternalMemoryHandleTypeFlagBits)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 20 :: Ptr BufferUsageFlags)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr ExternalMemoryHandleTypeFlagBits)) (zero)
+    lift $ f
 
-instance FromCStruct PhysicalDeviceExternalBufferInfo where
+instance ( Extendss PhysicalDeviceExternalBufferInfo es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceExternalBufferInfo es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     flags <- peek @BufferCreateFlags ((p `plusPtr` 16 :: Ptr BufferCreateFlags))
     usage <- peek @BufferUsageFlags ((p `plusPtr` 20 :: Ptr BufferUsageFlags))
     handleType <- peek @ExternalMemoryHandleTypeFlagBits ((p `plusPtr` 24 :: Ptr ExternalMemoryHandleTypeFlagBits))
     pure $ PhysicalDeviceExternalBufferInfo
-             flags usage handleType
+             next flags usage handleType
 
-instance Storable PhysicalDeviceExternalBufferInfo where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceExternalBufferInfo where
+instance es ~ '[] => Zero (PhysicalDeviceExternalBufferInfo es) where
   zero = PhysicalDeviceExternalBufferInfo
+           ()
            zero
            zero
            zero

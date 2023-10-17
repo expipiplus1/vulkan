@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     70
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
@@ -1202,6 +1205,7 @@ import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_frame_boundary (FrameBoundaryEXT)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
@@ -1243,6 +1247,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (SwapchainCounter
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisplayNativeHdrCreateInfoAMD)
 import Vulkan.Extensions.Handles (SwapchainKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (SwapchainLatencyCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (SwapchainPresentBarrierCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentFenceInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentModeInfoEXT)
@@ -1331,11 +1336,11 @@ foreign import ccall
 -- The @pCreateInfo->surface@ /must/ not be destroyed until after the
 -- swapchain is destroyed.
 --
--- If @pCreateInfo->oldSwapchain@ is
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and the native window referred
--- to by @pCreateInfo->surface@ is already associated with a Vulkan
--- swapchain, 'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
--- /must/ be returned.
+-- If @oldSwapchain@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', and the
+-- native window referred to by @pCreateInfo->surface@ is already
+-- associated with a Vulkan swapchain,
+-- 'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR' /must/ be
+-- returned.
 --
 -- If the native window referred to by @pCreateInfo->surface@ is already
 -- associated with a non-Vulkan graphics API surface,
@@ -1941,12 +1946,6 @@ foreign import ccall
 --     the @pWaitSemaphores@ member of @pPresentInfo@ executes on @queue@,
 --     there /must/ be no other queues waiting on the same semaphore
 --
--- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-01295# All elements of the
---     @pWaitSemaphores@ member of @pPresentInfo@ /must/ be semaphores that
---     are signaled, or have
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     previously submitted for execution
---
 -- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-03267# All elements of the
 --     @pWaitSemaphores@ member of @pPresentInfo@ /must/ be created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -1955,8 +1954,10 @@ foreign import ccall
 -- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-03268# All elements of the
 --     @pWaitSemaphores@ member of @pPresentInfo@ /must/ reference a
 --     semaphore signal operation that has been submitted for execution and
---     any semaphore signal operations on which it depends (if any) /must/
---     have also been submitted for execution
+--     any
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
+--     on which it depends (if any) /must/ have also been submitted for
+--     execution
 --
 -- Any writes to memory backing the images referenced by the
 -- @pImageIndices@ and @pSwapchains@ members of @pPresentInfo@, that are
@@ -2038,6 +2039,7 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | -                                                                                                                           | Any                                                                                                                   | -                                                                                                                                      |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
@@ -2731,6 +2733,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
 --     'Vulkan.Extensions.VK_EXT_display_control.SwapchainCounterCreateInfoEXT',
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD',
+--     'Vulkan.Extensions.VK_NV_low_latency2.SwapchainLatencyCreateInfoNV',
 --     'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV',
 --     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
 --     or
@@ -2915,6 +2918,7 @@ instance Extensible SwapchainCreateInfoKHR where
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SwapchainLatencyCreateInfoNV = Just f
     | Just Refl <- eqT @e @SwapchainPresentScalingCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SwapchainPresentModesCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
@@ -3059,6 +3063,9 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkPresentInfoKHR-pSwapchain-09231# Elements of @pSwapchain@
+--     /must/ be unique
+--
 -- -   #VUID-VkPresentInfoKHR-pImageIndices-01430# Each element of
 --     @pImageIndices@ /must/ be the index of a presentable image acquired
 --     from the swapchain specified by the corresponding element of the
@@ -3076,6 +3083,12 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     feature is not enabled, each @presentIds@ entry in that structure
 --     /must/ be NULL
 --
+-- -   #VUID-VkPresentInfoKHR-pSwapchains-09199# If any element of the
+--     @pSwapchains@ array has been created with
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
+--     all of the elements of this array /must/ be created with
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPresentInfoKHR-sType-sType# @sType@ /must/ be
@@ -3086,6 +3099,7 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     @NULL@ or a pointer to a valid instance of
 --     'DeviceGroupPresentInfoKHR',
 --     'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
+--     'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT',
 --     'Vulkan.Extensions.VK_GGP_frame_token.PresentFrameTokenGGP',
 --     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR',
 --     'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR',
@@ -3138,8 +3152,7 @@ data PresentInfoKHR (es :: [Type]) = PresentInfoKHR
     waitSemaphores :: Vector Semaphore
   , -- | @pSwapchains@ is a pointer to an array of
     -- 'Vulkan.Extensions.Handles.SwapchainKHR' objects with @swapchainCount@
-    -- entries. A given swapchain /must/ not appear in this list more than
-    -- once.
+    -- entries.
     swapchains :: Vector SwapchainKHR
   , -- | @pImageIndices@ is a pointer to an array of indices into the array of
     -- each swapchain’s presentable images, with @swapchainCount@ entries. Each
@@ -3168,6 +3181,7 @@ instance Extensible PresentInfoKHR where
   extends _ f
     | Just Refl <- eqT @e @SwapchainPresentModeInfoEXT = Just f
     | Just Refl <- eqT @e @SwapchainPresentFenceInfoEXT = Just f
+    | Just Refl <- eqT @e @FrameBoundaryEXT = Just f
     | Just Refl <- eqT @e @PresentFrameTokenGGP = Just f
     | Just Refl <- eqT @e @PresentTimesInfoGOOGLE = Just f
     | Just Refl <- eqT @e @PresentIdKHR = Just f

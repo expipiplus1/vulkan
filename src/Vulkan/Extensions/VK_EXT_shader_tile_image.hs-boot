@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
 --
@@ -42,7 +45,7 @@
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_tile_image.html SPV_EXT_shader_tile_image>
 --
 --     -   This extension provides API support for
---         <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GL_EXT_shader_tile_image.txt GL_EXT_shader_tile_image>
+--         <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GLSL_EXT_shader_tile_image.txt GL_EXT_shader_tile_image>
 --
 -- [__Contributors__]
 --

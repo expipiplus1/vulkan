@@ -430,7 +430,16 @@ data PhysicalDeviceVulkan13Properties = PhysicalDeviceVulkan13Properties
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
     -- binding.
     maxInlineUniformBlockSize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceVulkan13Properties" "maxPerStageDescriptorInlineUniformBlocks"
+  , -- | #limits-maxPerStageDescriptorInlineUniformBlocks#
+    -- @maxPerStageDescriptorInlineUniformBlocks@ is the maximum number of
+    -- inline uniform block bindings that /can/ be accessible to a single
+    -- shader stage in a pipeline layout. Descriptor bindings with a descriptor
+    -- type of
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
+    -- count against this limit. Only descriptor bindings in descriptor set
+    -- layouts created without the
+    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+    -- bit set count against this limit.
     maxPerStageDescriptorInlineUniformBlocks :: Word32
   , -- | #limits-maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks#
     -- @maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@ is similar to

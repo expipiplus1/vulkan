@@ -45,6 +45,7 @@ import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
 import Vulkan.Core10.Handles (BufferView)
 import Vulkan.Core10.Handles (BufferView(..))
 import Vulkan.Core10.Enums.BufferViewCreateFlags (BufferViewCreateFlags)
@@ -240,6 +241,17 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 -- | VkBufferViewCreateInfo - Structure specifying parameters of a newly
 -- created buffer view
 --
+-- = Description
+--
+-- The buffer view has a /buffer view usage/ identifying which descriptor
+-- types can be created from it. This usage /can/ be defined by including
+-- the
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+-- structure in the @pNext@ chain, and specifying the @usage@ value there.
+-- If this structure is not included, it is equal to the
+-- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@ value used to create
+-- @buffer@.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkBufferViewCreateInfo-offset-00925# @offset@ /must/ be less
@@ -281,16 +293,18 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --
--- -   #VUID-VkBufferViewCreateInfo-buffer-00933# If @buffer@ was created
---     with @usage@ containing
+-- -   #VUID-VkBufferViewCreateInfo-format-08778# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-views-usage buffer view usage>
+--     contains
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT',
 --     then
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
 --     of @format@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT'
 --
--- -   #VUID-VkBufferViewCreateInfo-buffer-00934# If @buffer@ was created
---     with @usage@ containing
+-- -   #VUID-VkBufferViewCreateInfo-format-08779# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-views-usage buffer view usage>
+--     contains
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT',
 --     then
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
@@ -340,13 +354,33 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     structure, its @exportObjectType@ member /must/ be
 --     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'
 --
+-- -   #VUID-VkBufferViewCreateInfo-pNext-08780# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR',
+--     its @usage@ /must/ not contain any other bit than
+--     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR'
+--
+-- -   #VUID-VkBufferViewCreateInfo-pNext-08781# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR',
+--     its @usage@ /must/ be a subset of the
+--     'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@ specified or
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@
+--     from 'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@ when creating
+--     @buffer@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBufferViewCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO'
 --
--- -   #VUID-VkBufferViewCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
+-- -   #VUID-VkBufferViewCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     or
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkBufferViewCreateInfo-sType-unique# The @sType@ value of each
@@ -407,6 +441,7 @@ instance Extensible BufferViewCreateInfo where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferViewCreateInfo e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfoKHR = Just f
     | otherwise = Nothing
 
 instance ( Extendss BufferViewCreateInfo es

@@ -17,12 +17,15 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
@@ -700,15 +703,14 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @stage@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-vkCmdWriteBufferMarker2AMD-rayTracingPipeline-07946# If
---     neither the
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>

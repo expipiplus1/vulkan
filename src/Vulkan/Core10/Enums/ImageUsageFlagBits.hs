@@ -13,6 +13,7 @@ module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlags
                                                                    , IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM
                                                                    , IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI
                                                                    , IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
+                                                                   , IMAGE_USAGE_HOST_TRANSFER_BIT_EXT
                                                                    , IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                    , IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
                                                                    , ..
@@ -111,6 +112,10 @@ pattern IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI = ImageUsageFlagBits 0x00040000
 -- attachment) in the same render pass.
 pattern IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = ImageUsageFlagBits 0x00080000
 
+-- | 'IMAGE_USAGE_HOST_TRANSFER_BIT_EXT' specifies that the image /can/ be
+-- used with host copy commands and host layout transitions.
+pattern IMAGE_USAGE_HOST_TRANSFER_BIT_EXT = ImageUsageFlagBits 0x00400000
+
 -- | 'IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
 -- the image /can/ be used to create a 'Vulkan.Core10.Handles.ImageView'
 -- suitable for use as a
@@ -174,6 +179,10 @@ showTableImageUsageFlagBits =
   ,
     ( IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
     , "ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"
+    )
+  ,
+    ( IMAGE_USAGE_HOST_TRANSFER_BIT_EXT
+    , "HOST_TRANSFER_BIT_EXT"
     )
   ,
     ( IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR

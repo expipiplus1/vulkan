@@ -533,14 +533,18 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_KHR_display_swapchain.createSharedSwapchainsKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR',
+-- 'Vulkan.Extensions.VK_NV_low_latency2.getLatencyTimingsNV',
 -- 'Vulkan.Extensions.VK_GOOGLE_display_timing.getPastPresentationTimingGOOGLE',
 -- 'Vulkan.Extensions.VK_GOOGLE_display_timing.getRefreshCycleDurationGOOGLE',
 -- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getSwapchainImagesKHR',
 -- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.getSwapchainStatusKHR',
+-- 'Vulkan.Extensions.VK_NV_low_latency2.latencySleepNV',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.releaseFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_hdr_metadata.setHdrMetadataEXT',
+-- 'Vulkan.Extensions.VK_NV_low_latency2.setLatencyMarkerNV',
+-- 'Vulkan.Extensions.VK_NV_low_latency2.setLatencySleepModeNV',
 -- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD',
 -- 'Vulkan.Extensions.VK_KHR_present_wait.waitForPresentKHR'
 newtype SwapchainKHR = SwapchainKHR Word64

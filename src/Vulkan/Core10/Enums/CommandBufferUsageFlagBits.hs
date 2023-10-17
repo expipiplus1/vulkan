@@ -42,8 +42,9 @@ pattern COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = CommandBufferUsageFlagBits 0x
 pattern COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = CommandBufferUsageFlagBits 0x00000002
 
 -- | 'COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT' specifies that a command
--- buffer /can/ be resubmitted to a queue while it is in the /pending
--- state/, and recorded into multiple primary command buffers.
+-- buffer /can/ be resubmitted to any queue of the same queue family while
+-- it is in the /pending state/, and recorded into multiple primary command
+-- buffers.
 pattern COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = CommandBufferUsageFlagBits 0x00000004
 
 conNameCommandBufferUsageFlagBits :: String

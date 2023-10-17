@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -64,13 +67,13 @@
 --
 -- == New Commands
 --
--- -   'getImageSubresourceLayout2EXT'
+-- -   'Vulkan.Extensions.VK_EXT_host_image_copy.getImageSubresourceLayout2EXT'
 --
 -- == New Structures
 --
--- -   'ImageSubresource2EXT'
+-- -   'Vulkan.Extensions.VK_EXT_host_image_copy.ImageSubresource2EXT'
 --
--- -   'SubresourceLayout2EXT'
+-- -   'Vulkan.Extensions.VK_EXT_host_image_copy.SubresourceLayout2EXT'
 --
 -- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
@@ -81,7 +84,7 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2',
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
---     'SubresourceLayout2EXT':
+--     'Vulkan.Extensions.VK_KHR_maintenance5.SubresourceLayout2KHR':
 --
 --     -   'ImageCompressionPropertiesEXT'
 --
@@ -119,11 +122,11 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT'
+--     -   'STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT'
+--     -   'STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT'
 --
 -- == Version History
 --
@@ -136,9 +139,10 @@
 -- 'ImageCompressionControlEXT', 'ImageCompressionFixedRateFlagBitsEXT',
 -- 'ImageCompressionFixedRateFlagsEXT', 'ImageCompressionFlagBitsEXT',
 -- 'ImageCompressionFlagsEXT', 'ImageCompressionPropertiesEXT',
--- 'ImageSubresource2EXT',
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.ImageSubresource2EXT',
 -- 'PhysicalDeviceImageCompressionControlFeaturesEXT',
--- 'SubresourceLayout2EXT', 'getImageSubresourceLayout2EXT'
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.SubresourceLayout2EXT',
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.getImageSubresourceLayout2EXT'
 --
 -- == Document Notes
 --
@@ -147,12 +151,11 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_image_compression_control  ( getImageSubresourceLayout2EXT
+module Vulkan.Extensions.VK_EXT_image_compression_control  ( pattern STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT
+                                                           , pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT
                                                            , ImageCompressionControlEXT(..)
                                                            , PhysicalDeviceImageCompressionControlFeaturesEXT(..)
                                                            , ImageCompressionPropertiesEXT(..)
-                                                           , ImageSubresource2EXT(..)
-                                                           , SubresourceLayout2EXT(..)
                                                            , ImageCompressionFlagsEXT
                                                            , ImageCompressionFlagBitsEXT( IMAGE_COMPRESSION_DEFAULT_EXT
                                                                                         , IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT
@@ -192,217 +195,63 @@ module Vulkan.Extensions.VK_EXT_image_compression_control  ( getImageSubresource
                                                            , pattern EXT_IMAGE_COMPRESSION_CONTROL_SPEC_VERSION
                                                            , EXT_IMAGE_COMPRESSION_CONTROL_EXTENSION_NAME
                                                            , pattern EXT_IMAGE_COMPRESSION_CONTROL_EXTENSION_NAME
+                                                           , ImageSubresource2KHR(..)
+                                                           , SubresourceLayout2KHR(..)
+                                                           , getImageSubresourceLayout2KHR
+                                                           , ImageSubresource2EXT
+                                                           , SubresourceLayout2EXT
+                                                           , getImageSubresourceLayout2EXT
                                                            ) where
 
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Vulkan.Internal.Utils (traceAroundEvent)
-import Control.Monad (unless)
-import Control.Monad.IO.Class (liftIO)
-import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
-import GHC.IO (throwIO)
-import GHC.Ptr (castPtr)
-import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
 import Numeric (showHex)
-import Control.Monad.Trans.Class (lift)
-import Control.Monad.Trans.Cont (evalContT)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
-import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
-import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
-import GHC.IO.Exception (IOErrorType(..))
-import GHC.IO.Exception (IOException(..))
-import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Kind (Type)
-import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.CStruct.Extends (Chain)
-import Vulkan.Core10.Handles (Device)
-import Vulkan.Core10.Handles (Device(..))
-import Vulkan.Core10.Handles (Device(Device))
-import Vulkan.Dynamic (DeviceCmds(pVkGetImageSubresourceLayout2EXT))
-import Vulkan.Core10.Handles (Device_T)
-import Vulkan.CStruct.Extends (Extends)
-import Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
-import Vulkan.Core10.Handles (Image)
-import Vulkan.Core10.Handles (Image(..))
-import Vulkan.Core10.SparseResourceMemoryManagement (ImageSubresource)
-import Vulkan.CStruct.Extends (PeekChain)
-import Vulkan.CStruct.Extends (PeekChain(..))
-import Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct.Extends (PokeChain(..))
-import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Image (SubresourceLayout)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT))
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "dynamic" mkVkGetImageSubresourceLayout2EXT
-  :: FunPtr (Ptr Device_T -> Image -> Ptr ImageSubresource2EXT -> Ptr (SomeStruct SubresourceLayout2EXT) -> IO ()) -> Ptr Device_T -> Image -> Ptr ImageSubresource2EXT -> Ptr (SomeStruct SubresourceLayout2EXT) -> IO ()
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR))
+import Vulkan.Extensions.VK_EXT_host_image_copy (getImageSubresourceLayout2EXT)
+import Vulkan.Extensions.VK_KHR_maintenance5 (getImageSubresourceLayout2KHR)
+import Vulkan.Extensions.VK_EXT_host_image_copy (ImageSubresource2EXT)
+import Vulkan.Extensions.VK_KHR_maintenance5 (ImageSubresource2KHR(..))
+import Vulkan.Extensions.VK_EXT_host_image_copy (SubresourceLayout2EXT)
+import Vulkan.Extensions.VK_KHR_maintenance5 (SubresourceLayout2KHR(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT"
+pattern STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR
 
--- | vkGetImageSubresourceLayout2EXT - Retrieve information about an image
--- subresource
---
--- = Description
---
--- 'getImageSubresourceLayout2EXT' behaves similarly to
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', with the ability to
--- specify extended inputs via chained input structures, and to return
--- extended information via chained output structures.
---
--- It is legal to call 'getImageSubresourceLayout2EXT' with a @image@
--- created with @tiling@ equal to
--- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', but the members
--- of 'ImageSubresource2EXT'::@imageSubresource@ will have undefined values
--- in this case.
---
--- Note
---
--- Structures chained from 'ImageSubresource2EXT'::@pNext@ will also be
--- updated when @tiling@ is equal to
--- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'.
---
--- == Valid Usage
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-aspectMask-00997# The
---     @aspectMask@ member of @pSubresource@ /must/ only have a single bit
---     set
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-mipLevel-01716# The @mipLevel@
---     member of @pSubresource@ /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
---     created
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-arrayLayer-01717# The
---     @arrayLayer@ member of @pSubresource@ /must/ be less than the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @image@ was created
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-format-04461# If @format@ is a
---     color format, the @aspectMask@ member of @pSubresource@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-format-04462# If @format@ has
---     a depth component, the @aspectMask@ member of @pSubresource@ /must/
---     contain
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-format-04463# If @format@ has
---     a stencil component, the @aspectMask@ member of @pSubresource@
---     /must/ contain
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-format-04464# If @format@ does
---     not contain a stencil or depth component, the @aspectMask@ member of
---     @pSubresource@ /must/ not contain
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-tiling-08717# If the @tiling@
---     of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
---     then the @aspectMask@ member of @pSubresource@ /must/ be a single
---     valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-image-01895# If @image@ was
---     created with the
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @image@ /must/ be bound to memory
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-tiling-02271# If the @tiling@
---     of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then the @aspectMask@ member of @pSubresource@ /must/ be
---     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ and the index /i/ /must/ be
---     less than the
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
---     associated with the image’s @format@ and
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierPropertiesEXT'::@drmFormatModifier@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-device-parameter# @device@
---     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-image-parameter# @image@
---     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-pSubresource-parameter#
---     @pSubresource@ /must/ be a valid pointer to a valid
---     'ImageSubresource2EXT' structure
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-pLayout-parameter# @pLayout@
---     /must/ be a valid pointer to a 'SubresourceLayout2EXT' structure
---
--- -   #VUID-vkGetImageSubresourceLayout2EXT-image-parent# @image@ /must/
---     have been created, allocated, or retrieved from @device@
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_compression_control VK_EXT_image_compression_control>,
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
--- 'ImageSubresource2EXT', 'SubresourceLayout2EXT'
-getImageSubresourceLayout2EXT :: forall a io
-                               . ( Extendss SubresourceLayout2EXT a
-                                 , PokeChain a
-                                 , PeekChain a
-                                 , MonadIO io )
-                              => -- | @device@ is the logical device that owns the image.
-                                 Device
-                              -> -- | @image@ is the image whose layout is being queried.
-                                 Image
-                              -> -- | @pSubresource@ is a pointer to a 'ImageSubresource2EXT' structure
-                                 -- selecting a specific image for the image subresource.
-                                 ImageSubresource2EXT
-                              -> io (SubresourceLayout2EXT a)
-getImageSubresourceLayout2EXT device image subresource = liftIO . evalContT $ do
-  let vkGetImageSubresourceLayout2EXTPtr = pVkGetImageSubresourceLayout2EXT (case device of Device{deviceCmds} -> deviceCmds)
-  lift $ unless (vkGetImageSubresourceLayout2EXTPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSubresourceLayout2EXT is null" Nothing Nothing
-  let vkGetImageSubresourceLayout2EXT' = mkVkGetImageSubresourceLayout2EXT vkGetImageSubresourceLayout2EXTPtr
-  pSubresource <- ContT $ withCStruct (subresource)
-  pPLayout <- ContT (withZeroCStruct @(SubresourceLayout2EXT _))
-  lift $ traceAroundEvent "vkGetImageSubresourceLayout2EXT" (vkGetImageSubresourceLayout2EXT'
-                                                               (deviceHandle (device))
-                                                               (image)
-                                                               pSubresource
-                                                               (forgetExtensions (pPLayout)))
-  pLayout <- lift $ peekCStruct @(SubresourceLayout2EXT _) pPLayout
-  pure $ (pLayout)
+
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT"
+pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR
 
 
 -- | VkImageCompressionControlEXT - Specify image compression properties
@@ -633,137 +482,6 @@ instance Storable ImageCompressionPropertiesEXT where
 instance Zero ImageCompressionPropertiesEXT where
   zero = ImageCompressionPropertiesEXT
            zero
-           zero
-
-
--- | VkImageSubresource2EXT - Structure specifying an image subresource
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_compression_control VK_EXT_image_compression_control>,
--- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getImageSubresourceLayout2EXT'
-data ImageSubresource2EXT = ImageSubresource2EXT
-  { -- | @imageSubresource@ is a
-    -- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource'
-    -- structure.
-    --
-    -- #VUID-VkImageSubresource2EXT-imageSubresource-parameter#
-    -- @imageSubresource@ /must/ be a valid
-    -- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource'
-    -- structure
-    imageSubresource :: ImageSubresource }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (ImageSubresource2EXT)
-#endif
-deriving instance Show ImageSubresource2EXT
-
-instance ToCStruct ImageSubresource2EXT where
-  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ImageSubresource2EXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr ImageSubresource)) (imageSubresource)
-    f
-  cStructSize = 32
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr ImageSubresource)) (zero)
-    f
-
-instance FromCStruct ImageSubresource2EXT where
-  peekCStruct p = do
-    imageSubresource <- peekCStruct @ImageSubresource ((p `plusPtr` 16 :: Ptr ImageSubresource))
-    pure $ ImageSubresource2EXT
-             imageSubresource
-
-instance Storable ImageSubresource2EXT where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero ImageSubresource2EXT where
-  zero = ImageSubresource2EXT
-           zero
-
-
--- | VkSubresourceLayout2EXT - Structure specifying subresource layout
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkSubresourceLayout2EXT-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT'
---
--- -   #VUID-VkSubresourceLayout2EXT-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of 'ImageCompressionPropertiesEXT'
---
--- -   #VUID-VkSubresourceLayout2EXT-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_compression_control VK_EXT_image_compression_control>,
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core10.Image.SubresourceLayout', 'getImageSubresourceLayout2EXT'
-data SubresourceLayout2EXT (es :: [Type]) = SubresourceLayout2EXT
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
-    next :: Chain es
-  , -- | @subresourceLayout@ is a 'Vulkan.Core10.Image.SubresourceLayout'
-    -- structure.
-    subresourceLayout :: SubresourceLayout
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (SubresourceLayout2EXT (es :: [Type]))
-#endif
-deriving instance Show (Chain es) => Show (SubresourceLayout2EXT es)
-
-instance Extensible SubresourceLayout2EXT where
-  extensibleTypeName = "SubresourceLayout2EXT"
-  setNext SubresourceLayout2EXT{..} next' = SubresourceLayout2EXT{next = next', ..}
-  getNext SubresourceLayout2EXT{..} = next
-  extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubresourceLayout2EXT e => b) -> Maybe b
-  extends _ f
-    | Just Refl <- eqT @e @ImageCompressionPropertiesEXT = Just f
-    | otherwise = Nothing
-
-instance ( Extendss SubresourceLayout2EXT es
-         , PokeChain es ) => ToCStruct (SubresourceLayout2EXT es) where
-  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SubresourceLayout2EXT{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT)
-    pNext'' <- fmap castPtr . ContT $ withChain (next)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    lift $ poke ((p `plusPtr` 16 :: Ptr SubresourceLayout)) (subresourceLayout)
-    lift $ f
-  cStructSize = 56
-  cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT)
-    pNext' <- fmap castPtr . ContT $ withZeroChain @es
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 16 :: Ptr SubresourceLayout)) (zero)
-    lift $ f
-
-instance ( Extendss SubresourceLayout2EXT es
-         , PeekChain es ) => FromCStruct (SubresourceLayout2EXT es) where
-  peekCStruct p = do
-    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
-    next <- peekChain (castPtr pNext)
-    subresourceLayout <- peekCStruct @SubresourceLayout ((p `plusPtr` 16 :: Ptr SubresourceLayout))
-    pure $ SubresourceLayout2EXT
-             next subresourceLayout
-
-instance es ~ '[] => Zero (SubresourceLayout2EXT es) where
-  zero = SubresourceLayout2EXT
-           ()
            zero
 
 

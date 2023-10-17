@@ -177,7 +177,7 @@ instance Zero MemoryDedicatedRequirements where
 --
 -- -   #VUID-VkMemoryDedicatedAllocateInfo-image-02964# If @image@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' and the memory is not an
---     imported Android Hardware Buffer,
+--     imported Android Hardware Buffer or an imported QNX Screen buffer ,
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
 --     equal the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
@@ -191,7 +191,7 @@ instance Zero MemoryDedicatedRequirements where
 --
 -- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-02965# If @buffer@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' and the memory is not an
---     imported Android Hardware Buffer,
+--     imported Android Hardware Buffer or an imported QNX Screen buffer ,
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
 --     equal the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
@@ -216,7 +216,7 @@ instance Zero MemoryDedicatedRequirements where
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     and the external handle was created by the Vulkan API, then the
 --     memory being imported /must/ also be a dedicated image allocation
---     and @image@ must be identical to the image associated with the
+--     and @image@ /must/ be identical to the image associated with the
 --     imported memory
 --
 -- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-01877# If @buffer@ is not

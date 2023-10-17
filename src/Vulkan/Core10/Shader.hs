@@ -101,6 +101,16 @@ foreign import ccall
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
 --
+-- Note
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+-- feature is enabled, shader module creation can be omitted entirely.
+-- Instead, applications should provide the 'ShaderModuleCreateInfo'
+-- structure directly in to pipeline creation by chaining it to
+-- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'. This avoids the
+-- overhead of creating and managing an additional object.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateShaderModule-pCreateInfo-06904# If @pCreateInfo@ is
@@ -275,62 +285,64 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   #VUID-VkShaderModuleCreateInfo-codeSize-01085# @codeSize@ /must/ be
---     greater than 0
+-- -   #VUID-VkShaderModuleCreateInfo-codeSize-08735# If pCode is a pointer
+--     to SPIR-V code, @codeSize@ /must/ be a multiple of 4
+--
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-08736# If pCode is a pointer to
+--     SPIR-V code, @pCode@ /must/ point to valid SPIR-V code, formatted
+--     and packed as described by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
+--
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-08737# If pCode is a pointer to
+--     SPIR-V code, @pCode@ /must/ adhere to the validation rules described
+--     by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
+--     section of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     appendix
+--
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-08738# If pCode is a pointer to
+--     SPIR-V code, @pCode@ /must/ declare the @Shader@ capability for
+--     SPIR-V code
+--
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-08739# If pCode is a pointer to
+--     SPIR-V code, @pCode@ /must/ not declare any capability that is not
+--     supported by the API, as described by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-module-validation Capabilities>
+--     section of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     appendix
+--
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-08740# If pCode is a pointer to
+--     SPIR-V code, and @pCode@ declares any of the capabilities listed in
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
+--     appendix, one of the corresponding requirements /must/ be satisfied
+--
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-08741# If pCode is a pointer to
+--     SPIR-V code, @pCode@ /must/ not declare any SPIR-V extension that is
+--     not supported by the API, as described by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-extensions Extension>
+--     section of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     appendix
+--
+-- -   #VUID-VkShaderModuleCreateInfo-pCode-08742# If pCode is a pointer to
+--     SPIR-V code, and @pCode@ declares any of the SPIR-V extensions
+--     listed in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Environment>
+--     appendix, one of the corresponding requirements /must/ be satisfied
 --
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-07912# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_glsl_shader VK_NV_glsl_shader>
 --     extension is not enabled, @pCode@ /must/ be a pointer to SPIR-V code
 --
--- -   #VUID-VkShaderModuleCreateInfo-pCode-01376# If @pCode@ is a pointer
---     to SPIR-V code, @codeSize@ /must/ be a multiple of 4
---
--- -   #VUID-VkShaderModuleCreateInfo-pCode-01377# @pCode@ /must/ point to
---     either valid SPIR-V code, formatted and packed as described by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
---     or valid GLSL code which /must/ be written to the
---     @GL_KHR_vulkan_glsl@ extension specification
---
--- -   #VUID-VkShaderModuleCreateInfo-pCode-01378# If @pCode@ is a pointer
---     to SPIR-V code, that code /must/ adhere to the validation rules
---     described by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
---     section of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
---     appendix
---
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-01379# If @pCode@ is a pointer
 --     to GLSL code, it /must/ be valid GLSL code written to the
 --     @GL_KHR_vulkan_glsl@ GLSL extension specification
 --
--- -   #VUID-VkShaderModuleCreateInfo-pCode-01089# @pCode@ /must/ declare
---     the @Shader@ capability for SPIR-V code
---
--- -   #VUID-VkShaderModuleCreateInfo-pCode-01090# @pCode@ /must/ not
---     declare any capability that is not supported by the API, as
---     described by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-module-validation Capabilities>
---     section of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
---     appendix
---
--- -   #VUID-VkShaderModuleCreateInfo-pCode-01091# If @pCode@ declares any
---     of the capabilities listed in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
---     appendix, one of the corresponding requirements /must/ be satisfied
---
--- -   #VUID-VkShaderModuleCreateInfo-pCode-04146# @pCode@ /must/ not
---     declare any SPIR-V extension that is not supported by the API, as
---     described by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions Extension>
---     section of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
---     appendix
---
--- -   #VUID-VkShaderModuleCreateInfo-pCode-04147# If @pCode@ declares any
---     of the SPIR-V extensions listed in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Environment>
---     appendix, one of the corresponding requirements /must/ be satisfied
+-- -   #VUID-VkShaderModuleCreateInfo-codeSize-01085# @codeSize@ /must/ be
+--     greater than 0
 --
 -- == Valid Usage (Implicit)
 --

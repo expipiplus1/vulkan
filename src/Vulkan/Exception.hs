@@ -43,6 +43,7 @@ resultString = \case
   THREAD_IDLE_KHR -> "A deferred operation is not complete but there is currently no work for this thread to do at the time of this call"
   ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> "An operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exclusive full-screen access"
   ERROR_INVALID_SHADER_NV -> "One or more shaders failed to compile or link"
+  ERROR_VALIDATION_FAILED_EXT -> "A command failed because invalid usage was detected by the implementation or a validation-layer"
   ERROR_INCOMPATIBLE_DISPLAY_KHR -> "The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an image"
   ERROR_OUT_OF_DATE_KHR -> "A surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the swapchain will fail"
   SUBOPTIMAL_KHR -> "A swapchain no longer matches the surface properties exactly, but can still be used to present to the surface successfully"

@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
 --     and
@@ -240,9 +243,9 @@ foreign import ccall
 --     invocation mask image /must/ have the value @0@ or @1@. The value 1
 --     means the invocation is active
 --
--- -   #VUID-vkCmdBindInvocationMaskHUAWEI-width-04983# @width@ in
+-- -   #VUID-vkCmdBindInvocationMaskHUAWEI-depth-04983# @depth@ in
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR'
---     should be 1
+--     /must/ be 1
 --
 -- == Valid Usage (Implicit)
 --

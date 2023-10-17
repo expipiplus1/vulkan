@@ -79,6 +79,7 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QNX_external_memory_screen_buffer (ExternalFormatQNX)
 import Vulkan.Core10.Enums.Filter (Filter)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlagBits)
@@ -90,6 +91,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core11.Handles (SamplerYcbcrConversion)
 import Vulkan.Core11.Handles (SamplerYcbcrConversion(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_ycbcr_degamma (SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM)
 import Vulkan.Core11.Enums.SamplerYcbcrModelConversion (SamplerYcbcrModelConversion)
 import Vulkan.Core11.Enums.SamplerYcbcrRange (SamplerYcbcrRange)
 import Vulkan.CStruct.Extends (SomeStruct)
@@ -382,7 +384,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-format-04061# If an
 --     external format conversion is not being created, @format@ /must/
---     represent unsigned normalized values (i.e. the format must be a
+--     represent unsigned normalized values (i.e. the format /must/ be a
 --     @UNORM@ format)
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-format-01650# The
@@ -474,15 +476,43 @@ instance Zero SamplerYcbcrConversionInfo where
 --     @chromaFilter@ /must/ not be
 --     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'
 --
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-pNext-09207# If the @pNext@
+--     chain includes a
+--     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
+--     structure, and if the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-ycbcr-degamma ycbcrDegamma>
+--     feature is not enabled, then
+--     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'::@enableYDegamma@
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-pNext-09208# If the @pNext@
+--     chain includes a
+--     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
+--     structure, and if the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-ycbcr-degamma ycbcrDegamma>
+--     feature is not enabled, then
+--     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'::@enableCbCrDegamma@
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-pNext-09209# If the @pNext@
+--     chain includes a
+--     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
+--     structure, @format@ /must/ be a format with 8-bit R, G, and B
+--     components.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-sType-sType# @sType@ /must/
 --     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO'
 --
--- -   #VUID-VkSamplerYcbcrConversionCreateInfo-pNext-pNext# @pNext@ /must/
---     be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+-- -   #VUID-VkSamplerYcbcrConversionCreateInfo-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX',
+--     or
+--     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
@@ -583,6 +613,8 @@ instance Extensible SamplerYcbcrConversionCreateInfo where
   getNext SamplerYcbcrConversionCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerYcbcrConversionCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM = Just f
+    | Just Refl <- eqT @e @ExternalFormatQNX = Just f
     | Just Refl <- eqT @e @ExternalFormatANDROID = Just f
     | otherwise = Nothing
 
@@ -665,6 +697,7 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 --     @planeAspect@ /must/ be a single valid
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkBindImagePlaneMemoryInfo-planeAspect-02284# If the image’s
 --     @tiling@ is
@@ -744,6 +777,7 @@ instance Zero BindImagePlaneMemoryInfo where
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 --     @planeAspect@ /must/ be a single valid
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkImagePlaneMemoryRequirementsInfo-planeAspect-02282# If the
 --     image’s @tiling@ is

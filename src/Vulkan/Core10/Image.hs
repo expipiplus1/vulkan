@@ -71,6 +71,7 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Extent3D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QNX_external_memory_screen_buffer (ExternalFormatQNX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExternalMemoryImageCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExternalMemoryImageCreateInfoNV)
 import Vulkan.Core10.Enums.Format (Format)
@@ -121,10 +122,41 @@ foreign import ccall
 -- -   #VUID-vkCreateImage-flags-00939# If the @flags@ member of
 --     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
+--     and the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     feature is not enabled, creating this 'Vulkan.Core10.Handles.Image'
+--     /must/ not cause the total required sparse memory for all currently
+--     valid sparse resources on the device to exceed
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
+--
+-- -   #VUID-vkCreateImage-flags-09385# If the @flags@ member of
+--     @pCreateInfo@ includes
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     feature is enabled, and the @usage@ member of @pCreateInfo@ contains
+--     bits not in
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseImageUsageFlags@,
 --     creating this 'Vulkan.Core10.Handles.Image' /must/ not cause the
 --     total required sparse memory for all currently valid sparse
---     resources on the device to exceed
+--     resources on the device, excluding 'Vulkan.Core10.Handles.Buffer'
+--     created with @usage@ member of @pCreateInfo@ containing bits in
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseBufferUsageFlags@
+--     and 'Vulkan.Core10.Handles.Image' created with @usage@ member of
+--     @pCreateInfo@ containing bits in
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseImageUsageFlags@,
+--     to exceed
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
+--
+-- -   #VUID-vkCreateImage-flags-09386# If the @flags@ member of
+--     @pCreateInfo@ includes
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
+--     and the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     feature is enabled, creating this 'Vulkan.Core10.Handles.Image'
+--     /must/ not cause the total required sparse memory for all currently
+--     valid sparse resources on the device to exceed
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseAddressSpaceSize@
 --
 -- -   #VUID-vkCreateImage-pNext-06389# If a
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
@@ -331,9 +363,9 @@ foreign import ccall
 --
 -- 'getImageSubresourceLayout' is invariant for the lifetime of a single
 -- image. However, the subresource layout of images in Android hardware
--- buffer external memory is not known until the image has been bound to
--- memory, so applications /must/ not call 'getImageSubresourceLayout' for
--- such an image before it has been bound.
+-- buffer or QNX Screen buffer external memory is not known until the image
+-- has been bound to memory, so applications /must/ not call
+-- 'getImageSubresourceLayout' for such an image before it has been bound.
 --
 -- == Valid Usage
 --
@@ -353,23 +385,28 @@ foreign import ccall
 --     member of @pSubresource@ /must/ be less than the @arrayLayers@
 --     specified in 'ImageCreateInfo' when @image@ was created
 --
--- -   #VUID-vkGetImageSubresourceLayout-format-04461# If @format@ is a
---     color format, the @aspectMask@ member of @pSubresource@ /must/ be
+-- -   #VUID-vkGetImageSubresourceLayout-format-08886# If @format@ of the
+--     @image@ is a color format, @tiling@ of the @image@ is
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', and does not
+--     have a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+--     the @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   #VUID-vkGetImageSubresourceLayout-format-04462# If @format@ has a
---     depth component, the @aspectMask@ member of @pSubresource@ /must/
---     contain
+-- -   #VUID-vkGetImageSubresourceLayout-format-04462# If @format@ of the
+--     @image@ has a depth component, the @aspectMask@ member of
+--     @pSubresource@ /must/ contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --
--- -   #VUID-vkGetImageSubresourceLayout-format-04463# If @format@ has a
---     stencil component, the @aspectMask@ member of @pSubresource@ /must/
---     contain
+-- -   #VUID-vkGetImageSubresourceLayout-format-04463# If @format@ of the
+--     @image@ has a stencil component, the @aspectMask@ member of
+--     @pSubresource@ /must/ contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   #VUID-vkGetImageSubresourceLayout-format-04464# If @format@ does not
---     contain a stencil or depth component, the @aspectMask@ member of
---     @pSubresource@ /must/ not contain
+-- -   #VUID-vkGetImageSubresourceLayout-format-04464# If @format@ of the
+--     @image@ does not contain a stencil or depth component, the
+--     @aspectMask@ member of @pSubresource@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
@@ -380,6 +417,7 @@ foreign import ccall
 --     then the @aspectMask@ member of @pSubresource@ /must/ be a single
 --     valid
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-vkGetImageSubresourceLayout-image-01895# If @image@ was
 --     created with the
@@ -512,6 +550,16 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- /may/ occur even when all image creation parameters satisfy their valid
 -- usage requirements.
 --
+-- If the implementation reports 'Vulkan.Core10.FundamentalTypes.TRUE' in
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.PhysicalDeviceHostImageCopyPropertiesEXT'::@identicalMemoryTypeRequirements@,
+-- usage of
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT'
+-- /must/ not affect the memory type requirements of the image as described
+-- in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-memory-requirements Sparse Resource Memory Requirements>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association Resource Memory Association>.
+--
 -- Note
 --
 -- For images created without
@@ -595,6 +643,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', and if
 --         the @pNext@ chain includes no
 --         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+--         or
+--         'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX'
 --         structure with non-zero @externalFormat@, then
 --         @imageCreateFormatFeatures@ is the value of
 --         'Vulkan.Core10.DeviceInitialization.FormatProperties'::@optimalTilingFeatures@
@@ -611,6 +661,17 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID'::@formatFeatures@
 --         obtained by
 --         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
+--         with a matching @externalFormat@ value.
+--
+--     -   If @tiling@ is
+--         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', and if
+--         the @pNext@ chain includes a
+--         'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX'
+--         structure with non-zero @externalFormat@, then
+--         @imageCreateFormatFeatures@ is the value of
+--         'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ScreenBufferFormatPropertiesQNX'::@formatFeatures@
+--         obtained by
+--         'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.getScreenBufferPropertiesQNX'
 --         with a matching @externalFormat@ value.
 --
 --     -   If the @pNext@ chain includes a
@@ -647,6 +708,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 --     -   If 'ImageCreateInfo'::@pNext@ contains no
 --         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+--         or
+--         'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX'
 --         structure with non-zero @externalFormat@, then
 --         @imageCreateImageFormatPropertiesList@ is the list of structures
 --         obtained by calling
@@ -886,6 +949,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
+-- -   #VUID-VkImageCreateInfo-flags-08865# If @flags@ contains
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
+--     @extent.width@ and @extent.height@ /must/ be equal
+--
+-- -   #VUID-VkImageCreateInfo-flags-08866# If @flags@ contains
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
+--     @arrayLayers@ /must/ be greater than or equal to 6
+--
 -- -   #VUID-VkImageCreateInfo-flags-02557# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
@@ -909,12 +980,6 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- -   #VUID-VkImageCreateInfo-extent-02254# @extent.depth@ /must/ be less
 --     than or equal to @imageCreateMaxExtent.depth@ (as defined in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
---
--- -   #VUID-VkImageCreateInfo-imageType-00954# If @imageType@ is
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @flags@ contains
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
---     @extent.width@ and @extent.height@ /must/ be equal and @arrayLayers@
---     /must/ be greater than or equal to 6
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00956# If @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', both @extent.height@
@@ -1273,6 +1338,37 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     structure whose @externalFormat@ member is not @0@, @tiling@ /must/
 --     be 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
 --
+-- -   #VUID-VkImageCreateInfo-pNext-08951# If the @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
+--     structure whose @handleTypes@ member includes
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX',
+--     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkImageCreateInfo-pNext-08952# If the @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
+--     structure whose @handleTypes@ member includes
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX',
+--     @mipLevels@ /must/ either be @1@ or equal to the number of levels in
+--     the complete mipmap chain based on @extent.width@, @extent.height@,
+--     and @extent.depth@
+--
+-- -   #VUID-VkImageCreateInfo-pNext-08953# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX'
+--     structure whose @externalFormat@ member is not @0@, @flags@ /must/
+--     not include
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
+--
+-- -   #VUID-VkImageCreateInfo-pNext-08954# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX'
+--     structure whose @externalFormat@ member is not @0@, @usage@ /must/
+--     not include any usages except
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
+--
+-- -   #VUID-VkImageCreateInfo-pNext-08955# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX'
+--     structure whose @externalFormat@ member is not @0@, @tiling@ /must/
+--     be 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
+--
 -- -   #VUID-VkImageCreateInfo-format-02795# If @format@ is a depth-stencil
 --     format, @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
@@ -1553,6 +1649,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     /must/ not be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
+-- -   #VUID-VkImageCreateInfo-imageCreateFormatFeatures-09048# If
+--     @imageCreateFormatFeatures@ (as defined in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     does not contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT',
+--     then @usage@ /must/ not contain
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageCreateInfo-sType-sType# @sType@ /must/ be
@@ -1565,6 +1669,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo',
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV',
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT',
@@ -1622,6 +1727,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.DeviceImageMemoryRequirements',
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.DeviceImageSubresourceInfoKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
@@ -1693,6 +1799,7 @@ instance Extensible ImageCreateInfo where
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ExternalFormatQNX = Just f
     | Just Refl <- eqT @e @OpticalFlowImageFormatInfoNV = Just f
     | Just Refl <- eqT @e @ImportMetalIOSurfaceInfoEXT = Just f
     | Just Refl <- eqT @e @ImportMetalTextureInfoEXT = Just f
@@ -1891,7 +1998,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_image_compression_control.SubresourceLayout2EXT',
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.SubresourceLayout2KHR',
 -- 'getImageSubresourceLayout'
 data SubresourceLayout = SubresourceLayout
   { -- | @offset@ is the byte offset from the start of the image or the plane

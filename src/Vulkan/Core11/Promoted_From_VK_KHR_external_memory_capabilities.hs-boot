@@ -11,7 +11,10 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities  ( Extern
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data ExternalBufferProperties
 
 instance ToCStruct ExternalBufferProperties
@@ -36,12 +39,15 @@ instance Show ExternalMemoryProperties
 instance FromCStruct ExternalMemoryProperties
 
 
-data PhysicalDeviceExternalBufferInfo
+type role PhysicalDeviceExternalBufferInfo nominal
+data PhysicalDeviceExternalBufferInfo (es :: [Type])
 
-instance ToCStruct PhysicalDeviceExternalBufferInfo
-instance Show PhysicalDeviceExternalBufferInfo
+instance ( Extendss PhysicalDeviceExternalBufferInfo es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceExternalBufferInfo es)
+instance Show (Chain es) => Show (PhysicalDeviceExternalBufferInfo es)
 
-instance FromCStruct PhysicalDeviceExternalBufferInfo
+instance ( Extendss PhysicalDeviceExternalBufferInfo es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceExternalBufferInfo es)
 
 
 data PhysicalDeviceExternalImageFormatInfo

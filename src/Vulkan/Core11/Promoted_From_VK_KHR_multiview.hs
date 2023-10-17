@@ -53,7 +53,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
--- -   @sType@ is the type of this structure.
+-- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
+--     identifying this structure.
 --
 -- -   @pNext@ is @NULL@ or a pointer to a structure extending this
 --     structure.

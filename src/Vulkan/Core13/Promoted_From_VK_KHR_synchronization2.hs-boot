@@ -17,12 +17,15 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-data BufferMemoryBarrier2
+type role BufferMemoryBarrier2 nominal
+data BufferMemoryBarrier2 (es :: [Type])
 
-instance ToCStruct BufferMemoryBarrier2
-instance Show BufferMemoryBarrier2
+instance ( Extendss BufferMemoryBarrier2 es
+         , PokeChain es ) => ToCStruct (BufferMemoryBarrier2 es)
+instance Show (Chain es) => Show (BufferMemoryBarrier2 es)
 
-instance FromCStruct BufferMemoryBarrier2
+instance ( Extendss BufferMemoryBarrier2 es
+         , PeekChain es ) => FromCStruct (BufferMemoryBarrier2 es)
 
 
 data CommandBufferSubmitInfo

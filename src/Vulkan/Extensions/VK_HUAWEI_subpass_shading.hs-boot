@@ -15,7 +15,10 @@
 --     370
 --
 -- [__Revision__]
---     2
+--     3
+--
+-- [__Ratification Status__]
+--     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
@@ -113,7 +116,9 @@
 -- -   Extending
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
+--
+--     -   'PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits':
@@ -245,12 +250,12 @@
 -- > VkMemoryBarrier2KHR fragmentToSubpassShading = {
 -- >   VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR, NULL,
 -- >   VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT|VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
--- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI, VK_ACCESS_INPUT_ATTACHMENT_READ_BIT
+-- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI, VK_ACCESS_INPUT_ATTACHMENT_READ_BIT
 -- > };
 -- >
 -- > VkMemoryBarrier2KHR subpassShadingToFragment = {
 -- >   VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR, NULL,
--- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI, VK_ACCESS_SHADER_WRITE_BIT,
+-- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI, VK_ACCESS_SHADER_WRITE_BIT,
 -- >   VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR, VK_ACCESS_SHADER_READ_BIT
 -- > };
 -- >
@@ -317,6 +322,12 @@
 -- > vkCreateComputePipelines(device, pipelineCache, 1, &subpassShadingComputePipelineCreateInfo, NULL, &pipeline);
 --
 -- == Version History
+--
+-- -   Revision 3, 2023-06-19 (Pan Gao)
+--
+--     -   Rename 'PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI' to
+--         'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
+--         to better aligned with naming of other pipeline stages
 --
 -- -   Revision 2, 2021-06-28 (Hueilong Wang)
 --

@@ -17,10 +17,13 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to @VK_KHR_fragment_shader_barycentric@ extension
 --

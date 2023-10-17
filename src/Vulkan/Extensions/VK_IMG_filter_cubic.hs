@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Tobias Hector
@@ -62,7 +65,7 @@
 --
 -- >     VkSamplerCreateInfo createInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO // sType
+-- >         .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
 -- >         // Other members set to application-desired values
 -- >     };
 -- >

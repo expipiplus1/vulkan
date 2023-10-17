@@ -88,6 +88,7 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
 import Vulkan.Core10.Enums.Format (Format)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentShadingRateAttachmentInfoKHR)
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
@@ -362,6 +363,12 @@ foreign import ccall
 --     attachment to be written to, both attachments /must/ have had the
 --     'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
 --     set
+--
+-- -   #VUID-vkCmdBeginRenderPass2-framebuffer-09046# If any attachments
+--     specified in @framebuffer@ are used by @renderPass@ and are bound to
+--     overlapping memory locations, there /must/ be only one that is used
+--     as a color attachment, depth\/stencil, or resolve attachment in any
+--     subpass
 --
 -- -   #VUID-vkCmdBeginRenderPass2-initialLayout-07002# If any of the
 --     @initialLayout@ or @finalLayout@ member of the
@@ -742,10 +749,13 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 -- structure in the @pNext@ chain.
 --
--- == Valid Usage
+-- @loadOp@ and @storeOp@ are ignored for fragment shading rate
+-- attachments. No access to the shading rate attachment is performed in
+-- @loadOp@ and @storeOp@. Instead, access to
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR'
+-- is performed as fragments are rasterized.
 --
--- -   #VUID-VkAttachmentDescription2-format-06698# @format@ /must/ not be
---     VK_FORMAT_UNDEFINED
+-- == Valid Usage
 --
 -- -   #VUID-VkAttachmentDescription2-format-06699# If @format@ includes a
 --     color or depth component and @loadOp@ is
@@ -880,6 +890,11 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     feature is not enabled, @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
 --
+-- -   #VUID-VkAttachmentDescription2-samples-08745# @samples@ /must/ be a
+--     bit value that is set in @imageCreateSampleCounts@ (as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     for the given @format@
+--
 -- -   #VUID-VkAttachmentDescription2-pNext-06704# If the @pNext@ chain
 --     does not include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
@@ -937,14 +952,28 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
+-- -   #VUID-VkAttachmentDescription2-format-09332# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is not enabled, @format@ /must/ not be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
+-- -   #VUID-VkAttachmentDescription2-format-09334# If @format@ is
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', there /must/ be a
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+--     structure in the @pNext@ chain with a @externalFormat@ that is not
+--     equal to @0@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAttachmentDescription2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2'
 --
--- -   #VUID-VkAttachmentDescription2-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
+-- -   #VUID-VkAttachmentDescription2-pNext-pNext# Each @pNext@ member of
+--     any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     or
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --
 -- -   #VUID-VkAttachmentDescription2-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -1049,6 +1078,7 @@ instance Extensible AttachmentDescription2 where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentDescription2 e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @AttachmentDescriptionStencilLayout = Just f
+    | Just Refl <- eqT @e @ExternalFormatANDROID = Just f
     | otherwise = Nothing
 
 instance ( Extendss AttachmentDescription2 es
@@ -1297,6 +1327,73 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- identified attachment defines a fragment shading rate attachment for
 -- that subpass.
 --
+-- If any element of @pResolveAttachments@ is an image specified with an
+-- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
+-- values in the corresponding color attachment will be resolved to the
+-- resolve attachment in the same manner as specified for
+-- <VkResolveModeFlagBits.html >.
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+-- limit is 'Vulkan.Core10.FundamentalTypes.TRUE', values in the color
+-- attachment will be loaded from the resolve attachment at the start of
+-- rendering, and /may/ also be reloaded any time after a resolve occurs or
+-- the resolve attachment is written to; if this occurs it /must/
+-- happen-before any writes to the color attachment are performed which
+-- happen-after the resolve that triggers this. If any color component in
+-- the external format is subsampled, values will be read from the nearest
+-- sample in the image when they are loaded. If the color attachment is
+-- also used as an input attachment, the same behavior applies.
+--
+-- Setting the color attachment to
+-- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' when an external resolve
+-- attachment is used and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+-- limit is 'Vulkan.Core10.FundamentalTypes.TRUE' will not result in color
+-- attachment writes to be discarded for that attachment.
+--
+-- When
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+-- is 'Vulkan.Core10.FundamentalTypes.TRUE', the color output from the
+-- subpass can still be read via an input attachment; but the application
+-- cannot bind an image view for the color attachment as there is no such
+-- image view bound. Instead to access the data as an input attachment
+-- applications /can/ use the resolve attachment in its place - using the
+-- resolve attachment image for the descriptor, and setting the
+-- corresponding element of @pInputAttachments@ to the index of the resolve
+-- attachment.
+--
+-- Loads or input attachment reads from the resolve attachment are
+-- performed as if using a
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+-- with the following parameters:
+--
+-- > VkSamplerYcbcrConversionCreateInfo createInfo = {
+-- >     .sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO,
+-- >     .pNext = NULL,
+-- >     .format = VK_FORMAT_UNDEFINED,
+-- >     .ycbcrModel = VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY,
+-- >     .ycbcrRange = VK_SAMPLER_YCBCR_RANGE_ITU_FULL,
+-- >     .components = {
+-- >         .r = VK_COMPONENT_SWIZZLE_B
+-- >         .g = VK_COMPONENT_SWIZZLE_R
+-- >         .b = VK_COMPONENT_SWIZZLE_G
+-- >         .a = VK_COMPONENT_SWIZZLE_IDENTITY},
+-- >     .xChromaOffset = properties.chromaOffsetX,
+-- >     .yChromaOffset = properties.chromaOffsetY,
+-- >     .chromaFilter = ename:VK_FILTER_NEAREST,
+-- >     .forceExplicitReconstruction = ... };
+--
+-- where @properties@ is equal to
+-- 'Vulkan.Extensions.VK_ANDROID_external_format_resolve.PhysicalDeviceExternalFormatResolvePropertiesANDROID'
+-- returned by the device and @forceExplicitReconstruction@ is effectively
+-- ignored as the
+-- 'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY'
+-- model is used. The applied swizzle is the same effective swizzle that
+-- would be applied by the
+-- 'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY'
+-- model, but no range expansion is applied.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkSubpassDescription2-attachment-06912# If the @attachment@
@@ -1397,7 +1494,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     member of @pDepthStencilAttachment@ is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and its @pNext@ chain
 --     includes a
---     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
 --     structure, the @layout@ member of @pDepthStencilAttachment@ /must/
 --     not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
@@ -1420,29 +1517,51 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     in the same subpass, then @loadOp@ /must/ not be
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'
 --
--- -   #VUID-VkSubpassDescription2-pResolveAttachments-03065# If
---     @pResolveAttachments@ is not @NULL@, for each resolve attachment
---     that does not have the value
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the corresponding
---     color attachment /must/ not have the value
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
---
--- -   #VUID-VkSubpassDescription2-pResolveAttachments-03066# If
---     @pResolveAttachments@ is not @NULL@, for each resolve attachment
---     that is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the
---     corresponding color attachment /must/ not have a sample count of
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
---
 -- -   #VUID-VkSubpassDescription2-pResolveAttachments-03067# If
 --     @pResolveAttachments@ is not @NULL@, each resolve attachment that is
 --     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have a
 --     sample count of
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   #VUID-VkSubpassDescription2-pResolveAttachments-03068# Any given
---     element of @pResolveAttachments@ /must/ have the same
---     'Vulkan.Core10.Enums.Format.Format' as its corresponding color
---     attachment
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09335# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is not enabled and @pResolveAttachments@ is not @NULL@, for each
+--     resolve attachment that does not have the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the corresponding
+--     color attachment /must/ not have the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkSubpassDescription2-nullColorAttachmentWithExternalFormatResolve-09336#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--     property is 'Vulkan.Core10.FundamentalTypes.FALSE' and
+--     @pResolveAttachments@ is not @NULL@, for each resolve attachment
+--     that has a format of 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
+--     the corresponding color attachment /must/ not have the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkSubpassDescription2-nullColorAttachmentWithExternalFormatResolve-09337#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--     property is 'Vulkan.Core10.FundamentalTypes.TRUE' and
+--     @pResolveAttachments@ is not @NULL@, for each resolve attachment
+--     that has a format of 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
+--     the corresponding color attachment /must/ have the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09338# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is not enabled and @pResolveAttachments@ is not @NULL@, for each
+--     resolve attachment that is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the corresponding
+--     color attachment /must/ not have a sample count of
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
+--
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09339# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is not enabled, each element of @pResolveAttachments@ /must/ have
+--     the same 'Vulkan.Core10.Enums.Format.Format' as its corresponding
+--     color attachment
 --
 -- -   #VUID-VkSubpassDescription2-multisampledRenderToSingleSampled-06869#
 --     If none of the @VK_AMD_mixed_attachment_samples@ extension, the
@@ -1454,8 +1573,21 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --
 -- -   #VUID-VkSubpassDescription2-pInputAttachments-02897# All attachments
 --     in @pInputAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
---     formats whose
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and any of the
+--     following is true:
+--
+--     -   the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--         feature is not enabled
+--
+--     -   the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--         property is 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+--     -   does not have a non-zero value of
+--         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
+--
+--     /must/ have image formats whose
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain at least
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
@@ -1470,10 +1602,11 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
--- -   #VUID-VkSubpassDescription2-pResolveAttachments-02899# All
+-- -   #VUID-VkSubpassDescription2-pResolveAttachments-09343# All
 --     attachments in @pResolveAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
---     formats whose
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and do not have an
+--     image format of 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' /must/
+--     have image formats whose
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
@@ -1567,9 +1700,9 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     @pPreserveAttachments@ /must/ not be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
--- -   #VUID-VkSubpassDescription2-pPreserveAttachments-03074# Any given
---     element of @pPreserveAttachments@ /must/ not also be an element of
---     any other member of the subpass description
+-- -   #VUID-VkSubpassDescription2-pPreserveAttachments-03074# Each element
+--     of @pPreserveAttachments@ /must/ not also be an element of any other
+--     member of the subpass description
 --
 -- -   #VUID-VkSubpassDescription2-layout-02528# If any attachment is used
 --     by more than one 'AttachmentReference2' member, then each use /must/
@@ -1614,6 +1747,52 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   #VUID-VkSubpassDescription2-viewMask-06706# The index of the most
 --     significant bit in @viewMask@ /must/ be less than
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
+--
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09344# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is enabled, @pResolveAttachments@ is not @NULL@, and
+--     @colorAttachmentCount@ is not @1@, any element of
+--     @pResolveAttachments@ that is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', /must/ not have a
+--     format of 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09345# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is enabled, @pResolveAttachments@ is not @NULL@, any element of
+--     @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and has a format of
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', and the corresponding
+--     element of @pColorAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the color attachment
+--     /must/ have a @samples@ value of @1@
+--
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09346# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is enabled, @pResolveAttachments@ is not @NULL@, and any element of
+--     @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and has a format of
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', @viewMask@ /must/ be
+--     @0@
+--
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09347# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is enabled, @pResolveAttachments@ is not @NULL@, and any element of
+--     @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and has a format of
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'::@pFragmentShadingRateAttachment@
+--     /must/ either be @NULL@ or a 'AttachmentReference2' structure with a
+--     @attachment@ value of 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkSubpassDescription2-externalFormatResolve-09348# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is enabled, @pResolveAttachments@ is not @NULL@, and any element of
+--     @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and has a format of
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', elements of
+--     @pInputAttachments@ referencing either a color attachment or resolve
+--     attachment used in this subpass /must/ not include
+--     @VK_IMAGE_ASPECT_PLANE_i_BIT@ for any index /i/ in its @aspectMask@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1894,7 +2073,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
 --
--- -   #VUID-VkSubpassDependency2-rayTracingPipeline-07949# If neither the
+-- -   #VUID-VkSubpassDependency2-srcStageMask-07949# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -1949,7 +2128,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @dstStageMask@ /must/ not be @0@
 --
--- -   #VUID-VkSubpassDependency2-rayTracingPipeline-07949# If neither the
+-- -   #VUID-VkSubpassDependency2-dstStageMask-07949# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -2198,7 +2377,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     member of any element of @pInputAttachments@, @pColorAttachments@,
 --     @pResolveAttachments@ or @pDepthStencilAttachment@, or the
 --     attachment indexed by any element of @pPreserveAttachments@ in any
---     given element of @pSubpasses@ is bound to a range of a
+--     element of @pSubpasses@ is bound to a range of a
 --     'Vulkan.Core10.Handles.DeviceMemory' object that overlaps with any
 --     other attachment in any subpass (including the same subpass), the
 --     'AttachmentDescription2' structures describing them /must/ include
@@ -2208,9 +2387,9 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 -- -   #VUID-VkRenderPassCreateInfo2-attachment-03051# If the @attachment@
 --     member of any element of @pInputAttachments@, @pColorAttachments@,
 --     @pResolveAttachments@ or @pDepthStencilAttachment@, or any element
---     of @pPreserveAttachments@ in any given element of @pSubpasses@ is
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then it /must/
---     be less than @attachmentCount@
+--     of @pPreserveAttachments@ in any element of @pSubpasses@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then it /must/ be
+--     less than @attachmentCount@
 --
 -- -   #VUID-VkRenderPassCreateInfo2-fragmentDensityMapAttachment-06472# If
 --     the pNext chain includes a
@@ -2309,6 +2488,11 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     subpass, it /must/ not be used as any other attachment in the render
 --     pass
 --
+-- -   #VUID-VkRenderPassCreateInfo2-pAttachments-09387# If any element of
+--     @pAttachments@ is used as a fragment shading rate attachment, the
+--     @loadOp@ for that attachment /must/ not be
+--     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'
+--
 -- -   #VUID-VkRenderPassCreateInfo2-flags-04521# If @flags@ includes
 --     'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM',
 --     an element of @pSubpasses@ includes an instance of
@@ -2391,6 +2575,13 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     then the element of @pAttachments@ with an index equal to
 --     @attachment@ /must/ not have a @format@ that includes only a stencil
 --     component
+--
+-- -   #VUID-VkRenderPassCreateInfo2-pResolveAttachments-09331# If any
+--     element of @pResolveAttachments@ of any element of @pSubpasses@
+--     references an attachment description with a format of
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'::@fragmentDensityMapAttachment->attachment@
+--     /must/ be 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2552,7 +2743,23 @@ instance es ~ '[] => Zero (RenderPassCreateInfo2 es) where
 
 -- | VkSubpassBeginInfo - Structure specifying subpass begin information
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkSubpassBeginInfo-contents-09382# If @contents@ is
+--     'Vulkan.Core10.Enums.SubpassContents.SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT',
+--     then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
+--     /must/ be enabled
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSubpassBeginInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBPASS_BEGIN_INFO'
+--
+-- -   #VUID-VkSubpassBeginInfo-pNext-pNext# @pNext@ /must/ be @NULL@
+--
+-- -   #VUID-VkSubpassBeginInfo-contents-parameter# @contents@ /must/ be a
+--     valid 'Vulkan.Core10.Enums.SubpassContents.SubpassContents' value
 --
 -- = See Also
 --
@@ -2567,9 +2774,6 @@ instance es ~ '[] => Zero (RenderPassCreateInfo2 es) where
 data SubpassBeginInfo = SubpassBeginInfo
   { -- | @contents@ is a 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
     -- value specifying how the commands in the next subpass will be provided.
-    --
-    -- #VUID-VkSubpassBeginInfo-contents-parameter# @contents@ /must/ be a
-    -- valid 'Vulkan.Core10.Enums.SubpassContents.SubpassContents' value
     contents :: SubpassContents }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

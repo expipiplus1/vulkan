@@ -90,10 +90,10 @@ pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlagBits 0x00000010
 -- | 'IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM' specifies that an
 -- image /can/ be used in a render pass with non-zero
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density map offsets>.
--- In a renderpass with non-zero offsets, fragment density map attachments,
--- input attachments, color attachments, depth\/stencil attachment, resolve
--- attachments, and preserve attachments /must/ be created with
--- 'IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM'.
+-- In a render pass with non-zero offsets, fragment density map
+-- attachments, input attachments, color attachments, depth\/stencil
+-- attachment, resolve attachments, and preserve attachments /must/ be
+-- created with 'IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM'.
 pattern IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM = ImageCreateFlagBits 0x00008000
 
 -- | 'IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT' specifies that the image /can/

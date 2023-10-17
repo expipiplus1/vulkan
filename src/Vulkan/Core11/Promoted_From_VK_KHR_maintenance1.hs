@@ -60,7 +60,7 @@ foreign import ccall
 -- the only way to release memory from a command pool to the system
 -- requires calling 'Vulkan.Core10.CommandPool.resetCommandPool', which
 -- cannot be executed while any command buffers from that pool are still in
--- use. Subsequent recording operations into command buffers will re-use
+-- use. Subsequent recording operations into command buffers will reuse
 -- this memory but since total memory requirements fluctuate over time,
 -- unused memory can accumulate.
 --

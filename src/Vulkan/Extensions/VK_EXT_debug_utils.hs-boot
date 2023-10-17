@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__; __Special Use__]
 --
 --     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
@@ -230,15 +233,15 @@
 -- >     PFN_vkDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 -- >
 -- >     VkDebugUtilsMessengerCreateInfoEXT callback1 = {
--- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,  // sType
--- >             NULL,                                                     // pNext
--- >             0,                                                        // flags
--- >             VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |           // messageSeverity
--- >             VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
--- >             VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |             // messageType
--- >             VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
--- >             myOutputDebugString,                                      // pfnUserCallback
--- >             NULL                                                      // pUserData
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+-- >         .pNext = NULL,
+-- >         .flags = 0,
+-- >         .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
+-- >                            VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+-- >         .messageType= VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+-- >                       VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+-- >         .pfnUserCallback = myOutputDebugString,
+-- >         .pUserData = NULL
 -- >     };
 -- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, NULL, &cb1);
 -- >     if (res != VK_SUCCESS) {
@@ -254,14 +257,14 @@
 -- >     }
 -- >
 -- >     VkDebugUtilsMessengerCreateInfoEXT callback3 = {
--- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,  // sType
--- >             NULL,                                                     // pNext
--- >             0,                                                        // flags
--- >             VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,          // messageSeverity
--- >             VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |             // messageType
--- >             VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
--- >             mystdOutLogger,                                           // pfnUserCallback
--- >             NULL                                                      // pUserData
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+-- >         .pNext = NULL,
+-- >         .flags = 0,
+-- >         .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+-- >         .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+-- >                        VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+-- >         .pfnUserCallback = mystdOutLogger,
+-- >         .pUserData = NULL
 -- >     };
 -- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback3, NULL, &cb3);
 -- >     if (res != VK_SUCCESS) {
@@ -291,11 +294,11 @@
 -- >     // Set a name on the image
 -- >     const VkDebugUtilsObjectNameInfoEXT imageNameInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, // sType
--- >         NULL,                                               // pNext
--- >         VK_OBJECT_TYPE_IMAGE,                               // objectType
--- >         (uint64_t)image,                                    // objectHandle
--- >         "Brick Diffuse Texture",                            // pObjectName
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+-- >         .pNext = NULL,
+-- >         .objectType = VK_OBJECT_TYPE_IMAGE,
+-- >         .objectHandle = (uint64_t)image,
+-- >         .pObjectName = "Brick Diffuse Texture",
 -- >     };
 -- >
 -- >     pfnSetDebugUtilsObjectNameEXT(device, &imageNameInfo);
@@ -323,10 +326,10 @@
 -- >     // Describe the area being rendered
 -- >     const VkDebugUtilsLabelEXT houseLabel =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, // sType
--- >         NULL,                                    // pNext
--- >         "Brick House",                           // pLabelName
--- >         { 1.0f, 0.0f, 0.0f, 1.0f },              // color
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+-- >         .pNext = NULL,
+-- >         .pLabelName = "Brick House",
+-- >         .color = { 1.0f, 0.0f, 0.0f, 1.0f },
 -- >     };
 -- >
 -- >     // Start an annotated group of calls under the 'Brick House' name
@@ -335,10 +338,10 @@
 -- >         // A mutable structure for each part being rendered
 -- >         VkDebugUtilsLabelEXT housePartLabel =
 -- >         {
--- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, // sType
--- >             NULL,                                    // pNext
--- >             NULL,                                    // pLabelName
--- >             { 0.0f, 0.0f, 0.0f, 0.0f },              // color
+-- >             .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+-- >             .pNext = NULL,
+-- >             .pLabelName = NULL,
+-- >             .color = { 0.0f, 0.0f, 0.0f, 0.0f },
 -- >         };
 -- >
 -- >         // Set the name and insert the marker
@@ -377,10 +380,10 @@
 -- >     // Describe the queue being used
 -- >     const VkDebugUtilsLabelEXT queueLabel =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT, // sType
--- >         NULL,                                    // pNext
--- >         "Main Render Work",                      // pLabelName
--- >         { 0.0f, 1.0f, 0.0f, 1.0f },              // color
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
+-- >         .pNext = NULL,
+-- >         .pLabelName = "Main Render Work",
+-- >         .color = { 0.0f, 1.0f, 0.0f, 1.0f },
 -- >     };
 -- >
 -- >     // Identify the queue label region
@@ -388,15 +391,18 @@
 -- >
 -- >     // Submit the work for the main render thread
 -- >     const VkCommandBuffer cmd_bufs[] = {commandBuffer};
--- >     VkSubmitInfo submit_info = {.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
--- >                                 .pNext = NULL,
--- >                                 .waitSemaphoreCount = 0,
--- >                                 .pWaitSemaphores = NULL,
--- >                                 .pWaitDstStageMask = NULL,
--- >                                 .commandBufferCount = 1,
--- >                                 .pCommandBuffers = cmd_bufs,
--- >                                 .signalSemaphoreCount = 0,
--- >                                 .pSignalSemaphores = NULL};
+-- >     VkSubmitInfo submit_info =
+-- >     {
+-- >         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+-- >         .pNext = NULL,
+-- >         .waitSemaphoreCount = 0,
+-- >         .pWaitSemaphores = NULL,
+-- >         .pWaitDstStageMask = NULL,
+-- >         .commandBufferCount = 1,
+-- >         .pCommandBuffers = cmd_bufs,
+-- >         .signalSemaphoreCount = 0,
+-- >         .pSignalSemaphores = NULL
+-- >     };
 -- >     vkQueueSubmit(queue, 1, &submit_info, fence);
 -- >
 -- >     // End the queue label region

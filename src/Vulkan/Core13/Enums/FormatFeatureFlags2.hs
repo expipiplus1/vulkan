@@ -63,6 +63,7 @@ module Vulkan.Core13.Enums.FormatFeatureFlags2  ( pattern FORMAT_FEATURE_2_SAMPL
                                                                         , FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM
                                                                         , FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM
                                                                         , FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV
+                                                                        , FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT
                                                                         , FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                         , FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT
                                                                         , FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
@@ -359,8 +360,9 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 -- -   'FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     specifies that an image view /can/ be used as a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
---     An implementation /must/ not set this feature for formats with
---     numeric type other than @*UINT@, or set it as a buffer feature.
+--     An implementation /must/ not set this feature for formats with a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
+--     other than @UINT@, or set it as a buffer feature.
 --
 -- -   @VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR@ specifies that an
 --     image view with this format /can/ be used as a
@@ -448,6 +450,10 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --     views created with this format /can/ be sampled in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-boxfilter box filter sampling>
 --     operations.
+--
+-- -   'FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT' specifies that an
+--     image /can/ be created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT'.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by <VkBuffer.html buffers> or
@@ -784,11 +790,17 @@ pattern FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM = FormatFeatureFlagBits2 0x000000
 -- @optimalTilingFeatures@ or @bufferFeatures@ members.
 pattern FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV = FormatFeatureFlagBits2 0x0000004000000000
 
+-- | 'FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT' specifies that an image
+-- /can/ be created with
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT'.
+pattern FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT = FormatFeatureFlagBits2 0x0000400000000000
+
 -- | 'FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
 -- that an image view /can/ be used as a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
--- An implementation /must/ not set this feature for formats with numeric
--- type other than @*UINT@, or set it as a buffer feature.
+-- An implementation /must/ not set this feature for formats with a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
+-- other than @UINT@, or set it as a buffer feature.
 pattern FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = FormatFeatureFlagBits2 0x0000000040000000
 
 -- | 'FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image
@@ -954,6 +966,10 @@ showTableFormatFeatureFlagBits2 =
   ,
     ( FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV
     , "LINEAR_COLOR_ATTACHMENT_BIT_NV"
+    )
+  ,
+    ( FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT
+    , "HOST_IMAGE_TRANSFER_BIT_EXT"
     )
   ,
     ( FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR

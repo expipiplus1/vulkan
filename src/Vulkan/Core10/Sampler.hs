@@ -79,8 +79,10 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Sampler)
 import Vulkan.Core10.Handles (Sampler(..))
 import Vulkan.Core10.Enums.SamplerAddressMode (SamplerAddressMode)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_image_processing2 (SamplerBlockMatchWindowCreateInfoQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_border_color_swizzle (SamplerBorderColorComponentMappingCreateInfoEXT)
 import Vulkan.Core10.Enums.SamplerCreateFlagBits (SamplerCreateFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_weights (SamplerCubicWeightsCreateInfoQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (SamplerCustomBorderColorCreateInfoEXT)
 import Vulkan.Core10.Enums.SamplerMipmapMode (SamplerMipmapMode)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (SamplerReductionModeCreateInfo)
@@ -430,6 +432,15 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     @minFilter@ is 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT',
 --     @anisotropyEnable@ /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-VkSamplerCreateInfo-magFilter-07911# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic VK_EXT_filter_cubic>
+--     extension is not enabled and either @magFilter@ or @minFilter@ is
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT', the @reductionMode@
+--     member of
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
+--     /must/ be
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
+--
 -- -   #VUID-VkSamplerCreateInfo-compareEnable-01423# If @compareEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', the @reductionMode@ member of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
@@ -565,7 +576,9 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
+--     'Vulkan.Extensions.VK_QCOM_image_processing2.SamplerBlockMatchWindowCreateInfoQCOM',
 --     'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
+--     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.SamplerCubicWeightsCreateInfoQCOM',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
 --     or
@@ -642,9 +655,9 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     -- specifying the addressing mode for W coordinates outside [0,1).
     addressModeW :: SamplerAddressMode
   , -- | #samplers-mipLodBias# @mipLodBias@ is the bias to be added to mipmap LOD
-    -- (level-of-detail) calculation and bias provided by image sampling
-    -- functions in SPIR-V, as described in the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
+    -- calculation and bias provided by image sampling functions in SPIR-V, as
+    -- described in the
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-level-of-detail-operation LOD Operation>
     -- section.
     mipLodBias :: Float
   , -- | #samplers-maxAnisotropy# @anisotropyEnable@ is
@@ -721,6 +734,8 @@ instance Extensible SamplerCreateInfo where
   getNext SamplerCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SamplerBlockMatchWindowCreateInfoQCOM = Just f
+    | Just Refl <- eqT @e @SamplerCubicWeightsCreateInfoQCOM = Just f
     | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerBorderColorComponentMappingCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerCustomBorderColorCreateInfoEXT = Just f

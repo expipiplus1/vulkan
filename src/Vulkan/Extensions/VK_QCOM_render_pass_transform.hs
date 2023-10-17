@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     3
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --     and
@@ -192,12 +195,12 @@
 --
 -- 2) Should the extension support only rotations (e.g. 90, 180,
 -- 270-degrees), or also mirror transforms (e.g. vertical flips)? Mobile
--- use-cases only require rotation. Other display systems such as
+-- use cases only require rotation. Other display systems such as
 -- projectors might require a flipped transform.
 --
 -- __RESOLVED__: In this version of the extension, the functionality is
--- restricted to 90, 180, and 270-degree rotations to address mobile
--- use-cases.
+-- restricted to 90, 180, and 270-degree rotations to address mobile use
+-- cases.
 --
 -- 3) How does this extension interact with VK_EXT_fragment_density_map?
 --

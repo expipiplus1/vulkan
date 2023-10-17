@@ -488,10 +488,10 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- disabled.
     robustBufferAccessUpdateAfterBind :: Bool
   , -- | #extension-limits-quadDivergentImplicitLod# @quadDivergentImplicitLod@
-    -- is a boolean value indicating whether implicit level of detail
-    -- calculations for image operations have well-defined results when the
-    -- image and\/or sampler objects used for the instruction are not uniform
-    -- within a quad. See
+    -- is a boolean value indicating whether implicit LOD calculations for
+    -- image operations have well-defined results when the image and\/or
+    -- sampler objects used for the instruction are not uniform within a quad.
+    -- See
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
     quadDivergentImplicitLod :: Bool
   , -- | #extension-limits-maxPerStageDescriptorUpdateAfterBindSamplers#
@@ -794,6 +794,11 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@pBindings@
 --     /must/ have a smaller value of @binding@
 --
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-pBindingFlags-09379#
+--     If an element of @pBindingFlags@ includes
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT',
+--     then it /must/ be the element with the the highest @binding@ number
+--
 -- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingUniformBufferUpdateAfterBind-03005#
 --     If
 --     'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingUniformBufferUpdateAfterBind@
@@ -1064,11 +1069,12 @@ instance Zero DescriptorSetVariableDescriptorCountAllocateInfo where
 -- 'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingVariableDescriptorCount@
 -- feature is not enabled, then @maxVariableDescriptorCount@ is set to
 -- zero. For the purposes of this command, a variable-sized descriptor
--- binding with a @descriptorCount@ of zero is treated as if the
--- @descriptorCount@ is one, and thus the binding is not ignored and the
--- maximum descriptor count will be returned. If the layout is not
--- supported, then the value written to @maxVariableDescriptorCount@ is
--- undefined.
+-- binding with a @descriptorCount@ of zero is treated as having a
+-- @descriptorCount@ of four if @descriptorType@ is
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
+-- or one otherwise, and thus the binding is not ignored and the maximum
+-- descriptor count will be returned. If the layout is not supported, then
+-- the value written to @maxVariableDescriptorCount@ is undefined.
 --
 -- == Valid Usage (Implicit)
 --

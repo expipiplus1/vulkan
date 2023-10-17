@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --     and
@@ -447,9 +450,10 @@ instance Zero PhysicalDeviceSwapchainMaintenance1FeaturesEXT where
 -- reset by the presentation engine.
 --
 -- The application /can/ destroy the wait semaphores associated with a
--- given presentation operation when the associated fence is signaled, and
--- /can/ destroy the swapchain when the fences associated with all past
--- presentation requests have signaled.
+-- given presentation operation when at least one of the associated fences
+-- is signaled, and /can/ destroy the swapchain when the fences associated
+-- with all past presentation requests referring to that swapchain have
+-- signaled.
 --
 -- Fences associated with presentations to the same swapchain on the same
 -- 'Vulkan.Core10.Handles.Queue' /must/ be signaled in the same order as
@@ -700,7 +704,7 @@ instance Zero SwapchainPresentModesCreateInfoEXT where
 --
 -- -   #VUID-VkSwapchainPresentModeInfoEXT-pPresentModes-07761# Each entry
 --     in @pPresentModes@ must be a presentation mode specified in
---     'SwapchainPresentModesCreateInfoEXT'::pPresentModes when creating
+--     'SwapchainPresentModesCreateInfoEXT'::@pPresentModes@ when creating
 --     the entry’s corresponding swapchain
 --
 -- == Valid Usage (Implicit)

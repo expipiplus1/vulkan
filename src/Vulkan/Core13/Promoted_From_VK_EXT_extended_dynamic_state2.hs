@@ -52,6 +52,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
 -- value used to create the currently active pipeline.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetRasterizerDiscardEnable-None-08970# At least one of
+--     the following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2 extendedDynamicState2>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetRasterizerDiscardEnable-commandBuffer-parameter#
@@ -138,6 +156,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthBiasEnable@
 -- value used to create the currently active pipeline.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDepthBiasEnable-None-08970# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2 extendedDynamicState2>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetDepthBiasEnable-commandBuffer-parameter#
@@ -221,6 +257,24 @@ foreign import ccall
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
 -- value used to create the currently active pipeline.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetPrimitiveRestartEnable-None-08970# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2 extendedDynamicState2>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- == Valid Usage (Implicit)
 --

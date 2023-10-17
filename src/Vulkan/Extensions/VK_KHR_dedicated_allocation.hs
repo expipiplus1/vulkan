@@ -17,10 +17,13 @@
 -- [__Revision__]
 --     3
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -117,26 +120,26 @@
 -- >     VkResult result = vkCreateImage(
 -- >         device,
 -- >         &imageCreateInfo,
--- >         NULL,                               // pAllocator
+-- >         NULL,               // pAllocator
 -- >         &image);
 -- >
 -- >     VkMemoryDedicatedRequirementsKHR dedicatedRequirements =
 -- >     {
--- >         VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR,
--- >         NULL,                               // pNext
+-- >         .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR,
+-- >         .pNext = NULL,
 -- >     };
 -- >
 -- >     VkMemoryRequirements2 memoryRequirements =
 -- >     {
--- >         VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
--- >         &dedicatedRequirements,             // pNext
+-- >         .sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
+-- >         .pNext = &dedicatedRequirements,
 -- >     };
 -- >
 -- >     const VkImageMemoryRequirementsInfo2 imageRequirementsInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
--- >         NULL,                               // pNext
--- >         image
+-- >         .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+-- >         .pNext = NULL,
+-- >         .image = image
 -- >     };
 -- >
 -- >     vkGetImageMemoryRequirements2(
@@ -150,25 +153,25 @@
 -- >
 -- >         VkMemoryDedicatedAllocateInfoKHR dedicatedInfo =
 -- >         {
--- >             VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR,   // sType
--- >             NULL,                                                   // pNext
--- >             image,                                                  // image
--- >             VK_NULL_HANDLE,                                         // buffer
+-- >             .sType = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR,
+-- >             .pNext = NULL,
+-- >             .image = image,
+-- >             .buffer = VK_NULL_HANDLE,
 -- >         };
 -- >
 -- >         VkMemoryAllocateInfo memoryAllocateInfo =
 -- >         {
--- >             VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,                 // sType
--- >             &dedicatedInfo,                                         // pNext
--- >             memoryRequirements.size,                                // allocationSize
--- >             FindMemoryTypeIndex(memoryRequirements.memoryTypeBits), // memoryTypeIndex
+-- >             .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+-- >             .pNext = &dedicatedInfo,
+-- >             .allocationSize = memoryRequirements.size,
+-- >             .memoryTypeIndex = FindMemoryTypeIndex(memoryRequirements.memoryTypeBits),
 -- >         };
 -- >
 -- >         VkDeviceMemory memory;
 -- >         vkAllocateMemory(
 -- >             device,
 -- >             &memoryAllocateInfo,
--- >             NULL,                       // pAllocator
+-- >             NULL,               // pAllocator
 -- >             &memory);
 -- >
 -- >         // Bind the image to the memory

@@ -2,6 +2,8 @@
 -- No documentation found for Chapter "DescriptorPoolCreateFlagBits"
 module Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits  ( DescriptorPoolCreateFlags
                                                          , DescriptorPoolCreateFlagBits( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+                                                                                       , DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV
+                                                                                       , DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV
                                                                                        , DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT
                                                                                        , DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
                                                                                        , ..
@@ -42,6 +44,28 @@ newtype DescriptorPoolCreateFlagBits = DescriptorPoolCreateFlagBits Flags
 -- 'Vulkan.Core10.DescriptorSet.resetDescriptorPool' are allowed.
 pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = DescriptorPoolCreateFlagBits 0x00000001
 
+-- | 'DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV' specifies
+-- that the implementation should allow the application to allocate more
+-- descriptors from the pool than was specified by the
+-- 'Vulkan.Core10.DescriptorSet.DescriptorPoolSize'::@descriptorCount@ for
+-- any descriptor type as specified by
+-- 'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo'::@poolSizeCount@
+-- and
+-- 'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo'::@pPoolSizes@, as
+-- available resources allow. The implementation /may/ use the
+-- @descriptorCount@ for each descriptor type to allocate the initial pool,
+-- but the application is allowed to set the @poolSizeCount@ to zero, or
+-- any of the @descriptorCount@ values in the @pPoolSizes@ array to zero.
+pattern DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV = DescriptorPoolCreateFlagBits 0x00000010
+
+-- | 'DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV' specifies that
+-- the implementation should allow the application to allocate more than
+-- 'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo'::@maxSets@
+-- descriptor set objects from the descriptor pool as available resources
+-- allow. The implementation /may/ use the @maxSets@ value to allocate the
+-- initial available sets, but using zero is permitted.
+pattern DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV = DescriptorPoolCreateFlagBits 0x00000008
+
 -- | 'DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT' specifies that this
 -- descriptor pool and the descriptor sets allocated from it reside
 -- entirely in host memory and cannot be bound. Similar to descriptor sets
@@ -77,6 +101,14 @@ showTableDescriptorPoolCreateFlagBits =
   [
     ( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
     , "FREE_DESCRIPTOR_SET_BIT"
+    )
+  ,
+    ( DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV
+    , "ALLOW_OVERALLOCATION_POOLS_BIT_NV"
+    )
+  ,
+    ( DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV
+    , "ALLOW_OVERALLOCATION_SETS_BIT_NV"
     )
   ,
     ( DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT

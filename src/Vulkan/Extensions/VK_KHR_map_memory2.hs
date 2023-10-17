@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Faith Ekstrand
@@ -43,8 +46,8 @@
 -- == Description
 --
 -- This extension provides extensible versions of the Vulkan memory map and
--- unmap entrypoints. The new entrypoints are functionally identical to the
--- core entrypoints, except that their parameters are specified using
+-- unmap entry points. The new entry points are functionally identical to
+-- the core entry points, except that their parameters are specified using
 -- extensible structures that can be used to pass extension-specific
 -- information.
 --

@@ -17,7 +17,10 @@
 -- [__Revision__]
 --     2
 --
--- [__Extension and Version Dependencies__; __Deprecation state__]
+-- [__Ratification Status__]
+--     Not ratified
+--
+-- [__Extension and Version Dependencies__; __Deprecation State__]
 --
 --     -   /Promoted/ to @VK_KHR_draw_indirect_count@ extension
 --

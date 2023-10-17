@@ -27,7 +27,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindIndexBufferIndirectCommandNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer',
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR'
 newtype IndexType = IndexType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

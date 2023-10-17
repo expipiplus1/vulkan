@@ -49,6 +49,7 @@ import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified (ExternalMemoryAcquireUnmodifiedEXT)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.ImageView (ImageSubresourceRange)
@@ -216,43 +217,90 @@ instance Zero MemoryBarrier where
 --     then it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-VkBufferMemoryBarrier-srcQueueFamilyIndex-04087# If
---     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
---     least one /must/ not be a special queue family reserved for external
---     memory ownership transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
---
--- -   #VUID-VkBufferMemoryBarrier-buffer-04088# If @buffer@ was created
---     with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
---     special queue family values reserved for external memory transfers,
---     the other /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   #VUID-VkBufferMemoryBarrier-buffer-04089# If @buffer@ was created
+-- -   #VUID-VkBufferMemoryBarrier-buffer-09095# If @buffer@ was created
 --     with a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ both be valid
---     queue families, or one of the special queue family values reserved
---     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
+--     @srcQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
 --
--- -   #VUID-VkBufferMemoryBarrier-synchronization2-03853# If the
+-- -   #VUID-VkBufferMemoryBarrier-buffer-09096# If @buffer@ was created
+--     with a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
+--     @dstQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
+--
+-- -   #VUID-VkBufferMemoryBarrier-srcQueueFamilyIndex-04087# If
+--     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
+--     least one of @srcQueueFamilyIndex@ or @dstQueueFamilyIndex@ /must/
+--     not be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier-None-09097# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkBufferMemoryBarrier-None-09098# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkBufferMemoryBarrier-srcQueueFamilyIndex-09099# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier-dstQueueFamilyIndex-09100# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier-None-09049# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, and @buffer@ was created with a sharing mode
 --     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at
 --     least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/
 --     be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
+-- -   #VUID-VkBufferMemoryBarrier-None-09050# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, and @buffer@ was created with a sharing mode
+--     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--     @srcQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkBufferMemoryBarrier-None-09051# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, and @buffer@ was created with a sharing mode
+--     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--     @dstQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBufferMemoryBarrier-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER'
 --
--- -   #VUID-VkBufferMemoryBarrier-pNext-pNext# @pNext@ /must/ be @NULL@
+-- -   #VUID-VkBufferMemoryBarrier-pNext-pNext# @pNext@ /must/ be @NULL@ or
+--     a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified.ExternalMemoryAcquireUnmodifiedEXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBufferMemoryBarrier-buffer-parameter# @buffer@ /must/ be a
 --     valid 'Vulkan.Core10.Handles.Buffer' handle
@@ -266,8 +314,10 @@ instance Zero MemoryBarrier where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'
-data BufferMemoryBarrier = BufferMemoryBarrier
-  { -- | @srcAccessMask@ is a bitmask of
+data BufferMemoryBarrier (es :: [Type]) = BufferMemoryBarrier
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
     srcAccessMask :: AccessFlags
@@ -293,41 +343,56 @@ data BufferMemoryBarrier = BufferMemoryBarrier
     -- from @offset@ to the end of the buffer.
     size :: DeviceSize
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (BufferMemoryBarrier)
+deriving instance Generic (BufferMemoryBarrier (es :: [Type]))
 #endif
-deriving instance Show BufferMemoryBarrier
+deriving instance Show (Chain es) => Show (BufferMemoryBarrier es)
 
-instance ToCStruct BufferMemoryBarrier where
+instance Extensible BufferMemoryBarrier where
+  extensibleTypeName = "BufferMemoryBarrier"
+  setNext BufferMemoryBarrier{..} next' = BufferMemoryBarrier{next = next', ..}
+  getNext BufferMemoryBarrier{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferMemoryBarrier e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @ExternalMemoryAcquireUnmodifiedEXT = Just f
+    | otherwise = Nothing
+
+instance ( Extendss BufferMemoryBarrier es
+         , PokeChain es ) => ToCStruct (BufferMemoryBarrier es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p BufferMemoryBarrier{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr AccessFlags)) (srcAccessMask)
-    poke ((p `plusPtr` 20 :: Ptr AccessFlags)) (dstAccessMask)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (srcQueueFamilyIndex)
-    poke ((p `plusPtr` 28 :: Ptr Word32)) (dstQueueFamilyIndex)
-    poke ((p `plusPtr` 32 :: Ptr Buffer)) (buffer)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (offset)
-    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (size)
-    f
+  pokeCStruct p BufferMemoryBarrier{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr AccessFlags)) (srcAccessMask)
+    lift $ poke ((p `plusPtr` 20 :: Ptr AccessFlags)) (dstAccessMask)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (srcQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (dstQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Buffer)) (buffer)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (offset)
+    lift $ poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (size)
+    lift $ f
   cStructSize = 56
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr AccessFlags)) (zero)
-    poke ((p `plusPtr` 20 :: Ptr AccessFlags)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Buffer)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr AccessFlags)) (zero)
+    lift $ poke ((p `plusPtr` 20 :: Ptr AccessFlags)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Buffer)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
+    lift $ f
 
-instance FromCStruct BufferMemoryBarrier where
+instance ( Extendss BufferMemoryBarrier es
+         , PeekChain es ) => FromCStruct (BufferMemoryBarrier es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcAccessMask <- peek @AccessFlags ((p `plusPtr` 16 :: Ptr AccessFlags))
     dstAccessMask <- peek @AccessFlags ((p `plusPtr` 20 :: Ptr AccessFlags))
     srcQueueFamilyIndex <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
@@ -336,6 +401,7 @@ instance FromCStruct BufferMemoryBarrier where
     offset <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
     size <- peek @DeviceSize ((p `plusPtr` 48 :: Ptr DeviceSize))
     pure $ BufferMemoryBarrier
+             next
              srcAccessMask
              dstAccessMask
              srcQueueFamilyIndex
@@ -344,14 +410,9 @@ instance FromCStruct BufferMemoryBarrier where
              offset
              size
 
-instance Storable BufferMemoryBarrier where
-  sizeOf ~_ = 56
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero BufferMemoryBarrier where
+instance es ~ '[] => Zero (BufferMemoryBarrier es) where
   zero = BufferMemoryBarrier
+           ()
            zero
            zero
            zero
@@ -621,29 +682,55 @@ instance Zero BufferMemoryBarrier where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     set
 --
--- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-04070# If
---     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
---     least one /must/ not be a special queue family reserved for external
---     memory ownership transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
---
--- -   #VUID-VkImageMemoryBarrier-image-04071# If @image@ was created with
---     a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
---     special queue family values reserved for external memory transfers,
---     the other /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   #VUID-VkImageMemoryBarrier-image-04072# If @image@ was created with
+-- -   #VUID-VkImageMemoryBarrier-image-09117# If @image@ was created with
 --     a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ both be valid
---     queue families, or one of the special queue family values reserved
---     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
+--     @srcQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
+--
+-- -   #VUID-VkImageMemoryBarrier-image-09118# If @image@ was created with
+--     a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
+--     @dstQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
+--
+-- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-04070# If
+--     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
+--     least one of @srcQueueFamilyIndex@ or @dstQueueFamilyIndex@ /must/
+--     not be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier-None-09119# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkImageMemoryBarrier-None-09120# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-09121# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier-dstQueueFamilyIndex-09122# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
 --
 -- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-07120# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
@@ -751,9 +838,14 @@ instance Zero BufferMemoryBarrier where
 --     then it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-VkImageMemoryBarrier-image-01671# If @image@ has a
---     single-plane color format or is not /disjoint/, then the
---     @aspectMask@ member of @subresourceRange@ /must/ be
+-- -   #VUID-VkImageMemoryBarrier-image-09241# If @image@ has a color
+--     format that is single-plane, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier-image-09242# If @image@ has a color
+--     format and is not /disjoint/, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier-image-01672# If @image@ has a
@@ -761,7 +853,8 @@ instance Zero BufferMemoryBarrier where
 --     @aspectMask@ member of @subresourceRange@ /must/ include at least
 --     one
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
---     or 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--     bit or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier-image-03319# If @image@ has a
 --     depth\/stencil format with both depth and stencil and the
@@ -795,20 +888,39 @@ instance Zero BufferMemoryBarrier where
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
--- -   #VUID-VkImageMemoryBarrier-synchronization2-03857# If the
+-- -   #VUID-VkImageMemoryBarrier-None-09052# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, and @image@ was created with a sharing mode
 --     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at
 --     least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/
 --     be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
+-- -   #VUID-VkImageMemoryBarrier-None-09053# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, and @image@ was created with a sharing mode
+--     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--     @srcQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkImageMemoryBarrier-None-09054# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, and @image@ was created with a sharing mode
+--     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--     @dstQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageMemoryBarrier-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER'
 --
--- -   #VUID-VkImageMemoryBarrier-pNext-pNext# @pNext@ /must/ be @NULL@ or
---     a pointer to a valid instance of
+-- -   #VUID-VkImageMemoryBarrier-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified.ExternalMemoryAcquireUnmodifiedEXT'
+--     or
 --     'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT'
 --
 -- -   #VUID-VkImageMemoryBarrier-sType-unique# The @sType@ value of each
@@ -879,6 +991,7 @@ instance Extensible ImageMemoryBarrier where
   getNext ImageMemoryBarrier{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryBarrier e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ExternalMemoryAcquireUnmodifiedEXT = Just f
     | Just Refl <- eqT @e @SampleLocationsInfoEXT = Just f
     | otherwise = Nothing
 
@@ -978,12 +1091,15 @@ data PipelineCacheHeaderVersionOne = PipelineCacheHeaderVersionOne
     --
     -- #VUID-VkPipelineCacheHeaderVersionOne-headerSize-04967# @headerSize@
     -- /must/ be 32
+    --
+    -- #VUID-VkPipelineCacheHeaderVersionOne-headerSize-08990# @headerSize@
+    -- /must/ not exceed the size of the pipeline cache
     headerSize :: Word32
   , -- | @headerVersion@ is a
     -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
-    -- enum value specifying the version of the header. A consumer of the
-    -- pipeline cache /should/ use the cache version to interpret the remainder
-    -- of the cache header.
+    -- value specifying the version of the header. A consumer of the pipeline
+    -- cache /should/ use the cache version to interpret the remainder of the
+    -- cache header.
     --
     -- #VUID-VkPipelineCacheHeaderVersionOne-headerVersion-04968#
     -- @headerVersion@ /must/ be
@@ -1146,6 +1262,19 @@ instance Zero DrawIndirectCommand where
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexed'.
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkDrawIndexedIndirectCommand-robustBufferAccess2-08798# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+--     is not enabled, (@indexSize@ × (@firstIndex@ + @indexCount@) +
+--     @offset@) /must/ be less than or equal to the size of the bound
+--     index buffer, with @indexSize@ being based on the type specified by
+--     @indexType@, where the index buffer, @indexType@, and @offset@ are
+--     specified via
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer' or
+--     'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR'. If
+--     'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR' is
+--     used to bind the index buffer, the size of the bound index buffer is
+--     'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR'::@size@
 --
 -- -   #VUID-VkDrawIndexedIndirectCommand-None-00552# For a given vertex
 --     buffer binding, any attribute data fetched /must/ be entirely

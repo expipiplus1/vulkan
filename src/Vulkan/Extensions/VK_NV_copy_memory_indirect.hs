@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     and
@@ -329,8 +332,8 @@ foreign import ccall
 --     is non-sparse then it /must/ be bound completely and contiguously to
 --     a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   [[VUID-{refpage}-dstImage-07973]] @dstImage@ /must/ have a sample
---     count equal to
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07973# @dstImage@
+--     /must/ have a sample count equal to
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImageLayout-07667#
@@ -341,17 +344,24 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImageLayout-07669#
 --     @dstImageLayout@ /must/ be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-mipLevel-07670# The specified
 --     @mipLevel@ of each region /must/ be less than the @mipLevels@
 --     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
 --     was created
 --
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-baseArrayLayer-07671# The
---     specified @baseArrayLayer@ + @layerCount@ of each region /must/ be
---     less than or equal to the @arrayLayers@ specified in
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-layerCount-09244# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     feature is not enabled, @layerCount@ /must/ not be
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS'
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-layerCount-08764# If
+--     @layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the specified
+--     @baseArrayLayer@ + @layerCount@ of each region /must/ be less than
+--     or equal to the @arrayLayers@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-imageOffset-07672# The

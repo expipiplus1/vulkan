@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
 --     and
@@ -162,7 +165,7 @@ import Vulkan.Core10.APIConstants (pattern REMAINING_3D_SLICES_EXT)
 -- The effective view depth is equal to @extent.depth@ used to create the
 -- @image@ for this view adjusted by @subresourceRange.baseMipLevel@ as
 -- specified in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
 --
 -- Shader access to this image view is only affected by
 -- 'ImageViewSlicedCreateInfoEXT' if it uses a descriptor of type
@@ -177,14 +180,14 @@ import Vulkan.Core10.APIConstants (pattern REMAINING_3D_SLICES_EXT)
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-sliceOffset-07867#
 --     @sliceOffset@ /must/ be less than the effective view depth as
 --     specified in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
 --
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-sliceCount-07868# If
 --     @sliceCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_3D_SLICES_EXT', it /must/ be
 --     be non-zero and @sliceOffset@ + @sliceCount@ /must/ be less than or
 --     equal to the effective view depth as specified in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
 --
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-image-07869# @image@ /must/
 --     have been created with @imageType@ equal to

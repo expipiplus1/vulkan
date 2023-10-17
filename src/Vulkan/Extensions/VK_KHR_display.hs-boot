@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     23
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
@@ -397,7 +400,7 @@
 --
 --     -   Added an “extension type” section to the specification header.
 --
---     -   Re-used the VK_EXT_KHR_surface surface transform enumerations
+--     -   Reused the VK_EXT_KHR_surface surface transform enumerations
 --         rather than redefining them here.
 --
 --     -   Updated the example code to use the new semantics.

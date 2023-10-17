@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>
@@ -150,7 +153,7 @@
 -- accurately map the DRM format to a 'Vulkan.Core10.Enums.Format.Format'.
 -- For example, DRM formats do not distinguish between RGB and sRGB (as of
 -- 2018-03-28); external information is required to identify the image’s
--- colorspace.
+-- color space.
 --
 -- The mapping between 'Vulkan.Core10.Enums.Format.Format' and DRM format
 -- is also incomplete. For some DRM formats there exist no corresponding
@@ -1140,9 +1143,12 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT'
 --
 -- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-pPlaneLayouts-parameter#
---     If @drmFormatModifierPlaneCount@ is not @0@, @pPlaneLayouts@ /must/
---     be a valid pointer to an array of @drmFormatModifierPlaneCount@
+--     @pPlaneLayouts@ /must/ be a valid pointer to an array of
+--     @drmFormatModifierPlaneCount@
 --     'Vulkan.Core10.Image.SubresourceLayout' structures
+--
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-drmFormatModifierPlaneCount-arraylength#
+--     @drmFormatModifierPlaneCount@ /must/ be greater than @0@
 --
 -- = See Also
 --

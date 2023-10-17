@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --     and
@@ -276,7 +279,7 @@ data PresentIdKHR = PresentIdKHR
   { -- | @swapchainCount@ is the number of swapchains being presented to the
     -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' command.
     swapchainCount :: Word32
-  , -- | @pPresentIds@ is @NULL@ or a pointer to an array of uint64_t with
+  , -- | @pPresentIds@ is @NULL@ or a pointer to an array of @uint64_t@ with
     -- @swapchainCount@ entries. If not @NULL@, each non-zero value in
     -- @pPresentIds@ specifies the present id to be associated with the
     -- presentation of the swapchain with the same index in the

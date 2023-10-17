@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -93,6 +96,41 @@
 -- -   'NV_COOPERATIVE_MATRIX_EXTENSION_NAME'
 --
 -- -   'NV_COOPERATIVE_MATRIX_SPEC_VERSION'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR':
+--
+--     -   'COMPONENT_TYPE_FLOAT16_NV'
+--
+--     -   'COMPONENT_TYPE_FLOAT32_NV'
+--
+--     -   'COMPONENT_TYPE_FLOAT64_NV'
+--
+--     -   'COMPONENT_TYPE_SINT16_NV'
+--
+--     -   'COMPONENT_TYPE_SINT32_NV'
+--
+--     -   'COMPONENT_TYPE_SINT64_NV'
+--
+--     -   'COMPONENT_TYPE_SINT8_NV'
+--
+--     -   'COMPONENT_TYPE_UINT16_NV'
+--
+--     -   'COMPONENT_TYPE_UINT32_NV'
+--
+--     -   'COMPONENT_TYPE_UINT64_NV'
+--
+--     -   'COMPONENT_TYPE_UINT8_NV'
+--
+-- -   Extending 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ScopeKHR':
+--
+--     -   'SCOPE_DEVICE_NV'
+--
+--     -   'SCOPE_QUEUE_FAMILY_NV'
+--
+--     -   'SCOPE_SUBGROUP_NV'
+--
+--     -   'SCOPE_WORKGROUP_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --

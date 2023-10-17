@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -56,13 +59,13 @@
 --     coord × dim. See
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-scale-factor Scale Factor Operation>.
 --
--- -   Calculation of the next higher lod size goes according to ⌈dim \/ 2⌉
+-- -   Calculation of the next higher LOD size goes according to ⌈dim \/ 2⌉
 --     rather than ⌊dim \/ 2⌋. See
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
 --
 -- -   The minimum level size is 2x2 for 2D images and 2x2x2 for 3D images.
 --     See
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
 --
 -- This image organization is designed to facilitate a system like Ptex
 -- with separate textures for each face of a subdivision or polygon mesh.
@@ -70,7 +73,7 @@
 -- maintain continuity between adjacent patches by duplicating values along
 -- shared edges. Additionally, using the modified mipmapping logic along
 -- with texture dimensions of the form 2n+1 allows continuity across shared
--- edges even if the adjacent patches use different level-of-detail values.
+-- edges even if the adjacent patches use different LOD values.
 --
 -- == New Structures
 --

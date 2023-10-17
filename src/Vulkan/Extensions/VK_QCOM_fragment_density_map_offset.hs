@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     and
@@ -296,7 +299,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 -- Offset values specified for any subpass that is not the last subpass in
 -- the render pass are ignored. If the
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassEndInfo'::@pNext@
--- chain for the last subpass of a renderpass does not include
+-- chain for the last subpass of a render pass does not include
 -- 'SubpassFragmentDensityMapOffsetEndInfoQCOM', or if
 -- @fragmentDensityOffsetCount@ is zero, then the offset (0,0) is used for
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>.

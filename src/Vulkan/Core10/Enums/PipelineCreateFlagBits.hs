@@ -191,11 +191,15 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT' specifies
 --     that the pipeline /may/ be used with an attachment feedback loop
---     including color attachments.
+--     including color attachments. It is ignored if
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
+--     is set in @pDynamicStates@.
 --
 -- -   'PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
 --     specifies that the pipeline /may/ be used with an attachment
---     feedback loop including depth-stencil attachments.
+--     feedback loop including depth-stencil attachments. It is ignored if
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
+--     is set in @pDynamicStates@.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT' specifies
 --     that the pipeline /can/ be used with acceleration structures which

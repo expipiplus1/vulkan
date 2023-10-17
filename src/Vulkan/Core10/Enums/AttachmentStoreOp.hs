@@ -15,8 +15,8 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 
--- | VkAttachmentStoreOp - Specify how contents of an attachment are treated
--- at the end of a subpass
+-- | VkAttachmentStoreOp - Specify how contents of an attachment are stored
+-- to memory at the end of a subpass
 --
 -- = Description
 --
@@ -53,9 +53,10 @@ pattern ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
 pattern ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
 
 -- | 'ATTACHMENT_STORE_OP_NONE' specifies the contents within the render area
--- are not accessed by the store operation. However, if the attachment was
--- written to during the render pass, the contents of the attachment will
--- be undefined inside the render area.
+-- are not accessed by the store operation as long as no values are written
+-- to the attachment during the render pass. If values are written during
+-- the render pass, this behaves identically to
+-- 'ATTACHMENT_STORE_OP_DONT_CARE' and with matching access semantics.
 pattern ATTACHMENT_STORE_OP_NONE = AttachmentStoreOp 1000301000
 
 {-# COMPLETE

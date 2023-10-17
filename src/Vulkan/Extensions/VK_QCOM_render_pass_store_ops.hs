@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Bill Licea-Kane
@@ -33,7 +36,7 @@
 --
 -- == Description
 --
--- Renderpass attachments /can/ be read-only for the duration of a render
+-- Render pass attachments /can/ be read-only for the duration of a render
 -- pass.
 --
 -- Examples include input attachments and depth attachments where depth

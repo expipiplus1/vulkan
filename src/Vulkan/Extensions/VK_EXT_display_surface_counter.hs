@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>
 --
@@ -198,11 +201,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-surface-06523]] @surface@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-surface-06523#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
 --
--- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
---     @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-surface-06211#
+--     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --

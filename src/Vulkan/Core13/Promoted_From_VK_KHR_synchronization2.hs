@@ -97,11 +97,14 @@ import Vulkan.Core10.Handles (Event(..))
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified (ExternalMemoryAcquireUnmodifiedEXT)
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_frame_boundary (FrameBoundaryEXT)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.ImageView (ImageSubresourceRange)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (LatencySubmissionPresentIdNV)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PerformanceQuerySubmitInfoKHR)
@@ -223,6 +226,18 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetEvent2-dependencyFlags-03825# The @dependencyFlags@
 --     member of @pDependencyInfo@ /must/ be @0@
+--
+-- -   #VUID-vkCmdSetEvent2-srcStageMask-09391# The @srcStageMask@ member
+--     of any element of the @pMemoryBarriers@, @pBufferMemoryBarriers@, or
+--     @pImageMemoryBarriers@ members of @pDependencyInfo@ /must/ not
+--     include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_HOST_BIT'
+--
+-- -   #VUID-vkCmdSetEvent2-dstStageMask-09392# The @dstStageMask@ member
+--     of any element of the @pMemoryBarriers@, @pBufferMemoryBarriers@, or
+--     @pImageMemoryBarriers@ members of @pDependencyInfo@ /must/ not
+--     include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_HOST_BIT'
 --
 -- -   #VUID-vkCmdSetEvent2-commandBuffer-03826# The current device mask of
 --     @commandBuffer@ /must/ include exactly one physical device
@@ -397,14 +412,14 @@ foreign import ccall
 -- -   #VUID-vkCmdResetEvent2-stageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-vkCmdResetEvent2-stageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-vkCmdResetEvent2-rayTracingPipeline-07946# If neither the
+-- -   #VUID-vkCmdResetEvent2-stageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -827,7 +842,22 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.RenderPass' object, the @image@ member of any
 --     image memory barrier included in this command /must/ be an
 --     attachment used in the current subpass both as an input attachment,
---     and as either a color or depth\/stencil attachment
+--     and as either a color, color resolve, or depth\/stencil attachment
+--
+-- -   #VUID-vkCmdPipelineBarrier2-image-09373# If 'cmdPipelineBarrier2' is
+--     called within a render pass instance using a
+--     'Vulkan.Core10.Handles.RenderPass' object, and the @image@ member of
+--     any image memory barrier is a color resolve attachment, the
+--     corresponding color attachment /must/ be
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-vkCmdPipelineBarrier2-image-09374# If 'cmdPipelineBarrier2' is
+--     called within a render pass instance using a
+--     'Vulkan.Core10.Handles.RenderPass' object, and the @image@ member of
+--     any image memory barrier is a color resolve attachment, it /must/
+--     have been created with a non-zero
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
+--     value
 --
 -- -   #VUID-vkCmdPipelineBarrier2-oldLayout-01181# If
 --     'cmdPipelineBarrier2' is called within a render pass instance, the
@@ -1059,20 +1089,15 @@ foreign import ccall
 --     member of any element of @pSubmits@, there /must/ be no other queues
 --     waiting on the same semaphore
 --
--- -   #VUID-vkQueueSubmit2-semaphore-03872# The @semaphore@ member of any
---     element of the @pWaitSemaphoreInfos@ member of any element of
---     @pSubmits@ /must/ be semaphores that are signaled, or have
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     previously submitted for execution
---
--- -   #VUID-vkQueueSubmit2-semaphore-03873# Any @semaphore@ member of any
+-- -   #VUID-vkQueueSubmit2-semaphore-03873# The @semaphore@ member of any
 --     element of the @pWaitSemaphoreInfos@ member of any element of
 --     @pSubmits@ that was created with a
 --     'Vulkan.Extensions.VK_KHR_timeline_semaphore.SemaphoreTypeKHR' of
 --     'Vulkan.Extensions.VK_KHR_timeline_semaphore.SEMAPHORE_TYPE_BINARY_KHR'
 --     /must/ reference a semaphore signal operation that has been
---     submitted for execution and any semaphore signal operations on which
---     it depends (if any) /must/ have also been submitted for execution
+--     submitted for execution and any
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
+--     on which it depends /must/ have also been submitted for execution
 --
 -- -   #VUID-vkQueueSubmit2-commandBuffer-03874# The @commandBuffer@ member
 --     of any element of the @pCommandBufferInfos@ member of any element of
@@ -1169,6 +1194,7 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | -                                                                                                                           | Any                                                                                                                   | -                                                                                                                                      |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
@@ -1245,22 +1271,36 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes only the timestamp write operation.
 --
--- When the timestamp value is written, the availability status of the
--- query is set to available.
+-- Note
+--
+-- Implementations may write the timestamp at any stage that is
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically later>
+-- than @stage@.
+--
+-- Any timestamp write that
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
+-- another timestamp write in the same submission /must/ not have a lower
+-- value unless its value overflows the maximum supported integer bit width
+-- of the query. If @VK_EXT_calibrated_timestamps@ is enabled, this extends
+-- to timestamp writes across all submissions on the same logical device:
+-- any timestamp write that
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
+-- another /must/ not have a lower value unless its value overflows the
+-- maximum supported integer bit width of the query. Timestamps written by
+-- this command /must/ be in the
+-- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.TIME_DOMAIN_DEVICE_EXT'
+-- <VkTimeDomainEXT.html time domain>. If an overflow occurs, the timestamp
+-- value /must/ wrap back to zero.
 --
 -- Note
 --
--- If an implementation is unable to detect completion and latch the timer
--- immediately after @stage@ has completed, it /may/ instead do so at any
--- logically later stage.
---
--- Comparisons between timestamps are not meaningful if the timestamps are
--- written by commands submitted to different queues.
---
--- Note
---
--- An example of such a comparison is subtracting an older timestamp from a
--- newer one to determine the execution time of a sequence of commands.
+-- Comparisons between timestamps should be done between timestamps where
+-- they are guaranteed to not decrease. For example, subtracting an older
+-- timestamp from a newer one to determine the execution time of a sequence
+-- of commands is only a reliable measurement if the two timestamp writes
+-- were performed in the same submission, or if the writes were performed
+-- on the same logical device and @VK_EXT_calibrated_timestamps@ is
+-- enabled.
 --
 -- If 'cmdWriteTimestamp2' is called while executing a render pass instance
 -- that has multiview enabled, the timestamp uses N consecutive query
@@ -1333,14 +1373,14 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteTimestamp2-stage-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @stage@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-vkCmdWriteTimestamp2-stage-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-vkCmdWriteTimestamp2-rayTracingPipeline-07946# If neither the
+-- -   #VUID-vkCmdWriteTimestamp2-stage-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -1362,9 +1402,6 @@ foreign import ccall
 --     been created with a @queryType@ of
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP'
 --
--- -   #VUID-vkCmdWriteTimestamp2-queryPool-03862# The query identified by
---     @queryPool@ and @query@ /must/ be /unavailable/
---
 -- -   #VUID-vkCmdWriteTimestamp2-timestampValidBits-03863# The command
 --     pool’s queue family /must/ support a non-zero @timestampValidBits@
 --
@@ -1372,7 +1409,7 @@ foreign import ccall
 --     the number of queries in @queryPool@
 --
 -- -   #VUID-vkCmdWriteTimestamp2-None-03864# All queries used by the
---     command /must/ be unavailable
+--     command /must/ be /unavailable/
 --
 -- -   #VUID-vkCmdWriteTimestamp2-query-03865# If 'cmdWriteTimestamp2' is
 --     called within a render pass instance, the sum of @query@ and the
@@ -1530,14 +1567,14 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 -- -   #VUID-VkMemoryBarrier2-srcStageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-VkMemoryBarrier2-srcStageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-VkMemoryBarrier2-rayTracingPipeline-07946# If neither the
+-- -   #VUID-VkMemoryBarrier2-srcStageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -1578,7 +1615,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INPUT_ATTACHMENT_READ_BIT',
 --     @srcStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
@@ -1694,8 +1731,8 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
 -- -   #VUID-VkMemoryBarrier2-srcAccessMask-03916# If @srcAccessMask@
@@ -1925,14 +1962,14 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 -- -   #VUID-VkMemoryBarrier2-dstStageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-VkMemoryBarrier2-dstStageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-VkMemoryBarrier2-rayTracingPipeline-07946# If neither the
+-- -   #VUID-VkMemoryBarrier2-dstStageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -1973,7 +2010,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INPUT_ATTACHMENT_READ_BIT',
 --     @dstStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
@@ -2089,8 +2126,8 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
 -- -   #VUID-VkMemoryBarrier2-dstAccessMask-03916# If @dstAccessMask@
@@ -2500,14 +2537,14 @@ instance Zero MemoryBarrier2 where
 -- -   #VUID-VkImageMemoryBarrier2-srcStageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-VkImageMemoryBarrier2-srcStageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-VkImageMemoryBarrier2-rayTracingPipeline-07946# If neither the
+-- -   #VUID-VkImageMemoryBarrier2-srcStageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -2548,7 +2585,7 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INPUT_ATTACHMENT_READ_BIT',
 --     @srcStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
@@ -2664,8 +2701,8 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-03916# If @srcAccessMask@
@@ -2895,14 +2932,14 @@ instance Zero MemoryBarrier2 where
 -- -   #VUID-VkImageMemoryBarrier2-dstStageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-VkImageMemoryBarrier2-dstStageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-VkImageMemoryBarrier2-rayTracingPipeline-07946# If neither the
+-- -   #VUID-VkImageMemoryBarrier2-dstStageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -2943,7 +2980,7 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INPUT_ATTACHMENT_READ_BIT',
 --     @dstStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
@@ -3059,8 +3096,8 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-03916# If @dstAccessMask@
@@ -3437,29 +3474,55 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     set
 --
--- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-04070# If
---     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
---     least one /must/ not be a special queue family reserved for external
---     memory ownership transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
---
--- -   #VUID-VkImageMemoryBarrier2-image-04071# If @image@ was created with
---     a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
---     special queue family values reserved for external memory transfers,
---     the other /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   #VUID-VkImageMemoryBarrier2-image-04072# If @image@ was created with
+-- -   #VUID-VkImageMemoryBarrier2-image-09117# If @image@ was created with
 --     a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ both be valid
---     queue families, or one of the special queue family values reserved
---     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
+--     @srcQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-09118# If @image@ was created with
+--     a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
+--     @dstQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-04070# If
+--     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
+--     least one of @srcQueueFamilyIndex@ or @dstQueueFamilyIndex@ /must/
+--     not be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-None-09119# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkImageMemoryBarrier2-None-09120# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-09121# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-dstQueueFamilyIndex-09122# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
 --
 -- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07120# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
@@ -3567,9 +3630,14 @@ instance Zero MemoryBarrier2 where
 --     then it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-VkImageMemoryBarrier2-image-01671# If @image@ has a
---     single-plane color format or is not /disjoint/, then the
---     @aspectMask@ member of @subresourceRange@ /must/ be
+-- -   #VUID-VkImageMemoryBarrier2-image-09241# If @image@ has a color
+--     format that is single-plane, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-09242# If @image@ has a color
+--     format and is not /disjoint/, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier2-image-01672# If @image@ has a
@@ -3577,7 +3645,8 @@ instance Zero MemoryBarrier2 where
 --     @aspectMask@ member of @subresourceRange@ /must/ include at least
 --     one
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
---     or 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--     bit or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier2-image-03319# If @image@ has a
 --     depth\/stencil format with both depth and stencil and the
@@ -3633,8 +3702,11 @@ instance Zero MemoryBarrier2 where
 -- -   #VUID-VkImageMemoryBarrier2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2'
 --
--- -   #VUID-VkImageMemoryBarrier2-pNext-pNext# @pNext@ /must/ be @NULL@ or
---     a pointer to a valid instance of
+-- -   #VUID-VkImageMemoryBarrier2-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified.ExternalMemoryAcquireUnmodifiedEXT'
+--     or
 --     'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT'
 --
 -- -   #VUID-VkImageMemoryBarrier2-sType-unique# The @sType@ value of each
@@ -3733,6 +3805,7 @@ instance Extensible ImageMemoryBarrier2 where
   getNext ImageMemoryBarrier2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryBarrier2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ExternalMemoryAcquireUnmodifiedEXT = Just f
     | Just Refl <- eqT @e @SampleLocationsInfoEXT = Just f
     | otherwise = Nothing
 
@@ -3917,15 +3990,14 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 -- -   #VUID-VkBufferMemoryBarrier2-srcStageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-VkBufferMemoryBarrier2-srcStageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-VkBufferMemoryBarrier2-rayTracingPipeline-07946# If neither
---     the
+-- -   #VUID-VkBufferMemoryBarrier2-srcStageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -3966,7 +4038,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INPUT_ATTACHMENT_READ_BIT',
 --     @srcStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
@@ -4082,8 +4154,8 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
 -- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-03916# If @srcAccessMask@
@@ -4313,15 +4385,14 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 -- -   #VUID-VkBufferMemoryBarrier2-dstStageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-VkBufferMemoryBarrier2-dstStageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-VkBufferMemoryBarrier2-rayTracingPipeline-07946# If neither
---     the
+-- -   #VUID-VkBufferMemoryBarrier2-dstStageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -4362,7 +4433,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INPUT_ATTACHMENT_READ_BIT',
 --     @dstStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
@@ -4478,8 +4549,8 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
 -- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-03916# If @dstAccessMask@
@@ -4677,29 +4748,55 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     then it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-VkBufferMemoryBarrier2-srcQueueFamilyIndex-04087# If
---     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
---     least one /must/ not be a special queue family reserved for external
---     memory ownership transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
---
--- -   #VUID-VkBufferMemoryBarrier2-buffer-04088# If @buffer@ was created
---     with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
---     special queue family values reserved for external memory transfers,
---     the other /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   #VUID-VkBufferMemoryBarrier2-buffer-04089# If @buffer@ was created
+-- -   #VUID-VkBufferMemoryBarrier2-buffer-09095# If @buffer@ was created
 --     with a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ both be valid
---     queue families, or one of the special queue family values reserved
---     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
+--     @srcQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
+--
+-- -   #VUID-VkBufferMemoryBarrier2-buffer-09096# If @buffer@ was created
+--     with a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
+--     @dstQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL',
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', or a valid
+--     queue family
+--
+-- -   #VUID-VkBufferMemoryBarrier2-srcQueueFamilyIndex-04087# If
+--     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
+--     least one of @srcQueueFamilyIndex@ or @dstQueueFamilyIndex@ /must/
+--     not be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL' or
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-None-09097# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-None-09098# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     extension is not enabled, and the value of
+--     'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--     used to create the 'Vulkan.Core10.Handles.Instance' is not greater
+--     than or equal to Version 1.1, @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-srcQueueFamilyIndex-09099# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @srcQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-dstQueueFamilyIndex-09100# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
+--     extension is not enabled @dstQueueFamilyIndex@ /must/ not be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
 --
 -- -   #VUID-VkBufferMemoryBarrier2-srcStageMask-03851# If either
 --     @srcStageMask@ or @dstStageMask@ includes
@@ -4712,6 +4809,11 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2'
 --
 -- -   #VUID-VkBufferMemoryBarrier2-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified.ExternalMemoryAcquireUnmodifiedEXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBufferMemoryBarrier2-srcStageMask-parameter# @srcStageMask@
 --     /must/ be a valid combination of
@@ -4743,8 +4845,10 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data BufferMemoryBarrier2 = BufferMemoryBarrier2
-  { -- | @srcStageMask@ is a
+data BufferMemoryBarrier2 (es :: [Type]) = BufferMemoryBarrier2
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcStageMask@ is a
     -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2' mask of
     -- pipeline stages to be included in the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes first synchronization scope>.
@@ -4780,41 +4884,56 @@ data BufferMemoryBarrier2 = BufferMemoryBarrier2
     -- from @offset@ to the end of the buffer.
     size :: DeviceSize
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (BufferMemoryBarrier2)
+deriving instance Generic (BufferMemoryBarrier2 (es :: [Type]))
 #endif
-deriving instance Show BufferMemoryBarrier2
+deriving instance Show (Chain es) => Show (BufferMemoryBarrier2 es)
 
-instance ToCStruct BufferMemoryBarrier2 where
+instance Extensible BufferMemoryBarrier2 where
+  extensibleTypeName = "BufferMemoryBarrier2"
+  setNext BufferMemoryBarrier2{..} next' = BufferMemoryBarrier2{next = next', ..}
+  getNext BufferMemoryBarrier2{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferMemoryBarrier2 e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @ExternalMemoryAcquireUnmodifiedEXT = Just f
+    | otherwise = Nothing
+
+instance ( Extendss BufferMemoryBarrier2 es
+         , PokeChain es ) => ToCStruct (BufferMemoryBarrier2 es) where
   withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p BufferMemoryBarrier2{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (srcStageMask)
-    poke ((p `plusPtr` 24 :: Ptr AccessFlags2)) (srcAccessMask)
-    poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2)) (dstStageMask)
-    poke ((p `plusPtr` 40 :: Ptr AccessFlags2)) (dstAccessMask)
-    poke ((p `plusPtr` 48 :: Ptr Word32)) (srcQueueFamilyIndex)
-    poke ((p `plusPtr` 52 :: Ptr Word32)) (dstQueueFamilyIndex)
-    poke ((p `plusPtr` 56 :: Ptr Buffer)) (buffer)
-    poke ((p `plusPtr` 64 :: Ptr DeviceSize)) (offset)
-    poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (size)
-    f
+  pokeCStruct p BufferMemoryBarrier2{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (srcStageMask)
+    lift $ poke ((p `plusPtr` 24 :: Ptr AccessFlags2)) (srcAccessMask)
+    lift $ poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2)) (dstStageMask)
+    lift $ poke ((p `plusPtr` 40 :: Ptr AccessFlags2)) (dstAccessMask)
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (srcQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (dstQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Buffer)) (buffer)
+    lift $ poke ((p `plusPtr` 64 :: Ptr DeviceSize)) (offset)
+    lift $ poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (size)
+    lift $ f
   cStructSize = 80
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 56 :: Ptr Buffer)) (zero)
-    poke ((p `plusPtr` 64 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Buffer)) (zero)
+    lift $ poke ((p `plusPtr` 64 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (zero)
+    lift $ f
 
-instance FromCStruct BufferMemoryBarrier2 where
+instance ( Extendss BufferMemoryBarrier2 es
+         , PeekChain es ) => FromCStruct (BufferMemoryBarrier2 es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcStageMask <- peek @PipelineStageFlags2 ((p `plusPtr` 16 :: Ptr PipelineStageFlags2))
     srcAccessMask <- peek @AccessFlags2 ((p `plusPtr` 24 :: Ptr AccessFlags2))
     dstStageMask <- peek @PipelineStageFlags2 ((p `plusPtr` 32 :: Ptr PipelineStageFlags2))
@@ -4825,6 +4944,7 @@ instance FromCStruct BufferMemoryBarrier2 where
     offset <- peek @DeviceSize ((p `plusPtr` 64 :: Ptr DeviceSize))
     size <- peek @DeviceSize ((p `plusPtr` 72 :: Ptr DeviceSize))
     pure $ BufferMemoryBarrier2
+             next
              srcStageMask
              srcAccessMask
              dstStageMask
@@ -4835,14 +4955,9 @@ instance FromCStruct BufferMemoryBarrier2 where
              offset
              size
 
-instance Storable BufferMemoryBarrier2 where
-  sizeOf ~_ = 80
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero BufferMemoryBarrier2 where
+instance es ~ '[] => Zero (BufferMemoryBarrier2 es) where
   zero = BufferMemoryBarrier2
+           ()
            zero
            zero
            zero
@@ -4921,7 +5036,7 @@ data DependencyInfo = DependencyInfo
   , -- | @pBufferMemoryBarriers@ is a pointer to an array of
     -- 'BufferMemoryBarrier2' structures defining memory dependencies between
     -- buffer ranges.
-    bufferMemoryBarriers :: Vector BufferMemoryBarrier2
+    bufferMemoryBarriers :: Vector (SomeStruct BufferMemoryBarrier2)
   , -- | @pImageMemoryBarriers@ is a pointer to an array of 'ImageMemoryBarrier2'
     -- structures defining memory dependencies between image subresources.
     imageMemoryBarriers :: Vector (SomeStruct ImageMemoryBarrier2)
@@ -4943,9 +5058,9 @@ instance ToCStruct DependencyInfo where
     lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers' `plusPtr` (48 * (i)) :: Ptr MemoryBarrier2) (e)) (memoryBarriers)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr MemoryBarrier2))) (pPMemoryBarriers')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32))
-    pPBufferMemoryBarriers' <- ContT $ allocaBytes @BufferMemoryBarrier2 ((Data.Vector.length (bufferMemoryBarriers)) * 80)
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers' `plusPtr` (80 * (i)) :: Ptr BufferMemoryBarrier2) (e)) (bufferMemoryBarriers)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferMemoryBarrier2))) (pPBufferMemoryBarriers')
+    pPBufferMemoryBarriers' <- ContT $ allocaBytes @(BufferMemoryBarrier2 _) ((Data.Vector.length (bufferMemoryBarriers)) * 80)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBufferMemoryBarriers' `plusPtr` (80 * (i)) :: Ptr (BufferMemoryBarrier2 _))) (e) . ($ ())) (bufferMemoryBarriers)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (BufferMemoryBarrier2 _)))) (pPBufferMemoryBarriers')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32))
     pPImageMemoryBarriers' <- ContT $ allocaBytes @(ImageMemoryBarrier2 _) ((Data.Vector.length (imageMemoryBarriers)) * 96)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers' `plusPtr` (96 * (i)) :: Ptr (ImageMemoryBarrier2 _))) (e) . ($ ())) (imageMemoryBarriers)
@@ -4965,8 +5080,8 @@ instance FromCStruct DependencyInfo where
     pMemoryBarriers <- peek @(Ptr MemoryBarrier2) ((p `plusPtr` 24 :: Ptr (Ptr MemoryBarrier2)))
     pMemoryBarriers' <- generateM (fromIntegral memoryBarrierCount) (\i -> peekCStruct @MemoryBarrier2 ((pMemoryBarriers `advancePtrBytes` (48 * (i)) :: Ptr MemoryBarrier2)))
     bufferMemoryBarrierCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
-    pBufferMemoryBarriers <- peek @(Ptr BufferMemoryBarrier2) ((p `plusPtr` 40 :: Ptr (Ptr BufferMemoryBarrier2)))
-    pBufferMemoryBarriers' <- generateM (fromIntegral bufferMemoryBarrierCount) (\i -> peekCStruct @BufferMemoryBarrier2 ((pBufferMemoryBarriers `advancePtrBytes` (80 * (i)) :: Ptr BufferMemoryBarrier2)))
+    pBufferMemoryBarriers <- peek @(Ptr (BufferMemoryBarrier2 _)) ((p `plusPtr` 40 :: Ptr (Ptr (BufferMemoryBarrier2 _))))
+    pBufferMemoryBarriers' <- generateM (fromIntegral bufferMemoryBarrierCount) (\i -> peekSomeCStruct (forgetExtensions ((pBufferMemoryBarriers `advancePtrBytes` (80 * (i)) :: Ptr (BufferMemoryBarrier2 _)))))
     imageMemoryBarrierCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pImageMemoryBarriers <- peek @(Ptr (ImageMemoryBarrier2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (ImageMemoryBarrier2 _))))
     pImageMemoryBarriers' <- generateM (fromIntegral imageMemoryBarrierCount) (\i -> peekSomeCStruct (forgetExtensions ((pImageMemoryBarriers `advancePtrBytes` (96 * (i)) :: Ptr (ImageMemoryBarrier2 _)))))
@@ -5041,14 +5156,14 @@ instance Zero DependencyInfo where
 -- -   #VUID-VkSemaphoreSubmitInfo-stageMask-04957# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   #VUID-VkSemaphoreSubmitInfo-stageMask-04995# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
--- -   #VUID-VkSemaphoreSubmitInfo-rayTracingPipeline-07946# If neither the
+-- -   #VUID-VkSemaphoreSubmitInfo-stageMask-07946# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -5323,6 +5438,8 @@ instance Zero CommandBufferSubmitInfo where
 -- -   #VUID-VkSubmitInfo2-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT',
+--     'Vulkan.Extensions.VK_NV_low_latency2.LatencySubmissionPresentIdNV',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceQuerySubmitInfoKHR',
 --     'Vulkan.Extensions.VK_KHR_win32_keyed_mutex.Win32KeyedMutexAcquireReleaseInfoKHR',
 --     or
@@ -5389,6 +5506,8 @@ instance Extensible SubmitInfo2 where
   getNext SubmitInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubmitInfo2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @LatencySubmissionPresentIdNV = Just f
+    | Just Refl <- eqT @e @FrameBoundaryEXT = Just f
     | Just Refl <- eqT @e @PerformanceQuerySubmitInfoKHR = Just f
     | Just Refl <- eqT @e @Win32KeyedMutexAcquireReleaseInfoKHR = Just f
     | Just Refl <- eqT @e @Win32KeyedMutexAcquireReleaseInfoNV = Just f

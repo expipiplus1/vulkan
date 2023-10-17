@@ -17,7 +17,10 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__; __Deprecation state__]
+-- [__Ratification Status__]
+--     Ratified
+--
+-- [__Extension and Version Dependencies__; __Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -49,9 +52,9 @@
 --
 -- == Description
 --
--- This extension provides new entry points to query memory requirements of
--- images and buffers in a way that can be easily extended by other
--- extensions, without introducing any further entry points. The Vulkan 1.0
+-- This extension provides new queries for memory requirements of images
+-- and buffers that can be easily extended by other extensions, without
+-- introducing any further entry points. The Vulkan 1.0
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements' and
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements'
 -- structures do not include @sType@ and @pNext@ members. This extension

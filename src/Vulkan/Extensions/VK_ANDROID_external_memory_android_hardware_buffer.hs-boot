@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     5
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
 --     and
@@ -94,7 +97,10 @@
 --     -   'AndroidHardwareBufferFormatPropertiesANDROID'
 --
 -- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo':
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo':
 --
 --     -   'ExternalFormatANDROID'
 --

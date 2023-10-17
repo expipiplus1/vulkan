@@ -17,10 +17,13 @@
 -- [__Revision__]
 --     4
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
@@ -155,7 +158,7 @@
 -- __RESOLVED__: These instructions must always accurately detect inf\/nan
 -- if it is passed to them.
 --
--- == Version 4 API incompatibility
+-- == Version 4 API Incompatibility
 --
 -- The original versions of @VK_KHR_shader_float_controls@ shipped with
 -- booleans named “separateDenormSettings” and

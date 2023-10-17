@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     12
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
@@ -298,13 +301,22 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- Note
 --
 -- If @format@ is a depth\/stencil format, the aspect is determined by the
--- value of 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor.
--- If 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor is
+-- value of 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@. If
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ is
 -- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT', the
 -- depth aspect is considered. If
--- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor is
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ is
 -- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', the
 -- stencil aspect is considered.
+--
+-- If @format@ is 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', the
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ is
+-- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', and the
+-- sampler is used with an image with a stencil format, then the
+-- implementation /must/ source the custom border color from either the
+-- first or second components of
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@customBorderColor@ and
+-- /should/ source it from the first component.
 --
 -- == Valid Usage
 --
@@ -313,7 +325,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --     @format@ is not a depth\/stencil format then the
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ type /must/
 --     match the sampled type of the provided @format@, as shown in the
---     /SPIR-V Sampled Type/ column of the
+--     /SPIR-V Type/ column of the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat>
 --     table
 --
@@ -325,7 +337,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04015# If the
 --     sampler is used to sample an image view of
 --     'Vulkan.Core10.Enums.Format.FORMAT_B4G4R4A4_UNORM_PACK16',
---     'Vulkan.Core10.Enums.Format.FORMAT_B5G6R5_UNORM_PACK16', or
+--     'Vulkan.Core10.Enums.Format.FORMAT_B5G6R5_UNORM_PACK16',
+--     'Vulkan.Core10.Enums.Format.FORMAT_A1B5G5R5_UNORM_PACK16_KHR', or
 --     'Vulkan.Core10.Enums.Format.FORMAT_B5G5R5A1_UNORM_PACK16' format
 --     then @format@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'

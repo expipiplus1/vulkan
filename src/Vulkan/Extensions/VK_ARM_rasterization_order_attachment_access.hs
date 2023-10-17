@@ -17,10 +17,13 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to @VK_EXT_rasterization_order_attachment_access@
 --         extension
@@ -57,10 +60,6 @@
 -- access to framebuffer attachments when used as both input and color, or
 -- depth\/stencil, attachments from one fragment to the next, in
 -- rasterization order, without explicit synchronization.
---
--- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
--- for more information.
 --
 -- == New Structures
 --

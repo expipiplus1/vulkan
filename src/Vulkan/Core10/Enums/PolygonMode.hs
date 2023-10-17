@@ -24,6 +24,20 @@ import GHC.Show (Show(showsPrec))
 -- particular, a polygon’s vertices are shaded and the polygon is clipped
 -- and possibly culled before these modes are applied.
 --
+-- If
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5PropertiesKHR'::@polygonModePointSize@
+-- is set to 'Vulkan.Core10.FundamentalTypes.TRUE', the point size of the
+-- final rasterization of polygons is taken from @PointSize@ when
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-polygonmode polygon mode>
+-- is 'POLYGON_MODE_POINT'.
+--
+-- Otherwise, if
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5PropertiesKHR'::@polygonModePointSize@
+-- is set to 'Vulkan.Core10.FundamentalTypes.FALSE', the point size of the
+-- final rasterization of polygons is 1.0 when
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-polygonmode polygon mode>
+-- is 'POLYGON_MODE_POINT'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,

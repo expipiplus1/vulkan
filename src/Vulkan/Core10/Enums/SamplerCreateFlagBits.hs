@@ -47,7 +47,9 @@ newtype SamplerCreateFlagBits = SamplerCreateFlagBits Flags
 -- | #samplers-imageprocessingsampler#
 -- 'SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM' specifies that the sampler
 -- will read from images using only @OpImageWeightedSampleQCOM@,
--- @OpImageBoxFilterQCOM@, @OpImageBlockMatchSSDQCOM@, or
+-- @OpImageBoxFilterQCOM@, @OpImageBlockMatchGatherSSDQCOM@,
+-- @OpImageBlockMatchGatherSADQCOM@, @OpImageBlockMatchWindowSSDQCOM@,
+-- @OpImageBlockMatchWindowSADQCOM@, @OpImageBlockMatchSSDQCOM@, or
 -- @OpImageBlockMatchSADQCOM@.
 pattern SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM = SamplerCreateFlagBits 0x00000010
 

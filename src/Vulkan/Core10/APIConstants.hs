@@ -52,6 +52,8 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern MAX_GLOBAL_PRIORITY_SIZE_KHR
                                    , MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
                                    , pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
+                                   , SHADER_INDEX_UNUSED_AMDX
+                                   , pattern SHADER_INDEX_UNUSED_AMDX
                                    , pattern NULL_HANDLE
                                    , IsHandle
                                    , HasObjectType(..)
@@ -65,7 +67,7 @@ import Data.Word (Word64)
 import Vulkan.Core10.Enums.ObjectType (ObjectType)
 import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Enums.PipelineCacheHeaderVersion (PipelineCacheHeaderVersion(..))
--- | VK_LOD_CLAMP_NONE - Maximum level of detail unclamped access sentinel
+-- | VK_LOD_CLAMP_NONE - Maximum LOD unclamped access sentinel
 --
 -- = See Also
 --
@@ -358,6 +360,17 @@ type MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_module_identifier VK_EXT_shader_module_identifier>
 pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT :: forall a . Integral a => a
 pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
+
+
+type SHADER_INDEX_UNUSED_AMDX = 0xffffffff
+
+-- | VK_SHADER_INDEX_UNUSED_AMDX - Sentinel for an unused shader index
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_shader_enqueue VK_AMDX_shader_enqueue>
+pattern SHADER_INDEX_UNUSED_AMDX :: Word32
+pattern SHADER_INDEX_UNUSED_AMDX = 0xffffffff
 
 
 -- | VK_NULL_HANDLE - Reserved non-valid object handle

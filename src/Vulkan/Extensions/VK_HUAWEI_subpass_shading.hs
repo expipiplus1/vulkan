@@ -15,7 +15,10 @@
 --     370
 --
 -- [__Revision__]
---     2
+--     3
+--
+-- [__Ratification Status__]
+--     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
@@ -113,7 +116,9 @@
 -- -   Extending
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
+--
+--     -   'PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits':
@@ -245,12 +250,12 @@
 -- > VkMemoryBarrier2KHR fragmentToSubpassShading = {
 -- >   VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR, NULL,
 -- >   VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT|VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
--- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI, VK_ACCESS_INPUT_ATTACHMENT_READ_BIT
+-- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI, VK_ACCESS_INPUT_ATTACHMENT_READ_BIT
 -- > };
 -- >
 -- > VkMemoryBarrier2KHR subpassShadingToFragment = {
 -- >   VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR, NULL,
--- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI, VK_ACCESS_SHADER_WRITE_BIT,
+-- >   VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI, VK_ACCESS_SHADER_WRITE_BIT,
 -- >   VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR, VK_ACCESS_SHADER_READ_BIT
 -- > };
 -- >
@@ -318,6 +323,12 @@
 --
 -- == Version History
 --
+-- -   Revision 3, 2023-06-19 (Pan Gao)
+--
+--     -   Rename 'PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI' to
+--         'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
+--         to better aligned with naming of other pipeline stages
+--
 -- -   Revision 2, 2021-06-28 (Hueilong Wang)
 --
 --     -   Change vkGetSubpassShadingMaxWorkgroupSizeHUAWEI to
@@ -344,6 +355,7 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_HUAWEI_subpass_shading  ( getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI
                                                     , cmdSubpassShadingHUAWEI
+                                                    , pattern PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI
                                                     , SubpassShadingPipelineCreateInfoHUAWEI(..)
                                                     , PhysicalDeviceSubpassShadingPropertiesHUAWEI(..)
                                                     , PhysicalDeviceSubpassShadingFeaturesHUAWEI(..)
@@ -405,6 +417,8 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_FEATURES_HUAWEI))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_PROPERTIES_HUAWEI))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBPASS_SHADING_PIPELINE_CREATE_INFO_HUAWEI))
@@ -541,6 +555,16 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02693# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic VK_EXT_filter_cubic>
+--     extension is not enabled and any 'Vulkan.Core10.Handles.ImageView'
+--     is sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a
+--     result of this command, it /must/ not have a
+--     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' of
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D',
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE', or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
+--
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-filterCubic-02694# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
@@ -565,6 +589,33 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FilterCubicImageViewImageFormatPropertiesEXT'::@filterCubicMinmax@
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-cubicRangeClamp-09212# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
+--     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
+--     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
+--     a result of this command
+--
+--     [/must/ not have a 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo']
+--         @reductionMode@ equal to
+--         'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-reductionMode-09213# Any
+--     'Vulkan.Core10.Handles.ImageView' being sampled with a
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'::@reductionMode@
+--     equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
+--     as a result of this command /must/ sample with
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-selectableCubicWeights-09214# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
+--     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
+--     a result of this command /must/ have
+--     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.SamplerCubicWeightsCreateInfoQCOM'::@cubicWeights@
+--     equal to
+--     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-flags-02696# Any
 --     'Vulkan.Core10.Handles.Image' created with a
@@ -607,11 +658,9 @@ foreign import ccall
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-08600# For each set /n/ that is
---     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, or by any of the
---     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
---     corresponding to the pipeline bind point used by this command, a
---     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     statically used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     a descriptor set /must/ have been bound to /n/ at the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for set /n/, with the
 --     'Vulkan.Core10.Handles.PipelineLayout' or
@@ -621,12 +670,10 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-08601# For each push constant
---     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command, or by any of
---     the 'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
---     corresponding to the pipeline bind point used by this command, a
---     push constant value /must/ have been set for the same pipeline bind
---     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     that is statically used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     a push constant value /must/ have been set for the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
 --     'Vulkan.Core10.Handles.PipelineLayout' or
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
@@ -638,12 +685,10 @@ foreign import ccall
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
---     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, or by any of the
---     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
---     corresponding to the pipeline bind point used by this command, a
---     push constant value /must/ have been set for the same pipeline bind
---     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     statically used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     a push constant value /must/ have been set for the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
 --     'Vulkan.Core10.Handles.PipelineLayout' or
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
@@ -806,34 +851,25 @@ foreign import ccall
 --     buffer as specified in the descriptor set bound to the same pipeline
 --     bind point
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-commandBuffer-08614# If
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-commandBuffer-02707# If
 --     @commandBuffer@ is an unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
---     is not supported, any resource accessed by the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command or any
---     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
---     corresponding to the pipeline bind point used by this command /must/
---     not be a protected resource
+--     is not supported, any resource accessed by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding bound shaders>
+--     /must/ not be a protected resource
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-None-08615# If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command or any
---     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
---     to the pipeline bind point used by this command accesses a
---     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
---     object that enables
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-None-06550# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
+--     accesses a 'Vulkan.Core10.Handles.Sampler' or
+--     'Vulkan.Core10.Handles.ImageView' object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-ConstOffset-08616# If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command or any
---     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
---     to the pipeline bind point used by this command accesses a
---     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
---     object that enables
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-ConstOffset-06551# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
+--     accesses a 'Vulkan.Core10.Handles.Sampler' or
+--     'Vulkan.Core10.Handles.ImageView' object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
@@ -845,17 +881,23 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-format-07753# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
---     command, then the image view’s @format@ /must/ match the numeric
---     format from the @Sampled@ @Type@ operand of the @OpTypeImage@ as
---     described in the SPIR-V Sampled Type column of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat ???>
---     table
+--     command, then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat numeric type>
+--     of the image view’s @format@ and the @Sampled@ @Type@ operand of the
+--     @OpTypeImage@ /must/ match
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-None-04115# If a
---     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
---     as a result of this command, then the @Type@ of the @Texel@ operand
---     of that instruction /must/ have at least as many components as the
---     image view’s format
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWrite-08795# If a
+--     'Vulkan.Core10.Handles.ImageView' created with a format other than
+--     'Vulkan.Core10.Enums.Format.FORMAT_A8_UNORM_KHR' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWrite-08796# If a
+--     'Vulkan.Core10.Handles.ImageView' created with the format
+--     'Vulkan.Core10.Enums.Format.FORMAT_A8_UNORM_KHR' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have four components
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
@@ -959,6 +1001,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWeightedSampleQCOM-06977# If
 --     @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
+--     @OpImageBlockMatchWindowSSDQCOM@, @OpImageBlockMatchWindowSADQCOM@,
+--     @OpImageBlockMatchGatherSSDQCOM@, @OpImageBlockMatchGatherSADQCOM@,
 --     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
 --     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
 --     the sampler /must/ have been created with
@@ -966,11 +1010,34 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWeightedSampleQCOM-06978# If
 --     any command other than @OpImageWeightedSampleQCOM@,
---     @OpImageBoxFilterQCOM@, @OpImageBlockMatchSSDQCOM@, or
+--     @OpImageBoxFilterQCOM@, @OpImageBlockMatchWindowSSDQCOM@,
+--     @OpImageBlockMatchWindowSADQCOM@, @OpImageBlockMatchGatherSSDQCOM@,
+--     @OpImageBlockMatchGatherSADQCOM@, @OpImageBlockMatchSSDQCOM@, or
 --     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
 --     a result of this command, then the sampler /must/ not have been
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageBlockMatchWindow-09215# If a
+--     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
+--     instruction is used to read from an
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageBlockMatchWindow-09216# If a
+--     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
+--     instruction is used to read from an
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s format /must/ be a single-component format.
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageBlockMatchWindow-09217# If a
+--     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
+--     read from a reference image as result of this command, then the
+--     specified reference coordinates /must/ not fail
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-07288# Any shader invocation
 --     executed by this command /must/
@@ -1038,6 +1105,10 @@ cmdSubpassShadingHUAWEI commandBuffer = liftIO $ do
   traceAroundEvent "vkCmdSubpassShadingHUAWEI" (vkCmdSubpassShadingHUAWEI'
                                                   (commandBufferHandle (commandBuffer)))
   pure $ ()
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI"
+pattern PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI = PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI
 
 
 -- | VkSubpassShadingPipelineCreateInfoHUAWEI - Structure specifying
@@ -1243,11 +1314,11 @@ instance Zero PhysicalDeviceSubpassShadingFeaturesHUAWEI where
            zero
 
 
-type HUAWEI_SUBPASS_SHADING_SPEC_VERSION = 2
+type HUAWEI_SUBPASS_SHADING_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_HUAWEI_SUBPASS_SHADING_SPEC_VERSION"
 pattern HUAWEI_SUBPASS_SHADING_SPEC_VERSION :: forall a . Integral a => a
-pattern HUAWEI_SUBPASS_SHADING_SPEC_VERSION = 2
+pattern HUAWEI_SUBPASS_SHADING_SPEC_VERSION = 3
 
 
 type HUAWEI_SUBPASS_SHADING_EXTENSION_NAME = "VK_HUAWEI_subpass_shading"

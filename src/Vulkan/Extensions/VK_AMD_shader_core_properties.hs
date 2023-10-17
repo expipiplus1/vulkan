@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -223,7 +226,7 @@ data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesA
     -- indicating the maximum size of a subgroup.
     wavefrontSize :: Word32
   , -- | #limits-sgprsPerSimd# @sgprsPerSimd@ is an unsigned integer value
-    -- indicating the number of physical Scalar General Purpose Registers
+    -- indicating the number of physical Scalar General-Purpose Registers
     -- (SGPRs) per SIMD.
     sgprsPerSimd :: Word32
   , -- | #limits-minSgprAllocation# @minSgprAllocation@ is an unsigned integer
@@ -237,7 +240,7 @@ data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesA
     -- a wave.
     sgprAllocationGranularity :: Word32
   , -- | #limits-vgprsPerSimd# @vgprsPerSimd@ is an unsigned integer value
-    -- indicating the number of physical Vector General Purpose Registers
+    -- indicating the number of physical Vector General-Purpose Registers
     -- (VGPRs) per SIMD.
     vgprsPerSimd :: Word32
   , -- | #limits-minVgprAllocation# @minVgprAllocation@ is an unsigned integer

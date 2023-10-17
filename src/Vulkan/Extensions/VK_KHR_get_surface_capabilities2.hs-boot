@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
@@ -43,11 +46,10 @@
 --
 -- == Description
 --
--- This extension provides new entry points to query device surface
--- capabilities in a way that can be easily extended by other extensions,
--- without introducing any further entry points. This extension can be
--- considered the @VK_KHR_surface@ equivalent of the
--- @VK_KHR_get_physical_device_properties2@ extension.
+-- This extension provides new queries for device surface capabilities that
+-- can be easily extended by other extensions, without introducing any
+-- further queries. This extension can be considered the @VK_KHR_surface@
+-- equivalent of the @VK_KHR_get_physical_device_properties2@ extension.
 --
 -- == New Commands
 --

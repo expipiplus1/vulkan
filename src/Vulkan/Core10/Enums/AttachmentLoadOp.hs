@@ -16,8 +16,8 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 
--- | VkAttachmentLoadOp - Specify how contents of an attachment are treated
--- at the beginning of a subpass
+-- | VkAttachmentLoadOp - Specify how contents of an attachment are
+-- initialized at the beginning of a subpass
 --
 -- = See Also
 --
@@ -29,8 +29,8 @@ newtype AttachmentLoadOp = AttachmentLoadOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'ATTACHMENT_LOAD_OP_LOAD' specifies that the previous contents of the
--- image within the render area will be preserved. For attachments with a
--- depth\/stencil format, this uses the access type
+-- image within the render area will be preserved as the initial values.
+-- For attachments with a depth\/stencil format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT'.
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_BIT'.
@@ -55,9 +55,8 @@ pattern ATTACHMENT_LOAD_OP_CLEAR = AttachmentLoadOp 1
 pattern ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
 
 -- | 'ATTACHMENT_LOAD_OP_NONE_EXT' specifies that the previous contents of
--- the image within the render area will be preserved, but the contents of
--- the attachment will be undefined inside the render pass. No access type
--- is used as the image is not accessed.
+-- the image will be undefined inside the render pass. No access type is
+-- used as the image is not accessed.
 pattern ATTACHMENT_LOAD_OP_NONE_EXT = AttachmentLoadOp 1000400000
 
 {-# COMPLETE

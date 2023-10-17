@@ -550,7 +550,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = Description
 --
--- -   @sType@ is the type of this structure.
+-- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
+--     identifying this structure.
 --
 -- -   @pNext@ is @NULL@ or a pointer to a structure extending this
 --     structure.
@@ -1554,10 +1555,9 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- disabled.
     robustBufferAccessUpdateAfterBind :: Bool
   , -- | #limits-quadDivergentImplicitLod# @quadDivergentImplicitLod@ is a
-    -- boolean value indicating whether implicit level of detail calculations
-    -- for image operations have well-defined results when the image and\/or
-    -- sampler objects used for the instruction are not uniform within a quad.
-    -- See
+    -- boolean value indicating whether implicit LOD calculations for image
+    -- operations have well-defined results when the image and\/or sampler
+    -- objects used for the instruction are not uniform within a quad. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
     quadDivergentImplicitLod :: Bool
   , -- | #limits-maxPerStageDescriptorUpdateAfterBindSamplers#

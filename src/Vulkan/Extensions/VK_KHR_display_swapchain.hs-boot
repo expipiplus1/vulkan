@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     10
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --     and
@@ -155,7 +158,7 @@
 --
 -- -   Revision 4, 2015-09-08 (James Jones)
 --
---     -   Allow creating multiple swap chains that share the same images
+--     -   Allow creating multiple swapchains that share the same images
 --         using a single call to vkCreateSwapchainKHR().
 --
 -- -   Revision 5, 2015-09-10 (Alon Or-bach)

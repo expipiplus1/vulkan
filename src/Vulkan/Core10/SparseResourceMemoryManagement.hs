@@ -83,6 +83,7 @@ import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.Format (Format(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_frame_boundary (FrameBoundaryEXT)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
@@ -427,20 +428,15 @@ foreign import ccall
 --     on @queue@, there /must/ be no other queues waiting on the same
 --     semaphore
 --
--- -   #VUID-vkQueueBindSparse-pWaitSemaphores-01117# All elements of the
---     @pWaitSemaphores@ member of all elements of the @pBindInfo@
---     parameter referring to a binary semaphore /must/ be semaphores that
---     are signaled, or have
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     previously submitted for execution
---
 -- -   #VUID-vkQueueBindSparse-pWaitSemaphores-03245# All elements of the
 --     @pWaitSemaphores@ member of all elements of @pBindInfo@ created with
 --     a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY' /must/
 --     reference a semaphore signal operation that has been submitted for
---     execution and any semaphore signal operations on which it depends
---     (if any) /must/ have also been submitted for execution
+--     execution and any
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
+--     on which it depends (if any) /must/ have also been submitted for
+--     execution
 --
 -- == Valid Usage (Implicit)
 --
@@ -476,6 +472,7 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | -                                                                                                                           | SPARSE_BINDING                                                                                                        | -                                                                                                                                      |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
@@ -685,7 +682,7 @@ instance Zero SparseImageMemoryRequirements where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
--- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageSubresource2EXT',
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.ImageSubresource2KHR',
 -- 'SparseImageMemoryBind', 'Vulkan.Core10.Image.getImageSubresourceLayout'
 data ImageSubresource = ImageSubresource
   { -- | @aspectMask@ is a
@@ -929,6 +926,9 @@ instance Zero SparseMemoryBind where
 --     ('SparseImageFormatProperties'::@imageGranularity.width@) of the
 --     image
 --
+-- -   #VUID-VkSparseImageMemoryBind-extent-09388# @extent.width@ /must/ be
+--     greater than @0@
+--
 -- -   #VUID-VkSparseImageMemoryBind-extent-01108# @extent.width@ /must/
 --     either be a multiple of the sparse image block width of the image,
 --     or else (@extent.width@ + @offset.x@) /must/ equal the width of the
@@ -939,6 +939,9 @@ instance Zero SparseMemoryBind where
 --     ('SparseImageFormatProperties'::@imageGranularity.height@) of the
 --     image
 --
+-- -   #VUID-VkSparseImageMemoryBind-extent-09389# @extent.height@ /must/
+--     be greater than @0@
+--
 -- -   #VUID-VkSparseImageMemoryBind-extent-01110# @extent.height@ /must/
 --     either be a multiple of the sparse image block height of the image,
 --     or else (@extent.height@ + @offset.y@) /must/ equal the height of
@@ -948,6 +951,9 @@ instance Zero SparseMemoryBind where
 --     multiple of the sparse image block depth
 --     ('SparseImageFormatProperties'::@imageGranularity.depth@) of the
 --     image
+--
+-- -   #VUID-VkSparseImageMemoryBind-extent-09390# @extent.depth@ /must/ be
+--     greater than @0@
 --
 -- -   #VUID-VkSparseImageMemoryBind-extent-01112# @extent.depth@ /must/
 --     either be a multiple of the sparse image block depth of the image,
@@ -1342,8 +1348,8 @@ instance Zero SparseImageMemoryBindInfo where
 -- -   #VUID-VkBindSparseInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupBindSparseInfo'
---     or
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupBindSparseInfo',
+--     'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT', or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --
 -- -   #VUID-VkBindSparseInfo-sType-unique# The @sType@ value of each
@@ -1420,6 +1426,7 @@ instance Extensible BindSparseInfo where
   getNext BindSparseInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindSparseInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @FrameBoundaryEXT = Just f
     | Just Refl <- eqT @e @TimelineSemaphoreSubmitInfo = Just f
     | Just Refl <- eqT @e @DeviceGroupBindSparseInfo = Just f
     | otherwise = Nothing

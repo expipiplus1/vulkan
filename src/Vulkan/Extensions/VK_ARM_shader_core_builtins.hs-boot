@@ -17,13 +17,16 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Contact__]
 --
 --     -   Kevin Petit
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ARM_shader_core_builtins] @kevinpetit%0A*Here describe the issue or question you have about the VK_ARM_shader_core_builtins extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ARM_shader_core_builtins] @kpet%0A*Here describe the issue or question you have about the VK_ARM_shader_core_builtins extension* >
 --
 -- == Other Extension Metadata
 --

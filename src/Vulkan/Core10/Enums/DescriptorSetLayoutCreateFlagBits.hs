@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "DescriptorSetLayoutCreateFlagBits"
 module Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits  ( DescriptorSetLayoutCreateFlags
                                                               , DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
+                                                                                                 , DESCRIPTOR_SET_LAYOUT_CREATE_INDIRECT_BINDABLE_BIT_NV
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
@@ -45,6 +46,14 @@ newtype DescriptorSetLayoutCreateFlagBits = DescriptorSetLayoutCreateFlagBits Fl
 -- non-UpdateAfterBind limits, whichever is larger.
 pattern DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT = DescriptorSetLayoutCreateFlagBits 0x00000004
 
+-- | 'DESCRIPTOR_SET_LAYOUT_CREATE_INDIRECT_BINDABLE_BIT_NV' specifies that
+-- descriptor sets using this layout allows them to be bound with compute
+-- pipelines that are created with
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
+-- flag set to be used in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_INDIRECT_BINDABLE_BIT_NV = DescriptorSetLayoutCreateFlagBits 0x00000080
+
 -- | 'DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT'
 -- specifies that this is a layout only containing immutable samplers that
 -- /can/ be bound by
@@ -86,6 +95,10 @@ showTableDescriptorSetLayoutCreateFlagBits =
   [
     ( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
     , "HOST_ONLY_POOL_BIT_EXT"
+    )
+  ,
+    ( DESCRIPTOR_SET_LAYOUT_CREATE_INDIRECT_BINDABLE_BIT_NV
+    , "INDIRECT_BINDABLE_BIT_NV"
     )
   ,
     ( DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT

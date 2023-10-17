@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -203,10 +206,10 @@
 -- previous issue. Even if you ignore the anisotropic filtering case where
 -- the implementation may return a granularity larger than that requested
 -- by the caller, each shader invocation will need to use atomic functions
--- to update up to four footprint image texels for each level of detail
--- accessed. Having each active shader invocation perform multiple atomic
--- operations can be expensive, particularly when neighboring invocations
--- will want to update the same footprint image texels.
+-- to update up to four footprint image texels for each LOD accessed.
+-- Having each active shader invocation perform multiple atomic operations
+-- can be expensive, particularly when neighboring invocations will want to
+-- update the same footprint image texels.
 --
 -- Techniques can be used to reduce the number of atomic operations
 -- performed when accumulating coverage include:

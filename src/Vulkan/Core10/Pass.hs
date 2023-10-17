@@ -569,58 +569,15 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 -- format has depth and\/or stencil components, @loadOp@ and @storeOp@
 -- apply only to the depth data, while @stencilLoadOp@ and @stencilStoreOp@
 -- define how the stencil data is handled. @loadOp@ and @stencilLoadOp@
--- define the /load operations/ that execute as part of the first subpass
--- that uses the attachment. @storeOp@ and @stencilStoreOp@ define the
--- /store operations/ that execute as part of the last subpass that uses
--- the attachment.
---
--- The load operation for each sample in an attachment happens-before any
--- recorded command which accesses the sample in the first subpass where
--- the attachment is used. Load operations for attachments with a
--- depth\/stencil format execute in the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'
--- pipeline stage. Load operations for attachments with a color format
--- execute in the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
--- pipeline stage.
---
--- The store operation for each sample in an attachment happens-after any
--- recorded command which accesses the sample in the last subpass where the
--- attachment is used. Store operations for attachments with a
--- depth\/stencil format execute in the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'
--- pipeline stage. Store operations for attachments with a color format
--- execute in the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
--- pipeline stage.
---
--- If an attachment is not used by any subpass, @loadOp@, @storeOp@,
--- @stencilStoreOp@, and @stencilLoadOp@ will be ignored for that
--- attachment, and no load or store ops will be performed. However, any
--- transition specified by @initialLayout@ and @finalLayout@ will still be
--- executed.
---
--- The load and store operations apply on the first and last use of each
--- view in the render pass, respectively. If a view index of an attachment
--- is not included in the view mask in any subpass that uses it, then the
--- load and store operations are ignored, and the attachment’s memory
--- contents will not be modified by execution of a render pass instance.
---
--- During a render pass instance, input\/color attachments with color
--- formats that have a component size of 8, 16, or 32 bits /must/ be
--- represented in the attachment’s format throughout the instance.
--- Attachments with other floating- or fixed-point color formats, or with
--- depth components /may/ be represented in a format with a precision
--- higher than the attachment format, but /must/ be represented with the
--- same range. When such a component is loaded via the @loadOp@, it will be
--- converted into an implementation-dependent format used by the render
--- pass. Such components /must/ be converted from the render pass format,
--- to the format of the attachment, before they are resolved or stored at
--- the end of a render pass instance via @storeOp@. Conversions occur as
--- described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-numerics Numeric Representation and Computation>
--- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-fixedconv Fixed-Point Data Conversions>.
+-- define the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load operations>
+-- for the attachment. @storeOp@ and @stencilStoreOp@ define the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store operations>
+-- for the attachment. If an attachment is not used by any subpass,
+-- @loadOp@, @storeOp@, @stencilStoreOp@, and @stencilLoadOp@ will be
+-- ignored for that attachment, and no load or store ops will be performed.
+-- However, any transition specified by @initialLayout@ and @finalLayout@
+-- will still be executed.
 --
 -- If @flags@ includes
 -- 'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT',
@@ -666,9 +623,7 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 -- other words, the same view /can/ be used simultaneously as an input and
 -- color or depth\/stencil attachment, but /must/ not be used as multiple
 -- color or depth\/stencil attachments nor as resolve or preserve
--- attachments. The precise set of valid scenarios is described in more
--- detail
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop below>.
+-- attachments.
 --
 -- If a set of attachments alias each other, then all except the first to
 -- be used in the render pass /must/ use an @initialLayout@ of
@@ -690,9 +645,6 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'.
 --
 -- == Valid Usage
---
--- -   #VUID-VkAttachmentDescription-format-06698# @format@ /must/ not be
---     VK_FORMAT_UNDEFINED
 --
 -- -   #VUID-VkAttachmentDescription-format-06699# If @format@ includes a
 --     color or depth component and @loadOp@ is
@@ -826,6 +778,14 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
 --     feature is not enabled, @finalLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--
+-- -   #VUID-VkAttachmentDescription-samples-08745# @samples@ /must/ be a
+--     bit value that is set in @imageCreateSampleCounts@ (as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     for the given @format@
+--
+-- -   #VUID-VkAttachmentDescription-format-06698# @format@ /must/ not be
+--     VK_FORMAT_UNDEFINED
 --
 -- -   #VUID-VkAttachmentDescription-format-06700# If @format@ includes a
 --     stencil component and @stencilLoadOp@ is
@@ -1144,12 +1104,10 @@ instance Zero AttachmentReference where
 -- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
 -- and if @pResolveAttachments@ is not @NULL@, each of its elements
 -- corresponds to a color attachment (the element in @pColorAttachments@ at
--- the same index), and a multisample resolve operation is defined for each
--- attachment. At the end of each subpass, multisample resolve operations
--- read the subpass’s color attachments, and resolve the samples for each
--- pixel within the render area to the same pixel location in the
--- corresponding resolve attachments, unless the resolve attachment index
--- is 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'.
+-- the same index), and a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve operation>
+-- is defined for each attachment unless the resolve attachment index is
+-- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'.
 --
 -- Similarly, if @flags@ does not include
 -- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
@@ -1157,36 +1115,29 @@ instance Zero AttachmentReference where
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@pDepthStencilResolveAttachment@
 -- is not @NULL@ and does not have the value
 -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', it corresponds to the
--- depth\/stencil attachment in @pDepthStencilAttachment@, and multisample
--- resolve operations for depth and stencil are defined by
+-- depth\/stencil attachment in @pDepthStencilAttachment@, and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve operation>
+-- for depth and stencil are defined by
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@depthResolveMode@
 -- and
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@stencilResolveMode@,
--- respectively. At the end of each subpass, multisample resolve operations
--- read the subpass’s depth\/stencil attachment, and resolve the samples
--- for each pixel to the same pixel location in the corresponding resolve
--- attachment. If
+-- respectively. If
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@depthResolveMode@
--- is 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', then the
--- depth component of the resolve attachment is not written to and its
--- contents are preserved. Similarly, if
+-- is 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE' or the
+-- @pDepthStencilResolveAttachment@ does not have a depth aspect, no
+-- resolve operation is performed for the depth attachment. If
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@stencilResolveMode@
--- is 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', then the
--- stencil component of the resolve attachment is not written to and its
--- contents are preserved.
--- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@depthResolveMode@
--- is ignored if the 'Vulkan.Core10.Enums.Format.Format' of the
--- @pDepthStencilResolveAttachment@ does not have a depth component.
--- Similarly,
--- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@stencilResolveMode@
--- is ignored if the 'Vulkan.Core10.Enums.Format.Format' of the
--- @pDepthStencilResolveAttachment@ does not have a stencil component.
+-- is 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE' or the
+-- @pDepthStencilResolveAttachment@ does not have a stencil aspect, no
+-- resolve operation is performed for the stencil attachment.
 --
 -- If the image subresource range referenced by the depth\/stencil
 -- attachment is created with
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT',
--- then the multisample resolve operation uses the sample locations state
--- specified in the @sampleLocationsInfo@ member of the element of the
+-- then the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve operation>
+-- uses the sample locations state specified in the @sampleLocationsInfo@
+-- member of the element of the
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.RenderPassSampleLocationsBeginInfoEXT'::@pPostSubpassSampleLocations@
 -- for the subpass.
 --
@@ -1676,7 +1627,11 @@ instance Zero SubpassDescription where
 -- than the 'Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass' used
 -- to begin the render pass instance. Otherwise, the first set of commands
 -- includes all commands submitted as part of the subpass instance
--- identified by @srcSubpass@ and any load, store or multisample resolve
+-- identified by @srcSubpass@ and any
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store>,
+-- or
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve>
 -- operations on attachments used in @srcSubpass@. In either case, the
 -- first synchronization scope is limited to operations on the pipeline
 -- stages determined by the
@@ -1691,7 +1646,11 @@ instance Zero SubpassDescription where
 -- than the 'Vulkan.Core10.CommandBufferBuilding.cmdEndRenderPass' used to
 -- end the render pass instance. Otherwise, the second set of commands
 -- includes all commands submitted as part of the subpass instance
--- identified by @dstSubpass@ and any load, store or multisample resolve
+-- identified by @dstSubpass@ and any
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store>,
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve>
 -- operations on attachments used in @dstSubpass@. In either case, the
 -- second synchronization scope is limited to operations on the pipeline
 -- stages determined by the
@@ -1793,7 +1752,7 @@ instance Zero SubpassDescription where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
 --
--- -   #VUID-VkSubpassDependency-rayTracingPipeline-07949# If neither the
+-- -   #VUID-VkSubpassDependency-srcStageMask-07949# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -1848,7 +1807,7 @@ instance Zero SubpassDescription where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @dstStageMask@ /must/ not be @0@
 --
--- -   #VUID-VkSubpassDependency-rayTracingPipeline-07949# If neither the
+-- -   #VUID-VkSubpassDependency-dstStageMask-07949# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 --     extension or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
@@ -2319,28 +2278,6 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --
 -- = Description
 --
--- Applications /must/ ensure that all non-attachment writes to memory
--- backing image subresources that are used as attachments that are not in
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
--- layout in a render pass instance happen-before or happen-after the
--- render pass instance. If an image subresource is written during a render
--- pass instance by anything other than load operations, store operations,
--- and layout transitions, applications /must/ ensure that all
--- non-attachment reads from memory backing that image subresource
--- happen-before or happen-after the render pass instance. For
--- depth\/stencil images, the aspects are not treated independently for the
--- above guarantees - writes to either aspect /must/ be synchronized with
--- accesses to the other aspect.
---
--- Note
---
--- An image subresource can be used as read-only as both an attachment and
--- a non-attachment during a render pass instance, but care must still be
--- taken to avoid data races with load\/store operations and layout
--- transitions. The simplest way to achieve this is to keep the
--- non-attachment and attachment accesses within the same subpass, or to
--- avoid layout transitions and load\/store operations that perform writes.
---
 -- It is legal for a subpass to use no color or depth\/stencil attachments,
 -- either because it has no attachment references or because all of them
 -- are 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'. This kind of subpass
@@ -2355,6 +2292,9 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE', then all pipelines to be
 -- bound with the subpass /must/ have the same value for
 -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
+-- In all such cases, @rasterizationSamples@ /must/ be a bit value that is
+-- set in
+-- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@framebufferNoAttachmentsSampleCounts@.
 --
 -- == Valid Usage
 --
@@ -2516,6 +2456,13 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
 --     by @renderPass@ /must/ have a @layerCount@ that is either @1@, or
 --     greater than @layers@
+--
+-- -   #VUID-VkFramebufferCreateInfo-renderPass-08921# If @renderPass@ was
+--     specified with non-zero view masks, each element of @pAttachments@
+--     that is used as a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
+--     /must/ have a @layerCount@ equal to @1@ or greater than the index of
+--     the most significant bit set in any of those view masks
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-04539# If @flags@ does not
 --     include
@@ -2796,6 +2743,34 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' /must/
 --     have a format that supports the sample count specified in
 --     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
+--
+-- -   #VUID-VkFramebufferCreateInfo-nullColorAttachmentWithExternalFormatResolve-09349#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', and @flags@ does not
+--     include
+--     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
+--     the format of the color attachment for each subpass in @renderPass@
+--     that includes an external format image as a resolve attachment
+--     /must/ have a format equal to the value of
+--     'Vulkan.Extensions.VK_ANDROID_external_format_resolve.AndroidHardwareBufferFormatResolvePropertiesANDROID'::@colorAttachmentFormat@
+--     as returned by a call to
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
+--     for the Android hardware buffer that was used to create the image
+--     view use as its resolve attachment
+--
+-- -   #VUID-VkFramebufferCreateInfo-pAttachments-09350# If @flags@ does
+--     not include
+--     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
+--     then if an element of @pAttachments@ has a format of
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ have been
+--     created with a
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
+--     value identical to that provided in the
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
+--     specified by the corresponding
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2'
+--     in @renderPass@
 --
 -- == Valid Usage (Implicit)
 --
