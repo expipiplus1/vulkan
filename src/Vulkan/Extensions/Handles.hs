@@ -18,7 +18,6 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , SwapchainKHR(..)
                                   , DebugReportCallbackEXT(..)
                                   , DebugUtilsMessengerEXT(..)
-                                  , SemaphoreSciSyncPoolNV(..)
                                   , Instance(..)
                                   , PhysicalDevice(..)
                                   , Device(..)
@@ -69,7 +68,6 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_MICROMAP_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL))
-import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SEMAPHORE_SCI_SYNC_POOL_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SHADER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
@@ -597,15 +595,4 @@ instance HasObjectType DebugUtilsMessengerEXT where
                                                    , h )
 instance Show DebugUtilsMessengerEXT where
   showsPrec p (DebugUtilsMessengerEXT x) = showParen (p >= 11) (showString "DebugUtilsMessengerEXT 0x" . showHex x)
-
-
--- No documentation found for TopLevel "VkSemaphoreSciSyncPoolNV"
-newtype SemaphoreSciSyncPoolNV = SemaphoreSciSyncPoolNV Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance HasObjectType SemaphoreSciSyncPoolNV where
-  objectTypeAndHandle (SemaphoreSciSyncPoolNV h) = ( OBJECT_TYPE_SEMAPHORE_SCI_SYNC_POOL_NV
-                                                   , h )
-instance Show SemaphoreSciSyncPoolNV where
-  showsPrec p (SemaphoreSciSyncPoolNV x) = showParen (p >= 11) (showString "SemaphoreSciSyncPoolNV 0x" . showHex x)
 

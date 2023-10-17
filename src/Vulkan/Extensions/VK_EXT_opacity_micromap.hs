@@ -496,7 +496,6 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Foreign.C.Types (CSize(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -2418,9 +2417,6 @@ data MicromapBuildInfoEXT = MicromapBuildInfoEXT
     mode :: BuildMicromapModeEXT
   , -- | @dstMicromap@ is a pointer to the target micromap for the build.
     dstMicromap :: MicromapEXT
-  , -- | @usageCountsCount@ specifies the number of usage counts structures that
-    -- will be used to determine the size of this micromap.
-    usageCountsCount :: Word32
   , -- | @pUsageCounts@ is a pointer to an array of 'MicromapUsageEXT'
     -- structures.
     usageCounts :: Vector MicromapUsageEXT
@@ -2452,21 +2448,10 @@ instance ToCStruct MicromapBuildInfoEXT where
     lift $ poke ((p `plusPtr` 20 :: Ptr BuildMicromapFlagsEXT)) (flags)
     lift $ poke ((p `plusPtr` 24 :: Ptr BuildMicromapModeEXT)) (mode)
     lift $ poke ((p `plusPtr` 32 :: Ptr MicromapEXT)) (dstMicromap)
-    let pUsageCountsLength = Data.Vector.length $ (usageCounts)
-    usageCountsCount'' <- lift $ if (usageCountsCount) == 0
-      then pure $ fromIntegral pUsageCountsLength
-      else do
-        unless (fromIntegral pUsageCountsLength == (usageCountsCount) || pUsageCountsLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pUsageCounts must be empty or have 'usageCountsCount' elements" Nothing Nothing
-        pure (usageCountsCount)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (usageCountsCount'')
-    pUsageCounts'' <- if Data.Vector.null (usageCounts)
-      then pure nullPtr
-      else do
-        pPUsageCounts <- ContT $ allocaBytes @MicromapUsageEXT (((Data.Vector.length (usageCounts))) * 12)
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPUsageCounts `plusPtr` (12 * (i)) :: Ptr MicromapUsageEXT) (e)) ((usageCounts))
-        pure $ pPUsageCounts
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr MicromapUsageEXT))) pUsageCounts''
+    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (usageCounts)) :: Word32))
+    pPUsageCounts' <- ContT $ allocaBytes @MicromapUsageEXT ((Data.Vector.length (usageCounts)) * 12)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPUsageCounts' `plusPtr` (12 * (i)) :: Ptr MicromapUsageEXT) (e)) (usageCounts)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr MicromapUsageEXT))) (pPUsageCounts')
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr MicromapUsageEXT)))) (nullPtr)
     ContT $ pokeCStruct ((p `plusPtr` 64 :: Ptr DeviceOrHostAddressConstKHR)) (data') . ($ ())
     ContT $ pokeCStruct ((p `plusPtr` 72 :: Ptr DeviceOrHostAddressKHR)) (scratchData) . ($ ())
@@ -2489,7 +2474,6 @@ instance ToCStruct MicromapBuildInfoEXT where
 
 instance Zero MicromapBuildInfoEXT where
   zero = MicromapBuildInfoEXT
-           zero
            zero
            zero
            zero
@@ -3503,9 +3487,6 @@ data AccelerationStructureTrianglesOpacityMicromapEXT = AccelerationStructureTri
   , -- | @baseTriangle@ is the base value added to the non-negative triangle
     -- indices
     baseTriangle :: Word32
-  , -- | @usageCountsCount@ specifies the number of usage counts structures that
-    -- will be used to determine the size of this micromap.
-    usageCountsCount :: Word32
   , -- | @pUsageCounts@ is a pointer to an array of 'MicromapUsageEXT'
     -- structures.
     usageCounts :: Vector MicromapUsageEXT
@@ -3528,21 +3509,10 @@ instance ToCStruct AccelerationStructureTrianglesOpacityMicromapEXT where
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr DeviceOrHostAddressConstKHR)) (indexBuffer) . ($ ())
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (indexStride)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (baseTriangle)
-    let pUsageCountsLength = Data.Vector.length $ (usageCounts)
-    usageCountsCount'' <- lift $ if (usageCountsCount) == 0
-      then pure $ fromIntegral pUsageCountsLength
-      else do
-        unless (fromIntegral pUsageCountsLength == (usageCountsCount) || pUsageCountsLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pUsageCounts must be empty or have 'usageCountsCount' elements" Nothing Nothing
-        pure (usageCountsCount)
-    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (usageCountsCount'')
-    pUsageCounts'' <- if Data.Vector.null (usageCounts)
-      then pure nullPtr
-      else do
-        pPUsageCounts <- ContT $ allocaBytes @MicromapUsageEXT (((Data.Vector.length (usageCounts))) * 12)
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPUsageCounts `plusPtr` (12 * (i)) :: Ptr MicromapUsageEXT) (e)) ((usageCounts))
-        pure $ pPUsageCounts
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr MicromapUsageEXT))) pUsageCounts''
+    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (usageCounts)) :: Word32))
+    pPUsageCounts' <- ContT $ allocaBytes @MicromapUsageEXT ((Data.Vector.length (usageCounts)) * 12)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPUsageCounts' `plusPtr` (12 * (i)) :: Ptr MicromapUsageEXT) (e)) (usageCounts)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr MicromapUsageEXT))) (pPUsageCounts')
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr MicromapUsageEXT)))) (nullPtr)
     lift $ poke ((p `plusPtr` 64 :: Ptr MicromapEXT)) (micromap)
     lift $ f
@@ -3561,7 +3531,6 @@ instance ToCStruct AccelerationStructureTrianglesOpacityMicromapEXT where
 
 instance Zero AccelerationStructureTrianglesOpacityMicromapEXT where
   zero = AccelerationStructureTrianglesOpacityMicromapEXT
-           zero
            zero
            zero
            zero

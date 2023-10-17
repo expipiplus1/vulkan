@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.35.2.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -82,9 +82,6 @@ library
       Vulkan.Core10.Enums.DeviceQueueCreateFlagBits
       Vulkan.Core10.Enums.DynamicState
       Vulkan.Core10.Enums.EventCreateFlagBits
-      Vulkan.Core10.Enums.FaultLevel
-      Vulkan.Core10.Enums.FaultQueryBehavior
-      Vulkan.Core10.Enums.FaultType
       Vulkan.Core10.Enums.FenceCreateFlagBits
       Vulkan.Core10.Enums.Filter
       Vulkan.Core10.Enums.Format
@@ -111,14 +108,12 @@ library
       Vulkan.Core10.Enums.PipelineBindPoint
       Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
       Vulkan.Core10.Enums.PipelineCacheHeaderVersion
-      Vulkan.Core10.Enums.PipelineCacheValidationVersion
       Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits
       Vulkan.Core10.Enums.PipelineCreateFlagBits
       Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
       Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
       Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
       Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
-      Vulkan.Core10.Enums.PipelineMatchControl
       Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
       Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
       Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits
@@ -156,7 +151,6 @@ library
       Vulkan.Core10.Enums.VertexInputRate
       Vulkan.Core10.Event
       Vulkan.Core10.ExtensionDiscovery
-      Vulkan.Core10.FaultHandlingFunctionality
       Vulkan.Core10.Fence
       Vulkan.Core10.FuncPointers
       Vulkan.Core10.FundamentalTypes
@@ -170,16 +164,13 @@ library
       Vulkan.Core10.Pass
       Vulkan.Core10.Pipeline
       Vulkan.Core10.PipelineCache
-      Vulkan.Core10.PipelineCacheHeaderTheseTypesArePartOfThe
       Vulkan.Core10.PipelineLayout
-      Vulkan.Core10.PipelineOfflineCreateInfo
       Vulkan.Core10.Query
       Vulkan.Core10.Queue
       Vulkan.Core10.QueueSemaphore
       Vulkan.Core10.Sampler
       Vulkan.Core10.Shader
       Vulkan.Core10.SparseResourceMemoryManagement
-      Vulkan.Core10.StaticMemoryFunctionality
       Vulkan.Core11
       Vulkan.Core11.DeviceInitialization
       Vulkan.Core11.Enums
@@ -324,7 +315,6 @@ library
       Vulkan.Extensions.VK_EXT_4444_formats
       Vulkan.Extensions.VK_EXT_acquire_drm_display
       Vulkan.Extensions.VK_EXT_acquire_xlib_display
-      Vulkan.Extensions.VK_EXT_application_parameters
       Vulkan.Extensions.VK_EXT_astc_decode_mode
       Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout
       Vulkan.Extensions.VK_EXT_blend_operation_advanced
@@ -505,7 +495,6 @@ library
       Vulkan.Extensions.VK_KHR_maintenance4
       Vulkan.Extensions.VK_KHR_map_memory2
       Vulkan.Extensions.VK_KHR_multiview
-      Vulkan.Extensions.VK_KHR_object_refresh
       Vulkan.Extensions.VK_KHR_performance_query
       Vulkan.Extensions.VK_KHR_pipeline_executable_properties
       Vulkan.Extensions.VK_KHR_pipeline_library
@@ -570,10 +559,7 @@ library
       Vulkan.Extensions.VK_NV_external_memory
       Vulkan.Extensions.VK_NV_external_memory_capabilities
       Vulkan.Extensions.VK_NV_external_memory_rdma
-      Vulkan.Extensions.VK_NV_external_memory_sci_buf
       Vulkan.Extensions.VK_NV_external_memory_win32
-      Vulkan.Extensions.VK_NV_external_sci_sync
-      Vulkan.Extensions.VK_NV_external_sci_sync2
       Vulkan.Extensions.VK_NV_fill_rectangle
       Vulkan.Extensions.VK_NV_fragment_coverage_to_color
       Vulkan.Extensions.VK_NV_fragment_shader_barycentric
@@ -588,7 +574,6 @@ library
       Vulkan.Extensions.VK_NV_mesh_shader
       Vulkan.Extensions.VK_NV_optical_flow
       Vulkan.Extensions.VK_NV_present_barrier
-      Vulkan.Extensions.VK_NV_private_vendor_info
       Vulkan.Extensions.VK_NV_ray_tracing
       Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
       Vulkan.Extensions.VK_NV_ray_tracing_motion_blur

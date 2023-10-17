@@ -16,13 +16,11 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
-import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -34,10 +32,11 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -46,14 +45,11 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandPool)
 import Vulkan.Core10.Handles (CommandPool(..))
 import Vulkan.Core10.Enums.CommandPoolCreateFlagBits (CommandPoolCreateFlags)
-import {-# SOURCE #-} Vulkan.Core10.StaticMemoryFunctionality (CommandPoolMemoryReservationCreateInfo)
 import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..))
 import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 import Vulkan.Core10.Handles (Device)
@@ -63,16 +59,8 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkResetCommandPool))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.CStruct.Extends (Extends)
-import Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.CStruct.Extends (PeekChain)
-import Vulkan.CStruct.Extends (PeekChain(..))
-import Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
-import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO))
@@ -87,7 +75,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateCommandPool
-  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct CommandPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct CommandPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result) -> Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result
 
 -- | vkCreateCommandPool - Create a new command pool object
 --
@@ -132,13 +120,13 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createCommandPool :: forall a io
-                   . (Extendss CommandPoolCreateInfo a, PokeChain a, MonadIO io)
+createCommandPool :: forall io
+                   . (MonadIO io)
                   => -- | @device@ is the logical device that creates the command pool.
                      Device
                   -> -- | @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
                      -- specifying the state of the command pool object.
-                     (CommandPoolCreateInfo a)
+                     CommandPoolCreateInfo
                   -> -- | @pAllocator@ controls host memory allocation as described in the
                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
@@ -156,7 +144,7 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
   pPCommandPool <- ContT $ bracket (callocBytes @CommandPool 8) free
   r <- lift $ traceAroundEvent "vkCreateCommandPool" (vkCreateCommandPool'
                                                         (deviceHandle (device))
-                                                        (forgetExtensions pCreateInfo)
+                                                        pCreateInfo
                                                         pAllocator
                                                         (pPCommandPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -171,7 +159,7 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withCommandPool :: forall a io r . (Extendss CommandPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> CommandPoolCreateInfo a -> Maybe AllocationCallbacks -> (io CommandPool -> (CommandPool -> io ()) -> r) -> r
+withCommandPool :: forall io r . MonadIO io => Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> (io CommandPool -> (CommandPool -> io ()) -> r) -> r
 withCommandPool device pCreateInfo pAllocator b =
   b (createCommandPool device pCreateInfo pAllocator)
     (\(o0) -> destroyCommandPool device o0 pAllocator)
@@ -385,10 +373,8 @@ resetCommandPool device commandPool flags = liftIO $ do
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createCommandPool'
-data CommandPoolCreateInfo (es :: [Type]) = CommandPoolCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
-    next :: Chain es
-  , -- | @flags@ is a bitmask of
+data CommandPoolCreateInfo = CommandPoolCreateInfo
+  { -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
     -- indicating usage behavior for the pool and command buffers allocated
     -- from it.
@@ -399,53 +385,43 @@ data CommandPoolCreateInfo (es :: [Type]) = CommandPoolCreateInfo
     -- on queues from the same queue family.
     queueFamilyIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (CommandPoolCreateInfo (es :: [Type]))
+deriving instance Generic (CommandPoolCreateInfo)
 #endif
-deriving instance Show (Chain es) => Show (CommandPoolCreateInfo es)
+deriving instance Show CommandPoolCreateInfo
 
-instance Extensible CommandPoolCreateInfo where
-  extensibleTypeName = "CommandPoolCreateInfo"
-  setNext CommandPoolCreateInfo{..} next' = CommandPoolCreateInfo{next = next', ..}
-  getNext CommandPoolCreateInfo{..} = next
-  extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandPoolCreateInfo e => b) -> Maybe b
-  extends _ f
-    | Just Refl <- eqT @e @CommandPoolMemoryReservationCreateInfo = Just f
-    | otherwise = Nothing
-
-instance ( Extendss CommandPoolCreateInfo es
-         , PokeChain es ) => ToCStruct (CommandPoolCreateInfo es) where
+instance ToCStruct CommandPoolCreateInfo where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CommandPoolCreateInfo{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
-    pNext'' <- fmap castPtr . ContT $ withChain (next)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    lift $ poke ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags)) (flags)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (queueFamilyIndex)
-    lift $ f
+  pokeCStruct p CommandPoolCreateInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags)) (flags)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (queueFamilyIndex)
+    f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
-    pNext' <- fmap castPtr . ContT $ withZeroChain @es
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    f
 
-instance ( Extendss CommandPoolCreateInfo es
-         , PeekChain es ) => FromCStruct (CommandPoolCreateInfo es) where
+instance FromCStruct CommandPoolCreateInfo where
   peekCStruct p = do
-    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
-    next <- peekChain (castPtr pNext)
     flags <- peek @CommandPoolCreateFlags ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags))
     queueFamilyIndex <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pure $ CommandPoolCreateInfo
-             next flags queueFamilyIndex
+             flags queueFamilyIndex
 
-instance es ~ '[] => Zero (CommandPoolCreateInfo es) where
+instance Storable CommandPoolCreateInfo where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero CommandPoolCreateInfo where
   zero = CommandPoolCreateInfo
-           ()
            zero
            zero
 

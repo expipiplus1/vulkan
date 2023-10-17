@@ -68,7 +68,6 @@ import Vulkan.Dynamic (DeviceCmds(pVkResetFences))
 import Vulkan.Dynamic (DeviceCmds(pVkWaitForFences))
 import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_fence (ExportFenceCreateInfo)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_sci_sync (ExportFenceSciSyncInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_fence_win32 (ExportFenceWin32HandleInfoKHR)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -635,7 +634,6 @@ instance Extensible FenceCreateInfo where
   getNext FenceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FenceCreateInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @ExportFenceSciSyncInfoNV = Just f
     | Just Refl <- eqT @e @ExportFenceWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ExportFenceCreateInfo = Just f
     | otherwise = Nothing

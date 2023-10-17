@@ -130,13 +130,10 @@ import Vulkan.Dynamic (getInstanceProcAddr')
 import Vulkan.Dynamic (initInstanceCmds)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
-import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
-import Vulkan.CStruct.Extends (withSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_application_parameters (ApplicationParametersEXT)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_report (DebugReportCallbackCreateInfoEXT)
@@ -1395,10 +1392,8 @@ instance Zero PhysicalDeviceProperties where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'InstanceCreateInfo', 'Vulkan.Core10.Enums.StructureType.StructureType'
-data ApplicationInfo (es :: [Type]) = ApplicationInfo
-  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
-    next :: Chain es
-  , -- | @pApplicationName@ is @NULL@ or is a pointer to a null-terminated UTF-8
+data ApplicationInfo = ApplicationInfo
+  { -- | @pApplicationName@ is @NULL@ or is a pointer to a null-terminated UTF-8
     -- string containing the name of the application.
     applicationName :: Maybe ByteString
   , -- | @applicationVersion@ is an unsigned integer variable containing the
@@ -1422,26 +1417,15 @@ data ApplicationInfo (es :: [Type]) = ApplicationInfo
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (ApplicationInfo (es :: [Type]))
+deriving instance Generic (ApplicationInfo)
 #endif
-deriving instance Show (Chain es) => Show (ApplicationInfo es)
+deriving instance Show ApplicationInfo
 
-instance Extensible ApplicationInfo where
-  extensibleTypeName = "ApplicationInfo"
-  setNext ApplicationInfo{..} next' = ApplicationInfo{next = next', ..}
-  getNext ApplicationInfo{..} = next
-  extends :: forall e b proxy. Typeable e => proxy e -> (Extends ApplicationInfo e => b) -> Maybe b
-  extends _ f
-    | Just Refl <- eqT @e @ApplicationParametersEXT = Just f
-    | otherwise = Nothing
-
-instance ( Extendss ApplicationInfo es
-         , PokeChain es ) => ToCStruct (ApplicationInfo es) where
+instance ToCStruct ApplicationInfo where
   withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ApplicationInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_APPLICATION_INFO)
-    pNext'' <- fmap castPtr . ContT $ withChain (next)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pApplicationName'' <- case (applicationName) of
       Nothing -> pure nullPtr
       Just j -> ContT $ useAsCString (j)
@@ -1456,20 +1440,16 @@ instance ( Extendss ApplicationInfo es
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_APPLICATION_INFO)
-    pNext' <- fmap castPtr . ContT $ withZeroChain @es
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_APPLICATION_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
+    f
 
-instance ( Extendss ApplicationInfo es
-         , PeekChain es ) => FromCStruct (ApplicationInfo es) where
+instance FromCStruct ApplicationInfo where
   peekCStruct p = do
-    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
-    next <- peekChain (castPtr pNext)
     pApplicationName <- peek @(Ptr CChar) ((p `plusPtr` 16 :: Ptr (Ptr CChar)))
     pApplicationName' <- maybePeek (\j -> packCString (j)) pApplicationName
     applicationVersion <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
@@ -1478,16 +1458,14 @@ instance ( Extendss ApplicationInfo es
     engineVersion <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     apiVersion <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     pure $ ApplicationInfo
-             next
              pApplicationName'
              applicationVersion
              pEngineName'
              engineVersion
              apiVersion
 
-instance es ~ '[] => Zero (ApplicationInfo es) where
+instance Zero ApplicationInfo where
   zero = ApplicationInfo
-           ()
            Nothing
            zero
            Nothing
@@ -1618,7 +1596,7 @@ data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
     -- structure. If not @NULL@, this information helps implementations
     -- recognize behavior inherent to classes of applications.
     -- 'ApplicationInfo' is defined in detail below.
-    applicationInfo :: Maybe (SomeStruct ApplicationInfo)
+    applicationInfo :: Maybe ApplicationInfo
   , -- | @ppEnabledLayerNames@ is a pointer to an array of @enabledLayerCount@
     -- null-terminated UTF-8 strings containing the names of layers to enable
     -- for the created instance. The layers are loaded in the order they are
@@ -1663,8 +1641,8 @@ instance ( Extendss InstanceCreateInfo es
     lift $ poke ((p `plusPtr` 16 :: Ptr InstanceCreateFlags)) (flags)
     pApplicationInfo'' <- case (applicationInfo) of
       Nothing -> pure nullPtr
-      Just j -> ContT @_ @_ @(Ptr (ApplicationInfo '[])) $ \cont -> withSomeCStruct @ApplicationInfo (j) (cont . castPtr)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (ApplicationInfo _)))) pApplicationInfo''
+      Just j -> ContT $ withCStruct (j)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ApplicationInfo))) pApplicationInfo''
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledLayerNames)) :: Word32))
     pPpEnabledLayerNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledLayerNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
@@ -1692,8 +1670,8 @@ instance ( Extendss InstanceCreateInfo es
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
     flags <- peek @InstanceCreateFlags ((p `plusPtr` 16 :: Ptr InstanceCreateFlags))
-    pApplicationInfo <- peek @(Ptr (ApplicationInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (ApplicationInfo _))))
-    pApplicationInfo' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pApplicationInfo
+    pApplicationInfo <- peek @(Ptr ApplicationInfo) ((p `plusPtr` 24 :: Ptr (Ptr ApplicationInfo)))
+    pApplicationInfo' <- maybePeek (\j -> peekCStruct @ApplicationInfo (j)) pApplicationInfo
     enabledLayerCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     ppEnabledLayerNames <- peek @(Ptr (Ptr CChar)) ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar))))
     ppEnabledLayerNames' <- generateM (fromIntegral enabledLayerCount) (\i -> packCString =<< peek ((ppEnabledLayerNames `advancePtrBytes` (8 * (i)) :: Ptr (Ptr CChar))))

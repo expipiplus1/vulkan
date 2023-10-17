@@ -65,7 +65,6 @@ import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_application_parameters (ApplicationParametersEXT)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
@@ -76,7 +75,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (DeviceDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (DeviceDiagnosticsConfigCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (DeviceGroupDeviceCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_memory_overallocation_behavior (DeviceMemoryOverallocationCreateInfoAMD)
-import {-# SOURCE #-} Vulkan.Core10.StaticMemoryFunctionality (DeviceObjectReservationCreateInfo)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (DevicePrivateDataCreateInfo)
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (DeviceQueueGlobalPriorityCreateInfoKHR)
@@ -84,7 +82,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import {-# SOURCE #-} Vulkan.Core10.FaultHandlingFunctionality (FaultCallbackInfo)
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDevice))
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
@@ -130,9 +127,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state2 (Physical
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (PhysicalDeviceExtendedDynamicState3FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state (PhysicalDeviceExtendedDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_rdma (PhysicalDeviceExternalMemoryRDMAFeaturesNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_sci_buf (PhysicalDeviceExternalMemorySciBufFeaturesNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_sci_sync2 (PhysicalDeviceExternalSciSync2FeaturesNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_sci_sync (PhysicalDeviceExternalSciSyncFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_fault (PhysicalDeviceFaultFeaturesEXT)
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceFeatures2)
@@ -243,7 +237,6 @@ import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Features)
 import {-# SOURCE #-} Vulkan.Core13 (PhysicalDeviceVulkan13Features)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model (PhysicalDeviceVulkanMemoryModelFeatures)
-import {-# SOURCE #-} Vulkan.Core10 (PhysicalDeviceVulkanSC10Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats (PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_image_arrays (PhysicalDeviceYcbcrImageArraysFeaturesEXT)
@@ -1130,8 +1123,6 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLegacyDitheringFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceVulkanSC10Features = Just f
-    | Just Refl <- eqT @e @(DeviceObjectReservationCreateInfo '[]) = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSynchronization2Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceColorWriteEnableFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryRDMAFeaturesNV = Just f
@@ -1160,7 +1151,6 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceExtendedDynamicStateFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceBorderColorSwizzleFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCustomBorderColorFeaturesEXT = Just f
-    | Just Refl <- eqT @e @FaultCallbackInfo = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCoherentMemoryFeaturesAMD = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan13Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan12Features = Just f
@@ -1241,15 +1231,11 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDevicePresentIdFeaturesKHR = Just f
     | Just Refl <- eqT @e @DeviceGroupDeviceCreateInfo = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMultiviewFeatures = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceExternalSciSync2FeaturesNV = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceExternalSciSyncFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVariablePointersFeatures = Just f
     | Just Refl <- eqT @e @(PhysicalDeviceFeatures2 '[]) = Just f
     | Just Refl <- eqT @e @PhysicalDevicePrivateDataFeatures = Just f
     | Just Refl <- eqT @e @DevicePrivateDataCreateInfo = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceExternalMemorySciBufFeaturesNV = Just f
-    | Just Refl <- eqT @e @ApplicationParametersEXT = Just f
     | otherwise = Nothing
 
 instance ( Extendss DeviceCreateInfo es

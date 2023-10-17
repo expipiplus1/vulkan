@@ -479,7 +479,6 @@
 module Vulkan.Extensions.VK_KHR_performance_query  ( AcquireProfilingLockInfoKHR
                                                    , PerformanceCounterDescriptionKHR
                                                    , PerformanceCounterKHR
-                                                   , PerformanceQueryReservationInfoKHR
                                                    , PerformanceQuerySubmitInfoKHR
                                                    , PhysicalDevicePerformanceQueryFeaturesKHR
                                                    , PhysicalDevicePerformanceQueryPropertiesKHR
@@ -512,14 +511,6 @@ instance ToCStruct PerformanceCounterKHR
 instance Show PerformanceCounterKHR
 
 instance FromCStruct PerformanceCounterKHR
-
-
-data PerformanceQueryReservationInfoKHR
-
-instance ToCStruct PerformanceQueryReservationInfoKHR
-instance Show PerformanceQueryReservationInfoKHR
-
-instance FromCStruct PerformanceQueryReservationInfoKHR
 
 
 data PerformanceQuerySubmitInfoKHR

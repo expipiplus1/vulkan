@@ -74,7 +74,6 @@ import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExportMemoryAllocateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExportMemoryAllocateInfoNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_sci_buf (ExportMemorySciBufInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ExportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ExportMemoryWin32HandleInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
@@ -85,7 +84,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardw
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (ImportMemoryBufferCollectionFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (ImportMemoryFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (ImportMemoryHostPointerInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_sci_buf (ImportMemorySciBufInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (ImportMemoryZirconHandleInfoFUCHSIA)
@@ -1423,8 +1421,6 @@ instance Extensible MemoryAllocateInfo where
     | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ExportMemoryAllocateInfo = Just f
-    | Just Refl <- eqT @e @ImportMemorySciBufInfoNV = Just f
-    | Just Refl <- eqT @e @ExportMemorySciBufInfoNV = Just f
     | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoNV = Just f
     | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoNV = Just f
     | Just Refl <- eqT @e @ExportMemoryAllocateInfoNV = Just f

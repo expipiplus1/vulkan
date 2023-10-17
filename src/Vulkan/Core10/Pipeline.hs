@@ -179,7 +179,6 @@ import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags (PipelineInputA
 import Vulkan.Core10.Handles (PipelineLayout)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_library (PipelineLibraryCreateInfoKHR)
 import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags (PipelineMultisampleStateCreateFlags)
-import {-# SOURCE #-} Vulkan.Core10.PipelineOfflineCreateInfo (PipelineOfflineCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conservative_rasterization (PipelineRasterizationConservativeStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PipelineRasterizationDepthClipStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PipelineRasterizationLineStateCreateInfoEXT)
@@ -1611,7 +1610,6 @@ instance Extensible ComputePipelineCreateInfo where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ComputePipelineCreateInfo e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @PipelineRobustnessCreateInfoEXT = Just f
-    | Just Refl <- eqT @e @PipelineOfflineCreateInfo = Just f
     | Just Refl <- eqT @e @PipelineCompilerControlCreateInfoAMD = Just f
     | Just Refl <- eqT @e @SubpassShadingPipelineCreateInfoHUAWEI = Just f
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfo = Just f
@@ -6622,7 +6620,6 @@ instance Extensible GraphicsPipelineCreateInfo where
     | Just Refl <- eqT @e @PipelineRenderingCreateInfo = Just f
     | Just Refl <- eqT @e @PipelineFragmentShadingRateEnumStateCreateInfoNV = Just f
     | Just Refl <- eqT @e @PipelineFragmentShadingRateStateCreateInfoKHR = Just f
-    | Just Refl <- eqT @e @PipelineOfflineCreateInfo = Just f
     | Just Refl <- eqT @e @PipelineLibraryCreateInfoKHR = Just f
     | Just Refl <- eqT @e @PipelineCompilerControlCreateInfoAMD = Just f
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfo = Just f

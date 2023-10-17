@@ -31,7 +31,6 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_4444_formats
                           , module Vulkan.Extensions.VK_EXT_acquire_drm_display
                           , module Vulkan.Extensions.VK_EXT_acquire_xlib_display
-                          , module Vulkan.Extensions.VK_EXT_application_parameters
                           , module Vulkan.Extensions.VK_EXT_astc_decode_mode
                           , module Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout
                           , module Vulkan.Extensions.VK_EXT_blend_operation_advanced
@@ -212,7 +211,6 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_maintenance4
                           , module Vulkan.Extensions.VK_KHR_map_memory2
                           , module Vulkan.Extensions.VK_KHR_multiview
-                          , module Vulkan.Extensions.VK_KHR_object_refresh
                           , module Vulkan.Extensions.VK_KHR_performance_query
                           , module Vulkan.Extensions.VK_KHR_pipeline_executable_properties
                           , module Vulkan.Extensions.VK_KHR_pipeline_library
@@ -280,10 +278,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_external_memory
                           , module Vulkan.Extensions.VK_NV_external_memory_capabilities
                           , module Vulkan.Extensions.VK_NV_external_memory_rdma
-                          , module Vulkan.Extensions.VK_NV_external_memory_sci_buf
                           , module Vulkan.Extensions.VK_NV_external_memory_win32
-                          , module Vulkan.Extensions.VK_NV_external_sci_sync
-                          , module Vulkan.Extensions.VK_NV_external_sci_sync2
                           , module Vulkan.Extensions.VK_NV_fill_rectangle
                           , module Vulkan.Extensions.VK_NV_fragment_coverage_to_color
                           , module Vulkan.Extensions.VK_NV_fragment_shader_barycentric
@@ -298,7 +293,6 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_mesh_shader
                           , module Vulkan.Extensions.VK_NV_optical_flow
                           , module Vulkan.Extensions.VK_NV_present_barrier
-                          , module Vulkan.Extensions.VK_NV_private_vendor_info
                           , module Vulkan.Extensions.VK_NV_ray_tracing
                           , module Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
                           , module Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
@@ -357,7 +351,6 @@ import Vulkan.Extensions.VK_ARM_shader_core_properties
 import Vulkan.Extensions.VK_EXT_4444_formats
 import Vulkan.Extensions.VK_EXT_acquire_drm_display
 import Vulkan.Extensions.VK_EXT_acquire_xlib_display
-import Vulkan.Extensions.VK_EXT_application_parameters
 import Vulkan.Extensions.VK_EXT_astc_decode_mode
 import Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout
 import Vulkan.Extensions.VK_EXT_blend_operation_advanced
@@ -538,7 +531,6 @@ import Vulkan.Extensions.VK_KHR_maintenance3
 import Vulkan.Extensions.VK_KHR_maintenance4
 import Vulkan.Extensions.VK_KHR_map_memory2
 import Vulkan.Extensions.VK_KHR_multiview
-import Vulkan.Extensions.VK_KHR_object_refresh
 import Vulkan.Extensions.VK_KHR_performance_query
 import Vulkan.Extensions.VK_KHR_pipeline_executable_properties
 import Vulkan.Extensions.VK_KHR_pipeline_library
@@ -606,10 +598,7 @@ import Vulkan.Extensions.VK_NV_displacement_micromap
 import Vulkan.Extensions.VK_NV_external_memory
 import Vulkan.Extensions.VK_NV_external_memory_capabilities
 import Vulkan.Extensions.VK_NV_external_memory_rdma
-import Vulkan.Extensions.VK_NV_external_memory_sci_buf
 import Vulkan.Extensions.VK_NV_external_memory_win32
-import Vulkan.Extensions.VK_NV_external_sci_sync
-import Vulkan.Extensions.VK_NV_external_sci_sync2
 import Vulkan.Extensions.VK_NV_fill_rectangle
 import Vulkan.Extensions.VK_NV_fragment_coverage_to_color
 import Vulkan.Extensions.VK_NV_fragment_shader_barycentric
@@ -624,7 +613,6 @@ import Vulkan.Extensions.VK_NV_memory_decompression
 import Vulkan.Extensions.VK_NV_mesh_shader
 import Vulkan.Extensions.VK_NV_optical_flow
 import Vulkan.Extensions.VK_NV_present_barrier
-import Vulkan.Extensions.VK_NV_private_vendor_info
 import Vulkan.Extensions.VK_NV_ray_tracing
 import Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur

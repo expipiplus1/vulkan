@@ -8,7 +8,6 @@ module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHan
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
-                                                                                               , EXTERNAL_MEMORY_HANDLE_TYPE_SCI_BUF_BIT_NV
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
@@ -166,9 +165,6 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = ExternalMemoryHandleTypeFla
 -- Direct3D resource.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = ExternalMemoryHandleTypeFlagBits 0x00000040
 
--- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_SCI_BUF_BIT_NV"
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_SCI_BUF_BIT_NV = ExternalMemoryHandleTypeFlagBits 0x00002000
-
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV' is a handle to an
 -- allocation accessible by remote devices. It owns a reference to the
 -- underlying memory resource represented by its Vulkan memory object.
@@ -239,10 +235,6 @@ showTableExternalMemoryHandleTypeFlagBits =
   ,
     ( EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
     , "D3D12_RESOURCE_BIT"
-    )
-  ,
-    ( EXTERNAL_MEMORY_HANDLE_TYPE_SCI_BUF_BIT_NV
-    , "SCI_BUF_BIT_NV"
     )
   ,
     ( EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV

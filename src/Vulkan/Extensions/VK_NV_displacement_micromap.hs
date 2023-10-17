@@ -174,9 +174,7 @@ module Vulkan.Extensions.VK_NV_displacement_micromap  ( PhysicalDeviceDisplaceme
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Control.Monad (unless)
 import Foreign.Marshal.Alloc (allocaBytes)
-import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -184,7 +182,6 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
@@ -198,8 +195,6 @@ import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
-import GHC.IO.Exception (IOErrorType(..))
-import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -467,13 +462,7 @@ data AccelerationStructureTrianglesDisplacementMicromapNV = AccelerationStructur
   , -- | @baseTriangle@ is the base value added to the non-negative triangle
     -- indices.
     baseTriangle :: Word32
-  , -- | @usageCountsCount@ specifies the number of usage counts structures that
-    -- will be used to determine the size of this micromap.
-    usageCountsCount :: Word32
   , -- | @pUsageCounts@ is a pointer to an array of
-    -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapUsageEXT' structures.
-    usageCounts :: Vector MicromapUsageEXT
-  , -- | @ppUsageCounts@ is a pointer to an array of pointers to
     -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapUsageEXT' structures.
     usageCounts :: Vector MicromapUsageEXT
   , -- | @micromap@ is the handle to the micromap object to include in this
@@ -503,29 +492,11 @@ instance ToCStruct AccelerationStructureTrianglesDisplacementMicromapNV where
     ContT $ pokeCStruct ((p `plusPtr` 80 :: Ptr DeviceOrHostAddressConstKHR)) (indexBuffer) . ($ ())
     lift $ poke ((p `plusPtr` 88 :: Ptr DeviceSize)) (indexStride)
     lift $ poke ((p `plusPtr` 96 :: Ptr Word32)) (baseTriangle)
-    let pUsageCountsLength = Data.Vector.length $ (usageCounts)
-    lift $ unless (fromIntegral pUsageCountsLength == (usageCountsCount) || pUsageCountsLength == 0) $
-      throwIO $ IOError Nothing InvalidArgument "" "pUsageCounts must be empty or have 'usageCountsCount' elements" Nothing Nothing
-    let ppUsageCountsLength = Data.Vector.length $ (usageCounts)
-    lift $ unless (fromIntegral ppUsageCountsLength == (usageCountsCount) || ppUsageCountsLength == 0) $
-      throwIO $ IOError Nothing InvalidArgument "" "ppUsageCounts must be empty or have 'usageCountsCount' elements" Nothing Nothing
-    lift $ poke ((p `plusPtr` 100 :: Ptr Word32)) ((usageCountsCount))
-    pUsageCounts'' <- if Data.Vector.null (usageCounts)
-      then pure nullPtr
-      else do
-        pPUsageCounts <- ContT $ allocaBytes @MicromapUsageEXT (((Data.Vector.length (usageCounts))) * 12)
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPUsageCounts `plusPtr` (12 * (i)) :: Ptr MicromapUsageEXT) (e)) ((usageCounts))
-        pure $ pPUsageCounts
-    lift $ poke ((p `plusPtr` 104 :: Ptr (Ptr MicromapUsageEXT))) pUsageCounts''
-    ppUsageCounts'' <- if Data.Vector.null (usageCounts)
-      then pure nullPtr
-      else do
-        pPpUsageCounts <- ContT $ allocaBytes @(Ptr MicromapUsageEXT) (((Data.Vector.length (usageCounts))) * 8)
-        Data.Vector.imapM_ (\i e -> do
-          ppUsageCounts' <- ContT $ withCStruct (e)
-          lift $ poke (pPpUsageCounts `plusPtr` (8 * (i)) :: Ptr (Ptr MicromapUsageEXT)) ppUsageCounts') ((usageCounts))
-        pure $ pPpUsageCounts
-    lift $ poke ((p `plusPtr` 112 :: Ptr (Ptr (Ptr MicromapUsageEXT)))) ppUsageCounts''
+    lift $ poke ((p `plusPtr` 100 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (usageCounts)) :: Word32))
+    pPUsageCounts' <- ContT $ allocaBytes @MicromapUsageEXT ((Data.Vector.length (usageCounts)) * 12)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPUsageCounts' `plusPtr` (12 * (i)) :: Ptr MicromapUsageEXT) (e)) (usageCounts)
+    lift $ poke ((p `plusPtr` 104 :: Ptr (Ptr MicromapUsageEXT))) (pPUsageCounts')
+    lift $ poke ((p `plusPtr` 112 :: Ptr (Ptr (Ptr MicromapUsageEXT)))) (nullPtr)
     lift $ poke ((p `plusPtr` 120 :: Ptr MicromapEXT)) (micromap)
     lift $ f
   cStructSize = 128
@@ -545,6 +516,7 @@ instance ToCStruct AccelerationStructureTrianglesDisplacementMicromapNV where
     ContT $ pokeCStruct ((p `plusPtr` 80 :: Ptr DeviceOrHostAddressConstKHR)) (zero) . ($ ())
     lift $ poke ((p `plusPtr` 88 :: Ptr DeviceSize)) (zero)
     lift $ poke ((p `plusPtr` 96 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 112 :: Ptr (Ptr (Ptr MicromapUsageEXT)))) (nullPtr)
     lift $ poke ((p `plusPtr` 120 :: Ptr MicromapEXT)) (zero)
     lift $ f
 
@@ -562,8 +534,6 @@ instance Zero AccelerationStructureTrianglesDisplacementMicromapNV where
            zero
            zero
            zero
-           zero
-           mempty
            mempty
            zero
 

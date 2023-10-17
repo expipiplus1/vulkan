@@ -684,7 +684,6 @@ import Vulkan.Core10.Handles (PipelineCache(..))
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core10.Handles (PipelineLayout)
-import {-# SOURCE #-} Vulkan.Core10.PipelineOfflineCreateInfo (PipelineOfflineCreateInfo)
 import Vulkan.Core10.Pipeline (PipelineShaderStageCreateInfo)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
@@ -3210,7 +3209,6 @@ instance Extensible RayTracingPipelineCreateInfoNV where
   getNext RayTracingPipelineCreateInfoNV{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RayTracingPipelineCreateInfoNV e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @PipelineOfflineCreateInfo = Just f
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfo = Just f
     | otherwise = Nothing
 

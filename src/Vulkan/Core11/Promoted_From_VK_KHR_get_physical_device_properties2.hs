@@ -153,9 +153,6 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state (PhysicalD
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceExternalImageFormatInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (PhysicalDeviceExternalMemoryHostPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_rdma (PhysicalDeviceExternalMemoryRDMAFeaturesNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_sci_buf (PhysicalDeviceExternalMemorySciBufFeaturesNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_sci_sync2 (PhysicalDeviceExternalSciSync2FeaturesNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_sci_sync (PhysicalDeviceExternalSciSyncFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_fault (PhysicalDeviceFaultFeaturesEXT)
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls (PhysicalDeviceFloatControlsProperties)
@@ -326,8 +323,6 @@ import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import {-# SOURCE #-} Vulkan.Core13 (PhysicalDeviceVulkan13Features)
 import {-# SOURCE #-} Vulkan.Core13 (PhysicalDeviceVulkan13Properties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model (PhysicalDeviceVulkanMemoryModelFeatures)
-import {-# SOURCE #-} Vulkan.Core10 (PhysicalDeviceVulkanSC10Features)
-import {-# SOURCE #-} Vulkan.Core10 (PhysicalDeviceVulkanSC10Properties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats (PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_ycbcr_image_arrays (PhysicalDeviceYcbcrImageArraysFeaturesEXT)
@@ -910,7 +905,6 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLegacyDitheringFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceVulkanSC10Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSynchronization2Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceColorWriteEnableFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryRDMAFeaturesNV = Just f
@@ -1015,12 +1009,9 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDevicePresentWaitFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDevicePresentIdFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMultiviewFeatures = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceExternalSciSync2FeaturesNV = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceExternalSciSyncFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVariablePointersFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDevicePrivateDataFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceExternalMemorySciBufFeaturesNV = Just f
     | otherwise = Nothing
 
 instance ( Extendss PhysicalDeviceFeatures2 es
@@ -1197,7 +1188,6 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorBufferPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceProvokingVertexPropertiesEXT = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceVulkanSC10Properties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRatePropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDevicePortabilitySubsetPropertiesKHR = Just f
