@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [0.11] - 2023-10-17
+- Bump VMA
+
 ## [0.10.5.1] - 2023-10-17
 - Raise upper bound on `vulkan`
 
