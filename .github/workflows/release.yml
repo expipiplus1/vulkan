@@ -20,7 +20,8 @@ jobs:
       with:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
-    - uses: Geertvdc/setup-hub@v1.0.0
+    - name: Install hub
+      run: sudo apt-get install -y hub
     - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
