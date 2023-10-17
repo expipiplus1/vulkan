@@ -133,7 +133,7 @@ brackets marshaledCommands handles = context "brackets" $ do
                    "vkCreateShadersEXT"
                    "vkDestroyShaderEXT"
                    "vkWithShadersEXT"
-    , cdBracket "SemaphoreSciSyncPoolNV"
+    -- , cdBracket "SemaphoreSciSyncPoolNV"
     ]
 
   --

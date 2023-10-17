@@ -135,6 +135,12 @@ bespokeModules = do
        , (mkTyName "XrBaseOutStructure", mod' ["CStruct", "Extends"])
        , (mkTyName "XrFovf"            , mod' ["Core10", "OtherTypes"])
        , (mkTyName "XrPosef"           , mod' ["Core10", "Space"])
+       , ( mkTyName "PFN_vkFaultCallbackFunction"
+         , mod' ["Core10", "FaultHandlingFunctionality"]
+         )
+       , ( mkTyName "FN_vkFaultCallbackFunction"
+         , mod' ["Core10", "FaultHandlingFunctionality"]
+         )
        ]
     <> (   (, mod' ["Core10", "FundamentalTypes"])
        <$> [ mkTyName "VkBool32"
@@ -743,6 +749,10 @@ micromapUsageCounts = BespokeScheme $ \case
     (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
       Just $ ElidedUnivalued "nullPtr"
     _ -> Nothing
+  "VkAccelerationStructureTrianglesDisplacementMicromapNV" -> \case
+    (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
+      Just $ ElidedUnivalued "nullPtr"
+    _ -> Nothing
   _ -> const Nothing
 
 structChainVar :: String
@@ -822,7 +832,7 @@ bespokeSizes t =
         , ("VkRemoteAddressNV", (8, 8))
         ]
         <> (fst <$> concat
-             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp, metalSized, nvscisync, nvscibuf]
+             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp, metalSized]
            )
     sharedSizes = []
   in
@@ -844,6 +854,16 @@ bespokeOptionality = \case
   -- See https://github.com/expipiplus1/vulkan/issues/239
   "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
     "pGeometries" -> Just mempty
+    _             -> Nothing
+  -- similar for ppUsageCounts
+  "VkMicromapBuildInfoEXT" -> \case
+    "pUsageCounts" -> Just mempty
+    _             -> Nothing
+  "VkAccelerationStructureTrianglesOpacityMicromapEXT" -> \case
+    "pUsageCounts" -> Just mempty
+    _             -> Nothing
+  "VkAccelerationStructureTrianglesDisplacementMicromapNV" -> \case
+    "pUsageCounts" -> Just mempty
     _             -> Nothing
   _ -> const Nothing
 
@@ -962,8 +982,8 @@ wsiTypes
   :: (HasErr r, HasRenderParams r) => SpecFlavor -> [Sem r RenderElement]
 wsiTypes = \case
   SpecVk ->
-    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp, metalSized, nvscisync, nvscibuf]) <> concat
-      [win32', xcb1, waylandShared, wayland, metalUnsized, android, directfb, screen, nvscisyncUnsized]
+    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp, metalSized]) <> concat
+      [win32', xcb1, waylandShared, wayland, metalUnsized, android, directfb, screen]
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
     <> concat [win32Xr', xcb1, waylandShared, d3d', jni, timespec]
 
