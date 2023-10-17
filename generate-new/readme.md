@@ -36,6 +36,8 @@ In an environment with `doxygen` (`nix-shell -p doxygen`), in the
   sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' \
          -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' \
          -e 's|^PREDEFINED *=|PREDEFINED = VMA_STATS_STRING_ENABLED=1 |' \
+         -e 's|^PREDEFINED *=|PREDEFINED = VMA_EXTENDS_VK_STRUCT(s)=s |' \
+         -e 's|@CMAKE_SOURCE_DIR@/||' \
          Doxyfile &&
   doxygen Doxyfile)
 ```
