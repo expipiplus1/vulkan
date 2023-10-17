@@ -55,7 +55,7 @@ tests:
 custom-setup:
   dependencies:
   - base
-  - Cabal
+  - Cabal >= 3 && < 4
   - cabal-doctest >= 1 && <1.1
 
 ghc-options:
