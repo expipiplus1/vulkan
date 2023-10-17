@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         ghc: ['8.10', '9.0', '9.2']
-        os: [ubuntu-22.04, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
       fail-fast: false
 
     steps:
@@ -35,7 +35,7 @@ jobs:
           ${{ runner.os }}-${{ matrix.ghc }}-
 
     - name: Install system dependencies Linux
-      if: matrix.os == 'ubuntu-22.04'
+      if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt-get install libsdl2-dev
@@ -142,7 +142,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-22.04, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
         stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-raytracing --flag vulkan-examples:-have-shaderc --system-ghc']
       fail-fast: false
 
@@ -172,7 +172,7 @@ jobs:
       with: {version: v4.30.5} # frenck/action-setup-yq#35
 
     - name: Install system dependencies Linux
-      if: matrix.os == 'ubuntu-22.04'
+      if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt-get install libsdl2-dev
@@ -320,7 +320,7 @@ jobs:
     - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell examples --arg buildProfiling true --run 'ghc-pkg list'
 
   shellcheck:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Install shellcheck
