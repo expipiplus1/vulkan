@@ -82,8 +82,6 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
         , vkPath </> "gen"
         , "-r"
         , vkPath </> "config/spec-macros.rb"
-        , "-r"
-        , vkPath </> "config/tilde_open_block.rb"
         ]
       SpecXr -> ["-r", vkPath </> "scripts/openxr-macros.rb"]
     adocOpts           = attribOpts ++ noteOpts ++ adocExts
