@@ -175,6 +175,8 @@ module VulkanMemoryAllocator  ( createAllocator
                               , AllocationCreateInfo(..)
                               , PoolCreateInfo(..)
                               , AllocationInfo(..)
+                              , PFN_vmaCheckDefragmentationBreakFunction
+                              , FN_vmaCheckDefragmentationBreakFunction
                               , DefragmentationInfo(..)
                               , DefragmentationMove(..)
                               , DefragmentationPassMoveInfo(..)
@@ -5545,6 +5547,11 @@ instance Zero AllocationInfo where
            Nothing
 
 
+type FN_vmaCheckDefragmentationBreakFunction = ("pUserData" ::: Ptr ()) -> IO Bool32
+-- No documentation found for TopLevel "PFN_vmaCheckDefragmentationBreakFunction"
+type PFN_vmaCheckDefragmentationBreakFunction = FunPtr FN_vmaCheckDefragmentationBreakFunction
+
+
 -- | VmaDefragmentationInfo
 --
 -- Parameters for defragmentation.
@@ -5567,22 +5574,31 @@ data DefragmentationInfo = DefragmentationInfo
     --
     -- @0@ means no limit.
     maxAllocationsPerPass :: Word32
+  , -- | Optional custom callback for stopping 'beginDefragmentation'.
+    --
+    -- Have to return true for breaking current defragmentation pass.
+    pfnBreakCallback :: PFN_vmaCheckDefragmentationBreakFunction
+  , -- | Optional data to pass to custom callback for stopping pass of
+    -- defragmentation.
+    breakCallbackUserData :: Ptr ()
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (DefragmentationInfo)
 #endif
 deriving instance Show DefragmentationInfo
 
 instance ToCStruct DefragmentationInfo where
-  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DefragmentationFlags)) (flags)
     poke ((p `plusPtr` 8 :: Ptr Pool)) (pool)
     poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (maxBytesPerPass)
     poke ((p `plusPtr` 24 :: Ptr Word32)) (maxAllocationsPerPass)
+    poke ((p `plusPtr` 32 :: Ptr PFN_vmaCheckDefragmentationBreakFunction)) (pfnBreakCallback)
+    poke ((p `plusPtr` 40 :: Ptr (Ptr ()))) (breakCallbackUserData)
     f
-  cStructSize = 32
+  cStructSize = 48
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr DefragmentationFlags)) (zero)
@@ -5596,17 +5612,26 @@ instance FromCStruct DefragmentationInfo where
     pool <- peek @Pool ((p `plusPtr` 8 :: Ptr Pool))
     maxBytesPerPass <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
     maxAllocationsPerPass <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    pfnBreakCallback <- peek @PFN_vmaCheckDefragmentationBreakFunction ((p `plusPtr` 32 :: Ptr PFN_vmaCheckDefragmentationBreakFunction))
+    pBreakCallbackUserData <- peek @(Ptr ()) ((p `plusPtr` 40 :: Ptr (Ptr ())))
     pure $ DefragmentationInfo
-             flags pool maxBytesPerPass maxAllocationsPerPass
+             flags
+             pool
+             maxBytesPerPass
+             maxAllocationsPerPass
+             pfnBreakCallback
+             pBreakCallbackUserData
 
 instance Storable DefragmentationInfo where
-  sizeOf ~_ = 32
+  sizeOf ~_ = 48
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero DefragmentationInfo where
   zero = DefragmentationInfo
+           zero
+           zero
            zero
            zero
            zero
