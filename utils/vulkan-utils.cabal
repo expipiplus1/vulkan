@@ -1,6 +1,6 @@
 cabal-version: 1.24
 
--- This file has been generated from package.yaml by hpack version 0.34.7.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
@@ -113,7 +113,7 @@ library
     , typed-process
     , unordered-containers
     , vector
-    , vulkan >=3.6.14 && <3.25
+    , vulkan >=3.6.14 && <3.26
   default-language: Haskell2010
 
 test-suite doctests

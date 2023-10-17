@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Raise upper bound on `vulkan`
 
 ## [0.10.5] - 2022-12-27
 - Bump VMA

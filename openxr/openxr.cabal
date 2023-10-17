@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.35.0.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
@@ -204,4 +204,4 @@ library
   if flag(use-vulkan-types)
     cpp-options: -DUSE_VULKAN_TYPES
     build-depends:
-        vulkan >=3.0 && <3.25
+        vulkan >=3.0 && <3.26
