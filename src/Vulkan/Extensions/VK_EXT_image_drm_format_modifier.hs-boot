@@ -18,25 +18,28 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_bind_memory2@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
---
---     -   Requires @VK_KHR_image_format_list@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_sampler_ycbcr_conversion@ to be enabled for any
---         device-level functionality
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_image_format_list VK_KHR_image_format_list>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
 --
 -- [__Contact__]
 --
---     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @chadversary%0A*Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension* >
+--     -   Lina Versace
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @versalinyaa%0A*Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension* >
 --
 -- == Other Extension Metadata
 --
@@ -52,11 +55,11 @@
 --
 --     -   Bas Nieuwenhuizen, Google
 --
---     -   Chad Versace, Google
+--     -   Lina Versace, Google
 --
 --     -   James Jones, NVIDIA
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Jőrg Wagner, ARM
 --
@@ -271,8 +274,8 @@
 -- The Linux kernel modesetting API (KMS), when configuring the display’s
 -- framebuffer with
 -- @struct drm_mode_fb_cmd2@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
--- allows one to specify the frambuffer’s /modifier/ as well as a per-plane
--- memory handle, offset, and row pitch.
+-- allows one to specify the framebuffer’s /modifier/ as well as a
+-- per-plane memory handle, offset, and row pitch.
 --
 -- GBM, a graphics buffer manager for Linux, allows creation of a @gbm_bo@
 -- (that is, a graphics /buffer object/) by importing data similar to that
@@ -528,7 +531,7 @@
 --
 -- === Version History
 --
--- -   Revision 1, 2018-08-29 (Chad Versace)
+-- -   Revision 1, 2018-08-29 (Lina Versace)
 --
 --     -   First stable revision
 --

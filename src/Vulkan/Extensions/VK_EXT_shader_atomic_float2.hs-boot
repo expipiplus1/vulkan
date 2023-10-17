@@ -18,16 +18,12 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_EXT_shader_atomic_float@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_atomic_float VK_EXT_shader_atomic_float>
 --
 -- [__Contact__]
 --
---     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_atomic_float2] @jekstrand%0A*Here describe the issue or question you have about the VK_EXT_shader_atomic_float2 extension* >
+--     -   Faith Ekstrand
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_atomic_float2] @gfxstrand%0A*Here describe the issue or question you have about the VK_EXT_shader_atomic_float2 extension* >
 --
 -- == Other Extension Metadata
 --
@@ -52,7 +48,7 @@
 --
 -- [__Contributors__]
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 -- == Description
 --
@@ -108,7 +104,7 @@
 --
 -- == Version History
 --
--- -   Revision 1, 2020-08-14 (Jason Ekstrand)
+-- -   Revision 1, 2020-08-14 (Faith Ekstrand)
 --
 --     -   Internal revisions
 --

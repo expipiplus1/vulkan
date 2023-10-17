@@ -57,10 +57,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkanMemoryModelFeatures = PhysicalDeviceVulkanMemoryModelFeatures
   { -- | #extension-features-vulkanMemoryModel# @vulkanMemoryModel@ indicates
-    -- whether the Vulkan Memory Model is supported, as defined in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
-    -- This also indicates whether shader modules /can/ declare the
-    -- @VulkanMemoryModel@ capability.
+    -- whether shader modules /can/ declare the @VulkanMemoryModel@ capability.
     vulkanMemoryModel :: Bool
   , -- | #extension-features-vulkanMemoryModelDeviceScope#
     -- @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory Model

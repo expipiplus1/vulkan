@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     2
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Special Use__]
+-- [__Extension and Version Dependencies__; __Special Use__]
 --
 --     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
 --

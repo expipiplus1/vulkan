@@ -35,6 +35,7 @@ resultString = \case
   ERROR_FORMAT_NOT_SUPPORTED -> "A requested format is not supported on this device"
   ERROR_FRAGMENTED_POOL -> "A pool allocation has failed due to fragmentation of the pool's memory"
   ERROR_UNKNOWN -> "An unknown error has occurred; either the application has provided invalid input, or an implementation failure has occurred"
+  ERROR_INCOMPATIBLE_SHADER_BINARY_EXT -> "The provided binary shader code is not compatible with this device"
   ERROR_COMPRESSION_EXHAUSTED_EXT -> "An image creation failed because internal resources required for compression are exhausted"
   OPERATION_NOT_DEFERRED_KHR -> "A deferred operation was requested and no operations were deferred"
   OPERATION_DEFERRED_KHR -> "A deferred operation was requested and at least some of the work was deferred"

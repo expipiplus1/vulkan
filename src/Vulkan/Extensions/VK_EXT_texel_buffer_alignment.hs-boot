@@ -18,11 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Deprecation state__]
 --
@@ -87,8 +85,8 @@
 -- Functionality in this extension is included in core Vulkan 1.3, with the
 -- EXT suffix omitted. However, only the properties structure is promoted.
 -- The feature structure is not promoted and @texelBufferAlignment@ is
--- enabled if when using a Vulkan 1.3 instance. The original type name is
--- still available as an alias of the core functionality.
+-- enabled if using a Vulkan 1.3 instance. The original type name is still
+-- available as an alias of the core functionality.
 --
 -- == Version History
 --

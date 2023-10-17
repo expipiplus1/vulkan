@@ -159,6 +159,7 @@ import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory 
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (DeviceSize)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_directfb_surface (DirectFBSurfaceCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (DiscardRectangleModeEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (Display)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (DisplayEventInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (DisplayKHR)
@@ -261,9 +262,11 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryGetW
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryGetZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (MemoryHostPointerPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_map_memory2 (MemoryMapInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.MemoryManagement (MemoryRequirements)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (MemoryRequirements2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_map_memory2 (MemoryUnmapInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryZirconHandlePropertiesFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
@@ -372,6 +375,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (Semapho
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_semaphore (SemaphoreGetZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreSignalInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreWaitInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_object (ShaderCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.Handles (ShaderEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (ShaderGroupShaderKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_info (ShaderInfoTypeAMD)
 import {-# SOURCE #-} Vulkan.Core10.Handles (ShaderModule)
@@ -1012,6 +1017,8 @@ data DeviceCmds = DeviceCmds
   , pVkGetPastPresentationTimingGOOGLE :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pPresentationTimingCount" ::: Ptr Word32) -> ("pPresentationTimings" ::: Ptr PastPresentationTimingGOOGLE) -> IO Result)
   , pVkCmdSetViewportWScalingNV :: FunPtr (Ptr CommandBuffer_T -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewportWScalings" ::: Ptr ViewportWScalingNV) -> IO ())
   , pVkCmdSetDiscardRectangleEXT :: FunPtr (Ptr CommandBuffer_T -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr Rect2D) -> IO ())
+  , pVkCmdSetDiscardRectangleEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("discardRectangleEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetDiscardRectangleModeEXT :: FunPtr (Ptr CommandBuffer_T -> DiscardRectangleModeEXT -> IO ())
   , pVkCmdSetSampleLocationsEXT :: FunPtr (Ptr CommandBuffer_T -> ("pSampleLocationsInfo" ::: Ptr SampleLocationsInfoEXT) -> IO ())
   , pVkGetBufferMemoryRequirements2 :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr BufferMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ())
   , pVkGetImageMemoryRequirements2 :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct ImageMemoryRequirementsInfo2)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ())
@@ -1060,6 +1067,7 @@ data DeviceCmds = DeviceCmds
   , pVkCmdEndQueryIndexedEXT :: FunPtr (Ptr CommandBuffer_T -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ())
   , pVkCmdDrawIndirectByteCountEXT :: FunPtr (Ptr CommandBuffer_T -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ())
   , pVkCmdSetExclusiveScissorNV :: FunPtr (Ptr CommandBuffer_T -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr Rect2D) -> IO ())
+  , pVkCmdSetExclusiveScissorEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissorEnables" ::: Ptr Bool32) -> IO ())
   , pVkCmdBindShadingRateImageNV :: FunPtr (Ptr CommandBuffer_T -> ImageView -> ImageLayout -> IO ())
   , pVkCmdSetViewportShadingRatePaletteNV :: FunPtr (Ptr CommandBuffer_T -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pShadingRatePalettes" ::: Ptr ShadingRatePaletteNV) -> IO ())
   , pVkCmdSetCoarseSampleOrderNV :: FunPtr (Ptr CommandBuffer_T -> CoarseSampleOrderTypeNV -> ("customSampleOrderCount" ::: Word32) -> ("pCustomSampleOrders" ::: Ptr CoarseSampleOrderCustomNV) -> IO ())
@@ -1260,6 +1268,12 @@ data DeviceCmds = DeviceCmds
   , pVkCmdOpticalFlowExecuteNV :: FunPtr (Ptr CommandBuffer_T -> OpticalFlowSessionNV -> ("pExecuteInfo" ::: Ptr OpticalFlowExecuteInfoNV) -> IO ())
   , pVkGetDeviceFaultInfoEXT :: FunPtr (Ptr Device_T -> ("pFaultCounts" ::: Ptr DeviceFaultCountsEXT) -> ("pFaultInfo" ::: Ptr DeviceFaultInfoEXT) -> IO Result)
   , pVkReleaseSwapchainImagesEXT :: FunPtr (Ptr Device_T -> ("pReleaseInfo" ::: Ptr ReleaseSwapchainImagesInfoEXT) -> IO Result)
+  , pVkMapMemory2KHR :: FunPtr (Ptr Device_T -> ("pMemoryMapInfo" ::: Ptr MemoryMapInfoKHR) -> ("ppData" ::: Ptr (Ptr ())) -> IO Result)
+  , pVkUnmapMemory2KHR :: FunPtr (Ptr Device_T -> ("pMemoryUnmapInfo" ::: Ptr MemoryUnmapInfoKHR) -> IO Result)
+  , pVkCreateShadersEXT :: FunPtr (Ptr Device_T -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct ShaderCreateInfoEXT)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pShaders" ::: Ptr ShaderEXT) -> IO Result)
+  , pVkDestroyShaderEXT :: FunPtr (Ptr Device_T -> ShaderEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
+  , pVkGetShaderBinaryDataEXT :: FunPtr (Ptr Device_T -> ShaderEXT -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO Result)
+  , pVkCmdBindShadersEXT :: FunPtr (Ptr CommandBuffer_T -> ("stageCount" ::: Word32) -> ("pStages" ::: Ptr ShaderStageFlagBits) -> ("pShaders" ::: Ptr ShaderEXT) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -1267,6 +1281,15 @@ deriving instance Show DeviceCmds
 instance Zero DeviceCmds where
   zero = DeviceCmds
     nullPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
     nullFunPtr
     nullFunPtr
     nullFunPtr
@@ -1927,6 +1950,8 @@ initDeviceCmds instanceCmds handle = do
   vkGetPastPresentationTimingGOOGLE <- getDeviceProcAddr' handle (Ptr "vkGetPastPresentationTimingGOOGLE"#)
   vkCmdSetViewportWScalingNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetViewportWScalingNV"#)
   vkCmdSetDiscardRectangleEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDiscardRectangleEXT"#)
+  vkCmdSetDiscardRectangleEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDiscardRectangleEnableEXT"#)
+  vkCmdSetDiscardRectangleModeEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDiscardRectangleModeEXT"#)
   vkCmdSetSampleLocationsEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetSampleLocationsEXT"#)
   vkGetBufferMemoryRequirements2 <- getFirstDeviceProcAddr [ (Ptr "vkGetBufferMemoryRequirements2KHR"#)
                                                            , (Ptr "vkGetBufferMemoryRequirements2"#) ]
@@ -1995,6 +2020,7 @@ initDeviceCmds instanceCmds handle = do
   vkCmdEndQueryIndexedEXT <- getDeviceProcAddr' handle (Ptr "vkCmdEndQueryIndexedEXT"#)
   vkCmdDrawIndirectByteCountEXT <- getDeviceProcAddr' handle (Ptr "vkCmdDrawIndirectByteCountEXT"#)
   vkCmdSetExclusiveScissorNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetExclusiveScissorNV"#)
+  vkCmdSetExclusiveScissorEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetExclusiveScissorEnableNV"#)
   vkCmdBindShadingRateImageNV <- getDeviceProcAddr' handle (Ptr "vkCmdBindShadingRateImageNV"#)
   vkCmdSetViewportShadingRatePaletteNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetViewportShadingRatePaletteNV"#)
   vkCmdSetCoarseSampleOrderNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoarseSampleOrderNV"#)
@@ -2233,6 +2259,12 @@ initDeviceCmds instanceCmds handle = do
   vkCmdOpticalFlowExecuteNV <- getDeviceProcAddr' handle (Ptr "vkCmdOpticalFlowExecuteNV"#)
   vkGetDeviceFaultInfoEXT <- getDeviceProcAddr' handle (Ptr "vkGetDeviceFaultInfoEXT"#)
   vkReleaseSwapchainImagesEXT <- getDeviceProcAddr' handle (Ptr "vkReleaseSwapchainImagesEXT"#)
+  vkMapMemory2KHR <- getDeviceProcAddr' handle (Ptr "vkMapMemory2KHR"#)
+  vkUnmapMemory2KHR <- getDeviceProcAddr' handle (Ptr "vkUnmapMemory2KHR"#)
+  vkCreateShadersEXT <- getDeviceProcAddr' handle (Ptr "vkCreateShadersEXT"#)
+  vkDestroyShaderEXT <- getDeviceProcAddr' handle (Ptr "vkDestroyShaderEXT"#)
+  vkGetShaderBinaryDataEXT <- getDeviceProcAddr' handle (Ptr "vkGetShaderBinaryDataEXT"#)
+  vkCmdBindShadersEXT <- getDeviceProcAddr' handle (Ptr "vkCmdBindShadersEXT"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -2425,6 +2457,8 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pPresentationTimingCount" ::: Ptr Word32) -> ("pPresentationTimings" ::: Ptr PastPresentationTimingGOOGLE) -> IO Result) vkGetPastPresentationTimingGOOGLE)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewportWScalings" ::: Ptr ViewportWScalingNV) -> IO ()) vkCmdSetViewportWScalingNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr Rect2D) -> IO ()) vkCmdSetDiscardRectangleEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("discardRectangleEnable" ::: Bool32) -> IO ()) vkCmdSetDiscardRectangleEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> DiscardRectangleModeEXT -> IO ()) vkCmdSetDiscardRectangleModeEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pSampleLocationsInfo" ::: Ptr SampleLocationsInfoEXT) -> IO ()) vkCmdSetSampleLocationsEXT)
     (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr BufferMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()) vkGetBufferMemoryRequirements2)
     (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct ImageMemoryRequirementsInfo2)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()) vkGetImageMemoryRequirements2)
@@ -2473,6 +2507,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()) vkCmdEndQueryIndexedEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()) vkCmdDrawIndirectByteCountEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr Rect2D) -> IO ()) vkCmdSetExclusiveScissorNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissorEnables" ::: Ptr Bool32) -> IO ()) vkCmdSetExclusiveScissorEnableNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ImageView -> ImageLayout -> IO ()) vkCmdBindShadingRateImageNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pShadingRatePalettes" ::: Ptr ShadingRatePaletteNV) -> IO ()) vkCmdSetViewportShadingRatePaletteNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> CoarseSampleOrderTypeNV -> ("customSampleOrderCount" ::: Word32) -> ("pCustomSampleOrders" ::: Ptr CoarseSampleOrderCustomNV) -> IO ()) vkCmdSetCoarseSampleOrderNV)
@@ -2673,4 +2708,10 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> OpticalFlowSessionNV -> ("pExecuteInfo" ::: Ptr OpticalFlowExecuteInfoNV) -> IO ()) vkCmdOpticalFlowExecuteNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pFaultCounts" ::: Ptr DeviceFaultCountsEXT) -> ("pFaultInfo" ::: Ptr DeviceFaultInfoEXT) -> IO Result) vkGetDeviceFaultInfoEXT)
     (castFunPtr @_ @(Ptr Device_T -> ("pReleaseInfo" ::: Ptr ReleaseSwapchainImagesInfoEXT) -> IO Result) vkReleaseSwapchainImagesEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ("pMemoryMapInfo" ::: Ptr MemoryMapInfoKHR) -> ("ppData" ::: Ptr (Ptr ())) -> IO Result) vkMapMemory2KHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pMemoryUnmapInfo" ::: Ptr MemoryUnmapInfoKHR) -> IO Result) vkUnmapMemory2KHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct ShaderCreateInfoEXT)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pShaders" ::: Ptr ShaderEXT) -> IO Result) vkCreateShadersEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ShaderEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyShaderEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ShaderEXT -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO Result) vkGetShaderBinaryDataEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("stageCount" ::: Word32) -> ("pStages" ::: Ptr ShaderStageFlagBits) -> ("pShaders" ::: Ptr ShaderEXT) -> IO ()) vkCmdBindShadersEXT)
 

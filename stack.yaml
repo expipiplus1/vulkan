@@ -10,7 +10,7 @@ extra-deps:
 - th-desugar-1.12
 - derive-storable-0.3.0.0
 - derive-storable-plugin-0.2.3.4
-- nothunks-0.1.3
+- nothunks-0.1.4
 
 nix:
   enable: false

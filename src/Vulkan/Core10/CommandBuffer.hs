@@ -440,6 +440,23 @@ foreign import ccall
 -- application wishes to further use the command buffer, the command buffer
 -- /must/ be reset.
 --
+-- In case the application recorded one or more
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>
+-- into the command buffer, implementations /may/ return the
+-- @VK_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR@ error if any of the
+-- specified Video Std parameters do not adhere to the syntactic or
+-- semantic requirements of the used video compression standard, or if
+-- values derived from parameters according to the rules defined by the
+-- used video compression standard do not adhere to the capabilities of the
+-- video compression standard or the implementation.
+--
+-- Note
+--
+-- Applications /should/ not rely on the
+-- @VK_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR@ error being returned by any
+-- command as a means to verify Video Std parameters, as implementations
+-- are not required to report the error in any specific set of cases.
+--
 -- The command buffer /must/ have been in the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>,
 -- and is moved to the
@@ -504,6 +521,8 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   @VK_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR@
 --
 -- = See Also
 --

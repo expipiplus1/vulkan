@@ -18,17 +18,11 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
---
---     -   Requires @VK_KHR_format_feature_flags2@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_synchronization2@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
 --
 -- [__Contact__]
 --
@@ -1428,7 +1422,7 @@ data OpticalFlowSessionCreateInfoNV (es :: [Type]) = OpticalFlowSessionCreateInf
     -- 'OpticalFlowSessionCreateInfoNV'::@outputGridSize@.
     outputGridSize :: OpticalFlowGridSizeFlagsNV
   , -- | @hintGridSize@ is one exactly bit of 'OpticalFlowGridSizeFlagsNV'
-    -- specifying the grid size of of the hint flow vector maps to be bound to
+    -- specifying the grid size of the hint flow vector maps to be bound to
     -- this optical flow session. The size of the hint maps is determined by
     -- 'OpticalFlowSessionCreateInfoNV'::@width@ and
     -- 'OpticalFlowSessionCreateInfoNV'::@height@ divided by
@@ -1540,8 +1534,8 @@ data OpticalFlowSessionCreatePrivateDataInfoNV = OpticalFlowSessionCreatePrivate
     -- specified in
     -- 'OpticalFlowSessionCreatePrivateDataInfoNV'::@pPrivateData@.
     id' :: Word32
-  , -- | @size@ is is the size of data in bytes which is passed at a memory
-    -- location specified in
+  , -- | @size@ is the size of data in bytes which is passed at a memory location
+    -- specified in
     -- 'OpticalFlowSessionCreatePrivateDataInfoNV'::@pPrivateData@.
     size :: Word32
   , -- | @pPrivateData@ is a pointer to NV internal data.

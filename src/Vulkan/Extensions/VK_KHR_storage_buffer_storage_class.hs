@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Deprecation state__]
+-- [__Extension and Version Dependencies__; __Deprecation state__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>

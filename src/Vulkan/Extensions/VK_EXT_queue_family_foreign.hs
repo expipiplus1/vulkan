@@ -18,16 +18,14 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_external_memory@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Contact__]
 --
---     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @chadversary%0A*Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension* >
+--     -   Lina Versace
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @versalinyaa%0A*Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension* >
 --
 -- == Other Extension Metadata
 --
@@ -39,11 +37,11 @@
 --
 -- [__Contributors__]
 --
---     -   Chad Versace, Google
+--     -   Lina Versace, Google
 --
 --     -   James Jones, NVIDIA
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Jesse Hall, Google
 --
@@ -88,7 +86,7 @@
 --
 -- == Version History
 --
--- -   Revision 1, 2017-11-01 (Chad Versace)
+-- -   Revision 1, 2017-11-01 (Lina Versace)
 --
 --     -   Squashed internal revisions
 --

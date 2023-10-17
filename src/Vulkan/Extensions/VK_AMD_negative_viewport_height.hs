@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Deprecation state__]
+-- [__Extension and Version Dependencies__; __Deprecation state__]
 --
 --     -   /Obsoleted/ by @VK_KHR_maintenance1@ extension
 --

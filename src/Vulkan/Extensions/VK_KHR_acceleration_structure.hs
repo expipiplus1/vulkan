@@ -18,17 +18,13 @@
 --     13
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.1
---
---     -   Requires @VK_EXT_descriptor_indexing@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_buffer_device_address@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_deferred_host_operations@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>
 --
 -- [__Contact__]
 --
@@ -1215,6 +1211,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
+                                                                                               , BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV
                                                                                                , BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT
                                                                                                , BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT
                                                                                                , BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT
@@ -1349,6 +1346,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (Accelerat
 import Vulkan.Extensions.Handles (AccelerationStructureKHR)
 import Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureMotionInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_displacement_micromap (AccelerationStructureTrianglesDisplacementMicromapNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (AccelerationStructureTrianglesOpacityMicromapEXT)
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
@@ -1526,8 +1524,11 @@ foreign import ccall
 -- Accesses to @pInfo->src@ and @pInfo->dst@ /must/ be
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- or the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>,
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
@@ -1741,16 +1742,23 @@ foreign import ccall
 -- Accesses to @pInfo->src@ /must/ be
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- or the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>,
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'.
 -- Accesses to the buffer indicated by @pInfo->dst.deviceAddress@ /must/ be
 -- synchronized with the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- or the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- pipeline stage and an access type of
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>,
+-- and an and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT'.
 --
 -- This command produces the same results as
@@ -2018,16 +2026,23 @@ foreign import ccall
 -- Accesses to @pInfo->dst@ /must/ be
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- or the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>,
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
 -- Accesses to the buffer indicated by @pInfo->src.deviceAddress@ /must/ be
 -- synchronized with the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- or the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- pipeline stage and an access type of
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>,
+-- and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_READ_BIT'.
 --
 -- This command can accept acceleration structures produced by either
@@ -2261,8 +2276,11 @@ foreign import ccall
 -- @pAccelerationStructures@ /must/ be
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- or the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>,
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
@@ -3958,7 +3976,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-ppMaxPrimitiveCounts-03653#
 --     Each @ppMaxPrimitiveCounts@[i][j] /must/ be greater than or equal to
---     the the @primitiveCount@ value specified by the
+--     the @primitiveCount@ value specified by the
 --     'AccelerationStructureBuildRangeInfoKHR' structure located at
 --     @pIndirectDeviceAddresses@[i] + (@j@ × @pIndirectStrides@[i])
 --
@@ -4745,6 +4763,14 @@ foreign import ccall
 --         'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
 --         and with an equivalent @micromap@.
 --
+--     -   For each element of either @pGeometries@ or @ppGeometries@ at a
+--         given index, with a @geometryType@ member equal to
+--         'GEOMETRY_TYPE_TRIANGLES_KHR', if the @pNext@ chain contains
+--         'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV'
+--         the corresponding member of @pBuildInfo@ also contains
+--         'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV'
+--         and with an equivalent @micromap@.
+--
 -- Similarly, the @updateScratchSize@ value will support any build command
 -- specifying the 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR' @mode@
 -- under the above conditions, and the @buildScratchSize@ value will
@@ -5233,12 +5259,10 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 --     @vertexStride@ /must/ be less than or equal to 232-1
 --
 -- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-03797#
---     @vertexFormat@ /must/ support the
+--     The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     of @vertexFormat@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
---     in
---     'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
---     as returned by
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
 --
 -- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-03798#
 --     @indexType@ /must/ be
@@ -5256,7 +5280,8 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 --     Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV'
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV',
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV',
 --     or
 --     'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
 --
@@ -5318,6 +5343,7 @@ instance Extensible AccelerationStructureGeometryTrianglesDataKHR where
   getNext AccelerationStructureGeometryTrianglesDataKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureGeometryTrianglesDataKHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @AccelerationStructureTrianglesDisplacementMicromapNV = Just f
     | Just Refl <- eqT @e @AccelerationStructureTrianglesOpacityMicromapEXT = Just f
     | Just Refl <- eqT @e @AccelerationStructureGeometryMotionTrianglesDataNV = Just f
     | otherwise = Nothing
@@ -7273,6 +7299,12 @@ pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = BuildAccelerati
 -- of build time or trace performance.
 pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000010
 
+-- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV'
+-- indicates that the displacement micromaps associated with the specified
+-- acceleration structure /may/ change with an acceleration structure
+-- update.
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV = BuildAccelerationStructureFlagBitsKHR 0x00000200
+
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
 -- indicates that the data of the opacity micromaps associated with the
 -- specified acceleration structure /may/ change with an acceleration
@@ -7321,6 +7353,10 @@ showTableBuildAccelerationStructureFlagBitsKHR =
   ,
     ( BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
     , "LOW_MEMORY_BIT_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV
+    , "ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV"
     )
   ,
     ( BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT

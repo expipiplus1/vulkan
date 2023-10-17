@@ -18,11 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_external_memory@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
 --
 -- [__Contact__]
 --
@@ -411,7 +407,7 @@ getMemoryWin32HandlePropertiesKHR device
 --     @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be a
 --     valid handle of the type specified by @handleType@
 --
--- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-01441# if @handle@ is
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-01441# If @handle@ is
 --     not @NULL@, @name@ /must/ be @NULL@
 --
 -- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-01518# If @handle@ is

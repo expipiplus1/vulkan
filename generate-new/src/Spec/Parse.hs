@@ -73,29 +73,41 @@ parseSpec bs = do
         specAtoms         <- case sSpecFlavor @t of
           SSpecVk -> pure mempty
           SSpecXr -> parseAtoms types
-        specFeatures   <- parseFeatures (contents n)
+        specFeatures <- parseFeatures NotDisabled (contents n)
+        specDisabledFeatures <- parseFeatures OnlyDisabled (contents n)
         specExtensions <-
           parseExtensions NotDisabled . contents =<< oneChild "extensions" n
         specDisabledExtensions <-
           parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
         let disabledTypeNames = V.fromList
-              [ n
+              ([ n
               | Extension {..} <- toList specDisabledExtensions
               , Require {..}   <- toList exRequires
               , n              <- toList rTypeNames
-              ]
-            disabledCommandNames = V.fromList
+              ] <>
               [ n
+              | Feature {..} <- toList specDisabledFeatures
+              , Require {..}   <- toList fRequires
+              , n              <- toList rTypeNames
+              ])
+            disabledTypeAliasNames = disabledTypeNames
+            disabledCommandNames = V.fromList
+              ([ n
               | Extension {..} <- toList specDisabledExtensions
               , Require {..}   <- toList exRequires
               , n              <- toList rCommandNames
-              ]
+              ] <>
+              [ n
+              | Feature {..} <- toList specDisabledFeatures
+              , Require {..}   <- toList fRequires
+              , n              <- toList rCommandNames
+              ])
         specHandles <- V.filter ((`V.notElem` disabledTypeNames) . hName)
           <$> parseHandles @t types
-        specFuncPointers <- parseFuncPointers types
-        typeAliases      <- parseTypeAliases
-          ["handle", "enum", "bitmask", "struct"]
-          types
+        specFuncPointers <- V.filter ((`V.notElem` disabledTypeNames) . fpName)
+          <$> parseFuncPointers types
+        typeAliases      <- V.filter ((`V.notElem` disabledTypeAliasNames) . aName)
+          <$> parseTypeAliases ["handle", "enum", "bitmask", "struct"] types
         unsizedStructs <- V.filter ((`V.notElem` disabledTypeNames) . sName)
           <$> parseStructs typeAliases types
         unsizedUnions <- V.filter ((`V.notElem` disabledTypeNames) . sName)
@@ -489,9 +501,11 @@ withChildren ss =
 -- Features and extensions
 ----------------------------------------------------------------
 
-parseFeatures :: [Content] -> P (Vector Feature)
-parseFeatures es = V.fromList
-  <$> sequenceV [ parseFeature e | Element e <- es, "feature" == name e ]
+parseFeatures :: ParseDisabled -> [Content] -> P (Vector Feature)
+parseFeatures parseDisabled es = V.fromList
+  <$> sequenceV [ parseFeature e | Element e <- es, "feature" == name e
+                , disabled parseDisabled e
+                ]
  where
   parseFeature :: Node -> P Feature
   parseFeature n = do
@@ -499,21 +513,30 @@ parseFeatures es = V.fromList
     context (unCName fName) $ do
       fVersion <- runReadP parseVersion
         =<< note "feature has no version" (getAttr "number" n)
-      fRequires <- parseRequires n
+      fRequires <- parseRequires Nothing n
       pure Feature { .. }
 
 data ParseDisabled = OnlyDisabled | NotDisabled
+  deriving (Eq, Show)
 
 parseExtensions :: ParseDisabled -> [Content] -> P (Vector Extension)
 parseExtensions parseDisabled es = V.fromList <$> sequenceV
-  [ parseExtension e
+  ([ parseExtension (case parseDisabled of
+                       OnlyDisabled -> Nothing
+                       NotDisabled -> Just NotDisabled
+                    ) e
   | Element e <- es
   , "extension" == name e
   , disabled parseDisabled e
-  ]
+  ] <>
+  [ parseExtension (Just OnlyDisabled) e
+  | OnlyDisabled == parseDisabled
+  , Element e <- es
+  , "extension" == name e
+  ])
  where
-  parseExtension :: Node -> P Extension
-  parseExtension n = do
+  parseExtension :: Maybe ParseDisabled -> Node -> P Extension
+  parseExtension parseDisabledReq n = do
     exName   <- decode =<< note "extension has no name" (getAttr "name" n)
     exNumber <- readAttr "number" n
     exType   <- case getAttr "type" n of
@@ -523,22 +546,36 @@ parseExtensions parseDisabled es = V.fromList <$> sequenceV
         throw $ "Unhandled extension type: " <> show exName <> " " <> show t
       Nothing -> pure UnknownExtensionType
     exDependencies <- listAttr decode "requires" n
-    exRequires     <- parseRequires n
+    exRequires     <- parseRequires parseDisabledReq n
     exRequiresCore <- traverse (runReadP parseVersion)
                                (getAttr "requiresCore" n)
     exSupported <- decode
       =<< note "extension has no supported attr" (getAttr "supported" n)
     pure Extension { .. }
 
-parseRequires :: Node -> P (Vector Require)
-parseRequires n = V.fromList <$> traverseV
+parseRequires :: Maybe ParseDisabled -> Node -> P (Vector Require)
+parseRequires parseDisabled n = V.fromList <$> traverseV
   parseRequire
-  [ r | Element r <- contents n, "require" == name r ]
+  [ r
+  | Element r <- contents n, "require" == name r
+  , maybe True (`disabled` r) parseDisabled
+  ]
  where
   parseRequire :: Node -> P Require
   parseRequire r = do
     rComment  <- traverse decode (getAttr "comment" r)
-    typeNames <- V.fromList . filter (not . isForbidden) <$> sequenceV
+    enums <- sequenceV
+      [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t
+      ]
+    -- No need to include extended enum types, they're pulled in by the extends
+    -- attributes, if we have them here then we can falsely detect them as
+    -- disabled
+    extendedEnums <- fmap (fmap CName) . traverse decode $
+      catMaybes
+        [ getAttr "extends" t
+        | Element t <- contents r, "enum" == name t
+        ]
+    typeNames <- V.fromList . filter (not . (`elem` extendedEnums) <&&> not . isForbidden) <$> sequenceV
       [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
     let -- TODO: this should probably be all constants
         isRequiredTypeActuallyAnEnum = (`elem` ["XR_MIN_HAPTIC_DURATION"])
@@ -549,8 +586,7 @@ parseRequires n = V.fromList <$> traverseV
       | Element t <- contents r
       , "command" == name t
       ]
-    rEnumValueNames <- (<> extraEnums) . V.fromList <$> sequenceV
-      [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
+    let rEnumValueNames = V.fromList enums <> extraEnums
     pure Require { .. }
 
 ----------------------------------------------------------------
@@ -577,6 +613,7 @@ parseDefinedConstants es = V.fromList <$> sequenceV
   , "type" == name e
   , Just "define" <- pure $ getAttr "category" e
   , Just (n, v)   <- pure $ definedConstant e
+  , notVulkanSC e
   ]
 
 parseExtensionConstants :: [Content] -> P (Vector Constant)
@@ -644,6 +681,7 @@ parseEnumAliases rs =
       , Element ee <- contents r
       , "enum" == name ee
       , Just alias <- pure $ getAttr "alias" ee
+      , notVulkanSC ee
       ]
 
 parseCommandAliases :: [Content] -> P (Vector Alias)
@@ -694,6 +732,7 @@ parseHeaderVersion es = do
         | Element n <- es
         , name n == "type"
         , Just "define" <- pure (getAttr "category" n)
+        , notVulkanSC n
         ]
   vers <- case sSpecFlavor @t of
     SSpecVk -> flip mapMaybeM defines $ \d -> do
@@ -802,6 +841,7 @@ parseEmptyBitmasks es = fromList <$> traverseV
   , not (isAlias n)
   , Nothing        <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
   , Just "bitmask" <- pure $ getAttr "category" n
+  , notVulkanSC n
   ]
  where
   parseEmptyBitmask :: Node -> P Enum'
@@ -830,6 +870,7 @@ parseEnums types es = do
     , not (isAlias n)
     , Just bits      <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
     , Just "bitmask" <- pure $ getAttr "category" n
+    , notVulkanSC n
     ]
   fromList . catMaybes <$> traverseV
     (uncurry
@@ -862,7 +903,8 @@ parseEnums types es = do
       else Just <$> do
         eValues <- fromList <$> traverseV
           (context (unCName eName) . parseValue)
-          [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
+          [ e | Element e <- contents n, name e == "enum", not (isAlias e)
+          ]
         eType <- if isBitmask
           -- If we can't find the flags name, use the bits name
           then do
@@ -984,7 +1026,7 @@ parseStruct aliases =
           sMembers <-
             fmap fromList
             . traverseV (parseStructMember sName)
-            $ [ m | Element m <- contents n, name m == "member" ]
+            $ [ m | Element m <- contents n, name m == "member", notVulkanSC m ]
           let sSize        = ()
               sAlignment   = ()
               sExtendedBy  = ()
@@ -1020,7 +1062,7 @@ parseCommands :: [Content] -> P (Vector Command)
 parseCommands es =
   fmap fromList
     . traverseV parseCommand
-    $ [ n | Element n <- es, name n == "command", not (isAlias n) ]
+    $ [ n | Element n <- es, name n == "command", not (isAlias n), notVulkanSC n ]
  where
 
   parseCommand :: Node -> P Command
@@ -1031,7 +1073,8 @@ parseCommands es =
     cName         <- nameElem "command" proto
     cReturnType   <- parseCType (allNonCommentText proto)
     cParameters   <- fromList
-      <$> traverseV (parseParameter cName) (manyChildren "param" n)
+      <$> traverseV (parseParameter cName)
+        [ m | Element m <- contents n, name m == "param", notVulkanSC m ]
     let cIsDynamic = True
         cCanBlock =
           "wait"
@@ -1215,6 +1258,8 @@ isForbidden n =
     , "VK_MAKE_VERSION"
     , "VK_MAKE_API_VERSION"
     , "VK_USE_64_BIT_PTR_DEFINES"
+    , "VKSC_API_VARIANT"
+    , "VKSC_API_VERSION_1_0"
     -- TODO: These are really hacky, once bits are defined then they prevent
     -- getting the size of structs.
     -- https://github.com/KhronosGroup/Vulkan-Docs/pull/1556
@@ -1223,6 +1268,28 @@ isForbidden n =
     , "VkPrivateDataSlotCreateFlagBits"
     , "VkPrivateDataSlotCreateFlagBitsEXT"
     , "VkImageFormatConstraintsFlagBitsFUCHSIA"
+    -- VulkanSC
+    -- , "PFN_vkFaultCallbackFunction"
+    -- , "FN_vkFaultCallbackFunction"
+    -- , "VkPipelineCacheStageValidationIndexEntry"
+    -- , "VkPipelineCacheSafetyCriticalIndexEntry"
+    -- , "VkPipelineCacheHeaderVersionSafetyCriticalOne"
+    -- , "VkFaultData"
+    -- , "VkFaultCallbackInfo"
+    -- , "VkPipelineOfflineCreateInfo"
+    -- , "VkPhysicalDeviceVulkanSC10Properties"
+    -- , "VkPipelinePoolSize"
+    -- , "VkDeviceObjectReservationCreateInfo"
+    -- , "VkCommandPoolMemoryReservationCreateInfo"
+    -- , "VkCommandPoolMemoryConsumption"
+    -- , "VkPhysicalDeviceVulkanSC10Features"
+    -- , "vkGetFaultData"
+    -- , "vkGetCommandPoolMemoryConsumption"
+    -- , "VkFaultLevel"
+    -- , "VkFaultType"
+    -- , "VkFaultQueryBehavior"
+    -- , "VkPipelineMatchControl"
+    -- , "VkPipelineCacheValidationVersion"
     ]
   xrForbidden =
     [ "openxr_platform_defines"
@@ -1267,12 +1334,17 @@ extraTypeNames = ["ANativeWindow", "AHardwareBuffer", "CAMetalLayer"]
 notDisabled :: Node -> Bool
 notDisabled = disabled NotDisabled
 
+notVulkanSC :: Node -> Bool
+notVulkanSC n = getAttr "api" n /= Just "vulkansc"
+
 disabled :: ParseDisabled -> Node -> Bool
 disabled p e =
   let markedDisabled = Just "disabled" == getAttr "supported" e
       forceDisabled =
         getAttr "name" e `elem` (Just <$> forceDisabledExtensions)
-      dis = markedDisabled || forceDisabled
+      vulkansc = Just "vulkansc" == getAttr "supported" e ||
+                 Just "vulkansc" == getAttr "api" e
+      dis = markedDisabled || forceDisabled || vulkansc
   in  case p of
         NotDisabled  -> not dis
         OnlyDisabled -> dis
@@ -1426,3 +1498,7 @@ for = flip traverse
 
 nubOrdV :: Ord a => Vector a -> Vector a
 nubOrdV = fromList . nubOrd . toList
+
+infixl 7 <&&>
+(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<&&>) = liftA2 (&&)

@@ -50,7 +50,9 @@ type ShaderStageFlags = ShaderStageFlagBits
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT',
 -- 'ShaderStageFlags',
+-- 'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT',
 -- 'Vulkan.Extensions.VK_AMD_shader_info.getShaderInfoAMD'
 newtype ShaderStageFlagBits = ShaderStageFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

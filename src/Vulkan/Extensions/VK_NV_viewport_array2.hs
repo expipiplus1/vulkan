@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Contact__]
+-- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Daniel Koch
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_viewport_array2] @dgkoch%0A*Here describe the issue or question you have about the VK_NV_viewport_array2 extension* >

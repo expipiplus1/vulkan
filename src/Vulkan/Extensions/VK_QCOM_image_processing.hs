@@ -18,11 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_format_feature_flags2@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
 --
 -- [__Contact__]
 --
@@ -414,7 +410,7 @@ instance Zero PhysicalDeviceImageProcessingFeaturesQCOM where
 --     operations.
 --
 -- -   #limits-boxfilter-maxblocksize#@maxBoxFilterBlockSize@ is a
---     'Vulkan.Core10.FundamentalTypes.Extent2D' describing the the maximum
+--     'Vulkan.Core10.FundamentalTypes.Extent2D' describing the maximum
 --     dimensions (@width@ and @height@) that /can/ be specified for
 --     @blocksize@ in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-boxfilter box filter sampling>

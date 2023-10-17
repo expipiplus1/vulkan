@@ -18,14 +18,9 @@
 --     3
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
---
---     -   Requires @VK_KHR_get_memory_requirements2@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
 --
 -- [__Contact__]
 --
@@ -1171,8 +1166,11 @@ foreign import ccall
 -- Accesses to @src@ and @dst@ /must/ be
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- or the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>,
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
@@ -1747,6 +1745,14 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
+-- -   #VUID-vkCmdTraceRaysNV-None-07888# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor is accessed using atomic operations as a result of this
+--     command, then the storage texel buffer’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT'
+--
 -- -   #VUID-vkCmdTraceRaysNV-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
@@ -1820,24 +1826,50 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02697# For each set /n/ that is
+-- -   #VUID-vkCmdTraceRaysNV-None-08600# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a descriptor set /must/
---     have been bound to /n/ at the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdTraceRaysNV-maintenance4-06425# If the
+-- -   #VUID-vkCmdTraceRaysNV-None-08601# For each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdTraceRaysNV-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
 --     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
---     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
---     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
+--     pipeline bind point used by this command, or by any of the
+--     'Vulkan.Extensions.Handles.ShaderEXT' objects bound to stages
+--     corresponding to the pipeline bind point used by this command, a
+--     push constant value /must/ have been set for the same pipeline bind
+--     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
+--     compatible for push constants, with the
+--     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' and
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline' or
+--     'Vulkan.Extensions.Handles.ShaderEXT', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-08114# Descriptors in each bound
@@ -1866,6 +1898,13 @@ foreign import ccall
 --     was created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-vkCmdTraceRaysNV-None-08604# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command
+--
 -- -   #VUID-vkCmdTraceRaysNV-None-08117# If the descriptors used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     were specified via
@@ -1879,18 +1918,37 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02700# A valid pipeline /must/ be bound
---     to the pipeline bind point used by this command
+-- -   #VUID-vkCmdTraceRaysNV-None-08605# If a descriptor is dynamically
+--     used with a 'Vulkan.Extensions.Handles.ShaderEXT' created with a
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' that was created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02859# There /must/ not have been any
---     calls to dynamic state setting commands for any state not specified
---     as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to
---     the pipeline bind point used by this command, since that pipeline
---     was bound
+-- -   #VUID-vkCmdTraceRaysNV-None-08606# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02702# If the
+-- -   #VUID-vkCmdTraceRaysNV-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-08608# If a pipeline is bound to the
+--     pipeline bind point used by this command, there /must/ not have been
+--     any calls to dynamic state setting commands for any state not
+--     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command, since that
+--     pipeline was bound
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -1902,17 +1960,21 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02703# If the
+-- -   #VUID-vkCmdTraceRaysNV-None-08610# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02704# If the
+-- -   #VUID-vkCmdTraceRaysNV-None-08611# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
@@ -1931,6 +1993,15 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
+-- -   #VUID-vkCmdTraceRaysNV-None-08612# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
 -- -   #VUID-vkCmdTraceRaysNV-storageBuffers-06936# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command accesses a storage buffer, and that stage
@@ -1944,25 +2015,41 @@ foreign import ccall
 --     of the range of the buffer as specified in the descriptor set bound
 --     to the same pipeline bind point
 --
--- -   #VUID-vkCmdTraceRaysNV-commandBuffer-02707# If @commandBuffer@ is an
+-- -   #VUID-vkCmdTraceRaysNV-None-08613# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a storage
+--     buffer, it /must/ not access values outside of the range of the
+--     buffer as specified in the descriptor set bound to the same pipeline
+--     bind point
+--
+-- -   #VUID-vkCmdTraceRaysNV-commandBuffer-08614# If @commandBuffer@ is an
 --     unprotected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' object bound to a stage
+--     corresponding to the pipeline bind point used by this command /must/
+--     not be a protected resource
 --
--- -   #VUID-vkCmdTraceRaysNV-None-06550# If the
+-- -   #VUID-vkCmdTraceRaysNV-None-08615# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ only be used with @OpImageSample*@ or
 --     @OpImageSparseSample*@ instructions
 --
--- -   #VUID-vkCmdTraceRaysNV-ConstOffset-06551# If the
+-- -   #VUID-vkCmdTraceRaysNV-ConstOffset-08616# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+--     point used by this command or any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -2893,31 +2980,44 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-03421# If @flags@
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07984# If @flags@
 --     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
---     flag, and @basePipelineIndex@ is @-1@, @basePipelineHandle@ /must/
---     be a valid handle to a ray tracing 'Vulkan.Core10.Handles.Pipeline'
+--     flag, and @basePipelineIndex@ is -1, @basePipelineHandle@ /must/ be
+--     a valid handle to a ray tracing 'Vulkan.Core10.Handles.Pipeline'
 --
--- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-03422# If @flags@
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07985# If @flags@
 --     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @basePipelineIndex@ /must/
 --     be a valid index into the calling command’s @pCreateInfos@ parameter
 --
--- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-03423# If @flags@
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07986# If @flags@
 --     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
---     flag, and @basePipelineIndex@ is not @-1@, @basePipelineHandle@
+--     flag, @basePipelineIndex@ /must/ be -1 or @basePipelineHandle@
 --     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-03424# If @flags@
---     contains the
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
---     flag, and @basePipelineHandle@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @basePipelineIndex@ /must/
---     be @-1@
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-07987# If a push
+--     constant block is declared in a shader, a push constant range in
+--     @layout@ /must/ match both the shader stage and range
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-07988# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources resource variables>
+--     is declared in a shader, a descriptor slot in @layout@ /must/ match
+--     the shader stage
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-07990# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources resource variables>
+--     is declared in a shader, and the descriptor type is not
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT', a
+--     descriptor slot in @layout@ /must/ match the descriptor type
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-07991# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources resource variables>
+--     is declared in a shader as an array, a descriptor slot in @layout@
+--     /must/ match the descriptor count
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-pStages-03426# The shader
 --     code for the entry points identified by @pStages@, and the rest of
@@ -2925,11 +3025,6 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --     linking rules described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces Shader Interfaces>
 --     chapter
---
--- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-03427# @layout@ /must/
---     be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency consistent>
---     with all shaders specified in @pStages@
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-03428# The number of
 --     resources in @layout@ accessible to each shader stage that is used
@@ -3017,6 +3112,10 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07402# @flags@ /must/
 --     not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07998# @flags@ /must/
+--     not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV'
 --
 -- == Valid Usage (Implicit)
 --

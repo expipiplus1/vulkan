@@ -334,7 +334,9 @@ instance Zero Extent3D where
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
 -- 'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
--- 'Extent2D', 'Offset2D',
+-- 'Extent2D',
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
+-- 'Offset2D',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowExecuteInfoNV',
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV',
@@ -464,6 +466,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
 -- 'Vulkan.Extensions.VK_EXT_device_memory_report.PhysicalDeviceDeviceMemoryReportFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostics_config.PhysicalDeviceDiagnosticsConfigFeaturesNV',
+-- 'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapFeaturesNV',
 -- 'Vulkan.Extensions.VK_EXT_physical_device_drm.PhysicalDeviceDrmPropertiesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PhysicalDeviceDynamicRenderingFeatures',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PhysicalDeviceExclusiveScissorFeaturesNV',
@@ -497,6 +500,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_EXT_image_compression_control_swapchain.PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT',
 -- 'Vulkan.Extensions.VK_QCOM_image_processing.PhysicalDeviceImageProcessingFeaturesQCOM',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_image_robustness.PhysicalDeviceImageRobustnessFeatures',
+-- 'Vulkan.Extensions.VK_EXT_image_sliced_view_of_3d.PhysicalDeviceImageSlicedViewOf3DFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_image_view_min_lod.PhysicalDeviceImageViewMinLodFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.PhysicalDeviceImagelessFramebufferFeatures',
 -- 'Vulkan.Extensions.VK_EXT_index_type_uint8.PhysicalDeviceIndexTypeUint8FeaturesEXT',
@@ -517,6 +521,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
 -- 'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM',
 -- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports.PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM',
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_non_seamless_cube_map.PhysicalDeviceNonSeamlessCubeMapFeaturesEXT',
@@ -572,10 +577,13 @@ instance Zero Rect2D where
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product.PhysicalDeviceShaderIntegerDotProductProperties',
 -- 'Vulkan.Extensions.VK_INTEL_shader_integer_functions2.PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL',
 -- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.PhysicalDeviceShaderModuleIdentifierFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_object.PhysicalDeviceShaderObjectFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_shader_sm_builtins.PhysicalDeviceShaderSMBuiltinsFeaturesNV',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types.PhysicalDeviceShaderSubgroupExtendedTypesFeatures',
 -- 'Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow.PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_shader_terminate_invocation.PhysicalDeviceShaderTerminateInvocationFeatures',
+-- 'Vulkan.Extensions.VK_EXT_shader_tile_image.PhysicalDeviceShaderTileImageFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_tile_image.PhysicalDeviceShaderTileImagePropertiesEXT',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PhysicalDeviceShadingRateImageFeaturesNV',
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceSparseProperties',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties',
@@ -640,9 +648,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV',
 -- 'Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.TextureLODGatherFormatPropertiesAMD',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264CapabilitiesEXT VkVideoEncodeH264CapabilitiesEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264EmitPictureParametersInfoEXT VkVideoEncodeH264EmitPictureParametersInfoEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264RateControlLayerInfoEXT VkVideoEncodeH264RateControlLayerInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265EmitPictureParametersInfoEXT VkVideoEncodeH265EmitPictureParametersInfoEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265RateControlLayerInfoEXT VkVideoEncodeH265RateControlLayerInfoEXT>,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdExecuteGeneratedCommandsNV',
@@ -663,6 +669,8 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthTestEnableEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnableEXT',
+-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT',
+-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable',
@@ -740,18 +748,16 @@ type SampleMask = Word32
 --
 -- Any 'Flags' member or parameter used in the API as an input /must/ be a
 -- valid combination of bit flags. A valid combination is either zero or
--- the bitwise OR of valid bit flags. A bit flag is valid if:
+-- the bitwise OR of valid bit flags.
 --
--- -   The bit flag is defined as part of the @Vk*FlagBits@ type, where the
---     bits type is obtained by taking the flag type and replacing the
---     trailing 'Flags' with @FlagBits@. For example, a flag value of type
---     'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags'
---     /must/ contain only bit flags defined by
---     'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlagBits'.
---
--- -   The flag is allowed in the context in which it is being used. For
---     example, in some cases, certain bit flags or combinations of bit
---     flags are mutually exclusive.
+-- An individual bit flag is valid for a 'Flags' type if it would be a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-validusage-enums valid enumerant>
+-- when used with the equivalent @Vk*FlagBits@ type, where the bits type is
+-- obtained by taking the flag type and replacing the trailing 'Flags' with
+-- @FlagBits@. For example, a flag value of type
+-- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags' /must/
+-- contain only bit flags defined by
+-- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlagBits'.
 --
 -- Any 'Flags' member or parameter returned from a query command or
 -- otherwise output from Vulkan to the application /may/ contain bit flags
@@ -788,18 +794,16 @@ type Flags = Word32
 --
 -- Any @Vk*Flags2@ member or parameter used in the API as an input /must/
 -- be a valid combination of bit flags. A valid combination is either zero
--- or the bitwise OR of valid bit flags. A bit flag is valid if:
+-- or the bitwise OR of valid bit flags.
 --
--- -   The bit flag is defined as part of the @Vk*FlagBits2@ type, where
---     the bits type is obtained by taking the flag type and replacing the
---     trailing @Flags2@ with @FlagBits2@. For example, a flag value of
---     type 'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlags2KHR'
---     /must/ contain only bit flags defined by
---     'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlagBits2KHR'.
---
--- -   The flag is allowed in the context in which it is being used. For
---     example, in some cases, certain bit flags or combinations of bit
---     flags are mutually exclusive.
+-- An individual bit flag is valid for a @Vk*Flags2@ type if it would be a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-validusage-enums valid enumerant>
+-- when used with the equivalent @Vk*FlagBits2@ type, where the bits type
+-- is obtained by taking the flag type and replacing the trailing @Flags2@
+-- with @FlagBits2@. For example, a flag value of type
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlags2KHR' /must/
+-- contain only bit flags defined by
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlagBits2KHR'.
 --
 -- Any @Vk*Flags2@ member or parameter returned from a query command or
 -- otherwise output from Vulkan to the application /may/ contain bit flags
@@ -834,6 +838,7 @@ type Flags64 = Word64
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryAabbsDataKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
+-- 'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferPropertiesANDROID',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
@@ -866,10 +871,12 @@ type Flags64 = Word64
 -- 'Vulkan.Core10.Memory.MappedMemoryRange',
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo',
 -- 'Vulkan.Core10.DeviceInitialization.MemoryHeap',
+-- 'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR',
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapBuildInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapBuildSizesInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderPropertiesHUAWEI',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.PhysicalDeviceExternalMemoryHostPropertiesEXT',
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits',

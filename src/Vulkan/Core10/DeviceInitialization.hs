@@ -1495,6 +1495,15 @@ instance Zero ApplicationInfo where
 -- struct to the @pNext@ element of the 'InstanceCreateInfo' structure
 -- given to 'createInstance'.
 --
+-- Note
+--
+-- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG'
+-- allows applications to ship drivers with themselves. Only drivers that
+-- are designed to work with it should be used, such as drivers that
+-- implement Vulkan in software or that implement Vulkan by translating it
+-- to a different API. Any driver that requires installation should not be
+-- used, such as hardware drivers.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkInstanceCreateInfo-pNext-04925# If the @pNext@ chain of

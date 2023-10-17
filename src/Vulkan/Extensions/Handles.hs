@@ -11,6 +11,7 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , CuFunctionNVX(..)
                                   , OpticalFlowSessionNV(..)
                                   , MicromapEXT(..)
+                                  , ShaderEXT(..)
                                   , DisplayKHR(..)
                                   , DisplayModeKHR(..)
                                   , SurfaceKHR(..)
@@ -67,6 +68,7 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_MICROMAP_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SHADER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_VALIDATION_CACHE_EXT))
@@ -324,6 +326,7 @@ instance Show OpticalFlowSessionNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
+-- 'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMemoryToMicromapInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMicromapInfoEXT',
@@ -340,6 +343,24 @@ instance HasObjectType MicromapEXT where
   objectTypeAndHandle (MicromapEXT h) = (OBJECT_TYPE_MICROMAP_EXT, h)
 instance Show MicromapEXT where
   showsPrec p (MicromapEXT x) = showParen (p >= 11) (showString "MicromapEXT 0x" . showHex x)
+
+
+-- | VkShaderEXT - Opaque handle to a shader object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- 'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_object.destroyShaderEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_object.getShaderBinaryDataEXT'
+newtype ShaderEXT = ShaderEXT Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType ShaderEXT where
+  objectTypeAndHandle (ShaderEXT h) = (OBJECT_TYPE_SHADER_EXT, h)
+instance Show ShaderEXT where
+  showsPrec p (ShaderEXT x) = showParen (p >= 11) (showString "ShaderEXT 0x" . showHex x)
 
 
 -- | VkDisplayKHR - Opaque handle to a display object

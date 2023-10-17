@@ -220,7 +220,7 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --
 -- -   'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT' specifies that an
 --     image view /can/ be used as a framebuffer color attachment that
---     supports blending and as an input attachment.
+--     supports blending.
 --
 -- -   'FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT' specifies that an
 --     image view /can/ be used as a framebuffer depth\/stencil attachment
@@ -559,7 +559,7 @@ pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT = FormatFeatureFlagBits2 0x0000000
 
 -- | 'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT' specifies that an image
 -- view /can/ be used as a framebuffer color attachment that supports
--- blending and as an input attachment.
+-- blending.
 pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT = FormatFeatureFlagBits2 0x0000000000000100
 
 -- | 'FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT' specifies that an image

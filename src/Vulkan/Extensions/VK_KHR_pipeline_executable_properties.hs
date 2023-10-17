@@ -18,11 +18,7 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Special Use__]
 --
@@ -30,8 +26,8 @@
 --
 -- [__Contact__]
 --
---     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_executable_properties] @jekstrand%0A*Here describe the issue or question you have about the VK_KHR_pipeline_executable_properties extension* >
+--     -   Faith Ekstrand
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_executable_properties] @gfxstrand%0A*Here describe the issue or question you have about the VK_KHR_pipeline_executable_properties extension* >
 --
 -- == Other Extension Metadata
 --
@@ -43,7 +39,7 @@
 --
 -- [__Interactions and External Dependencies__; __Contributors__]
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Ian Romanick, Intel
 --
@@ -154,7 +150,7 @@
 --
 -- == Version History
 --
--- -   Revision 1, 2019-05-28 (Jason Ekstrand)
+-- -   Revision 1, 2019-05-28 (Faith Ekstrand)
 --
 --     -   Initial draft
 --

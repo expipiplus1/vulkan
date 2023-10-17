@@ -135,6 +135,12 @@ bespokeModules = do
        , (mkTyName "XrBaseOutStructure", mod' ["CStruct", "Extends"])
        , (mkTyName "XrFovf"            , mod' ["Core10", "OtherTypes"])
        , (mkTyName "XrPosef"           , mod' ["Core10", "Space"])
+       , ( mkTyName "PFN_vkFaultCallbackFunction"
+         , mod' ["Core10", "FaultHandlingFunctionality"]
+         )
+       , ( mkTyName "FN_vkFaultCallbackFunction"
+         , mod' ["Core10", "FaultHandlingFunctionality"]
+         )
        ]
     <> (   (, mod' ["Core10", "FundamentalTypes"])
        <$> [ mkTyName "VkBool32"
@@ -269,6 +275,10 @@ dualPurposeBytestrings = BespokeScheme $ \case
       _ -> Nothing
     | c == "vkGetShaderInfoAMD" -> \case
       a | (Ptr NonConst Void) <- type' a, "pInfo" <- name a ->
+        Just (Returned ByteString)
+      _ -> Nothing
+    | c == "vkGetShaderBinaryDataEXT" -> \case
+      a | (Ptr NonConst Void) <- type' a, "pData" <- name a ->
         Just (Returned ByteString)
       _ -> Nothing
   _ -> const Nothing
@@ -739,6 +749,10 @@ micromapUsageCounts = BespokeScheme $ \case
     (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
       Just $ ElidedUnivalued "nullPtr"
     _ -> Nothing
+  "VkAccelerationStructureTrianglesDisplacementMicromapNV" -> \case
+    (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
+      Just $ ElidedUnivalued "nullPtr"
+    _ -> Nothing
   _ -> const Nothing
 
 structChainVar :: String
@@ -840,6 +854,16 @@ bespokeOptionality = \case
   -- See https://github.com/expipiplus1/vulkan/issues/239
   "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
     "pGeometries" -> Just mempty
+    _             -> Nothing
+  -- similar for ppUsageCounts
+  "VkMicromapBuildInfoEXT" -> \case
+    "pUsageCounts" -> Just mempty
+    _             -> Nothing
+  "VkAccelerationStructureTrianglesOpacityMicromapEXT" -> \case
+    "pUsageCounts" -> Just mempty
+    _             -> Nothing
+  "VkAccelerationStructureTrianglesDisplacementMicromapNV" -> \case
+    "pUsageCounts" -> Just mempty
     _             -> Nothing
   _ -> const Nothing
 
@@ -1137,6 +1161,19 @@ directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
 screen :: HasRenderParams r => [Sem r RenderElement]
 screen = [voidData "_screen_window", voidData "screen_context"]
+
+nvscisyncUnsized :: HasRenderParams r => [Sem r RenderElement]
+nvscisyncUnsized = [voidData "NvSciSyncFence"]
+
+nvscisync :: HasRenderParams r => [BespokeAlias r]
+nvscisync = [ alias (APtr ''()) "NvSciSyncAttrList"
+            , alias (APtr ''()) "NvSciSyncObj"
+            ]
+
+nvscibuf :: HasRenderParams r => [BespokeAlias r]
+nvscibuf = [ alias (APtr ''()) "NvSciBufAttrList"
+           , alias (APtr ''()) "NvSciBufObj"
+           ]
 
 ----------------------------------------------------------------
 -- OpenXR platform stuff

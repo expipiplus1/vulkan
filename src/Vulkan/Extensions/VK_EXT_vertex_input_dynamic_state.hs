@@ -18,11 +18,9 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Contact__]
 --
@@ -188,15 +186,18 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the vertex input attribute and vertex input binding
--- descriptions state for subsequent drawing commands when the graphics
--- pipeline is created with
+-- descriptions state for subsequent drawing commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@
 -- values used to create the currently active pipeline.
 --
--- If the bound pipeline state object was also created with the
+-- If drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or if the bound pipeline state object was also created with the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE'
 -- dynamic state enabled, then
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
@@ -205,9 +206,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetVertexInputEXT-None-04790# The
+-- -   #VUID-vkCmdSetVertexInputEXT-None-08546# Either the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexInputDynamicState vertexInputDynamicState>
---     feature /must/ be enabled
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature or both /must/ be enabled
 --
 -- -   #VUID-vkCmdSetVertexInputEXT-vertexBindingDescriptionCount-04791#
 --     @vertexBindingDescriptionCount@ /must/ be less than or equal to
@@ -279,6 +282,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'VertexInputAttributeDescription2EXT',
@@ -427,6 +431,7 @@ instance Zero PhysicalDeviceVertexInputDynamicStateFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate',
@@ -523,13 +528,10 @@ instance Zero VertexInputBindingDescription2EXT where
 --     /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributeOffset@
 --
--- -   #VUID-VkVertexInputAttributeDescription2EXT-format-04805# @format@
---     /must/ be allowed as a vertex buffer format, as specified by the
+-- -   #VUID-VkVertexInputAttributeDescription2EXT-format-04805# The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-view-format-features format features>
+--     of @format@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_VERTEX_BUFFER_BIT'
---     flag in
---     'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
---     returned by
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --
 -- -   #VUID-VkVertexInputAttributeDescription2EXT-vertexAttributeAccessBeyondStride-04806#
 --     If the @VK_KHR_portability_subset@ extension is enabled, and
@@ -550,6 +552,7 @@ instance Zero VertexInputBindingDescription2EXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',

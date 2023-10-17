@@ -18,11 +18,7 @@
 --     3
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_memory_requirements2@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
 --
 -- [__Deprecation state__]
 --
@@ -50,7 +46,7 @@
 --
 --     -   Jeff Bolz, NVIDIA
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 -- == Description
 --
@@ -195,11 +191,11 @@
 --     -   Add some references to external object interactions to the
 --         overview.
 --
--- -   Revision 2, 2017-03-27 (Jason Ekstrand)
+-- -   Revision 2, 2017-03-27 (Faith Ekstrand)
 --
 --     -   Rework the extension to be query-based
 --
--- -   Revision 3, 2017-07-31 (Jason Ekstrand)
+-- -   Revision 3, 2017-07-31 (Faith Ekstrand)
 --
 --     -   Clarify that memory objects allocated with
 --         VkMemoryDedicatedAllocateInfoKHR can only have the specified

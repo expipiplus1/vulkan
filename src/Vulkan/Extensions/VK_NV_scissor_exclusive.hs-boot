@@ -15,14 +15,10 @@
 --     206
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Contact__]
 --
@@ -32,7 +28,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-07-31
+--     2023-01-18
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -59,7 +55,15 @@
 -- rectangle is used for both the scissor and exclusive scissor tests, the
 -- exclusive scissor test will pass if and only if the scissor test fails.
 --
+-- Version 2 of this extension introduces
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
+-- and 'cmdSetExclusiveScissorEnableNV'. Applications that use this dynamic
+-- state must ensure the implementation advertises at least @specVersion@
+-- @2@ of this extension.
+--
 -- == New Commands
+--
+-- -   'cmdSetExclusiveScissorEnableNV'
 --
 -- -   'cmdSetExclusiveScissorNV'
 --
@@ -83,6 +87,8 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
+--
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
@@ -105,6 +111,10 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2023-01-18 (Piers Daniell)
+--
+--     -   Add dynamic state for explicit exclusive scissor enables
+--
 -- -   Revision 1, 2018-07-31 (Pat Brown)
 --
 --     -   Internal revisions
@@ -113,7 +123,7 @@
 --
 -- 'PhysicalDeviceExclusiveScissorFeaturesNV',
 -- 'PipelineViewportExclusiveScissorStateCreateInfoNV',
--- 'cmdSetExclusiveScissorNV'
+-- 'cmdSetExclusiveScissorEnableNV', 'cmdSetExclusiveScissorNV'
 --
 -- == Document Notes
 --

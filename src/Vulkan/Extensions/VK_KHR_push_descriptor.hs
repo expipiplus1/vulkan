@@ -18,11 +18,7 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Contact__]
 --
@@ -400,6 +396,18 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.BufferView' in a layout defined by
 --     @descriptorUpdateTemplate@ when it was created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.createDescriptorUpdateTemplate'
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-layout-07993# @layout@
+--     /must/ be compatible with the layout used to create
+--     @descriptorUpdateTemplate@
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-descriptorUpdateTemplate-07994#
+--     @descriptorUpdateTemplate@ /must/ have been created with a
+--     @templateType@ of
+--     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-set-07995# @set@ /must/
+--     be the same value used to create @descriptorUpdateTemplate@
 --
 -- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-set-07304# @set@ /must/
 --     be less than

@@ -129,6 +129,11 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cmdBeBracket "TransformFeedbackEXT"
     , cmdBeBracket "QueryIndexedEXT"
     , cmdBeBracket "Rendering"
+    , autoBracket' BracketCPS
+                   "vkCreateShadersEXT"
+                   "vkDestroyShaderEXT"
+                   "vkWithShadersEXT"
+    -- , cdBracket "SemaphoreSciSyncPoolNV"
     ]
 
   --

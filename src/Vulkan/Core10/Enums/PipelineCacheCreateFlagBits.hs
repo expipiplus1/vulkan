@@ -1,7 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineCacheCreateFlagBits"
 module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFlags
-                                                        , PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
+                                                        , PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT
+                                                                                     , PIPELINE_CACHE_CREATE_READ_ONLY_BIT
+                                                                                     , PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
                                                                                      , ..
                                                                                      )
                                                         ) where
@@ -29,6 +31,12 @@ type PipelineCacheCreateFlags = PipelineCacheCreateFlagBits
 newtype PipelineCacheCreateFlagBits = PipelineCacheCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- No documentation found for Nested "VkPipelineCacheCreateFlagBits" "VK_PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT"
+pattern PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT = PipelineCacheCreateFlagBits 0x00000004
+
+-- No documentation found for Nested "VkPipelineCacheCreateFlagBits" "VK_PIPELINE_CACHE_CREATE_READ_ONLY_BIT"
+pattern PIPELINE_CACHE_CREATE_READ_ONLY_BIT = PipelineCacheCreateFlagBits 0x00000002
+
 -- | 'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT' specifies that all
 -- commands that modify the created 'Vulkan.Core10.Handles.PipelineCache'
 -- will be
@@ -42,13 +50,21 @@ conNamePipelineCacheCreateFlagBits :: String
 conNamePipelineCacheCreateFlagBits = "PipelineCacheCreateFlagBits"
 
 enumPrefixPipelineCacheCreateFlagBits :: String
-enumPrefixPipelineCacheCreateFlagBits = "PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT"
+enumPrefixPipelineCacheCreateFlagBits = "PIPELINE_CACHE_CREATE_"
 
 showTablePipelineCacheCreateFlagBits :: [(PipelineCacheCreateFlagBits, String)]
 showTablePipelineCacheCreateFlagBits =
   [
+    ( PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT
+    , "USE_APPLICATION_STORAGE_BIT"
+    )
+  ,
+    ( PIPELINE_CACHE_CREATE_READ_ONLY_BIT
+    , "READ_ONLY_BIT"
+    )
+  ,
     ( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
-    , ""
+    , "EXTERNALLY_SYNCHRONIZED_BIT"
     )
   ]
 

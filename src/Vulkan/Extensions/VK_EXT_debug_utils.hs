@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     2
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Special Use__]
+-- [__Extension and Version Dependencies__; __Special Use__]
 --
 --     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Debugging tools>
 --
@@ -670,6 +666,25 @@ foreign import ccall
 --     @pNameInfo->objectHandle@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
+-- -   #VUID-vkSetDebugUtilsObjectNameEXT-pNameInfo-07872# If
+--     @pNameInfo->pname@:objectHandle is the valid handle of an
+--     instance-level object, the 'Vulkan.Core10.Handles.Device' identified
+--     by @device@ /must/ be a descendent of the same
+--     'Vulkan.Core10.Handles.Instance' as the object identified by
+--     @pNameInfo->pname@:objectHandle
+--
+-- -   #VUID-vkSetDebugUtilsObjectNameEXT-pNameInfo-07873# If
+--     @pNameInfo->pname@:objectHandle is the valid handle of a
+--     physical-device-level object, the 'Vulkan.Core10.Handles.Device'
+--     identified by @device@ /must/ be a descendant of the same
+--     'Vulkan.Core10.Handles.PhysicalDevice' as the object identified by
+--     @pNameInfo->pname@:objectHandle
+--
+-- -   #VUID-vkSetDebugUtilsObjectNameEXT-pNameInfo-07874# If
+--     @pNameInfo->pname@:objectHandle is the valid handle of a
+--     device-level object, that object /must/ be a descendent of the
+--     'Vulkan.Core10.Handles.Device' identified by @device@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkSetDebugUtilsObjectNameEXT-device-parameter# @device@ /must/
@@ -702,7 +717,8 @@ foreign import ccall
 -- 'DebugUtilsObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
 setDebugUtilsObjectNameEXT :: forall io
                             . (MonadIO io)
-                           => -- | @device@ is the device that created the object.
+                           => -- | @device@ is the device that is associated with the named object passed
+                              -- in via @objectHandle@.
                               Device
                            -> -- | @pNameInfo@ is a pointer to a 'DebugUtilsObjectNameInfoEXT' structure
                               -- specifying parameters of the name to set on the object.
@@ -728,6 +744,27 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr DebugUtilsObjectTagInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DebugUtilsObjectTagInfoEXT -> IO Result
 
 -- | vkSetDebugUtilsObjectTagEXT - Attach arbitrary data to an object
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkSetDebugUtilsObjectTagEXT-pNameInfo-07875# If
+--     @pNameInfo->pname@:objectHandle is the valid handle of an
+--     instance-level object, the 'Vulkan.Core10.Handles.Device' identified
+--     by @device@ /must/ be a descendent of the same
+--     'Vulkan.Core10.Handles.Instance' as the object identified by
+--     @pNameInfo->pname@:objectHandle
+--
+-- -   #VUID-vkSetDebugUtilsObjectTagEXT-pNameInfo-07876# If
+--     @pNameInfo->pname@:objectHandle is the valid handle of a
+--     physical-device-level object, the 'Vulkan.Core10.Handles.Device'
+--     identified by @device@ /must/ be a descendant of the same
+--     'Vulkan.Core10.Handles.PhysicalDevice' as the object identified by
+--     @pNameInfo->pname@:objectHandle
+--
+-- -   #VUID-vkSetDebugUtilsObjectTagEXT-pNameInfo-07877# If
+--     @pNameInfo->pname@:objectHandle is the valid handle of a
+--     device-level object, that object /must/ be a descendent of the
+--     'Vulkan.Core10.Handles.Device' identified by @device@
 --
 -- == Valid Usage (Implicit)
 --

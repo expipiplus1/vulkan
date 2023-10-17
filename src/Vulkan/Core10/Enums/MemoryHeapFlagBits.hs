@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "MemoryHeapFlagBits"
 module Vulkan.Core10.Enums.MemoryHeapFlagBits  ( MemoryHeapFlags
                                                , MemoryHeapFlagBits( MEMORY_HEAP_DEVICE_LOCAL_BIT
+                                                                   , MEMORY_HEAP_SEU_SAFE_BIT
                                                                    , MEMORY_HEAP_MULTI_INSTANCE_BIT
                                                                    , ..
                                                                    )
@@ -35,6 +36,9 @@ newtype MemoryHeapFlagBits = MemoryHeapFlagBits Flags
 -- different memory property flags.
 pattern MEMORY_HEAP_DEVICE_LOCAL_BIT = MemoryHeapFlagBits 0x00000001
 
+-- No documentation found for Nested "VkMemoryHeapFlagBits" "VK_MEMORY_HEAP_SEU_SAFE_BIT"
+pattern MEMORY_HEAP_SEU_SAFE_BIT = MemoryHeapFlagBits 0x00000004
+
 -- | 'MEMORY_HEAP_MULTI_INSTANCE_BIT' specifies that in a logical device
 -- representing more than one physical device, there is a per-physical
 -- device instance of the heap memory. By default, an allocation from such
@@ -54,6 +58,7 @@ showTableMemoryHeapFlagBits =
     ( MEMORY_HEAP_DEVICE_LOCAL_BIT
     , "DEVICE_LOCAL_BIT"
     )
+  , (MEMORY_HEAP_SEU_SAFE_BIT, "SEU_SAFE_BIT")
   ,
     ( MEMORY_HEAP_MULTI_INSTANCE_BIT
     , "MULTI_INSTANCE_BIT"

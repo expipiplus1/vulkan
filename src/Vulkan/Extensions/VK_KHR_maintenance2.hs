@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Deprecation state__]
+-- [__Extension and Version Dependencies__; __Deprecation state__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -87,8 +83,8 @@
 -- == Input Attachment Specification
 --
 -- Input attachment specification allows an application to specify which
--- aspect of a multi-aspect image (e.g. a combined depth stencil format)
--- will be accessed via a @subpassLoad@ operation.
+-- aspect of a multi-aspect image (e.g. a depth\/stencil format) will be
+-- accessed via a @subpassLoad@ operation.
 --
 -- On some implementations there /may/ be a performance penalty if the
 -- implementation does not know (at 'Vulkan.Core10.Pass.createRenderPass'

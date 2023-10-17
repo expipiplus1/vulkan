@@ -18,14 +18,9 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_FUCHSIA_external_memory@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_sampler_ycbcr_conversion@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
 --
 -- [__Contact__]
 --

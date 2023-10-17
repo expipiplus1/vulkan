@@ -6,6 +6,7 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
                                                                            , PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
                                                                            , PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT
+                                                                           , PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
                                                                            , PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
                                                                            , PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                            , PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
@@ -200,6 +201,10 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     that the pipeline /can/ be used with acceleration structures which
 --     reference an opacity micromap array.
 --
+-- -   'PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV' specifies
+--     that the pipeline /can/ be used with aceleration structures which
+--     reference a displacement micromap array.
+--
 -- -   'PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT' specifies that the
 --     pipeline /must/ not be bound to a protected command buffer.
 --
@@ -254,6 +259,9 @@ pattern PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT = PipelineCreateFlagBits 0
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT"
 pattern PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT = PipelineCreateFlagBits 0x08000000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"
+pattern PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = PipelineCreateFlagBits 0x10000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
 pattern PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = PipelineCreateFlagBits 0x01000000
@@ -357,6 +365,10 @@ showTablePipelineCreateFlagBits =
   ,
     ( PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT
     , "NO_PROTECTED_ACCESS_BIT_EXT"
+    )
+  ,
+    ( PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
+    , "RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"
     )
   ,
     ( PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT

@@ -17,19 +17,15 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Deprecation state__]
+-- [__Extension and Version Dependencies__; __Deprecation state__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
 --
 -- [__Contact__]
 --
---     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_image_format_list] @jekstrand%0A*Here describe the issue or question you have about the VK_KHR_image_format_list extension* >
+--     -   Faith Ekstrand
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_image_format_list] @gfxstrand%0A*Here describe the issue or question you have about the VK_KHR_image_format_list extension* >
 --
 -- == Other Extension Metadata
 --
@@ -45,7 +41,7 @@
 --
 -- [__Contributors__]
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Jan-Harald Fredriksen, ARM
 --
@@ -97,7 +93,7 @@
 --
 -- == Version History
 --
--- -   Revision 1, 2017-03-20 (Jason Ekstrand)
+-- -   Revision 1, 2017-03-20 (Faith Ekstrand)
 --
 --     -   Initial revision
 --

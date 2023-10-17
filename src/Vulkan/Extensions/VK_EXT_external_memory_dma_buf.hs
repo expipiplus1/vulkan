@@ -18,16 +18,12 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_external_memory_fd@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>
 --
 -- [__Contact__]
 --
---     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_dma_buf] @chadversary%0A*Here describe the issue or question you have about the VK_EXT_external_memory_dma_buf extension* >
+--     -   Lina Versace
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_dma_buf] @versalinyaa%0A*Here describe the issue or question you have about the VK_EXT_external_memory_dma_buf extension* >
 --
 -- == Other Extension Metadata
 --
@@ -39,11 +35,11 @@
 --
 -- [__Contributors__]
 --
---     -   Chad Versace, Google
+--     -   Lina Versace, Google
 --
 --     -   James Jones, NVIDIA
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 -- == Description
 --
@@ -96,7 +92,7 @@
 --
 -- == Version History
 --
--- -   Revision 1, 2017-10-10 (Chad Versace)
+-- -   Revision 1, 2017-10-10 (Lina Versace)
 --
 --     -   Squashed internal revisions
 --

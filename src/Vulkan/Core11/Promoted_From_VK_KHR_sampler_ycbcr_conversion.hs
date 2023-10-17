@@ -663,16 +663,8 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 -- -   #VUID-VkBindImagePlaneMemoryInfo-planeAspect-02283# If the image’s
 --     @tiling@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
---     @planeAspect@ /must/ be a single valid /format plane/ for the image
---     (that is, for a two-plane image @planeAspect@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     and for a three-plane image @planeAspect@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT')
+--     @planeAspect@ /must/ be a single valid
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --
 -- -   #VUID-VkBindImagePlaneMemoryInfo-planeAspect-02284# If the image’s
 --     @tiling@ is
@@ -750,16 +742,8 @@ instance Zero BindImagePlaneMemoryInfo where
 --     image’s @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
---     @planeAspect@ /must/ be a single valid /format plane/ for the image
---     (that is, for a two-plane image @planeAspect@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     and for a three-plane image @planeAspect@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT')
+--     @planeAspect@ /must/ be a single valid
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --
 -- -   #VUID-VkImagePlaneMemoryRequirementsInfo-planeAspect-02282# If the
 --     image’s @tiling@ is

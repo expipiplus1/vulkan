@@ -15,14 +15,12 @@
 --     100
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Contact__]
 --
@@ -32,7 +30,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2016-12-22
+--     2023-01-18
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -65,9 +63,22 @@
 -- physical device in a device group by specifying the device mask and
 -- setting discard rectangle dynamic state.
 --
+-- Version 2 of this extension introduces new dynamic states
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+-- and
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT',
+-- and the corresponding functions 'cmdSetDiscardRectangleEnableEXT' and
+-- 'cmdSetDiscardRectangleModeEXT'. Applications that use these dynamic
+-- states must ensure the implementation advertises at least @specVersion@
+-- @2@ of this extension.
+--
 -- == New Commands
 --
 -- -   'cmdSetDiscardRectangleEXT'
+--
+-- -   'cmdSetDiscardRectangleEnableEXT'
+--
+-- -   'cmdSetDiscardRectangleModeEXT'
 --
 -- == New Structures
 --
@@ -96,7 +107,11 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+--
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -105,6 +120,11 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT'
 --
 -- == Version History
+--
+-- -   Revision 2, 2023-01-18 (Piers Daniell)
+--
+--     -   Add dynamic states for discard rectangle enable\/disable and
+--         mode.
 --
 -- -   Revision 1, 2016-12-22 (Piers Daniell)
 --
@@ -116,7 +136,8 @@
 -- 'PhysicalDeviceDiscardRectanglePropertiesEXT',
 -- 'PipelineDiscardRectangleStateCreateFlagsEXT',
 -- 'PipelineDiscardRectangleStateCreateInfoEXT',
--- 'cmdSetDiscardRectangleEXT'
+-- 'cmdSetDiscardRectangleEXT', 'cmdSetDiscardRectangleEnableEXT',
+-- 'cmdSetDiscardRectangleModeEXT'
 --
 -- == Document Notes
 --
@@ -126,6 +147,8 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_discard_rectangles  ( cmdSetDiscardRectangleEXT
+                                                    , cmdSetDiscardRectangleEnableEXT
+                                                    , cmdSetDiscardRectangleModeEXT
                                                     , PhysicalDeviceDiscardRectanglePropertiesEXT(..)
                                                     , PipelineDiscardRectangleStateCreateInfoEXT(..)
                                                     , PipelineDiscardRectangleStateCreateFlagsEXT(..)
@@ -185,12 +208,17 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDiscardRectangleEXT))
+import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDiscardRectangleEnableEXT))
+import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDiscardRectangleModeEXT))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -213,7 +241,9 @@ foreign import ccall
 -- @firstDiscardRectangle@ + i, for i in [0, @discardRectangleCount@).
 --
 -- This command sets the discard rectangles for subsequent drawing commands
--- when the graphics pipeline is created with
+-- when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
@@ -327,6 +357,192 @@ cmdSetDiscardRectangleEXT commandBuffer
   pure $ ()
 
 
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdSetDiscardRectangleEnableEXT
+  :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
+
+-- | vkCmdSetDiscardRectangleEnableEXT - Enable discard rectangles
+-- dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the discard rectangle enable for subsequent drawing
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is implied by the
+-- 'PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
+-- value used to create the currently active pipeline, where a non-zero
+-- @discardRectangleCount@ implicitly enables discard rectangles, otherwise
+-- they are disabled.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDiscardRectangleEnableEXT-specVersion-07851# The
+--     @VK_EXT_discard_rectangles@ extension /must/ be enabled, and the
+--     implementation /must/ support at least @specVersion@ @2@ of this
+--     extension
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkCmdSetDiscardRectangleEnableEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.CommandBuffer' handle
+--
+-- -   #VUID-vkCmdSetDiscardRectangleEnableEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   #VUID-vkCmdSetDiscardRectangleEnableEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support graphics operations
+--
+-- -   #VUID-vkCmdSetDiscardRectangleEnableEXT-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.Handles.CommandBuffer'
+cmdSetDiscardRectangleEnableEXT :: forall io
+                                 . (MonadIO io)
+                                => -- | @commandBuffer@ is the command buffer into which the command will be
+                                   -- recorded.
+                                   CommandBuffer
+                                -> -- | @discardRectangleEnable@ specifies whether discard rectangles are
+                                   -- enabled or not.
+                                   ("discardRectangleEnable" ::: Bool)
+                                -> io ()
+cmdSetDiscardRectangleEnableEXT commandBuffer
+                                  discardRectangleEnable = liftIO $ do
+  let vkCmdSetDiscardRectangleEnableEXTPtr = pVkCmdSetDiscardRectangleEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
+  unless (vkCmdSetDiscardRectangleEnableEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleEnableEXT is null" Nothing Nothing
+  let vkCmdSetDiscardRectangleEnableEXT' = mkVkCmdSetDiscardRectangleEnableEXT vkCmdSetDiscardRectangleEnableEXTPtr
+  traceAroundEvent "vkCmdSetDiscardRectangleEnableEXT" (vkCmdSetDiscardRectangleEnableEXT'
+                                                          (commandBufferHandle (commandBuffer))
+                                                          (boolToBool32 (discardRectangleEnable)))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdSetDiscardRectangleModeEXT
+  :: FunPtr (Ptr CommandBuffer_T -> DiscardRectangleModeEXT -> IO ()) -> Ptr CommandBuffer_T -> DiscardRectangleModeEXT -> IO ()
+
+-- | vkCmdSetDiscardRectangleModeEXT - Sets the discard rectangle mode
+-- dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the discard rectangle mode for subsequent drawing
+-- commands when drawing using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- or when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleMode@
+-- value used to create the currently active pipeline.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDiscardRectangleModeEXT-specVersion-07852# The
+--     @VK_EXT_discard_rectangles@ extension /must/ be enabled, and the
+--     implementation /must/ support at least @specVersion@ @2@ of this
+--     extension
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkCmdSetDiscardRectangleModeEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.CommandBuffer' handle
+--
+-- -   #VUID-vkCmdSetDiscardRectangleModeEXT-discardRectangleMode-parameter#
+--     @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT'
+--     value
+--
+-- -   #VUID-vkCmdSetDiscardRectangleModeEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   #VUID-vkCmdSetDiscardRectangleModeEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support graphics operations
+--
+-- -   #VUID-vkCmdSetDiscardRectangleModeEXT-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
+-- 'Vulkan.Core10.Handles.CommandBuffer', 'DiscardRectangleModeEXT'
+cmdSetDiscardRectangleModeEXT :: forall io
+                               . (MonadIO io)
+                              => -- | @commandBuffer@ is the command buffer into which the command will be
+                                 -- recorded.
+                                 CommandBuffer
+                              -> -- | @discardRectangleMode@ specifies the discard rectangle mode for all
+                                 -- discard rectangles, either inclusive or exclusive.
+                                 DiscardRectangleModeEXT
+                              -> io ()
+cmdSetDiscardRectangleModeEXT commandBuffer discardRectangleMode = liftIO $ do
+  let vkCmdSetDiscardRectangleModeEXTPtr = pVkCmdSetDiscardRectangleModeEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
+  unless (vkCmdSetDiscardRectangleModeEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleModeEXT is null" Nothing Nothing
+  let vkCmdSetDiscardRectangleModeEXT' = mkVkCmdSetDiscardRectangleModeEXT vkCmdSetDiscardRectangleModeEXTPtr
+  traceAroundEvent "vkCmdSetDiscardRectangleModeEXT" (vkCmdSetDiscardRectangleModeEXT'
+                                                        (commandBufferHandle (commandBuffer))
+                                                        (discardRectangleMode))
+  pure $ ()
+
+
 -- | VkPhysicalDeviceDiscardRectanglePropertiesEXT - Structure describing
 -- discard rectangle limits that can be supported by an implementation
 --
@@ -396,13 +612,25 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 -- If the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 -- dynamic state is enabled for a pipeline, the @pDiscardRectangles@ member
--- is ignored.
+-- is ignored. If the
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
+-- dynamic state is not enabled for the pipeline the presence of this
+-- structure in the 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
+-- chain, and a @discardRectangleCount@ greater than zero, implicitly
+-- enables discard rectangles in the pipeline, otherwise discard rectangles
+-- /must/ enabled or disabled by 'cmdSetDiscardRectangleEnableEXT'. If the
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+-- dynamic state is enabled for the pipeline, the @discardRectangleMode@
+-- member is ignored, and the discard rectangle mode /must/ be set by
+-- 'cmdSetDiscardRectangleModeEXT'.
 --
 -- When this structure is included in the @pNext@ chain of
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
--- parameters of the discard rectangle test. If this structure is not
--- included in the @pNext@ chain, it is equivalent to specifying this
--- structure with a @discardRectangleCount@ of @0@.
+-- parameters of the discard rectangle test. If the
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
+-- dynamic state is not enabled, and this structure is not included in the
+-- @pNext@ chain, it is equivalent to specifying this structure with a
+-- @discardRectangleCount@ of @0@.
 --
 -- == Valid Usage (Implicit)
 --
@@ -518,7 +746,8 @@ instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
--- 'PipelineDiscardRectangleStateCreateInfoEXT'
+-- 'PipelineDiscardRectangleStateCreateInfoEXT',
+-- 'cmdSetDiscardRectangleModeEXT'
 newtype DiscardRectangleModeEXT = DiscardRectangleModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -571,11 +800,11 @@ instance Read DiscardRectangleModeEXT where
       conNameDiscardRectangleModeEXT
       DiscardRectangleModeEXT
 
-type EXT_DISCARD_RECTANGLES_SPEC_VERSION = 1
+type EXT_DISCARD_RECTANGLES_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION"
 pattern EXT_DISCARD_RECTANGLES_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_DISCARD_RECTANGLES_SPEC_VERSION = 1
+pattern EXT_DISCARD_RECTANGLES_SPEC_VERSION = 2
 
 
 type EXT_DISCARD_RECTANGLES_EXTENSION_NAME = "VK_EXT_discard_rectangles"

@@ -26,6 +26,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_DESCRIPTOR_SET
                                                   , OBJECT_TYPE_FRAMEBUFFER
                                                   , OBJECT_TYPE_COMMAND_POOL
+                                                  , OBJECT_TYPE_SHADER_EXT
                                                   , OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
                                                   , OBJECT_TYPE_MICROMAP_EXT
                                                   , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
@@ -245,6 +246,9 @@ pattern OBJECT_TYPE_FRAMEBUFFER = ObjectType 24
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern OBJECT_TYPE_COMMAND_POOL = ObjectType 25
 
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SHADER_EXT"
+pattern OBJECT_TYPE_SHADER_EXT = ObjectType 1000482000
+
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV"
 pattern OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV = ObjectType 1000464000
 
@@ -332,6 +336,7 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = ObjectType 1000156000
   , OBJECT_TYPE_DESCRIPTOR_SET
   , OBJECT_TYPE_FRAMEBUFFER
   , OBJECT_TYPE_COMMAND_POOL
+  , OBJECT_TYPE_SHADER_EXT
   , OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
   , OBJECT_TYPE_MICROMAP_EXT
   , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
@@ -392,6 +397,7 @@ showTableObjectType =
   , (OBJECT_TYPE_DESCRIPTOR_SET, "DESCRIPTOR_SET")
   , (OBJECT_TYPE_FRAMEBUFFER, "FRAMEBUFFER")
   , (OBJECT_TYPE_COMMAND_POOL, "COMMAND_POOL")
+  , (OBJECT_TYPE_SHADER_EXT, "SHADER_EXT")
   ,
     ( OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
     , "OPTICAL_FLOW_SESSION_NV"

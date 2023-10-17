@@ -18,14 +18,9 @@
 --     1
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
---
---     -   Requires @VK_EXT_debug_utils@ to be enabled for any device-level
---         functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
 --
 -- [__Special Uses__]
 --
@@ -177,7 +172,7 @@
 -- __RESOLVED__: Changes to the virtual address ranges associated with a
 -- Vulkan object should be reported as close as possible to where they
 -- occur within the implementation. If virtual address binding is deferred,
--- then the the callback should also be deferred to match.
+-- then the callback should also be deferred to match.
 --
 -- 9.) Do bind\/unbind callbacks have to form matched pairs? Can a large
 -- region be bound, and then subregions unbound, resulting in

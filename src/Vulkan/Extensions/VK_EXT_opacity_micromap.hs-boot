@@ -18,14 +18,9 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_acceleration_structure@ to be enabled for any
---         device-level functionality
---
---     -   Requires @VK_KHR_synchronization2@ to be enabled for any
---         device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
 --
 -- [__Contact__]
 --
@@ -292,14 +287,14 @@
 -- >
 -- >     iw = ~(iu + iv);
 -- >
--- >     if (uf + vf >= 1.0f && iuv < (1u link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html# level) - 1u) --iw;
+-- >     if (uf + vf >= 1.0f && iuv < (1u << level) - 1u) --iw;
 -- >
 -- >     uint32_t b0 = ~(iu ^ iw);
 -- >     b0 &= ((1u << level) - 1u);
 -- >     uint32_t t = (iu ^ iv) & b0;
 -- >
 -- >     uint32_t f = t;
--- >     f ^= f [^] 1u;
+-- >     f ^= f >> 1u;
 -- >     f ^= f >> 2u;
 -- >     f ^= f >> 4u;
 -- >     f ^= f >> 8u;

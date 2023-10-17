@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     25
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Contact__]
+-- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   James Jones
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @cubanismo%0A*Here describe the issue or question you have about the VK_KHR_surface extension* >
@@ -61,7 +57,7 @@
 --
 --     -   Chia-I Wu, LunarG
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 -- == Description
 --

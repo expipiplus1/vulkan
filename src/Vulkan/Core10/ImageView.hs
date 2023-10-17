@@ -73,6 +73,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_astc_decode_mode (ImageViewASTCDe
 import Vulkan.Core10.Enums.ImageViewCreateFlagBits (ImageViewCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (ImageViewMinLodCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_image_processing (ImageViewSampleWeightCreateInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_sliced_view_of_3d (ImageViewSlicedCreateInfoEXT)
 import Vulkan.Core10.Enums.ImageViewType (ImageViewType)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (ImageViewUsageCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
@@ -565,6 +566,11 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ and
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@.
 --
+-- If @image@ is a 3D image, its Z range /can/ be restricted to a subset by
+-- adding a
+-- 'Vulkan.Extensions.VK_EXT_image_sliced_view_of_3d.ImageViewSlicedCreateInfoEXT'
+-- to the @pNext@ chain.
+--
 -- If @image@ was created with the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 -- flag, and if the @format@ of the image is not
@@ -578,6 +584,16 @@ instance Zero ImageSubresourceRange where
 -- section. Views of compatible formats will have the same mapping between
 -- texel coordinates and memory locations irrespective of the @format@,
 -- with only the interpretation of the bit pattern changing.
+--
+-- If @image@ was created with a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- format, and the image view’s @aspectMask@ is one of
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' or
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT', the
+-- view’s aspect mask is considered to be equivalent to
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' when
+-- used as a framebuffer attachment.
 --
 -- Note
 --
@@ -923,23 +939,16 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, if the @format@ of the @image@ is a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
---     format, and if @subresourceRange.aspectMask@ is one of
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT',
+--     format, and if @subresourceRange.aspectMask@ is one of the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect masks>,
 --     then @format@ /must/ be compatible with the
 --     'Vulkan.Core10.Enums.Format.Format' for the plane of the @image@
 --     @format@ indicated by @subresourceRange.aspectMask@, as defined in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
 --
--- -   #VUID-VkImageViewCreateInfo-subresourceRange-07818# If
---     @subresourceRange.aspectMask@ contains any of
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT',
---     then it /must/ only have a single bit set
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-07818#
+--     @subresourceRange.aspectMask@ /must/ only have at most 1 valid
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01762# If @image@ was not created
 --     with the
@@ -1327,6 +1336,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 --     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT',
 --     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM',
+--     'Vulkan.Extensions.VK_EXT_image_sliced_view_of_3d.ImageViewSlicedCreateInfoEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 --     or
@@ -1408,6 +1418,7 @@ instance Extensible ImageViewCreateInfo where
     | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewASTCDecodeModeEXT = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f
+    | Just Refl <- eqT @e @ImageViewSlicedCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewUsageCreateInfo = Just f
     | otherwise = Nothing
 

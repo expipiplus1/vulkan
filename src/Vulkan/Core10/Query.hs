@@ -587,10 +587,34 @@ getQueryPoolResults device
 --     greater than 0
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryType-07133# If @queryType@ is
---     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then the
---     @pNext@ chain /must/ include a
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@, then the @pNext@ chain
+--     /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
 --     structure with @videoCodecOperation@ specifying an encode operation
+--
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-07906# If @queryType@ is
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@, then the @pNext@ chain
+--     /must/ include a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryPoolVideoEncodeFeedbackCreateInfoKHR VkQueryPoolVideoEncodeFeedbackCreateInfoKHR>
+--     structure
+--
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-07907# If @queryType@ is
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@, and the @pNext@ chain
+--     includes a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure and a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryPoolVideoEncodeFeedbackCreateInfoKHR VkQueryPoolVideoEncodeFeedbackCreateInfoKHR>
+--     structure, then
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryPoolVideoEncodeFeedbackCreateInfoKHR VkQueryPoolVideoEncodeFeedbackCreateInfoKHR>::@encodeFeedbackFlags@
+--     /must/ not contain any bits that are not set in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeCapabilitiesKHR VkVideoEncodeCapabilitiesKHR>::@supportedEncodeFeedbackFlags@,
+--     as returned by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR>
+--     for the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-profiles video profile>
+--     described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     and its @pNext@ chain
 --
 -- == Valid Usage (Implicit)
 --
@@ -602,6 +626,7 @@ getQueryPoolResults device
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
 --     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryPoolVideoEncodeFeedbackCreateInfoKHR VkQueryPoolVideoEncodeFeedbackCreateInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoKHR VkVideoDecodeH264ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoKHR VkVideoDecodeH265ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeUsageInfoKHR VkVideoDecodeUsageInfoKHR>,

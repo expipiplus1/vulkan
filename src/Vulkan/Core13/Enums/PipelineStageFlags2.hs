@@ -276,8 +276,10 @@ pattern PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT = PipelineStageFlagBits2 0x000
 pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT = PipelineStageFlagBits2 0x0000000000000200
 
 -- | 'PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT' specifies the stage of
--- the pipeline after blending where the final color values are output from
--- the pipeline. This stage also includes
+-- the pipeline where final color values are output from the pipeline. This
+-- stage includes
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blending blending>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-logicop logic operations>,
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load and store operations>,
 -- multisample resolve operations for framebuffer attachments with a color
 -- or depth\/stencil format, and
@@ -448,7 +450,9 @@ pattern PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR = PipelineStageFlagBits2 0x0
 
 -- | 'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' specifies the
 -- execution of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure acceleration structure commands>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure acceleration structure commands>
+-- or
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure copy commands>.
 pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR = PipelineStageFlagBits2 0x0000000002000000
 
 -- | 'PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies

@@ -18,8 +18,7 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.1
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
 -- [__Deprecation state__]
 --
@@ -44,7 +43,7 @@
 --
 --     -   Jeff Bolz, NVIDIA
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Sławek Grajewski, Intel
 --
@@ -121,7 +120,8 @@
 --
 --     -   'PhysicalDeviceSubgroupSizeControlPropertiesEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
+-- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
+--     'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT':
 --
 --     -   'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --
@@ -158,7 +158,7 @@
 --
 --     -   Initial draft
 --
--- -   Revision 2, 2019-07-26 (Jason Ekstrand)
+-- -   Revision 2, 2019-07-26 (Faith Ekstrand)
 --
 --     -   Add the missing 'PhysicalDeviceSubgroupSizeControlFeaturesEXT'
 --         for querying subgroup size control features.

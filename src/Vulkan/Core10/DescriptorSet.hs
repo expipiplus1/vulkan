@@ -1180,11 +1180,8 @@ instance Zero DescriptorBufferInfo where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     the image /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     and the @aspectMask@ of the @imageView@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---     or (for three-plane formats only)
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     and the @aspectMask@ of the @imageView@ /must/ be a valid
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --
 -- -   #VUID-VkDescriptorImageInfo-mutableComparisonSamplers-04450# If the
 --     @VK_KHR_portability_subset@ extension is enabled, and
@@ -1601,12 +1598,6 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with the identity swizzle
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-07729# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with exactly one aspect
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00337# If @descriptorType@
 --     is
@@ -2212,7 +2203,7 @@ instance Zero CopyDescriptorSet where
 --
 -- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-08004# If
 --     @descriptorType@ is
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     and 'DescriptorSetLayoutCreateInfo'::@flags@ does not contain
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     then @descriptorCount@ /must/ be less than or equal to
@@ -2903,6 +2894,22 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 -- parameters for descriptor sets
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkDescriptorSetAllocateInfo-apiVersion-07895# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, @descriptorSetCount@ /must/ not be greater
+--     than the number of sets that are currently available for allocation
+--     in @descriptorPool@
+--
+-- -   #VUID-VkDescriptorSetAllocateInfo-apiVersion-07896# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, @descriptorPool@ /must/ have enough free
+--     descriptor capacity remaining to allocate the descriptor sets of the
+--     specified layouts
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-00308# Each element of
 --     @pSetLayouts@ /must/ not have been created with

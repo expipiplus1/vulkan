@@ -401,7 +401,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     and @unnormalizedCoordinates@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   #VUID-VkSamplerCreateInfo-None-01647# if
+-- -   #VUID-VkSamplerCreateInfo-None-01647# If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'

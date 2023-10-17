@@ -74,6 +74,7 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.Handles (ImageView)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled (MultisampledRenderToSingleSampledInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (MultiviewPerViewAttributesInfoNVX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas (MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.FundamentalTypes (Rect2D)
@@ -395,9 +396,20 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- If there is an instance of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
--- included in the @pNext@ chain and its @deviceCount@ member is not @0@,
--- then @renderArea@ is ignored, and the render area is defined per-device
--- by that structure.
+-- included in the @pNext@ chain and its @deviceRenderAreaCount@ member is
+-- not @0@, then @renderArea@ is ignored, and the render area is defined
+-- per-device by that structure.
+--
+-- If multiview is enabled, and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-render-areas multiviewPerViewRenderAreas>
+-- feature is enabled, and there is an instance of
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
+-- included in the @pNext@ chain with @perViewRenderAreaCount@ not equal to
+-- @0@, then the elements of
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'::@pPerViewRenderAreas@
+-- override @renderArea@ and define a render area for each view. In this
+-- case, @renderArea@ /must/ be set to an area at least as large as the
+-- union of all the per-view render areas.
 --
 -- Each element of the @pColorAttachments@ array corresponds to an output
 -- location in the shader, i.e. if the shader declares an output variable
@@ -467,7 +479,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0, the sum of
---     @renderArea.extent.width@ and @renderArea.offset.y@ /must/ be less
+--     @renderArea.extent.height@ and @renderArea.offset.y@ /must/ be less
 --     than or equal to
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferHeight>
 --
@@ -528,7 +540,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     is not @NULL@ and @pDepthAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pDepthAttachment->imageView@ /must/ have been created with a format
---     that includes a depth aspect
+--     that includes a depth component
 --
 -- -   #VUID-VkRenderingInfo-pDepthAttachment-06088# If @pDepthAttachment@
 --     is not @NULL@ and @pDepthAttachment->imageView@ is not
@@ -901,6 +913,20 @@ instance Zero PipelineRenderingCreateInfo where
 --     significant bit in @viewMask@ /must/ be less than
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
 --
+-- -   #VUID-VkRenderingInfo-perViewRenderAreaCount-07857# If the
+--     @perViewRenderAreaCount@ member of a
+--     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
+--     structure included in the @pNext@ chain is not @0@, then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-render-areas multiviewPerViewRenderAreas>
+--     feature /must/ be enabled.
+--
+-- -   #VUID-VkRenderingInfo-perViewRenderAreaCount-07858# If the
+--     @perViewRenderAreaCount@ member of a
+--     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
+--     structure included in the @pNext@ chain is not @0@, then
+--     @renderArea@ /must/ specify a render area that includes the union of
+--     all per view render areas.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderingInfo-sType-sType# @sType@ /must/ be
@@ -912,6 +938,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
 --     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT',
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX',
+--     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
@@ -984,6 +1011,7 @@ instance Extensible RenderingInfo where
   getNext RenderingInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderingInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM = Just f
     | Just Refl <- eqT @e @MultiviewPerViewAttributesInfoNVX = Just f
     | Just Refl <- eqT @e @RenderingFragmentDensityMapAttachmentInfoEXT = Just f
     | Just Refl <- eqT @e @RenderingFragmentShadingRateAttachmentInfoKHR = Just f
@@ -1062,7 +1090,7 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 --
 -- At the end of rendering, the values written to each pixel location in
 -- @imageView@ will be resolved according to @resolveMode@ and stored into
--- the the same location in @resolveImageView@.
+-- the same location in @resolveImageView@.
 --
 -- Note
 --
@@ -1460,7 +1488,7 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfo-depthAttachmentFormat-06540#
 --     If @depthAttachmentFormat@ is not
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
---     that includes a depth aspect
+--     that includes a depth component
 --
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfo-depthAttachmentFormat-06007#
 --     If @depthAttachmentFormat@ is not

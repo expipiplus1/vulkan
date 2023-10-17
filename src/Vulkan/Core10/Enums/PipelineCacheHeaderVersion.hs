@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineCacheHeaderVersion"
 module Vulkan.Core10.Enums.PipelineCacheHeaderVersion  (PipelineCacheHeaderVersion( PIPELINE_CACHE_HEADER_VERSION_ONE
+                                                                                  , PIPELINE_CACHE_HEADER_VERSION_SAFETY_CRITICAL_ONE
                                                                                   , ..
                                                                                   )) where
 
@@ -30,16 +31,32 @@ newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32
 -- pipeline cache.
 pattern PIPELINE_CACHE_HEADER_VERSION_ONE = PipelineCacheHeaderVersion 1
 
-{-# COMPLETE PIPELINE_CACHE_HEADER_VERSION_ONE :: PipelineCacheHeaderVersion #-}
+-- No documentation found for Nested "VkPipelineCacheHeaderVersion" "VK_PIPELINE_CACHE_HEADER_VERSION_SAFETY_CRITICAL_ONE"
+pattern PIPELINE_CACHE_HEADER_VERSION_SAFETY_CRITICAL_ONE = PipelineCacheHeaderVersion 1000298001
+
+{-# COMPLETE
+  PIPELINE_CACHE_HEADER_VERSION_ONE
+  , PIPELINE_CACHE_HEADER_VERSION_SAFETY_CRITICAL_ONE ::
+    PipelineCacheHeaderVersion
+  #-}
 
 conNamePipelineCacheHeaderVersion :: String
 conNamePipelineCacheHeaderVersion = "PipelineCacheHeaderVersion"
 
 enumPrefixPipelineCacheHeaderVersion :: String
-enumPrefixPipelineCacheHeaderVersion = "PIPELINE_CACHE_HEADER_VERSION_ONE"
+enumPrefixPipelineCacheHeaderVersion = "PIPELINE_CACHE_HEADER_VERSION_"
 
 showTablePipelineCacheHeaderVersion :: [(PipelineCacheHeaderVersion, String)]
-showTablePipelineCacheHeaderVersion = [(PIPELINE_CACHE_HEADER_VERSION_ONE, "")]
+showTablePipelineCacheHeaderVersion =
+  [
+    ( PIPELINE_CACHE_HEADER_VERSION_ONE
+    , "ONE"
+    )
+  ,
+    ( PIPELINE_CACHE_HEADER_VERSION_SAFETY_CRITICAL_ONE
+    , "SAFETY_CRITICAL_ONE"
+    )
+  ]
 
 instance Show PipelineCacheHeaderVersion where
   showsPrec =

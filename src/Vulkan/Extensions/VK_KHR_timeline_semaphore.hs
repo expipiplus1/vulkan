@@ -18,11 +18,7 @@
 --     2
 --
 -- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
---     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
---         for any device-level functionality
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
 -- [__Deprecation state__]
 --
@@ -31,8 +27,8 @@
 --
 -- [__Contact__]
 --
---     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_timeline_semaphore] @jekstrand%0A*Here describe the issue or question you have about the VK_KHR_timeline_semaphore extension* >
+--     -   Faith Ekstrand
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_timeline_semaphore] @gfxstrand%0A*Here describe the issue or question you have about the VK_KHR_timeline_semaphore extension* >
 --
 -- == Other Extension Metadata
 --
@@ -59,7 +55,7 @@
 --
 --     -   Yuriy O’Donnell, Epic Games
 --
---     -   Jason Ekstrand, Intel
+--     -   Faith Ekstrand, Intel
 --
 --     -   Jesse Hall, Google
 --
@@ -264,11 +260,11 @@
 --
 -- == Version History
 --
--- -   Revision 1, 2018-05-10 (Jason Ekstrand)
+-- -   Revision 1, 2018-05-10 (Faith Ekstrand)
 --
 --     -   Initial version
 --
--- -   Revision 2, 2019-06-12 (Jason Ekstrand)
+-- -   Revision 2, 2019-06-12 (Faith Ekstrand)
 --
 --     -   Added an initialValue parameter to timeline semaphore creation
 --

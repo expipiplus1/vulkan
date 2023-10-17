@@ -62,6 +62,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency (QueryLowLatencySupportNV)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
@@ -260,7 +261,7 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ExportSemaphoreWin32HandleInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalSharedEventInfoEXT',
---     or
+--     'Vulkan.Extensions.VK_NV_low_latency.QueryLowLatencySupportNV', or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
 --
 -- -   #VUID-VkSemaphoreCreateInfo-sType-unique# The @sType@ value of each
@@ -293,6 +294,7 @@ instance Extensible SemaphoreCreateInfo where
   getNext SemaphoreCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SemaphoreCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @QueryLowLatencySupportNV = Just f
     | Just Refl <- eqT @e @ImportMetalSharedEventInfoEXT = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SemaphoreTypeCreateInfo = Just f

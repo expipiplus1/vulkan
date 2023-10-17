@@ -17,11 +17,7 @@
 -- [__Revision__]
 --     4
 --
--- [__Extension and Version Dependencies__]
---
---     -   Requires support for Vulkan 1.0
---
--- [__Contact__]
+-- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Bill Licea-Kane
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_shader_resolve] @wwlk%0A*Here describe the issue or question you have about the VK_QCOM_render_pass_shader_resolve extension* >

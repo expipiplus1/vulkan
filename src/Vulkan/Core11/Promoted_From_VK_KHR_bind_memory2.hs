@@ -92,6 +92,12 @@ foreign import ccall
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
 --
+-- Note
+--
+-- If 'bindBufferMemory2' fails, and @bindInfoCount@ was greater than one,
+-- then the buffers referenced by @pBindInfos@ will be in an indeterminate
+-- state, and must not be used. Applications should destroy these buffers.
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -152,6 +158,12 @@ foreign import ccall
 --
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
+--
+-- Note
+--
+-- If 'bindImageMemory2' fails, and @bindInfoCount@ was greater than one,
+-- then the images referenced by @pBindInfos@ will be in an indeterminate
+-- state, and must not be used. Applications should destroy these images.
 --
 -- == Valid Usage
 --
@@ -292,6 +304,15 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to a buffer handle created with identical creation parameters
 --     to @buffer@ and @memoryOffset@ /must/ be zero
+--
+-- -   #VUID-VkBindBufferMemoryInfo-apiVersion-07920# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, and @buffer@ was not created with
+--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ not
+--     have been allocated dedicated for a specific buffer or image
 --
 -- -   #VUID-VkBindBufferMemoryInfo-memory-02726# If the value of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
@@ -527,6 +548,15 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
 --     equal to an image handle created with identical creation parameters
 --     to @image@ and @memoryOffset@ /must/ be zero
+--
+-- -   #VUID-VkBindImageMemoryInfo-apiVersion-07921# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
+--     extension is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, and @image@ was not created with
+--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ not
+--     have been allocated dedicated for a specific buffer or image
 --
 -- -   #VUID-VkBindImageMemoryInfo-memory-02728# If the value of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
