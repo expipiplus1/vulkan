@@ -36,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Checkout the pull request branch
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ssh-key: ${{ steps.creds.outputs.ssh_key }}
           token: ${{ steps.creds.outputs.token }}
