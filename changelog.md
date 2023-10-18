@@ -3,6 +3,10 @@
 ## WIP
 
 ## [3.26] - 2023-10-17
+- Bump API version to v1.3.268
+  - A breaking change is that `VkBufferMemoryBarrier` has extensions,
+    and as such must be wrapped with `SomeStruct` when being passed
+    in lists, for example in `cmdPipelineBarrier`
 
 ## [3.25] - 2023-10-17
 - Bump API version to v1.3.246
