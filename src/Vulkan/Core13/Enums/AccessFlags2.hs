@@ -199,6 +199,7 @@ pattern ACCESS_2_INDIRECT_COMMAND_READ_BIT = AccessFlagBits2 0x0000000000000001
 
 -- | 'ACCESS_2_INDEX_READ_BIT' specifies read access to an index buffer as
 -- part of an indexed drawing command, bound by
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR' and
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'. Such access
 -- occurs in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INDEX_INPUT_BIT'
@@ -222,15 +223,13 @@ pattern ACCESS_2_UNIFORM_READ_BIT = AccessFlagBits2 0x0000000000000008
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass input attachment>
 -- within a render pass during subpass shading or fragment shading. Such
 -- access occurs in the
--- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 -- or
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT'
 -- pipeline stage.
 pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT = AccessFlagBits2 0x0000000000000010
 
 -- | 'ACCESS_2_SHADER_READ_BIT' is equivalent to the logical OR of:
---
--- -   'ACCESS_2_UNIFORM_READ_BIT'
 --
 -- -   'ACCESS_2_SHADER_SAMPLED_READ_BIT'
 --
@@ -249,23 +248,28 @@ pattern ACCESS_2_SHADER_WRITE_BIT = AccessFlagBits2 0x0000000000000040
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blending blending>
 -- (other than
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>),
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-logicop logic operations>,
--- or via certain
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load operations>
--- or
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>.
--- Such access occurs in the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-logicop logic operations>
+-- or certain
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations render pass load operations>
+-- in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT'
+-- pipeline stage or via
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>
+-- in the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT'
 -- pipeline stage.
 pattern ACCESS_2_COLOR_ATTACHMENT_READ_BIT = AccessFlagBits2 0x0000000000000080
 
 -- | 'ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT' specifies write access to a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass color, resolve, or depth\/stencil resolve attachment>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass color attachment>
 -- during a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass render pass>
--- or via certain
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load and store operations>.
--- Such access occurs in the
+-- or via certain render pass
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store>,
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve>
+-- operations. Such access occurs in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT'
 -- pipeline stage.
 pattern ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT = AccessFlagBits2 0x0000000000000100
@@ -275,27 +279,32 @@ pattern ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT = AccessFlagBits2 0x0000000000000100
 -- via
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-ds-state depth or stencil operations>
 -- or certain
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load operations>.
--- Such access occurs in the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations render pass load operations>
+-- in the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT'
+-- or
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT'
+-- pipeline stages or via
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>
+-- in the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT'
+-- pipeline stage.
+pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT = AccessFlagBits2 0x0000000000000200
+
+-- | 'ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT' specifies write access to
+-- a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass depth\/stencil attachment>,
+-- via
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-ds-state depth or stencil operations>
+-- or certain render pass
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store>
+-- operations. Such access occurs in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT'
 -- or
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT'
 -- pipeline stages.
-pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT = AccessFlagBits2 0x0000000000000200
-
--- | 'ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT' specifies write
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-ds-state depth or stencil operations>
--- in the
--- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR'
--- or
--- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR'
--- pipeline stages or via certain
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load operations>
--- or
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>
--- in the
--- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR'
--- pipeline stage.
 pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = AccessFlagBits2 0x0000000000000400
 
 -- | 'ACCESS_2_TRANSFER_READ_BIT' specifies read access to an image or buffer

@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     5
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
 --     and
@@ -94,7 +97,10 @@
 --     -   'AndroidHardwareBufferFormatPropertiesANDROID'
 --
 -- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo':
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo':
 --
 --     -   'ExternalFormatANDROID'
 --
@@ -331,6 +337,7 @@ import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct.Extends (forgetExtensions)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_format_resolve (AndroidHardwareBufferFormatResolvePropertiesANDROID)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.ImageView (ComponentMapping)
@@ -669,8 +676,9 @@ instance Zero AndroidHardwareBufferUsageANDROID where
 -- -   #VUID-VkAndroidHardwareBufferPropertiesANDROID-pNext-pNext# Each
 --     @pNext@ member of any structure (including this one) in the @pNext@
 --     chain /must/ be either @NULL@ or a pointer to a valid instance of
---     'AndroidHardwareBufferFormatProperties2ANDROID' or
---     'AndroidHardwareBufferFormatPropertiesANDROID'
+--     'AndroidHardwareBufferFormatProperties2ANDROID',
+--     'AndroidHardwareBufferFormatPropertiesANDROID', or
+--     'Vulkan.Extensions.VK_ANDROID_external_format_resolve.AndroidHardwareBufferFormatResolvePropertiesANDROID'
 --
 -- -   #VUID-VkAndroidHardwareBufferPropertiesANDROID-sType-unique# The
 --     @sType@ value of each struct in the @pNext@ chain /must/ be unique
@@ -702,6 +710,7 @@ instance Extensible AndroidHardwareBufferPropertiesANDROID where
   getNext AndroidHardwareBufferPropertiesANDROID{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AndroidHardwareBufferPropertiesANDROID e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @AndroidHardwareBufferFormatResolvePropertiesANDROID = Just f
     | Just Refl <- eqT @e @AndroidHardwareBufferFormatProperties2ANDROID = Just f
     | Just Refl <- eqT @e @AndroidHardwareBufferFormatPropertiesANDROID = Just f
     | otherwise = Nothing
@@ -859,9 +868,9 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 -- with appropriate parameters. These sets of features are independent of
 -- each other, e.g. the external format will support sampler Y′CBCR
--- conversion even if the non-external format does not, and writing to
--- non-external format images is possible but writing to external format
--- images is not.
+-- conversion even if the non-external format does not, and rendering
+-- directly to the external format will not be supported even if the
+-- non-external format does support this.
 --
 -- Android hardware buffers with the same external format /must/ have the
 -- same support for
@@ -1027,9 +1036,13 @@ instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
 --
 -- = Description
 --
--- If @externalFormat@ is zero, the effect is as if the
--- 'ExternalFormatANDROID' structure was not present. Otherwise, the
--- @image@ will have the specified external format.
+-- When included in the @pNext@ chain of another structure, it indicates
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats additional format information>
+-- beyond what is provided by 'Vulkan.Core10.Enums.Format.Format' values
+-- for an Android hardware buffer. If @externalFormat@ is zero, it
+-- indicates that no external format is used, and implementations should
+-- rely only on other format information. If this structure is not present,
+-- it is equivalent to setting @externalFormat@ to zero.
 --
 -- == Valid Usage (Implicit)
 --

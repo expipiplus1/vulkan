@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --
@@ -55,7 +58,7 @@
 -- metadata also includes the @maxContentLightLevel@ and
 -- @maxFrameAverageLightLevel@ as defined by CTA 861.3.
 --
--- While the general purpose of the metadata is to assist in the
+-- While the intended purpose of the metadata is to assist in the
 -- transformation between different color volumes of different displays and
 -- help achieve better color reproduction, it is not in the scope of this
 -- extension to define how exactly the metadata should be used in such a

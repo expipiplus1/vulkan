@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -71,7 +74,7 @@
 -- properties and statistics about the different executables produced by
 -- the pipeline compilation process. This is intended to be used by
 -- debugging and performance tools to allow them to provide more detailed
--- information to the user. Certain compile-time shader statistics provided
+-- information to the user. Certain compile time shader statistics provided
 -- through this extension may be useful to developers for debugging or
 -- performance analysis.
 --

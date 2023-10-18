@@ -572,10 +572,12 @@ foreign import ccall
 -- [2]
 --     Device-level commands which are part of the core version specified
 --     by 'ApplicationInfo'::@apiVersion@ when creating the instance will
---     always return a valid function pointer. Core commands beyond that
---     version which are supported by the implementation /may/ either
---     return @NULL@ or a function pointer, though the function pointer
---     /must/ not be called.
+--     always return a valid function pointer. If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     feature is enabled, core commands beyond that version which are
+--     supported by the implementation will return @NULL@, otherwise the
+--     implementation /may/ either return @NULL@ or a function pointer. If
+--     a function pointer is returned, it /must/ not be called.
 --
 -- [3]
 --     In this function, device-level excludes all physical-device-level
@@ -1005,6 +1007,18 @@ foreign import ccall
 -- the limitations for @usage2@ and @flags2@, for all values of @format@,
 -- @type@, and @tiling@.
 --
+-- If @VK_EXT_host_image_copy@ is supported, @usage@ includes
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT', and
+-- @flags@ does not include either of
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
+-- or
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT',
+-- then the result of calls to 'getPhysicalDeviceImageFormatProperties'
+-- with identical parameters except for the inclusion of
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT'
+-- in @usage@ /must/ be identical.
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -1318,7 +1332,7 @@ instance Zero PhysicalDeviceProperties where
 -- 'Vulkan.Core10.Enums.Result.ERROR_INCOMPATIBLE_DRIVER' if @apiVersion@
 -- was larger than 1.0. Implementations that support Vulkan 1.1 or later
 -- /must/ not return 'Vulkan.Core10.Enums.Result.ERROR_INCOMPATIBLE_DRIVER'
--- for any value of @apiVersion@.
+-- for any value of @apiVersion@ .
 --
 -- Note
 --
@@ -1411,8 +1425,8 @@ data ApplicationInfo = ApplicationInfo
     -- application is designed to use, encoded as described in
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
     -- The patch version number specified in @apiVersion@ is ignored when
-    -- creating an instance object. Only the major and minor versions of the
-    -- instance /must/ match those requested in @apiVersion@.
+    -- creating an instance object. The variant version of the instance /must/
+    -- match that requested in @apiVersion@.
     apiVersion :: Word32
   }
   deriving (Typeable)
@@ -1479,7 +1493,7 @@ instance Zero ApplicationInfo where
 -- = Description
 --
 -- To capture events that occur while creating or destroying an instance,
--- an application can link a
+-- an application /can/ link a
 -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT'
 -- structure or a
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
@@ -2555,10 +2569,18 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --         @OpConstantNull@ are treated as pointing to a zero-sized object,
     --         so all accesses through such pointers are considered to be out
     --         of bounds. Buffer accesses through buffer device addresses are
-    --         not bounds-checked. If the
-    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess cooperativeMatrixRobustBufferAccess>
+    --         not bounds-checked.
+    --
+    --     -   If the
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess-NV ::cooperativeMatrixRobustBufferAccess>
     --         feature is not enabled, then accesses using
     --         @OpCooperativeMatrixLoadNV@ and @OpCooperativeMatrixStoreNV@
+    --         /may/ not be bounds-checked.
+    --
+    --     -   If the
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess ::cooperativeMatrixRobustBufferAccess>
+    --         feature is not enabled, then accesses using
+    --         @OpCooperativeMatrixLoadKHR@ and @OpCooperativeMatrixStoreKHR@
     --         /may/ not be bounds-checked.
     --
     --         Note
@@ -3946,7 +3968,17 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
   , -- | #limits-sparseAddressSpaceSize# @sparseAddressSpaceSize@ is the total
     -- amount of address space available, in bytes, for sparse memory
     -- resources. This is an upper bound on the sum of the sizes of all sparse
-    -- resources, regardless of whether any memory is bound to them.
+    -- resources, regardless of whether any memory is bound to them. If the
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+    -- feature is enabled, then the difference between
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-extendedSparseAddressSpaceSize extendedSparseAddressSpaceSize>
+    -- and @sparseAddressSpaceSize@ can also be used, by
+    -- 'Vulkan.Core10.Handles.Image' created with the @usage@ member of
+    -- 'Vulkan.Core10.Image.ImageCreateInfo' only containing bits in
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-extendedSparseImageUsageFlags extendedSparseImageUsageFlags>
+    -- and 'Vulkan.Core10.Handles.Buffer' created with the @usage@ member of
+    -- 'Vulkan.Core10.Buffer.BufferCreateInfo' only containing bits in
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-extendedSparseBufferUsageFlags extendedSparseBufferUsageFlags>.
     sparseAddressSpaceSize :: DeviceSize
   , -- | #limits-maxBoundDescriptorSets# @maxBoundDescriptorSets@ is the maximum
     -- number of descriptor sets that /can/ be simultaneously used by a
@@ -4312,21 +4344,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
   , -- | #limits-maxComputeSharedMemorySize# @maxComputeSharedMemorySize@ is the
     -- maximum total storage size, in bytes, available for variables declared
     -- with the @Workgroup@ storage class in shader modules (or with the
-    -- @shared@ storage qualifier in GLSL) in the compute shader stage. When
-    -- variables declared with the @Workgroup@ storage class are explicitly
-    -- laid out (hence they are also decorated with @Block@), the amount of
-    -- storage consumed is the size of the largest Block variable, not counting
-    -- any padding at the end. The amount of storage consumed by the non-Block
-    -- variables declared with the @Workgroup@ storage class is
-    -- implementation-dependent. However, the amount of storage consumed may
-    -- not exceed the largest block size that would be obtained if all active
-    -- non-Block variables declared with @Workgroup@ storage class were
-    -- assigned offsets in an arbitrary order by successively taking the
-    -- smallest valid offset according to the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Storage Buffer Layout>
-    -- rules, and with @Boolean@ values considered as 32-bit integer values for
-    -- the purpose of this calculation. (This is equivalent to using the GLSL
-    -- std430 layout rules.)
+    -- @shared@ storage qualifier in GLSL) in the compute shader stage.
     maxComputeSharedMemorySize :: Word32
   , -- | #limits-maxComputeWorkGroupCount# @maxComputeWorkGroupCount@[3] is the
     -- maximum number of local workgroups that /can/ be dispatched by a single
@@ -4690,7 +4708,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdCopyBufferToImage2',
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage',
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdCopyImageToBuffer2',
-    -- and 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. The per
+    -- and 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. This
+    -- value is also the optimal host memory offset alignment in bytes for
+    -- 'Vulkan.Extensions.VK_EXT_host_image_copy.copyMemoryToImageEXT' and
+    -- 'Vulkan.Extensions.VK_EXT_host_image_copy.copyImageToMemoryEXT'. The per
     -- texel alignment requirements are enforced, but applications /should/ use
     -- the optimal alignment for optimal performance and power use. The value
     -- /must/ be a power of two.
@@ -4701,7 +4722,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdCopyBufferToImage2',
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage',
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdCopyImageToBuffer2',
-    -- and 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. Row
+    -- and 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. This
+    -- value is also the optimal host memory row pitch alignment in bytes for
+    -- 'Vulkan.Extensions.VK_EXT_host_image_copy.copyMemoryToImageEXT' and
+    -- 'Vulkan.Extensions.VK_EXT_host_image_copy.copyImageToMemoryEXT'. Row
     -- pitch is the number of bytes between texels with the same X coordinate
     -- in adjacent rows (Y coordinates differ by one). The per texel alignment
     -- requirements are enforced, but applications /should/ use the optimal

@@ -36,6 +36,10 @@ type ExternalMemoryFeatureFlags = ExternalMemoryFeatureFlagBits
 -- handle type
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'.
 -- Implementations /must/ not report
+-- 'EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT' for buffers with external
+-- handle type
+-- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX'.
+-- Implementations /must/ not report
 -- 'EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT' for images or buffers with
 -- external handle type
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT',

@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
 --     or
@@ -309,8 +312,8 @@ getMemoryFdPropertiesKHR :: forall io
                             ExternalMemoryHandleTypeFlagBits
                          -> -- | @fd@ is the handle which will be imported.
                             --
-                            -- #VUID-vkGetMemoryFdPropertiesKHR-fd-00673# @fd@ /must/ be an external
-                            -- memory handle created outside of the Vulkan API
+                            -- #VUID-vkGetMemoryFdPropertiesKHR-fd-00673# @fd@ /must/ point to a valid
+                            -- POSIX file descriptor memory handle
                             ("fd" ::: Int32)
                          -> io (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do

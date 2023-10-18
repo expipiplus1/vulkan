@@ -18,6 +18,7 @@ import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStor
 import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT(..))
 import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI(..))
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV(..))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV(..))
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures(..))
 import Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT(..))
@@ -26,18 +27,21 @@ import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragme
 import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT(..))
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR(..))
+import Vulkan.Extensions.VK_QCOM_image_processing2 (PhysicalDeviceImageProcessing2FeaturesQCOM(..))
 import Vulkan.Extensions.VK_QCOM_image_processing (PhysicalDeviceImageProcessingFeaturesQCOM(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
+import Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
 import Vulkan.Extensions.VK_ARM_shader_core_builtins (PhysicalDeviceShaderCoreBuiltinsFeaturesARM(..))
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
 import Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures(..))
+import Vulkan.Extensions.VK_AMDX_shader_enqueue (PhysicalDeviceShaderEnqueueFeaturesAMDX(..))
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
@@ -56,6 +60,7 @@ import Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties(..))
 import Vulkan.Core13 (PhysicalDeviceVulkan13Features(..))
 import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(..))
+import Vulkan.Extensions.VK_AMDX_shader_enqueue (pattern AMDX_SHADER_ENQUEUE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gpu_shader_int16 (pattern AMD_GPU_SHADER_INT16_EXTENSION_NAME)
@@ -93,6 +98,7 @@ import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADE
 import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_8bit_storage (pattern KHR_8BIT_STORAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_buffer_device_address (pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (pattern KHR_COOPERATIVE_MATRIX_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_device_group (pattern KHR_DEVICE_GROUP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_format_feature_flags2 (pattern KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (pattern KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME)
@@ -101,6 +107,7 @@ import Vulkan.Extensions.VK_KHR_multiview (pattern KHR_MULTIVIEW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_query (pattern KHR_RAY_QUERY_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (pattern KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (pattern KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (pattern KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_atomic_int64 (pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_draw_parameters (pattern KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME)
@@ -130,6 +137,7 @@ import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME)
+import Vulkan.Extensions.VK_QCOM_image_processing2 (pattern QCOM_IMAGE_PROCESSING_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_QCOM_image_processing (pattern QCOM_IMAGE_PROCESSING_EXTENSION_NAME)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ARITHMETIC_BIT))
@@ -633,7 +641,7 @@ spirvExtensionRequirements = \case
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
-  "SPV_INTEL_shader_integer_functions" ->
+  "SPV_INTEL_shader_integer_functions2" ->
     (,)
       []
       [ RequireDeviceExtension
@@ -655,6 +663,15 @@ spirvExtensionRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "SPV_QCOM_image_processing2" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = QCOM_IMAGE_PROCESSING_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "SPV_EXT_mesh_shader" ->
     (,)
       []
@@ -664,12 +681,57 @@ spirvExtensionRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "SPV_KHR_ray_tracing_position_fetch" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "SPV_EXT_shader_tile_image" ->
     (,)
       []
       [ RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = EXT_SHADER_TILE_IMAGE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_EXT_opacity_micromap" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_OPACITY_MICROMAP_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_cooperative_matrix" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_COOPERATIVE_MATRIX_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_ARM_core_builtins" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = ARM_SHADER_CORE_BUILTINS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_AMDX_shader_enqueue" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = AMDX_SHADER_ENQUEUE_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]
@@ -2234,6 +2296,20 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "TextureBlockMatch2QCOM" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "textureBlockMatch2"
+          , checkFeature = \PhysicalDeviceImageProcessing2FeaturesQCOM{textureBlockMatch2} -> textureBlockMatch2
+          , enableFeature = \_ -> PhysicalDeviceImageProcessing2FeaturesQCOM{textureBlockMatch2 = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = QCOM_IMAGE_PROCESSING_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "MeshShadingEXT" ->
     (,)
       []
@@ -2289,6 +2365,20 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "RayTracingPositionFetchKHR" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "rayTracingPositionFetch"
+          , checkFeature = \PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch} -> rayTracingPositionFetch
+          , enableFeature = \_ -> PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "TileImageColorReadAccessEXT" ->
     (,)
       []
@@ -2328,6 +2418,34 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = EXT_SHADER_TILE_IMAGE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "CooperativeMatrixKHR" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "cooperativeMatrix"
+          , checkFeature = \PhysicalDeviceCooperativeMatrixFeaturesKHR{cooperativeMatrix} -> cooperativeMatrix
+          , enableFeature = \PhysicalDeviceCooperativeMatrixFeaturesKHR{..} -> PhysicalDeviceCooperativeMatrixFeaturesKHR{cooperativeMatrix = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_COOPERATIVE_MATRIX_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "ShaderEnqueueAMDX" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderEnqueue"
+          , checkFeature = \PhysicalDeviceShaderEnqueueFeaturesAMDX{shaderEnqueue} -> shaderEnqueue
+          , enableFeature = \_ -> PhysicalDeviceShaderEnqueueFeaturesAMDX{shaderEnqueue = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = AMDX_SHADER_ENQUEUE_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

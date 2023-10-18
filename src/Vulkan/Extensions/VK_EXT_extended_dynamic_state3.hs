@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -80,18 +83,6 @@
 --
 -- -   'cmdSetConservativeRasterizationModeEXT'
 --
--- -   'cmdSetCoverageModulationModeNV'
---
--- -   'cmdSetCoverageModulationTableEnableNV'
---
--- -   'cmdSetCoverageModulationTableNV'
---
--- -   'cmdSetCoverageReductionModeNV'
---
--- -   'cmdSetCoverageToColorEnableNV'
---
--- -   'cmdSetCoverageToColorLocationNV'
---
 -- -   'cmdSetDepthClampEnableEXT'
 --
 -- -   'cmdSetDepthClipEnableEXT'
@@ -114,19 +105,59 @@
 --
 -- -   'cmdSetRasterizationStreamEXT'
 --
--- -   'cmdSetRepresentativeFragmentTestEnableNV'
---
 -- -   'cmdSetSampleLocationsEnableEXT'
 --
 -- -   'cmdSetSampleMaskEXT'
 --
--- -   'cmdSetShadingRateImageEnableNV'
---
 -- -   'cmdSetTessellationDomainOriginEXT'
 --
--- -   'cmdSetViewportSwizzleNV'
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>
+-- is supported:
 --
 -- -   'cmdSetViewportWScalingEnableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>
+-- is supported:
+--
+-- -   'cmdSetCoverageReductionModeNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>
+-- is supported:
+--
+-- -   'cmdSetCoverageToColorEnableNV'
+--
+-- -   'cmdSetCoverageToColorLocationNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>
+-- is supported:
+--
+-- -   'cmdSetCoverageModulationModeNV'
+--
+-- -   'cmdSetCoverageModulationTableEnableNV'
+--
+-- -   'cmdSetCoverageModulationTableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>
+-- is supported:
+--
+-- -   'cmdSetRepresentativeFragmentTestEnableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>
+-- is supported:
+--
+-- -   'cmdSetShadingRateImageEnableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>
+-- is supported:
+--
+-- -   'cmdSetViewportSwizzleNV'
 --
 -- == New Structures
 --
@@ -167,18 +198,6 @@
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
---
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
@@ -201,25 +220,79 @@
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
---
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
---
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_PROPERTIES_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
 --
 -- == Issues
 --
@@ -252,22 +325,14 @@
 -- 'cmdSetAlphaToCoverageEnableEXT', 'cmdSetAlphaToOneEnableEXT',
 -- 'cmdSetColorBlendAdvancedEXT', 'cmdSetColorBlendEnableEXT',
 -- 'cmdSetColorBlendEquationEXT', 'cmdSetColorWriteMaskEXT',
--- 'cmdSetConservativeRasterizationModeEXT',
--- 'cmdSetCoverageModulationModeNV',
--- 'cmdSetCoverageModulationTableEnableNV',
--- 'cmdSetCoverageModulationTableNV', 'cmdSetCoverageReductionModeNV',
--- 'cmdSetCoverageToColorEnableNV', 'cmdSetCoverageToColorLocationNV',
--- 'cmdSetDepthClampEnableEXT', 'cmdSetDepthClipEnableEXT',
--- 'cmdSetDepthClipNegativeOneToOneEXT',
+-- 'cmdSetConservativeRasterizationModeEXT', 'cmdSetDepthClampEnableEXT',
+-- 'cmdSetDepthClipEnableEXT', 'cmdSetDepthClipNegativeOneToOneEXT',
 -- 'cmdSetExtraPrimitiveOverestimationSizeEXT',
 -- 'cmdSetLineRasterizationModeEXT', 'cmdSetLineStippleEnableEXT',
 -- 'cmdSetLogicOpEnableEXT', 'cmdSetPolygonModeEXT',
 -- 'cmdSetProvokingVertexModeEXT', 'cmdSetRasterizationSamplesEXT',
--- 'cmdSetRasterizationStreamEXT',
--- 'cmdSetRepresentativeFragmentTestEnableNV',
--- 'cmdSetSampleLocationsEnableEXT', 'cmdSetSampleMaskEXT',
--- 'cmdSetShadingRateImageEnableNV', 'cmdSetTessellationDomainOriginEXT',
--- 'cmdSetViewportSwizzleNV', 'cmdSetViewportWScalingEnableNV'
+-- 'cmdSetRasterizationStreamEXT', 'cmdSetSampleLocationsEnableEXT',
+-- 'cmdSetSampleMaskEXT', 'cmdSetTessellationDomainOriginEXT'
 --
 -- == Document Notes
 --
@@ -920,8 +985,9 @@ cmdSetSampleMaskEXT :: forall io
                        CommandBuffer
                     -> -- | @samples@ specifies the number of sample bits in the @pSampleMask@.
                        ("samples" ::: SampleCountFlagBits)
-                    -> -- | @pSampleMask@ is a pointer to an array of VkSampleMask values, where the
-                       -- array size is based on the @samples@ parameter.
+                    -> -- | @pSampleMask@ is a pointer to an array of
+                       -- 'Vulkan.Core10.FundamentalTypes.SampleMask' values, where the array size
+                       -- is based on the @samples@ parameter.
                        ("sampleMask" ::: Vector SampleMask)
                     -> io ()
 cmdSetSampleMaskEXT commandBuffer samples sampleMask = liftIO . evalContT $ do
@@ -964,8 +1030,8 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetAlphaToCoverageEnableEXT-None-08506# Either the
---     \<features-extendedDynamicState3AlphaToCoverageEnable,
---     @extendedDynamicState3AlphaToCoverageEnable@>> feature or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToCoverageEnable extendedDynamicState3AlphaToCoverageEnable>
+--     feature or the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
 --     feature or both /must/ be enabled
 --
@@ -1465,6 +1531,15 @@ foreign import ccall
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'::@colorWriteMask@
 -- values used to create the currently active pipeline.
+--
+-- Note
+--
+-- Formats with bits that are shared between components specified by
+-- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlagBits',
+-- such as 'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32',
+-- cannot have their channels individually masked by this functionality;
+-- either all components that share bits have to be enabled, or none of
+-- them.
 --
 -- == Valid Usage
 --
@@ -2635,6 +2710,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetViewportWScalingEnableNV :: forall io
@@ -2738,6 +2814,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_NV_viewport_swizzle.ViewportSwizzleNV'
 cmdSetViewportSwizzleNV :: forall io
@@ -2840,6 +2917,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageToColorEnableNV :: forall io
@@ -2931,6 +3009,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageToColorLocationNV :: forall io
                                  . (MonadIO io)
@@ -3027,6 +3106,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.CoverageModulationModeNV'
 cmdSetCoverageModulationModeNV :: forall io
@@ -3119,6 +3199,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageModulationTableEnableNV :: forall io
@@ -3221,6 +3302,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoverageModulationTableNV :: forall io
                                  . (MonadIO io)
@@ -3316,6 +3398,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetShadingRateImageEnableNV :: forall io
@@ -3413,6 +3496,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.CoverageReductionModeNV'
 cmdSetCoverageReductionModeNV :: forall io
@@ -3505,6 +3589,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetRepresentativeFragmentTestEnableNV :: forall io

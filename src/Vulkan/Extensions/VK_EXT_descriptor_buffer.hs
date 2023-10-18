@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     and
@@ -388,6 +391,7 @@ import Vulkan.Extensions.Handles (AccelerationStructureNV)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
@@ -515,7 +519,8 @@ foreign import ccall
 --
 -- -   #VUID-vkGetDescriptorSetLayoutSizeEXT-layout-08012# @layout@ /must/
 --     have been created with the
---     VK_DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT flag set
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     flag set
 --
 -- == Valid Usage (Implicit)
 --
@@ -579,8 +584,8 @@ foreign import ccall
 -- precise location accessed by a shader for a given descriptor is as
 -- follows:
 --
--- -   location = bufferAddress + setOffset + descriptorOffset
---     (arrayElement * descriptorSize)
+-- -   location = bufferAddress + setOffset + descriptorOffset +
+--     (arrayElement × descriptorSize)
 --
 -- where bufferAddress and setOffset are the base address and offset for
 -- the identified descriptor set as specified by
@@ -618,7 +623,8 @@ foreign import ccall
 --
 -- -   #VUID-vkGetDescriptorSetLayoutBindingOffsetEXT-layout-08014#
 --     @layout@ /must/ have been created with the
---     VK_DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT flag set
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     flag set
 --
 -- == Valid Usage (Implicit)
 --
@@ -1036,6 +1042,13 @@ foreign import ccall
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-pipelineBindPoint-08067#
 --     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
 --     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
+--
+-- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-firstSet-09006# The
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' for each set from
+--     @firstSet@ to @firstSet@ + @setCount@ when @layout@ was created
+--     /must/ have been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     bit set
 --
 -- == Valid Usage (Implicit)
 --
@@ -2291,6 +2304,13 @@ instance Zero PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, @address@ /must/ not be zero
 --
+-- -   #VUID-VkDescriptorAddressInfoEXT-nullDescriptor-08938# If @address@
+--     is zero, @range@ /must/ be 'Vulkan.Core10.APIConstants.WHOLE_SIZE'
+--
+-- -   #VUID-VkDescriptorAddressInfoEXT-nullDescriptor-08939# If @address@
+--     is not zero, @range@ /must/ not be
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE'
+--
 -- -   #VUID-VkDescriptorAddressInfoEXT-None-08044# If @address@ is not
 --     zero, @address@ /must/ be a valid device address at an offset within
 --     a 'Vulkan.Core10.Handles.Buffer'
@@ -2299,8 +2319,8 @@ instance Zero PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT where
 --     than or equal to the size of the buffer containing @address@ minus
 --     the offset of @address@ from the base address of the buffer
 --
--- -   #VUID-VkDescriptorAddressInfoEXT-range-08046# @range@ must not be
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE'
+-- -   #VUID-VkDescriptorAddressInfoEXT-range-08940# @range@ /must/ not be
+--     zero
 --
 -- == Valid Usage (Implicit)
 --
@@ -2387,14 +2407,22 @@ instance Zero DescriptorAddressInfoEXT where
 -- | VkDescriptorBufferBindingInfoEXT - Structure specifying descriptor
 -- buffer binding information
 --
+-- = Description
+--
+-- If a
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+-- structure is present in the @pNext@ chain,
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'::@flags@
+-- from that structure is used instead of @flags@ from this structure.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-bufferlessPushDescriptors-08056#
 --     If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', and @usage@ contains
---     VK_BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT, then the
---     @pNext@ chain /must/ include a
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT',
+--     then the @pNext@ chain /must/ include a
 --     'DescriptorBufferBindingPushDescriptorBufferHandleEXT' structure
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-address-08057# @address@
@@ -2428,9 +2456,11 @@ instance Zero DescriptorAddressInfoEXT where
 --     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT'
 --
--- -   #VUID-VkDescriptorBufferBindingInfoEXT-pNext-pNext# @pNext@ /must/
---     be @NULL@ or a pointer to a valid instance of
---     'DescriptorBufferBindingPushDescriptorBufferHandleEXT'
+-- -   #VUID-VkDescriptorBufferBindingInfoEXT-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     or 'DescriptorBufferBindingPushDescriptorBufferHandleEXT'
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
@@ -2450,11 +2480,15 @@ instance Zero DescriptorAddressInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdBindDescriptorBuffersEXT'
 data DescriptorBufferBindingInfoEXT (es :: [Type]) = DescriptorBufferBindingInfoEXT
-  { -- No documentation found for Nested "VkDescriptorBufferBindingInfoEXT" "pNext"
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
-  , -- No documentation found for Nested "VkDescriptorBufferBindingInfoEXT" "address"
+  , -- | @address@ is a 'Vulkan.Core10.FundamentalTypes.DeviceAddress' specifying
+    -- the device address defining the descriptor buffer to be bound.
     address :: DeviceAddress
-  , -- No documentation found for Nested "VkDescriptorBufferBindingInfoEXT" "usage"
+  , -- | @usage@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' specifying
+    -- the 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@ for the buffer from
+    -- which @address@ was queried.
     usage :: BufferUsageFlags
   }
   deriving (Typeable)
@@ -2470,6 +2504,7 @@ instance Extensible DescriptorBufferBindingInfoEXT where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorBufferBindingInfoEXT e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @DescriptorBufferBindingPushDescriptorBufferHandleEXT = Just f
+    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfoKHR = Just f
     | otherwise = Nothing
 
 instance ( Extendss DescriptorBufferBindingInfoEXT es
@@ -3026,7 +3061,7 @@ instance Zero SamplerCaptureDescriptorDataInfoEXT where
 --     @accelerationStructureNV@ /must/ have been created with
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
 --     set in
---     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'::info::@flags@
+--     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'::@info.flags@
 --
 -- -   #VUID-VkAccelerationStructureCaptureDescriptorDataInfoEXT-accelerationStructure-08093#
 --     If @accelerationStructure@ is not

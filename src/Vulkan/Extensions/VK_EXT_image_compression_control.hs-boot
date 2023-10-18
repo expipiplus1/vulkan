@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -64,13 +67,13 @@
 --
 -- == New Commands
 --
--- -   'getImageSubresourceLayout2EXT'
+-- -   'Vulkan.Extensions.VK_EXT_host_image_copy.getImageSubresourceLayout2EXT'
 --
 -- == New Structures
 --
--- -   'ImageSubresource2EXT'
+-- -   'Vulkan.Extensions.VK_EXT_host_image_copy.ImageSubresource2EXT'
 --
--- -   'SubresourceLayout2EXT'
+-- -   'Vulkan.Extensions.VK_EXT_host_image_copy.SubresourceLayout2EXT'
 --
 -- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
@@ -81,7 +84,7 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2',
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
---     'SubresourceLayout2EXT':
+--     'Vulkan.Extensions.VK_KHR_maintenance5.SubresourceLayout2KHR':
 --
 --     -   'ImageCompressionPropertiesEXT'
 --
@@ -119,11 +122,11 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT'
+--     -   'STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT'
+--     -   'STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT'
 --
 -- == Version History
 --
@@ -136,9 +139,10 @@
 -- 'ImageCompressionControlEXT', 'ImageCompressionFixedRateFlagBitsEXT',
 -- 'ImageCompressionFixedRateFlagsEXT', 'ImageCompressionFlagBitsEXT',
 -- 'ImageCompressionFlagsEXT', 'ImageCompressionPropertiesEXT',
--- 'ImageSubresource2EXT',
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.ImageSubresource2EXT',
 -- 'PhysicalDeviceImageCompressionControlFeaturesEXT',
--- 'SubresourceLayout2EXT', 'getImageSubresourceLayout2EXT'
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.SubresourceLayout2EXT',
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.getImageSubresourceLayout2EXT'
 --
 -- == Document Notes
 --
@@ -149,18 +153,13 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_image_compression_control  ( ImageCompressionControlEXT
                                                            , ImageCompressionPropertiesEXT
-                                                           , ImageSubresource2EXT
                                                            , PhysicalDeviceImageCompressionControlFeaturesEXT
-                                                           , SubresourceLayout2EXT
                                                            ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+
 data ImageCompressionControlEXT
 
 instance ToCStruct ImageCompressionControlEXT
@@ -177,29 +176,10 @@ instance Show ImageCompressionPropertiesEXT
 instance FromCStruct ImageCompressionPropertiesEXT
 
 
-data ImageSubresource2EXT
-
-instance ToCStruct ImageSubresource2EXT
-instance Show ImageSubresource2EXT
-
-instance FromCStruct ImageSubresource2EXT
-
-
 data PhysicalDeviceImageCompressionControlFeaturesEXT
 
 instance ToCStruct PhysicalDeviceImageCompressionControlFeaturesEXT
 instance Show PhysicalDeviceImageCompressionControlFeaturesEXT
 
 instance FromCStruct PhysicalDeviceImageCompressionControlFeaturesEXT
-
-
-type role SubresourceLayout2EXT nominal
-data SubresourceLayout2EXT (es :: [Type])
-
-instance ( Extendss SubresourceLayout2EXT es
-         , PokeChain es ) => ToCStruct (SubresourceLayout2EXT es)
-instance Show (Chain es) => Show (SubresourceLayout2EXT es)
-
-instance ( Extendss SubresourceLayout2EXT es
-         , PeekChain es ) => FromCStruct (SubresourceLayout2EXT es)
 

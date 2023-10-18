@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: "0.5.10.3"
+version: "0.5.10.5"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
@@ -39,7 +39,7 @@ library:
   - typed-process
   - unordered-containers
   - vector
-  - vulkan >= 3.6.14 && < 3.26
+  - vulkan >= 3.6.14 && < 3.27
 
 tests:
   doctests:
@@ -55,7 +55,7 @@ tests:
 custom-setup:
   dependencies:
   - base
-  - Cabal
+  - Cabal >= 3 && < 4
   - cabal-doctest >= 1 && <1.1
 
 ghc-options:

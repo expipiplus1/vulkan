@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -279,6 +282,21 @@ instance Zero PhysicalDeviceFragmentShaderBarycentricFeaturesKHR where
 -- | VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR - Structure
 -- describing fragment shader barycentric limits of an implementation
 --
+-- = Members
+--
+-- -   #limits-triStripVertexOrderIndependentOfProvokingVertex# When the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-flatshading provoking vertex mode>
+--     is
+--     'Vulkan.Extensions.VK_EXT_provoking_vertex.PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT',
+--     and the primitive order is odd in a triangle strip, the ordering of
+--     vertices is defined in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-barycentric-order-table-last-vertex last vertex table>.
+--     @triStripVertexOrderIndependentOfProvokingVertex@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' indicates that the
+--     implementation ignores this and uses the vertex order defined by
+--     'Vulkan.Extensions.VK_EXT_provoking_vertex.PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT'
+--     instead.
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceFragmentShaderBarycentricPropertiesKHR' structure
@@ -297,15 +315,7 @@ instance Zero PhysicalDeviceFragmentShaderBarycentricFeaturesKHR where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderBarycentricPropertiesKHR = PhysicalDeviceFragmentShaderBarycentricPropertiesKHR
-  { -- | #limits-triStripVertexOrderIndependentOfProvokingVertex#
-    -- @triStripVertexOrderIndependentOfProvokingVertex@ indicates that the
-    -- implementation does not change its vertex numbering for triangle strip
-    -- primitives when the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-flatshading provoking vertex mode>
-    -- is
-    -- 'Vulkan.Extensions.VK_EXT_provoking_vertex.PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT',
-    -- as shown in the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-barycentric-order-table-last-vertex last vertex table>.
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR" "triStripVertexOrderIndependentOfProvokingVertex"
     triStripVertexOrderIndependentOfProvokingVertex :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

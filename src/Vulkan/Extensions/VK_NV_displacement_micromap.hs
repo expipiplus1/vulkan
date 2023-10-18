@@ -15,7 +15,10 @@
 --     398
 --
 -- [__Revision__]
---     1
+--     2
+--
+-- [__Ratification Status__]
+--     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
@@ -32,6 +35,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_displacement_micromap] @pixeljetstream%0A*Here describe the issue or question you have about the VK_NV_displacement_micromap extension* >
 --
 --     -   Eric Werness
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_displacement_micromap] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NV_displacement_micromap extension* >
 --
 -- == Other Extension Metadata
 --
@@ -137,6 +141,10 @@
 -- -   Revision 1, 2023-03-17 (Eric Werness)
 --
 --     -   Initial public revision
+--
+-- -   Revision 2, 2023-07-07 (Eric Werness)
+--
+--     -   Add shader support for decode intrinsics
 --
 -- == See Also
 --
@@ -414,6 +422,7 @@ instance Zero PhysicalDeviceDisplacementMicromapPropertiesNV where
 --     structures
 --
 -- -   #VUID-VkAccelerationStructureTrianglesDisplacementMicromapNV-micromap-parameter#
+--     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @micromap@ /must/ be a valid 'Vulkan.Extensions.Handles.MicromapEXT'
 --     handle
 --
@@ -517,7 +526,6 @@ instance ToCStruct AccelerationStructureTrianglesDisplacementMicromapNV where
     lift $ poke ((p `plusPtr` 88 :: Ptr DeviceSize)) (zero)
     lift $ poke ((p `plusPtr` 96 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 112 :: Ptr (Ptr (Ptr MicromapUsageEXT)))) (nullPtr)
-    lift $ poke ((p `plusPtr` 120 :: Ptr MicromapEXT)) (zero)
     lift $ f
 
 instance Zero AccelerationStructureTrianglesDisplacementMicromapNV where
@@ -618,11 +626,11 @@ instance Read DisplacementMicromapFormatNV where
       conNameDisplacementMicromapFormatNV
       DisplacementMicromapFormatNV
 
-type NV_DISPLACEMENT_MICROMAP_SPEC_VERSION = 1
+type NV_DISPLACEMENT_MICROMAP_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_NV_DISPLACEMENT_MICROMAP_SPEC_VERSION"
 pattern NV_DISPLACEMENT_MICROMAP_SPEC_VERSION :: forall a . Integral a => a
-pattern NV_DISPLACEMENT_MICROMAP_SPEC_VERSION = 1
+pattern NV_DISPLACEMENT_MICROMAP_SPEC_VERSION = 2
 
 
 type NV_DISPLACEMENT_MICROMAP_EXTENSION_NAME = "VK_NV_displacement_micromap"

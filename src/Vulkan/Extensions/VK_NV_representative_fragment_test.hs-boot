@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -128,14 +131,14 @@
 -- color buffers. For the use cases intended for this feature, we do not
 -- expect color or depth writes to be enabled.
 --
--- (4) How do derivatives and automatic texture level of detail
--- computations work with the representative fragment test enabled?
+-- (4) How do derivatives and automatic texture LOD computations work with
+-- the representative fragment test enabled?
 --
 -- __RESOLVED__: If a fragment shader uses derivative functions or texture
--- lookups using automatic level of detail computation, derivatives will be
--- computed identically whether or not the representative fragment test is
--- enabled. For the use cases intended for this feature, we do not expect
--- the use of derivatives in the fragment shader.
+-- lookups using automatic LOD computation, derivatives will be computed
+-- identically whether or not the representative fragment test is enabled.
+-- For the use cases intended for this feature, we do not expect the use of
+-- derivatives in the fragment shader.
 --
 -- == Version History
 --

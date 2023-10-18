@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -112,8 +115,9 @@
 --
 -- This extension introduces a new 'Vulkan.Extensions.Handles.ShaderEXT'
 -- object type which represents a single compiled shader stage. Shader
--- objects can be used as a more flexible but comparably performant
--- alternative to 'Vulkan.Core10.Handles.Pipeline' objects.
+-- objects provide a more flexible alternative to
+-- 'Vulkan.Core10.Handles.Pipeline' objects, which may be helpful in
+-- certain use cases.
 --
 -- == New Object Types
 --
@@ -138,18 +142,6 @@
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT'
 --
@@ -197,15 +189,11 @@
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
 --
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
---
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
 --
@@ -215,10 +203,6 @@
 --
 -- -   'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
---
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
 -- -   'createShadersEXT'
@@ -226,6 +210,54 @@
 -- -   'destroyShaderEXT'
 --
 -- -   'getShaderBinaryDataEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
 --
 -- == New Structures
 --
@@ -293,6 +325,54 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
+-- is supported:
+--
+-- -   Extending 'ShaderCreateFlagBitsEXT':
+--
+--     -   'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_mesh_shader VK_EXT_mesh_shader>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_mesh_shader VK_NV_mesh_shader>
+-- is supported:
+--
+-- -   Extending 'ShaderCreateFlagBitsEXT':
+--
+--     -   'SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+-- is supported:
+--
+-- -   Extending 'ShaderCreateFlagBitsEXT':
+--
+--     -   'SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
+--
+--     -   'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- is supported:
+--
+-- -   Extending 'ShaderCreateFlagBitsEXT':
+--
+--     -   'SHADER_CREATE_DISPATCH_BASE_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>
+-- is supported:
+--
+-- -   Extending 'ShaderCreateFlagBitsEXT':
+--
+--     -   'SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT'
+--
 -- == Examples
 --
 -- __Example 1__
@@ -352,7 +432,7 @@
 -- > VkResult result;
 -- > VkShaderEXT shaders[2];
 -- >
--- > result = vkCmdCreateShadersEXT(device, 2, &shaderCreateInfos, NULL, shaders);
+-- > result = vkCreateShadersEXT(device, 2, &shaderCreateInfos, NULL, shaders);
 -- > if (result != VK_SUCCESS)
 -- > {
 -- >     // Handle error
@@ -381,8 +461,8 @@
 -- >
 -- > // Equivalent to the previous line. Linked shaders can be bound one at a time,
 -- > // in any order:
--- > vkCmdBindShadersEXT(commandBuffer, 1, &stages[1], &shaders[1]);
--- > vkCmdBindShadersEXT(commandBuffer, 1, &stages[0], &shaders[0]);
+-- > // vkCmdBindShadersEXT(commandBuffer, 1, &stages[1], &shaders[1]);
+-- > // vkCmdBindShadersEXT(commandBuffer, 1, &stages[0], &shaders[0]);
 -- >
 -- > // The above is sufficient to draw if the device was created with the
 -- > // tessellationShader and geometryShader features disabled. Otherwise, since
@@ -400,6 +480,9 @@
 -- > // meaning no shaders are bound to those stages, and that any previously bound
 -- > // shaders are unbound
 -- > vkCmdBindShadersEXT(commandBuffer, 3, unusedStages, NULL);
+-- >
+-- > // Graphics shader objects may only be used to draw inside dynamic render pass
+-- > // instances begun with vkCmdBeginRendering(), assume one has already been begun
 -- >
 -- > // Draw a triangle
 -- > vkCmdDraw(commandBuffer, 3, 1, 0, 0);
@@ -516,7 +599,7 @@
 -- > VkResult result;
 -- > VkShaderEXT shaders[5];
 -- >
--- > result = vkCmdCreateShadersEXT(device, 5, &shaderCreateInfos, NULL, shaders);
+-- > result = vkCreateShadersEXT(device, 5, &shaderCreateInfos, NULL, shaders);
 -- > if (result != VK_SUCCESS)
 -- > {
 -- >     // Handle error
@@ -534,33 +617,43 @@
 -- > // Assume vertex buffers, descriptor sets, etc. have been bound, and existing
 -- > // state setting commands have been called to set all required state
 -- >
--- > const VkShaderStageFlagBits vertexStage = VK_SHADER_STAGE_VERTEX_BIT;
--- > const VkShaderStageFlagBits geometryStage = VK_SHADER_STAGE_VERTEX_BIT;
--- > const VkShaderStageFlagBits fragmentStage = VK_SHADER_STAGE_VERTEX_BIT;
+-- > const VkShaderStageFlagBits stages[3] =
+-- > {
+-- >     // Any order is allowed
+-- >     VK_SHADER_STAGE_FRAGMENT_BIT,
+-- >     VK_SHADER_STAGE_VERTEX_BIT,
+-- >     VK_SHADER_STAGE_GEOMETRY_BIT,
+-- > };
 -- >
--- > // Bind unlinked vertex shader
--- > vkCmdBindShadersEXT(commandBuffer, 1, &vertexStage, &shaders[0]);
+-- > VkShaderEXT bindShaders[3] =
+-- > {
+-- >     shaders[2], // FS
+-- >     shaders[1], // VS
+-- >     shaders[0]  // GS
+-- > };
 -- >
--- > // Bind unlinked fragment shader
--- > vkCmdBindShadersEXT(commandBuffer, 1, &fragmentStage, &shaders[3]);
--- >
--- > // Bind unlinked geometry shader
--- > vkCmdBindShadersEXT(commandBuffer, 1, &geometryStage, &shaders[2]);
+-- > // Bind unlinked shaders
+-- > vkCmdBindShadersEXT(commandBuffer, 3, stages, bindShaders);
 -- >
 -- > // Assume the tessellationShader feature is disabled, so vkCmdBindShadersEXT()
 -- > // need not have been called with either tessellation stage
+-- >
+-- > // Graphics shader objects may only be used to draw inside dynamic render pass
+-- > // instances begun with vkCmdBeginRendering(), assume one has already been begun
 -- >
 -- > // Draw a triangle
 -- > vkCmdDraw(commandBuffer, 3, 1, 0, 0);
 -- >
 -- > // Bind a different unlinked fragment shader
--- > vkCmdBindShadersEXT(commandBuffer, 1, &fragmentStage, &shaders[4]);
+-- > const VkShaderStageFlagBits fragmentStage = VK_SHADER_STAGE_FRAGMENT_BIT;
+-- > vkCmdBindShadersEXT(commandBuffer, 1, &fragmentStage, &shaders[3]);
 -- >
 -- > // Draw another triangle
 -- > vkCmdDraw(commandBuffer, 3, 1, 0, 0);
 -- >
 -- > // Bind a different unlinked vertex shader
--- > vkCmdBindShadersEXT(commandBuffer, 1, &vertexStage, &shaders[1]);
+-- > const VkShaderStageFlagBits vertexStage = VK_SHADER_STAGE_VERTEX_BIT;
+-- > vkCmdBindShadersEXT(commandBuffer, 1, &vertexStage, &shaders[4]);
 -- >
 -- > // Draw another triangle
 -- > vkCmdDraw(commandBuffer, 3, 1, 0, 0);
@@ -591,12 +684,6 @@
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnableEXT',
@@ -620,17 +707,13 @@
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilTestEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT',
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT',
 -- 'createShadersEXT', 'destroyShaderEXT', 'getShaderBinaryDataEXT'
 --

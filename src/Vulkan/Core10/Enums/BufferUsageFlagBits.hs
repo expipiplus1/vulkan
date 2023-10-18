@@ -18,6 +18,7 @@ module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlags
                                                                      , BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR
                                                                      , BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
                                                                      , BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
+                                                                     , BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX
                                                                      , BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT
                                                                      , BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
                                                                      , BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
@@ -87,6 +88,7 @@ pattern BUFFER_USAGE_STORAGE_BUFFER_BIT = BufferUsageFlagBits 0x00000020
 
 -- | 'BUFFER_USAGE_INDEX_BUFFER_BIT' specifies that the buffer is suitable
 -- for passing as the @buffer@ parameter to
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR' and
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
 pattern BUFFER_USAGE_INDEX_BUFFER_BIT = BufferUsageFlagBits 0x00000040
 
@@ -149,6 +151,11 @@ pattern BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR = BufferUsageFlagBit
 -- specifies that the buffer is suitable for use as a read-only input to an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-building acceleration structure build>.
 pattern BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = BufferUsageFlagBits 0x00080000
+
+-- | 'BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX' specifies that the
+-- buffer /can/ be used for as scratch memory for
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#executiongraphs execution graph dispatch>.
+pattern BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX = BufferUsageFlagBits 0x02000000
 
 -- | 'BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies that the buffer
 -- is suitable for passing as the @buffer@ parameter to
@@ -249,6 +256,10 @@ showTableBufferUsageFlagBits =
   ,
     ( BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
     , "ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR"
+    )
+  ,
+    ( BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX
+    , "EXECUTION_GRAPH_SCRATCH_BIT_AMDX"
     )
   ,
     ( BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT

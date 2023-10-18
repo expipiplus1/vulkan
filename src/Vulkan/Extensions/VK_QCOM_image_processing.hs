@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
 --
@@ -53,7 +56,7 @@
 -- 3D graphics to UI and from composition to compute applications. Simple
 -- scaling and filtering can be done with bilinear filtering, which comes
 -- for free during texture sampling. However, as screen sizes get larger
--- and more use-cases rely on GPU such as camera and video post-processing
+-- and more use cases rely on GPU such as camera and video post-processing
 -- needs, there is increasing demand for GPU to support higher order
 -- filtering and other advanced image processing.
 --
@@ -386,7 +389,8 @@ instance Zero PhysicalDeviceImageProcessingFeaturesQCOM where
 --
 -- = Members
 --
--- -   @sType@ is the type of this structure.
+-- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
+--     identifying this structure.
 --
 -- -   @pNext@ is @NULL@ or a pointer to a structure extending this
 --     structure.

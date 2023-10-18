@@ -346,6 +346,15 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
+-- -   #VUID-VkBindBufferMemoryInfo-bufferDeviceAddressCaptureReplay-09200#
+--     If the
+--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddressCaptureReplay@
+--     feature is enabled and @buffer@ was created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--     bit set
+--
 -- -   #VUID-VkBindBufferMemoryInfo-buffer-06408# If @buffer@ was created
 --     with
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
@@ -355,13 +364,17 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
 --
 -- -   #VUID-VkBindBufferMemoryInfo-descriptorBufferCaptureReplay-08112# If
---     the
---     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT'
---     ::@descriptorBufferCaptureReplay@ feature is enabled and @buffer@
---     was created with the
+--     the @buffer@ was created with the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
+--
+-- -   #VUID-VkBindBufferMemoryInfo-buffer-09201# If the @buffer@ was
+--     created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
 --
 -- -   #VUID-VkBindBufferMemoryInfo-pNext-01605# If the @pNext@ chain
@@ -583,13 +596,17 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     when @image@ was created
 --
 -- -   #VUID-VkBindImageMemoryInfo-descriptorBufferCaptureReplay-08113# If
---     the
---     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT'
---     ::@descriptorBufferCaptureReplay@ feature is enabled and @image@ was
---     created with the
+--     the @image@ was created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
+--
+-- -   #VUID-VkBindImageMemoryInfo-image-09202# If the @image@ was created
+--     with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
 --
 -- -   #VUID-VkBindImageMemoryInfo-pNext-01615# If the @pNext@ chain does

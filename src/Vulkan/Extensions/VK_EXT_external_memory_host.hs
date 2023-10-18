@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
 --     or
@@ -268,6 +271,9 @@ foreign import ccall
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
+-- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-pHostPointer-parameter#
+--     @pHostPointer@ /must/ be a pointer value
+--
 -- -   #VUID-vkGetMemoryHostPointerPropertiesEXT-pMemoryHostPointerProperties-parameter#
 --     @pMemoryHostPointerProperties@ /must/ be a valid pointer to a
 --     'MemoryHostPointerPropertiesEXT' structure
@@ -389,6 +395,9 @@ getMemoryHostPointerPropertiesEXT device
 --     @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
+--
+-- -   #VUID-VkImportMemoryHostPointerInfoEXT-pHostPointer-parameter#
+--     @pHostPointer@ /must/ be a pointer value
 --
 -- = See Also
 --

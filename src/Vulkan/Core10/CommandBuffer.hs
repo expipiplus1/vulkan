@@ -98,6 +98,7 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
 import Vulkan.Core10.Handles (Framebuffer)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (MultiviewPerViewAttributesInfoNVX)
 import Vulkan.CStruct.Extends (PeekChain)
@@ -435,10 +436,15 @@ foreign import ccall
 --
 -- = Description
 --
+-- The command buffer /must/ have been in the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>,
+-- and, if successful, is moved to the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>.
+--
 -- If there was an error during recording, the application will be notified
--- by an unsuccessful return code returned by 'endCommandBuffer'. If the
--- application wishes to further use the command buffer, the command buffer
--- /must/ be reset.
+-- by an unsuccessful return code returned by 'endCommandBuffer', and the
+-- command buffer will be moved to the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid state>.
 --
 -- In case the application recorded one or more
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>
@@ -456,11 +462,6 @@ foreign import ccall
 -- @VK_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR@ error being returned by any
 -- command as a means to verify Video Std parameters, as implementations
 -- are not required to report the error in any specific set of cases.
---
--- The command buffer /must/ have been in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>,
--- and is moved to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>.
 --
 -- == Valid Usage
 --
@@ -754,6 +755,7 @@ instance Zero CommandBufferAllocateInfo where
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
 --     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX'
 --
@@ -842,6 +844,7 @@ instance Extensible CommandBufferInheritanceInfo where
     | Just Refl <- eqT @e @CommandBufferInheritanceRenderingInfo = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceViewportScissorInfoNV = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceRenderPassTransformInfoQCOM = Just f
+    | Just Refl <- eqT @e @ExternalFormatANDROID = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceConditionalRenderingInfoEXT = Just f
     | otherwise = Nothing
 
@@ -905,6 +908,11 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkCommandBufferBeginInfo-flags-09123# If @flags@ contains
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
+--     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support graphics operations
+--
 -- -   #VUID-VkCommandBufferBeginInfo-flags-00055# If @flags@ contains
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
 --     the @framebuffer@ member of @pInheritanceInfo@ /must/ be either
@@ -912,18 +920,13 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --     'Vulkan.Core10.Handles.Framebuffer' that is compatible with the
 --     @renderPass@ member of @pInheritanceInfo@
 --
--- -   #VUID-VkCommandBufferBeginInfo-flags-06000# If @flags@ contains
+-- -   #VUID-VkCommandBufferBeginInfo-flags-09240# If @flags@ contains
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
---     and the @renderPass@ member of @pInheritanceInfo@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @renderPass@ /must/ be a
---     valid 'Vulkan.Core10.Handles.RenderPass'
---
--- -   #VUID-VkCommandBufferBeginInfo-flags-06001# If @flags@ contains
---     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
---     and the @renderPass@ member of @pInheritanceInfo@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', the @subpass@ member of
---     @pInheritanceInfo@ /must/ be a valid subpass index within the
---     @renderPass@ member of @pInheritanceInfo@
+--     and the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-dynamicRendering dynamicRendering>
+--     feature is not enabled, the @renderPass@ member of
+--     @pInheritanceInfo@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkCommandBufferBeginInfo-flags-06002# If @flags@ contains
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
@@ -944,6 +947,20 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --     structure, the @colorAttachmentCount@ member of that structure
 --     /must/ be equal to the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'::@colorAttachmentCount@
+--
+-- -   #VUID-VkCommandBufferBeginInfo-flags-06000# If @flags@ contains
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
+--     and the @renderPass@ member of @pInheritanceInfo@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the @renderPass@ member of
+--     @pInheritanceInfo@ /must/ be a valid
+--     'Vulkan.Core10.Handles.RenderPass'
+--
+-- -   #VUID-VkCommandBufferBeginInfo-flags-06001# If @flags@ contains
+--     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
+--     and the @renderPass@ member of @pInheritanceInfo@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the @subpass@ member of
+--     @pInheritanceInfo@ /must/ be a valid subpass index within the
+--     @renderPass@ member of @pInheritanceInfo@
 --
 -- == Valid Usage (Implicit)
 --

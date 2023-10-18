@@ -1160,7 +1160,7 @@ directfb :: HasRenderParams r => [Sem r RenderElement]
 directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
 screen :: HasRenderParams r => [Sem r RenderElement]
-screen = [voidData "_screen_window", voidData "screen_context"]
+screen = [voidData "_screen_window", voidData "_screen_context", voidData "_screen_buffer"]
 
 nvscisyncUnsized :: HasRenderParams r => [Sem r RenderElement]
 nvscisyncUnsized = [voidData "NvSciSyncFence"]

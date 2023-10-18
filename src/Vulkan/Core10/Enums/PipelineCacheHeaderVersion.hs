@@ -28,7 +28,8 @@ newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'PIPELINE_CACHE_HEADER_VERSION_ONE' specifies version one of the
--- pipeline cache.
+-- pipeline cache, described by
+-- 'Vulkan.Core10.OtherTypes.PipelineCacheHeaderVersionOne'.
 pattern PIPELINE_CACHE_HEADER_VERSION_ONE = PipelineCacheHeaderVersion 1
 
 -- No documentation found for Nested "VkPipelineCacheHeaderVersion" "VK_PIPELINE_CACHE_HEADER_VERSION_SAFETY_CRITICAL_ONE"

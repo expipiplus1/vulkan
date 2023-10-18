@@ -122,8 +122,9 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBeginRendering-commandBuffer-06068# If @commandBuffer@ is
---     a secondary command buffer, @pRenderingInfo->flags@ /must/ not
---     include
+--     a secondary command buffer, and the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
+--     feature is not enabled, @pRenderingInfo->flags@ /must/ not include
 --     'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT'
 --
 -- == Valid Usage (Implicit)
@@ -297,11 +298,11 @@ cmdEndRendering commandBuffer = liftIO $ do
 -- = Description
 --
 -- When a pipeline is created without a 'Vulkan.Core10.Handles.RenderPass',
--- if this structure is present in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it specifies the
--- view mask and format of attachments used for rendering. If this
--- structure is not specified, and the pipeline does not include a
--- 'Vulkan.Core10.Handles.RenderPass', @viewMask@ and
+-- if the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' includes this
+-- structure, it specifies the view mask and format of attachments used for
+-- rendering. If this structure is not specified, and the pipeline does not
+-- include a 'Vulkan.Core10.Handles.RenderPass', @viewMask@ and
 -- @colorAttachmentCount@ are @0@, and @depthAttachmentFormat@ and
 -- @stencilAttachmentFormat@ are
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'. If a graphics pipeline is
@@ -314,6 +315,13 @@ cmdEndRendering commandBuffer = liftIO $ do
 -- corresponding attachment is unused within the render pass. Valid formats
 -- indicate that an attachment /can/ be used - but it is still valid to set
 -- the attachment to @NULL@ when beginning rendering.
+--
+-- If the render pass is going to be used with an external format resolve
+-- attachment, a
+-- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+-- structure /must/ also be included in the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', defining the
+-- external format of the resolve attachment that will be used.
 --
 -- == Valid Usage (Implicit)
 --
@@ -416,8 +424,9 @@ instance Zero PipelineRenderingCreateInfo where
 -- decorated with a @Location@ value of __X__, then it uses the attachment
 -- provided in @pColorAttachments@[__X__]. If the @imageView@ member of any
 -- element of @pColorAttachments@ is
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE', writes to the corresponding
--- location by a fragment are discarded.
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and @resolveMode@ is not
+-- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+-- writes to the corresponding location by a fragment are discarded.
 --
 -- == Valid Usage
 --
@@ -432,6 +441,14 @@ instance Zero PipelineRenderingCreateInfo where
 --     @pStencilAttachment@, and elements of @pColorAttachments@ that are
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been
 --     created with the same @sampleCount@
+--
+-- -   #VUID-VkRenderingInfo-None-08994# If
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'::@deviceRenderAreaCount@
+--     is 0, @renderArea.extent.width@ /must/ be greater than 0
+--
+-- -   #VUID-VkRenderingInfo-None-08995# If
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'::@deviceRenderAreaCount@
+--     is 0, @renderArea.extent.height@ /must/ be greater than 0
 --
 -- -   #VUID-VkRenderingInfo-imageView-06858# If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>
@@ -927,6 +944,41 @@ instance Zero PipelineRenderingCreateInfo where
 --     @renderArea@ /must/ specify a render area that includes the union of
 --     all per view render areas.
 --
+-- -   #VUID-VkRenderingInfo-None-09044# Valid attachments specified by
+--     this structure /must/ not be bound to memory locations that are
+--     bound to any other valid attachments specified by this structure
+--
+-- -   #VUID-VkRenderingInfo-flags-09381# If @flags@ includes
+--     'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_CONTENTS_INLINE_BIT_EXT'
+--     then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkRenderingInfo-pDepthAttachment-09318#
+--     @pDepthAttachment->resolveMode@ /must/ not be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--
+-- -   #VUID-VkRenderingInfo-pStencilAttachment-09319#
+--     @pStencilAttachment->resolveMode@ /must/ not be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--
+-- -   #VUID-VkRenderingInfo-colorAttachmentCount-09320# If
+--     @colorAttachmentCount@ is not @1@, the @resolveMode@ member of any
+--     element of @pColorAttachments@ /must/ not be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--
+-- -   #VUID-VkRenderingInfo-resolveMode-09321# If the @resolveMode@ of any
+--     element of @pColorAttachments@ is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkRenderingInfo-resolveMode-09322# If the @resolveMode@ of any
+--     element of @pColorAttachments@ is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderingInfo-sType-sType# @sType@ /must/ be
@@ -1073,24 +1125,30 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 -- Values in @imageView@ are loaded and stored according to the values of
 -- @loadOp@ and @storeOp@, within the render area for each device specified
 -- in 'RenderingInfo'. If @imageView@ is
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE', other members of this
--- structure are ignored; writes to this attachment will be discarded, and
--- no load, store, or resolve operations will be performed.
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and @resolveMode@ is not
+-- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+-- other members of this structure are ignored; writes to this attachment
+-- will be discarded, and no
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store>,
+-- or
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve>
+-- operations will be performed.
 --
 -- If @resolveMode@ is
 -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', then
 -- @resolveImageView@ is ignored. If @resolveMode@ is not
 -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and
--- @resolveImageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
--- values in @resolveImageView@ within the render area become undefined
--- once rendering begins. Only values in the aspect corresponding to the
--- use of this attachment become undefined (the depth aspect if this
--- attachment is used as 'RenderingInfo'::@pDepthAttachment@, and the
--- stencil aspect if it is used as @pStencilAttachment@).
---
--- At the end of rendering, the values written to each pixel location in
--- @imageView@ will be resolved according to @resolveMode@ and stored into
--- the same location in @resolveImageView@.
+-- @resolveImageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations render pass multisample resolve operation>
+-- is defined for the attachment subresource. If @resolveMode@ is
+-- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+-- and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+-- limit is 'Vulkan.Core10.FundamentalTypes.TRUE', values are only
+-- undefined once
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load operations>
+-- have completed.
 --
 -- Note
 --
@@ -1109,6 +1167,18 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 --
 -- Image contents at the end of a suspended render pass instance remain
 -- defined for access by a resuming render pass instance.
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+-- limit is 'Vulkan.Core10.FundamentalTypes.TRUE', and @resolveMode@ is
+-- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+-- values in the color attachment will be loaded from the resolve
+-- attachment at the start of rendering, and /may/ also be reloaded any
+-- time after a resolve occurs or the resolve attachment is written to; if
+-- this occurs it /must/ happen-before any writes to the color attachment
+-- are performed which happen-after the resolve that triggers this. If any
+-- color component in the external format is subsampled, values will be
+-- read from the nearest sample in the image when they are loaded.
 --
 -- == Valid Usage
 --
@@ -1246,6 +1316,68 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 --     @resolveImageLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR'
 --
+-- -   #VUID-VkRenderingAttachmentInfo-externalFormatResolve-09323# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     is not enabled, @resolveMode@ /must/ not be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--
+-- -   #VUID-VkRenderingAttachmentInfo-resolveMode-09324# If @resolveMode@
+--     is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     @resolveImageView@ /must/ be a valid image view
+--
+-- -   #VUID-VkRenderingAttachmentInfo-nullColorAttachmentWithExternalFormatResolve-09325#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--     property is 'Vulkan.Core10.FundamentalTypes.TRUE' and @resolveMode@
+--     is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     @resolveImageView@ /must/ have been created with an image with a
+--     @samples@ value of
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
+--
+-- -   #VUID-VkRenderingAttachmentInfo-resolveMode-09326# If @resolveMode@
+--     is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     @resolveImageView@ /must/ have been created with an external format
+--     specified by
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+--
+-- -   #VUID-VkRenderingAttachmentInfo-resolveMode-09327# If @resolveMode@
+--     is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     @resolveImageView@ /must/ have been created with a
+--     @subresourceRange.layerCount@ of @1@
+--
+-- -   #VUID-VkRenderingAttachmentInfo-resolveMode-09328# If @resolveMode@
+--     is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--     and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE', @imageView@ /must/ be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkRenderingAttachmentInfo-resolveMode-09329# If @resolveMode@
+--     is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--     and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', @imageView@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.ImageView'
+--
+-- -   #VUID-VkRenderingAttachmentInfo-resolveMode-09330# If @resolveMode@
+--     is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--     and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', @imageView@ /must/ have a
+--     format equal to the value of
+--     'Vulkan.Extensions.VK_ANDROID_external_format_resolve.AndroidHardwareBufferFormatResolvePropertiesANDROID'::@colorAttachmentFormat@
+--     as returned by a call to
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
+--     for the Android hardware buffer that was used to create
+--     @resolveImageView@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderingAttachmentInfo-sType-sType# @sType@ /must/ be
@@ -1311,21 +1443,24 @@ data RenderingAttachmentInfo = RenderingAttachmentInfo
     imageLayout :: ImageLayout
   , -- | @resolveMode@ is a
     -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits' value
-    -- defining how multisampled data written to @imageView@ will be resolved.
+    -- defining how data written to @imageView@ will be resolved into
+    -- @resolveImageView@.
     resolveMode :: ResolveModeFlagBits
-  , -- | @resolveImageView@ is an image view used to write resolved multisample
-    -- data at the end of rendering.
+  , -- | @resolveImageView@ is an image view used to write resolved data at the
+    -- end of rendering.
     resolveImageView :: ImageView
   , -- | @resolveImageLayout@ is the layout that @resolveImageView@ will be in
     -- during rendering.
     resolveImageLayout :: ImageLayout
   , -- | @loadOp@ is a 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp'
-    -- value specifying how the contents of @imageView@ are treated at the
-    -- start of the render pass instance.
+    -- value defining the
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load operation>
+    -- for the attachment.
     loadOp :: AttachmentLoadOp
   , -- | @storeOp@ is a 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
-    -- value specifying how the contents of @imageView@ are treated at the end
-    -- of the render pass instance.
+    -- value defining the
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store operation>
+    -- for the attachment.
     storeOp :: AttachmentStoreOp
   , -- | @clearValue@ is a 'Vulkan.Core10.CommandBufferBuilding.ClearValue'
     -- structure defining values used to clear @imageView@ when @loadOp@ is
@@ -1470,7 +1605,8 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 -- If @depthAttachmentFormat@, @stencilAttachmentFormat@, or any element of
 -- @pColorAttachmentFormats@ is
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it indicates that the
--- corresponding attachment is unused within the render pass.
+-- corresponding attachment is unused within the render pass and writes to
+-- those attachments are discarded.
 --
 -- == Valid Usage
 --
@@ -1498,14 +1634,14 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 --     that include
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   #VUID-VkCommandBufferInheritanceRenderingInfoKHR-pColorAttachmentFormats-06492#
+-- -   #VUID-VkCommandBufferInheritanceRenderingInfo-pColorAttachmentFormats-06492#
 --     If any element of @pColorAttachmentFormats@ is not
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
 --     with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     that include
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT',
---     or
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     , or
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --     if the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>

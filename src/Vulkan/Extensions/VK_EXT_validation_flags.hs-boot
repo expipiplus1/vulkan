@@ -17,7 +17,10 @@
 -- [__Revision__]
 --     2
 --
--- [__Extension and Version Dependencies__; __Deprecation state__]
+-- [__Ratification Status__]
+--     Not ratified
+--
+-- [__Extension and Version Dependencies__; __Deprecation State__]
 --
 --     -   /Deprecated/ by @VK_EXT_validation_features@ extension
 --

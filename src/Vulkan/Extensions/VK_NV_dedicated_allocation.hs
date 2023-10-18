@@ -17,7 +17,10 @@
 -- [__Revision__]
 --     1
 --
--- [__Extension and Version Dependencies__; __Deprecation state__]
+-- [__Ratification Status__]
+--     Not ratified
+--
+-- [__Extension and Version Dependencies__; __Deprecation State__]
 --
 --     -   /Deprecated/ by @VK_KHR_dedicated_allocation@ extension
 --
@@ -93,15 +96,15 @@
 -- >
 -- >     VkDedicatedAllocationImageCreateInfoNV dedicatedImageInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV,            // sType
--- >         NULL,                                                                   // pNext
--- >         VK_TRUE,                                                                // dedicatedAllocation
+-- >         .sType = VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV,
+-- >         .pNext = NULL,
+-- >         .dedicatedAllocation = VK_TRUE,
 -- >     };
 -- >
 -- >     VkImageCreateInfo imageCreateInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,    // sType
--- >         &dedicatedImageInfo                     // pNext
+-- >         .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+-- >         .pNext = &dedicatedImageInfo
 -- >         // Other members set as usual
 -- >     };
 -- >
@@ -109,7 +112,7 @@
 -- >     VkResult result = vkCreateImage(
 -- >         device,
 -- >         &imageCreateInfo,
--- >         NULL,                       // pAllocator
+-- >         NULL,               // pAllocator
 -- >         &image);
 -- >
 -- >     VkMemoryRequirements memoryRequirements;
@@ -123,25 +126,25 @@
 -- >
 -- >     VkDedicatedAllocationMemoryAllocateInfoNV dedicatedInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV,             // sType
--- >         NULL,                                                                       // pNext
--- >         image,                                                                      // image
--- >         VK_NULL_HANDLE,                                                             // buffer
+-- >         .sType = VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV,
+-- >         .pNext = NULL,
+-- >         .image = image,
+-- >         .buffer = VK_NULL_HANDLE,
 -- >     };
 -- >
 -- >     VkMemoryAllocateInfo memoryAllocateInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,                 // sType
--- >         &dedicatedInfo,                                         // pNext
--- >         memoryRequirements.size,                                // allocationSize
--- >         FindMemoryTypeIndex(memoryRequirements.memoryTypeBits), // memoryTypeIndex
+-- >         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+-- >         .pNext = &dedicatedInfo,
+-- >         .allocationSize = memoryRequirements.size,
+-- >         .memoryTypeIndex = FindMemoryTypeIndex(memoryRequirements.memoryTypeBits),
 -- >     };
 -- >
 -- >     VkDeviceMemory memory;
 -- >     vkAllocateMemory(
 -- >         device,
 -- >         &memoryAllocateInfo,
--- >         NULL,                       // pAllocator
+-- >         NULL,               // pAllocator
 -- >         &memory);
 -- >
 -- >     // Bind the image to the memory

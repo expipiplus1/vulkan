@@ -159,9 +159,18 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --
 -- = Description
 --
--- If @pDepthStencilResolveAttachment@ is @NULL@, or if its attachment
--- index is 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', it indicates
--- that no depth\/stencil resolve attachment will be used in the subpass.
+-- If the @pNext@ chain of
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2'
+-- includes a 'SubpassDescriptionDepthStencilResolve' structure, then that
+-- structure describes
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve operations>
+-- for the depth\/stencil attachment in a subpass. If this structure is not
+-- included in the @pNext@ chain of
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
+-- or if it is and either @pDepthStencilResolveAttachment@ is @NULL@ or its
+-- attachment index is 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', it
+-- indicates that no depth\/stencil resolve attachment will be used in the
+-- subpass.
 --
 -- == Valid Usage
 --
@@ -198,7 +207,7 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     @pDepthStencilResolveAttachment@ has a depth component, then the
 --     'Vulkan.Core10.Enums.Format.Format' of @pDepthStencilAttachment@
 --     /must/ have a depth component with the same number of bits and
---     numerical type
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03182#
 --     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
@@ -207,7 +216,7 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     @pDepthStencilResolveAttachment@ has a stencil component, then the
 --     'Vulkan.Core10.Enums.Format.Format' of @pDepthStencilAttachment@
 --     /must/ have a stencil component with the same number of bits and
---     numerical type
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03178#
 --     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have

@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
@@ -415,8 +418,8 @@ foreign import ccall
 --     @pFragmentSize@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.FundamentalTypes.Extent2D' structure
 --
--- -   #VUID-vkCmdSetFragmentShadingRateKHR-combinerOps-parameter# Any
---     given element of @combinerOps@ /must/ be a valid
+-- -   #VUID-vkCmdSetFragmentShadingRateKHR-combinerOps-parameter# Each
+--     element of @combinerOps@ /must/ be a valid
 --     'FragmentShadingRateCombinerOpKHR' value
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-commandBuffer-recording#

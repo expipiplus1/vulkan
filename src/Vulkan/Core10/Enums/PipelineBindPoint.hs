@@ -4,6 +4,7 @@ module Vulkan.Core10.Enums.PipelineBindPoint  (PipelineBindPoint( PIPELINE_BIND_
                                                                 , PIPELINE_BIND_POINT_COMPUTE
                                                                 , PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI
                                                                 , PIPELINE_BIND_POINT_RAY_TRACING_KHR
+                                                                , PIPELINE_BIND_POINT_EXECUTION_GRAPH_AMDX
                                                                 , ..
                                                                 )) where
 
@@ -26,6 +27,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutCreateInfoNV',
+-- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.PipelineIndirectDeviceAddressInfoNV',
 -- 'Vulkan.Core10.Pass.SubpassDescription',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdBindDescriptorBufferEmbeddedSamplersEXT',
@@ -33,7 +35,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdBindPipelineShaderGroupNV',
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
--- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT'
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+-- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.cmdUpdatePipelineIndirectBufferNV'
 newtype PipelineBindPoint = PipelineBindPoint Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -51,11 +54,16 @@ pattern PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI = PipelineBindPoint 100036900
 -- pipeline.
 pattern PIPELINE_BIND_POINT_RAY_TRACING_KHR = PipelineBindPoint 1000165000
 
+-- | 'PIPELINE_BIND_POINT_EXECUTION_GRAPH_AMDX' specifies binding as an
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#executiongraphs execution graph pipeline>.
+pattern PIPELINE_BIND_POINT_EXECUTION_GRAPH_AMDX = PipelineBindPoint 1000134000
+
 {-# COMPLETE
   PIPELINE_BIND_POINT_GRAPHICS
   , PIPELINE_BIND_POINT_COMPUTE
   , PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI
-  , PIPELINE_BIND_POINT_RAY_TRACING_KHR ::
+  , PIPELINE_BIND_POINT_RAY_TRACING_KHR
+  , PIPELINE_BIND_POINT_EXECUTION_GRAPH_AMDX ::
     PipelineBindPoint
   #-}
 
@@ -76,6 +84,10 @@ showTablePipelineBindPoint =
   ,
     ( PIPELINE_BIND_POINT_RAY_TRACING_KHR
     , "RAY_TRACING_KHR"
+    )
+  ,
+    ( PIPELINE_BIND_POINT_EXECUTION_GRAPH_AMDX
+    , "EXECUTION_GRAPH_AMDX"
     )
   ]
 

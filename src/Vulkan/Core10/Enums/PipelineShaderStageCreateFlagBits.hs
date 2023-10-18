@@ -52,7 +52,7 @@ newtype PipelineShaderStageCreateFlagBits = PipelineShaderStageCreateFlagBits Fl
 
 -- | 'PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT' specifies that
 -- the subgroup sizes /must/ be launched with all invocations active in the
--- compute stage.
+-- task, mesh, or compute stage.
 pattern PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT = PipelineShaderStageCreateFlagBits 0x00000002
 
 -- | 'PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT' specifies

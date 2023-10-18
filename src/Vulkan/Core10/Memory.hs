@@ -88,6 +88,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemo
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (ImportMemoryZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalBufferInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QNX_external_memory_screen_buffer (ImportScreenBufferInfoQNX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedAllocateInfo)
 import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags)
@@ -897,6 +898,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- -   'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
 --
+-- -   'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ImportScreenBufferInfoQNX'
+--     with a non-@NULL@ @buffer@ value
+--
 -- If the parameters define an import operation and the external handle
 -- type is
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
@@ -955,19 +959,19 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   #VUID-VkMemoryAllocateInfo-None-06657# The parameters /must/ not
---     define more than one
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import operation>
---
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-07897# If the parameters
 --     do not define an
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import or export operation>,
 --     @allocationSize@ /must/ be greater than @0@
 --
+-- -   #VUID-VkMemoryAllocateInfo-None-06657# The parameters /must/ not
+--     define more than one
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import operation>
+--
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-07899# If the parameters
 --     define an export operation and the handle type is not
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
---     @allocationSize@ /must/ be greater than @0@
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     , @allocationSize@ /must/ be greater than @0@
 --
 -- -   #VUID-VkMemoryAllocateInfo-buffer-06380# If the parameters define an
 --     import operation from an
@@ -1057,8 +1061,10 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     require a dedicated allocation, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@
---     or
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@,
+--     or by
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferProperties'
+--     in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.externalMemoryFeatures@,
 --     the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
@@ -1284,6 +1290,58 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     that bit /must/ be included in the Android hardware buffer’s
 --     @AHardwareBuffer_Desc@::@usage@
 --
+-- -   #VUID-VkMemoryAllocateInfo-screenBufferImport-08941# If the
+--     parameters define an import operation and the external handle type
+--     is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX',
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX'::@screenBufferImport@
+--     /must/ be enabled
+--
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-08942# If the parameters
+--     define an import operation and the external handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX',
+--     @allocationSize@ /must/ be the size returned by
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.getScreenBufferPropertiesQNX'
+--     for the QNX Screen buffer
+--
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-08943# If the parameters
+--     define an import operation and the external handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX',
+--     @memoryTypeIndex@ /must/ be one of those returned by
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.getScreenBufferPropertiesQNX'
+--     for the QNX Screen buffer
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-08944# If the parameters define an
+--     import operation, the external handle is a QNX Screen buffer, and
+--     the @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     the QNX Screen’s buffer must be a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-08945# If the parameters define an
+--     import operation, the external handle is an QNX Screen buffer, and
+--     the @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     the format of @image@ /must/ be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' or the format returned
+--     by
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.getScreenBufferPropertiesQNX'
+--     in
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ScreenBufferFormatPropertiesQNX'::@format@
+--     for the QNX Screen buffer
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-08946# If the parameters define an
+--     import operation, the external handle is a QNX Screen buffer, and
+--     the @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with @image@ that is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the width, height, and
+--     array layer dimensions of @image@ and the QNX Screen buffer’s
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.Screen_buffer'
+--     must be identical
+--
 -- -   #VUID-VkMemoryAllocateInfo-opaqueCaptureAddress-03329# If
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     is not zero,
@@ -1368,6 +1426,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
 --     'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalBufferInfoEXT',
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ImportScreenBufferInfoQNX',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo',
@@ -1407,6 +1466,7 @@ instance Extensible MemoryAllocateInfo where
   getNext MemoryAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryAllocateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImportScreenBufferInfoQNX = Just f
     | Just Refl <- eqT @e @ImportMetalBufferInfoEXT = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImportMemoryBufferCollectionFUCHSIA = Just f

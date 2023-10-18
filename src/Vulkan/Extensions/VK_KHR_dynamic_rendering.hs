@@ -17,12 +17,15 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_depth_stencil_resolve VK_KHR_depth_stencil_resolve>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
@@ -692,7 +695,7 @@ instance Zero RenderingFragmentDensityMapAttachmentInfoEXT where
 -- 'AttachmentSampleCountInfoAMD' /can/ also be included in the @pNext@
 -- chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'. When a
 -- graphics pipeline is created without a
--- 'Vulkan.Core10.Handles.RenderPass', if this structure is present in the
+-- 'Vulkan.Core10.Handles.RenderPass', if this structure is included in the
 -- @pNext@ chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it
 -- specifies the sample count of attachments used for rendering. If this
 -- structure is not specified, and the pipeline does not include a

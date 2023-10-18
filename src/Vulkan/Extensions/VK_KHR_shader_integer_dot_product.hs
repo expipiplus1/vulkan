@@ -17,10 +17,13 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
@@ -28,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Kevin Petit
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_integer_dot_product] @kevinpetit%0A*Here describe the issue or question you have about the VK_KHR_shader_integer_dot_product extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_integer_dot_product] @kpet%0A*Here describe the issue or question you have about the VK_KHR_shader_integer_dot_product extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_integer_dot_product.adoc VK_KHR_shader_integer_dot_product>
@@ -87,7 +90,7 @@
 -- This extension adds support for the integer dot product SPIR-V
 -- instructions defined in SPV_KHR_integer_dot_product. These instructions
 -- are particularly useful for neural network inference and training but
--- find uses in other general purpose compute applications as well.
+-- find uses in other general-purpose compute applications as well.
 --
 -- == New Structures
 --

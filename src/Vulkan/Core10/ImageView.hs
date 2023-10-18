@@ -103,6 +103,11 @@ foreign import ccall
 
 -- | vkCreateImageView - Create an image view from an existing image
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCreateImageView-image-09179# 'ImageViewCreateInfo'::@image@
+--     /must/ have been created from @device@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateImageView-device-parameter# @device@ /must/ be a valid
@@ -272,6 +277,7 @@ destroyImageView device imageView allocator = liftIO . evalContT $ do
 -- 'ImageViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
+-- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ScreenBufferFormatPropertiesQNX',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>
 data ComponentMapping = ComponentMapping
   { -- | @r@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
@@ -459,6 +465,7 @@ instance Zero ComponentMapping where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.HostImageLayoutTransitionInfoEXT',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
@@ -784,12 +791,14 @@ instance Zero ImageSubresourceRange where
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_BIT'
 --
--- -   #VUID-VkImageViewCreateInfo-usage-02276# If @usage@ contains
+-- -   #VUID-VkImageViewCreateInfo-usage-08931# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
 --     then the image view’s
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-02277# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
@@ -798,36 +807,30 @@ instance Zero ImageSubresourceRange where
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   #VUID-VkImageViewCreateInfo-usage-06516# If @usage@ contains
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
---     then the image view’s
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV',
---     if the image is created with
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
---     feature is enabled
---
--- -   #VUID-VkImageViewCreateInfo-usage-06517# If @usage@ contains
+-- -   #VUID-VkImageViewCreateInfo-usage-08932# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
---     then the image view’s
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     must contain
---     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV',
---     if the image is created with
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
---     feature is enabled
+--     and any of the following is true:
 --
--- -   #VUID-VkImageViewCreateInfo-usage-02652# If @usage@ contains
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
+--     -   the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--         feature is not enabled
+--
+--     -   the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nullColorAttachmentWithExternalFormatResolve nullColorAttachmentWithExternalFormatResolve>
+--         property is 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+--     -   @image@ was created with an
+--         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
+--         value of 0
+--
 --     then the image view’s
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain at least one of
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- -   #VUID-VkImageViewCreateInfo-subresourceRange-01478#
 --     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
@@ -883,7 +886,7 @@ instance Zero ImageSubresourceRange where
 --     computed from @baseMipLevel@ and @extent.depth@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created,
 --     according to the formula defined in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
 --
 -- -   #VUID-VkImageViewCreateInfo-subresourceRange-02725# If
 --     @subresourceRange.layerCount@ is not
@@ -899,7 +902,7 @@ instance Zero ImageSubresourceRange where
 --     @baseMipLevel@ and @extent.depth@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created,
 --     according to the formula defined in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01761# If @image@ was created with
 --     the
@@ -940,8 +943,8 @@ instance Zero ImageSubresourceRange where
 --     flag, if the @format@ of the @image@ is a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format, and if @subresourceRange.aspectMask@ is one of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect masks>,
---     then @format@ /must/ be compatible with the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bits, then @format@ /must/ be compatible with the
 --     'Vulkan.Core10.Enums.Format.Format' for the plane of the @image@
 --     @format@ indicated by @subresourceRange.aspectMask@, as defined in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
@@ -949,6 +952,7 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-subresourceRange-07818#
 --     @subresourceRange.aspectMask@ /must/ only have at most 1 valid
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01762# If @image@ was not created
 --     with the
@@ -1001,18 +1005,34 @@ instance Zero ImageSubresourceRange where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-compatibility view type compatibility table>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02399# If @image@ has an
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats Android external format>,
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02400# If @image@ has an
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats Android external format>,
 --     the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a @conversion@ object created with the same external
 --     format as @image@
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02401# If @image@ has an
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats Android external format>,
+--     all members of @components@ /must/ be the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08957# If @image@ has an
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-external-formats QNX Screen external format>,
+--     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08958# If @image@ has an
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-external-formats QNX Screen external format>,
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
+--     structure with a @conversion@ object created with the same external
+--     format as @image@
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08959# If @image@ has an
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-external-formats QNX Screen external format>,
 --     all members of @components@ /must/ be the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --

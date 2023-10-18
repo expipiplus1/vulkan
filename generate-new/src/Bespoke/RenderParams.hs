@@ -48,6 +48,7 @@ renderParams handles = r
             . ( case parent of
                   "VkPerformanceCounterResultKHR" -> (<> "Counter")
                   "VkDeviceOrHostAddressConstKHR" -> (<> "Const")
+                  "VkDeviceOrHostAddressConstAMDX" -> (<> "ConstAMDX")
                   "VkDescriptorDataEXT" -> articalize
                   _ -> id
               )

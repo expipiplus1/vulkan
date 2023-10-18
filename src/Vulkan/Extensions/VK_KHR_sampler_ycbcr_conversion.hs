@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     14
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
 --     and
@@ -26,7 +29,7 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -162,11 +165,6 @@
 --     -   'CHROMA_LOCATION_COSITED_EVEN_KHR'
 --
 --     -   'CHROMA_LOCATION_MIDPOINT_KHR'
---
--- -   Extending
---     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
---
---     -   'DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.Format.Format':
 --
@@ -315,6 +313,8 @@
 --
 --     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT'
 --
+--     -   'DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT'
+--
 -- == Version History
 --
 -- -   Revision 1, 2017-01-24 (Andrew Garrard)
@@ -399,7 +399,6 @@ module Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion  ( pattern STRUCTURE_TY
                                                           , pattern STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO_KHR
                                                           , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES_KHR
                                                           , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES_KHR
-                                                          , pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT
                                                           , pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR
                                                           , pattern FORMAT_G8B8G8R8_422_UNORM_KHR
                                                           , pattern FORMAT_B8G8R8G8_422_UNORM_KHR
@@ -455,6 +454,7 @@ module Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion  ( pattern STRUCTURE_TY
                                                           , pattern SAMPLER_YCBCR_RANGE_ITU_NARROW_KHR
                                                           , pattern CHROMA_LOCATION_COSITED_EVEN_KHR
                                                           , pattern CHROMA_LOCATION_MIDPOINT_KHR
+                                                          , pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT
                                                           , createSamplerYcbcrConversionKHR
                                                           , destroySamplerYcbcrConversionKHR
                                                           , SamplerYcbcrConversionKHR
@@ -583,10 +583,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES_KHR = S
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES_KHR"
 pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES_KHR = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
-
-
--- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT = DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
 
 
 -- No documentation found for TopLevel "VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR"
@@ -807,6 +803,10 @@ pattern CHROMA_LOCATION_COSITED_EVEN_KHR = CHROMA_LOCATION_COSITED_EVEN
 
 -- No documentation found for TopLevel "VK_CHROMA_LOCATION_MIDPOINT_KHR"
 pattern CHROMA_LOCATION_MIDPOINT_KHR = CHROMA_LOCATION_MIDPOINT
+
+
+-- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT = DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
 
 
 -- No documentation found for TopLevel "vkCreateSamplerYcbcrConversionKHR"

@@ -17,7 +17,10 @@
 -- [__Revision__]
 --     3
 --
--- [__Extension and Version Dependencies__; __Deprecation state__]
+-- [__Ratification Status__]
+--     Ratified
+--
+-- [__Extension and Version Dependencies__; __Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
@@ -86,7 +89,7 @@
 --
 -- >     VkSamplerCreateInfo createInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO // sType
+-- >         .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
 -- >         // Other members set to application-desired values
 -- >     };
 -- >

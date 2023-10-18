@@ -20,12 +20,15 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-data BlitImageInfo2
+type role BlitImageInfo2 nominal
+data BlitImageInfo2 (es :: [Type])
 
-instance ToCStruct BlitImageInfo2
-instance Show BlitImageInfo2
+instance ( Extendss BlitImageInfo2 es
+         , PokeChain es ) => ToCStruct (BlitImageInfo2 es)
+instance Show (Chain es) => Show (BlitImageInfo2 es)
 
-instance FromCStruct BlitImageInfo2
+instance ( Extendss BlitImageInfo2 es
+         , PeekChain es ) => FromCStruct (BlitImageInfo2 es)
 
 
 data BufferCopy2

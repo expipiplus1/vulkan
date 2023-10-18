@@ -229,6 +229,15 @@ foreign import ccall
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
+-- -   #VUID-vkBindBufferMemory-bufferDeviceAddressCaptureReplay-09200# If
+--     the
+--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddressCaptureReplay@
+--     feature is enabled and @buffer@ was created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--     bit set
+--
 -- -   #VUID-vkBindBufferMemory-buffer-06408# If @buffer@ was created with
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
 --     chained to 'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@,
@@ -237,12 +246,17 @@ foreign import ccall
 --     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
 --
 -- -   #VUID-vkBindBufferMemory-descriptorBufferCaptureReplay-08112# If the
---     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT'
---     ::@descriptorBufferCaptureReplay@ feature is enabled and @buffer@
---     was created with the
+--     @buffer@ was created with the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
+--
+-- -   #VUID-vkBindBufferMemory-buffer-09201# If the @buffer@ was created
+--     with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
 --
 -- == Valid Usage (Implicit)
@@ -334,6 +348,11 @@ foreign import ccall
 -- -   #VUID-vkGetImageMemoryRequirements-image-04004# If @image@ was
 --     created with the
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     external memory handle type, then @image@ /must/ be bound to memory
+--
+-- -   #VUID-vkGetImageMemoryRequirements-image-08960# If @image@ was
+--     created with the
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX'
 --     external memory handle type, then @image@ /must/ be bound to memory
 --
 -- == Valid Usage (Implicit)
@@ -499,12 +518,17 @@ foreign import ccall
 --     when @image@ was created
 --
 -- -   #VUID-vkBindImageMemory-descriptorBufferCaptureReplay-08113# If the
---     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT'
---     ::@descriptorBufferCaptureReplay@ feature is enabled and @image@ was
---     created with the
+--     @image@ was created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
+--
+-- -   #VUID-vkBindImageMemory-image-09202# If the @image@ was created with
+--     the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
 --
 -- -   #VUID-vkBindImageMemory-image-01608# @image@ /must/ not have been

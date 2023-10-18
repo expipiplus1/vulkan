@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -140,6 +143,10 @@
 --
 -- -   #VUID-vkGetDescriptorSetHostMappingVALVE-ppData-parameter# @ppData@
 --     /must/ be a valid pointer to a pointer value
+--
+-- -   #VUID-vkGetDescriptorSetHostMappingVALVE-descriptorSet-parent#
+--     @descriptorSet@ /must/ have been created, allocated, or retrieved
+--     from @device@
 --
 -- There is currently no specification language written for this type. This
 -- section acts only as placeholder and to avoid dead links in the

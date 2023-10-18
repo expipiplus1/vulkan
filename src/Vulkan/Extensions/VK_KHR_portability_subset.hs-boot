@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -59,7 +62,7 @@
 --
 -- == Description
 --
--- The \`VK_KHR_portability_subset extension allows a non-conformant Vulkan
+-- The @VK_KHR_portability_subset@ extension allows a non-conformant Vulkan
 -- implementation to be built on top of another non-Vulkan graphics API,
 -- and identifies differences between that implementation and a
 -- fully-conformant native Vulkan implementation.

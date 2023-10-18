@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Matthaeus G. Chajdas
@@ -49,7 +52,8 @@
 -- == New Structures
 --
 -- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo':
+--     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+--     'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX':
 --
 --     -   'PipelineCompilerControlCreateInfoAMD'
 --

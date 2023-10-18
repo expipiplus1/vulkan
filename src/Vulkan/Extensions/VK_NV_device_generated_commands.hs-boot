@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     3
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --     and
@@ -137,7 +140,7 @@
 -- -   a flag that encodes the primitive winding
 --
 -- While the GPU can be faster than a CPU to generate the commands, it will
--- not happen asynchronously to the device, therefore the primary use-case
+-- not happen asynchronously to the device, therefore the primary use case
 -- is generating “less” total work (occlusion culling, classification to
 -- use specialized shaders, etc.).
 --

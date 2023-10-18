@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
 --
@@ -328,7 +331,7 @@ getMemoryWin32HandlePropertiesKHR :: forall io
                                   -> -- | @handle@ is the handle which will be imported.
                                      --
                                      -- #VUID-vkGetMemoryWin32HandlePropertiesKHR-handle-00665# @handle@ /must/
-                                     -- be an external memory handle created outside of the Vulkan API
+                                     -- point to a valid Windows memory handle
                                      HANDLE
                                   -> io (MemoryWin32HandlePropertiesKHR)
 getMemoryWin32HandlePropertiesKHR device
@@ -503,12 +506,12 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 -- is included in the @pNext@ chain of
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo' with a Windows @handleType@,
 -- but either 'ExportMemoryWin32HandleInfoKHR' is not included in the
--- @pNext@ chain, or if it is but @pAttributes@ is set to @NULL@, default
--- security descriptor values will be used, and child processes created by
--- the application will not inherit the handle, as described in the MSDN
--- documentation for “Synchronization Object Security and Access Rights”1.
--- Further, if the structure is not present, the access rights used depend
--- on the handle type.
+-- @pNext@ chain, or it is included but @pAttributes@ is set to @NULL@,
+-- default security descriptor values will be used, and child processes
+-- created by the application will not inherit the handle, as described in
+-- the MSDN documentation for “Synchronization Object Security and Access
+-- Rights”1. Further, if the structure is not present, the access rights
+-- used depend on the handle type.
 --
 -- For handles of the following types:
 --

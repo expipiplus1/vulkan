@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 --     and
@@ -258,7 +261,7 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_EXT'
 --
--- == Reference code
+-- == Reference Code
 --
 -- > uint32_t BarycentricsToSpaceFillingCurveIndex(float u, float v, uint32_t level)
 -- > {
@@ -617,13 +620,25 @@ foreign import ccall
 -- that can be built into a micromap is determined by the parameters of
 -- 'MicromapCreateInfoEXT'.
 --
--- Populating the data in the object after allocating and binding memory is
--- done with commands such as 'cmdBuildMicromapsEXT', 'buildMicromapsEXT',
+-- The micromap data is stored in the object referred to by
+-- 'MicromapCreateInfoEXT'::@buffer@. Once memory has been bound to that
+-- buffer, it /must/ be populated by micromap build or micromap copy
+-- commands such as 'cmdBuildMicromapsEXT', 'buildMicromapsEXT',
 -- 'cmdCopyMicromapEXT', and 'copyMicromapEXT'.
+--
+-- Note
+--
+-- The expected usage for a trace capture\/replay tool is that it will
+-- serialize and later deserialize the micromap data using micromap copy
+-- commands. During capture the tool will use 'copyMicromapToMemoryEXT' or
+-- 'cmdCopyMicromapToMemoryEXT' with a @mode@ of
+-- 'COPY_MICROMAP_MODE_SERIALIZE_EXT', and 'copyMemoryToMicromapEXT' or
+-- 'cmdCopyMemoryToMicromapEXT' with a @mode@ of
+-- 'COPY_MICROMAP_MODE_DESERIALIZE_EXT' during replay.
 --
 -- The input buffers passed to micromap build commands will be referenced
 -- by the implementation for the duration of the command. Micromaps /must/
--- be fully self-contained. The application /may/ re-use or free any memory
+-- be fully self-contained. The application /can/ reuse or free any memory
 -- which was used by the command as an input or as scratch without
 -- affecting the results of a subsequent acceleration structure build using
 -- the micromap or traversal of that acceleration structure.
@@ -2252,6 +2267,10 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkGetMicromapBuildSizesEXT-dstMicromap-09180#
+--     'MicromapBuildInfoEXT'::@dstMicromap@ /must/ have been created from
+--     @device@
+--
 -- -   #VUID-vkGetMicromapBuildSizesEXT-micromap-07439# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromap micromap>
 --     feature /must/ be enabled
@@ -3465,6 +3484,7 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 --     @usageCountsCount@ valid pointers to 'MicromapUsageEXT' structures
 --
 -- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-micromap-parameter#
+--     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @micromap@ /must/ be a valid 'Vulkan.Extensions.Handles.MicromapEXT'
 --     handle
 --
@@ -3526,7 +3546,6 @@ instance ToCStruct AccelerationStructureTrianglesOpacityMicromapEXT where
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr MicromapUsageEXT)))) (nullPtr)
-    lift $ poke ((p `plusPtr` 64 :: Ptr MicromapEXT)) (zero)
     lift $ f
 
 instance Zero AccelerationStructureTrianglesOpacityMicromapEXT where

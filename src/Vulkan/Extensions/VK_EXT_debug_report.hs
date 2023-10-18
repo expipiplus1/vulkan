@@ -17,7 +17,10 @@
 -- [__Revision__]
 --     10
 --
--- [__Extension and Version Dependencies__; __Deprecation state__]
+-- [__Ratification Status__]
+--     Not ratified
+--
+-- [__Extension and Version Dependencies__; __Deprecation State__]
 --
 --     -   /Deprecated/ by @VK_EXT_debug_utils@ extension
 --
@@ -144,12 +147,12 @@
 -- >     VkDebugReportCallbackEXT cb1, cb2, cb3;
 -- >
 -- >     VkDebugReportCallbackCreateInfoEXT callback1 = {
--- >             VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,    // sType
--- >             NULL,                                                       // pNext
--- >             VK_DEBUG_REPORT_ERROR_BIT_EXT |                             // flags
--- >             VK_DEBUG_REPORT_WARNING_BIT_EXT,
--- >             myOutputDebugString,                                        // pfnCallback
--- >             NULL                                                        // pUserData
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,
+-- >         .pNext = NULL,
+-- >         .flags = VK_DEBUG_REPORT_ERROR_BIT_EXT |
+-- >                  VK_DEBUG_REPORT_WARNING_BIT_EXT,
+-- >         .pfnCallback = myOutputDebugString,
+-- >         .pUserData = NULL
 -- >     };
 -- >     res = vkCreateDebugReportCallbackEXT(instance, &callback1, &cb1);
 -- >     if (res != VK_SUCCESS)
@@ -163,11 +166,11 @@
 -- >        /* Do error handling for VK_ERROR_OUT_OF_MEMORY */
 -- >
 -- >     VkDebugReportCallbackCreateInfoEXT callback3 = {
--- >             VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,    // sType
--- >             NULL,                                                       // pNext
--- >             VK_DEBUG_REPORT_WARNING_BIT_EXT,                            // flags
--- >             mystdOutLogger,                                             // pfnCallback
--- >             NULL                                                        // pUserData
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,
+-- >         .pNext = NULL,
+-- >         .flags = VK_DEBUG_REPORT_WARNING_BIT_EXT,
+-- >         .pfnCallback = mystdOutLogger,
+-- >         .pUserData = NULL
 -- >     };
 -- >     res = vkCreateDebugReportCallbackEXT(instance, &callback3, &cb3);
 -- >     if (res != VK_SUCCESS)

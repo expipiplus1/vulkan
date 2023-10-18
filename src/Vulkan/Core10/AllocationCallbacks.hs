@@ -25,6 +25,36 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- | VkAllocationCallbacks - Structure containing callback function pointers
 -- for memory allocation
 --
+-- = Description
+--
+-- -   @pUserData@ is a value to be interpreted by the implementation of
+--     the callbacks. When any of the callbacks in 'AllocationCallbacks'
+--     are called, the Vulkan implementation will pass this value as the
+--     first parameter to the callback. This value /can/ vary each time an
+--     allocator is passed into a command, even when the same object takes
+--     an allocator in multiple commands.
+--
+-- -   @pfnAllocation@ is a
+--     'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction' pointer to an
+--     application-defined memory allocation function.
+--
+-- -   @pfnReallocation@ is a
+--     'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction' pointer to
+--     an application-defined memory reallocation function.
+--
+-- -   @pfnFree@ is a 'Vulkan.Core10.FuncPointers.PFN_vkFreeFunction'
+--     pointer to an application-defined memory free function.
+--
+-- -   @pfnInternalAllocation@ is a
+--     'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification'
+--     pointer to an application-defined function that is called by the
+--     implementation when the implementation makes internal allocations.
+--
+-- -   @pfnInternalFree@ is a
+--     'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification' pointer
+--     to an application-defined function that is called by the
+--     implementation when the implementation frees internal allocations.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkAllocationCallbacks-pfnAllocation-00632# @pfnAllocation@
@@ -73,7 +103,9 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Extensions.VK_EXT_directfb_surface.createDirectFBSurfaceEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayModeKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayPlaneSurfaceKHR',
--- 'Vulkan.Core10.Event.createEvent', 'Vulkan.Core10.Fence.createFence',
+-- 'Vulkan.Core10.Event.createEvent',
+-- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.createExecutionGraphPipelinesAMDX',
+-- 'Vulkan.Core10.Fence.createFence',
 -- 'Vulkan.Core10.Pass.createFramebuffer',
 -- 'Vulkan.Core10.Pipeline.createGraphicsPipelines',
 -- 'Vulkan.Extensions.VK_EXT_headless_surface.createHeadlessSurfaceEXT',
@@ -161,33 +193,17 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDeviceEventEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT'
 data AllocationCallbacks = AllocationCallbacks
-  { -- | @pUserData@ is a value to be interpreted by the implementation of the
-    -- callbacks. When any of the callbacks in 'AllocationCallbacks' are
-    -- called, the Vulkan implementation will pass this value as the first
-    -- parameter to the callback. This value /can/ vary each time an allocator
-    -- is passed into a command, even when the same object takes an allocator
-    -- in multiple commands.
+  { -- No documentation found for Nested "VkAllocationCallbacks" "pUserData"
     userData :: Ptr ()
-  , -- | @pfnAllocation@ is a
-    -- 'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction' pointer to an
-    -- application-defined memory allocation function.
+  , -- No documentation found for Nested "VkAllocationCallbacks" "pfnAllocation"
     pfnAllocation :: PFN_vkAllocationFunction
-  , -- | @pfnReallocation@ is a
-    -- 'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction' pointer to an
-    -- application-defined memory reallocation function.
+  , -- No documentation found for Nested "VkAllocationCallbacks" "pfnReallocation"
     pfnReallocation :: PFN_vkReallocationFunction
-  , -- | @pfnFree@ is a 'Vulkan.Core10.FuncPointers.PFN_vkFreeFunction' pointer
-    -- to an application-defined memory free function.
+  , -- No documentation found for Nested "VkAllocationCallbacks" "pfnFree"
     pfnFree :: PFN_vkFreeFunction
-  , -- | @pfnInternalAllocation@ is a
-    -- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification'
-    -- pointer to an application-defined function that is called by the
-    -- implementation when the implementation makes internal allocations.
+  , -- No documentation found for Nested "VkAllocationCallbacks" "pfnInternalAllocation"
     pfnInternalAllocation :: PFN_vkInternalAllocationNotification
-  , -- | @pfnInternalFree@ is a
-    -- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification' pointer to
-    -- an application-defined function that is called by the implementation
-    -- when the implementation frees internal allocations.
+  , -- No documentation found for Nested "VkAllocationCallbacks" "pfnInternalFree"
     pfnInternalFree :: PFN_vkInternalFreeNotification
   }
   deriving (Typeable)

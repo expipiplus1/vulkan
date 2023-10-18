@@ -303,6 +303,10 @@ foreign import ccall
 --     @descriptorUpdateTemplate@ /must/ be a valid
 --     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
 --
+-- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorSet-parent#
+--     @descriptorSet@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
 -- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorUpdateTemplate-parent#
 --     @descriptorUpdateTemplate@ /must/ have been created, allocated, or
 --     retrieved from @device@
@@ -326,49 +330,49 @@ foreign import ccall
 -- > {
 -- >     // binding to a single image descriptor
 -- >     {
--- >         0,                                           // binding
--- >         0,                                           // dstArrayElement
--- >         1,                                           // descriptorCount
--- >         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType
--- >         offsetof(AppDataStructure, imageInfo),       // offset
--- >         0                                            // stride is not required if descriptorCount is 1
+-- >         .binding = 0,
+-- >         .dstArrayElement = 0,
+-- >         .descriptorCount = 1,
+-- >         .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+-- >         .offset = offsetof(AppDataStructure, imageInfo),
+-- >         .stride = 0         // stride not required if descriptorCount is 1
 -- >     },
 -- >
 -- >     // binding to an array of buffer descriptors
 -- >     {
--- >         1,                                           // binding
--- >         0,                                           // dstArrayElement
--- >         3,                                           // descriptorCount
--- >         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,           // descriptorType
--- >         offsetof(AppDataStructure, bufferInfoArray), // offset
--- >         sizeof(VkDescriptorBufferInfo)               // stride, descriptor buffer infos are compact
+-- >         .binding = 1,
+-- >         .dstArrayElement = 0,
+-- >         .descriptorCount = 3,
+-- >         .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+-- >         .offset = offsetof(AppDataStructure, bufferInfoArray),
+-- >         .stride = sizeof(VkDescriptorBufferInfo)    // descriptor buffer infos are compact
 -- >     },
 -- >
 -- >     // binding to an array of buffer views
 -- >     {
--- >         2,                                           // binding
--- >         0,                                           // dstArrayElement
--- >         2,                                           // descriptorCount
--- >         VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER,     // descriptorType
--- >         offsetof(AppDataStructure, bufferView) +
--- >           offsetof(AppBufferView, bufferView),       // offset
--- >         sizeof(AppBufferView)                        // stride, bufferViews do not have to be compact
+-- >         .binding = 2,
+-- >         .dstArrayElement = 0,
+-- >         .descriptorCount = 2,
+-- >         .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER,
+-- >         .offset = offsetof(AppDataStructure, bufferView) +
+-- >                   offsetof(AppBufferView, bufferView),
+-- >         .stride = sizeof(AppBufferView)             // bufferViews do not have to be compact
 -- >     },
 -- > };
 -- >
 -- > // create a descriptor update template for descriptor set updates
 -- > const VkDescriptorUpdateTemplateCreateInfo createInfo =
 -- > {
--- >     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
--- >     NULL,                                                      // pNext
--- >     0,                                                         // flags
--- >     3,                                                         // descriptorUpdateEntryCount
--- >     descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries
--- >     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET,         // templateType
--- >     myLayout,                                                  // descriptorSetLayout
--- >     0,                                                         // pipelineBindPoint, ignored by given templateType
--- >     0,                                                         // pipelineLayout, ignored by given templateType
--- >     0,                                                         // set, ignored by given templateType
+-- >     .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,
+-- >     .pNext = NULL,
+-- >     .flags = 0,
+-- >     .descriptorUpdateEntryCount = 3,
+-- >     .pDescriptorUpdateEntries = descriptorUpdateTemplateEntries,
+-- >     .templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET,
+-- >     .descriptorSetLayout = myLayout,
+-- >     .pipelineBindPoint = 0,     // ignored by given templateType
+-- >     .pipelineLayout = 0,        // ignored by given templateType
+-- >     .set = 0,                   // ignored by given templateType
 -- > };
 -- >
 -- > VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;

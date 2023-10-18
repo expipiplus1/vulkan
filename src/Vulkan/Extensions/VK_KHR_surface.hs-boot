@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     25
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   James Jones

@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>
 --     and
@@ -123,11 +126,6 @@
 --
 -- -   'FUCHSIA_BUFFER_COLLECTION_SPEC_VERSION'
 --
--- -   Extending
---     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT'
---
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA'
@@ -153,6 +151,15 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_MEMORY_BUFFER_COLLECTION_FUCHSIA'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SYSMEM_COLOR_SPACE_FUCHSIA'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT'
 --
 -- == Issues
 --

@@ -288,10 +288,13 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
 -- is set, results for all queries in @queryPool@ identified by
 -- @firstQuery@ and @queryCount@ are copied to @pData@, along with an extra
--- availability value written directly after the results of each query and
--- interpreted as an unsigned integer. A value of zero indicates that the
--- results are not yet available, otherwise the query is complete and
--- results are available.
+-- availability or status value written directly after the results of each
+-- query and interpreted as an unsigned integer. A value of zero indicates
+-- that the results are not yet available, otherwise the query is complete
+-- and results are available. The size of the availability or status values
+-- is 64 bits if
+-- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set in
+-- @flags@. Otherwise, it is 32 bits.
 --
 -- If @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@ is set, results for all queries
 -- in @queryPool@ identified by @firstQuery@ and @queryCount@ are copied to
@@ -306,6 +309,14 @@ foreign import ccall
 -- defines specific meaning for values returned here, though
 -- implementations are free to return other values.
 --
+-- Note
+--
+-- If
+-- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
+-- or @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@ is set, the layout of data in
+-- the buffer is a /(result,availability)/ or /(result,status)/ pair for
+-- each query returned, and @stride@ is the stride between each pair.
+--
 -- Results for any available query written by this command are final and
 -- represent the final result of the query. If
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' is
@@ -314,9 +325,9 @@ foreign import ccall
 -- Otherwise, any result written by this command is undefined.
 --
 -- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set,
--- results and availability or status values for all queries are written as
--- an array of 64-bit values. If the @queryPool@ was created with
--- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
+-- results and, if returned, availability or status values for all queries
+-- are written as an array of 64-bit values. If the @queryPool@ was created
+-- with 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 -- results for each query are written as an array of the type indicated by
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterKHR'::@storage@
 -- for the counter being queried. Otherwise, results and availability or
@@ -398,6 +409,12 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set
 --     in @flags@ then @pData@ and @stride@ /must/ be multiples of @8@
 --
+-- -   #VUID-vkGetQueryPoolResults-stride-08993# If
+--     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
+--     is set, @stride@ /must/ be large enough to contain the unsigned
+--     integer representing availability or status in addition to the query
+--     result.
+--
 -- -   #VUID-vkGetQueryPoolResults-queryType-03229# If the @queryType@ used
 --     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
@@ -407,7 +424,7 @@ foreign import ccall
 -- -   #VUID-vkGetQueryPoolResults-queryType-04519# If the @queryType@ used
 --     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     then @stride@ /must/ be large enough to contain
+--     then @stride@ /must/ be large enough to contain the
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@counterIndexCount@
 --     used to create @queryPool@ times the size of
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'
@@ -431,7 +448,8 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT',
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
+--     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@,
+--     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT',
 --     or 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
 --
 -- -   #VUID-vkGetQueryPoolResults-queryType-03231# If the @queryType@ used

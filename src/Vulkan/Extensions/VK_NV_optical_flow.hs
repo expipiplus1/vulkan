@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     and
@@ -885,7 +888,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdOpticalFlowExecuteNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support opticalflow operations
+--     allocated from /must/ support optical flow operations
 --
 -- -   #VUID-vkCmdOpticalFlowExecuteNV-renderpass# This command /must/ only
 --     be called outside of a render pass instance

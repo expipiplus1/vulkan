@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
@@ -101,14 +104,14 @@
 --
 -- == Issues
 --
--- > (1) Do we need to support Bresenham-style and smooth lines with more than
--- > one rasterization sample? i.e. the equivalent of glDisable(GL_MULTISAMPLE)
--- > in OpenGL when the framebuffer has more than one sample?
+-- 1) Do we need to support Bresenham-style and smooth lines with more than
+-- one rasterization sample? i.e. the equivalent of
+-- glDisable(GL_MULTISAMPLE) in OpenGL when the framebuffer has more than
+-- one sample?
 --
--- > RESOLVED: Yes.
--- > For simplicity, Bresenham line rasterization carries forward a few
--- > restrictions from OpenGL, such as not supporting per-sample shading, alpha
--- > to coverage, or alpha to one.
+-- __RESOLVED__: Yes. For simplicity, Bresenham line rasterization carries
+-- forward a few restrictions from OpenGL, such as not supporting
+-- per-sample shading, alpha to coverage, or alpha to one.
 --
 -- == Version History
 --

@@ -221,12 +221,13 @@ myRecordCommandBuffer Frame {..} imageIndex = do
       PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
       zero
       []
-      [ zero { srcAccessMask = ACCESS_HOST_WRITE_BIT
-             , dstAccessMask = ACCESS_SHADER_READ_BIT
-             , buffer        = fCameraMatricesBuffer
-             , offset        = fCameraMatricesOffset
-             , size = fromIntegral (sizeOf (undefined :: CameraMatrices))
-             }
+      [ SomeStruct
+          zero { srcAccessMask = ACCESS_HOST_WRITE_BIT
+               , dstAccessMask = ACCESS_SHADER_READ_BIT
+               , buffer        = fCameraMatricesBuffer
+               , offset        = fCameraMatricesOffset
+               , size = fromIntegral (sizeOf (undefined :: CameraMatrices))
+               }
       ]
       []
 

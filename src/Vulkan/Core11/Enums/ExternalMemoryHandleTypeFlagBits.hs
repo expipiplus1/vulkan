@@ -8,6 +8,7 @@ module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHan
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+                                                                                               , EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
@@ -68,6 +69,8 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'              | No restriction                                                                                             | No restriction                                                                                             |
 -- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV'                 | No restriction                                                                                             | No restriction                                                                                             |
+-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX'               | No restriction                                                                                             | No restriction                                                                                             |
 -- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 --
 -- External memory handle types compatibility
@@ -165,6 +168,13 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = ExternalMemoryHandleTypeFla
 -- Direct3D resource.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = ExternalMemoryHandleTypeFlagBits 0x00000040
 
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX' specifies a
+-- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.Screen_buffer'
+-- object defined by the QNX SDP. See
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-qnx-screen-buffer QNX Screen Buffer>
+-- for more details of this handle type.
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX = ExternalMemoryHandleTypeFlagBits 0x00004000
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV' is a handle to an
 -- allocation accessible by remote devices. It owns a reference to the
 -- underlying memory resource represented by its Vulkan memory object.
@@ -235,6 +245,10 @@ showTableExternalMemoryHandleTypeFlagBits =
   ,
     ( EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
     , "D3D12_RESOURCE_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX
+    , "SCREEN_BUFFER_BIT_QNX"
     )
   ,
     ( EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV

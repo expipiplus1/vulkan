@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     25
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   James Jones
@@ -1278,6 +1281,7 @@ instance Zero SurfaceFormatKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
+-- 'Vulkan.Extensions.VK_NV_low_latency2.LatencySurfaceCapabilitiesNV',
 -- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT',
 -- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
@@ -1301,7 +1305,7 @@ pattern PRESENT_MODE_IMMEDIATE_KHR = PresentModeKHR 0
 -- hold pending presentation requests. If the queue is full when a new
 -- presentation request is received, the new request replaces the existing
 -- entry, and any images associated with the prior entry become available
--- for re-use by the application. One request is removed from the queue and
+-- for reuse by the application. One request is removed from the queue and
 -- processed during each vertical blanking period in which the queue is
 -- non-empty.
 pattern PRESENT_MODE_MAILBOX_KHR = PresentModeKHR 1
@@ -1431,9 +1435,9 @@ instance Read PresentModeKHR where
 -- For a traditional “Linear” or non-gamma transfer function color space
 -- use 'COLOR_SPACE_PASS_THROUGH_EXT'.
 --
--- The color components of non-linear color space swap chain images /must/
+-- The color components of non-linear color space swapchain images /must/
 -- have had the appropriate transfer function applied. The color space
--- selected for the swap chain image will not affect the processing of data
+-- selected for the swapchain image will not affect the processing of data
 -- written into the image by the implementation. Vulkan requires that all
 -- implementations support the sRGB transfer function by use of an SRGB
 -- pixel format. Other transfer functions, such as SMPTE 170M or SMPTE2084,

@@ -91,6 +91,11 @@ import GHC.Show (Show(showsPrec))
 -- possible. If no issues are identified it could be an implementation
 -- issue, and the implementor should be contacted for support.
 --
+-- Any command returning a 'Result' /may/ return
+-- 'ERROR_VALIDATION_FAILED_EXT' if a violation of valid usage is detected,
+-- even though commands do not explicitly list this as a possible return
+-- code.
+--
 -- Performance-critical commands generally do not have return codes. If a
 -- runtime error occurs in such commands, the implementation will defer
 -- reporting the error until a specified point. For commands that record
@@ -218,7 +223,8 @@ pattern ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT = Result (-1000158000
 -- @VK_EXT_debug_report@ if enabled.
 pattern ERROR_INVALID_SHADER_NV = Result (-1000012000)
 
--- No documentation found for Nested "VkResult" "VK_ERROR_VALIDATION_FAILED_EXT"
+-- | 'ERROR_VALIDATION_FAILED_EXT' A command failed because invalid usage was
+-- detected by the implementation or a validation-layer.
 pattern ERROR_VALIDATION_FAILED_EXT = Result (-1000011001)
 
 -- | 'ERROR_INCOMPATIBLE_DISPLAY_KHR' The display used by a swapchain does

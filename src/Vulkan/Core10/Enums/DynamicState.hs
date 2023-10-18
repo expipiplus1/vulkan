@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_STENCIL_COMPARE_MASK
                                                       , DYNAMIC_STATE_STENCIL_WRITE_MASK
                                                       , DYNAMIC_STATE_STENCIL_REFERENCE
+                                                      , DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
                                                       , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
                                                       , DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
                                                       , DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV
@@ -118,14 +119,18 @@ pattern DYNAMIC_STATE_SCISSOR = DynamicState 1
 -- commands that generate line primitives for the rasterizer.
 pattern DYNAMIC_STATE_LINE_WIDTH = DynamicState 2
 
--- | 'DYNAMIC_STATE_DEPTH_BIAS' specifies that the @depthBiasConstantFactor@,
--- @depthBiasClamp@ and @depthBiasSlopeFactor@ states in
+-- | 'DYNAMIC_STATE_DEPTH_BIAS' specifies that any instance of
+-- 'Vulkan.Extensions.VK_EXT_depth_bias_control.DepthBiasRepresentationInfoEXT'
+-- included in the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' as well as
+-- the @depthBiasConstantFactor@, @depthBiasClamp@ and
+-- @depthBiasSlopeFactor@ states in
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
--- ignored and /must/ be set dynamically with
--- 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBias' before any draws
--- are performed with @depthBiasEnable@ in
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' set to
--- 'Vulkan.Core10.FundamentalTypes.TRUE'.
+-- ignored and /must/ be set dynamically with either
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBias' or
+-- 'Vulkan.Extensions.VK_EXT_depth_bias_control.cmdSetDepthBias2EXT' before
+-- any draws are performed with
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-depthbias-enable depth bias enabled>.
 pattern DYNAMIC_STATE_DEPTH_BIAS = DynamicState 3
 
 -- | 'DYNAMIC_STATE_BLEND_CONSTANTS' specifies that the @blendConstants@
@@ -175,6 +180,15 @@ pattern DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
 -- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
+
+-- | 'DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT' specifies that the
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
+-- and
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
+-- flags will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state.cmdSetAttachmentFeedbackLoopEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT = DynamicState 1000524000
 
 -- | 'DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV' specifies that the
 -- @coverageReductionMode@ state in
@@ -693,6 +707,7 @@ pattern DYNAMIC_STATE_CULL_MODE = DynamicState 1000267000
   , DYNAMIC_STATE_STENCIL_COMPARE_MASK
   , DYNAMIC_STATE_STENCIL_WRITE_MASK
   , DYNAMIC_STATE_STENCIL_REFERENCE
+  , DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
   , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
   , DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
   , DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV
@@ -781,6 +796,10 @@ showTableDynamicState =
     , "STENCIL_WRITE_MASK"
     )
   , (DYNAMIC_STATE_STENCIL_REFERENCE, "STENCIL_REFERENCE")
+  ,
+    ( DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
+    , "ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT"
+    )
   ,
     ( DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
     , "COVERAGE_REDUCTION_MODE_NV"

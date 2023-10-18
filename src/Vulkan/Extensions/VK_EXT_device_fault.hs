@@ -15,7 +15,10 @@
 --     342
 --
 -- [__Revision__]
---     1
+--     2
+--
+-- [__Ratification Status__]
+--     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -109,6 +112,12 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT'
 --
 -- == Version History
+--
+-- -   Revision 2, 2023-04-05 (Ralph Potter)
+--
+--     -   Restored two missing members to the XML definition of
+--         VkDeviceFaultVendorBinaryHeaderVersionOneEXT. No functional
+--         change to the specification.
 --
 -- -   Revision 1, 2020-10-19 (Ralph Potter)
 --
@@ -863,6 +872,14 @@ data DeviceFaultVendorBinaryHeaderVersionOneEXT = DeviceFaultVendorBinaryHeaderV
     -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@pEngineName@
     -- during instance creation.
     engineNameOffset :: Word32
+  , -- | @engineVersion@ /must/ be zero or the value specified by
+    -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@engineVersion@
+    -- during instance creation.
+    engineVersion :: Word32
+  , -- | @apiVersion@ /must/ be zero or the value specified by
+    -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+    -- during instance creation.
+    apiVersion :: Word32
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -871,7 +888,7 @@ deriving instance Generic (DeviceFaultVendorBinaryHeaderVersionOneEXT)
 deriving instance Show DeviceFaultVendorBinaryHeaderVersionOneEXT
 
 instance ToCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
-  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceFaultVendorBinaryHeaderVersionOneEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (headerSize)
     poke ((p `plusPtr` 4 :: Ptr DeviceFaultVendorBinaryHeaderVersionEXT)) (headerVersion)
@@ -882,8 +899,10 @@ instance ToCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
     poke ((p `plusPtr` 36 :: Ptr Word32)) (applicationNameOffset)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (applicationVersion)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (engineNameOffset)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (engineVersion)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (apiVersion)
     f
-  cStructSize = 48
+  cStructSize = 56
   cStructAlignment = 4
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
@@ -895,6 +914,8 @@ instance ToCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
     poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
@@ -908,6 +929,8 @@ instance FromCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
     applicationNameOffset <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
     applicationVersion <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     engineNameOffset <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
+    engineVersion <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
+    apiVersion <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
     pure $ DeviceFaultVendorBinaryHeaderVersionOneEXT
              headerSize
              headerVersion
@@ -918,9 +941,11 @@ instance FromCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
              applicationNameOffset
              applicationVersion
              engineNameOffset
+             engineVersion
+             apiVersion
 
 instance Storable DeviceFaultVendorBinaryHeaderVersionOneEXT where
-  sizeOf ~_ = 48
+  sizeOf ~_ = 56
   alignment ~_ = 4
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -933,6 +958,8 @@ instance Zero DeviceFaultVendorBinaryHeaderVersionOneEXT where
            zero
            zero
            mempty
+           zero
+           zero
            zero
            zero
            zero
@@ -1103,11 +1130,11 @@ instance Read DeviceFaultVendorBinaryHeaderVersionEXT where
       conNameDeviceFaultVendorBinaryHeaderVersionEXT
       DeviceFaultVendorBinaryHeaderVersionEXT
 
-type EXT_DEVICE_FAULT_SPEC_VERSION = 1
+type EXT_DEVICE_FAULT_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_DEVICE_FAULT_SPEC_VERSION"
 pattern EXT_DEVICE_FAULT_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_DEVICE_FAULT_SPEC_VERSION = 1
+pattern EXT_DEVICE_FAULT_SPEC_VERSION = 2
 
 
 type EXT_DEVICE_FAULT_EXTENSION_NAME = "VK_EXT_device_fault"

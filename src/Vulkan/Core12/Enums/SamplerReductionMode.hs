@@ -3,6 +3,7 @@
 module Vulkan.Core12.Enums.SamplerReductionMode  (SamplerReductionMode( SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE
                                                                       , SAMPLER_REDUCTION_MODE_MIN
                                                                       , SAMPLER_REDUCTION_MODE_MAX
+                                                                      , SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM
                                                                       , ..
                                                                       )) where
 
@@ -41,10 +42,17 @@ pattern SAMPLER_REDUCTION_MODE_MIN = SamplerReductionMode 1
 -- non-zero weights.
 pattern SAMPLER_REDUCTION_MODE_MAX = SamplerReductionMode 2
 
+-- | 'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM' specifies
+-- values are combined as described by
+-- 'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE', followed by a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-range-clamp texel range clamp>.
+pattern SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM = SamplerReductionMode 1000521000
+
 {-# COMPLETE
   SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE
   , SAMPLER_REDUCTION_MODE_MIN
-  , SAMPLER_REDUCTION_MODE_MAX ::
+  , SAMPLER_REDUCTION_MODE_MAX
+  , SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM ::
     SamplerReductionMode
   #-}
 
@@ -62,6 +70,10 @@ showTableSamplerReductionMode =
     )
   , (SAMPLER_REDUCTION_MODE_MIN, "MIN")
   , (SAMPLER_REDUCTION_MODE_MAX, "MAX")
+  ,
+    ( SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM
+    , "WEIGHTED_AVERAGE_RANGECLAMP_QCOM"
+    )
   ]
 
 instance Show SamplerReductionMode where

@@ -15,7 +15,10 @@
 --     342
 --
 -- [__Revision__]
---     1
+--     2
+--
+-- [__Ratification Status__]
+--     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -109,6 +112,12 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT'
 --
 -- == Version History
+--
+-- -   Revision 2, 2023-04-05 (Ralph Potter)
+--
+--     -   Restored two missing members to the XML definition of
+--         VkDeviceFaultVendorBinaryHeaderVersionOneEXT. No functional
+--         change to the specification.
 --
 -- -   Revision 1, 2020-10-19 (Ralph Potter)
 --

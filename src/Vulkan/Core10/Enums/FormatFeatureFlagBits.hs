@@ -224,8 +224,9 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 -- -   'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
 --     that an image view /can/ be used as a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
---     An implementation /must/ not set this feature for formats with
---     numeric type other than @*UINT@, or set it as a buffer feature.
+--     An implementation /must/ not set this feature for formats with a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
+--     other than @UINT@, or set it as a buffer feature.
 --
 -- -   @VK_FORMAT_FEATURE_VIDEO_DECODE_OUTPUT_BIT_KHR@ specifies that an
 --     image view with this format /can/ be used as a
@@ -403,8 +404,9 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = FormatFeatureFlagBits 0
 -- | 'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
 -- an image view /can/ be used as a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
--- An implementation /must/ not set this feature for formats with numeric
--- type other than @*UINT@, or set it as a buffer feature.
+-- An implementation /must/ not set this feature for formats with a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
+-- other than @UINT@, or set it as a buffer feature.
 pattern FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = FormatFeatureFlagBits 0x40000000
 
 -- | 'FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image

@@ -62,6 +62,7 @@ import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (pokeSomeCStruct)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_weights (BlitImageCubicWeightsInfoQCOM)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
@@ -114,12 +115,12 @@ foreign import ccall
 --
 -- = Description
 --
--- Each source region specified by @pCopyBufferInfo->pname@:pRegions is
--- copied from the source buffer to the destination region of the
--- destination buffer. If any of the specified regions in
--- @pCopyBufferInfo->pname@:srcBuffer overlaps in memory with any of the
--- specified regions in @pCopyBufferInfo->pname@:dstBuffer, values read
--- from those overlapping regions are undefined.
+-- Each source region specified by @pCopyBufferInfo->pRegions@ is copied
+-- from the source buffer to the destination region of the destination
+-- buffer. If any of the specified regions in @pCopyBufferInfo->srcBuffer@
+-- overlaps in memory with any of the specified regions in
+-- @pCopyBufferInfo->dstBuffer@, values read from those overlapping regions
+-- are undefined.
 --
 -- == Valid Usage
 --
@@ -312,7 +313,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdBlitImage2
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr BlitImageInfo2 -> IO ()) -> Ptr CommandBuffer_T -> Ptr BlitImageInfo2 -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct BlitImageInfo2) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct BlitImageInfo2) -> IO ()
 
 -- | vkCmdBlitImage2 - Copy regions of an image, potentially performing
 -- format conversion,
@@ -386,14 +387,14 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'BlitImageInfo2', 'Vulkan.Core10.Handles.CommandBuffer'
-cmdBlitImage2 :: forall io
-               . (MonadIO io)
+cmdBlitImage2 :: forall a io
+               . (Extendss BlitImageInfo2 a, PokeChain a, MonadIO io)
               => -- | @commandBuffer@ is the command buffer into which the command will be
                  -- recorded.
                  CommandBuffer
               -> -- | @pBlitImageInfo@ is a pointer to a 'BlitImageInfo2' structure describing
                  -- the blit parameters.
-                 BlitImageInfo2
+                 (BlitImageInfo2 a)
               -> io ()
 cmdBlitImage2 commandBuffer blitImageInfo = liftIO . evalContT $ do
   let vkCmdBlitImage2Ptr = pVkCmdBlitImage2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
@@ -403,7 +404,7 @@ cmdBlitImage2 commandBuffer blitImageInfo = liftIO . evalContT $ do
   pBlitImageInfo <- ContT $ withCStruct (blitImageInfo)
   lift $ traceAroundEvent "vkCmdBlitImage2" (vkCmdBlitImage2'
                                                (commandBufferHandle (commandBuffer))
-                                               pBlitImageInfo)
+                                               (forgetExtensions pBlitImageInfo))
   pure $ ()
 
 
@@ -836,14 +837,14 @@ instance Zero BufferCopy2 where
 --
 -- -   #VUID-VkImageCopy2-apiVersion-07940# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
---     extension is not enabled and
+--     extension is not enabled, and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
 --     is less than Vulkan 1.1, the @aspectMask@ member of @srcSubresource@
 --     and @dstSubresource@ /must/ match
 --
 -- -   #VUID-VkImageCopy2-apiVersion-07941# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
---     extension is not enabled and
+--     extension is not enabled, and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
 --     is less than Vulkan 1.1, the @layerCount@ member of @srcSubresource@
 --     and @dstSubresource@ /must/ match
@@ -875,7 +876,9 @@ instance Zero BufferCopy2 where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
--- 'CopyImageInfo2', 'Vulkan.Core10.FundamentalTypes.Extent3D',
+-- 'CopyImageInfo2',
+-- 'Vulkan.Extensions.VK_EXT_host_image_copy.CopyImageToImageInfoEXT',
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -962,8 +965,25 @@ instance Zero ImageCopy2 where
 -- -   #VUID-VkImageBlit2-aspectMask-00238# The @aspectMask@ member of
 --     @srcSubresource@ and @dstSubresource@ /must/ match
 --
--- -   #VUID-VkImageBlit2-layerCount-00239# The @layerCount@ member of
---     @srcSubresource@ and @dstSubresource@ /must/ match
+-- -   #VUID-VkImageBlit2-layerCount-08800# If neither of the @layerCount@
+--     members of @srcSubresource@ or @dstSubresource@ are
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     @layerCount@ members of @srcSubresource@ or @dstSubresource@ /must/
+--     match
+--
+-- -   #VUID-VkImageBlit2-maintenance5-08799# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     feature is not enabled, the @layerCount@ member of @srcSubresource@
+--     or @dstSubresource@ /must/ not be
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS'
+--
+-- -   #VUID-VkImageBlit2-layerCount-08801# If one of the @layerCount@
+--     members of @srcSubresource@ or @dstSubresource@ is
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the other
+--     member /must/ be either
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' or equal to the
+--     @arrayLayers@ member of the 'Vulkan.Core10.Image.ImageCreateInfo'
+--     used to create the image minus @baseArrayLayer@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1105,15 +1125,15 @@ instance es ~ '[] => Zero (ImageBlit2 es) where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkBufferImageCopy2-bufferRowLength-00195# @bufferRowLength@
+-- -   #VUID-VkBufferImageCopy2-bufferRowLength-09101# @bufferRowLength@
 --     /must/ be @0@, or greater than or equal to the @width@ member of
 --     @imageExtent@
 --
--- -   #VUID-VkBufferImageCopy2-bufferImageHeight-00196#
+-- -   #VUID-VkBufferImageCopy2-bufferImageHeight-09102#
 --     @bufferImageHeight@ /must/ be @0@, or greater than or equal to the
 --     @height@ member of @imageExtent@
 --
--- -   #VUID-VkBufferImageCopy2-aspectMask-00212# The @aspectMask@ member
+-- -   #VUID-VkBufferImageCopy2-aspectMask-09103# The @aspectMask@ member
 --     of @imageSubresource@ /must/ only have a single bit set
 --
 -- -   #VUID-VkBufferImageCopy2-imageExtent-06659# @imageExtent.width@
@@ -1260,8 +1280,25 @@ instance es ~ '[] => Zero (BufferImageCopy2 es) where
 --     @srcSubresource@ and @dstSubresource@ /must/ only contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   #VUID-VkImageResolve2-layerCount-00267# The @layerCount@ member of
---     @srcSubresource@ and @dstSubresource@ /must/ match
+-- -   #VUID-VkImageResolve2-layerCount-08803# If neither of the
+--     @layerCount@ members of @srcSubresource@ or @dstSubresource@ are
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     @layerCount@ member of @srcSubresource@ and @dstSubresource@ /must/
+--     match
+--
+-- -   #VUID-VkImageResolve2-maintenance5-08802# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     feature is not enabled, the @layerCount@ member of @srcSubresource@
+--     or @dstSubresource@ /must/ not be
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS'
+--
+-- -   #VUID-VkImageResolve2-layerCount-08804# If one of the @layerCount@
+--     members of @srcSubresource@ or @dstSubresource@ is
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the other
+--     member /must/ be either
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' or equal to the
+--     @arrayLayers@ member of the 'Vulkan.Core10.Image.ImageCreateInfo'
+--     used to create the image minus @baseArrayLayer@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1508,9 +1545,9 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-srcImageLayout-01917# @srcImageLayout@ /must/
 --     be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
+--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-01996# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
@@ -1524,9 +1561,9 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-dstImageLayout-01395# @dstImageLayout@ /must/
 --     be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
+--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-01548# If the
 --     'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
@@ -1542,6 +1579,12 @@ instance Zero CopyBufferInfo2 where
 --     /must/ be compatible according to
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes the description of compatible planes>
 --     for the plane being copied
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-09247# If the
+--     'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
+--     @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compressed_image_formats compressed image format>,
+--     the formats /must/ have the same texel block extent
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-00136# The sample count of
 --     @srcImage@ and @dstImage@ /must/ match
@@ -1569,12 +1612,14 @@ instance Zero CopyBufferInfo2 where
 --     then for each element of @pRegions@, @srcSubresource.aspectMask@
 --     /must/ be a single valid
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-08714# If @dstImage@ has a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 --     then for each element of @pRegions@, @dstSubresource.aspectMask@
 --     /must/ be a single valid
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-01556# If @srcImage@ has a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
@@ -1590,14 +1635,14 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-apiVersion-07932# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
---     extension is not enabled,
+--     extension is not enabled, or
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
 --     is less than Vulkan 1.1, and either @srcImage@ or @dstImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each
 --     element of @pRegions@, @srcSubresource.baseArrayLayer@ and
---     @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
+--     @dstSubresource.baseArrayLayer@ /must/ both be @0@, and
 --     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
---     each be @1@
+--     both be @1@
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-04443# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
@@ -1658,20 +1703,48 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-apiVersion-07933# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
---     extension is not enabled,
+--     extension is not enabled, and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
 --     is less than Vulkan 1.1, @srcImage@ and @dstImage@ /must/ have the
 --     same 'Vulkan.Core10.Enums.ImageType.ImageType'
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-07743# If @srcImage@ and @dstImage@
---     have a different 'Vulkan.Core10.Enums.ImageType.ImageType', one
---     /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the
---     other /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+-- -   #VUID-VkCopyImageInfo2-apiVersion-08969# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     extension is not enabled, and
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, @srcImage@ or @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @extent.depth@ /must/ be @1@
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-07744# If @srcImage@ and @dstImage@
---     have the same 'Vulkan.Core10.Enums.ImageType.ImageType', the
---     @layerCount@ member of @srcSubresource@ and @dstSubresource@ in each
---     element of @pRegions@ /must/ match
+-- -   #VUID-VkCopyImageInfo2-srcImage-07743# If @srcImage@ and @dstImage@
+--     have a different 'Vulkan.Core10.Enums.ImageType.ImageType', and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, one /must/ be
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the other /must/
+--     be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-08793# If @srcImage@ and @dstImage@
+--     have the same 'Vulkan.Core10.Enums.ImageType.ImageType', for each
+--     element of @pRegions@, if neither of the @layerCount@ members of
+--     @srcSubresource@ or @dstSubresource@ are
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     @layerCount@ members of @srcSubresource@ or @dstSubresource@ /must/
+--     match
+--
+-- -   #VUID-VkCopyImageInfo2-maintenance5-08792# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     feature is not enabled, the @layerCount@ member of @srcSubresource@
+--     or @dstSubresource@ /must/ not be
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS'
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-08794# If @srcImage@ and @dstImage@
+--     have the same 'Vulkan.Core10.Enums.ImageType.ImageType', and one of
+--     the @layerCount@ members of @srcSubresource@ or @dstSubresource@ is
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the other
+--     member /must/ be either
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' or equal to the
+--     @arrayLayers@ member of the 'Vulkan.Core10.Image.ImageCreateInfo'
+--     used to create the image minus @baseArrayLayer@
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-01790# If @srcImage@ and @dstImage@
 --     are both of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
@@ -1834,9 +1907,12 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-srcSubresource-07968# The
 --     @srcSubresource.baseArrayLayer@ + @srcSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @srcImage@ was created
+--     each element of @pRegions@ , if @srcSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@
+--     was created
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-07969# @srcImage@ /must/ not have
 --     been created with @flags@ containing
@@ -1854,9 +1930,12 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-dstSubresource-07968# The
 --     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @dstImage@ was created
+--     each element of @pRegions@ , if @dstSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
+--     was created
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-07969# @dstImage@ /must/ not have
 --     been created with @flags@ containing
@@ -2095,15 +2174,21 @@ instance Zero CopyImageInfo2 where
 --
 -- -   #VUID-VkBlitImageInfo2-srcSubresource-01707# The
 --     @srcSubresource.baseArrayLayer@ + @srcSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @srcImage@ was created
+--     each element of @pRegions@ , if @srcSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@
+--     was created
 --
 -- -   #VUID-VkBlitImageInfo2-dstSubresource-01708# The
 --     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @dstImage@ was created
+--     each element of @pRegions@ , if @srcSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
+--     was created
 --
 -- -   #VUID-VkBlitImageInfo2-dstImage-02545# @dstImage@ and @srcImage@
 --     /must/ not have been created with @flags@ containing
@@ -2194,12 +2279,23 @@ instance Zero CopyImageInfo2 where
 --     in its @pNext@ chain, then @srcImage@ /must/ not have a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
+-- -   #VUID-VkBlitImageInfo2-filter-09204# If @filter@ is
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' and if the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     feature is not enabled then the cubic weights /must/ be
+--     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBlitImageInfo2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BLIT_IMAGE_INFO_2'
 --
--- -   #VUID-VkBlitImageInfo2-pNext-pNext# @pNext@ /must/ be @NULL@
+-- -   #VUID-VkBlitImageInfo2-pNext-pNext# @pNext@ /must/ be @NULL@ or a
+--     pointer to a valid instance of
+--     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.BlitImageCubicWeightsInfoQCOM'
+--
+-- -   #VUID-VkBlitImageInfo2-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBlitImageInfo2-srcImage-parameter# @srcImage@ /must/ be a
 --     valid 'Vulkan.Core10.Handles.Image' handle
@@ -2237,8 +2333,10 @@ instance Zero CopyImageInfo2 where
 -- 'ImageBlit2', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdBlitImage2',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR'
-data BlitImageInfo2 = BlitImageInfo2
-  { -- | @srcImage@ is the source image.
+data BlitImageInfo2 (es :: [Type]) = BlitImageInfo2
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcImage@ is the source image.
     srcImage :: Image
   , -- | @srcImageLayout@ is the layout of the source image subresources for the
     -- blit.
@@ -2257,15 +2355,26 @@ data BlitImageInfo2 = BlitImageInfo2
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (BlitImageInfo2)
+deriving instance Generic (BlitImageInfo2 (es :: [Type]))
 #endif
-deriving instance Show BlitImageInfo2
+deriving instance Show (Chain es) => Show (BlitImageInfo2 es)
 
-instance ToCStruct BlitImageInfo2 where
+instance Extensible BlitImageInfo2 where
+  extensibleTypeName = "BlitImageInfo2"
+  setNext BlitImageInfo2{..} next' = BlitImageInfo2{next = next', ..}
+  getNext BlitImageInfo2{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends BlitImageInfo2 e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @BlitImageCubicWeightsInfoQCOM = Just f
+    | otherwise = Nothing
+
+instance ( Extendss BlitImageInfo2 es
+         , PokeChain es ) => ToCStruct (BlitImageInfo2 es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BlitImageInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr Image)) (srcImage)
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (srcImageLayout)
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (dstImage)
@@ -2278,18 +2387,22 @@ instance ToCStruct BlitImageInfo2 where
     lift $ f
   cStructSize = 64
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Image)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
-    poke ((p `plusPtr` 56 :: Ptr Filter)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Image)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Filter)) (zero)
+    lift $ f
 
-instance FromCStruct BlitImageInfo2 where
+instance ( Extendss BlitImageInfo2 es
+         , PeekChain es ) => FromCStruct (BlitImageInfo2 es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcImage <- peek @Image ((p `plusPtr` 16 :: Ptr Image))
     srcImageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
     dstImage <- peek @Image ((p `plusPtr` 32 :: Ptr Image))
@@ -2299,10 +2412,17 @@ instance FromCStruct BlitImageInfo2 where
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (96 * (i)) :: Ptr (ImageBlit2 _)))))
     filter' <- peek @Filter ((p `plusPtr` 56 :: Ptr Filter))
     pure $ BlitImageInfo2
-             srcImage srcImageLayout dstImage dstImageLayout pRegions' filter'
+             next
+             srcImage
+             srcImageLayout
+             dstImage
+             dstImageLayout
+             pRegions'
+             filter'
 
-instance Zero BlitImageInfo2 where
+instance es ~ '[] => Zero (BlitImageInfo2 es) where
   zero = BlitImageInfo2
+           ()
            zero
            zero
            zero
@@ -2316,11 +2436,11 @@ instance Zero BlitImageInfo2 where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-04565# If the image region
---     specified by each element of @pRegions@ does not contain
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-04565# The image region
+--     specified by each element of @pRegions@ that does not contain
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, it /must/ be a region that is contained within
---     the specified @imageSubresource@ of @dstImage@
+--     in its @pNext@ chain /must/ be contained within the specified
+--     @imageSubresource@ of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04554# If the image
 --     region specified by each element of @pRegions@ contains
@@ -2383,9 +2503,9 @@ instance Zero BlitImageInfo2 where
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImageLayout-01396#
 --     @dstImageLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
+--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07931# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_range_unrestricted VK_EXT_depth_range_unrestricted>
@@ -2405,9 +2525,12 @@ instance Zero BlitImageInfo2 where
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-imageSubresource-07968# The
 --     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @dstImage@ was created
+--     each element of @pRegions@ , if @imageSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
+--     was created
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07969# @dstImage@ /must/ not
 --     have been created with @flags@ containing
@@ -2422,7 +2545,7 @@ instance Zero BlitImageInfo2 where
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
 --     @imageExtent.height@ /must/ be @1@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-00200# For each element
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-09104# For each element
 --     of @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
@@ -2434,89 +2557,77 @@ instance Zero BlitImageInfo2 where
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
 --     /must/ be @1@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-bufferRowLength-00203# For each
---     element of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
--- -   #VUID-VkCopyBufferToImageInfo2-bufferImageHeight-00204# For each
---     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07274# For each element of
+-- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07274# For each element of
 --     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07275# For each element of
+-- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07275# For each element of
 --     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07276# For each element of
+-- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07276# For each element of
 --     @pRegions@, @imageOffset.z@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00207# For each element
---     of @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
+-- -   #VUID-VkCopyBufferToImageInfo2-dstImage-00207# For each element of
+--     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
 --     not equal the width of the subresource specified by
 --     @srcSubresource@, @extent.width@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00208# For each element
---     of @pRegions@, if the sum of @imageOffset.y@ and @extent.height@
---     does not equal the height of the subresource specified by
+-- -   #VUID-VkCopyBufferToImageInfo2-dstImage-00208# For each element of
+--     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
+--     not equal the height of the subresource specified by
 --     @srcSubresource@, @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00209# For each element
---     of @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
+-- -   #VUID-VkCopyBufferToImageInfo2-dstImage-00209# For each element of
+--     @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
 --     not equal the depth of the subresource specified by
 --     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-aspectMask-00211# For each element of
---     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
---     present in @dstImage@
+-- -   #VUID-VkCopyBufferToImageInfo2-imageSubresource-09105# For each
+--     element of @pRegions@, @imageSubresource.aspectMask@ /must/ specify
+--     aspects present in @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07981# If @dstImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---
--- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07982# If @dstImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
---     then for each element of @pRegions@, @imageSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     /must/ be a single valid
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07983# If @dstImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each element
 --     of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @imageSubresource.layerCount@ /must/ be @1@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07277# For each element of
---     @pRegions@, @bufferRowLength@ divided by the
+-- -   #VUID-VkCopyBufferToImageInfo2-bufferRowLength-09106# For each
+--     element of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-bufferImageHeight-09107# For each
+--     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-bufferRowLength-09108# For each
+--     element of @pRegions@, @bufferRowLength@ divided by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @dstImage@ /must/ be
 --     less than or equal to 231-1
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07975# If @dstImage@ does
---     not have either a depth\/stencil or a
+--     not have either a depth\/stencil format or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the
@@ -2652,10 +2763,10 @@ instance Zero CopyBufferToImageInfo2 where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-04566# If the image region
---     specified by each element of @pRegions@ does not contain
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-04566# The image region
+--     specified by each element of @pRegions@ that does not contain
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, it /must/ be contained within the specified
+--     in its @pNext@ chain /must/ be contained within the specified
 --     @imageSubresource@ of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04557# If the image
@@ -2719,9 +2830,9 @@ instance Zero CopyBufferToImageInfo2 where
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImageLayout-01397#
 --     @srcImageLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
+--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07966# If @srcImage@ is
 --     non-sparse then the image or the specified /disjoint/ plane /must/
@@ -2735,9 +2846,12 @@ instance Zero CopyBufferToImageInfo2 where
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-imageSubresource-07968# The
 --     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @srcImage@ was created
+--     each element of @pRegions@ , if @imageSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@
+--     was created
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07969# @srcImage@ /must/ not
 --     have been created with @flags@ containing
@@ -2752,7 +2866,7 @@ instance Zero CopyBufferToImageInfo2 where
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
 --     @imageExtent.height@ /must/ be @1@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-00200# For each element
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-09104# For each element
 --     of @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
@@ -2764,89 +2878,77 @@ instance Zero CopyBufferToImageInfo2 where
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
 --     /must/ be @1@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-bufferRowLength-00203# For each
---     element of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
---
--- -   #VUID-VkCopyImageToBufferInfo2-bufferImageHeight-00204# For each
---     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
---
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07274# For each element of
+-- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07274# For each element of
 --     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07275# For each element of
+-- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07275# For each element of
 --     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07276# For each element of
+-- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07276# For each element of
 --     @pRegions@, @imageOffset.z@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00207# For each element
---     of @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
+-- -   #VUID-VkCopyImageToBufferInfo2-srcImage-00207# For each element of
+--     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
 --     not equal the width of the subresource specified by
 --     @srcSubresource@, @extent.width@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00208# For each element
---     of @pRegions@, if the sum of @imageOffset.y@ and @extent.height@
---     does not equal the height of the subresource specified by
+-- -   #VUID-VkCopyImageToBufferInfo2-srcImage-00208# For each element of
+--     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
+--     not equal the height of the subresource specified by
 --     @srcSubresource@, @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00209# For each element
---     of @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
+-- -   #VUID-VkCopyImageToBufferInfo2-srcImage-00209# For each element of
+--     @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
 --     not equal the depth of the subresource specified by
 --     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-aspectMask-00211# For each element of
---     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
---     present in @srcImage@
+-- -   #VUID-VkCopyImageToBufferInfo2-imageSubresource-09105# For each
+--     element of @pRegions@, @imageSubresource.aspectMask@ /must/ specify
+--     aspects present in @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07981# If @srcImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---
--- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07982# If @srcImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
---     then for each element of @pRegions@, @imageSubresource.aspectMask@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     /must/ be a single valid
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     bit
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07983# If @srcImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each element
 --     of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @imageSubresource.layerCount@ /must/ be @1@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07277# For each element of
---     @pRegions@, @bufferRowLength@ divided by the
+-- -   #VUID-VkCopyImageToBufferInfo2-bufferRowLength-09106# For each
+--     element of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-bufferImageHeight-09107# For each
+--     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-bufferRowLength-09108# For each
+--     element of @pRegions@, @bufferRowLength@ divided by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @srcImage@ /must/ be
 --     less than or equal to 231-1
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07975# If @srcImage@ does
---     not have either a depth\/stencil or a
+--     not have either a depth\/stencil format or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the
@@ -3052,15 +3154,21 @@ instance Zero CopyImageToBufferInfo2 where
 --
 -- -   #VUID-VkResolveImageInfo2-srcSubresource-01711# The
 --     @srcSubresource.baseArrayLayer@ + @srcSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @srcImage@ was created
+--     each element of @pRegions@ , if @srcSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@
+--     was created
 --
 -- -   #VUID-VkResolveImageInfo2-dstSubresource-01712# The
 --     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
---     each element of @pRegions@ /must/ be less than or equal to the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @dstImage@ was created
+--     each element of @pRegions@ , if @dstSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+--     is not enabled, /must/ be less than or equal to the @arrayLayers@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
+--     was created
 --
 -- -   #VUID-VkResolveImageInfo2-dstImage-02546# @dstImage@ and @srcImage@
 --     /must/ not have been created with @flags@ containing

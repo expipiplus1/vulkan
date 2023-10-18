@@ -96,6 +96,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@cullMode@
 -- value used to create the currently active pipeline.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetCullMode-None-08971# At least one of the following
+--     /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetCullMode-commandBuffer-parameter# @commandBuffer@
@@ -181,6 +199,24 @@ foreign import ccall
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@frontFace@
 -- value used to create the currently active pipeline.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetFrontFace-None-08971# At least one of the following
+--     /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- == Valid Usage (Implicit)
 --
@@ -268,6 +304,24 @@ foreign import ccall
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 -- value used to create the currently active pipeline.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetPrimitiveTopology-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- == Valid Usage (Implicit)
 --
@@ -358,6 +412,22 @@ foreign import ccall
 -- and @pViewports@ values used to create the currently active pipeline.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCmdSetViewportWithCount-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- -   #VUID-vkCmdSetViewportWithCount-viewportCount-03394# @viewportCount@
 --     /must/ be between @1@ and
@@ -467,6 +537,22 @@ foreign import ccall
 -- and @pScissors@ values used to create the currently active pipeline.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCmdSetScissorWithCount-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- -   #VUID-vkCmdSetScissorWithCount-scissorCount-03397# @scissorCount@
 --     /must/ be between @1@ and
@@ -583,9 +669,12 @@ foreign import ccall
 -- the offset indicated by @pOffsets@[i] from the start of the buffer
 -- @pBuffers@[i]. If @pSizes@ is not @NULL@ then @pSizes@[i] specifies the
 -- bound size of the vertex buffer starting from the corresponding elements
--- of @pBuffers@[i] plus @pOffsets@[i]. All vertex input attributes that
--- use each of these bindings will use these updated addresses in their
--- address calculations for subsequent drawing commands. If the
+-- of @pBuffers@[i] plus @pOffsets@[i]. If @pSizes@[i] is
+-- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' then the bound size is from
+-- @pBuffers@[i] plus @pOffsets@[i] to the end of the buffer @pBuffers@[i].
+-- All vertex input attributes that use each of these bindings will use
+-- these updated addresses in their address calculations for subsequent
+-- drawing commands. If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 -- feature is enabled, elements of @pBuffers@ /can/ be
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and /can/ be used by the
@@ -635,13 +724,14 @@ foreign import ccall
 --     @firstBinding@ and @bindingCount@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
 --
--- -   #VUID-vkCmdBindVertexBuffers2-pOffsets-03357# All elements of
---     @pOffsets@ /must/ be less than the size of the corresponding element
---     in @pBuffers@
+-- -   #VUID-vkCmdBindVertexBuffers2-pOffsets-03357# If @pSizes@ is not
+--     @NULL@, all elements of @pOffsets@ /must/ be less than the size of
+--     the corresponding element in @pBuffers@
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-pSizes-03358# If @pSizes@ is not
---     @NULL@, all elements of @pOffsets@ plus @pSizes@ /must/ be less than
---     or equal to the size of the corresponding element in @pBuffers@
+--     @NULL@, all elements of @pOffsets@ plus @pSizes@ , where @pSizes@ is
+--     not 'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be less than or
+--     equal to the size of the corresponding element in @pBuffers@
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-pBuffers-03359# All elements of
 --     @pBuffers@ /must/ have been created with the
@@ -830,6 +920,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthTestEnable@
 -- value used to create the currently active pipeline.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDepthTestEnable-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetDepthTestEnable-commandBuffer-parameter#
@@ -914,6 +1022,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthWriteEnable@
 -- value used to create the currently active pipeline.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDepthWriteEnable-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetDepthWriteEnable-commandBuffer-parameter#
@@ -996,6 +1122,24 @@ foreign import ccall
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthCompareOp@
 -- value used to create the currently active pipeline.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDepthCompareOp-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- == Valid Usage (Implicit)
 --
@@ -1089,6 +1233,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthBoundsTestEnable@
 -- value used to create the currently active pipeline.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDepthBoundsTestEnable-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetDepthBoundsTestEnable-commandBuffer-parameter#
@@ -1173,6 +1335,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@stencilTestEnable@
 -- value used to create the currently active pipeline.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetStencilTestEnable-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetStencilTestEnable-commandBuffer-parameter#
@@ -1256,6 +1436,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@failOp@,
 -- @passOp@, @depthFailOp@, and @compareOp@ values used to create the
 -- currently active pipeline, for both front and back faces.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetStencilOp-None-08971# At least one of the following
+--     /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- == Valid Usage (Implicit)
 --

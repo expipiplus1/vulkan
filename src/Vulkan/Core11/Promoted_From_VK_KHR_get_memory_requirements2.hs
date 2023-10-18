@@ -347,6 +347,11 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --     external memory handle type, then @image@ /must/ be bound to memory
 --
+-- -   #VUID-VkImageMemoryRequirementsInfo2-image-08961# If @image@ was
+--     created with the
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX'
+--     external memory handle type, then @image@ /must/ be bound to memory
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageMemoryRequirementsInfo2-sType-sType# @sType@ /must/ be
@@ -505,7 +510,8 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 -- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageMemoryRequirementsKHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'getImageMemoryRequirements2',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
+-- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR',
+-- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.getPipelineIndirectMemoryRequirementsNV'
 data MemoryRequirements2 (es :: [Type]) = MemoryRequirements2
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es

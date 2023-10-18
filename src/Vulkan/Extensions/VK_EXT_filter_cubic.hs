@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     3
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__; __Contact__]
 --
 --     -   Bill Licea-Kane
@@ -39,7 +42,7 @@
 --
 --     -   Graeme Leese, Broadcom
 --
---     -   Jan-Herald Fredericksen, ARM
+--     -   Jan-Harald Fredriksen, ARM
 --
 --     -   Jeff Leger, Qualcomm Technologies, Inc.
 --

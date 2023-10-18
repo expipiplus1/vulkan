@@ -185,6 +185,8 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_ASTC_12x10_SRGB_BLOCK
                                           , FORMAT_ASTC_12x12_UNORM_BLOCK
                                           , FORMAT_ASTC_12x12_SRGB_BLOCK
+                                          , FORMAT_A8_UNORM_KHR
+                                          , FORMAT_A1B5G5R5_UNORM_PACK16_KHR
                                           , FORMAT_R16G16_S10_5_NV
                                           , FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
                                           , FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
@@ -269,6 +271,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatProperties2ANDROID',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
+-- 'Vulkan.Extensions.VK_ANDROID_external_format_resolve.AndroidHardwareBufferFormatResolvePropertiesANDROID',
 -- 'Vulkan.Core10.Pass.AttachmentDescription',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
@@ -285,8 +288,10 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceSparseImageFormatInfo2',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.RenderingAreaInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
+-- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ScreenBufferFormatPropertiesQNX',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Core10.Pipeline.VertexInputAttributeDescription',
@@ -1310,6 +1315,16 @@ pattern FORMAT_ASTC_12x12_UNORM_BLOCK = Format 183
 -- nonlinear encoding applied to the RGB components.
 pattern FORMAT_ASTC_12x12_SRGB_BLOCK = Format 184
 
+-- | 'FORMAT_A8_UNORM_KHR' specifies a one-component, 8-bit unsigned
+-- normalized format that has a single 8-bit A component.
+pattern FORMAT_A8_UNORM_KHR = Format 1000470001
+
+-- | 'FORMAT_A1B5G5R5_UNORM_PACK16_KHR' specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 1-bit A component in bit
+-- 15, a 5-bit B component in bits 10..14, a 5-bit G component in bits
+-- 5..9, and a 5-bit R component in bits 0..4.
+pattern FORMAT_A1B5G5R5_UNORM_PACK16_KHR = Format 1000470000
+
 -- | 'FORMAT_R16G16_S10_5_NV' specifies a two-component, fixed-point format
 -- where most significant bit specifies the sign bit, next 10 bits specify
 -- the integer value and last 5 bits represent the fractional value.
@@ -2222,6 +2237,8 @@ pattern FORMAT_G8B8G8R8_422_UNORM = Format 1000156000
   , FORMAT_ASTC_12x10_SRGB_BLOCK
   , FORMAT_ASTC_12x12_UNORM_BLOCK
   , FORMAT_ASTC_12x12_SRGB_BLOCK
+  , FORMAT_A8_UNORM_KHR
+  , FORMAT_A1B5G5R5_UNORM_PACK16_KHR
   , FORMAT_R16G16_S10_5_NV
   , FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
   , FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
@@ -2517,6 +2534,11 @@ showTableFormat =
   , (FORMAT_ASTC_12x10_SRGB_BLOCK, "ASTC_12x10_SRGB_BLOCK")
   , (FORMAT_ASTC_12x12_UNORM_BLOCK, "ASTC_12x12_UNORM_BLOCK")
   , (FORMAT_ASTC_12x12_SRGB_BLOCK, "ASTC_12x12_SRGB_BLOCK")
+  , (FORMAT_A8_UNORM_KHR, "A8_UNORM_KHR")
+  ,
+    ( FORMAT_A1B5G5R5_UNORM_PACK16_KHR
+    , "A1B5G5R5_UNORM_PACK16_KHR"
+    )
   , (FORMAT_R16G16_S10_5_NV, "R16G16_S10_5_NV")
   ,
     ( FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG

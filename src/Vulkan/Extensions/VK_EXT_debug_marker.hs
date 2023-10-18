@@ -17,10 +17,13 @@
 -- [__Revision__]
 --     4
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to @VK_EXT_debug_utils@ extension
 --
@@ -114,11 +117,11 @@
 -- >     // Set a name on the image
 -- >     const VkDebugMarkerObjectNameInfoEXT imageNameInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT, // sType
--- >         NULL,                                           // pNext
--- >         VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT,          // objectType
--- >         (uint64_t)image,                                // object
--- >         "Brick Diffuse Texture",                        // pObjectName
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT,
+-- >         .pNext = NULL,
+-- >         .objectType = VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT,
+-- >         .object = (uint64_t)image,
+-- >         .pObjectName = "Brick Diffuse Texture",
 -- >     };
 -- >
 -- >     pfnDebugMarkerSetObjectNameEXT(device, &imageNameInfo);
@@ -144,10 +147,10 @@
 -- >     // Describe the area being rendered
 -- >     const VkDebugMarkerMarkerInfoEXT houseMarker =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT, // sType
--- >         NULL,                                           // pNext
--- >         "Brick House",                                  // pMarkerName
--- >         { 1.0f, 0.0f, 0.0f, 1.0f },                     // color
+-- >         .sType = VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,
+-- >         .pNext = NULL,
+-- >         .pMarkerName = "Brick House",
+-- >         .color = { 1.0f, 0.0f, 0.0f, 1.0f },
 -- >     };
 -- >
 -- >     // Start an annotated group of calls under the 'Brick House' name
@@ -156,10 +159,10 @@
 -- >         // A mutable structure for each part being rendered
 -- >         VkDebugMarkerMarkerInfoEXT housePartMarker =
 -- >         {
--- >             VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT, // sType
--- >             NULL,                                           // pNext
--- >             NULL,                                           // pMarkerName
--- >             { 0.0f, 0.0f, 0.0f, 0.0f },                     // color
+-- >             .sType = VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,
+-- >             .pNext = NULL,
+-- >             .pMarkerName = NULL,
+-- >             .color = { 0.0f, 0.0f, 0.0f, 0.0f },
 -- >         };
 -- >
 -- >         // Set the name and insert the marker

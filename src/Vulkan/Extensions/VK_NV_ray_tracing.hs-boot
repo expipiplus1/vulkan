@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     3
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     and
@@ -143,8 +146,6 @@
 --
 -- -   'GeometryTrianglesNV'
 --
--- -   'Vulkan.Extensions.VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
---
 -- -   'RayTracingPipelineCreateInfoNV'
 --
 -- -   'RayTracingShaderGroupCreateInfoNV'
@@ -159,6 +160,12 @@
 -- -   Extending 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet':
 --
 --     -   'WriteDescriptorSetAccelerationStructureNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
 --
 -- == New Enums
 --
@@ -231,11 +238,6 @@
 --     -   'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV'
 --
 --     -   'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV'
---
--- -   Extending
---     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.DescriptorType.DescriptorType':
 --
@@ -342,6 +344,15 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT'
+--
 -- == New or Modified Built-In Variables
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIdNV>
@@ -441,9 +452,7 @@
 -- 'GeometryAABBNV', 'GeometryDataNV', 'GeometryFlagBitsNV',
 -- 'GeometryFlagsNV', 'GeometryInstanceFlagBitsNV',
 -- 'GeometryInstanceFlagsNV', 'GeometryNV', 'GeometryTrianglesNV',
--- 'GeometryTypeNV',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.MemoryRequirements2KHR',
--- 'PhysicalDeviceRayTracingPropertiesNV',
+-- 'GeometryTypeNV', 'PhysicalDeviceRayTracingPropertiesNV',
 -- 'RayTracingPipelineCreateInfoNV', 'RayTracingShaderGroupCreateInfoNV',
 -- 'RayTracingShaderGroupTypeNV', 'TransformMatrixNV',
 -- 'WriteDescriptorSetAccelerationStructureNV',

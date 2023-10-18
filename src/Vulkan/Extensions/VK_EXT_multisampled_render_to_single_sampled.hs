@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
 --     and
@@ -382,8 +385,9 @@ data MultisampledRenderToSingleSampledInfoEXT = MultisampledRenderToSingleSample
     -- rendering to single-sampled attachments is performed as described
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#multisampled-render-to-single-sampled below>.
     multisampledRenderToSingleSampledEnable :: Bool
-  , -- | @rasterizationSamples@ is a VkSampleCountFlagBits specifying the number
-    -- of samples used in rasterization.
+  , -- | @rasterizationSamples@ is a
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' specifying
+    -- the number of samples used in rasterization.
     rasterizationSamples :: SampleCountFlagBits
   }
   deriving (Typeable, Eq)

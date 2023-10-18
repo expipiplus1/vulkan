@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
@@ -43,11 +46,10 @@
 --
 -- == Description
 --
--- This extension provides new entry points to query device surface
--- capabilities in a way that can be easily extended by other extensions,
--- without introducing any further entry points. This extension can be
--- considered the @VK_KHR_surface@ equivalent of the
--- @VK_KHR_get_physical_device_properties2@ extension.
+-- This extension provides new queries for device surface capabilities that
+-- can be easily extended by other extensions, without introducing any
+-- further queries. This extension can be considered the @VK_KHR_surface@
+-- equivalent of the @VK_KHR_get_physical_device_properties2@ extension.
 --
 -- == New Commands
 --
@@ -205,6 +207,7 @@ import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionPropertiesEXT)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceCapabilities2KHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceFormats2KHR))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (LatencySurfaceCapabilitiesNV)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
@@ -655,6 +658,7 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 --     any structure (including this one) in the @pNext@ chain /must/ be
 --     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.DisplayNativeHdrSurfaceCapabilitiesAMD',
+--     'Vulkan.Extensions.VK_NV_low_latency2.LatencySurfaceCapabilitiesNV',
 --     'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT',
 --     'Vulkan.Extensions.VK_NV_present_barrier.SurfaceCapabilitiesPresentBarrierNV',
@@ -692,6 +696,7 @@ instance Extensible SurfaceCapabilities2KHR where
   getNext SurfaceCapabilities2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceCapabilities2KHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @LatencySurfaceCapabilitiesNV = Just f
     | Just Refl <- eqT @e @SurfacePresentModeCompatibilityEXT = Just f
     | Just Refl <- eqT @e @SurfacePresentScalingCapabilitiesEXT = Just f
     | Just Refl <- eqT @e @SurfaceCapabilitiesPresentBarrierNV = Just f

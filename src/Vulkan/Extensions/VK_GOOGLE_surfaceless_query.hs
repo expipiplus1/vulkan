@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     2
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
@@ -55,8 +58,9 @@
 -- and
 -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR'
 -- functions to accept 'Vulkan.Core10.APIConstants.NULL_HANDLE' as their
--- @surface@ parameter, allowing potential surface formats, colorspaces and
--- present modes to be queried without providing a surface. Identically,
+-- @surface@ parameter, allowing potential surface formats, color spaces
+-- and present modes to be queried without providing a surface.
+-- Identically,
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceFormats2KHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- and

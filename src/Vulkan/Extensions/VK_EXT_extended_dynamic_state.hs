@@ -17,12 +17,15 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
--- [__Deprecation state__]
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
@@ -150,7 +153,12 @@
 -- interfaces that were promoted remain available as aliases of the core
 -- functionality.
 --
--- === Why are the values of @pStrides@ in 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2' limited to be between 0 and the maximum extent of the binding, when this restriction is not present for the same static state?
+-- == Issues
+--
+-- 1) Why are the values of @pStrides@ in
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
+-- limited to be between 0 and the maximum extent of the binding, when this
+-- restriction is not present for the same static state?
 --
 -- Implementing these edge cases adds overhead to some implementations that
 -- would require significant cost when calling this function, and the

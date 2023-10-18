@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
@@ -116,17 +119,17 @@
 --
 -- >     VkImageViewASTCDecodeModeEXT decodeMode =
 -- >     {
--- >         VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT, // sType
--- >         NULL, // pNext
--- >         VK_FORMAT_R8G8B8A8_UNORM // decode mode
+-- >         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT,
+-- >         .pNext = NULL,
+-- >         .decodeMode = VK_FORMAT_R8G8B8A8_UNORM
 -- >     };
 -- >
 -- >     VkImageViewCreateInfo createInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO, // sType
--- >         &decodeMode, // pNext
+-- >         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+-- >         .pNext = &decodeMode,
 -- >         // flags, image, viewType set to application-desired values
--- >         VK_FORMAT_ASTC_8x8_UNORM_BLOCK, // format
+-- >         .format = VK_FORMAT_ASTC_8x8_UNORM_BLOCK,
 -- >         // components, subresourceRange set to application-desired values
 -- >     };
 -- >

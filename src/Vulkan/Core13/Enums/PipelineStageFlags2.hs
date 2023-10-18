@@ -58,7 +58,7 @@ module Vulkan.Core13.Enums.PipelineStageFlags2  ( pattern PIPELINE_STAGE_2_NONE_
                                                                         , PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT
                                                                         , PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR
                                                                         , PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI
-                                                                        , PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI
+                                                                        , PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI
                                                                         , PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT
                                                                         , PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT
                                                                         , PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT
@@ -264,14 +264,14 @@ pattern PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT = PipelineStageFlagBits2 0x00000000
 -- | 'PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT' specifies the stage of the
 -- pipeline where early fragment tests (depth and stencil tests before
 -- fragment shading) are performed. This stage also includes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load operations>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations render pass load operations>
 -- for framebuffer attachments with a depth\/stencil format.
 pattern PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT = PipelineStageFlagBits2 0x0000000000000100
 
 -- | 'PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT' specifies the stage of the
 -- pipeline where late fragment tests (depth and stencil tests after
 -- fragment shading) are performed. This stage also includes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass store operations>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations render pass store operations>
 -- for framebuffer attachments with a depth\/stencil format.
 pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT = PipelineStageFlagBits2 0x0000000000000200
 
@@ -280,10 +280,13 @@ pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT = PipelineStageFlagBits2 0x0000
 -- stage includes
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blending blending>,
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-logicop logic operations>,
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load and store operations>,
--- multisample resolve operations for framebuffer attachments with a color
--- or depth\/stencil format, and
--- 'Vulkan.Core10.CommandBufferBuilding.cmdClearAttachments'.
+-- render pass
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store>
+-- operations for color attachments,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations render pass multisample resolve operations>,
+-- and 'Vulkan.Core10.CommandBufferBuilding.cmdClearAttachments'.
 pattern PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT = PipelineStageFlagBits2 0x0000000000000400
 
 -- | 'PIPELINE_STAGE_2_COMPUTE_SHADER_BIT' specifies the compute shader
@@ -346,9 +349,11 @@ pattern PIPELINE_STAGE_2_HOST_BIT = PipelineStageFlagBits2 0x0000000000004000
 --
 -- -   'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT'
 --
--- -   'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+-- -   'PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   'PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   'PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
 --
 -- -   'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
@@ -429,9 +434,9 @@ pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR = PipelineStageFlag
 -- to optimize the ray dispatch.
 pattern PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI = PipelineStageFlagBits2 0x0000010000000000
 
--- | 'PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI' specifies the subpass
+-- | 'PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI' specifies the subpass
 -- shading shader stage.
-pattern PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI = PipelineStageFlagBits2 0x0000008000000000
+pattern PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI = PipelineStageFlagBits2 0x0000008000000000
 
 -- | 'PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT' specifies the mesh shader stage.
 pattern PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT = PipelineStageFlagBits2 0x0000000000100000
@@ -593,8 +598,8 @@ showTablePipelineStageFlagBits2 =
     , "INVOCATION_MASK_BIT_HUAWEI"
     )
   ,
-    ( PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI
-    , "SUBPASS_SHADING_BIT_HUAWEI"
+    ( PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI
+    , "SUBPASS_SHADER_BIT_HUAWEI"
     )
   ,
     ( PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT

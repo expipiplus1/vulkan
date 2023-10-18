@@ -8,6 +8,7 @@ module Vulkan.Core13.Enums.RenderingFlagBits  ( pattern RENDERING_CONTENTS_SECON
                                                                  , RENDERING_SUSPENDING_BIT
                                                                  , RENDERING_RESUMING_BIT
                                                                  , RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
+                                                                 , RENDERING_CONTENTS_INLINE_BIT_EXT
                                                                  , ..
                                                                  )
                                               ) where
@@ -60,7 +61,10 @@ newtype RenderingFlagBits = RenderingFlagBits Flags
 
 -- | 'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT' specifies that draw
 -- calls for the render pass instance will be recorded in secondary command
--- buffers.
+-- buffers. If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
+-- feature is enabled, the draw calls /can/ come from both inline and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands'.
 pattern RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = RenderingFlagBits 0x00000001
 
 -- | 'RENDERING_SUSPENDING_BIT' specifies that the render pass instance will
@@ -75,6 +79,15 @@ pattern RENDERING_RESUMING_BIT = RenderingFlagBits 0x00000004
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>
 -- is enabled for the render pass instance.
 pattern RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT = RenderingFlagBits 0x00000008
+
+-- | 'RENDERING_CONTENTS_INLINE_BIT_EXT' specifies that draw calls for the
+-- render pass instance /can/ be recorded inline within the current command
+-- buffer. When the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
+-- feature is enabled this /can/ be combined with the
+-- 'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT' bit to allow draw
+-- calls to be recorded both inline and in secondary command buffers.
+pattern RENDERING_CONTENTS_INLINE_BIT_EXT = RenderingFlagBits 0x00000010
 
 conNameRenderingFlagBits :: String
 conNameRenderingFlagBits = "RenderingFlagBits"
@@ -93,6 +106,10 @@ showTableRenderingFlagBits =
   ,
     ( RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
     , "ENABLE_LEGACY_DITHERING_BIT_EXT"
+    )
+  ,
+    ( RENDERING_CONTENTS_INLINE_BIT_EXT
+    , "CONTENTS_INLINE_BIT_EXT"
     )
   ]
 

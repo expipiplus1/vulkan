@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
@@ -166,7 +169,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
--- -   @sType@ is the type of this structure.
+-- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
+--     identifying this structure.
 --
 -- -   @pNext@ is @NULL@ or a pointer to a structure extending this
 --     structure.

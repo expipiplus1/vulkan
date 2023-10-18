@@ -17,6 +17,9 @@
 -- [__Revision__]
 --     1
 --
+-- [__Ratification Status__]
+--     Not ratified
+--
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
@@ -94,6 +97,41 @@
 --
 -- -   'NV_COOPERATIVE_MATRIX_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR':
+--
+--     -   'COMPONENT_TYPE_FLOAT16_NV'
+--
+--     -   'COMPONENT_TYPE_FLOAT32_NV'
+--
+--     -   'COMPONENT_TYPE_FLOAT64_NV'
+--
+--     -   'COMPONENT_TYPE_SINT16_NV'
+--
+--     -   'COMPONENT_TYPE_SINT32_NV'
+--
+--     -   'COMPONENT_TYPE_SINT64_NV'
+--
+--     -   'COMPONENT_TYPE_SINT8_NV'
+--
+--     -   'COMPONENT_TYPE_UINT16_NV'
+--
+--     -   'COMPONENT_TYPE_UINT32_NV'
+--
+--     -   'COMPONENT_TYPE_UINT64_NV'
+--
+--     -   'COMPONENT_TYPE_UINT8_NV'
+--
+-- -   Extending 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ScopeKHR':
+--
+--     -   'SCOPE_DEVICE_NV'
+--
+--     -   'SCOPE_QUEUE_FAMILY_NV'
+--
+--     -   'SCOPE_SUBGROUP_NV'
+--
+--     -   'SCOPE_WORKGROUP_NV'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV'
@@ -145,36 +183,34 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_cooperative_matrix  ( getPhysicalDeviceCooperativeMatrixPropertiesNV
+                                                   , pattern SCOPE_DEVICE_NV
+                                                   , pattern SCOPE_WORKGROUP_NV
+                                                   , pattern SCOPE_SUBGROUP_NV
+                                                   , pattern SCOPE_QUEUE_FAMILY_NV
+                                                   , pattern COMPONENT_TYPE_FLOAT16_NV
+                                                   , pattern COMPONENT_TYPE_FLOAT32_NV
+                                                   , pattern COMPONENT_TYPE_FLOAT64_NV
+                                                   , pattern COMPONENT_TYPE_SINT8_NV
+                                                   , pattern COMPONENT_TYPE_SINT16_NV
+                                                   , pattern COMPONENT_TYPE_SINT32_NV
+                                                   , pattern COMPONENT_TYPE_SINT64_NV
+                                                   , pattern COMPONENT_TYPE_UINT8_NV
+                                                   , pattern COMPONENT_TYPE_UINT16_NV
+                                                   , pattern COMPONENT_TYPE_UINT32_NV
+                                                   , pattern COMPONENT_TYPE_UINT64_NV
                                                    , PhysicalDeviceCooperativeMatrixFeaturesNV(..)
                                                    , PhysicalDeviceCooperativeMatrixPropertiesNV(..)
                                                    , CooperativeMatrixPropertiesNV(..)
-                                                   , ScopeNV( SCOPE_DEVICE_NV
-                                                            , SCOPE_WORKGROUP_NV
-                                                            , SCOPE_SUBGROUP_NV
-                                                            , SCOPE_QUEUE_FAMILY_NV
-                                                            , ..
-                                                            )
-                                                   , ComponentTypeNV( COMPONENT_TYPE_FLOAT16_NV
-                                                                    , COMPONENT_TYPE_FLOAT32_NV
-                                                                    , COMPONENT_TYPE_FLOAT64_NV
-                                                                    , COMPONENT_TYPE_SINT8_NV
-                                                                    , COMPONENT_TYPE_SINT16_NV
-                                                                    , COMPONENT_TYPE_SINT32_NV
-                                                                    , COMPONENT_TYPE_SINT64_NV
-                                                                    , COMPONENT_TYPE_UINT8_NV
-                                                                    , COMPONENT_TYPE_UINT16_NV
-                                                                    , COMPONENT_TYPE_UINT32_NV
-                                                                    , COMPONENT_TYPE_UINT64_NV
-                                                                    , ..
-                                                                    )
+                                                   , ScopeNV
+                                                   , ComponentTypeNV
                                                    , NV_COOPERATIVE_MATRIX_SPEC_VERSION
                                                    , pattern NV_COOPERATIVE_MATRIX_SPEC_VERSION
                                                    , NV_COOPERATIVE_MATRIX_EXTENSION_NAME
                                                    , pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME
+                                                   , ScopeKHR(..)
+                                                   , ComponentTypeKHR(..)
                                                    ) where
 
-import Vulkan.Internal.Utils (enumReadPrec)
-import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
@@ -187,7 +223,6 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Show (showsPrec)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -195,7 +230,6 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
@@ -207,11 +241,8 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
-import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
-import GHC.Read (Read(readPrec))
-import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -221,6 +252,7 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -228,13 +260,31 @@ import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR)
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_FLOAT16_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_FLOAT32_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_FLOAT64_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT16_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT32_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT64_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT8_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT16_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT32_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT64_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT8_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(SCOPE_DEVICE_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(SCOPE_QUEUE_FAMILY_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(SCOPE_SUBGROUP_KHR))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(SCOPE_WORKGROUP_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(..))
+import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -322,6 +372,66 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
   pure $ ((r'), pProperties')
 
 
+-- No documentation found for TopLevel "VK_SCOPE_DEVICE_NV"
+pattern SCOPE_DEVICE_NV = SCOPE_DEVICE_KHR
+
+
+-- No documentation found for TopLevel "VK_SCOPE_WORKGROUP_NV"
+pattern SCOPE_WORKGROUP_NV = SCOPE_WORKGROUP_KHR
+
+
+-- No documentation found for TopLevel "VK_SCOPE_SUBGROUP_NV"
+pattern SCOPE_SUBGROUP_NV = SCOPE_SUBGROUP_KHR
+
+
+-- No documentation found for TopLevel "VK_SCOPE_QUEUE_FAMILY_NV"
+pattern SCOPE_QUEUE_FAMILY_NV = SCOPE_QUEUE_FAMILY_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_FLOAT16_NV"
+pattern COMPONENT_TYPE_FLOAT16_NV = COMPONENT_TYPE_FLOAT16_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_FLOAT32_NV"
+pattern COMPONENT_TYPE_FLOAT32_NV = COMPONENT_TYPE_FLOAT32_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_FLOAT64_NV"
+pattern COMPONENT_TYPE_FLOAT64_NV = COMPONENT_TYPE_FLOAT64_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_SINT8_NV"
+pattern COMPONENT_TYPE_SINT8_NV = COMPONENT_TYPE_SINT8_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_SINT16_NV"
+pattern COMPONENT_TYPE_SINT16_NV = COMPONENT_TYPE_SINT16_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_SINT32_NV"
+pattern COMPONENT_TYPE_SINT32_NV = COMPONENT_TYPE_SINT32_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_SINT64_NV"
+pattern COMPONENT_TYPE_SINT64_NV = COMPONENT_TYPE_SINT64_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_UINT8_NV"
+pattern COMPONENT_TYPE_UINT8_NV = COMPONENT_TYPE_UINT8_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_UINT16_NV"
+pattern COMPONENT_TYPE_UINT16_NV = COMPONENT_TYPE_UINT16_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_UINT32_NV"
+pattern COMPONENT_TYPE_UINT32_NV = COMPONENT_TYPE_UINT32_KHR
+
+
+-- No documentation found for TopLevel "VK_COMPONENT_TYPE_UINT64_NV"
+pattern COMPONENT_TYPE_UINT64_NV = COMPONENT_TYPE_UINT64_KHR
+
+
 -- | VkPhysicalDeviceCooperativeMatrixFeaturesNV - Structure describing
 -- cooperative matrix features that can be supported by an implementation
 --
@@ -349,10 +459,10 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
-  { -- | #features-cooperativeMatrix# @cooperativeMatrix@ indicates that the
+  { -- | #features-cooperativeMatrix-NV# @cooperativeMatrix@ indicates that the
     -- implementation supports the @CooperativeMatrixNV@ SPIR-V capability.
     cooperativeMatrix :: Bool
-  , -- | #features-cooperativeMatrixRobustBufferAccess#
+  , -- | #features-cooperativeMatrixRobustBufferAccess-NV#
     -- @cooperativeMatrixRobustBufferAccess@ indicates that the implementation
     -- supports robust buffer access for SPIR-V @OpCooperativeMatrixLoadNV@ and
     -- @OpCooperativeMatrixStoreNV@ instructions.
@@ -422,7 +532,7 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatrixPropertiesNV
-  { -- | #limits-cooperativeMatrixSupportedStages#
+  { -- | #limits-cooperativeMatrixSupportedStages-NV#
     -- @cooperativeMatrixSupportedStages@ is a bitfield of
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' describing
     -- the shader stages that cooperative matrix instructions are supported in.
@@ -588,167 +698,13 @@ instance Zero CooperativeMatrixPropertiesNV where
            zero
 
 
--- | VkScopeNV - Specify SPIR-V scope
---
--- = Description
---
--- All enum values match the corresponding SPIR-V value.
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
--- 'CooperativeMatrixPropertiesNV'
-newtype ScopeNV = ScopeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
+-- No documentation found for TopLevel "VkScopeNV"
+type ScopeNV = ScopeKHR
 
--- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'SCOPE_DEVICE_NV' corresponds to SPIR-V 'Vulkan.Core10.Handles.Device'
--- scope.
-pattern SCOPE_DEVICE_NV = ScopeNV 1
+-- No documentation found for TopLevel "VkComponentTypeNV"
+type ComponentTypeNV = ComponentTypeKHR
 
--- | 'SCOPE_WORKGROUP_NV' corresponds to SPIR-V @Workgroup@ scope.
-pattern SCOPE_WORKGROUP_NV = ScopeNV 2
-
--- | 'SCOPE_SUBGROUP_NV' corresponds to SPIR-V @Subgroup@ scope.
-pattern SCOPE_SUBGROUP_NV = ScopeNV 3
-
--- | 'SCOPE_QUEUE_FAMILY_NV' corresponds to SPIR-V @QueueFamily@ scope.
-pattern SCOPE_QUEUE_FAMILY_NV = ScopeNV 5
-
-{-# COMPLETE
-  SCOPE_DEVICE_NV
-  , SCOPE_WORKGROUP_NV
-  , SCOPE_SUBGROUP_NV
-  , SCOPE_QUEUE_FAMILY_NV ::
-    ScopeNV
-  #-}
-
-conNameScopeNV :: String
-conNameScopeNV = "ScopeNV"
-
-enumPrefixScopeNV :: String
-enumPrefixScopeNV = "SCOPE_"
-
-showTableScopeNV :: [(ScopeNV, String)]
-showTableScopeNV =
-  [ (SCOPE_DEVICE_NV, "DEVICE_NV")
-  , (SCOPE_WORKGROUP_NV, "WORKGROUP_NV")
-  , (SCOPE_SUBGROUP_NV, "SUBGROUP_NV")
-  , (SCOPE_QUEUE_FAMILY_NV, "QUEUE_FAMILY_NV")
-  ]
-
-instance Show ScopeNV where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixScopeNV
-      showTableScopeNV
-      conNameScopeNV
-      (\(ScopeNV x) -> x)
-      (showsPrec 11)
-
-instance Read ScopeNV where
-  readPrec =
-    enumReadPrec
-      enumPrefixScopeNV
-      showTableScopeNV
-      conNameScopeNV
-      ScopeNV
-
--- | VkComponentTypeNV - Specify SPIR-V cooperative matrix component type
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
--- 'CooperativeMatrixPropertiesNV'
-newtype ComponentTypeNV = ComponentTypeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | 'COMPONENT_TYPE_FLOAT16_NV' corresponds to SPIR-V @OpTypeFloat@ 16.
-pattern COMPONENT_TYPE_FLOAT16_NV = ComponentTypeNV 0
-
--- | 'COMPONENT_TYPE_FLOAT32_NV' corresponds to SPIR-V @OpTypeFloat@ 32.
-pattern COMPONENT_TYPE_FLOAT32_NV = ComponentTypeNV 1
-
--- | 'COMPONENT_TYPE_FLOAT64_NV' corresponds to SPIR-V @OpTypeFloat@ 64.
-pattern COMPONENT_TYPE_FLOAT64_NV = ComponentTypeNV 2
-
--- | 'COMPONENT_TYPE_SINT8_NV' corresponds to SPIR-V @OpTypeInt@ 8 1.
-pattern COMPONENT_TYPE_SINT8_NV = ComponentTypeNV 3
-
--- | 'COMPONENT_TYPE_SINT16_NV' corresponds to SPIR-V @OpTypeInt@ 16 1.
-pattern COMPONENT_TYPE_SINT16_NV = ComponentTypeNV 4
-
--- | 'COMPONENT_TYPE_SINT32_NV' corresponds to SPIR-V @OpTypeInt@ 32 1.
-pattern COMPONENT_TYPE_SINT32_NV = ComponentTypeNV 5
-
--- | 'COMPONENT_TYPE_SINT64_NV' corresponds to SPIR-V @OpTypeInt@ 64 1.
-pattern COMPONENT_TYPE_SINT64_NV = ComponentTypeNV 6
-
--- | 'COMPONENT_TYPE_UINT8_NV' corresponds to SPIR-V @OpTypeInt@ 8 0.
-pattern COMPONENT_TYPE_UINT8_NV = ComponentTypeNV 7
-
--- | 'COMPONENT_TYPE_UINT16_NV' corresponds to SPIR-V @OpTypeInt@ 16 0.
-pattern COMPONENT_TYPE_UINT16_NV = ComponentTypeNV 8
-
--- | 'COMPONENT_TYPE_UINT32_NV' corresponds to SPIR-V @OpTypeInt@ 32 0.
-pattern COMPONENT_TYPE_UINT32_NV = ComponentTypeNV 9
-
--- | 'COMPONENT_TYPE_UINT64_NV' corresponds to SPIR-V @OpTypeInt@ 64 0.
-pattern COMPONENT_TYPE_UINT64_NV = ComponentTypeNV 10
-
-{-# COMPLETE
-  COMPONENT_TYPE_FLOAT16_NV
-  , COMPONENT_TYPE_FLOAT32_NV
-  , COMPONENT_TYPE_FLOAT64_NV
-  , COMPONENT_TYPE_SINT8_NV
-  , COMPONENT_TYPE_SINT16_NV
-  , COMPONENT_TYPE_SINT32_NV
-  , COMPONENT_TYPE_SINT64_NV
-  , COMPONENT_TYPE_UINT8_NV
-  , COMPONENT_TYPE_UINT16_NV
-  , COMPONENT_TYPE_UINT32_NV
-  , COMPONENT_TYPE_UINT64_NV ::
-    ComponentTypeNV
-  #-}
-
-conNameComponentTypeNV :: String
-conNameComponentTypeNV = "ComponentTypeNV"
-
-enumPrefixComponentTypeNV :: String
-enumPrefixComponentTypeNV = "COMPONENT_TYPE_"
-
-showTableComponentTypeNV :: [(ComponentTypeNV, String)]
-showTableComponentTypeNV =
-  [ (COMPONENT_TYPE_FLOAT16_NV, "FLOAT16_NV")
-  , (COMPONENT_TYPE_FLOAT32_NV, "FLOAT32_NV")
-  , (COMPONENT_TYPE_FLOAT64_NV, "FLOAT64_NV")
-  , (COMPONENT_TYPE_SINT8_NV, "SINT8_NV")
-  , (COMPONENT_TYPE_SINT16_NV, "SINT16_NV")
-  , (COMPONENT_TYPE_SINT32_NV, "SINT32_NV")
-  , (COMPONENT_TYPE_SINT64_NV, "SINT64_NV")
-  , (COMPONENT_TYPE_UINT8_NV, "UINT8_NV")
-  , (COMPONENT_TYPE_UINT16_NV, "UINT16_NV")
-  , (COMPONENT_TYPE_UINT32_NV, "UINT32_NV")
-  , (COMPONENT_TYPE_UINT64_NV, "UINT64_NV")
-  ]
-
-instance Show ComponentTypeNV where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixComponentTypeNV
-      showTableComponentTypeNV
-      conNameComponentTypeNV
-      (\(ComponentTypeNV x) -> x)
-      (showsPrec 11)
-
-instance Read ComponentTypeNV where
-  readPrec =
-    enumReadPrec
-      enumPrefixComponentTypeNV
-      showTableComponentTypeNV
-      conNameComponentTypeNV
-      ComponentTypeNV
 
 type NV_COOPERATIVE_MATRIX_SPEC_VERSION = 1
 

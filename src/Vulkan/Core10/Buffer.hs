@@ -61,6 +61,7 @@ import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (BufferDeviceAddressCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
 import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationBufferCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
@@ -107,10 +108,41 @@ foreign import ccall
 -- -   #VUID-vkCreateBuffer-flags-00911# If the @flags@ member of
 --     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
+--     and the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     feature is not enabled, creating this 'Vulkan.Core10.Handles.Buffer'
+--     /must/ not cause the total required sparse memory for all currently
+--     valid sparse resources on the device to exceed
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
+--
+-- -   #VUID-vkCreateBuffer-flags-09383# If the @flags@ member of
+--     @pCreateInfo@ includes
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     feature is enabled, and the @usage@ member of @pCreateInfo@ contains
+--     bits not in
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseBufferUsageFlags@,
 --     creating this 'Vulkan.Core10.Handles.Buffer' /must/ not cause the
 --     total required sparse memory for all currently valid sparse
---     resources on the device to exceed
+--     resources on the device, excluding 'Vulkan.Core10.Handles.Buffer'
+--     created with @usage@ member of @pCreateInfo@ containing bits in
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseBufferUsageFlags@
+--     and 'Vulkan.Core10.Handles.Image' created with @usage@ member of
+--     @pCreateInfo@ containing bits in
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseImageUsageFlags@,
+--     to exceed
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
+--
+-- -   #VUID-vkCreateBuffer-flags-09384# If the @flags@ member of
+--     @pCreateInfo@ includes
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
+--     and the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     feature is enabled, creating this 'Vulkan.Core10.Handles.Buffer'
+--     /must/ not cause the total required sparse memory for all currently
+--     valid sparse resources on the device to exceed
+--     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseAddressSpaceSize@
 --
 -- -   #VUID-vkCreateBuffer-pNext-06387# If using the
 --     'Vulkan.Core10.Handles.Buffer' for an import operation from a
@@ -279,6 +311,14 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- | VkBufferCreateInfo - Structure specifying the parameters of a newly
 -- created buffer object
 --
+-- = Description
+--
+-- If a
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+-- structure is present in the @pNext@ chain,
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@
+-- from that structure is used instead of @usage@ from this structure.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
@@ -410,18 +450,18 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     creating this 'Vulkan.Core10.Handles.Buffer' /must/ not cause the
 --     total required space for all currently valid buffers using this flag
 --     on the device to exceed
---     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@samplerDescriptorBufferAddressSpaceSize@
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferPropertiesEXT'::@samplerDescriptorBufferAddressSpaceSize@
 --     or
---     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@descriptorBufferAddressSpaceSize@
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferPropertiesEXT'::@descriptorBufferAddressSpaceSize@
 --
 -- -   #VUID-VkBufferCreateInfo-usage-08098# If @usage@ includes
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     creating this 'Vulkan.Core10.Handles.Buffer' /must/ not cause the
 --     total required space for all currently valid buffers using this flag
 --     on the device to exceed
---     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@resourceDescriptorBufferAddressSpaceSize@
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferPropertiesEXT'::@resourceDescriptorBufferAddressSpaceSize@
 --     or
---     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@descriptorBufferAddressSpaceSize@
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferPropertiesEXT'::@descriptorBufferAddressSpaceSize@
 --
 -- -   #VUID-VkBufferCreateInfo-flags-08099# If @flags@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
@@ -453,6 +493,17 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-VkBufferCreateInfo-None-09205# If the @pNext@ chain does not
+--     include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@ must be a valid combination of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
+--
+-- -   #VUID-VkBufferCreateInfo-None-09206# If the @pNext@ chain does not
+--     include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@ /must/ not be @0@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBufferCreateInfo-sType-sType# @sType@ /must/ be
@@ -464,6 +515,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
@@ -477,13 +529,6 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     combination of
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
 --     values
---
--- -   #VUID-VkBufferCreateInfo-usage-parameter# @usage@ /must/ be a valid
---     combination of
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
---
--- -   #VUID-VkBufferCreateInfo-usage-requiredbitmask# @usage@ /must/ not
---     be @0@
 --
 -- -   #VUID-VkBufferCreateInfo-sharingMode-parameter# @sharingMode@ /must/
 --     be a valid 'Vulkan.Core10.Enums.SharingMode.SharingMode' value
@@ -538,6 +583,7 @@ instance Extensible BufferCreateInfo where
     | Just Refl <- eqT @e @BufferOpaqueCaptureAddressCreateInfo = Just f
     | Just Refl <- eqT @e @ExternalMemoryBufferCreateInfo = Just f
     | Just Refl <- eqT @e @DedicatedAllocationBufferCreateInfoNV = Just f
+    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfoKHR = Just f
     | otherwise = Nothing
 
 instance ( Extendss BufferCreateInfo es

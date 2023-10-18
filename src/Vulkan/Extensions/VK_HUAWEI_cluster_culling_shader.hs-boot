@@ -15,7 +15,10 @@
 --     405
 --
 -- [__Revision__]
---     1
+--     2
+--
+-- [__Ratification Status__]
+--     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -63,29 +66,29 @@
 --
 -- == Description
 --
--- Cluster Culling Shader(CCS) is similar to the existing compute shader;
--- its main purpose is to provide an execution environment in order to
--- perform coarse-level geometry culling and level-of-detail selection more
--- efficiently on GPU.
+-- Cluster Culling Shaders (CCS) are similar to the existing compute
+-- shaders. Their main purpose is to provide an execution environment in
+-- order to perform coarse-level geometry culling and LOD selection more
+-- efficiently on the GPU.
 --
--- The traditional 2-pass GPU culling solution using compute shader needs a
--- pipeline barrier between compute pipeline and graphics pipeline,
--- sometimes, in order to optimize performance, an additional compaction
--- process may also be required. this extension improve the above mentioned
--- shortcomings which can allow compute shader directly emit visible
--- clusters to following graphics pipeline.
+-- The traditional 2-pass GPU culling solution using a compute shader
+-- sometimes needs a pipeline barrier between compute and graphics pipeline
+-- to optimize performance. An additional compaction process may also be
+-- required. This extension addresses these shortcomings, allowing compute
+-- shaders to directly emit visible clusters to the following graphics
+-- pipeline.
 --
--- A set of new built-in output variables are used to express visible
--- cluster, in addition, a new built-in function is used to emit these
--- variables from CCS to IA stage, then IA can use these variables to
--- fetches vertices of visible cluster and drive vertex shader to shading
--- these vertices. Note that ccs do not work at the same time with geometry
--- shader or tessellation shader.
+-- A set of new built-in output variables are used to express a visible
+-- cluster. In addition, a new built-in function is used to emit these
+-- variables from CCS to the IA stage. The IA stage can use these variables
+-- to fetches vertices of a visible cluster and drive vertex shaders to
+-- shading these vertices.
 --
--- As stated above, both IA and vertex shader are preserved, vertex shader
--- still used for vertices position shading, instead of directly outputting
--- a set of transformed vertices from compute shader, this makes CCS more
--- suitable for mobile GPUs.
+-- Note that CCS do not work with geometry or tessellation shaders, but
+-- both IA and vertex shaders are preserved. Vertex shaders are still used
+-- for vertex position shading, instead of directly outputting transformed
+-- vertices from the compute shader. This makes CCS more suitable for
+-- mobile GPUs.
 --
 -- == New Commands
 --
@@ -155,7 +158,7 @@
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ClusterCullingShadingHUAWEI ClusterCullingShadingHUAWEI>
 --
--- == Sample code
+-- == Sample Code
 --
 -- Example of cluster culling in a GLSL shader
 --
@@ -348,6 +351,10 @@
 -- -   Revision 1, 2022-11-18 (YuChang Wang)
 --
 --     -   Internal revisions
+--
+-- -   Revision 2, 2023-04-02 (Jon Leech)
+--
+--     -   Grammar edits.
 --
 -- == See Also
 --
