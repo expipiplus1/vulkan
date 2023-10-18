@@ -27,7 +27,7 @@ source-repository head
 custom-setup
   setup-depends:
       Cabal ==3.*
-    , base
+    , base <5
     , cabal-doctest >=1 && <1.1
 
 library

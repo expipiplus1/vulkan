@@ -54,7 +54,7 @@ tests:
 
 custom-setup:
   dependencies:
-  - base
+  - base < 5
   - Cabal >= 3 && < 4
   - cabal-doctest >= 1 && <1.1
 
