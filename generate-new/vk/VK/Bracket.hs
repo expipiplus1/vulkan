@@ -58,7 +58,7 @@ brackets marshaledCommands handles = context "brackets" $ do
 
   -- TODO: Missing functions here should be warnings, because we might be
   -- generating a different version of the spec.
-  bs <- sequenceV
+  bs <- sequenceV $
     [ cdBracket "Instance"
     , cdBracket "Device"
     , cdBracket "CommandPool"
@@ -134,6 +134,12 @@ brackets marshaledCommands handles = context "brackets" $ do
                    "vkDestroyShaderEXT"
                    "vkWithShadersEXT"
     -- , cdBracket "SemaphoreSciSyncPoolNV"
+    ] <>
+    [ cdBracket "CudaModuleNV"
+    | "VkCudaModuleNV" `elem` (hName <$> handles)
+    ] <>
+    [ cdBracket "CudaFunctionNV"
+    | "VkCudaFunctionNV" `elem` (hName <$> handles)
     ]
 
   --

@@ -281,6 +281,10 @@ dualPurposeBytestrings = BespokeScheme $ \case
       a | (Ptr NonConst Void) <- type' a, "pData" <- name a ->
         Just (Returned ByteString)
       _ -> Nothing
+    | c == "vkGetCudaModuleCacheNV" -> \case
+      a | (Ptr NonConst Void) <- type' a, "pCacheData" <- name a ->
+        Just (Returned ByteString)
+      _ -> Nothing
   _ -> const Nothing
 
 difficultLengths :: [BespokeScheme]
@@ -1276,6 +1280,10 @@ cuLaunchSchemes =
       "VkCuLaunchInfoNVX" -> \case
         a | "pParams" <- name a -> Just (Vector NotNullable VoidPtr)
         a | "pExtras" <- name a -> Just (Vector NotNullable VoidPtr)
+        _                       -> Nothing
+      "VkCudaLaunchInfoNV" -> \case
+        a | "pParams" <- name a -> Just (Vector Nullable VoidPtr)
+        a | "pExtras" <- name a -> Just (Vector Nullable VoidPtr)
         _                       -> Nothing
       _ -> const Nothing
 
