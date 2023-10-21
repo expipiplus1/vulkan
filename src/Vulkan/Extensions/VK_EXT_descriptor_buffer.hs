@@ -724,7 +724,7 @@ foreign import ccall
 -- -   #VUID-vkGetDescriptorEXT-dataSize-08125# @dataSize@ /must/ equal the
 --     size of a descriptor of type 'DescriptorGetInfoEXT'::@type@
 --     determined by the value in
---     'PhysicalDeviceDescriptorBufferPropertiesEXT', or
+--     'PhysicalDeviceDescriptorBufferPropertiesEXT' , or determined by
 --     'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT'::@combinedImageSamplerDensityMapDescriptorSize@
 --     if @pDescriptorInfo@ specifies a
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'

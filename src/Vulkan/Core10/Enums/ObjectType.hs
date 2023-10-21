@@ -30,6 +30,8 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
                                                   , OBJECT_TYPE_MICROMAP_EXT
                                                   , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
+                                                  , OBJECT_TYPE_CUDA_FUNCTION_NV
+                                                  , OBJECT_TYPE_CUDA_MODULE_NV
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
                                                   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
                                                   , OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
@@ -268,6 +270,12 @@ pattern OBJECT_TYPE_MICROMAP_EXT = ObjectType 1000396000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA"
 pattern OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA = ObjectType 1000366000
 
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_CUDA_FUNCTION_NV"
+pattern OBJECT_TYPE_CUDA_FUNCTION_NV = ObjectType 1000307001
+
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_CUDA_MODULE_NV"
+pattern OBJECT_TYPE_CUDA_MODULE_NV = ObjectType 1000307000
+
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
 pattern OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV = ObjectType 1000277000
 
@@ -350,6 +358,8 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = ObjectType 1000156000
   , OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
   , OBJECT_TYPE_MICROMAP_EXT
   , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
+  , OBJECT_TYPE_CUDA_FUNCTION_NV
+  , OBJECT_TYPE_CUDA_MODULE_NV
   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
   , OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
@@ -417,6 +427,8 @@ showTableObjectType =
     ( OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
     , "BUFFER_COLLECTION_FUCHSIA"
     )
+  , (OBJECT_TYPE_CUDA_FUNCTION_NV, "CUDA_FUNCTION_NV")
+  , (OBJECT_TYPE_CUDA_MODULE_NV, "CUDA_MODULE_NV")
   ,
     ( OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
     , "INDIRECT_COMMANDS_LAYOUT_NV"

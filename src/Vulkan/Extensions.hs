@@ -28,6 +28,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_ANDROID_external_format_resolve
                           , module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
                           , module Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
+                          , module Vulkan.Extensions.VK_ARM_scheduling_controls
                           , module Vulkan.Extensions.VK_ARM_shader_core_builtins
                           , module Vulkan.Extensions.VK_ARM_shader_core_properties
                           , module Vulkan.Extensions.VK_EXT_4444_formats
@@ -282,6 +283,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_copy_memory_indirect
                           , module Vulkan.Extensions.VK_NV_corner_sampled_image
                           , module Vulkan.Extensions.VK_NV_coverage_reduction_mode
+                          , module Vulkan.Extensions.VK_NV_cuda_kernel_launch
                           , module Vulkan.Extensions.VK_NV_dedicated_allocation
                           , module Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
                           , module Vulkan.Extensions.VK_NV_descriptor_pool_overallocation
@@ -370,6 +372,7 @@ import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
 import Vulkan.Extensions.VK_ANDROID_external_format_resolve
 import Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
 import Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
+import Vulkan.Extensions.VK_ARM_scheduling_controls
 import Vulkan.Extensions.VK_ARM_shader_core_builtins
 import Vulkan.Extensions.VK_ARM_shader_core_properties
 import Vulkan.Extensions.VK_EXT_4444_formats
@@ -624,6 +627,7 @@ import Vulkan.Extensions.VK_NV_cooperative_matrix
 import Vulkan.Extensions.VK_NV_copy_memory_indirect
 import Vulkan.Extensions.VK_NV_corner_sampled_image
 import Vulkan.Extensions.VK_NV_coverage_reduction_mode
+import Vulkan.Extensions.VK_NV_cuda_kernel_launch
 import Vulkan.Extensions.VK_NV_dedicated_allocation
 import Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
 import Vulkan.Extensions.VK_NV_descriptor_pool_overallocation

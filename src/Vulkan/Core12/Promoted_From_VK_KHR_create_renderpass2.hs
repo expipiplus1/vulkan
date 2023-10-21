@@ -905,7 +905,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
 -- -   #VUID-VkAttachmentDescription2-pNext-06705# If the @pNext@ chain
---     does includes a
+--     includes a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 --     structure, @format@ includes a stencil component, and
 --     @stencilLoadOp@ is

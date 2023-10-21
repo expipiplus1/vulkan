@@ -1545,7 +1545,7 @@ instance Zero ApplicationInfo where
 --     bit set, the list of enabled extensions in @ppEnabledExtensionNames@
 --     /must/ contain @VK_KHR_portability_enumeration@
 --
--- -   #VUID-VkInstanceCreateInfo-pNext# If the @pNext@ chain of
+-- -   #VUID-VkInstanceCreateInfo-pNext-09400# If the @pNext@ chain of
 --     'InstanceCreateInfo' includes a
 --     'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG'
 --     structure, the list of enabled extensions in

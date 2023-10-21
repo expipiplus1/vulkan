@@ -5,6 +5,8 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , BufferCollectionFUCHSIA
                                   , CuFunctionNVX
                                   , CuModuleNVX
+                                  , CudaFunctionNV
+                                  , CudaModuleNV
                                   , DebugReportCallbackEXT
                                   , DebugUtilsMessengerEXT
                                   , DeferredOperationKHR
@@ -35,6 +37,12 @@ data CuFunctionNVX
 
 
 data CuModuleNVX
+
+
+data CudaFunctionNV
+
+
+data CudaModuleNV
 
 
 data DebugReportCallbackEXT

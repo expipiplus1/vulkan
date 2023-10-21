@@ -369,10 +369,10 @@ instance Zero PushConstantRange where
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
 --     and
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorSampledImages@
@@ -400,10 +400,10 @@ instance Zero PushConstantRange where
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02214# The total
 --     number of bindings in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a @descriptorType@ of
+--     bit set and with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
+--     @pSetLayouts@, /must/ be less than or equal to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxPerStageDescriptorInlineUniformBlocks@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03022# The total

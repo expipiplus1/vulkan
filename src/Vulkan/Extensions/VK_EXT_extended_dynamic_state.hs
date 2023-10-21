@@ -166,7 +166,7 @@
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state VK_EXT_vertex_input_dynamic_state>
 -- allows the stride to be changed freely when supported via
--- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'[].
+-- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'.
 --
 -- == Version History
 --

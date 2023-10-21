@@ -529,11 +529,11 @@ cmdCopyMemoryToImageIndirectNV commandBuffer
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 data CopyMemoryIndirectCommandNV = CopyMemoryIndirectCommandNV
-  { -- | @srcAddress@ is the starting address of the source host or device memory
-    -- to copy from.
+  { -- | @srcAddress@ is the starting address of the source device memory to copy
+    -- from.
     srcAddress :: DeviceAddress
-  , -- | @dstAddress@ is the starting address of the destination host or device
-    -- memory to copy to.
+  , -- | @dstAddress@ is the starting address of the destination device memory to
+    -- copy to.
     dstAddress :: DeviceAddress
   , -- | @size@ is the size of the copy in bytes.
     size :: DeviceSize
@@ -618,8 +618,8 @@ instance Zero CopyMemoryIndirectCommandNV where
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D'
 data CopyMemoryToImageIndirectCommandNV = CopyMemoryToImageIndirectCommandNV
-  { -- | @srcAddress@ is the starting address of the source host or device memory
-    -- to copy from.
+  { -- | @srcAddress@ is the starting address of the source device memory to copy
+    -- from.
     srcAddress :: DeviceAddress
   , -- | @bufferRowLength@ and @bufferImageHeight@ specify in texels a subregion
     -- of a larger two- or three-dimensional image in buffer memory, and

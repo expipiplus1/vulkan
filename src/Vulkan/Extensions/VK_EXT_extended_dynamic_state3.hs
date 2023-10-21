@@ -299,7 +299,7 @@
 -- 1) What about the VkPipelineMultisampleStateCreateInfo state
 -- @sampleShadingEnable@ and @minSampleShading@?
 --
--- [UNRESOLVED]
+-- [__UNRESOLVED__]
 --
 --     -   @sampleShadingEnable@ and @minSampleShading@ are required when
 --         compiling the fragment shader, and it is not meaningful to set
@@ -525,11 +525,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetTessellationDomainOriginEXT-None-08576# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3TessellationDomainOrigin extendedDynamicState3TessellationDomainOrigin>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetTessellationDomainOriginEXT-None-09423# At least one
+--     of the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3TessellationDomainOrigin extendedDynamicState3TessellationDomainOrigin>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -627,11 +632,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDepthClampEnableEXT-None-08582# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClampEnable extendedDynamicState3DepthClampEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetDepthClampEnableEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3DepthClampEnable extendedDynamicState3DepthClampEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetDepthClampEnableEXT-depthClamp-07449# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthClamp depthClamp>
@@ -722,11 +732,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetPolygonModeEXT-None-08566# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3PolygonMode extendedDynamicState3PolygonMode>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetPolygonModeEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3PolygonMode extendedDynamicState3PolygonMode>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetPolygonModeEXT-fillModeNonSolid-07424# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fillModeNonSolid fillModeNonSolid>
@@ -828,11 +843,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetRasterizationSamplesEXT-None-08552# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationSamples extendedDynamicState3RasterizationSamples>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetRasterizationSamplesEXT-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationSamples extendedDynamicState3RasterizationSamples>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -922,11 +942,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetSampleMaskEXT-None-08504# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3SampleMask extendedDynamicState3SampleMask>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetSampleMaskEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3SampleMask extendedDynamicState3SampleMask>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1029,11 +1054,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetAlphaToCoverageEnableEXT-None-08506# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToCoverageEnable extendedDynamicState3AlphaToCoverageEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetAlphaToCoverageEnableEXT-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToCoverageEnable extendedDynamicState3AlphaToCoverageEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1120,11 +1150,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetAlphaToOneEnableEXT-None-08508# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToOneEnable extendedDynamicState3AlphaToOneEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetAlphaToOneEnableEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToOneEnable extendedDynamicState3AlphaToOneEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetAlphaToOneEnableEXT-alphaToOne-07607# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
@@ -1216,16 +1251,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLogicOpEnableEXT-None-08542# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LogicOpEnable extendedDynamicState3LogicOpEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetLogicOpEnableEXT-None-09423# At least one of the
+--     following /must/ be true:
 --
--- -   #VUID-vkCmdSetLogicOpEnableEXT-logicOp-07366# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-logicOp logicOp>
---     feature is not enabled, @logicOpEnable@ /must/ be
---     'Vulkan.Core10.FundamentalTypes.FALSE'
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3LogicOpEnable extendedDynamicState3LogicOpEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1312,11 +1347,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorBlendEnableEXT-None-08536# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEnable extendedDynamicState3ColorBlendEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetColorBlendEnableEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEnable extendedDynamicState3ColorBlendEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1426,11 +1466,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorBlendEquationEXT-None-08538# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEquation extendedDynamicState3ColorBlendEquation>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetColorBlendEquationEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEquation extendedDynamicState3ColorBlendEquation>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1543,11 +1588,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorWriteMaskEXT-None-08540# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorWriteMask extendedDynamicState3ColorWriteMask>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetColorWriteMaskEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ColorWriteMask extendedDynamicState3ColorWriteMask>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1654,11 +1704,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetRasterizationStreamEXT-None-08550# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationStream extendedDynamicState3RasterizationStream>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetRasterizationStreamEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationStream extendedDynamicState3RasterizationStream>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetRasterizationStreamEXT-transformFeedback-07411# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-transformFeedback transformFeedback>
@@ -1757,12 +1812,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetConservativeRasterizationModeEXT-None-08570# Either
---     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ConservativeRasterizationMode extendedDynamicState3ConservativeRasterizationMode>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetConservativeRasterizationModeEXT-None-09423# At least
+--     one of the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ConservativeRasterizationMode extendedDynamicState3ConservativeRasterizationMode>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -1857,12 +1916,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetExtraPrimitiveOverestimationSizeEXT-None-08572# Either
---     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ExtraPrimitiveOverestimationSize extendedDynamicState3ExtraPrimitiveOverestimationSize>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetExtraPrimitiveOverestimationSizeEXT-None-09423# At
+--     least one of the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ExtraPrimitiveOverestimationSize extendedDynamicState3ExtraPrimitiveOverestimationSize>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetExtraPrimitiveOverestimationSizeEXT-extraPrimitiveOverestimationSize-07428#
 --     @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@
@@ -1961,11 +2024,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDepthClipEnableEXT-None-08584# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipEnable extendedDynamicState3DepthClipEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetDepthClipEnableEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipEnable extendedDynamicState3DepthClipEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetDepthClipEnableEXT-depthClipEnable-07451# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthClipEnable depthClipEnable>
@@ -2056,11 +2124,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetSampleLocationsEnableEXT-None-08554# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3SampleLocationsEnable extendedDynamicState3SampleLocationsEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetSampleLocationsEnableEXT-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3SampleLocationsEnable extendedDynamicState3SampleLocationsEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2150,11 +2223,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetColorBlendAdvancedEXT-None-08592# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendAdvanced extendedDynamicState3ColorBlendAdvanced>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetColorBlendAdvancedEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendAdvanced extendedDynamicState3ColorBlendAdvanced>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2258,11 +2336,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetProvokingVertexModeEXT-None-08580# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ProvokingVertexMode extendedDynamicState3ProvokingVertexMode>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetProvokingVertexModeEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ProvokingVertexMode extendedDynamicState3ProvokingVertexMode>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetProvokingVertexModeEXT-provokingVertexMode-07447# If
 --     @provokingVertexMode@ is
@@ -2361,11 +2444,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLineRasterizationModeEXT-None-08558# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LineRasterizationMode extendedDynamicState3LineRasterizationMode>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetLineRasterizationModeEXT-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3LineRasterizationMode extendedDynamicState3LineRasterizationMode>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetLineRasterizationModeEXT-lineRasterizationMode-07418#
 --     If @lineRasterizationMode@ is
@@ -2478,11 +2566,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLineStippleEnableEXT-None-08560# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LineStippleEnable extendedDynamicState3LineStippleEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetLineStippleEnableEXT-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3LineStippleEnable extendedDynamicState3LineStippleEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2569,11 +2662,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDepthClipNegativeOneToOneEXT-None-08586# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipNegativeOneToOne extendedDynamicState3DepthClipNegativeOneToOne>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetDepthClipNegativeOneToOneEXT-None-09423# At least one
+--     of the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipNegativeOneToOne extendedDynamicState3DepthClipNegativeOneToOne>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetDepthClipNegativeOneToOneEXT-depthClipControl-07453#
 --     The
@@ -2665,11 +2763,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetViewportWScalingEnableNV-None-08594# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ViewportWScalingEnable extendedDynamicState3ViewportWScalingEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetViewportWScalingEnableNV-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ViewportWScalingEnable extendedDynamicState3ViewportWScalingEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2760,11 +2863,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetViewportSwizzleNV-None-08578# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ViewportSwizzle extendedDynamicState3ViewportSwizzle>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetViewportSwizzleNV-None-09423# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ViewportSwizzle extendedDynamicState3ViewportSwizzle>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2872,11 +2980,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageToColorEnableNV-None-08524# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorEnable extendedDynamicState3CoverageToColorEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetCoverageToColorEnableNV-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorEnable extendedDynamicState3CoverageToColorEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -2964,11 +3077,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageToColorLocationNV-None-08526# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorLocation extendedDynamicState3CoverageToColorLocation>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetCoverageToColorLocationNV-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorLocation extendedDynamicState3CoverageToColorLocation>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3056,11 +3174,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageModulationModeNV-None-08530# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationMode extendedDynamicState3CoverageModulationMode>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetCoverageModulationModeNV-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationMode extendedDynamicState3CoverageModulationMode>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3154,11 +3277,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageModulationTableEnableNV-None-08532# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTableEnable extendedDynamicState3CoverageModulationTableEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetCoverageModulationTableEnableNV-None-09423# At least
+--     one of the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTableEnable extendedDynamicState3CoverageModulationTableEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3250,11 +3378,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageModulationTableNV-None-08534# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTable extendedDynamicState3CoverageModulationTable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetCoverageModulationTableNV-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTable extendedDynamicState3CoverageModulationTable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3353,11 +3486,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetShadingRateImageEnableNV-None-08556# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ShadingRateImageEnable extendedDynamicState3ShadingRateImageEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetShadingRateImageEnableNV-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3ShadingRateImageEnable extendedDynamicState3ShadingRateImageEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3446,11 +3584,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetCoverageReductionModeNV-None-08528# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageReductionMode extendedDynamicState3CoverageReductionMode>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetCoverageReductionModeNV-None-09423# At least one of
+--     the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3CoverageReductionMode extendedDynamicState3CoverageReductionMode>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -3543,12 +3686,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetRepresentativeFragmentTestEnableNV-None-08522# Either
---     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RepresentativeFragmentTestEnable extendedDynamicState3RepresentativeFragmentTestEnable>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetRepresentativeFragmentTestEnableNV-None-09423# At
+--     least one of the following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState3RepresentativeFragmentTestEnable extendedDynamicState3RepresentativeFragmentTestEnable>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --

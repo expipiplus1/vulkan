@@ -37,14 +37,14 @@
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
+-- [__Last Modified Date__]
 --     2020-11-23
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires @VK_EXT_debug_utils@
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Ralph Potter, Samsung
 --

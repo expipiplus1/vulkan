@@ -395,6 +395,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkGetQueryPoolResults-None-09401# All queries used by the
+--     command /must/ not be uninitialized
+--
 -- -   #VUID-vkGetQueryPoolResults-firstQuery-00813# @firstQuery@ /must/ be
 --     less than the number of queries in @queryPool@
 --

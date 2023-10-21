@@ -2411,16 +2411,11 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     attachment by @renderPass@ /must/ have a @layerCount@ greater than
 --     the index of the most significant bit set in any of those view masks
 --
--- -   #VUID-VkFramebufferCreateInfo-renderPass-02746# If @renderPass@ was
---     specified with non-zero view masks, each element of @pAttachments@
---     that is referenced by @fragmentDensityMapAttachment@ /must/ have a
---     @layerCount@ equal to @1@ or greater than the index of the most
---     significant bit set in any of those view masks
---
--- -   #VUID-VkFramebufferCreateInfo-renderPass-02747# If @renderPass@ was
---     specified with all view masks equal to zero, each element of
+-- -   #VUID-VkFramebufferCreateInfo-renderPass-02746# Each element of
 --     @pAttachments@ that is referenced by @fragmentDensityMapAttachment@
---     /must/ have a @layerCount@ equal to @1@
+--     /must/ have a @layerCount@ equal to @1@ or if @renderPass@ was
+--     specified with non-zero view masks, greater than the index of the
+--     most significant bit set in any of those view masks
 --
 -- -   #VUID-VkFramebufferCreateInfo-pAttachments-02555# If @flags@ does
 --     not include
