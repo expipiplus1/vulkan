@@ -584,6 +584,11 @@ instance Zero PhysicalDeviceMemoryDecompressionPropertiesNV where
 -- -   #VUID-VkDecompressMemoryRegionNV-dstAddress-07687# The @dstAddress@
 --     /must/ be 4 byte aligned
 --
+-- -   #VUID-VkDecompressMemoryRegionNV-decompressionMethod-09395# If
+--     @decompressionMethod@ is
+--     'MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV', then
+--     @decompressedSize@ /must/ be less than or equal to 65536 bytes
+--
 -- -   #VUID-VkDecompressMemoryRegionNV-dstAddress-07688# The memory in
 --     range @dstAddress@ and @dstAddress@ + @decompressedSize@ /must/ be
 --     valid and bound to a 'Vulkan.Core10.Handles.DeviceMemory' object

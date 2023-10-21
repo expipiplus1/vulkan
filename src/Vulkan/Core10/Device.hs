@@ -78,6 +78,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_memory_overallocation_behavior (D
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (DevicePrivateDataCreateInfo)
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (DeviceQueueGlobalPriorityCreateInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (DeviceQueueShaderCoreControlCreateInfoARM)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -113,6 +114,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_corner_sampled_image (PhysicalDevi
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PhysicalDeviceCoverageReductionModeFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_clamp (PhysicalDeviceCubicClampFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_weights (PhysicalDeviceCubicWeightsFeaturesQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (PhysicalDeviceCudaKernelLaunchFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_bias_control (PhysicalDeviceDepthBiasControlFeaturesEXT)
@@ -214,6 +216,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (Phys
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (PhysicalDeviceScalarBlockLayoutFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsFeaturesARM)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
@@ -523,14 +526,25 @@ destroyDevice device allocator = liftIO . evalContT $ do
 --     includes the 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_PROTECTED_BIT'
 --     capability
 --
+-- -   #VUID-VkDeviceQueueCreateInfo-pNext-09398# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM'
+--     structure then
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsPropertiesARM'::@schedulingControlsFlags@
+--     /must/ contain
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDeviceQueueCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO'
 --
--- -   #VUID-VkDeviceQueueCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
+-- -   #VUID-VkDeviceQueueCreateInfo-pNext-pNext# Each @pNext@ member of
+--     any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_global_priority.DeviceQueueGlobalPriorityCreateInfoKHR'
+--     or
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM'
 --
 -- -   #VUID-VkDeviceQueueCreateInfo-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -583,6 +597,7 @@ instance Extensible DeviceQueueCreateInfo where
   getNext DeviceQueueCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceQueueCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @DeviceQueueShaderCoreControlCreateInfoARM = Just f
     | Just Refl <- eqT @e @DeviceQueueGlobalPriorityCreateInfoKHR = Just f
     | otherwise = Nothing
 
@@ -852,6 +867,21 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     is enabled, @ppEnabledExtensionNames@ /must/ not contain
 --     @VK_AMD_shader_fragment_mask@
 --
+-- -   #VUID-VkDeviceCreateInfo-pNext-09396# If the @pNext@ chain includes
+--     a
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM'
+--     structure, then it /must/ not be included in the @pNext@ chain of
+--     any of the 'DeviceQueueCreateInfo' structures in
+--     @pQueueCreateInfos@.
+--
+-- -   #VUID-VkDeviceCreateInfo-pNext-09397# If the @pNext@ chain includes
+--     a
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM'
+--     structure then
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsPropertiesARM'::@schedulingControlsFlags@
+--     /must/ contain
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDeviceCreateInfo-sType-sType# @sType@ /must/ be
@@ -865,6 +895,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 --     'Vulkan.Extensions.VK_AMD_memory_overallocation_behavior.DeviceMemoryOverallocationCreateInfoAMD',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_private_data.DevicePrivateDataCreateInfo',
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage.PhysicalDevice16BitStorageFeatures',
 --     'Vulkan.Extensions.VK_EXT_4444_formats.PhysicalDevice4444FormatsFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage.PhysicalDevice8BitStorageFeatures',
@@ -890,6 +921,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PhysicalDeviceCoverageReductionModeFeaturesNV',
 --     'Vulkan.Extensions.VK_QCOM_filter_cubic_clamp.PhysicalDeviceCubicClampFeaturesQCOM',
 --     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.PhysicalDeviceCubicWeightsFeaturesQCOM',
+--     'Vulkan.Extensions.VK_NV_cuda_kernel_launch.PhysicalDeviceCudaKernelLaunchFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_depth_bias_control.PhysicalDeviceDepthBiasControlFeaturesEXT',
@@ -990,6 +1022,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout.PhysicalDeviceScalarBlockLayoutFeatures',
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsFeaturesARM',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.PhysicalDeviceSeparateDepthStencilLayoutsFeatures',
 --     'Vulkan.Extensions.VK_EXT_shader_atomic_float2.PhysicalDeviceShaderAtomicFloat2FeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_shader_atomic_float.PhysicalDeviceShaderAtomicFloatFeaturesEXT',
@@ -1117,6 +1150,9 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceSchedulingControlsFeaturesARM = Just f
+    | Just Refl <- eqT @e @DeviceQueueShaderCoreControlCreateInfoARM = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceCudaKernelLaunchFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalFormatResolveFeaturesANDROID = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageProcessing2FeaturesQCOM = Just f

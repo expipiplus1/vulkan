@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [3.26.1] - 2023-10-21
+- Bump API version to v1.3.269
+
 ## [3.26] - 2023-10-17
 - Bump API version to v1.3.268
   - A breaking change is that `VkBufferMemoryBarrier` has extensions,

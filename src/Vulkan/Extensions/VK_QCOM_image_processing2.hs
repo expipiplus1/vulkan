@@ -330,11 +330,6 @@ instance Zero PhysicalDeviceImageProcessing2FeaturesQCOM where
 --
 -- = Description
 --
--- -   #limits-blockmatch-maxWindowExtent#@maxBlockMatchWindow@ is a
---     'Vulkan.Core10.FundamentalTypes.Extent2D' describing the largest
---     dimensions (@width@ and @height@) that /can/ be specified for the
---     block match window.
---
 -- If the 'PhysicalDeviceImageProcessing2PropertiesQCOM' structure is
 -- included in the @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
@@ -348,17 +343,16 @@ instance Zero PhysicalDeviceImageProcessing2FeaturesQCOM where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-VkPhysicalDeviceImageProcessing2PropertiesQCOM-sType-sType#
---     @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_PROPERTIES_QCOM'
---
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_image_processing2 VK_QCOM_image_processing2>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageProcessing2PropertiesQCOM = PhysicalDeviceImageProcessing2PropertiesQCOM
-  { -- No documentation found for Nested "VkPhysicalDeviceImageProcessing2PropertiesQCOM" "maxBlockMatchWindow"
+  { -- | #limits-blockmatch-maxWindowExtent# @maxBlockMatchWindow@ is a
+    -- 'Vulkan.Core10.FundamentalTypes.Extent2D' describing the largest
+    -- dimensions (@width@ and @height@) that /can/ be specified for the block
+    -- match window.
     maxBlockMatchWindow :: Extent2D }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

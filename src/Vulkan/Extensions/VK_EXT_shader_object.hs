@@ -1919,6 +1919,16 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     feature is not enabled, @flags@ /must/ not include
 --     'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
+-- -   #VUID-VkShaderCreateInfoEXT-flags-09404# If @flags@ includes
+--     'SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT', the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-09405# If @flags@ includes
+--     'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT', the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-computeFullSubgroups computeFullSubgroups>
+--     feature /must/ be enabled
+--
 -- -   #VUID-VkShaderCreateInfoEXT-flags-08992# If @flags@ includes
 --     'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT', @stage@ /must/ be
 --     one of

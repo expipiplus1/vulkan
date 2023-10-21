@@ -16,6 +16,7 @@ jobs:
           signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
       - id: creds
+        name: Set up credentials
         run: |
           # Escape newlines
           DEPLOY_KEY="${DEPLOY_KEY//'%'/'%25'}"

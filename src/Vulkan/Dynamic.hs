@@ -114,6 +114,11 @@ import {-# SOURCE #-} Vulkan.Extensions.Handles (CuFunctionNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_binary_import (CuLaunchInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_binary_import (CuModuleCreateInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (CuModuleNVX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (CudaFunctionCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.Handles (CudaFunctionNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (CudaLaunchInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (CudaModuleCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.Handles (CudaModuleNV)
 import {-# SOURCE #-} Vulkan.Core10.Enums.CullModeFlagBits (CullModeFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_marker (DebugMarkerMarkerInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_marker (DebugMarkerObjectNameInfoEXT)
@@ -1271,6 +1276,12 @@ data DeviceCmds = DeviceCmds
   , pVkSetBufferCollectionImageConstraintsFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pImageConstraintsInfo" ::: Ptr ImageConstraintsInfoFUCHSIA) -> IO Result)
   , pVkDestroyBufferCollectionFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkGetBufferCollectionPropertiesFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result)
+  , pVkCreateCudaModuleNV :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr CudaModuleCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pModule" ::: Ptr CudaModuleNV) -> IO Result)
+  , pVkGetCudaModuleCacheNV :: FunPtr (Ptr Device_T -> CudaModuleNV -> ("pCacheSize" ::: Ptr CSize) -> ("pCacheData" ::: Ptr ()) -> IO Result)
+  , pVkCreateCudaFunctionNV :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr CudaFunctionCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pFunction" ::: Ptr CudaFunctionNV) -> IO Result)
+  , pVkDestroyCudaModuleNV :: FunPtr (Ptr Device_T -> CudaModuleNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
+  , pVkDestroyCudaFunctionNV :: FunPtr (Ptr Device_T -> CudaFunctionNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
+  , pVkCmdCudaLaunchKernelNV :: FunPtr (Ptr CommandBuffer_T -> ("pLaunchInfo" ::: Ptr CudaLaunchInfoNV) -> IO ())
   , pVkCmdBeginRendering :: FunPtr (Ptr CommandBuffer_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> IO ())
   , pVkCmdEndRendering :: FunPtr (Ptr CommandBuffer_T -> IO ())
   , pVkGetDescriptorSetLayoutHostMappingInfoVALVE :: FunPtr (Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ())
@@ -1801,7 +1812,14 @@ instance Zero DeviceCmds where
     nullFunPtr
     nullFunPtr
     nullFunPtr
-    nullFunPtr nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2309,6 +2327,12 @@ initDeviceCmds instanceCmds handle = do
   vkSetBufferCollectionImageConstraintsFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkSetBufferCollectionImageConstraintsFUCHSIA"#)
   vkDestroyBufferCollectionFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkDestroyBufferCollectionFUCHSIA"#)
   vkGetBufferCollectionPropertiesFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetBufferCollectionPropertiesFUCHSIA"#)
+  vkCreateCudaModuleNV <- getDeviceProcAddr' handle (Ptr "vkCreateCudaModuleNV"#)
+  vkGetCudaModuleCacheNV <- getDeviceProcAddr' handle (Ptr "vkGetCudaModuleCacheNV"#)
+  vkCreateCudaFunctionNV <- getDeviceProcAddr' handle (Ptr "vkCreateCudaFunctionNV"#)
+  vkDestroyCudaModuleNV <- getDeviceProcAddr' handle (Ptr "vkDestroyCudaModuleNV"#)
+  vkDestroyCudaFunctionNV <- getDeviceProcAddr' handle (Ptr "vkDestroyCudaFunctionNV"#)
+  vkCmdCudaLaunchKernelNV <- getDeviceProcAddr' handle (Ptr "vkCmdCudaLaunchKernelNV"#)
   vkCmdBeginRendering <- getFirstDeviceProcAddr [ (Ptr "vkCmdBeginRenderingKHR"#)
                                                 , (Ptr "vkCmdBeginRendering"#) ]
   vkCmdEndRendering <- getFirstDeviceProcAddr [ (Ptr "vkCmdEndRenderingKHR"#)
@@ -2786,6 +2810,12 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pImageConstraintsInfo" ::: Ptr ImageConstraintsInfoFUCHSIA) -> IO Result) vkSetBufferCollectionImageConstraintsFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyBufferCollectionFUCHSIA)
     (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result) vkGetBufferCollectionPropertiesFUCHSIA)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr CudaModuleCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pModule" ::: Ptr CudaModuleNV) -> IO Result) vkCreateCudaModuleNV)
+    (castFunPtr @_ @(Ptr Device_T -> CudaModuleNV -> ("pCacheSize" ::: Ptr CSize) -> ("pCacheData" ::: Ptr ()) -> IO Result) vkGetCudaModuleCacheNV)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr CudaFunctionCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pFunction" ::: Ptr CudaFunctionNV) -> IO Result) vkCreateCudaFunctionNV)
+    (castFunPtr @_ @(Ptr Device_T -> CudaModuleNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyCudaModuleNV)
+    (castFunPtr @_ @(Ptr Device_T -> CudaFunctionNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyCudaFunctionNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pLaunchInfo" ::: Ptr CudaLaunchInfoNV) -> IO ()) vkCmdCudaLaunchKernelNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> IO ()) vkCmdBeginRendering)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdEndRendering)
     (castFunPtr @_ @(Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ()) vkGetDescriptorSetLayoutHostMappingInfoVALVE)

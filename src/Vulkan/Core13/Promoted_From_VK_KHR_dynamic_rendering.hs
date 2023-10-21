@@ -799,17 +799,6 @@ instance Zero PipelineRenderingCreateInfo where
 --     width greater than or equal to
 --     \(\left\lceil{\frac{renderArea_{x}+renderArea_{width}}{maxFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
--- -   #VUID-VkRenderingInfo-pNext-06113# If the @pNext@ chain contains a
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
---     structure, its @deviceRenderAreaCount@ member is not 0, and the
---     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
---     structure included in the @pNext@ chain is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
---     width greater than or equal to
---     \(\left\lceil{\frac{pDeviceRenderAreas_{x}+pDeviceRenderAreas_{width}}{maxFragmentDensityTexelSize_{width}}}\right\rceil\)
---     for each element of @pDeviceRenderAreas@
---
 -- -   #VUID-VkRenderingInfo-pNext-06114# If the @pNext@ chain does not
 --     contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
@@ -820,6 +809,17 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     height greater than or equal to
 --     \(\left\lceil{\frac{renderArea_{y}+renderArea_{height}}{maxFragmentDensityTexelSize_{height}}}\right\rceil\)
+--
+-- -   #VUID-VkRenderingInfo-pNext-06113# If the @pNext@ chain contains a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
+--     structure, its @deviceRenderAreaCount@ member is not 0, and the
+--     @imageView@ member of a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     structure included in the @pNext@ chain is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
+--     width greater than or equal to
+--     \(\left\lceil{\frac{pDeviceRenderAreas_{x}+pDeviceRenderAreas_{width}}{maxFragmentDensityTexelSize_{width}}}\right\rceil\)
+--     for each element of @pDeviceRenderAreas@
 --
 -- -   #VUID-VkRenderingInfo-pNext-06115# If the @pNext@ chain contains a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
@@ -851,17 +851,6 @@ instance Zero PipelineRenderingCreateInfo where
 --     width greater than or equal to
 --     \(\left\lceil{\frac{renderArea_{x}+renderArea_{width}}{shadingRateAttachmentTexelSize_{width}}}\right\rceil\)
 --
--- -   #VUID-VkRenderingInfo-pNext-06120# If the @pNext@ chain contains a
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
---     structure, its @deviceRenderAreaCount@ member is not 0, and the
---     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
---     structure included in the @pNext@ chain is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
---     width greater than or equal to
---     \(\left\lceil{\frac{pDeviceRenderAreas_{x}+pDeviceRenderAreas_{width}}{shadingRateAttachmentTexelSize_{width}}}\right\rceil\)
---     for each element of @pDeviceRenderAreas@
---
 -- -   #VUID-VkRenderingInfo-pNext-06121# If the @pNext@ chain does not
 --     contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
@@ -872,6 +861,17 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     height greater than or equal to
 --     \(\left\lceil{\frac{renderArea_{y}+renderArea_{height}}{shadingRateAttachmentTexelSize_{height}}}\right\rceil\)
+--
+-- -   #VUID-VkRenderingInfo-pNext-06120# If the @pNext@ chain contains a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
+--     structure, its @deviceRenderAreaCount@ member is not 0, and the
+--     @imageView@ member of a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure included in the @pNext@ chain is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
+--     width greater than or equal to
+--     \(\left\lceil{\frac{pDeviceRenderAreas_{x}+pDeviceRenderAreas_{width}}{shadingRateAttachmentTexelSize_{width}}}\right\rceil\)
+--     for each element of @pDeviceRenderAreas@
 --
 -- -   #VUID-VkRenderingInfo-pNext-06122# If the @pNext@ chain contains a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
@@ -1194,24 +1194,34 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE' or
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
 --
--- -   #VUID-VkRenderingAttachmentInfo-imageView-06861# If @imageView@ is
---     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @resolveMode@ is not
---     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and the
---     @pNext@ chain of 'RenderingInfo' does not includes a
---     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
---     structure with the @multisampledRenderToSingleSampledEnable@ field
---     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @imageView@ /must/
+-- -   #VUID-VkRenderingAttachmentInfo-imageView-06861# @imageView@ /must/
 --     not have a sample count of
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' if all
+--     of the following hold:
 --
--- -   #VUID-VkRenderingAttachmentInfo-imageView-06862# If @imageView@ is
---     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @resolveMode@ is not
---     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and the
---     @pNext@ chain of 'RenderingInfo' does not includes a
---     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
---     structure with the @multisampledRenderToSingleSampledEnable@ field
---     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @resolveImageView@
---     /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     -   @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+--     -   @resolveMode@ is not
+--         'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
+--
+--     -   the @pNext@ chain of 'RenderingInfo' does not include a
+--         'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--         structure with the @multisampledRenderToSingleSampledEnable@
+--         field equal to 'Vulkan.Core10.FundamentalTypes.TRUE'
+--
+-- -   #VUID-VkRenderingAttachmentInfo-imageView-06862# @resolveImageView@
+--     /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE' if all of the
+--     following hold:
+--
+--     -   @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+--     -   @resolveMode@ is not
+--         'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
+--
+--     -   the @pNext@ chain of 'RenderingInfo' does not include a
+--         'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--         structure with the @multisampledRenderToSingleSampledEnable@
+--         field equal to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   #VUID-VkRenderingAttachmentInfo-imageView-06863# If @imageView@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @resolveMode@ is not
