@@ -1282,8 +1282,8 @@ cuLaunchSchemes =
         a | "pExtras" <- name a -> Just (Vector NotNullable VoidPtr)
         _                       -> Nothing
       "VkCudaLaunchInfoNV" -> \case
-        a | "pParams" <- name a -> Just (Vector Nullable VoidPtr)
-        a | "pExtras" <- name a -> Just (Vector Nullable VoidPtr)
+        a | "pParams" <- name a -> Just (Vector NotNullable VoidPtr)
+        a | "pExtras" <- name a -> Just (Vector NotNullable VoidPtr)
         _                       -> Nothing
       _ -> const Nothing
 
