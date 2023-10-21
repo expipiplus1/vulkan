@@ -40,8 +40,10 @@ echo "Generating VMA documentation" &&
   sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' \
          -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' \
          -e 's|^PREDEFINED *=|PREDEFINED = VMA_STATS_STRING_ENABLED=1 |' \
+         -e 's|^PREDEFINED *=|PREDEFINED = VMA_EXTENDS_VK_STRUCT(s)=s |' \
+         -e 's|@CMAKE_SOURCE_DIR@/||' \
          Doxyfile &&
-  nix-shell -p cmake vulkan-headers vulkan-loader doxygen --run 'cmake . -DBUILD_DOCUMENTATION=ON && cmake --build . --target doc_doxygen' )
+  nix-shell -p doxygen --run 'doxygen Doxyfile')
 
 echo "Generating Vulkan-Docs headers"
 (cd generate-new/Vulkan-Docs/xml &&
