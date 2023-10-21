@@ -374,6 +374,8 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
@@ -1124,6 +1126,12 @@ pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = DebugReportObjectTyp
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT = DebugReportObjectTypeEXT 1000366000
 
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV"
+pattern DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV = DebugReportObjectTypeEXT 1000307001
+
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV"
+pattern DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV = DebugReportObjectTypeEXT 1000307000
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT = DebugReportObjectTypeEXT 1000165000
 
@@ -1176,6 +1184,8 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObj
   , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
   , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
   , DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV
+  , DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV
   , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
   , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
   , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
@@ -1324,6 +1334,14 @@ showTableDebugReportObjectTypeEXT =
   ,
     ( DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
     , "BUFFER_COLLECTION_FUCHSIA_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV
+    , "CUDA_FUNCTION_NV"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV
+    , "CUDA_MODULE_NV"
     )
   ,
     ( DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT

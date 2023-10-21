@@ -171,6 +171,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (CopyMicromapToM
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_binary_import (CuFunctionCreateInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_binary_import (CuLaunchInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_binary_import (CuModuleCreateInfoNVX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (CudaFunctionCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (CudaLaunchInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (CudaModuleCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (D3D12FenceSubmitInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_marker (DebugMarkerMarkerInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_marker (DebugMarkerObjectNameInfoEXT)
@@ -236,6 +239,7 @@ import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (DevicePri
 import {-# SOURCE #-} Vulkan.Core10.Device (DeviceQueueCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (DeviceQueueGlobalPriorityCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (DeviceQueueInfo2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (DeviceQueueShaderCoreControlCreateInfoARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_LUNARG_direct_driver_loading (DirectDriverLoadingInfoLUNARG)
 import {-# SOURCE #-} Vulkan.Extensions.VK_LUNARG_direct_driver_loading (DirectDriverLoadingListLUNARG)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_directfb_surface (DirectFBSurfaceCreateInfoEXT)
@@ -489,6 +493,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_corner_sampled_image (PhysicalDevi
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PhysicalDeviceCoverageReductionModeFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_clamp (PhysicalDeviceCubicClampFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_weights (PhysicalDeviceCubicWeightsFeaturesQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (PhysicalDeviceCudaKernelLaunchFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (PhysicalDeviceCudaKernelLaunchPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
@@ -660,6 +666,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (PhysicalDeviceS
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (PhysicalDeviceSamplerFilterMinmaxProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (PhysicalDeviceScalarBlockLayoutFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsFeaturesARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsPropertiesARM)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
@@ -1296,7 +1304,11 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceImageProcessing2FeaturesQCOM = ()
   Extends DeviceCreateInfo PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceExternalFormatResolveFeaturesANDROID = ()
+  Extends DeviceCreateInfo PhysicalDeviceCudaKernelLaunchFeaturesNV = ()
+  Extends DeviceCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
+  Extends DeviceCreateInfo PhysicalDeviceSchedulingControlsFeaturesARM = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
+  Extends DeviceQueueCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
   Extends EventCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends EventCreateInfo ImportMetalSharedEventInfoEXT = ()
   Extends ExecutionGraphPipelineCreateInfoAMDX PipelineCreationFeedbackCreateInfo = ()
@@ -1566,6 +1578,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageProcessing2FeaturesQCOM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExternalFormatResolveFeaturesANDROID = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceCudaKernelLaunchFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceSchedulingControlsFeaturesARM = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1657,6 +1671,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceImageProcessing2PropertiesQCOM = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceLayeredDriverPropertiesMSFT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceExternalFormatResolvePropertiesANDROID = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceCudaKernelLaunchPropertiesNV = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceSchedulingControlsPropertiesARM = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfacePresentModeEXT = ()
@@ -2378,6 +2394,11 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_LATENCY_SUBMISSION_PRESENT_ID_NV -> go @LatencySubmissionPresentIdNV
   STRUCTURE_TYPE_SWAPCHAIN_LATENCY_CREATE_INFO_NV -> go @SwapchainLatencyCreateInfoNV
   STRUCTURE_TYPE_LATENCY_SURFACE_CAPABILITIES_NV -> go @LatencySurfaceCapabilitiesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV -> go @PhysicalDeviceCudaKernelLaunchFeaturesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV -> go @PhysicalDeviceCudaKernelLaunchPropertiesNV
+  STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM -> go @DeviceQueueShaderCoreControlCreateInfoARM
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM -> go @PhysicalDeviceSchedulingControlsFeaturesARM
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM -> go @PhysicalDeviceSchedulingControlsPropertiesARM
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2917,6 +2938,11 @@ infix 6 ::&
 {-# complete (::&) :: LatencySubmissionPresentIdNV #-}
 {-# complete (::&) :: SwapchainLatencyCreateInfoNV #-}
 {-# complete (::&) :: LatencySurfaceCapabilitiesNV #-}
+{-# complete (::&) :: PhysicalDeviceCudaKernelLaunchFeaturesNV #-}
+{-# complete (::&) :: PhysicalDeviceCudaKernelLaunchPropertiesNV #-}
+{-# complete (::&) :: DeviceQueueShaderCoreControlCreateInfoARM #-}
+{-# complete (::&) :: PhysicalDeviceSchedulingControlsFeaturesARM #-}
+{-# complete (::&) :: PhysicalDeviceSchedulingControlsPropertiesARM #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

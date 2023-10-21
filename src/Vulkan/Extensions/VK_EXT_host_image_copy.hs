@@ -1240,14 +1240,13 @@ instance Zero ImageToMemoryCopyEXT where
 --     /must/ be less than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
 --
--- -   #VUID-VkCopyMemoryToImageInfoEXT-imageSubresource-07968# The
+-- -   #VUID-VkCopyMemoryToImageInfoEXT-imageSubresource-07968# If
+--     @imageSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
---     each element of @pRegions@ , if @imageSubresource.layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     is not enabled, /must/ be less than or equal to the @arrayLayers@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
---     was created
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @dstImage@ was created
 --
 -- -   #VUID-VkCopyMemoryToImageInfoEXT-dstImage-07969# @dstImage@ /must/
 --     not have been created with @flags@ containing
@@ -1527,14 +1526,13 @@ instance Zero CopyMemoryToImageInfoEXT where
 --     /must/ be less than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@ was created
 --
--- -   #VUID-VkCopyImageToMemoryInfoEXT-imageSubresource-07968# The
+-- -   #VUID-VkCopyImageToMemoryInfoEXT-imageSubresource-07968# If
+--     @imageSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @imageSubresource.baseArrayLayer@ + @imageSubresource.layerCount@ of
---     each element of @pRegions@ , if @imageSubresource.layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     is not enabled, /must/ be less than or equal to the @arrayLayers@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@
---     was created
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @srcImage@ was created
 --
 -- -   #VUID-VkCopyImageToMemoryInfoEXT-srcImage-07969# @srcImage@ /must/
 --     not have been created with @flags@ containing
@@ -1813,14 +1811,13 @@ instance Zero CopyImageToMemoryInfoEXT where
 --     /must/ be less than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@ was created
 --
--- -   #VUID-VkCopyImageToImageInfoEXT-srcSubresource-07968# The
+-- -   #VUID-VkCopyImageToImageInfoEXT-srcSubresource-07968# If
+--     @srcSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @srcSubresource.baseArrayLayer@ + @srcSubresource.layerCount@ of
---     each element of @pRegions@ , if @srcSubresource.layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     is not enabled, /must/ be less than or equal to the @arrayLayers@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @srcImage@
---     was created
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @srcImage@ was created
 --
 -- -   #VUID-VkCopyImageToImageInfoEXT-srcImage-07969# @srcImage@ /must/
 --     not have been created with @flags@ containing
@@ -1956,14 +1953,13 @@ instance Zero CopyImageToMemoryInfoEXT where
 --     /must/ be less than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
 --
--- -   #VUID-VkCopyImageToImageInfoEXT-dstSubresource-07968# The
+-- -   #VUID-VkCopyImageToImageInfoEXT-dstSubresource-07968# If
+--     @dstSubresource.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
---     each element of @pRegions@ , if @dstSubresource.layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     is not enabled, /must/ be less than or equal to the @arrayLayers@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
---     was created
+--     each element of @pRegions@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @dstImage@ was created
 --
 -- -   #VUID-VkCopyImageToImageInfoEXT-dstImage-07969# @dstImage@ /must/
 --     not have been created with @flags@ containing

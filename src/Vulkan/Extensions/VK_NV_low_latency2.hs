@@ -351,14 +351,57 @@ foreign import ccall
   "dynamic" mkVkLatencySleepNV
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr LatencySleepInfoNV -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Ptr LatencySleepInfoNV -> IO Result
 
--- No documentation found for TopLevel "vkLatencySleepNV"
+-- | vkLatencySleepNV - Trigger low latency mode Sleep
+--
+-- = Description
+--
+-- 'latencySleepNV' returns immediately. Applications /should/ use
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.waitSemaphores'
+-- with
+-- @pSleepInfo@::'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.signalSemaphore'
+-- to delay host CPU work. CPU work refers to application work done before
+-- presenting which includes but is not limited to: input sampling,
+-- simulation, command buffer recording, command buffer submission, and
+-- present submission. It is recommended to call this function before input
+-- sampling. When using this function, it /should/ be called exactly once
+-- between presents.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
+-- 'Vulkan.Core10.Handles.Device', 'LatencySleepInfoNV',
+-- 'Vulkan.Extensions.Handles.SwapchainKHR'
 latencySleepNV :: forall io
                 . (MonadIO io)
-               => -- No documentation found for Nested "vkLatencySleepNV" "device"
+               => -- | @device@ is the device associated with @swapchain@.
+                  --
+                  -- #VUID-vkLatencySleepNV-device-parameter# @device@ /must/ be a valid
+                  -- 'Vulkan.Core10.Handles.Device' handle
                   Device
-               -> -- No documentation found for Nested "vkLatencySleepNV" "swapchain"
+               -> -- | @swapchain@ is the swapchain to delay associated CPU work based on
+                  -- 'LatencySubmissionPresentIdNV' submissions.
+                  --
+                  -- #VUID-vkLatencySleepNV-swapchain-parameter# @swapchain@ /must/ be a
+                  -- valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
+                  --
+                  -- #VUID-vkLatencySleepNV-swapchain-parent# @swapchain@ /must/ have been
+                  -- created, allocated, or retrieved from @device@
                   SwapchainKHR
-               -> -- No documentation found for Nested "vkLatencySleepNV" "pSleepInfo"
+               -> -- | @pSleepInfo@ is a pointer to a 'LatencySleepInfoNV' structure specifying
+                  -- the parameters of the latency sleep.
+                  --
+                  -- #VUID-vkLatencySleepNV-pSleepInfo-parameter# @pSleepInfo@ /must/ be a
+                  -- valid pointer to a valid 'LatencySleepInfoNV' structure
                   LatencySleepInfoNV
                -> io ()
 latencySleepNV device swapchain sleepInfo = liftIO . evalContT $ do
@@ -381,14 +424,42 @@ foreign import ccall
   "dynamic" mkVkSetLatencyMarkerNV
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr SetLatencyMarkerInfoNV -> IO ()) -> Ptr Device_T -> SwapchainKHR -> Ptr SetLatencyMarkerInfoNV -> IO ()
 
--- No documentation found for TopLevel "vkSetLatencyMarkerNV"
+-- | vkSetLatencyMarkerNV - Pass in marker for timing info
+--
+-- = Description
+--
+-- At the beginning and end of simulation and render threads and beginning
+-- and end of 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' calls,
+-- 'setLatencyMarkerNV' /can/ be called to provide timestamps for the
+-- application’s reference. These timestamps are returned with a call to
+-- 'getLatencyTimingsNV' alongside driver provided timestamps at various
+-- points of interest with regards to latency within the application.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
+-- 'Vulkan.Core10.Handles.Device', 'SetLatencyMarkerInfoNV',
+-- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setLatencyMarkerNV :: forall io
                     . (MonadIO io)
-                   => -- No documentation found for Nested "vkSetLatencyMarkerNV" "device"
+                   => -- | @device@ is the device associated with @swapchain@.
+                      --
+                      -- #VUID-vkSetLatencyMarkerNV-device-parameter# @device@ /must/ be a valid
+                      -- 'Vulkan.Core10.Handles.Device' handle
                       Device
-                   -> -- No documentation found for Nested "vkSetLatencyMarkerNV" "swapchain"
+                   -> -- | @swapchain@ is the swapchain to capture timestamps on.
+                      --
+                      -- #VUID-vkSetLatencyMarkerNV-swapchain-parameter# @swapchain@ /must/ be a
+                      -- valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
+                      --
+                      -- #VUID-vkSetLatencyMarkerNV-swapchain-parent# @swapchain@ /must/ have
+                      -- been created, allocated, or retrieved from @device@
                       SwapchainKHR
-                   -> -- No documentation found for Nested "vkSetLatencyMarkerNV" "pLatencyMarkerInfo"
+                   -> -- | #VUID-vkSetLatencyMarkerNV-pLatencyMarkerInfo-parameter#
+                      -- @pLatencyMarkerInfo@ /must/ be a valid pointer to a valid
+                      -- 'SetLatencyMarkerInfoNV' structure
                       SetLatencyMarkerInfoNV
                    -> io ()
 setLatencyMarkerNV device swapchain latencyMarkerInfo = liftIO . evalContT $ do
@@ -411,12 +482,41 @@ foreign import ccall
   "dynamic" mkVkGetLatencyTimingsNV
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr Word32 -> Ptr GetLatencyMarkerInfoNV -> IO ()) -> Ptr Device_T -> SwapchainKHR -> Ptr Word32 -> Ptr GetLatencyMarkerInfoNV -> IO ()
 
--- No documentation found for TopLevel "vkGetLatencyTimingsNV"
+-- | vkGetLatencyTimingsNV - Get latency marker results
+--
+-- = Description
+--
+-- The timings returned by 'getLatencyTimingsNV' contain the timestamps
+-- requested from 'setLatencyMarkerNV' and additional
+-- implementation-specific markers defined in
+-- 'LatencyTimingsFrameReportNV'. If @pTimings@ is @NULL@, then the maximum
+-- number of queryable frame data is returned in @pTimingCount@. Otherwise,
+-- @pTimingCount@ /must/ point to a variable set by the user to the number
+-- of elements in the @pTimings@ array in @pGetLatencyMarkerInfo@, and on
+-- return the variable is overwritten with the number of values actually
+-- written to @pTimings@.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
+-- 'Vulkan.Core10.Handles.Device', 'GetLatencyMarkerInfoNV',
+-- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getLatencyTimingsNV :: forall io
                      . (MonadIO io)
-                    => -- No documentation found for Nested "vkGetLatencyTimingsNV" "device"
+                    => -- | @device@ is the device associated with @swapchain@.
+                       --
+                       -- #VUID-vkGetLatencyTimingsNV-device-parameter# @device@ /must/ be a valid
+                       -- 'Vulkan.Core10.Handles.Device' handle
                        Device
-                    -> -- No documentation found for Nested "vkGetLatencyTimingsNV" "swapchain"
+                    -> -- | @swapchain@ is the swapchain to return data from.
+                       --
+                       -- #VUID-vkGetLatencyTimingsNV-swapchain-parameter# @swapchain@ /must/ be a
+                       -- valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
+                       --
+                       -- #VUID-vkGetLatencyTimingsNV-swapchain-parent# @swapchain@ /must/ have
+                       -- been created, allocated, or retrieved from @device@
                        SwapchainKHR
                     -> io (("timingCount" ::: Word32), GetLatencyMarkerInfoNV)
 getLatencyTimingsNV device swapchain = liftIO . evalContT $ do
@@ -561,11 +661,32 @@ instance Zero LatencySleepModeInfoNV where
            zero
 
 
--- No documentation found for TopLevel "VkLatencySleepInfoNV"
+-- | VkLatencySleepInfoNV - Structure specifying the parameters of
+-- vkLatencySleepNV
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
+-- 'Vulkan.Core10.Handles.Semaphore',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType', 'latencySleepNV'
 data LatencySleepInfoNV = LatencySleepInfoNV
-  { -- No documentation found for Nested "VkLatencySleepInfoNV" "signalSemaphore"
+  { -- | 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.signalSemaphore'
+    -- is a semaphore that is signaled to indicate that the application
+    -- /should/ resume input sampling work.
+    --
+    -- #VUID-VkLatencySleepInfoNV-signalSemaphore-09361#
+    -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.signalSemaphore'
+    -- /must/ be a timeline semaphore
+    --
+    -- #VUID-VkLatencySleepInfoNV-signalSemaphore-parameter#
+    -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.signalSemaphore'
+    -- /must/ be a valid 'Vulkan.Core10.Handles.Semaphore' handle
     signalSemaphore :: Semaphore
-  , -- No documentation found for Nested "VkLatencySleepInfoNV" "value"
+  , -- | @value@ is the value that
+    -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.signalSemaphore'
+    -- is set to for resuming sampling work.
     value :: Word64
   }
   deriving (Typeable, Eq)
@@ -610,11 +731,23 @@ instance Zero LatencySleepInfoNV where
            zero
 
 
--- No documentation found for TopLevel "VkSetLatencyMarkerInfoNV"
+-- | VkSetLatencyMarkerInfoNV - Structure specifying the parameters of
+-- vkSetLatencyMarkerNV
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
+-- 'LatencyMarkerNV', 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'setLatencyMarkerNV'
 data SetLatencyMarkerInfoNV = SetLatencyMarkerInfoNV
   { -- No documentation found for Nested "VkSetLatencyMarkerInfoNV" "presentID"
     presentID :: Word64
-  , -- No documentation found for Nested "VkSetLatencyMarkerInfoNV" "marker"
+  , -- | @marker@ is the type of timestamp to be recorded.
+    --
+    -- #VUID-VkSetLatencyMarkerInfoNV-marker-parameter# @marker@ /must/ be a
+    -- valid 'LatencyMarkerNV' value
     marker :: LatencyMarkerNV
   }
   deriving (Typeable, Eq)
@@ -659,9 +792,27 @@ instance Zero SetLatencyMarkerInfoNV where
            zero
 
 
--- No documentation found for TopLevel "VkGetLatencyMarkerInfoNV"
+-- | VkGetLatencyMarkerInfoNV - Structure specifying the parameters of
+-- vkGetLatencyTimingsNV
+--
+-- = Description
+--
+-- The elements of @pTimings@ are arranged in the order they were requested
+-- in, with the oldest data in the first entry.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
+-- 'LatencyTimingsFrameReportNV',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getLatencyTimingsNV'
 data GetLatencyMarkerInfoNV = GetLatencyMarkerInfoNV
-  { -- No documentation found for Nested "VkGetLatencyMarkerInfoNV" "pTimings"
+  { -- | @pTimings@ is either @NULL@ or a pointer to an array of
+    -- 'LatencyTimingsFrameReportNV' structures.
+    --
+    -- #VUID-VkGetLatencyMarkerInfoNV-pTimings-parameter# @pTimings@ /must/ be
+    -- a valid pointer to a 'LatencyTimingsFrameReportNV' structure
     timings :: Ptr LatencyTimingsFrameReportNV }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

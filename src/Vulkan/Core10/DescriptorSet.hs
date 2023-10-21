@@ -939,8 +939,9 @@ foreign import ccall
 --     array of @pDescriptorWrites@[i].@descriptorCount@ valid
 --     'DescriptorImageInfo' structures
 --
--- -   #VUID-vkUpdateDescriptorSets-None-03047# Descriptor bindings updated
---     by this command which were created without the
+-- -   #VUID-vkUpdateDescriptorSets-None-03047# The @dstSet@ member of each
+--     element of @pDescriptorWrites@ or @pDescriptorCopies@ for bindings
+--     which were created without the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --     or
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
@@ -1978,11 +1979,11 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     flag set
 --
 -- -   #VUID-VkCopyDescriptorSet-srcSet-04885# If @srcSet@’s layout was
---     created with neither
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     nor
+--     created without either the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
---     flags set, then @dstSet@’s layout /must/ have been created without
+--     flag or the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     flag set, then @dstSet@’s layout /must/ have been created without
 --     the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set
@@ -1996,12 +1997,12 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     flag set
 --
 -- -   #VUID-VkCopyDescriptorSet-srcSet-04887# If the descriptor pool from
---     which @srcSet@ was allocated was created with neither
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     nor
+--     which @srcSet@ was allocated was created without either the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
---     flags set, then the descriptor pool from which @dstSet@ was
---     allocated /must/ have been created without the
+--     flag or the
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
+--     flag set, then the descriptor pool from which @dstSet@ was allocated
+--     /must/ have been created without the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
@@ -2208,7 +2209,7 @@ instance Zero CopyDescriptorSet where
 --     and 'DescriptorSetLayoutCreateInfo'::@flags@ does not contain
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     then @descriptorCount@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxInlineUniformBlockSize@
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxInlineUniformBlockSize@
 --
 -- -   #VUID-VkDescriptorSetLayoutBinding-flags-08005# If
 --     'DescriptorSetLayoutCreateInfo'::@flags@ contains
@@ -2910,7 +2911,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-apiVersion-07895# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
---     extension is not enabled,
+--     extension is not enabled and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
 --     is less than Vulkan 1.1, @descriptorSetCount@ /must/ not be greater
 --     than the number of sets that are currently available for allocation
@@ -2918,7 +2919,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-apiVersion-07896# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
---     extension is not enabled,
+--     extension is not enabled and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
 --     is less than Vulkan 1.1, @descriptorPool@ /must/ have enough free
 --     descriptor capacity remaining to allocate the descriptor sets of the
@@ -2945,10 +2946,10 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --     is included in the @pNext@ chain, and
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'::@descriptorSetCount@
 --     is not zero, then
---     slink::VkDescriptorSetVariableDescriptorCountAllocateInfo::pDescriptorCounts[i]
+--     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'::pDescriptorCounts[i]
 --     /must/ be less than or equal to
---     slink::VkDescriptorSetLayoutBinding::descriptorCount for the
---     corresponding binding used to create @pSetLayouts@[i]
+--     'DescriptorSetLayoutBinding'::descriptorCount for the corresponding
+--     binding used to create @pSetLayouts@[i]
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-04610# If any element
 --     of @pSetLayouts@ was created with the

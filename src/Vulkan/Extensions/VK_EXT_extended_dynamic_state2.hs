@@ -222,11 +222,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetPatchControlPointsEXT-None-08574# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState2PatchControlPoints extendedDynamicState2PatchControlPoints>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetPatchControlPointsEXT-None-09422# At least one of the
+--     following /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2PatchControlPoints extendedDynamicState2PatchControlPoints>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- -   #VUID-vkCmdSetPatchControlPointsEXT-patchControlPoints-04874#
 --     @patchControlPoints@ /must/ be greater than zero and less than or
@@ -316,11 +321,16 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLogicOpEXT-None-08544# Either the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState2LogicOp extendedDynamicState2LogicOp>
---     feature or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature or both /must/ be enabled
+-- -   #VUID-vkCmdSetLogicOpEXT-None-09422# At least one of the following
+--     /must/ be true:
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2LogicOp extendedDynamicState2LogicOp>
+--         feature is enabled
+--
+--     -   The
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
 --
 -- == Valid Usage (Implicit)
 --

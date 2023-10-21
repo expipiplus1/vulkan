@@ -128,6 +128,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_corner_sampled_image (PhysicalDevi
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PhysicalDeviceCoverageReductionModeFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_clamp (PhysicalDeviceCubicClampFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_weights (PhysicalDeviceCubicWeightsFeaturesQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (PhysicalDeviceCudaKernelLaunchFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (PhysicalDeviceCudaKernelLaunchPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
@@ -289,6 +291,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (PhysicalDeviceS
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (PhysicalDeviceSamplerFilterMinmaxProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (PhysicalDeviceScalarBlockLayoutFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsFeaturesARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsPropertiesARM)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
@@ -896,6 +900,8 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceSchedulingControlsFeaturesARM = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceCudaKernelLaunchFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalFormatResolveFeaturesANDROID = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageProcessing2FeaturesQCOM = Just f
@@ -1124,6 +1130,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_KHR_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesKHR',
 --     'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesNV',
 --     'Vulkan.Extensions.VK_NV_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectPropertiesNV',
+--     'Vulkan.Extensions.VK_NV_cuda_kernel_launch.PhysicalDeviceCudaKernelLaunchPropertiesNV',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
 --     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT',
@@ -1179,6 +1186,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsPropertiesARM',
 --     'Vulkan.Extensions.VK_ARM_shader_core_builtins.PhysicalDeviceShaderCoreBuiltinsPropertiesARM',
 --     'Vulkan.Extensions.VK_AMD_shader_core_properties2.PhysicalDeviceShaderCoreProperties2AMD',
 --     'Vulkan.Extensions.VK_AMD_shader_core_properties.PhysicalDeviceShaderCorePropertiesAMD',
@@ -1233,6 +1241,8 @@ instance Extensible PhysicalDeviceProperties2 where
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceSchedulingControlsPropertiesARM = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceCudaKernelLaunchPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalFormatResolvePropertiesANDROID = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLayeredDriverPropertiesMSFT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageProcessing2PropertiesQCOM = Just f

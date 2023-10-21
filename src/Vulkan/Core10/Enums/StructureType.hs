@@ -159,6 +159,9 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE
                                                         , STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM
+                                                        , STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT
                                                         , STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT
@@ -284,6 +287,11 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT
                                                         , STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV
+                                                        , STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV
+                                                        , STRUCTURE_TYPE_CUDA_FUNCTION_CREATE_INFO_NV
+                                                        , STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV
                                                         , STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR
@@ -900,6 +908,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuFunctionCreateInfoNVX',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuLaunchInfoNVX',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuModuleCreateInfoNVX',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaFunctionCreateInfoNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaLaunchInfoNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaModuleCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.D3D12FenceSubmitInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerMarkerInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectNameInfoEXT',
@@ -956,6 +967,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_global_priority.DeviceQueueGlobalPriorityCreateInfoKHR',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.DeviceQueueInfo2',
+-- 'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM',
 -- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingInfoLUNARG',
 -- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG',
 -- 'Vulkan.Extensions.VK_EXT_directfb_surface.DirectFBSurfaceCreateInfoEXT',
@@ -1166,6 +1178,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PhysicalDeviceCoverageReductionModeFeaturesNV',
 -- 'Vulkan.Extensions.VK_QCOM_filter_cubic_clamp.PhysicalDeviceCubicClampFeaturesQCOM',
 -- 'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.PhysicalDeviceCubicWeightsFeaturesQCOM',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.PhysicalDeviceCudaKernelLaunchFeaturesNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.PhysicalDeviceCudaKernelLaunchPropertiesNV',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
@@ -1333,6 +1347,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout.PhysicalDeviceScalarBlockLayoutFeatures',
+-- 'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsFeaturesARM',
+-- 'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsPropertiesARM',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.PhysicalDeviceSeparateDepthStencilLayoutsFeatures',
 -- 'Vulkan.Extensions.VK_EXT_shader_atomic_float2.PhysicalDeviceShaderAtomicFloat2FeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_shader_atomic_float.PhysicalDeviceShaderAtomicFloatFeaturesEXT',
@@ -2128,6 +2144,15 @@ pattern STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT = StructureType 1000418
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT = StructureType 1000418000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM = StructureType 1000417002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM = StructureType 1000417001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM = StructureType 1000417000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM = StructureType 1000415000
 
@@ -2502,6 +2527,21 @@ pattern STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT = StructureType 10003
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV"
 pattern STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV = StructureType 1000310000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV = StructureType 1000307004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV = StructureType 1000307003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV"
+pattern STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV = StructureType 1000307002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CUDA_FUNCTION_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_CUDA_FUNCTION_CREATE_INFO_NV = StructureType 1000307001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV = StructureType 1000307000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV"
 pattern STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV = StructureType 1000300001
@@ -4166,6 +4206,9 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE
   , STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM
+  , STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT
   , STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT
@@ -4291,6 +4334,11 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT
   , STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT
   , STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV
+  , STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV
+  , STRUCTURE_TYPE_CUDA_FUNCTION_CREATE_INFO_NV
+  , STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV
   , STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR
@@ -5428,6 +5476,18 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM
+    , "PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM
+    , "PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM
+    , "DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM
     , "PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM"
     )
@@ -5926,6 +5986,26 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV
     , "QUERY_LOW_LATENCY_SUPPORT_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV
+    , "PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV
+    , "PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV
+    , "CUDA_LAUNCH_INFO_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_CUDA_FUNCTION_CREATE_INFO_NV
+    , "CUDA_FUNCTION_CREATE_INFO_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV
+    , "CUDA_MODULE_CREATE_INFO_NV"
     )
   ,
     ( STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV

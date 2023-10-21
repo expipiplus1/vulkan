@@ -387,39 +387,6 @@ instance Zero PhysicalDeviceImageProcessingFeaturesQCOM where
 -- | VkPhysicalDeviceImageProcessingPropertiesQCOM - Structure containing
 -- image processing properties
 --
--- = Members
---
--- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
---     identifying this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to a structure extending this
---     structure.
---
--- -   #limits-weightfilter-phases#@maxWeightFilterPhases@ is the maximum
---     value that /can/ be specified for
---     'ImageViewSampleWeightCreateInfoQCOM'::@numPhases@. in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-weightimage-filterphases weight image sampling>
---     operations.
---
--- -   #limits-weightfilter-maxdimension#@maxWeightFilterDimension@ is a
---     'Vulkan.Core10.FundamentalTypes.Extent2D' describing the largest
---     dimensions (@width@ and @height@) that /can/ be specified for
---     'ImageViewSampleWeightCreateInfoQCOM'::@filterSize@.
---
--- -   #limits-blockmatch-maxblocksize#@maxBlockMatchRegion@ is a
---     'Vulkan.Core10.FundamentalTypes.Extent2D' describing the largest
---     dimensions (@width@ and @height@) that /can/ be specified for
---     @blockSize@ in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-blockmatch block matching>
---     operations.
---
--- -   #limits-boxfilter-maxblocksize#@maxBoxFilterBlockSize@ is a
---     'Vulkan.Core10.FundamentalTypes.Extent2D' describing the maximum
---     dimensions (@width@ and @height@) that /can/ be specified for
---     @blocksize@ in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-boxfilter box filter sampling>
---     operations.
---
 -- = Description
 --
 -- If the 'PhysicalDeviceImageProcessingPropertiesQCOM' structure is
@@ -441,13 +408,30 @@ instance Zero PhysicalDeviceImageProcessingFeaturesQCOM where
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageProcessingPropertiesQCOM = PhysicalDeviceImageProcessingPropertiesQCOM
-  { -- No documentation found for Nested "VkPhysicalDeviceImageProcessingPropertiesQCOM" "maxWeightFilterPhases"
+  { -- | #limits-weightfilter-phases# @maxWeightFilterPhases@ is the maximum
+    -- value that /can/ be specified for
+    -- 'ImageViewSampleWeightCreateInfoQCOM'::@numPhases@ in
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-weightimage-filterphases weight image sampling>
+    -- operations.
     maxWeightFilterPhases :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceImageProcessingPropertiesQCOM" "maxWeightFilterDimension"
+  , -- | #limits-weightfilter-maxdimension# @maxWeightFilterDimension@ is a
+    -- 'Vulkan.Core10.FundamentalTypes.Extent2D' describing the largest
+    -- dimensions (@width@ and @height@) that /can/ be specified for
+    -- 'ImageViewSampleWeightCreateInfoQCOM'::@filterSize@.
     maxWeightFilterDimension :: Extent2D
-  , -- No documentation found for Nested "VkPhysicalDeviceImageProcessingPropertiesQCOM" "maxBlockMatchRegion"
+  , -- | #limits-blockmatch-maxblocksize# @maxBlockMatchRegion@ is a
+    -- 'Vulkan.Core10.FundamentalTypes.Extent2D' describing the largest
+    -- dimensions (@width@ and @height@) that /can/ be specified for
+    -- @blockSize@ in
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-blockmatch block matching>
+    -- operations.
     maxBlockMatchRegion :: Extent2D
-  , -- No documentation found for Nested "VkPhysicalDeviceImageProcessingPropertiesQCOM" "maxBoxFilterBlockSize"
+  , -- | #limits-boxfilter-maxblocksize# @maxBoxFilterBlockSize@ is a
+    -- 'Vulkan.Core10.FundamentalTypes.Extent2D' describing the maximum
+    -- dimensions (@width@ and @height@) that /can/ be specified for
+    -- @blocksize@ in
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-boxfilter box filter sampling>
+    -- operations.
     maxBoxFilterBlockSize :: Extent2D
   }
   deriving (Typeable)

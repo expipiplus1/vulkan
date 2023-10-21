@@ -299,7 +299,7 @@
 -- 1) What about the VkPipelineMultisampleStateCreateInfo state
 -- @sampleShadingEnable@ and @minSampleShading@?
 --
--- [UNRESOLVED]
+-- [__UNRESOLVED__]
 --
 --     -   @sampleShadingEnable@ and @minSampleShading@ are required when
 --         compiling the fragment shader, and it is not meaningful to set

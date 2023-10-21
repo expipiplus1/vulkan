@@ -5429,15 +5429,6 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and if @pResolveAttachments@ is not @NULL@, then each resolve
 --     attachment /must/ be 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06575# If the pipeline
---     requires
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
---     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
---     @renderPass@ /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a
---     valid render pass object
---
 -- -   #VUID-VkGraphicsPipelineCreateInfo-dynamicRendering-06576# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-dynamicRendering dynamicRendering>
 --     feature is not enabled and the pipeline requires
@@ -7087,7 +7078,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @subpass@ includes an external format resolve attachment, and
---     @rasterizationSamples@ is not dynamic,,
+--     @rasterizationSamples@ is not dynamic,
 --     'PipelineMultisampleStateCreateInfo'::@rasterizationSamples@ /must/
 --     be 'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --

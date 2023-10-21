@@ -18,6 +18,8 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , SwapchainKHR(..)
                                   , DebugReportCallbackEXT(..)
                                   , DebugUtilsMessengerEXT(..)
+                                  , CudaModuleNV(..)
+                                  , CudaFunctionNV(..)
                                   , Instance(..)
                                   , PhysicalDevice(..)
                                   , Device(..)
@@ -57,6 +59,8 @@ import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CUDA_FUNCTION_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CUDA_MODULE_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_FUNCTION_NVX))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_MODULE_NVX))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT))
@@ -599,4 +603,39 @@ instance HasObjectType DebugUtilsMessengerEXT where
                                                    , h )
 instance Show DebugUtilsMessengerEXT where
   showsPrec p (DebugUtilsMessengerEXT x) = showParen (p >= 11) (showString "DebugUtilsMessengerEXT 0x" . showHex x)
+
+
+-- | VkCudaModuleNV - Opaque handle to a CUDA module object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cuda_kernel_launch VK_NV_cuda_kernel_launch>,
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaFunctionCreateInfoNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.createCudaModuleNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.destroyCudaModuleNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.getCudaModuleCacheNV'
+newtype CudaModuleNV = CudaModuleNV Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType CudaModuleNV where
+  objectTypeAndHandle (CudaModuleNV h) = (OBJECT_TYPE_CUDA_MODULE_NV, h)
+instance Show CudaModuleNV where
+  showsPrec p (CudaModuleNV x) = showParen (p >= 11) (showString "CudaModuleNV 0x" . showHex x)
+
+
+-- | VkCudaFunctionNV - Opaque handle to a CUDA function object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cuda_kernel_launch VK_NV_cuda_kernel_launch>,
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaLaunchInfoNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.createCudaFunctionNV',
+-- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.destroyCudaFunctionNV'
+newtype CudaFunctionNV = CudaFunctionNV Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType CudaFunctionNV where
+  objectTypeAndHandle (CudaFunctionNV h) = (OBJECT_TYPE_CUDA_FUNCTION_NV, h)
+instance Show CudaFunctionNV where
+  showsPrec p (CudaFunctionNV x) = showParen (p >= 11) (showString "CudaFunctionNV 0x" . showHex x)
 

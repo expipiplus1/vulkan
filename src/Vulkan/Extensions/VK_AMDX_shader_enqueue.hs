@@ -903,11 +903,10 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
---     a result of this command
---
---     [/must/ not have a 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo']
---         @reductionMode@ equal to
---         'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
+--     a result of this command /must/ not have a
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'::@reductionMode@
+--     equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-reductionMode-09213# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with a
@@ -1623,11 +1622,10 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
---     a result of this command
---
---     [/must/ not have a 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo']
---         @reductionMode@ equal to
---         'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
+--     a result of this command /must/ not have a
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'::@reductionMode@
+--     equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-reductionMode-09213# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with a
@@ -2377,11 +2375,10 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
---     a result of this command
---
---     [/must/ not have a 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo']
---         @reductionMode@ equal to
---         'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
+--     a result of this command /must/ not have a
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'::@reductionMode@
+--     equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM'
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-reductionMode-09213# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with a
