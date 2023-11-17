@@ -672,8 +672,7 @@ cmdWaitEvents2SafeOrUnsafe mkVkCmdWaitEvents2 commandBuffer
 --     @pImageMemoryBarriers@ members of @pDependencyInfos@ /must/ either
 --     include only pipeline stages valid for the queue family that was
 --     used to create the command pool that @commandBuffer@ was allocated
---     from, or include only
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_HOST_BIT'
+--     from
 --
 -- -   #VUID-vkCmdWaitEvents2-dstStageMask-03843# The @dstStageMask@ member
 --     of any element of the @pMemoryBarriers@, @pBufferMemoryBarriers@, or

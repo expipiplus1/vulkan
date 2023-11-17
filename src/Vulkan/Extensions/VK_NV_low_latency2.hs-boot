@@ -20,7 +20,12 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>
+--
+-- [__Contact__]
 --
 --     -   Charles Hansen
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_low_latency2] @cshansen%0A*Here describe the issue or question you have about the VK_NV_low_latency2 extension* >

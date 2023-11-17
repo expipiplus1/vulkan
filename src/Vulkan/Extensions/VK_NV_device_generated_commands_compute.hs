@@ -427,18 +427,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-vkGetPipelineIndirectDeviceAddressNV-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetPipelineIndirectDeviceAddressNV-pInfo-parameter# @pInfo@
+--     /must/ be a valid pointer to a valid
+--     'PipelineIndirectDeviceAddressInfoNV' structure
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands_compute VK_NV_device_generated_commands_compute>,
 -- 'Vulkan.Core10.Handles.Device', 'PipelineIndirectDeviceAddressInfoNV'
 getPipelineIndirectDeviceAddressNV :: forall io
                                     . (MonadIO io)
-                                   => -- | #VUID-vkGetPipelineIndirectDeviceAddressNV-device-parameter# @device@
-                                      -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                   => -- | @device@ is the logical device on which the pipeline was created.
                                       Device
-                                   -> -- | #VUID-vkGetPipelineIndirectDeviceAddressNV-pInfo-parameter# @pInfo@
-                                      -- /must/ be a valid pointer to a valid
-                                      -- 'PipelineIndirectDeviceAddressInfoNV' structure
+                                   -> -- | @pInfo@ is a pointer to a 'PipelineIndirectDeviceAddressInfoNV'
+                                      -- structure specifying the pipeline to retrieve the address for.
                                       PipelineIndirectDeviceAddressInfoNV
                                    -> io (DeviceAddress)
 getPipelineIndirectDeviceAddressNV device info = liftIO . evalContT $ do
@@ -456,7 +461,7 @@ getPipelineIndirectDeviceAddressNV device info = liftIO . evalContT $ do
 -- | VkComputePipelineIndirectBufferInfoNV - Structure describing the device
 -- address where pipeline’s metadata will be saved
 --
--- = Members
+-- = Description
 --
 -- If @pipelineDeviceAddressCaptureReplay@ is zero, no specific address is
 -- requested. If @pipelineDeviceAddressCaptureReplay@ is not zero, then it
@@ -530,11 +535,15 @@ getPipelineIndirectDeviceAddressNV device info = liftIO . evalContT $ do
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ComputePipelineIndirectBufferInfoNV = ComputePipelineIndirectBufferInfoNV
-  { -- No documentation found for Nested "VkComputePipelineIndirectBufferInfoNV" "deviceAddress"
+  { -- | @deviceAddress@ is the address where the pipeline’s metadata will be
+    -- stored.
     deviceAddress :: DeviceAddress
-  , -- No documentation found for Nested "VkComputePipelineIndirectBufferInfoNV" "size"
+  , -- | @size@ is the size of pipeline’s metadata that was queried using
+    -- 'getPipelineIndirectMemoryRequirementsNV'.
     size :: DeviceSize
-  , -- No documentation found for Nested "VkComputePipelineIndirectBufferInfoNV" "pipelineDeviceAddressCaptureReplay"
+  , -- | @pipelineDeviceAddressCaptureReplay@ is the device address where
+    -- pipeline’s metadata was originally saved and can now be used to
+    -- re-populate @deviceAddress@ for replay.
     pipelineDeviceAddressCaptureReplay :: DeviceAddress
   }
   deriving (Typeable, Eq)
@@ -699,6 +708,20 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPipelineIndirectDeviceAddressInfoNV-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV'
+--
+-- -   #VUID-VkPipelineIndirectDeviceAddressInfoNV-pNext-pNext# @pNext@
+--     /must/ be @NULL@
+--
+-- -   #VUID-VkPipelineIndirectDeviceAddressInfoNV-pipelineBindPoint-parameter#
+--     @pipelineBindPoint@ /must/ be a valid
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
+--
+-- -   #VUID-VkPipelineIndirectDeviceAddressInfoNV-pipeline-parameter#
+--     @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands_compute VK_NV_device_generated_commands_compute>,
@@ -707,12 +730,11 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineIndirectDeviceAddressNV'
 data PipelineIndirectDeviceAddressInfoNV = PipelineIndirectDeviceAddressInfoNV
-  { -- | #VUID-VkPipelineIndirectDeviceAddressInfoNV-pipelineBindPoint-parameter#
-    -- @pipelineBindPoint@ /must/ be a valid
+  { -- | @pipelineBindPoint@ is a
     -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
+    -- specifying the type of pipeline whose device address is being queried.
     pipelineBindPoint :: PipelineBindPoint
-  , -- | #VUID-VkPipelineIndirectDeviceAddressInfoNV-pipeline-parameter#
-    -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+  , -- | @pipeline@ specifies the pipeline whose device address is being queried.
     pipeline :: Pipeline
   }
   deriving (Typeable, Eq)
