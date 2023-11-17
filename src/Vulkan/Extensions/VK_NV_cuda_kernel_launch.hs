@@ -918,12 +918,12 @@ instance Zero CudaFunctionCreateInfoNV where
 --     valid 'Vulkan.Extensions.Handles.CudaFunctionNV' handle
 --
 -- -   #VUID-VkCudaLaunchInfoNV-pParams-parameter# If @paramCount@ is not
---     @0@, @pParams@ /must/ be a valid pointer to an array of @paramCount@
---     bytes
+--     @0@, and @pParams@ is not @NULL@, @pParams@ /must/ be a valid
+--     pointer to an array of @paramCount@ bytes
 --
 -- -   #VUID-VkCudaLaunchInfoNV-pExtras-parameter# If @extraCount@ is not
---     @0@, @pExtras@ /must/ be a valid pointer to an array of @extraCount@
---     bytes
+--     @0@, and @pExtras@ is not @NULL@, @pExtras@ /must/ be a valid
+--     pointer to an array of @extraCount@ bytes
 --
 -- = See Also
 --
@@ -955,9 +955,13 @@ data CudaLaunchInfoNV = CudaLaunchInfoNV
   , -- | @sharedMemBytes@ is the dynamic shared-memory size per thread block in
     -- bytes.
     sharedMemBytes :: Word32
+  , -- | @paramCount@ is the length of the @pParams@ table.
+    paramCount :: Word64
   , -- | @pParams@ is a pointer to an array of @paramCount@ pointers,
     -- corresponding to the arguments of @function@.
     params :: Vector (Ptr ())
+  , -- | @extraCount@ is reserved for future use.
+    extraCount :: Word64
   , -- | @pExtras@ is reserved for future use.
     extras :: Vector (Ptr ())
   }
@@ -980,11 +984,25 @@ instance ToCStruct CudaLaunchInfoNV where
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (blockDimY)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (blockDimZ)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (sharedMemBytes)
-    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (params)) :: CSize))
+    let pParamsLength = Data.Vector.length $ (params)
+    paramCount'' <- lift $ if (paramCount) == 0
+      then pure $ fromIntegral pParamsLength
+      else do
+        unless (fromIntegral pParamsLength == (paramCount) || pParamsLength == 0) $
+          throwIO $ IOError Nothing InvalidArgument "" "pParams must be empty or have 'paramCount' elements" Nothing Nothing
+        pure (paramCount)
+    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) (paramCount'')
     pPParams' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (params)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPParams' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (params)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ())))) (pPParams')
-    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (extras)) :: CSize))
+    let pExtrasLength = Data.Vector.length $ (extras)
+    extraCount'' <- lift $ if (extraCount) == 0
+      then pure $ fromIntegral pExtrasLength
+      else do
+        unless (fromIntegral pExtrasLength == (extraCount) || pExtrasLength == 0) $
+          throwIO $ IOError Nothing InvalidArgument "" "pExtras must be empty or have 'extraCount' elements" Nothing Nothing
+        pure (extraCount)
+    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) (extraCount'')
     pPExtras' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (extras)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPExtras' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (extras)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ())))) (pPExtras')
@@ -1015,11 +1033,13 @@ instance FromCStruct CudaLaunchInfoNV where
     blockDimZ <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     sharedMemBytes <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     paramCount <- peek @CSize ((p `plusPtr` 56 :: Ptr CSize))
+    let paramCount' = coerce @CSize @Word64 paramCount
     pParams <- peek @(Ptr (Ptr ())) ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ()))))
-    pParams' <- generateM (fromIntegral (coerce @CSize @Word64 paramCount)) (\i -> peek @(Ptr ()) ((pParams `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
+    pParams' <- generateM (fromIntegral paramCount') (\i -> peek @(Ptr ()) ((pParams `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
     extraCount <- peek @CSize ((p `plusPtr` 72 :: Ptr CSize))
+    let extraCount' = coerce @CSize @Word64 extraCount
     pExtras <- peek @(Ptr (Ptr ())) ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ()))))
-    pExtras' <- generateM (fromIntegral (coerce @CSize @Word64 extraCount)) (\i -> peek @(Ptr ()) ((pExtras `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
+    pExtras' <- generateM (fromIntegral extraCount') (\i -> peek @(Ptr ()) ((pExtras `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
     pure $ CudaLaunchInfoNV
              function
              gridDimX
@@ -1029,7 +1049,9 @@ instance FromCStruct CudaLaunchInfoNV where
              blockDimY
              blockDimZ
              sharedMemBytes
+             paramCount'
              pParams'
+             extraCount'
              pExtras'
 
 instance Zero CudaLaunchInfoNV where
@@ -1042,7 +1064,9 @@ instance Zero CudaLaunchInfoNV where
            zero
            zero
            zero
+           zero
            mempty
+           zero
            mempty
 
 
@@ -1143,7 +1167,7 @@ data PhysicalDeviceCudaKernelLaunchPropertiesNV = PhysicalDeviceCudaKernelLaunch
     -- minor version number of the compute code.
     computeCapabilityMinor :: Word32
   , -- | #limits-computeCapabilityMajor# @computeCapabilityMajor@ indicates the
-    -- minor version number of the compute code.
+    -- major version number of the compute code.
     computeCapabilityMajor :: Word32
   }
   deriving (Typeable, Eq)
