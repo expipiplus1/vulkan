@@ -171,6 +171,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_HUAWEI_subpass_shading
                           , module Vulkan.Extensions.VK_IMG_filter_cubic
                           , module Vulkan.Extensions.VK_IMG_format_pvrtc
+                          , module Vulkan.Extensions.VK_IMG_relaxed_line_rasterization
                           , module Vulkan.Extensions.VK_INTEL_performance_query
                           , module Vulkan.Extensions.VK_INTEL_shader_integer_functions2
                           , module Vulkan.Extensions.VK_KHR_16bit_storage
@@ -515,6 +516,7 @@ import Vulkan.Extensions.VK_HUAWEI_invocation_mask
 import Vulkan.Extensions.VK_HUAWEI_subpass_shading
 import Vulkan.Extensions.VK_IMG_filter_cubic
 import Vulkan.Extensions.VK_IMG_format_pvrtc
+import Vulkan.Extensions.VK_IMG_relaxed_line_rasterization
 import Vulkan.Extensions.VK_INTEL_performance_query
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2
 import Vulkan.Extensions.VK_KHR_16bit_storage

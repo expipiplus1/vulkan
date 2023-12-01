@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html SPV_KHR_non_semantic_info>
+--
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
@@ -34,13 +41,6 @@
 --
 -- [__Last Modified Date__]
 --     2019-10-16
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.3 Core
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html SPV_KHR_non_semantic_info>
 --
 -- [__IP Status__]
 --     No known IP claims.

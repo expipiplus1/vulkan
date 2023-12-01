@@ -18,10 +18,26 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_NV_clip_space_w_scaling
+--
+--     -   Interacts with VK_NV_coverage_reduction_mode
+--
+--     -   Interacts with VK_NV_fragment_coverage_to_color
+--
+--     -   Interacts with VK_NV_framebuffer_mixed_samples
+--
+--     -   Interacts with VK_NV_representative_fragment_test
+--
+--     -   Interacts with VK_NV_shading_rate_image
+--
+--     -   Interacts with VK_NV_viewport_swizzle
 --
 -- [__Contact__]
 --

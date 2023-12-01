@@ -20,7 +20,18 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_marker
+--
+--     -   Interacts with VK_EXT_debug_report
+--
+--     -   Interacts with VK_EXT_debug_utils
+--
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
@@ -34,10 +45,6 @@
 --
 -- [__Last Modified Date__]
 --     2018-11-05
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.3 Core
 --
 -- [__Contributors__]
 --

@@ -43,8 +43,6 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   Promoted to Vulkan 1.2 Core
---
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_subgroup_extended_types.txt GLSL_EXT_shader_subgroup_extended_types>
 --
