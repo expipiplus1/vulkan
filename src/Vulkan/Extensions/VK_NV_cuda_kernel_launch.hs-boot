@@ -21,12 +21,17 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--     None
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#boilerplate-provisional-header description>
 --         of provisional header files for enablement and stability
 --         details.__
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
 --
 -- [__Contact__]
 --
@@ -76,14 +81,12 @@
 -- of the CUDA module.
 --
 -- As with 'Vulkan.Core10.Handles.PipelineCache', the binary cache depends
--- on the hardware architecture. Therefore the application must assume the
--- cache might fail, and thus need to handle falling back to the original
--- PTX code as necessary. Most often, the cache will succeed if the same
--- GPU driver and architecture is used between the cache generation from
--- PTX and the use of this cache. But most often, in the event of a new
--- driver version or a if using a different GPU But in the event of a new
--- driver version or if using a different GPU architecture, the cache is
--- likely to become invalid.
+-- on the hardware architecture. The application must assume the cache
+-- might fail, and need to handle falling back to the original PTX code as
+-- necessary. Most often, the cache will succeed if the same GPU driver and
+-- architecture is used between the cache generation from PTX and the use
+-- of this cache. In the event of a new driver version, or if using a
+-- different GPU architecture, the cache is likely to become invalid.
 --
 -- == New Object Types
 --
@@ -130,13 +133,6 @@
 --
 -- -   'NV_CUDA_KERNEL_LAUNCH_SPEC_VERSION'
 --
--- -   Extending
---     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV'
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV'
---
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_CUDA_FUNCTION_NV'
@@ -154,6 +150,17 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT'
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT'
 --
 -- == Issues
 --

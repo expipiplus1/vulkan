@@ -20,7 +20,16 @@
 -- [__Ratification Status__]
 --     Ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
+--
+--     -   Interacts with VK_KHR_push_descriptor
+--
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -41,8 +50,6 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   Interacts with @VK_KHR_push_descriptor@
---
---     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]
 --

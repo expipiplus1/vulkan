@@ -27,7 +27,9 @@
 --
 -- [__Deprecation State__]
 --
---     -   /Promoted/ to @VK_KHR_global_priority@ extension
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>
+--         extension
 --
 -- [__Contact__]
 --

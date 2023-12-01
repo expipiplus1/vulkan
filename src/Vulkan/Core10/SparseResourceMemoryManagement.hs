@@ -325,7 +325,7 @@ getPhysicalDeviceSparseImageFormatProperties :: forall io
                                                 PhysicalDevice
                                              -> -- | @format@ is the image format.
                                                 Format
-                                             -> -- | @type@ is the dimensionality of image.
+                                             -> -- | @type@ is the dimensionality of the image.
                                                 ImageType
                                              -> -- | @samples@ is a
                                                 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value

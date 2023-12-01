@@ -23,6 +23,10 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer VK_ANDROID_external_memory_android_hardware_buffer>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
+--
 -- [__Special Use__]
 --
 --     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse OpenGL \/ ES support>

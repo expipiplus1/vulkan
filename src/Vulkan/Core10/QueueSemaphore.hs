@@ -174,7 +174,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkDestroySemaphore-semaphore-01137# All submitted batches that
+-- -   #VUID-vkDestroySemaphore-semaphore-05149# All submitted batches that
 --     refer to @semaphore@ /must/ have completed execution
 --
 -- -   #VUID-vkDestroySemaphore-semaphore-01138# If

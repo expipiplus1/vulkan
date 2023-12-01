@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html SPV_EXT_shader_viewport_index_layer>
+--
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
@@ -36,11 +43,6 @@
 --     2017-08-08
 --
 -- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.2 Core
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html SPV_EXT_shader_viewport_index_layer>
 --
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt GL_ARB_shader_viewport_layer_array>,

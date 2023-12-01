@@ -23,6 +23,10 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview VK_KHR_multiview>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NVX/SPV_NVX_multiview_per_view_attributes.html SPV_NVX_multiview_per_view_attributes>
+--
 -- [__Contact__]
 --
 --     -   Jeff Bolz
@@ -37,9 +41,6 @@
 --     No known IP claims.
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NVX_multiview_per_view_attributes.html SPV_NVX_multiview_per_view_attributes>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nvx/GL_NVX_multiview_per_view_attributes.txt GL_NVX_multiview_per_view_attributes>

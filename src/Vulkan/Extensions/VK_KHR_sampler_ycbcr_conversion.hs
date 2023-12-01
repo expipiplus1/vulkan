@@ -29,6 +29,10 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -46,10 +50,6 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]
 --

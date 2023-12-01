@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_fragment_mask.html SPV_AMD_shader_fragment_mask>
+--
+-- [__Contact__]
 --
 --     -   Aaron Hagan
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_fragment_mask] @AaronHaganAMD%0A*Here describe the issue or question you have about the VK_AMD_shader_fragment_mask extension* >
@@ -34,9 +41,6 @@
 --     No known IP claims.
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_fragment_mask.html SPV_AMD_shader_fragment_mask>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/amd/GL_AMD_shader_fragment_mask.txt GL_AMD_shader_fragment_mask>

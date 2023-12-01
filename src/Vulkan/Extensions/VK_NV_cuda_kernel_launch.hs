@@ -21,12 +21,17 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--     None
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#boilerplate-provisional-header description>
 --         of provisional header files for enablement and stability
 --         details.__
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
 --
 -- [__Contact__]
 --
@@ -76,14 +81,12 @@
 -- of the CUDA module.
 --
 -- As with 'Vulkan.Core10.Handles.PipelineCache', the binary cache depends
--- on the hardware architecture. Therefore the application must assume the
--- cache might fail, and thus need to handle falling back to the original
--- PTX code as necessary. Most often, the cache will succeed if the same
--- GPU driver and architecture is used between the cache generation from
--- PTX and the use of this cache. But most often, in the event of a new
--- driver version or a if using a different GPU But in the event of a new
--- driver version or if using a different GPU architecture, the cache is
--- likely to become invalid.
+-- on the hardware architecture. The application must assume the cache
+-- might fail, and need to handle falling back to the original PTX code as
+-- necessary. Most often, the cache will succeed if the same GPU driver and
+-- architecture is used between the cache generation from PTX and the use
+-- of this cache. In the event of a new driver version, or if using a
+-- different GPU architecture, the cache is likely to become invalid.
 --
 -- == New Object Types
 --
@@ -130,13 +133,6 @@
 --
 -- -   'NV_CUDA_KERNEL_LAUNCH_SPEC_VERSION'
 --
--- -   Extending
---     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV'
---
---     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV'
---
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_CUDA_FUNCTION_NV'
@@ -154,6 +150,17 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT'
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT'
 --
 -- == Issues
 --
@@ -302,8 +309,8 @@ foreign import ccall
 --
 -- = Description
 --
--- Once a CUDA module has been created, you /may/ create the function entry
--- point that /must/ refer to one function in the module.
+-- Once a CUDA module has been created, the application /may/ create the
+-- function entry point, which /must/ refer to one function in the module.
 --
 -- == Valid Usage (Implicit)
 --
@@ -392,19 +399,35 @@ foreign import ccall
 
 -- | vkGetCudaModuleCacheNV - Get CUDA module cache
 --
--- == Valid Usage
+-- = Description
 --
--- -   #VUID-vkGetCudaModuleCacheNV-pCacheSize-09414# @pCacheSize@ /must/
---     be a pointer containing the amount of bytes to be copied in
---     @pCacheData@. If @pCacheData@ is NULL, the function will return in
---     this pointer the total amount of bytes required to later perform the
---     copy into @pCacheData@.
+-- If @pCacheData@ is @NULL@, then the size of the binary cache, in bytes,
+-- is returned in @pCacheSize@. Otherwise, @pCacheSize@ /must/ point to a
+-- variable set by the user to the size of the buffer, in bytes, pointed to
+-- by @pCacheData@, and on return the variable is overwritten with the
+-- amount of data actually written to @pCacheData@. If @pCacheSize@ is less
+-- than the size of the binary shader code, nothing is written to
+-- @pCacheData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
--- -   #VUID-vkGetCudaModuleCacheNV-pCacheData-09415# @pCacheData@ /may/ be
---     a pointer to a buffer in which the binary cache will be copied. The
---     amount of bytes copied is defined by the value in @pCacheSize@. This
---     pointer /may/ be NULL. In this case, the function will write the
---     total amount of required data in @pCacheSize@.
+-- The returned cache /may/ then be used later for further initialization
+-- of the CUDA module, by sending this cache /instead/ of the PTX code when
+-- using 'createCudaModuleNV'.
+--
+-- Note
+--
+-- Using the binary cache instead of the original PTX code /should/
+-- significantly speed up initialization of the CUDA module, given that the
+-- whole compilation and validation will not be necessary.
+--
+-- As with 'Vulkan.Core10.Handles.PipelineCache', the binary cache depends
+-- on the specific implementation. The application /must/ assume the cache
+-- upload might fail in many circumstances and thus /may/ have to get ready
+-- for falling back to the original PTX code if necessary. Most often, the
+-- cache /may/ succeed if the same device driver and architecture is used
+-- between the cache generation from PTX and the use of this cache. In the
+-- event of a new driver version or if using a different device
+-- architecture, this cache /may/ become invalid.
 --
 -- == Valid Usage (Implicit)
 --
@@ -828,8 +851,8 @@ instance Zero CudaModuleCreateInfoNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createCudaFunctionNV'
 data CudaFunctionCreateInfoNV = CudaFunctionCreateInfoNV
-  { -- | @module@ /must/ be the CUDA 'Vulkan.Extensions.Handles.CudaModuleNV'
-    -- module in which the function resides.
+  { -- | @module@ is the CUDA 'Vulkan.Extensions.Handles.CudaModuleNV' module in
+    -- which the function resides.
     --
     -- #VUID-VkCudaFunctionCreateInfoNV-module-parameter# @module@ /must/ be a
     -- valid 'Vulkan.Extensions.Handles.CudaModuleNV' handle
@@ -882,6 +905,25 @@ instance Zero CudaFunctionCreateInfoNV where
 -- | VkCudaLaunchInfoNV - Structure specifying the parameters to launch a
 -- CUDA kernel
 --
+-- = Description
+--
+-- Kernel parameters of @function@ are specified via @pParams@, very much
+-- the same way as described in
+-- <https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__EXEC.html#group__CUDA__EXEC_1gb8f3dc3031b40da29d5f9a7139e52e15 cuLaunchKernel>
+--
+-- If @function@ has N parameters, then @pParams@ /must/ be an array of N
+-- pointers and @paramCount@ /must/ be set to N. Each of @kernelParams@[0]
+-- through @kernelParams@[N-1] /must/ point to a region of memory from
+-- which the actual kernel parameter will be copied. The number of kernel
+-- parameters and their offsets and sizes are not specified here as that
+-- information is stored in the 'Vulkan.Extensions.Handles.CudaFunctionNV'
+-- object.
+--
+-- The application-owned memory pointed to by @pParams@ and
+-- @kernelParams@[0] through @kernelParams@[N-1] are consumed immediately,
+-- and /may/ be altered or freed after 'cmdCudaLaunchKernelNV' has
+-- returned.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkCudaLaunchInfoNV-gridDimX-09406# @gridDimX@ /must/ be less
@@ -918,12 +960,12 @@ instance Zero CudaFunctionCreateInfoNV where
 --     valid 'Vulkan.Extensions.Handles.CudaFunctionNV' handle
 --
 -- -   #VUID-VkCudaLaunchInfoNV-pParams-parameter# If @paramCount@ is not
---     @0@, @pParams@ /must/ be a valid pointer to an array of @paramCount@
---     bytes
+--     @0@, and @pParams@ is not @NULL@, @pParams@ /must/ be a valid
+--     pointer to an array of @paramCount@ bytes
 --
 -- -   #VUID-VkCudaLaunchInfoNV-pExtras-parameter# If @extraCount@ is not
---     @0@, @pExtras@ /must/ be a valid pointer to an array of @extraCount@
---     bytes
+--     @0@, and @pExtras@ is not @NULL@, @pExtras@ /must/ be a valid
+--     pointer to an array of @extraCount@ bytes
 --
 -- = See Also
 --
@@ -955,9 +997,13 @@ data CudaLaunchInfoNV = CudaLaunchInfoNV
   , -- | @sharedMemBytes@ is the dynamic shared-memory size per thread block in
     -- bytes.
     sharedMemBytes :: Word32
+  , -- | @paramCount@ is the length of the @pParams@ table.
+    paramCount :: Word64
   , -- | @pParams@ is a pointer to an array of @paramCount@ pointers,
     -- corresponding to the arguments of @function@.
     params :: Vector (Ptr ())
+  , -- | @extraCount@ is reserved for future use.
+    extraCount :: Word64
   , -- | @pExtras@ is reserved for future use.
     extras :: Vector (Ptr ())
   }
@@ -980,11 +1026,25 @@ instance ToCStruct CudaLaunchInfoNV where
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (blockDimY)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (blockDimZ)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (sharedMemBytes)
-    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (params)) :: CSize))
+    let pParamsLength = Data.Vector.length $ (params)
+    paramCount'' <- lift $ if (paramCount) == 0
+      then pure $ fromIntegral pParamsLength
+      else do
+        unless (fromIntegral pParamsLength == (paramCount) || pParamsLength == 0) $
+          throwIO $ IOError Nothing InvalidArgument "" "pParams must be empty or have 'paramCount' elements" Nothing Nothing
+        pure (paramCount)
+    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) (paramCount'')
     pPParams' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (params)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPParams' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (params)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ())))) (pPParams')
-    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (extras)) :: CSize))
+    let pExtrasLength = Data.Vector.length $ (extras)
+    extraCount'' <- lift $ if (extraCount) == 0
+      then pure $ fromIntegral pExtrasLength
+      else do
+        unless (fromIntegral pExtrasLength == (extraCount) || pExtrasLength == 0) $
+          throwIO $ IOError Nothing InvalidArgument "" "pExtras must be empty or have 'extraCount' elements" Nothing Nothing
+        pure (extraCount)
+    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) (extraCount'')
     pPExtras' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (extras)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPExtras' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (extras)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ())))) (pPExtras')
@@ -1015,11 +1075,13 @@ instance FromCStruct CudaLaunchInfoNV where
     blockDimZ <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     sharedMemBytes <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     paramCount <- peek @CSize ((p `plusPtr` 56 :: Ptr CSize))
+    let paramCount' = coerce @CSize @Word64 paramCount
     pParams <- peek @(Ptr (Ptr ())) ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ()))))
-    pParams' <- generateM (fromIntegral (coerce @CSize @Word64 paramCount)) (\i -> peek @(Ptr ()) ((pParams `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
+    pParams' <- generateM (fromIntegral paramCount') (\i -> peek @(Ptr ()) ((pParams `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
     extraCount <- peek @CSize ((p `plusPtr` 72 :: Ptr CSize))
+    let extraCount' = coerce @CSize @Word64 extraCount
     pExtras <- peek @(Ptr (Ptr ())) ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ()))))
-    pExtras' <- generateM (fromIntegral (coerce @CSize @Word64 extraCount)) (\i -> peek @(Ptr ()) ((pExtras `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
+    pExtras' <- generateM (fromIntegral extraCount') (\i -> peek @(Ptr ()) ((pExtras `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
     pure $ CudaLaunchInfoNV
              function
              gridDimX
@@ -1029,7 +1091,9 @@ instance FromCStruct CudaLaunchInfoNV where
              blockDimY
              blockDimZ
              sharedMemBytes
+             paramCount'
              pParams'
+             extraCount'
              pExtras'
 
 instance Zero CudaLaunchInfoNV where
@@ -1042,7 +1106,9 @@ instance Zero CudaLaunchInfoNV where
            zero
            zero
            zero
+           zero
            mempty
+           zero
            mempty
 
 
@@ -1143,7 +1209,7 @@ data PhysicalDeviceCudaKernelLaunchPropertiesNV = PhysicalDeviceCudaKernelLaunch
     -- minor version number of the compute code.
     computeCapabilityMinor :: Word32
   , -- | #limits-computeCapabilityMajor# @computeCapabilityMajor@ indicates the
-    -- minor version number of the compute code.
+    -- major version number of the compute code.
     computeCapabilityMajor :: Word32
   }
   deriving (Typeable, Eq)

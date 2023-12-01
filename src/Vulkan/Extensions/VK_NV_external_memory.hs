@@ -25,7 +25,9 @@
 --
 -- [__Deprecation State__]
 --
---     -   /Deprecated/ by @VK_KHR_external_memory@ extension
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--         extension
 --
 --         -   Which in turn was /promoted/ to
 --             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>

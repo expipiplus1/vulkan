@@ -23,9 +23,15 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_fragment_shader_barycentric.html SPV_NV_fragment_shader_barycentric>
+--
 -- [__Deprecation State__]
 --
---     -   /Promoted/ to @VK_KHR_fragment_shader_barycentric@ extension
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shader_barycentric VK_KHR_fragment_shader_barycentric>
+--         extension
 --
 -- [__Contact__]
 --
@@ -41,9 +47,6 @@
 --     No known IP claims.
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_fragment_shader_barycentric.html SPV_NV_fragment_shader_barycentric>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_fragment_shader_barycentric.txt GL_NV_fragment_shader_barycentric>

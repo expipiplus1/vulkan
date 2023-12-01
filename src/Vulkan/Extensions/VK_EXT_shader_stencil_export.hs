@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html SPV_EXT_shader_stencil_export>
+--
+-- [__Contact__]
 --
 --     -   Dominik Witczak
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_stencil_export] @dominikwitczakamd%0A*Here describe the issue or question you have about the VK_EXT_shader_stencil_export extension* >
@@ -34,9 +41,6 @@
 --     No known IP claims.
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html SPV_EXT_shader_stencil_export>
 --
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_stencil_export.txt GL_ARB_shader_stencil_export>

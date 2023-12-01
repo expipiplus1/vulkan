@@ -25,6 +25,10 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_storage_buffer_storage_class VK_KHR_storage_buffer_storage_class>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_variable_pointers.html SPV_KHR_variable_pointers>
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -42,13 +46,6 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
---
--- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_variable_pointers.html SPV_KHR_variable_pointers>
---
---     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]
 --

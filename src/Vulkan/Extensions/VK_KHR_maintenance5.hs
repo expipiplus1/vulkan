@@ -25,6 +25,62 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
+--
+--     -   Interacts with VK_VERSION_1_2
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_EXT_attachment_feedback_loop_layout
+--
+--     -   Interacts with VK_EXT_buffer_device_address
+--
+--     -   Interacts with VK_EXT_conditional_rendering
+--
+--     -   Interacts with VK_EXT_descriptor_buffer
+--
+--     -   Interacts with VK_EXT_fragment_density_map
+--
+--     -   Interacts with VK_EXT_graphics_pipeline_library
+--
+--     -   Interacts with VK_EXT_opacity_micromap
+--
+--     -   Interacts with VK_EXT_pipeline_creation_cache_control
+--
+--     -   Interacts with VK_EXT_pipeline_protected_access
+--
+--     -   Interacts with VK_EXT_transform_feedback
+--
+--     -   Interacts with VK_KHR_acceleration_structure
+--
+--     -   Interacts with VK_KHR_buffer_device_address
+--
+--     -   Interacts with VK_KHR_device_group
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
+--
+--     -   Interacts with VK_KHR_fragment_shading_rate
+--
+--     -   Interacts with VK_KHR_pipeline_executable_properties
+--
+--     -   Interacts with VK_KHR_pipeline_library
+--
+--     -   Interacts with VK_KHR_ray_tracing_pipeline
+--
+--     -   Interacts with VK_KHR_video_decode_queue
+--
+--     -   Interacts with VK_KHR_video_encode_queue
+--
+--     -   Interacts with VK_NV_device_generated_commands
+--
+--     -   Interacts with VK_NV_displacement_micromap
+--
+--     -   Interacts with VK_NV_ray_tracing
+--
+--     -   Interacts with VK_NV_ray_tracing_motion_blur
+--
 -- [__Contact__]
 --
 --     -   Stu Smith
@@ -911,13 +967,11 @@ foreign import ccall
 --
 -- -   #VUID-vkGetImageSubresourceLayout2KHR-mipLevel-01716# The @mipLevel@
 --     member of @pSubresource@ /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
---     created
+--     specified in @image@
 --
 -- -   #VUID-vkGetImageSubresourceLayout2KHR-arrayLayer-01717# The
 --     @arrayLayer@ member of @pSubresource@ /must/ be less than the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @image@ was created
+--     @arrayLayers@ specified in @image@
 --
 -- -   #VUID-vkGetImageSubresourceLayout2KHR-format-08886# If @format@ of
 --     the @image@ is a color format, @tiling@ of the @image@ is
@@ -953,12 +1007,12 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --     bit
 --
--- -   #VUID-vkGetImageSubresourceLayout2KHR-image-01895# If @image@ was
+-- -   #VUID-vkGetImageSubresourceLayout2KHR-image-09434# If @image@ was
 --     created with the
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --     external memory handle type, then @image@ /must/ be bound to memory
 --
--- -   #VUID-vkGetImageSubresourceLayout2KHR-tiling-02271# If the @tiling@
+-- -   #VUID-vkGetImageSubresourceLayout2KHR-tiling-09435# If the @tiling@
 --     of the @image@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then the @aspectMask@ member of @pSubresource@ /must/ be
@@ -1707,17 +1761,15 @@ instance es ~ '[] => Zero (SubresourceLayout2KHR es) where
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-mipLevel-01716# The @mipLevel@
 --     member of @pSubresource@ /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
---     created
+--     specified in @pCreateInfo@
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-arrayLayer-01717# The
 --     @arrayLayer@ member of @pSubresource@ /must/ be less than the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @image@ was created
+--     @arrayLayers@ specified in @pCreateInfo@
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-format-08886# If @format@ of
---     the @image@ is a color format, @tiling@ of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
+--     the @pCreateInfo@ is a color format, @tiling@ of the @pCreateInfo@
+--     is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', and does not
 --     have a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
@@ -1725,44 +1777,29 @@ instance es ~ '[] => Zero (SubresourceLayout2KHR es) where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-format-04462# If @format@ of
---     the @image@ has a depth component, the @aspectMask@ member of
+--     the @pCreateInfo@ has a depth component, the @aspectMask@ member of
 --     @pSubresource@ /must/ contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-format-04463# If @format@ of
---     the @image@ has a stencil component, the @aspectMask@ member of
---     @pSubresource@ /must/ contain
+--     the @pCreateInfo@ has a stencil component, the @aspectMask@ member
+--     of @pSubresource@ /must/ contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-format-04464# If @format@ of
---     the @image@ does not contain a stencil or depth component, the
+--     the @pCreateInfo@ does not contain a stencil or depth component, the
 --     @aspectMask@ member of @pSubresource@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-tiling-08717# If the @tiling@
---     of the @image@ is
+--     of the @pCreateInfo@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and has a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 --     then the @aspectMask@ member of @pSubresource@ /must/ be a single
 --     valid
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --     bit
---
--- -   #VUID-VkDeviceImageSubresourceInfoKHR-image-01895# If @image@ was
---     created with the
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @image@ /must/ be bound to memory
---
--- -   #VUID-VkDeviceImageSubresourceInfoKHR-tiling-02271# If the @tiling@
---     of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then the @aspectMask@ member of @pSubresource@ /must/ be
---     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ and the index /i/ /must/ be
---     less than the
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
---     associated with the image’s @format@ and
---     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierPropertiesEXT'::@drmFormatModifier@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1990,12 +2027,13 @@ type PipelineCreateFlags2KHR = PipelineCreateFlagBits2KHR
 --     feedback loop including depth-stencil attachments.
 --
 -- -   'PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT' specifies
---     that the pipeline /can/ be used with acceleration structures which
---     reference an opacity micromap array.
+--     that the ray tracing pipeline /can/ be used with acceleration
+--     structures which reference an opacity micromap array.
 --
 -- -   'PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV'
---     specifies that the pipeline /can/ be used with aceleration
---     structures which reference a displacement micromap array.
+--     specifies that the ray tracing pipeline /can/ be used with
+--     acceleration structures which reference a displacement micromap
+--     array.
 --
 -- -   'PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT_EXT' specifies that the
 --     pipeline /must/ not be bound to a protected command buffer.
