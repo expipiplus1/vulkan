@@ -25,7 +25,7 @@ import           UnliftIO                       ( Exception(displayException)
                                                 )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
-import           Vulkan.Core12
+import qualified Vulkan.Core10.DeviceInitialization as DI
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                as Timeline
 import           Vulkan.Exception
@@ -160,7 +160,7 @@ physicalDeviceInfo phys = runMaybeT $ do
     empty
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
-    pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
+    pure $ sum (DI.size <$> heaps)
   (pdiQueueCreateInfos, getQueues) <- MaybeT $ assignQueues
     phys
     (MyQueues (QueueSpec 1 (const (pure . isComputeQueueFamily))))

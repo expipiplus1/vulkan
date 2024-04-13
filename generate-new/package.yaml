@@ -122,7 +122,7 @@ dependencies:
 - pandoc
 - parsec
 - parsers
-- polysemy >= 1.4 && < 1.8
+- polysemy >= 1.4 && < 2
 - pretty-show
 - prettyprinter
 - regex-applicative

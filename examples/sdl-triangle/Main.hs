@@ -34,10 +34,13 @@ import           Say
 import           System.Exit
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import qualified Vulkan.Core10.DeviceInitialization as DI
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
+import qualified Vulkan.Extensions.VK_KHR_surface as SF
 import           Vulkan.Extensions.VK_KHR_swapchain
+import qualified Vulkan.Extensions.VK_KHR_swapchain as SW
 import           Vulkan.Utils.Debug
 import           Vulkan.Utils.ShaderQQ.GLSL.Glslang ( vert
                                                     , frag )
@@ -267,6 +270,7 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
   shaderStages   <- createShaders dev
   pipelineLayout <- withPipelineLayout dev zero Nothing allocate
   let
+    Extent2D {width = swapchainWidth, height = swapchainHeight} = swapchainExtent
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo = zero
       { stages             = shaderStages
@@ -280,8 +284,8 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
           [ Viewport
               { x        = 0
               , y        = 0
-              , width    = realToFrac (width (swapchainExtent :: Extent2D))
-              , height   = realToFrac (height (swapchainExtent :: Extent2D))
+              , width    = realToFrac swapchainWidth
+              , height   = realToFrac swapchainHeight
               , minDepth = 0
               , maxDepth = 1
               }
@@ -333,14 +337,14 @@ createFramebuffers
   -> RenderPass
   -> Extent2D
   -> Managed (V.Vector Framebuffer)
-createFramebuffers dev imageViews renderPass swapchainExtent =
+createFramebuffers dev imageViews renderPass Extent2D {width, height} =
   for imageViews $ \imageView -> do
     let framebufferCreateInfo :: FramebufferCreateInfo '[]
         framebufferCreateInfo = zero
           { renderPass  = renderPass
           , attachments = [imageView]
-          , width       = width (swapchainExtent :: Extent2D)
-          , height      = height (swapchainExtent :: Extent2D)
+          , width
+          , height
           , layers      = 1
           }
     withFramebuffer dev framebufferCreateInfo Nothing allocate
@@ -493,11 +497,9 @@ createGraphicalDevice inst surface = do
       in
         zero
           { surface            = surface
-          , minImageCount      = minImageCount
-                                     (surfaceCaps :: SurfaceCapabilitiesKHR)
-                                   + 1
-          , imageFormat = (format :: SurfaceFormatKHR -> Format) surfaceFormat
-          , imageColorSpace    = colorSpace surfaceFormat
+          , minImageCount      = SF.minImageCount surfaceCaps + 1
+          , imageFormat        = SF.format surfaceFormat
+          , imageColorSpace    = SF.colorSpace surfaceFormat
           , imageExtent        = case
                                    currentExtent
                                      (surfaceCaps :: SurfaceCapabilitiesKHR)
@@ -522,8 +524,8 @@ createGraphicalDevice inst surface = do
     , graphicsQueue
     , graphicsQueueFamilyIndex
     , presentQueue
-    , format (surfaceFormat :: SurfaceFormatKHR)
-    , imageExtent (swapchainCreateInfo :: SwapchainCreateInfoKHR '[])
+    , SF.format surfaceFormat
+    , SW.imageExtent swapchainCreateInfo
     , swapchain
     )
 
@@ -571,7 +573,7 @@ pickGraphicalPhysicalDevice inst surface _requiredExtensions desiredFormat = do
   deviceScore :: MonadIO m => PhysicalDevice -> m Word64
   deviceScore dev = do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties dev
-    let totalSize = sum $ (size :: MemoryHeap -> DeviceSize) <$> heaps
+    let totalSize = sum $ DI.size <$> heaps
     pure totalSize
 
   deviceHasSwapchain :: MonadIO m => PhysicalDevice -> m Bool
@@ -606,10 +608,8 @@ pickGraphicalPhysicalDevice inst surface _requiredExtensions desiredFormat = do
       _
         | V.any
           (\f ->
-            format (f :: SurfaceFormatKHR)
-              == format (desiredFormat :: SurfaceFormatKHR)
-              && colorSpace (f :: SurfaceFormatKHR)
-              == colorSpace (desiredFormat :: SurfaceFormatKHR)
+            SF.format f == SF.format desiredFormat
+              && SF.colorSpace f == SF.colorSpace desiredFormat
           )
           formats
         -> desiredFormat
