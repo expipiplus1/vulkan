@@ -46,6 +46,8 @@ import qualified Language.C.Types              as C
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withImage )
+import qualified Vulkan.Core10.DeviceInitialization as DI
+import qualified Vulkan.Core10.Image           as SL
 import           Vulkan.Dynamic                 ( DeviceCmds
                                                   ( DeviceCmds
                                                   , pVkGetDeviceProcAddr
@@ -571,7 +573,7 @@ render = do
   let pixelAddr :: Int -> Int -> Ptr Word32
       pixelAddr x y = plusPtr
         (mappedData cpuImageAllocationInfo)
-        ( fromIntegral (offset (cpuImageLayout :: SubresourceLayout))
+        ( fromIntegral (SL.offset cpuImageLayout)
         + (y * fromIntegral (rowPitch cpuImageLayout))
         + (x * sizeOf (0 :: Word32))
         )
@@ -738,7 +740,7 @@ physicalDeviceInfo
 physicalDeviceInfo phys = runMaybeT $ do
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
-    pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
+    pure $ sum (DI.size <$> heaps)
   pdiGraphicsQueueFamilyIndex <- do
     queueFamilyProperties <- getPhysicalDeviceQueueFamilyProperties phys
     let isGraphicsQueue q =

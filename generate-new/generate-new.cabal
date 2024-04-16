@@ -92,10 +92,11 @@ library
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeriveFunctor
+      DeepSubsumption
       DeriveFoldable
-      DeriveTraversable
+      DeriveFunctor
       DeriveGeneric
+      DeriveTraversable
       DerivingVia
       DisambiguateRecordFields
       DuplicateRecordFields
@@ -152,7 +153,7 @@ library
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.8
+    , polysemy >=1.4 && <2
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -199,10 +200,11 @@ library khronos-spec
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeriveFunctor
+      DeepSubsumption
       DeriveFoldable
-      DeriveTraversable
+      DeriveFunctor
       DeriveGeneric
+      DeriveTraversable
       DerivingVia
       DisambiguateRecordFields
       DuplicateRecordFields
@@ -260,7 +262,7 @@ library khronos-spec
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.8
+    , polysemy >=1.4 && <2
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -302,10 +304,11 @@ executable vk
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeriveFunctor
+      DeepSubsumption
       DeriveFoldable
-      DeriveTraversable
+      DeriveFunctor
       DeriveGeneric
+      DeriveTraversable
       DerivingVia
       DisambiguateRecordFields
       DuplicateRecordFields
@@ -364,7 +367,7 @@ executable vk
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.8
+    , polysemy >=1.4 && <2
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -409,10 +412,11 @@ executable vma
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeriveFunctor
+      DeepSubsumption
       DeriveFoldable
-      DeriveTraversable
+      DeriveFunctor
       DeriveGeneric
+      DeriveTraversable
       DerivingVia
       DisambiguateRecordFields
       DuplicateRecordFields
@@ -471,7 +475,7 @@ executable vma
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.8
+    , polysemy >=1.4 && <2
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -514,10 +518,11 @@ executable xr
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeriveFunctor
+      DeepSubsumption
       DeriveFoldable
-      DeriveTraversable
+      DeriveFunctor
       DeriveGeneric
+      DeriveTraversable
       DerivingVia
       DisambiguateRecordFields
       DuplicateRecordFields
@@ -576,7 +581,7 @@ executable xr
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.8
+    , polysemy >=1.4 && <2
     , pretty-show
     , prettyprinter
     , regex-applicative
