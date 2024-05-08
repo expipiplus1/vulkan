@@ -186,7 +186,7 @@ classes Spec {..} = do
     tellDoc [qqi|
       class PeekChain (xs :: [Type])
       class PokeChain (xs :: [Type])
-      type family Extends (p :: [Type] -> Type) (x :: Type) :: Constraint
+      type family Extends (p :: [Type] -> Type) (x :: Type) :: Constraint where ..
       type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
         Extendss p '[]      = ()
         Extendss p (x : xs) = (Extends p x, Extendss p xs)
