@@ -589,6 +589,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.PhysicalDeviceRayTracingMotionBlurFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelineFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch.PhysicalDeviceRayTracingPositionFetchFeaturesKHR',
+-- 'Vulkan.Extensions.VK_IMG_relaxed_line_rasterization.PhysicalDeviceRelaxedLineRasterizationFeaturesIMG',
 -- 'Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
 -- 'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',

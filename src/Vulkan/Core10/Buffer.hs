@@ -337,9 +337,9 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', each
 --     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
 --     than @pQueueFamilyPropertyCount@ returned by either
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
---     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
+--     or
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
 --     for the @physicalDevice@ that was used to create @device@
 --
 -- -   #VUID-VkBufferCreateInfo-flags-00915# If the
@@ -414,9 +414,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-flags-03338# If @flags@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
---     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT bufferDeviceAddressCaptureReplayEXT>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT bufferDeviceAddressCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-usage-04813# If @usage@ includes

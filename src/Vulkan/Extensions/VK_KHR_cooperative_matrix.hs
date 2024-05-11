@@ -406,6 +406,8 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesKHR where
 -- At least one entry in the list /must/ have power of two values for all
 -- of @MSize@, @KSize@, and @NSize@.
 --
+-- @scope@ /must/ be 'SCOPE_SUBGROUP_KHR'.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -535,6 +537,9 @@ instance Zero CooperativeMatrixPropertiesKHR where
 -- cooperative matrix properties supported by an implementation
 --
 -- = Description
+--
+-- @cooperativeMatrixSupportedStages@ /must/ not have any bits other than
+-- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' set.
 --
 -- If the 'PhysicalDeviceCooperativeMatrixPropertiesKHR' structure is
 -- included in the @pNext@ chain of the

@@ -388,12 +388,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI',
 --     @pipeline@ /must/ be a subpass shading pipeline
 --
--- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-06653# If
---     @pipelineBindPoint@ is
---     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS',
---     @pipeline@ /must/ have been created without
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdBindPipeline-commandBuffer-parameter# @commandBuffer@
@@ -1543,12 +1537,6 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
 --     is not enabled, each element of @pDescriptorSets@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorSet'
---
--- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-08010# Each element of
---     @pDescriptorSets@ /must/ have been allocated with a
---     'Vulkan.Core10.Handles.DescriptorSetLayout' which was not created
---     with
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -3394,8 +3382,10 @@ foreign import ccall
 --     equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
--- -   #VUID-vkCmdDraw-colorAttachmentCount-06179# If the current render
---     pass instance was begun with
+-- -   #VUID-vkCmdDraw-colorAttachmentCount-06179# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
@@ -5467,7 +5457,7 @@ foreign import ccall
 -- -   #VUID-vkCmdDraw-pStrides-04913# If the bound graphics pipeline was
 --     created with the
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
---     dynamic state enabled, but not the
+--     dynamic state enabled, but without the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
@@ -7142,8 +7132,10 @@ foreign import ccall
 --     equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
--- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06179# If the current
---     render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06179# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
@@ -9229,7 +9221,7 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexed-pStrides-04913# If the bound graphics
 --     pipeline was created with the
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
---     dynamic state enabled, but not the
+--     dynamic state enabled, but without the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
@@ -10919,8 +10911,10 @@ foreign import ccall
 --     equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
--- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06179# If the current
---     render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06179# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
@@ -12984,7 +12978,7 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirect-pStrides-04913# If the bound graphics
 --     pipeline was created with the
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
---     dynamic state enabled, but not the
+--     dynamic state enabled, but without the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
@@ -14694,7 +14688,9 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-06179# If the
---     current render pass instance was begun with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
@@ -16766,7 +16762,7 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexedIndirect-pStrides-04913# If the bound graphics
 --     pipeline was created with the
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
---     dynamic state enabled, but not the
+--     dynamic state enabled, but without the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
@@ -18732,12 +18728,6 @@ foreign import ccall
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
 --     @layerCount@ members of @srcSubresource@ or @dstSubresource@ /must/
 --     match
---
--- -   #VUID-vkCmdCopyImage-maintenance5-08792# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     feature is not enabled, the @layerCount@ member of @srcSubresource@
---     or @dstSubresource@ /must/ not be
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS'
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-08794# If @srcImage@ and @dstImage@
 --     have the same 'Vulkan.Core10.Enums.ImageType.ImageType', and one of
@@ -25694,12 +25684,6 @@ instance Zero ImageCopy where
 --     @layerCount@ members of @srcSubresource@ or @dstSubresource@ /must/
 --     match
 --
--- -   #VUID-VkImageBlit-maintenance5-08799# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     feature is not enabled, the @layerCount@ member of @srcSubresource@
---     or @dstSubresource@ /must/ not be
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS'
---
 -- -   #VUID-VkImageBlit-layerCount-08801# If one of the @layerCount@
 --     members of @srcSubresource@ or @dstSubresource@ is
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the other
@@ -25936,12 +25920,6 @@ instance Zero BufferImageCopy where
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
 --     @layerCount@ member of @srcSubresource@ and @dstSubresource@ /must/
 --     match
---
--- -   #VUID-VkImageResolve-maintenance5-08802# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     feature is not enabled, the @layerCount@ member of @srcSubresource@
---     or @dstSubresource@ /must/ not be
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS'
 --
 -- -   #VUID-VkImageResolve-layerCount-08804# If one of the @layerCount@
 --     members of @srcSubresource@ or @dstSubresource@ is
