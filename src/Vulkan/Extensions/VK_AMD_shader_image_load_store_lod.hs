@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_image_load_store_lod.html SPV_AMD_shader_image_load_store_lod>
+--
+-- [__Contact__]
 --
 --     -   Dominik Witczak
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_image_load_store_lod] @dominikwitczakamd%0A*Here describe the issue or question you have about the VK_AMD_shader_image_load_store_lod extension* >
@@ -31,9 +38,6 @@
 --     2017-08-21
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_image_load_store_lod.html SPV_AMD_shader_image_load_store_lod>
 --
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/AMD/AMD_shader_image_load_store_lod.txt GL_AMD_shader_image_load_store_lod>

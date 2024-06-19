@@ -47,8 +47,6 @@
 --
 --     -   Requires SPIR-V 1.4.
 --
---     -   Promoted to Vulkan 1.2 Core
---
 -- [__Contributors__]
 --
 --     -   Alexander Galazin, Arm

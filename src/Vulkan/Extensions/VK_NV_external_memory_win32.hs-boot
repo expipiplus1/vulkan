@@ -25,7 +25,9 @@
 --
 -- [__Deprecation State__]
 --
---     -   /Deprecated/ by @VK_KHR_external_memory_win32@ extension
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>
+--         extension
 --
 -- [__Contact__]
 --

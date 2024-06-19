@@ -1564,12 +1564,11 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     color attachment
 --
 -- -   #VUID-VkSubpassDescription2-multisampledRenderToSingleSampled-06869#
---     If none of the @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, all attachments in @pColorAttachments@ that are
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have the
---     same sample count
+--     feature is not enabled, all attachments in @pColorAttachments@ that
+--     are not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
+--     the same sample count
 --
 -- -   #VUID-VkSubpassDescription2-pInputAttachments-02897# All attachments
 --     in @pInputAttachments@ that are not
@@ -1688,13 +1687,17 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkSubpassDescription2-multisampledRenderToSingleSampled-06872#
---     If none of the @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, all attachments in @pDepthStencilAttachment@ or
---     @pColorAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have the same
---     sample count
+--     All attachments in @pDepthStencilAttachment@ or @pColorAttachments@
+--     that are not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/
+--     have the same sample count , if none of the following are enabled:
+--
+--     -   The @VK_AMD_mixed_attachment_samples@ extension
+--
+--     -   The @VK_NV_framebuffer_mixed_samples@ extension
+--
+--     -   The
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--         feature,
 --
 -- -   #VUID-VkSubpassDescription2-attachment-03073# Each element of
 --     @pPreserveAttachments@ /must/ not be

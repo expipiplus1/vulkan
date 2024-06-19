@@ -4366,14 +4366,6 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     @pViewportState@ is not @NULL@ it /must/ be a valid pointer to a
 --     valid 'PipelineViewportStateCreateInfo' structure
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-pViewportState-04892# If the
---     pipeline requires
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
---     dynamic state enabled, @pViewportState@ /must/ be a valid pointer to
---     a valid 'PipelineViewportStateCreateInfo' structure
---
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pMultisampleState-09026# If the
 --     pipeline requires
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
@@ -4454,8 +4446,8 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-02510# If the
 --     pipeline requires
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
---     and the @VK_EXT_depth_range_unrestricted@ extension is not enabled
---     and no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     the @VK_EXT_depth_range_unrestricted@ extension is not enabled and
+--     no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS', and
 --     the @depthBoundsTestEnable@ member of @pDepthStencilState@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', the @minDepthBounds@ and
@@ -5876,9 +5868,12 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     @pStages@ /must/ be a valid pointer to an array of @stageCount@
 --     valid 'PipelineShaderStageCreateInfo' structures
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-pRasterizationState-09039# If the
---     @VK_EXT_extended_dynamic_state3@ extension is not enabled, or any of
---     the
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pRasterizationState-09039# If
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
+--     includes
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT',
+--     and the @VK_EXT_extended_dynamic_state3@ extension is not enabled,
+--     or any of the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT',
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT', or
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
@@ -6397,26 +6392,6 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
 --     @pStages@ /must/ be a valid pointer to an array of @stageCount@
 --     valid 'PipelineShaderStageCreateInfo' structures
---
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-09041# If
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
---     includes
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT',
---     and the @VK_EXT_extended_dynamic_state3@ extension is not enabled,
---     or any of the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT',
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT', or
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
---     dynamic states are not set, or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
---     is enabled on the device and
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
---     is not set, @pMultisampleState@ /must/ be a valid pointer to a valid
---     'PipelineMultisampleStateCreateInfo' structure
---
--- -   #VUID-VkGraphicsPipelineCreateInfo-pRasterizationState-09042# If
---     @pRasterizationState@ is not @NULL@ it /must/ be a valid pointer to
---     a valid 'PipelineRasterizationStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06642# If
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
@@ -6963,6 +6938,21 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     is not specified, the pipeline /must/ define
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-08909# If @flags@ does not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR',
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     is specified either in a library or by the inclusion of
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT',
+--     and that state either includes
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
+--     or has @pRasterizationState->rasterizerDiscardEnable@ set to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', the pipeline /must/ define
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
+--     and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
+--     or include those states in linked pipeline libraries
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-09043# If
 --     @pDynamicState->pDynamicStates@ does not include

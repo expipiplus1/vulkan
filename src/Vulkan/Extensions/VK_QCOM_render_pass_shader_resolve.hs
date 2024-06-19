@@ -20,7 +20,10 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__Contact__]
 --
 --     -   Bill Licea-Kane
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_shader_resolve] @wwlk%0A*Here describe the issue or question you have about the VK_QCOM_render_pass_shader_resolve extension* >

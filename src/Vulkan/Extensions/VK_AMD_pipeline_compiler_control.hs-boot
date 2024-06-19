@@ -20,7 +20,10 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_pipeline_compiler_control] @anteru%0A*Here describe the issue or question you have about the VK_AMD_pipeline_compiler_control extension* >

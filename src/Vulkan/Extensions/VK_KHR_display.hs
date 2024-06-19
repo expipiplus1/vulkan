@@ -132,8 +132,8 @@
 -- non-stereo modes? YUV and RGB scanout even if they both take RGB input
 -- images? BGR vs. RGB input? etc.
 --
--- __PROPOSED RESOLUTION__: Many modern displays support at most a handful
--- of resolutions and timings natively. Other “modes” are expected to be
+-- __RESOLVED__: Many modern displays support at most a handful of
+-- resolutions and timings natively. Other “modes” are expected to be
 -- supported using scaling hardware on the display engine or GPU. Other
 -- properties, such as rotation and mirroring should not require
 -- duplicating hardware modes just to express all combinations. Further,
@@ -154,25 +154,25 @@
 --
 -- 2) What properties of a display itself are useful?
 --
--- __PROPOSED RESOLUTION__: This issue is too broad. It was meant to prompt
--- general discussion, but resolving this issue amounts to completing this
+-- __RESOLVED__: This issue is too broad. It was meant to prompt general
+-- discussion, but resolving this issue amounts to completing this
 -- specification. All interesting properties should be included. The issue
 -- will remain as a placeholder since removing it would make it hard to
 -- parse existing discussion notes that refer to issues by number.
 --
 -- 3) How are multiple overlay planes within a display or mode enumerated?
 --
--- __PROPOSED RESOLUTION__: They are referred to by an index. Each display
--- will report the number of overlay planes it contains.
+-- __RESOLVED__: They are referred to by an index. Each display will report
+-- the number of overlay planes it contains.
 --
 -- 4) Should swapchains be created relative to a mode or a display?
 --
--- __PROPOSED RESOLUTION__: When using this extension, swapchains are
--- created relative to a mode and a plane. The mode implies the display
--- object the swapchain will present to. If the specified mode is not the
--- display’s current mode, the new mode will be applied when the first
--- image is presented to the swapchain, and the default operating system
--- mode, if any, will be restored when the swapchain is destroyed.
+-- __RESOLVED__: When using this extension, swapchains are created relative
+-- to a mode and a plane. The mode implies the display object the swapchain
+-- will present to. If the specified mode is not the display’s current
+-- mode, the new mode will be applied when the first image is presented to
+-- the swapchain, and the default operating system mode, if any, will be
+-- restored when the swapchain is destroyed.
 --
 -- 5) Should users query generic ranges from displays and construct their
 -- own modes explicitly using those constraints rather than querying a
@@ -181,41 +181,41 @@
 -- monitor side or in the GPU display engine, making “modes” something of a
 -- relic\/compatibility construct).
 --
--- __PROPOSED RESOLUTION__: Expose both. Display information structures
--- will expose a set of predefined modes, as well as any attributes
--- necessary to construct a customized mode.
+-- __RESOLVED__: Expose both. Display information structures will expose a
+-- set of predefined modes, as well as any attributes necessary to
+-- construct a customized mode.
 --
 -- 6) Is it fine if we return the display and display mode handles in the
 -- structure used to query their properties?
 --
--- __PROPOSED RESOLUTION__: Yes.
+-- __RESOLVED__: Yes.
 --
 -- 7) Is there a possibility that not all displays of a device work with
 -- all of the present queues of a device? If yes, how do we determine which
 -- displays work with which present queues?
 --
--- __PROPOSED RESOLUTION__: No known hardware has such limitations, but
--- determining such limitations is supported automatically using the
--- existing @VK_KHR_surface@ and @VK_KHR_swapchain@ query mechanisms.
+-- __RESOLVED__: No known hardware has such limitations, but determining
+-- such limitations is supported automatically using the existing
+-- @VK_KHR_surface@ and @VK_KHR_swapchain@ query mechanisms.
 --
 -- 8) Should all presentation need to be done relative to an overlay plane,
 -- or can a display mode + display be used alone to target an output?
 --
--- __PROPOSED RESOLUTION__: Require specifying a plane explicitly.
+-- __RESOLVED__: Require specifying a plane explicitly.
 --
 -- 9) Should displays have an associated window system display, such as an
 -- @HDC@ or @Display*@?
 --
--- __PROPOSED RESOLUTION__: No. Displays are independent of any windowing
--- system in use on the system. Further, neither @HDC@ nor @Display*@ refer
--- to a physical display object.
+-- __RESOLVED__: No. Displays are independent of any windowing system in
+-- use on the system. Further, neither @HDC@ nor @Display*@ refer to a
+-- physical display object.
 --
 -- 10) Are displays queried from a physical GPU or from a device instance?
 --
--- __PROPOSED RESOLUTION__: Developers prefer to query modes directly from
--- the physical GPU so they can use display information as an input to
--- their device selection algorithms prior to device creation. This avoids
--- the need to create placeholder device instances to enumerate displays.
+-- __RESOLVED__: Developers prefer to query modes directly from the
+-- physical GPU so they can use display information as an input to their
+-- device selection algorithms prior to device creation. This avoids the
+-- need to create placeholder device instances to enumerate displays.
 --
 -- This preference must be weighed against the extra initialization that
 -- must be done by driver vendors prior to device instance creation to
@@ -229,18 +229,20 @@
 -- There is no performance case against making them dispatchable objects,
 -- but they would be the first extension objects to be dispatchable.
 --
--- __PROPOSED RESOLUTION__: Do not make displays or modes dispatchable.
--- They will dispatch based on their associated physical device.
+-- __RESOLVED__: Do not make displays or modes dispatchable. They will
+-- dispatch based on their associated physical device.
 --
 -- 12) Should hardware cursor capabilities be exposed?
 --
--- __PROPOSED RESOLUTION__: Defer. This could be a separate extension on
--- top of the base WSI specs.
+-- __RESOLVED__: Defer. This could be a separate extension on top of the
+-- base WSI specs.
 --
--- if they are one physical display device to an end user, but may
--- internally be implemented as two side-by-side displays using the same
--- display engine (and sometimes cabling) resources as two physically
--- separate display devices.
+-- 13) How many display objects should be enumerated for \"tiled\" display
+-- devices? There are ongoing design discussions among lower-level display
+-- API authors regarding how to expose displays if they are one physical
+-- display device to an end user, but may internally be implemented as two
+-- side-by-side displays using the same display engine (and sometimes
+-- cabling) resources as two physically separate display devices.
 --
 -- __RESOLVED__: Tiled displays will appear as a single display object in
 -- this API.

@@ -29,6 +29,12 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_acceleration_structure
+--
+--     -   Interacts with VK_NV_ray_tracing
+--
 -- [__Contact__]
 --
 --     -   Tobias Hector
@@ -2555,14 +2561,21 @@ instance es ~ '[] => Zero (DescriptorBufferBindingInfoEXT es) where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDescriptorBufferBindingPushDescriptorBufferHandleEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT'
+--
+-- -   #VUID-VkDescriptorBufferBindingPushDescriptorBufferHandleEXT-buffer-parameter#
+--     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorBufferBindingPushDescriptorBufferHandleEXT = DescriptorBufferBindingPushDescriptorBufferHandleEXT
-  { -- | #VUID-VkDescriptorBufferBindingPushDescriptorBufferHandleEXT-buffer-parameter#
-    -- @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+  { -- | @buffer@ is the 'Vulkan.Core10.Handles.Buffer' handle of the buffer for
+    -- push descriptors.
     buffer :: Buffer }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -2666,6 +2679,26 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 --     @pStorageBuffer@ is not @NULL@ and @pStorageBuffer->address@ is not
 --     zero, @pStorageBuffer->address@ must be an address within a
 --     'Vulkan.Core10.Handles.Buffer' created on @device@
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-09427# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
+--     @pUniformBuffer@ is not @NULL@ , the number of texel buffer elements
+--     given by (⌊@pUniformBuffer->range@ \/ (texel block size)⌋ × (texels
+--     per block)) where texel block size and texels per block are as
+--     defined in the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     table for @pUniformBuffer->format@, /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-09428# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+--     @pStorageBuffer@ is not @NULL@ , the number of texel buffer elements
+--     given by (⌊@pStorageBuffer->range@ \/ (texel block size)⌋ × (texels
+--     per block)) where texel block size and texels per block are as
+--     defined in the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     table for @pStorageBuffer->format@, /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-08028# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'

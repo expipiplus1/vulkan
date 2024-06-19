@@ -433,14 +433,26 @@ instance Zero PipelineRenderingCreateInfo where
 -- -   #VUID-VkRenderingInfo-viewMask-06069# If @viewMask@ is @0@,
 --     @layerCount@ /must/ not be @0@
 --
--- -   #VUID-VkRenderingInfo-multisampledRenderToSingleSampled-06857# If
---     none of the @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
+-- -   #VUID-VkRenderingInfo-multisampledRenderToSingleSampled-06857#
+--     @imageView@ members of @pDepthAttachment@, @pStencilAttachment@, and
+--     elements of @pColorAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with the same @sampleCount@ , if none of the following are enabled:
+--
+--     -   The @VK_AMD_mixed_attachment_samples@ extension
+--
+--     -   The @VK_NV_framebuffer_mixed_samples@ extension
+--
+--     -   The
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--         feature,
+--
+-- -   #VUID-VkRenderingInfo-imageView-09429# @imageView@ members of
+--     elements of @pColorAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with the same @sampleCount@ , if the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, @imageView@ members of @pDepthAttachment@,
---     @pStencilAttachment@, and elements of @pColorAttachments@ that are
---     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been
---     created with the same @sampleCount@
+--     feature is not enabled
 --
 -- -   #VUID-VkRenderingInfo-None-08994# If
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'::@deviceRenderAreaCount@

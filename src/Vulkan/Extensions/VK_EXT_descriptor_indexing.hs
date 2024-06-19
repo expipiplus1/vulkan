@@ -25,6 +25,10 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3 VK_KHR_maintenance3>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html SPV_EXT_descriptor_indexing>
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -41,11 +45,6 @@
 --     2017-10-02
 --
 -- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.2 Core
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html SPV_EXT_descriptor_indexing>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt GL_EXT_nonuniform_qualifier>

@@ -29,6 +29,12 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
+--
+--     -   Interacts with VK_KHR_format_feature_flags2
+--
 -- [__Contact__]
 --
 --     -   Daniel Koch

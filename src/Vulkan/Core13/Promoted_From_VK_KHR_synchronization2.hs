@@ -672,8 +672,7 @@ cmdWaitEvents2SafeOrUnsafe mkVkCmdWaitEvents2 commandBuffer
 --     @pImageMemoryBarriers@ members of @pDependencyInfos@ /must/ either
 --     include only pipeline stages valid for the queue family that was
 --     used to create the command pool that @commandBuffer@ was allocated
---     from, or include only
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_HOST_BIT'
+--     from
 --
 -- -   #VUID-vkCmdWaitEvents2-dstStageMask-03843# The @dstStageMask@ member
 --     of any element of the @pMemoryBarriers@, @pBufferMemoryBarriers@, or
@@ -3648,19 +3647,19 @@ instance Zero MemoryBarrier2 where
 --     bit or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   #VUID-VkImageMemoryBarrier2-image-03319# If @image@ has a
---     depth\/stencil format with both depth and stencil and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include either or both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
 -- -   #VUID-VkImageMemoryBarrier2-image-03320# If @image@ has a
 --     depth\/stencil format with both depth and stencil and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
 --     feature is not enabled, then the @aspectMask@ member of
 --     @subresourceRange@ /must/ include both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-03319# If @image@ has a
+--     depth\/stencil format with both depth and stencil and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include either or both
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
