@@ -27,6 +27,8 @@ library:
     extra-libraries: vulkan-1
   - condition: os(darwin)
     extra-libraries: vulkan
+  - condition: os(darwin) && flag(darwin-lib-dirs)
+    extra-lib-dirs: /usr/local/lib
   - condition: '!os(windows) && !os(darwin)'
     pkg-config-dependencies: vulkan
   - condition: flag(safe-foreign-calls)
@@ -62,6 +64,11 @@ flags:
   trace-calls:
     description: Inserts calls to Debug.Trace.traceEventIO around every Vulkan call.
     default: no
+    manual: yes
+
+  darwin-lib-dirs:
+    description: Add default LunarG MoltenVK SDK paths to extra-lib-dirs when building on MacOS. Requires Cabal >=3.10.3.
+    default: yes
     manual: yes
 
 tests:
