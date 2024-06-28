@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.35.2.
+-- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -23,6 +23,11 @@ extra-source-files:
 source-repository head
   type: git
   location: https://github.com/expipiplus1/vulkan
+
+flag darwin-lib-dirs
+  description: Add default LunarG MoltenVK SDK paths to extra-lib-dirs when building on MacOS. Requires Cabal >=3.10.3.
+  manual: True
+  default: True
 
 flag generic-instances
   description: Derive Generic instances for all structs. Disabled by default because of code size and compile time impact.
@@ -673,26 +678,6 @@ library
       UndecidableInstances
       ViewPatterns
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
-
-  -- The LunarG installation script (macOS) copies the vulkan dylibs to /usr/local/lib.
-  --
-  -- By adding this directory to the RPATH entries of the vulkan dylib
-  -- built from this component, we can save a lot of headaches (ie loader
-  -- errors) for macOS users for whom that path is not part of the default
-  -- RPATH entries. This is justified by this being the default installation
-  -- path of the vulkan SDK on macOS.
-  --
-  -- More specifically, vulkan-utils uses template haskell which forces the
-  -- vulkan library to be loaded at compile time, resulting in an especially
-  -- hard to diagnose loader error that is harder to fix than correcting the
-  -- rpath of an executable (#501). This fixes that error for LunarG vulkan
-  -- installations.
-  --
-  -- The caveat is that this fix is predicated on a Cabal bug being fixed: This
-  -- will only work from Cabal 3.10.3+ (after cabal#9554 lands).
-  if os(darwin)
-    extra-lib-dirs: /usr/local/lib
-
   build-depends:
       base <5
     , bytestring
@@ -705,6 +690,9 @@ library
   if os(darwin)
     extra-libraries:
         vulkan
+  if os(darwin) && flag(darwin-lib-dirs)
+    extra-lib-dirs:
+        /usr/local/lib
   if !os(windows) && !os(darwin)
     pkgconfig-depends:
         vulkan
