@@ -677,6 +677,7 @@ library
       TypeSynonymInstances
       UndecidableInstances
       ViewPatterns
+      ConstraintKinds
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   build-depends:
       base <5
@@ -746,6 +747,7 @@ test-suite test
       TypeSynonymInstances
       UndecidableInstances
       ViewPatterns
+      ConstraintKinds
   build-tool-depends:
       tasty-discover:tasty-discover
   build-depends:
