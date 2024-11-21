@@ -41,6 +41,9 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
+import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
+import qualified Vulkan.Core10                 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo(..))
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import           Vulkan.Dynamic                 ( DeviceCmds
                                                   ( DeviceCmds
@@ -58,6 +61,7 @@ import           Vulkan.Utils.ShaderQQ.GLSL.Glslang
 import           Vulkan.Zero
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
+import qualified VulkanMemoryAllocator         as AllocationCreateInfo (AllocationCreateInfo(..))
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -205,7 +209,7 @@ render = do
     zero { size  = fromIntegral $ width * height * 4 * sizeOf (0 :: Float)
          , usage = BUFFER_USAGE_STORAGE_BUFFER_BIT
          }
-    zero { flags = ALLOCATION_CREATE_MAPPED_BIT
+    zero { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
          , usage = MEMORY_USAGE_GPU_TO_CPU
          }
 
@@ -249,9 +253,7 @@ render = do
 
   -- Create our shader and compute pipeline
   shader              <- createShader
-  (_, pipelineLayout) <- withPipelineLayout' zero
-    { setLayouts = [descriptorSetLayout]
-    }
+  (_, pipelineLayout) <- withPipelineLayout' zero { PipelineLayoutCreateInfo.setLayouts = [descriptorSetLayout] }
   let pipelineCreateInfo :: ComputePipelineCreateInfo '[]
       pipelineCreateInfo = zero { layout             = pipelineLayout
                                 , stage              = shader
@@ -263,9 +265,7 @@ render = do
 
   -- Create a command buffer
   computeQueueFamilyIndex <- getComputeQueueFamilyIndex
-  let commandPoolCreateInfo :: CommandPoolCreateInfo
-      commandPoolCreateInfo =
-        zero { queueFamilyIndex = computeQueueFamilyIndex }
+  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = computeQueueFamilyIndex }
   (_, commandPool) <- withCommandPool' commandPoolCreateInfo
   let commandBufferAllocateInfo = zero { commandPool = commandPool
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
@@ -275,7 +275,7 @@ render = do
 
   -- Fill command buffer
   useCommandBuffer commandBuffer
-                   zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+                   zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ do
         -- Set up our state, pipeline and descriptor set
         cmdBindPipeline commandBuffer

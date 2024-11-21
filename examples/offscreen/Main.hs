@@ -46,6 +46,8 @@ import qualified Language.C.Types              as C
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withImage )
+import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
+import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import qualified Vulkan.Core10.Image           as SL
 import           Vulkan.Dynamic                 ( DeviceCmds
@@ -64,6 +66,7 @@ import           Vulkan.Utils.ShaderQQ.GLSL.Glslang
 import           Vulkan.Zero
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
+import qualified VulkanMemoryAllocator         as AllocationCreateInfo (AllocationCreateInfo(..))
 
 #if defined(RENDERDOC)
 data RENDERDOC_API_1_1_2
@@ -269,8 +272,7 @@ render = do
                           .|. IMAGE_USAGE_TRANSFER_SRC_BIT
       , initialLayout = IMAGE_LAYOUT_UNDEFINED
       }
-    allocationCreateInfo :: AllocationCreateInfo
-    allocationCreateInfo = zero { flags = ALLOCATION_CREATE_MAPPED_BIT
+    allocationCreateInfo = zero { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
                                 , usage = MEMORY_USAGE_GPU_ONLY
                                 }
   -- Allocate the image with VMA
@@ -288,8 +290,7 @@ render = do
                                 , usage         = IMAGE_USAGE_TRANSFER_DST_BIT
                                 , initialLayout = IMAGE_LAYOUT_UNDEFINED
                                 }
-      cpuAllocationCreateInfo :: AllocationCreateInfo
-      cpuAllocationCreateInfo = zero { flags = ALLOCATION_CREATE_MAPPED_BIT
+      cpuAllocationCreateInfo = zero { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
                                      , usage = MEMORY_USAGE_GPU_TO_CPU
                                      }
   (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage'
@@ -432,9 +433,7 @@ render = do
 
   -- Create a command buffer
   graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
-  let commandPoolCreateInfo :: CommandPoolCreateInfo
-      commandPoolCreateInfo =
-        zero { queueFamilyIndex = graphicsQueueFamilyIndex }
+  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex }
   (_, commandPool) <- withCommandPool' commandPoolCreateInfo
   let commandBufferAllocateInfo = zero { commandPool = commandPool
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
@@ -448,7 +447,7 @@ render = do
   -- - Transition the images to be able to perform the copy
   -- - Copy the image to CPU mapped memory
   useCommandBuffer commandBuffer
-                   zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+                   zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ do
         let renderPassBeginInfo = zero
               { renderPass  = renderPass
