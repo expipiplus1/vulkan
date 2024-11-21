@@ -42,6 +42,7 @@ import           Haskell                       as H
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type.Preserve
+import           Render.Utils                  ( plainTVcompat )
 import           Spec.Types
 
 -- | The same as 'cToHsType' except type variables are written as @_@
@@ -72,7 +73,7 @@ cToHsTypeQuantified
 cToHsTypeQuantified preserve t = do
   (negNames, posNames, t) <- runRenderTypeContext
     $ cToHsType' Unwrapped preserve t
-  pure $ ForallT ((`PlainTV` SpecifiedSpec) . cVarName <$> (negNames <> posNames)) [] t
+  pure $ ForallT (plainTVcompat . cVarName <$> (negNames <> posNames)) [] t
 
 cToHsTypeWithContext
   :: forall r

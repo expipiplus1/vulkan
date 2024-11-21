@@ -1,3 +1,4 @@
+{-# language CPP #-}
 module Render.Utils
   where
 
@@ -93,3 +94,10 @@ chooseAlign :: Int -> (Doc ann, TH.Name, Doc ann -> Doc ann)
 chooseAlign align = if align <= 8
   then ("allocaBytes", 'allocaBytes, id)
   else ("allocaBytesAligned", 'allocaBytesAligned, (<+> viaShow align))
+
+plainTVcompat :: TH.Name -> TH.TyVarBndr
+#if MIN_VERSION_template_haskell(2,17,0)
+plainTVcompat = (`TH.PlainTV` TH.SpecifiedSpec)
+#else
+plainTVcompat = TH.PlainTV
+#endif

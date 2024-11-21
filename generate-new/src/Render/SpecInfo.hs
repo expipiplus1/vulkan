@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 module Render.SpecInfo where
 
 import           Algebra.Graph.Relation
@@ -112,7 +114,11 @@ specSpecInfo Spec {..} siTypeSize =
       (<>)
       [ (t, [u])
       | u <- toList specUnions
+#if MIN_VERSION_algebraic_graphs(0,7,0)
+      , t <- reachable typeParentRelation (sName u)
+#else
       , t <- reachable (sName u) typeParentRelation
+#endif
       ]
     siContainsUnion = fromMaybe mempty . (`Map.lookup` containsUnionMap)
     aliasMap =

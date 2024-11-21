@@ -92,7 +92,6 @@ library
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeepSubsumption
       DeriveFoldable
       DeriveFunctor
       DeriveGeneric
@@ -179,6 +178,9 @@ library
     , word-wrap
     , xeno
   default-language: Haskell2010
+  if impl(ghc >= 9.2.4)
+    default-extensions:
+        DeepSubsumption
 
 library khronos-spec
   exposed-modules:
@@ -200,7 +202,6 @@ library khronos-spec
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeepSubsumption
       DeriveFoldable
       DeriveFunctor
       DeriveGeneric
@@ -288,6 +289,9 @@ library khronos-spec
     , word-wrap
     , xeno
   default-language: Haskell2010
+  if impl(ghc >= 9.2.4)
+    default-extensions:
+        DeepSubsumption
 
 executable vk
   main-is: Main.hs
@@ -304,7 +308,6 @@ executable vk
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeepSubsumption
       DeriveFoldable
       DeriveFunctor
       DeriveGeneric
@@ -393,6 +396,9 @@ executable vk
     , word-wrap
     , xeno
   default-language: Haskell2010
+  if impl(ghc >= 9.2.4)
+    default-extensions:
+        DeepSubsumption
 
 executable vma
   main-is: Main.hs
@@ -412,7 +418,6 @@ executable vma
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeepSubsumption
       DeriveFoldable
       DeriveFunctor
       DeriveGeneric
@@ -501,6 +506,9 @@ executable vma
     , word-wrap
     , xeno
   default-language: Haskell2010
+  if impl(ghc >= 9.2.4)
+    default-extensions:
+        DeepSubsumption
 
 executable xr
   main-is: Main.hs
@@ -518,7 +526,6 @@ executable xr
       BlockArguments
       ConstraintKinds
       DataKinds
-      DeepSubsumption
       DeriveFoldable
       DeriveFunctor
       DeriveGeneric
@@ -607,3 +614,6 @@ executable xr
     , word-wrap
     , xeno
   default-language: Haskell2010
+  if impl(ghc >= 9.2.4)
+    default-extensions:
+        DeepSubsumption
