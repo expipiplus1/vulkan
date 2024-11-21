@@ -20,6 +20,8 @@ import           UnliftIO                       ( MonadUnliftIO )
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Core10
+import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
+import qualified Vulkan.Core10                 as Extent2D (Extent2D(..))
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                as Swap
@@ -56,7 +58,7 @@ renderFrame = do
                                        }
   (_, ~[commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
   useCommandBuffer' commandBuffer
-                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+                    zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ myRecordCommandBuffer f imageIndex
 
   -- Submit the work
@@ -108,8 +110,8 @@ myRecordCommandBuffer Frame {..} imageIndex = do
       0
       [ Viewport { x        = 0
                  , y        = 0
-                 , width    = realToFrac (width (siImageExtent :: Extent2D))
-                 , height   = realToFrac (height (siImageExtent :: Extent2D))
+                 , width    = realToFrac (Extent2D.width siImageExtent)
+                 , height   = realToFrac (Extent2D.height siImageExtent)
                  , minDepth = 0
                  , maxDepth = 1
                  }

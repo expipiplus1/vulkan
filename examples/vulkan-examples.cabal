@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.6.
+-- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -113,9 +113,9 @@ library
     , vector
     , vulkan
     , vulkan-utils
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
-  default-language: Haskell2010
 
 executable compute
   main-is: Main.hs
@@ -174,9 +174,9 @@ executable compute
     , vector
     , vulkan
     , vulkan-utils
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
-  default-language: Haskell2010
 
 executable hlsl
   main-is: Main.hs
@@ -247,11 +247,11 @@ executable hlsl
     , vulkan
     , vulkan-examples
     , vulkan-utils >=0.3
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
   if !flag(have-shaderc)
     buildable: False
-  default-language: Haskell2010
 
 executable info
   main-is: Main.hs
@@ -300,9 +300,9 @@ executable info
       base <5
     , pretty-simple >=3.3
     , vulkan
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
-  default-language: Haskell2010
 
 executable offscreen
   main-is: Main.hs
@@ -361,6 +361,7 @@ executable offscreen
     , vector
     , vulkan
     , vulkan-utils
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
   if flag(renderdoc)
@@ -370,7 +371,6 @@ executable offscreen
     build-depends:
         containers
       , inline-c
-  default-language: Haskell2010
 
 executable rays
   main-is: Main.hs
@@ -450,11 +450,11 @@ executable rays
     , vulkan >=3.7
     , vulkan-examples
     , vulkan-utils >=0.3
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
   if !flag(raytracing)
     buildable: False
-  default-language: Haskell2010
 
 executable resize
   main-is: Main.hs
@@ -524,9 +524,9 @@ executable resize
     , vulkan
     , vulkan-examples
     , vulkan-utils
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
-  default-language: Haskell2010
 
 executable sdl-triangle
   main-is: Main.hs
@@ -583,9 +583,9 @@ executable sdl-triangle
     , vector
     , vulkan
     , vulkan-utils
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
-  default-language: Haskell2010
 
 executable timeline-semaphore
   main-is: Main.hs
@@ -639,9 +639,9 @@ executable timeline-semaphore
     , vector
     , vulkan
     , vulkan-utils >=0.3
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
-  default-language: Haskell2010
 
 executable vrcube
   main-is: Main.hs
@@ -713,8 +713,8 @@ executable vrcube
     , vulkan >=3.7
     , vulkan-examples
     , vulkan-utils >=0.3
+  default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
   if !flag(vr)
     buildable: False
-  default-language: Haskell2010

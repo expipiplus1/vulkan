@@ -38,6 +38,8 @@ import           UnliftIO.Exception             ( throwString
 import           Vulkan.Core10
 import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_surface
+import           Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR (SurfaceCapabilitiesKHR(..))
+import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR(..))
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Misc
 import           Vulkan.Zero
@@ -98,7 +100,7 @@ allocSwapchainResources oldSwapchain windowSize surface = do
   (imageViewKeys, imageViews) <-
     fmap V.unzip . V.forM swapchainImages $ \image ->
       Framebuffer.createImageView
-        (format (siSurfaceFormat :: SurfaceFormatKHR))
+        (SurfaceFormatKHR.format siSurfaceFormat)
         image
 
   -- This refcount is released in 'recreateSwapchainResources'
@@ -174,7 +176,7 @@ createSwapchain oldSwapchain explicitSize surf = do
         -- the driver to finish
         buffer = 1
         desired =
-          buffer + minImageCount (surfaceCaps :: SurfaceCapabilitiesKHR)
+          buffer + SurfaceCapabilitiesKHR.minImageCount surfaceCaps
       in
         min limit desired
 
@@ -190,13 +192,13 @@ createSwapchain oldSwapchain explicitSize surf = do
       , flags              = zero
       , queueFamilyIndices = mempty -- No need to specify when not using concurrent access
       , minImageCount      = imageCount
-      , imageFormat        = format (surfaceFormat :: SurfaceFormatKHR)
+      , imageFormat        = SurfaceFormatKHR.format surfaceFormat
       , imageColorSpace    = colorSpace surfaceFormat
       , imageExtent        = imageExtent
       , imageArrayLayers   = 1
       , imageUsage         = foldr (.|.) zero requiredUsageFlags
       , imageSharingMode   = SHARING_MODE_EXCLUSIVE
-      , preTransform = currentTransform (surfaceCaps :: SurfaceCapabilitiesKHR)
+      , preTransform       = SurfaceCapabilitiesKHR.currentTransform surfaceCaps
       , compositeAlpha     = compositeAlphaMode
       , presentMode        = presentMode
       , clipped            = True

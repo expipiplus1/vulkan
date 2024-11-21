@@ -27,6 +27,8 @@ import           Swapchain
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Core10
+import qualified Vulkan.Core10                 as Extent2D (Extent2D(..))
+import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_swapchain
@@ -113,7 +115,7 @@ renderFrame = withSpan_ "renderFrame" $ do
   withSpan_ "record"
     $ useCommandBuffer'
         commandBuffer
-        zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+        zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ myRecordCommandBuffer f imageIndex
 
   -- Submit the work
@@ -160,8 +162,8 @@ myRecordCommandBuffer Frame {..} imageIndex = do
       SwapchainResources {..} = fSwapchainResources
       SwapchainInfo {..}      = srInfo
       image                   = srImages ! fromIntegral imageIndex
-      imageWidth              = width (siImageExtent :: Extent2D)
-      imageHeight             = height (siImageExtent :: Extent2D)
+      imageWidth              = Extent2D.width siImageExtent
+      imageHeight             = Extent2D.height siImageExtent
       imageSubresourceRange   = ImageSubresourceRange
         { aspectMask     = IMAGE_ASPECT_COLOR_BIT
         , baseMipLevel   = 0

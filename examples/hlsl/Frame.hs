@@ -33,6 +33,7 @@ import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_surface
+import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR(..))
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
 
@@ -93,7 +94,7 @@ initialFrame fWindow fSurface = do
                                                  fSurface
 
   (_, fRenderPass) <- RenderPass.createRenderPass
-    (format (siSurfaceFormat (srInfo fSwapchainResources) :: SurfaceFormatKHR))
+    (SurfaceFormatKHR.format (siSurfaceFormat (srInfo fSwapchainResources)))
 
   (fReleaseFramebuffers, fFramebuffers) <- createFramebuffers
     fRenderPass

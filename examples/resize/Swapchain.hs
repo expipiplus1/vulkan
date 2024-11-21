@@ -23,6 +23,8 @@ import           Vulkan.Core10           hiding ( createFramebuffer
                                                 )
 import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_surface
+import           Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR (SurfaceCapabilitiesKHR(..))
+import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR(..))
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
 
@@ -69,23 +71,22 @@ createSwapchain oldSwapchain explicitSize surf = do
   sayErrString $ "Using surface format " <> show surfaceFormat
 
   let imageExtent =
-        case currentExtent (surfaceCaps :: SurfaceCapabilitiesKHR) of
+        case SurfaceCapabilitiesKHR.currentExtent surfaceCaps of
           Extent2D w h | w == maxBound, h == maxBound -> explicitSize
           e -> e
 
   let
     swapchainCreateInfo = zero
       { surface          = surf
-      , minImageCount    = minImageCount (surfaceCaps :: SurfaceCapabilitiesKHR)
-                             + 1
-      , imageFormat      = (format :: SurfaceFormatKHR -> Format) surfaceFormat
+      , minImageCount    = SurfaceCapabilitiesKHR.minImageCount surfaceCaps + 1
+      , imageFormat      = SurfaceFormatKHR.format surfaceFormat
       , imageColorSpace  = colorSpace surfaceFormat
       , imageExtent      = imageExtent
       , imageArrayLayers = 1
       , imageUsage       = IMAGE_USAGE_STORAGE_BIT
                              .|. IMAGE_USAGE_COLOR_ATTACHMENT_BIT
       , imageSharingMode = SHARING_MODE_EXCLUSIVE
-      , preTransform = currentTransform (surfaceCaps :: SurfaceCapabilitiesKHR)
+      , preTransform     = SurfaceCapabilitiesKHR.currentTransform surfaceCaps
       , compositeAlpha   = COMPOSITE_ALPHA_OPAQUE_BIT_KHR
       , presentMode      = presentMode
       , clipped          = True
@@ -153,12 +154,11 @@ allocSwapchainResources windowSize oldSwapchain surface = do
     windowSize
     surface
 
-  (renderPassKey, renderPass) <- Pipeline.createRenderPass
-    (format (surfaceFormat :: SurfaceFormatKHR))
+  (renderPassKey, renderPass) <- Pipeline.createRenderPass (SurfaceFormatKHR.format surfaceFormat)
   (_            , swapchainImages) <- getSwapchainImagesKHR' swapchain
   (imageViewKeys, imageViews     ) <-
     fmap V.unzip . V.forM swapchainImages $ \image ->
-      createImageView (format (surfaceFormat :: SurfaceFormatKHR)) image
+      createImageView (SurfaceFormatKHR.format surfaceFormat) image
 
   (framebufferKeys, framebuffers) <-
     fmap V.unzip . V.forM imageViews $ \imageView ->
@@ -176,7 +176,7 @@ allocSwapchainResources windowSize oldSwapchain surface = do
     , framebuffers
     , imageViews
     , swapchainImages
-    , format (surfaceFormat :: SurfaceFormatKHR)
+    , SurfaceFormatKHR.format surfaceFormat
     , releaseSwapchain
     )
 
