@@ -36,6 +36,8 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import qualified Vulkan.Core10                 as MemoryHeap (MemoryHeap(..))
+import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import           Vulkan.Core11                  ( pattern API_VERSION_1_1 )
 import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
@@ -197,7 +199,7 @@ physicalDeviceInfo surf phys = runMaybeT $ do
   --
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
-    pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
+    pure $ sum (MemoryHeap.size <$> heaps)
 
   pure (PhysicalDeviceInfo { .. }, SomeStruct dci)
 
@@ -261,8 +263,7 @@ createCommandPools
   -- ^ Queue family for the pools
   -> m (Vector CommandPool)
 createCommandPools dev n (QueueFamilyIndex queueFamilyIndex) = do
-  let commandPoolCreateInfo :: CommandPoolCreateInfo
-      commandPoolCreateInfo = zero { queueFamilyIndex = queueFamilyIndex }
+  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = queueFamilyIndex }
   V.replicateM
     n
     (   snd

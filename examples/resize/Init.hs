@@ -28,6 +28,7 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import qualified Vulkan.Core10                 as MemoryHeap (MemoryHeap(..))
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
@@ -164,7 +165,7 @@ physicalDeviceInfo surf phys = runMaybeT $ do
   -- Score based on the total memory
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
-    pure $ sum ((size :: MemoryHeap -> DeviceSize) <$> heaps)
+    pure $ sum (MemoryHeap.size <$> heaps)
 
   pure PhysicalDeviceInfo { .. }
 

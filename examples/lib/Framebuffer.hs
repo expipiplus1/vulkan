@@ -13,6 +13,8 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import           Vulkan.Core10 as Extent2D (Extent2D(..))
+import           Vulkan.Core10 as ImageViewCreateInfo (ImageViewCreateInfo(..))
 import           Vulkan.Zero
 
 autoapplyDecs
@@ -41,8 +43,8 @@ createFramebuffer renderPass imageView imageSize = do
   let framebufferCreateInfo :: FramebufferCreateInfo '[]
       framebufferCreateInfo = zero { renderPass  = renderPass
                                    , attachments = [imageView]
-                                   , width       = width (imageSize :: Extent2D)
-                                   , height = height (imageSize :: Extent2D)
+                                   , width       = Extent2D.width imageSize
+                                   , height      = Extent2D.height imageSize
                                    , layers      = 1
                                    }
   withFramebuffer' framebufferCreateInfo
@@ -54,7 +56,7 @@ createImageView
   -> Image
   -> m (ReleaseKey, ImageView)
 createImageView format = \image ->
-  withImageView' imageViewCreateInfo { image = image }
+  withImageView' imageViewCreateInfo { ImageViewCreateInfo.image = image }
  where
   imageViewCreateInfo = zero
     { viewType         = IMAGE_VIEW_TYPE_2D

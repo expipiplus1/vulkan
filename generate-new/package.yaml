@@ -12,7 +12,6 @@ default-extensions:
 - BlockArguments
 - ConstraintKinds
 - DataKinds
-- DeepSubsumption
 - DeriveFoldable
 - DeriveFunctor
 - DeriveGeneric
@@ -49,6 +48,10 @@ default-extensions:
 - TypeFamilies
 - TypeOperators
 - ViewPatterns
+when:
+- condition: impl(ghc >= 9.2.4)
+  default-extensions:
+  - DeepSubsumption
 name: generate-new
 synopsis: A program to generate the vulkan package from the vulkan docs.
 author: Ellie Hermaszewska

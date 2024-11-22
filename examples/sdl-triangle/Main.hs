@@ -34,6 +34,8 @@ import           Say
 import           System.Exit
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
+import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
@@ -139,9 +141,7 @@ createCommandBuffers
   -> Managed (V.Vector CommandBuffer)
 createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex framebuffers swapchainExtent
   = do
-    let commandPoolCreateInfo :: CommandPoolCreateInfo
-        commandPoolCreateInfo =
-          zero { queueFamilyIndex = graphicsQueueFamilyIndex }
+    let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex }
     commandPool <- withCommandPool dev commandPoolCreateInfo Nothing allocate
     let commandBufferAllocateInfo :: CommandBufferAllocateInfo
         commandBufferAllocateInfo = zero
@@ -153,7 +153,7 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
     _ <- liftIO . for (V.zip framebuffers buffers) $ \(framebuffer, buffer) ->
       useCommandBuffer
           buffer
-          zero { flags = COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT }
+          zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT }
         $ do
             let renderPassBeginInfo = zero
                   { renderPass  = renderPass

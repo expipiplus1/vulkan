@@ -1,4 +1,4 @@
-resolver: lts-18.13
+resolver: lts-22.42
 packages:
 - .
 - utils
@@ -6,11 +6,16 @@ packages:
 - VulkanMemoryAllocator
 - openxr
 extra-deps:
-- autoapply-0.4.1.1
-- th-desugar-1.12
-- derive-storable-0.3.0.0
-- derive-storable-plugin-0.2.3.4
-- nothunks-0.1.4
+# - autoapply-0.4.1.1
+- git: https://github.com/dpwiz/autoapply.git
+  commit: 640ed1a689484fc307e1bab7c06db1027b28c87c
+- unification-fd-0.12.0
+- derive-storable-0.3.1.0
+- derive-storable-plugin-0.2.3.7
+
+allow-newer: true
+allow-newer-deps:
+- unification-fd
 
 nix:
   enable: false

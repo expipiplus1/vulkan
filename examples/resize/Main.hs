@@ -41,6 +41,8 @@ import           Vulkan.Core10                 as Vk
                                                 , withBuffer
                                                 , withImage
                                                 )
+import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
+import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
@@ -79,9 +81,7 @@ main = prettyError . runResourceT $ do
   surface <- createSurface inst sdlWindow
   DeviceParams devName phys dev graphicsQueue graphicsQueueFamilyIndex <-
     createDevice inst (snd surface)
-  let commandPoolCreateInfo :: CommandPoolCreateInfo
-      commandPoolCreateInfo =
-        zero { queueFamilyIndex = graphicsQueueFamilyIndex }
+  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex }
   commandPools <- V.replicateM
     numConcurrentFrames
     (snd <$> withCommandPool dev commandPoolCreateInfo Nothing allocate)
@@ -276,7 +276,7 @@ draw = do
 
   let julia = True
   useCommandBuffer' commandBuffer
-                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+                    zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ if julia
         then do
           -- Transition image to general, to write from the compute shader

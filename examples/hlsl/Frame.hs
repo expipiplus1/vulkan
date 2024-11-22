@@ -31,8 +31,10 @@ import           Swapchain
 import           UnliftIO.Exception             ( throwString )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_surface
+import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR(..))
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Zero
 
@@ -77,7 +79,7 @@ initialRecycledResources = do
 
   graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
   (_, fCommandPool)        <- withCommandPool' zero
-    { queueFamilyIndex = unQueueFamilyIndex graphicsQueueFamilyIndex
+    { CommandPoolCreateInfo.queueFamilyIndex = unQueueFamilyIndex graphicsQueueFamilyIndex
     }
 
   pure RecycledResources { .. }
@@ -93,7 +95,7 @@ initialFrame fWindow fSurface = do
                                                  fSurface
 
   (_, fRenderPass) <- RenderPass.createRenderPass
-    (format (siSurfaceFormat (srInfo fSwapchainResources) :: SurfaceFormatKHR))
+    (SurfaceFormatKHR.format (siSurfaceFormat (srInfo fSwapchainResources)))
 
   (fReleaseFramebuffers, fFramebuffers) <- createFramebuffers
     fRenderPass

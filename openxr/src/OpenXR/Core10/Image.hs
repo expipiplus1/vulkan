@@ -91,6 +91,7 @@ import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
 import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
+import OpenXR.Core10.Handles as Swapchain (Swapchain(..))
 import OpenXR.CStruct.Extends (SomeChild)
 import OpenXR.CStruct.Extends (SomeChild(..))
 import OpenXR.CStruct.Extends (SomeStruct)
@@ -485,7 +486,7 @@ enumerateSwapchainImages :: forall a io
                             Swapchain
                          -> io (Result, "images" ::: Vector a)
 enumerateSwapchainImages swapchain = liftIO . evalContT $ do
-  let xrEnumerateSwapchainImagesPtr = pXrEnumerateSwapchainImages (instanceCmds (swapchain :: Swapchain))
+  let xrEnumerateSwapchainImagesPtr = pXrEnumerateSwapchainImages (Swapchain.instanceCmds swapchain)
   lift $ unless (xrEnumerateSwapchainImagesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateSwapchainImages is null" Nothing Nothing
   let xrEnumerateSwapchainImages' = mkXrEnumerateSwapchainImages xrEnumerateSwapchainImagesPtr
@@ -1091,7 +1092,7 @@ instance ToCStruct SwapchainImageAcquireInfo where
 
 instance FromCStruct SwapchainImageAcquireInfo where
   peekCStruct _ = pure $ SwapchainImageAcquireInfo
-                           
+
 
 instance Storable SwapchainImageAcquireInfo where
   sizeOf ~_ = 16
@@ -1101,7 +1102,7 @@ instance Storable SwapchainImageAcquireInfo where
 
 instance Zero SwapchainImageAcquireInfo where
   zero = SwapchainImageAcquireInfo
-           
+
 
 
 -- | XrSwapchainImageWaitInfo - Describes a swapchain image wait operation
@@ -1194,7 +1195,7 @@ instance ToCStruct SwapchainImageReleaseInfo where
 
 instance FromCStruct SwapchainImageReleaseInfo where
   peekCStruct _ = pure $ SwapchainImageReleaseInfo
-                           
+
 
 instance Storable SwapchainImageReleaseInfo where
   sizeOf ~_ = 16
@@ -1204,5 +1205,5 @@ instance Storable SwapchainImageReleaseInfo where
 
 instance Zero SwapchainImageReleaseInfo where
   zero = SwapchainImageReleaseInfo
-           
+
 
