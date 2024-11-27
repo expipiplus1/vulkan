@@ -33,6 +33,12 @@
 -- [__Last Modified Date__]
 --     2021-05-19
 --
+-- [__Interactions and External Dependencies__]
+--
+--     -   Interacts with Vulkan 1.1.
+--
+--     -   Interacts with @VK_KHR_shader_draw_parameters@.
+--
 -- [__IP Status__]
 --     No known IP claims.
 --

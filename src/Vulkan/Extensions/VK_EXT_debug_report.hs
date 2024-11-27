@@ -20,9 +20,18 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
 --
---     -   /Deprecated/ by @VK_EXT_debug_utils@ extension
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
+--
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
+--         extension
 --
 -- [__Special Use__]
 --
@@ -374,8 +383,8 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
-                                                                        , DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV
-                                                                        , DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
@@ -1126,11 +1135,11 @@ pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = DebugReportObjectTyp
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT = DebugReportObjectTypeEXT 1000366000
 
--- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV"
-pattern DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV = DebugReportObjectTypeEXT 1000307001
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT = DebugReportObjectTypeEXT 1000307001
 
--- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV"
-pattern DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV = DebugReportObjectTypeEXT 1000307000
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT = DebugReportObjectTypeEXT 1000307000
 
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT = DebugReportObjectTypeEXT 1000165000
@@ -1184,8 +1193,8 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObj
   , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
   , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
   , DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
-  , DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV
-  , DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV
+  , DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT
   , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
   , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
   , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
@@ -1336,12 +1345,12 @@ showTableDebugReportObjectTypeEXT =
     , "BUFFER_COLLECTION_FUCHSIA_EXT"
     )
   ,
-    ( DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV
-    , "CUDA_FUNCTION_NV"
+    ( DEBUG_REPORT_OBJECT_TYPE_CUDA_FUNCTION_NV_EXT
+    , "CUDA_FUNCTION_NV_EXT"
     )
   ,
-    ( DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV
-    , "CUDA_MODULE_NV"
+    ( DEBUG_REPORT_OBJECT_TYPE_CUDA_MODULE_NV_EXT
+    , "CUDA_MODULE_NV_EXT"
     )
   ,
     ( DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT

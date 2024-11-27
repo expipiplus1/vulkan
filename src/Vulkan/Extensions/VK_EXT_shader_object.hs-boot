@@ -33,6 +33,38 @@
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_EXT_fragment_density_map
+--
+--     -   Interacts with VK_EXT_mesh_shader
+--
+--     -   Interacts with VK_EXT_subgroup_size_control
+--
+--     -   Interacts with VK_KHR_device_group
+--
+--     -   Interacts with VK_KHR_fragment_shading_rate
+--
+--     -   Interacts with VK_NV_clip_space_w_scaling
+--
+--     -   Interacts with VK_NV_coverage_reduction_mode
+--
+--     -   Interacts with VK_NV_fragment_coverage_to_color
+--
+--     -   Interacts with VK_NV_framebuffer_mixed_samples
+--
+--     -   Interacts with VK_NV_mesh_shader
+--
+--     -   Interacts with VK_NV_representative_fragment_test
+--
+--     -   Interacts with VK_NV_shading_rate_image
+--
+--     -   Interacts with VK_NV_viewport_swizzle
+--
 -- [__Contact__]
 --
 --     -   Daniel Story

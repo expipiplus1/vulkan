@@ -25,7 +25,9 @@
 --
 -- [__Deprecation State__]
 --
---     -   /Promoted/ to @VK_EXT_debug_utils@ extension
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
+--         extension
 --
 -- [__Special Use__]
 --

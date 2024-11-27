@@ -659,6 +659,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelinePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (PhysicalDeviceRayTracingPropertiesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_IMG_relaxed_line_rasterization (PhysicalDeviceRelaxedLineRasterizationFeaturesIMG)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2PropertiesEXT)
@@ -1307,6 +1308,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceCudaKernelLaunchFeaturesNV = ()
   Extends DeviceCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
   Extends DeviceCreateInfo PhysicalDeviceSchedulingControlsFeaturesARM = ()
+  Extends DeviceCreateInfo PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends DeviceQueueCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
   Extends EventCreateInfo ExportMetalObjectCreateInfoEXT = ()
@@ -1580,6 +1582,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExternalFormatResolveFeaturesANDROID = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCudaKernelLaunchFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSchedulingControlsFeaturesARM = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -2399,6 +2402,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM -> go @DeviceQueueShaderCoreControlCreateInfoARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM -> go @PhysicalDeviceSchedulingControlsFeaturesARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM -> go @PhysicalDeviceSchedulingControlsPropertiesARM
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_RELAXED_LINE_RASTERIZATION_FEATURES_IMG -> go @PhysicalDeviceRelaxedLineRasterizationFeaturesIMG
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2943,6 +2947,7 @@ infix 6 ::&
 {-# complete (::&) :: DeviceQueueShaderCoreControlCreateInfoARM #-}
 {-# complete (::&) :: PhysicalDeviceSchedulingControlsFeaturesARM #-}
 {-# complete (::&) :: PhysicalDeviceSchedulingControlsPropertiesARM #-}
+{-# complete (::&) :: PhysicalDeviceRelaxedLineRasterizationFeaturesIMG #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

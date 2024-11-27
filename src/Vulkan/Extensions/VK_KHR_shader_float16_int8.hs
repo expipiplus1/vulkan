@@ -40,8 +40,6 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   Promoted to Vulkan 1.2 Core
---
 --     -   This extension interacts with @VK_KHR_8bit_storage@
 --
 --     -   This extension interacts with @VK_KHR_16bit_storage@

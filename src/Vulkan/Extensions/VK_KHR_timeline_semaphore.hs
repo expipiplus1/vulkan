@@ -50,8 +50,6 @@
 --
 --     -   This extension interacts with @VK_KHR_external_semaphore_win32@
 --
---     -   Promoted to Vulkan 1.2 Core
---
 -- [__Contributors__]
 --
 --     -   Jeff Bolz, NVIDIA

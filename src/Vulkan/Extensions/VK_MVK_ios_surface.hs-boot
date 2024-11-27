@@ -25,7 +25,9 @@
 --
 -- [__Deprecation State__]
 --
---     -   /Deprecated/ by @VK_EXT_metal_surface@ extension
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_surface VK_EXT_metal_surface>
+--         extension
 --
 -- [__Contact__]
 --

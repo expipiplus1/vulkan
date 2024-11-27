@@ -23,6 +23,18 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group_creation VK_KHR_device_group_creation>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_bind_memory2
+--
+--     -   Interacts with VK_KHR_surface
+--
+--     -   Interacts with VK_KHR_swapchain
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_device_group.html SPV_KHR_device_group>
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -40,13 +52,6 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
---
--- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_device_group.html SPV_KHR_device_group>
---
---     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]
 --

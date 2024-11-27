@@ -379,11 +379,11 @@ foreign import ccall
 --
 -- -   #VUID-vkGetImageSubresourceLayout-mipLevel-01716# The @mipLevel@
 --     member of @pSubresource@ /must/ be less than the @mipLevels@
---     specified in 'ImageCreateInfo' when @image@ was created
+--     specified in @image@
 --
 -- -   #VUID-vkGetImageSubresourceLayout-arrayLayer-01717# The @arrayLayer@
 --     member of @pSubresource@ /must/ be less than the @arrayLayers@
---     specified in 'ImageCreateInfo' when @image@ was created
+--     specified in @image@
 --
 -- -   #VUID-vkGetImageSubresourceLayout-format-08886# If @format@ of the
 --     @image@ is a color format, @tiling@ of the @image@ is
@@ -419,12 +419,12 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
 --     bit
 --
--- -   #VUID-vkGetImageSubresourceLayout-image-01895# If @image@ was
+-- -   #VUID-vkGetImageSubresourceLayout-image-09432# If @image@ was
 --     created with the
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --     external memory handle type, then @image@ /must/ be bound to memory
 --
--- -   #VUID-vkGetImageSubresourceLayout-tiling-02271# If the @tiling@ of
+-- -   #VUID-vkGetImageSubresourceLayout-tiling-09433# If the @tiling@ of
 --     the @image@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then the @aspectMask@ member of @pSubresource@ /must/ be

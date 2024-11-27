@@ -47,8 +47,6 @@
 --
 --     -   Interacts with @VK_NV_dedicated_allocation@.
 --
---     -   Promoted to Vulkan 1.1 Core
---
 -- [__Contributors__]
 --
 --     -   Ian Elliott, Google

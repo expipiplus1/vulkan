@@ -18,12 +18,16 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_opacity_micromap.html SPV_EXT_opacity_micromap>
 --
 -- [__Contact__]
 --
@@ -42,9 +46,6 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_opacity_micromap.html SPV_EXT_opacity_micromap>
---
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_opacity_micromap.txt GLSL_EXT_opacity_micromap>
 --
@@ -60,8 +61,8 @@
 --
 -- == Description
 --
--- When adding adding transparency to a ray traced scene, an application
--- can choose between further tessellating the geometry or using an any hit
+-- When adding transparency to a ray traced scene, an application can
+-- choose between further tessellating the geometry or using an any-hit
 -- shader to allow the ray through specific parts of the geometry. These
 -- options have the downside of either significantly increasing memory
 -- consumption or adding runtime overhead to run shader code in the middle

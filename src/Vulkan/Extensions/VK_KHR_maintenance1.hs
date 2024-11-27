@@ -20,7 +20,10 @@
 -- [__Ratification Status__]
 --     Ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -34,10 +37,6 @@
 --
 -- [__Last Modified Date__]
 --     2018-03-13
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]
 --
