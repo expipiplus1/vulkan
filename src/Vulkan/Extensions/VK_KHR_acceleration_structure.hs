@@ -3167,15 +3167,23 @@ foreign import ccall
 --     built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-primitiveCount-03769# For
---     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
---     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built
+--     each element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', then for each
+--     'AccelerationStructureGeometryKHR' structure referred to by its
+--     @pGeometries@ or @ppGeometries@ members, the @primitiveCount@ member
+--     of its corresponding 'AccelerationStructureBuildRangeInfoKHR'
+--     structure /must/ have the same value which was specified when
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-firstVertex-03770# For
---     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
---     command, if the corresponding geometry uses indices, its
---     @firstVertex@ member /must/ have the same value which was specified
---     when @srcAccelerationStructure@ was last built
+--     each element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', then for each
+--     'AccelerationStructureGeometryKHR' structure referred to by its
+--     @pGeometries@ or @ppGeometries@ members, if the geometry uses
+--     indices, the @firstVertex@ member of its corresponding
+--     'AccelerationStructureBuildRangeInfoKHR' structure /must/ have the
+--     same value which was specified when @srcAccelerationStructure@ was
+--     last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03801# For each
 --     element of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@
@@ -3748,15 +3756,23 @@ foreign import ccall
 --     built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-primitiveCount-03769#
---     For each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
---     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built
+--     For each element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', then for each
+--     'AccelerationStructureGeometryKHR' structure referred to by its
+--     @pGeometries@ or @ppGeometries@ members, the @primitiveCount@ member
+--     of its corresponding 'AccelerationStructureBuildRangeInfoKHR'
+--     structure /must/ have the same value which was specified when
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-firstVertex-03770#
---     For each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
---     command, if the corresponding geometry uses indices, its
---     @firstVertex@ member /must/ have the same value which was specified
---     when @srcAccelerationStructure@ was last built
+--     For each element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', then for each
+--     'AccelerationStructureGeometryKHR' structure referred to by its
+--     @pGeometries@ or @ppGeometries@ members, if the geometry uses
+--     indices, the @firstVertex@ member of its corresponding
+--     'AccelerationStructureBuildRangeInfoKHR' structure /must/ have the
+--     same value which was specified when @srcAccelerationStructure@ was
+--     last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03801# For
 --     each element of @pInfos@[i].@pGeometries@ or
@@ -4408,15 +4424,23 @@ foreign import ccall
 --     built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-primitiveCount-03769# For
---     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
---     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built
+--     each element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', then for each
+--     'AccelerationStructureGeometryKHR' structure referred to by its
+--     @pGeometries@ or @ppGeometries@ members, the @primitiveCount@ member
+--     of its corresponding 'AccelerationStructureBuildRangeInfoKHR'
+--     structure /must/ have the same value which was specified when
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-firstVertex-03770# For each
---     'AccelerationStructureBuildRangeInfoKHR' referenced by this command,
---     if the corresponding geometry uses indices, its @firstVertex@ member
---     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built
+--     element of @pInfos@, if its @mode@ member is
+--     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', then for each
+--     'AccelerationStructureGeometryKHR' structure referred to by its
+--     @pGeometries@ or @ppGeometries@ members, if the geometry uses
+--     indices, the @firstVertex@ member of its corresponding
+--     'AccelerationStructureBuildRangeInfoKHR' structure /must/ have the
+--     same value which was specified when @srcAccelerationStructure@ was
+--     last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03801# For each
 --     element of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@

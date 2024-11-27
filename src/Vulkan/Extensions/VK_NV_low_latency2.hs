@@ -20,7 +20,12 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>
+--
+-- [__Contact__]
 --
 --     -   Charles Hansen
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_low_latency2] @cshansen%0A*Here describe the issue or question you have about the VK_NV_low_latency2 extension* >
@@ -293,6 +298,12 @@ foreign import ccall
 -- If @pSleepModeInfo@ is @NULL@, 'setLatencySleepModeNV' will disable low
 -- latency mode, low latency boost, and set the minimum present interval
 -- previously specified by 'LatencySleepModeInfoNV' to zero on @swapchain@.
+-- As an exception to the normal rules for objects which are externally
+-- synchronized, the swapchain passed to 'setLatencySleepModeNV' /may/ be
+-- simultaneously used by other threads in calls to functions other than
+-- 'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR'. Access to the
+-- swapchain data associated with this extension /must/ be atomic within
+-- the implementation.
 --
 -- == Return Codes
 --
@@ -433,7 +444,13 @@ foreign import ccall
 -- 'setLatencyMarkerNV' /can/ be called to provide timestamps for the
 -- application’s reference. These timestamps are returned with a call to
 -- 'getLatencyTimingsNV' alongside driver provided timestamps at various
--- points of interest with regards to latency within the application.
+-- points of interest with regards to latency within the application. As an
+-- exception to the normal rules for objects which are externally
+-- synchronized, the swapchain passed to 'setLatencyMarkerNV' /may/ be
+-- simultaneously used by other threads in calls to functions other than
+-- 'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR'. Access to the
+-- swapchain data associated with this extension /must/ be atomic within
+-- the implementation.
 --
 -- == Valid Usage (Implicit)
 --

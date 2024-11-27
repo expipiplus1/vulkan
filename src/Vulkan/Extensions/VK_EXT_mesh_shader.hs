@@ -1811,7 +1811,9 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
 -- -   #VUID-vkCmdDrawMeshTasksEXT-colorAttachmentCount-06179# If the
---     current render pass instance was begun with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
@@ -5513,7 +5515,10 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-colorAttachmentCount-06179# If
---     the current render pass instance was begun with
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
@@ -9211,7 +9216,10 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-colorAttachmentCount-06179#
---     If the current render pass instance was begun with
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a

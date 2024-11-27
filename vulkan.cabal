@@ -460,6 +460,7 @@ library
       Vulkan.Extensions.VK_HUAWEI_subpass_shading
       Vulkan.Extensions.VK_IMG_filter_cubic
       Vulkan.Extensions.VK_IMG_format_pvrtc
+      Vulkan.Extensions.VK_IMG_relaxed_line_rasterization
       Vulkan.Extensions.VK_INTEL_performance_query
       Vulkan.Extensions.VK_INTEL_shader_integer_functions2
       Vulkan.Extensions.VK_KHR_16bit_storage
