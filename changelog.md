@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump API version to v1.3.269
 
 ## [3.26.2] - 2024-06-28
 
