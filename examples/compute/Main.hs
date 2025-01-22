@@ -80,6 +80,7 @@ main = runResourceT $ do
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
 
+initializeInstance :: ResourceT IO Instance
 initializeInstance = do
   availableLayers <- map layerName . toList . snd <$> enumerateInstanceLayerProperties
 
