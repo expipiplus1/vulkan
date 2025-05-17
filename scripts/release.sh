@@ -33,7 +33,7 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-if [ $help ]; then
+if [ "$help" ]; then
   me=$(basename "$0")
   cat <<EOF
 $me: Create releases for the tags on HEAD. Fails when there are no relevant
@@ -72,7 +72,7 @@ declare -a tagMap
 for i in "${tags[@]}"; do
   for r in "${!tagNames[@]}"; do
     if [[ "$i" =~ ${tagNames[$r]} ]]; then
-      tagMap[$r]=$i
+      tagMap[r]=$i
     fi
   done
 done

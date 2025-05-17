@@ -14,18 +14,23 @@ jobs:
       matrix:
         ghc: ['8.10', '9.0', '9.2']
         os: [ubuntu-latest, macOS-latest, windows-latest]
+        exclude:
+          - os: macOS-latest
+            ghc: '8.10'
+          - os: macOS-latest
+            ghc: '9.0'
       fail-fast: false
 
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-    - uses: haskell/actions/setup@v2
+    - uses: haskell-actions/setup@v2
       id: setup-haskell
       with:
         ghc-version: ${{ matrix.ghc }}
 
-    - uses: actions/cache@v4.0.2
+    - uses: actions/cache@v4
       with:
         path: |
           ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
@@ -67,10 +72,10 @@ jobs:
         EOF
 
     - name: Prepare Vulkan SDK
-      uses: humbletim/setup-vulkan-sdk@v1.2.0
+      uses: humbletim/setup-vulkan-sdk@v1.2.1
       with:
         vulkan-query-version: latest
-        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
+        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang, SPIRV-Cross, SPIRV-Tools, SPIRV-Reflect, SPIRV-Headers
         vulkan-use-cache: true
 
     - name: Make libvulkan.1.dylib available on OSX
@@ -78,7 +83,9 @@ jobs:
       shell: bash
       run: |
         file $VULKAN_SDK/lib/libvulkan.1.dylib
-        ln -s $VULKAN_SDK/lib/libvulkan.1.dylib /usr/local/lib/libvulkan.1.dylib
+        ls -la /usr/local/ /usr/local/lib/ || true
+        mkdir -p /usr/local/lib/ || true
+        ln -s $VULKAN_SDK/lib/libvulkan.1.dylib /usr/local/lib/libvulkan.1.dylib || true
 
     - name: Inform Cabal about Vulkan
       shell: bash
@@ -90,8 +97,6 @@ jobs:
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
         if uname -s | grep -i mingw; then sep=';'; else sep=':'; fi
         printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}${sep}}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
-        # until this is fixed https://github.com/haskell/cabal/issues/7339
-        printf "%s\n" "DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH:+${DYLD_LIBRARY_PATH}${sep}}$VULKAN_SDK/lib" >> "$GITHUB_ENV"
 
     - name: Remove openxr
       run: |
@@ -150,14 +155,14 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-    - uses: haskell/actions/setup@v2
+    - uses: haskell-actions/setup@v2
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: '8.10'
+        ghc-version: '9.6.7'
 
     - name: Cache stack things
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.stack
@@ -201,10 +206,10 @@ jobs:
         brew install pkg-config sdl2
 
     - name: Prepare Vulkan SDK
-      uses: humbletim/setup-vulkan-sdk@v1.2.0
+      uses: humbletim/setup-vulkan-sdk@v1.2.1
       with:
         vulkan-query-version: latest
-        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
+        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang, SPIRV-Cross, SPIRV-Tools, SPIRV-Reflect, SPIRV-Headers
         vulkan-use-cache: true
 
     - name: Inform Stack about Vulkan

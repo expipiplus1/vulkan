@@ -28,7 +28,7 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-if [ $help ]; then
+if [ "$help" ]; then
   me=$(basename "$0")
   cat <<EOF
 $me: Update Vulkan-Docs and regenerate source
@@ -58,7 +58,7 @@ git -C generate-new/Vulkan-Docs fetch --tags
 
 if git -C generate-new/Vulkan-Docs describe --tags | grep "$version"; then
   echo "Vulkan-Docs is already at $version"
-  if ! [ $force ]; then
+  if ! [ "$force" ]; then
     exit 0
   fi
 fi
