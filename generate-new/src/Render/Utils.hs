@@ -95,9 +95,10 @@ chooseAlign align = if align <= 8
   then ("allocaBytes", 'allocaBytes, id)
   else ("allocaBytesAligned", 'allocaBytesAligned, (<+> viaShow align))
 
-plainTVcompat :: TH.Name -> TH.TyVarBndr
 #if MIN_VERSION_template_haskell(2,17,0)
+plainTVcompat :: TH.Name -> TH.TyVarBndr TH.Specificity
 plainTVcompat = (`TH.PlainTV` TH.SpecifiedSpec)
 #else
+plainTVcompat :: TH.Name -> TH.TyVarBndr
 plainTVcompat = TH.PlainTV
 #endif
