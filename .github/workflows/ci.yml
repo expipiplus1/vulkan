@@ -70,7 +70,7 @@ jobs:
       uses: humbletim/setup-vulkan-sdk@v1.2.1
       with:
         vulkan-query-version: latest
-        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
+        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang, SPIRV-Cross, SPIRV-Tools, SPIRV-Reflect, SPIRV-Headers
         vulkan-use-cache: true
 
     - name: Make libvulkan.1.dylib available on OSX
@@ -204,7 +204,7 @@ jobs:
       uses: humbletim/setup-vulkan-sdk@v1.2.1
       with:
         vulkan-query-version: latest
-        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
+        vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang, SPIRV-Cross, SPIRV-Tools, SPIRV-Reflect, SPIRV-Headers
         vulkan-use-cache: true
 
     - name: Inform Stack about Vulkan
