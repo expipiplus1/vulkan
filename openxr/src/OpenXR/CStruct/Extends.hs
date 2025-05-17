@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "Extends"
 module OpenXR.CStruct.Extends  ( BaseInStructure(..)
                                , BaseOutStructure(..)
+                               , ExtendsWith
                                , Extends
                                , PeekChain(..)
                                , PokeChain(..)
@@ -328,38 +329,38 @@ instance Zero BaseOutStructure where
            zero
 
 
-type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
-  Extends CompositionLayerBaseHeader CompositionLayerColorScaleBiasKHR = ()
-  Extends CompositionLayerProjectionView CompositionLayerDepthInfoKHR = ()
-  Extends FrameEndInfo SecondaryViewConfigurationFrameEndInfoMSFT = ()
-  Extends FrameState SecondaryViewConfigurationFrameStateMSFT = ()
-  Extends HandJointLocationsEXT HandJointVelocitiesEXT = ()
-  Extends HandTrackerCreateInfoEXT HandPoseTypeInfoMSFT = ()
-  Extends InstanceCreateInfo InstanceCreateInfoAndroidKHR = ()
-  Extends InstanceCreateInfo DebugUtilsMessengerCreateInfoEXT = ()
-  Extends InteractionProfileSuggestedBinding InteractionProfileAnalogThresholdVALVE = ()
-  Extends InteractionProfileSuggestedBinding BindingModificationsKHR = ()
-  Extends SessionBeginInfo SecondaryViewConfigurationSessionBeginInfoMSFT = ()
-  Extends SessionCreateInfo GraphicsBindingOpenGLWin32KHR = ()
-  Extends SessionCreateInfo GraphicsBindingOpenGLXlibKHR = ()
-  Extends SessionCreateInfo GraphicsBindingOpenGLXcbKHR = ()
-  Extends SessionCreateInfo GraphicsBindingOpenGLWaylandKHR = ()
-  Extends SessionCreateInfo GraphicsBindingD3D11KHR = ()
-  Extends SessionCreateInfo GraphicsBindingD3D12KHR = ()
-  Extends SessionCreateInfo GraphicsBindingOpenGLESAndroidKHR = ()
-  Extends SessionCreateInfo GraphicsBindingVulkanKHR = ()
-  Extends SessionCreateInfo SessionCreateInfoOverlayEXTX = ()
-  Extends SessionCreateInfo GraphicsBindingEGLMNDX = ()
-  Extends SessionCreateInfo HolographicWindowAttachmentMSFT = ()
-  Extends SpaceLocation SpaceVelocity = ()
-  Extends SpaceLocation EyeGazeSampleTimeEXT = ()
-  Extends SwapchainCreateInfo SecondaryViewConfigurationSwapchainCreateInfoMSFT = ()
-  Extends SystemProperties SystemEyeGazeInteractionPropertiesEXT = ()
-  Extends SystemProperties SystemHandTrackingPropertiesEXT = ()
-  Extends SystemProperties SystemHandTrackingMeshPropertiesMSFT = ()
-  Extends ViewConfigurationView ViewConfigurationDepthRangeEXT = ()
-  Extends ViewConfigurationView ViewConfigurationViewFovEPIC = ()
-  Extends a b = TypeError (ShowType a :<>: Text " is not extended by " :<>: ShowType b)
+type family ExtendsWith (a :: [Type] -> Type) (b :: Type) :: () where
+  ExtendsWith CompositionLayerBaseHeader CompositionLayerColorScaleBiasKHR = '()
+  ExtendsWith CompositionLayerProjectionView CompositionLayerDepthInfoKHR = '()
+  ExtendsWith FrameEndInfo SecondaryViewConfigurationFrameEndInfoMSFT = '()
+  ExtendsWith FrameState SecondaryViewConfigurationFrameStateMSFT = '()
+  ExtendsWith HandJointLocationsEXT HandJointVelocitiesEXT = '()
+  ExtendsWith HandTrackerCreateInfoEXT HandPoseTypeInfoMSFT = '()
+  ExtendsWith InstanceCreateInfo InstanceCreateInfoAndroidKHR = '()
+  ExtendsWith InstanceCreateInfo DebugUtilsMessengerCreateInfoEXT = '()
+  ExtendsWith InteractionProfileSuggestedBinding InteractionProfileAnalogThresholdVALVE = '()
+  ExtendsWith InteractionProfileSuggestedBinding BindingModificationsKHR = '()
+  ExtendsWith SessionBeginInfo SecondaryViewConfigurationSessionBeginInfoMSFT = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingOpenGLWin32KHR = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingOpenGLXlibKHR = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingOpenGLXcbKHR = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingOpenGLWaylandKHR = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingD3D11KHR = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingD3D12KHR = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingOpenGLESAndroidKHR = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingVulkanKHR = '()
+  ExtendsWith SessionCreateInfo SessionCreateInfoOverlayEXTX = '()
+  ExtendsWith SessionCreateInfo GraphicsBindingEGLMNDX = '()
+  ExtendsWith SessionCreateInfo HolographicWindowAttachmentMSFT = '()
+  ExtendsWith SpaceLocation SpaceVelocity = '()
+  ExtendsWith SpaceLocation EyeGazeSampleTimeEXT = '()
+  ExtendsWith SwapchainCreateInfo SecondaryViewConfigurationSwapchainCreateInfoMSFT = '()
+  ExtendsWith SystemProperties SystemEyeGazeInteractionPropertiesEXT = '()
+  ExtendsWith SystemProperties SystemHandTrackingPropertiesEXT = '()
+  ExtendsWith SystemProperties SystemHandTrackingMeshPropertiesMSFT = '()
+  ExtendsWith ViewConfigurationView ViewConfigurationDepthRangeEXT = '()
+  ExtendsWith ViewConfigurationView ViewConfigurationViewFovEPIC = '()
+  ExtendsWith a b = TypeError (ShowType a :<>: Text " is not extended by " :<>: ShowType b)
 
 data SomeStruct (a :: [Type] -> Type) where
   SomeStruct
@@ -583,9 +584,19 @@ pattern e :& es = (e, es)
 infixr 7 :&
 {-# complete (:&) #-}
 
+-- | We don't really need constraint units produced by `ExtendsWith`, so this type
+-- family will ensure that it would reduce and drop the result
+--
+-- That will result in less overhead because `Extendss` reduces into a single
+-- contraint unit `()` instead of cons-list `((), ((), ()))` produced by `(,)`
+type family ReportUnsolved (a :: ()) (b :: Constraint) :: Constraint where
+  ReportUnsolved '() b = b
+  
 type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
   Extendss p '[]      = ()
-  Extendss p (x : xs) = (Extends p x, Extendss p xs)
+  Extendss p (x : xs) = ExtendsWith p x `ReportUnsolved` Extendss p xs
+
+type Extends p a = ExtendsWith p a ~ '()
 
 class PokeChain es where
   withChain :: Chain es -> (Ptr (Chain es) -> IO a) -> IO a

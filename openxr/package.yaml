@@ -105,3 +105,4 @@ default-extensions:
 - TypeSynonymInstances
 - UndecidableInstances
 - ViewPatterns
+- ConstraintKinds
