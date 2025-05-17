@@ -154,7 +154,7 @@ jobs:
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: '8.10'
+        ghc-version: '9.6.7'
 
     - name: Cache stack things
       uses: actions/cache@v4
