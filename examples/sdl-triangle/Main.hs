@@ -39,6 +39,7 @@ import qualified Vulkan.Core10                 as CommandPoolCreateInfo (Command
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
+import           Vulkan.Extensions.VK_KHR_portability_enumeration
 import           Vulkan.Extensions.VK_KHR_surface
 import qualified Vulkan.Extensions.VK_KHR_surface as SF
 import           Vulkan.Extensions.VK_KHR_swapchain
@@ -437,7 +438,7 @@ windowInstanceCreateInfo window = do
   let requiredLayers     = []
       optionalLayers     = ["VK_LAYER_KHRONOS_validation"]
       requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME] <> windowExtensions
-      optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
+      optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME, KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME]
   extensions <- partitionOptReq "extension"
                                 availableExtensionNames
                                 optionalExtensions
@@ -453,6 +454,7 @@ windowInstanceCreateInfo window = do
                                               }
           , enabledLayerNames     = V.fromList layers
           , enabledExtensionNames = V.fromList extensions
+          , flags = INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
           }
     ::& debugUtilsMessengerCreateInfo
     :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
