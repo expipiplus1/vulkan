@@ -9,13 +9,15 @@ extra-deps:
 # - autoapply-0.4.1.1
 - git: https://github.com/dpwiz/autoapply.git
   commit: 640ed1a689484fc307e1bab7c06db1027b28c87c
-- unification-fd-0.12.0
+- unification-fd-0.12.0.2
 - derive-storable-0.3.1.0
 - derive-storable-plugin-0.2.3.7
 
+# use ghcup, nix, setup actions
+system-ghc: true
+install-ghc: false
+
 allow-newer: true
-allow-newer-deps:
-- unification-fd
 
 nix:
   enable: false
