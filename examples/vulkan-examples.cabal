@@ -125,45 +125,10 @@ executable compute
       Paths_vulkan_examples
   hs-source-dirs:
       compute
-  default-extensions:
-      DataKinds
-      DefaultSignatures
-      DeriveFoldable
-      DeriveFunctor
-      DeriveTraversable
-      DerivingStrategies
-      DuplicateRecordFields
-      FlexibleContexts
-      FlexibleInstances
-      GADTs
-      GeneralizedNewtypeDeriving
-      InstanceSigs
-      LambdaCase
-      MagicHash
-      NamedFieldPuns
-      NoMonomorphismRestriction
-      NumDecimals
-      OverloadedStrings
-      PatternSynonyms
-      PolyKinds
-      QuantifiedConstraints
-      RankNTypes
-      RecordWildCards
-      RoleAnnotations
-      ScopedTypeVariables
-      StandaloneDeriving
-      Strict
-      TupleSections
-      TypeApplications
-      TypeFamilyDependencies
-      TypeOperators
-      TypeSynonymInstances
-      ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -O2 -threaded -rtsopts -main-is graphics -with-rtsopts=-N
   build-depends:
       JuicyPixels
     , VulkanMemoryAllocator
-    , autoapply >=0.4
     , base <5
     , bytestring
     , resourcet
