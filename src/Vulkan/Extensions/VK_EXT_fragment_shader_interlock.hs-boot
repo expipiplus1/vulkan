@@ -25,6 +25,10 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_shader_interlock.html SPV_EXT_fragment_shader_interlock>
+--
 -- [__Contact__]
 --
 --     -   Piers Daniell
@@ -36,9 +40,6 @@
 --     2019-05-02
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_shader_interlock.html SPV_EXT_fragment_shader_interlock>
 --
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_fragment_shader_interlock.txt GL_ARB_fragment_shader_interlock>

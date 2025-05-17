@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_geometry_shader_passthrough.html SPV_NV_geometry_shader_passthrough>
+--
+-- [__Contact__]
 --
 --     -   Daniel Koch
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_geometry_shader_passthrough] @dgkoch%0A*Here describe the issue or question you have about the VK_NV_geometry_shader_passthrough extension* >
@@ -31,9 +38,6 @@
 --     2017-02-15
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_geometry_shader_passthrough.html SPV_NV_geometry_shader_passthrough>
 --
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/NV/NV_geometry_shader_passthrough.txt GL_NV_geometry_shader_passthrough>

@@ -25,6 +25,62 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
+--
+--     -   Interacts with VK_VERSION_1_2
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_EXT_attachment_feedback_loop_layout
+--
+--     -   Interacts with VK_EXT_buffer_device_address
+--
+--     -   Interacts with VK_EXT_conditional_rendering
+--
+--     -   Interacts with VK_EXT_descriptor_buffer
+--
+--     -   Interacts with VK_EXT_fragment_density_map
+--
+--     -   Interacts with VK_EXT_graphics_pipeline_library
+--
+--     -   Interacts with VK_EXT_opacity_micromap
+--
+--     -   Interacts with VK_EXT_pipeline_creation_cache_control
+--
+--     -   Interacts with VK_EXT_pipeline_protected_access
+--
+--     -   Interacts with VK_EXT_transform_feedback
+--
+--     -   Interacts with VK_KHR_acceleration_structure
+--
+--     -   Interacts with VK_KHR_buffer_device_address
+--
+--     -   Interacts with VK_KHR_device_group
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
+--
+--     -   Interacts with VK_KHR_fragment_shading_rate
+--
+--     -   Interacts with VK_KHR_pipeline_executable_properties
+--
+--     -   Interacts with VK_KHR_pipeline_library
+--
+--     -   Interacts with VK_KHR_ray_tracing_pipeline
+--
+--     -   Interacts with VK_KHR_video_decode_queue
+--
+--     -   Interacts with VK_KHR_video_encode_queue
+--
+--     -   Interacts with VK_NV_device_generated_commands
+--
+--     -   Interacts with VK_NV_displacement_micromap
+--
+--     -   Interacts with VK_NV_ray_tracing
+--
+--     -   Interacts with VK_NV_ray_tracing_motion_blur
+--
 -- [__Contact__]
 --
 --     -   Stu Smith

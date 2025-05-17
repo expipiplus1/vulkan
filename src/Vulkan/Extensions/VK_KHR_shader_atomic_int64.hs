@@ -40,8 +40,6 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   Promoted to Vulkan 1.2 Core
---
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_gpu_shader_int64.txt GL_ARB_gpu_shader_int64>
 --         and

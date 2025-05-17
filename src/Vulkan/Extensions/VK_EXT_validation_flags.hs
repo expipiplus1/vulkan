@@ -20,9 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
 --
---     -   /Deprecated/ by @VK_EXT_validation_features@ extension
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>
+--         extension
 --
 -- [__Special Use__]
 --

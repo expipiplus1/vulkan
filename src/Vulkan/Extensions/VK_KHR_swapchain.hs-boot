@@ -23,6 +23,10 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
+--
 -- [__Contact__]
 --
 --     -   James Jones

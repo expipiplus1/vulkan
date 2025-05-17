@@ -94,6 +94,7 @@ import Vulkan.Extensions.VK_GOOGLE_decorate_string (pattern GOOGLE_DECORATE_STRI
 import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1 (pattern GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME)
 import Vulkan.Extensions.VK_GOOGLE_user_type (pattern GOOGLE_USER_TYPE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (pattern HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME)
+import Vulkan.Extensions.VK_HUAWEI_subpass_shading (pattern HUAWEI_SUBPASS_SHADING_EXTENSION_NAME)
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_8bit_storage (pattern KHR_8BIT_STORAGE_EXTENSION_NAME)
@@ -732,6 +733,33 @@ spirvExtensionRequirements = \case
       [ RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = AMDX_SHADER_ENQUEUE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_HUAWEI_cluster_culling_shader" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_HUAWEI_subpass_shading" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = HUAWEI_SUBPASS_SHADING_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_NV_ray_tracing_motion_blur" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

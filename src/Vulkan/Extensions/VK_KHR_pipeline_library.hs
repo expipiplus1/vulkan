@@ -20,7 +20,10 @@
 -- [__Ratification Status__]
 --     Ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__Contact__]
 --
 --     -   Christoph Kubisch
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_library] @pixeljetstream%0A*Here describe the issue or question you have about the VK_KHR_pipeline_library extension* >

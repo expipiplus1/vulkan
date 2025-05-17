@@ -23,6 +23,16 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_ray_tracing_pipeline
+--
+--     -   Interacts with VK_KHR_synchronization2
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_cull_mask.html SPV_KHR_ray_cull_mask>
+--
 -- [__Contact__]
 --
 --     -   Daniel Koch
@@ -34,9 +44,6 @@
 --     2022-02-21
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_cull_mask.html SPV_KHR_ray_cull_mask>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_cull_mask.txt GLSL_EXT_ray_cull_mask>

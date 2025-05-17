@@ -20,7 +20,10 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__Deprecation State__]
 --
 --     -   /Deprecated/ without replacement
 --

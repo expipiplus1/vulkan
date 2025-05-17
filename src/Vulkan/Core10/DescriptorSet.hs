@@ -1170,6 +1170,26 @@ instance Zero DescriptorBufferInfo where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     but not both
 --
+-- -   #VUID-VkDescriptorImageInfo-imageLayout-09425# If @imageLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
+--     then the @aspectMask@ used to create @imageView@ /must/ not include
+--     either
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-VkDescriptorImageInfo-imageLayout-09426# If @imageLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     then the @aspectMask@ used to create @imageView@ /must/ not include
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
 -- -   #VUID-VkDescriptorImageInfo-imageLayout-00344# @imageLayout@ /must/
 --     match the actual 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
 --     each subresource accessible from @imageView@ at the time this
@@ -2798,6 +2818,13 @@ instance Zero DescriptorPoolSize where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --     element in @pPoolSizes@ /must/ not have sets of supported descriptor
 --     types which partially overlap
+--
+-- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-09424# If @pPoolSizes@
+--     contains a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfo'
+--     structure whose @maxInlineUniformBlockBindings@ member is not zero
 --
 -- == Valid Usage (Implicit)
 --

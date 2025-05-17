@@ -25,6 +25,10 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
+--
 -- [__Contact__]
 --
 --     -   John Rosasco

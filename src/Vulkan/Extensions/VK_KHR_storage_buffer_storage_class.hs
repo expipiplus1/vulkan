@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html SPV_KHR_storage_buffer_storage_class>
+--
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -37,13 +44,6 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
---
--- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html SPV_KHR_storage_buffer_storage_class>
---
---     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]
 --

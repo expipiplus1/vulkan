@@ -25,7 +25,8 @@
 --
 -- [__Deprecation State__]
 --
---     -   /Promoted/ to @VK_EXT_rasterization_order_attachment_access@
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_rasterization_order_attachment_access VK_EXT_rasterization_order_attachment_access>
 --         extension
 --
 -- [__Contact__]

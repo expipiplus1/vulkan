@@ -1332,7 +1332,7 @@ data DeviceCmds = DeviceCmds
   , pVkSetLatencySleepModeNV :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pSleepModeInfo" ::: Ptr LatencySleepModeInfoNV) -> IO Result)
   , pVkLatencySleepNV :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pSleepInfo" ::: Ptr LatencySleepInfoNV) -> IO Result)
   , pVkSetLatencyMarkerNV :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr SetLatencyMarkerInfoNV) -> IO ())
-  , pVkGetLatencyTimingsNV :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pTimingCount" ::: Ptr Word32) -> ("pLatencyMarkerInfo" ::: Ptr GetLatencyMarkerInfoNV) -> IO ())
+  , pVkGetLatencyTimingsNV :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr GetLatencyMarkerInfoNV) -> IO ())
   , pVkQueueNotifyOutOfBandNV :: FunPtr (Ptr Queue_T -> ("pQueueTypeInfo" ::: Ptr OutOfBandQueueTypeInfoNV) -> IO ())
   }
 
@@ -2866,6 +2866,6 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pSleepModeInfo" ::: Ptr LatencySleepModeInfoNV) -> IO Result) vkSetLatencySleepModeNV)
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pSleepInfo" ::: Ptr LatencySleepInfoNV) -> IO Result) vkLatencySleepNV)
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr SetLatencyMarkerInfoNV) -> IO ()) vkSetLatencyMarkerNV)
-    (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pTimingCount" ::: Ptr Word32) -> ("pLatencyMarkerInfo" ::: Ptr GetLatencyMarkerInfoNV) -> IO ()) vkGetLatencyTimingsNV)
+    (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr GetLatencyMarkerInfoNV) -> IO ()) vkGetLatencyTimingsNV)
     (castFunPtr @_ @(Ptr Queue_T -> ("pQueueTypeInfo" ::: Ptr OutOfBandQueueTypeInfoNV) -> IO ()) vkQueueNotifyOutOfBandNV)
 
