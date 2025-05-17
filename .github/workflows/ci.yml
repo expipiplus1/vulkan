@@ -67,7 +67,7 @@ jobs:
         EOF
 
     - name: Prepare Vulkan SDK
-      uses: humbletim/setup-vulkan-sdk@v1.2.0
+      uses: humbletim/setup-vulkan-sdk@v1.2.1
       with:
         vulkan-query-version: latest
         vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
@@ -201,7 +201,7 @@ jobs:
         brew install pkg-config sdl2
 
     - name: Prepare Vulkan SDK
-      uses: humbletim/setup-vulkan-sdk@v1.2.0
+      uses: humbletim/setup-vulkan-sdk@v1.2.1
       with:
         vulkan-query-version: latest
         vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
