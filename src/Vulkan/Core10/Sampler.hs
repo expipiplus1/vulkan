@@ -713,9 +713,9 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     --
     -- -   The image view /must/ have a single layer and a single mip level.
     --
-    -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
-    -- image built-in functions in the shader that use the sampler have the
-    -- following requirements:
+    --     When @unnormalizedCoordinates@ is
+    --     'Vulkan.Core10.FundamentalTypes.TRUE', image built-in functions in
+    --     the shader that use the sampler have the following requirements:
     --
     -- -   The functions /must/ not use projection.
     --

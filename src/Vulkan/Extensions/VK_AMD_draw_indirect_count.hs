@@ -20,9 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
 --
---     -   /Promoted/ to @VK_KHR_draw_indirect_count@ extension
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_draw_indirect_count VK_KHR_draw_indirect_count>
+--         extension
 --
 --         -   Which in turn was /promoted/ to
 --             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2-promotions Vulkan 1.2>
@@ -36,10 +41,6 @@
 --
 -- [__Last Modified Date__]
 --     2016-08-23
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to @VK_KHR_draw_indirect_count@
 --
 -- [__IP Status__]
 --     No known IP claims.

@@ -40,8 +40,6 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   Promoted to Vulkan 1.3 Core
---
 --     -   Requires SPIR-V 1.2 for @LocalSizeId@
 --
 -- [__Contributors__]

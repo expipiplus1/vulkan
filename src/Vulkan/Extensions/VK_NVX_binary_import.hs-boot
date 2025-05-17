@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
+--
+-- [__Contact__]
 --
 --     -   Eric Werness
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NVX_binary_import extension* >
@@ -273,11 +280,9 @@
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# @pData@ /must/ be a
---     valid pointer to an array of @dataSize@ bytes
---
--- -   #VUID-VkCuModuleCreateInfoNVX-dataSize-arraylength# @dataSize@
---     /must/ be greater than @0@
+-- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
+--     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@
+--     bytes
 --
 -- There is currently no specification language written for this command.
 -- This section acts only as placeholder and to avoid dead links in the

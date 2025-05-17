@@ -2697,13 +2697,13 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --     -   (@vertexBufferRangeSize@ - (@vertexBufferRangeSize@ %
     --         @bindingStride@))
     --
-    --     where @vertexBufferRangeSize@ is the byte size of the memory range
-    --     bound to the vertex buffer binding and @bindingStride@ is the byte
-    --     stride of the corresponding vertex input binding. Further, if any
-    --     vertex input attribute using a specific vertex input binding is out
-    --     of bounds, then all vertex input attributes using that vertex input
-    --     binding for that vertex shader invocation are considered out of
-    --     bounds.
+    --         where @vertexBufferRangeSize@ is the byte size of the memory
+    --         range bound to the vertex buffer binding and @bindingStride@ is
+    --         the byte stride of the corresponding vertex input binding.
+    --         Further, if any vertex input attribute using a specific vertex
+    --         input binding is out of bounds, then all vertex input attributes
+    --         using that vertex input binding for that vertex shader
+    --         invocation are considered out of bounds.
     --
     --     -   If a vertex input attribute is out of bounds, it will be
     --         assigned one of the following values:
@@ -2948,10 +2948,10 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --
     -- -   'Vulkan.Core10.Enums.Format.FORMAT_EAC_R11G11_SNORM_BLOCK'
     --
-    -- To query for additional properties, or if the feature is not enabled,
-    -- 'getPhysicalDeviceFormatProperties' and
-    -- 'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
-    -- supported properties of individual formats as normal.
+    --     To query for additional properties, or if the feature is not
+    --     enabled, 'getPhysicalDeviceFormatProperties' and
+    --     'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
+    --     supported properties of individual formats as normal.
     textureCompressionETC2 :: Bool
   , -- | #features-textureCompressionASTC_LDR# @textureCompressionASTC_LDR@
     -- specifies whether all of the ASTC LDR compressed texture formats are
@@ -3019,10 +3019,10 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --
     -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x12_SRGB_BLOCK'
     --
-    -- To query for additional properties, or if the feature is not enabled,
-    -- 'getPhysicalDeviceFormatProperties' and
-    -- 'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
-    -- supported properties of individual formats as normal.
+    --     To query for additional properties, or if the feature is not
+    --     enabled, 'getPhysicalDeviceFormatProperties' and
+    --     'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
+    --     supported properties of individual formats as normal.
     textureCompressionASTC_LDR :: Bool
   , -- | #features-textureCompressionBC# @textureCompressionBC@ specifies whether
     -- all of the BC compressed texture formats are supported. If this feature
@@ -3066,10 +3066,10 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --
     -- -   'Vulkan.Core10.Enums.Format.FORMAT_BC7_SRGB_BLOCK'
     --
-    -- To query for additional properties, or if the feature is not enabled,
-    -- 'getPhysicalDeviceFormatProperties' and
-    -- 'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
-    -- supported properties of individual formats as normal.
+    --     To query for additional properties, or if the feature is not
+    --     enabled, 'getPhysicalDeviceFormatProperties' and
+    --     'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
+    --     supported properties of individual formats as normal.
     textureCompressionBC :: Bool
   , -- | #features-occlusionQueryPrecise# @occlusionQueryPrecise@ specifies
     -- whether occlusion queries returning actual sample counts are supported.
@@ -3191,24 +3191,24 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --
     -- -   'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
     --
-    -- Note
+    --     Note
     --
-    -- @shaderStorageImageExtendedFormats@ feature only adds a guarantee of
-    -- format support, which is specified for the whole physical device.
-    -- Therefore enabling or disabling the feature via
-    -- 'Vulkan.Core10.Device.createDevice' has no practical effect.
+    --     @shaderStorageImageExtendedFormats@ feature only adds a guarantee of
+    --     format support, which is specified for the whole physical device.
+    --     Therefore enabling or disabling the feature via
+    --     'Vulkan.Core10.Device.createDevice' has no practical effect.
     --
-    -- To query for additional properties, or if the feature is not supported,
-    -- 'getPhysicalDeviceFormatProperties' and
-    -- 'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
-    -- supported properties of individual formats, as usual rules allow.
+    --     To query for additional properties, or if the feature is not
+    --     supported, 'getPhysicalDeviceFormatProperties' and
+    --     'getPhysicalDeviceImageFormatProperties' /can/ be used to check for
+    --     supported properties of individual formats, as usual rules allow.
     --
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_R32G32_UINT',
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_R32G32_SINT', and
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_R32G32_SFLOAT' from
-    -- @StorageImageExtendedFormats@ SPIR-V capability, are already covered by
-    -- core Vulkan
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-mandatory-features-32bit mandatory format support>.
+    --     'Vulkan.Core10.Enums.Format.FORMAT_R32G32_UINT',
+    --     'Vulkan.Core10.Enums.Format.FORMAT_R32G32_SINT', and
+    --     'Vulkan.Core10.Enums.Format.FORMAT_R32G32_SFLOAT' from
+    --     @StorageImageExtendedFormats@ SPIR-V capability, are already covered
+    --     by core Vulkan
+    --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-mandatory-features-32bit mandatory format support>.
     shaderStorageImageExtendedFormats :: Bool
   , -- | #features-shaderStorageImageMultisample# @shaderStorageImageMultisample@
     -- specifies whether multisampled storage images are supported. If this
