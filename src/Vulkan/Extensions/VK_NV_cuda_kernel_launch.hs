@@ -1033,7 +1033,7 @@ instance ToCStruct CudaLaunchInfoNV where
         unless (fromIntegral pParamsLength == (paramCount) || pParamsLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pParams must be empty or have 'paramCount' elements" Nothing Nothing
         pure (paramCount)
-    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) (paramCount'')
+    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) (fromIntegral (paramCount''))
     pPParams' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (params)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPParams' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (params)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ())))) (pPParams')
@@ -1044,7 +1044,7 @@ instance ToCStruct CudaLaunchInfoNV where
         unless (fromIntegral pExtrasLength == (extraCount) || pExtrasLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pExtras must be empty or have 'extraCount' elements" Nothing Nothing
         pure (extraCount)
-    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) (extraCount'')
+    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) (fromIntegral (extraCount''))
     pPExtras' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (extras)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPExtras' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (extras)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ())))) (pPExtras')

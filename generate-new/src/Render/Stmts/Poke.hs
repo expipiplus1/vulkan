@@ -41,6 +41,7 @@ import           Control.Exception              ( bracket )
 import           Control.Monad.Trans.Cont       ( ContT )
 import qualified Data.ByteString               as BS
 import qualified Data.Vector                   as V
+import           Foreign.C.Types (CSize)
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 
@@ -476,6 +477,7 @@ lengthFromNames isElided lenName lenType os rs = do
     lenHType <- cToHsType DoPreserve lenType
     Pure AlwaysInline . ValueDoc <$> case lenHType of
       ConT i | i == ''Int -> pure l1
+      ConT i | i == ''CSize -> pure $ "fromIntegral" <+> parens l1
       _                  -> if isElided
         then do
           lenTyDoc <- renderType lenHType
