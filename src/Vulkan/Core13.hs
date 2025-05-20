@@ -214,12 +214,13 @@ data PhysicalDeviceVulkan13Features = PhysicalDeviceVulkan13Features
     --
     -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x12_SFLOAT_BLOCK'
     --
-    -- To query for additional properties, or if the feature is not enabled,
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
-    -- and
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
-    -- /can/ be used to check for supported properties of individual formats as
-    -- normal.
+    --     To query for additional properties, or if the feature is not
+    --     enabled,
+    --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
+    --     and
+    --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
+    --     /can/ be used to check for supported properties of individual
+    --     formats as normal.
     textureCompressionASTC_HDR :: Bool
   , -- | #features-shaderZeroInitializeWorkgroupMemory#
     -- @shaderZeroInitializeWorkgroupMemory@ specifies whether the

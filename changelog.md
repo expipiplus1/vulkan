@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [3.26.3] - 2025-05-18
+
+- Bump API version to v1.3.271
+
 ## [3.26.2] - 2024-06-28
 
 - New flag darwin-lib-dirs that auto-adds LunarG dylibs. Requires Cabal >=3.10.3.

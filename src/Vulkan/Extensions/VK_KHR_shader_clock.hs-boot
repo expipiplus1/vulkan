@@ -25,6 +25,10 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html SPV_KHR_shader_clock>
+--
 -- [__Contact__]
 --
 --     -   Aaron Hagan
@@ -40,13 +44,10 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html SPV_KHR_shader_clock>.
---
 --     -   This extension provides API support for
---         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_clock.txt ARB_shader_clock>
+--         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_clock.txt GL_ARB_shader_clock>
 --         and
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_realtime_clock.txt EXT_shader_realtime_clock>
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_realtime_clock.txt GL_EXT_shader_realtime_clock>
 --
 -- [__Contributors__]
 --

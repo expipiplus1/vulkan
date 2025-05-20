@@ -560,8 +560,9 @@ foreign import ccall
 --     with a @usage@ value containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-06233# A valid graphics
---     pipeline /must/ be bound to
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-06233# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid graphics pipeline /must/ be bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-04128# The last
@@ -2922,7 +2923,10 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-colorAttachmentCount-06179# If
---     the current render pass instance was begun with
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
@@ -4998,7 +5002,7 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-pStrides-04913# If the bound
 --     graphics pipeline was created with the
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
---     dynamic state enabled, but not the
+--     dynamic state enabled, but without the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'

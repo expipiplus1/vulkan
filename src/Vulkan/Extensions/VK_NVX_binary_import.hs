@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_debug_report
+--
+-- [__Contact__]
 --
 --     -   Eric Werness
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NVX_binary_import extension* >
@@ -273,11 +280,9 @@
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# @pData@ /must/ be a
---     valid pointer to an array of @dataSize@ bytes
---
--- -   #VUID-VkCuModuleCreateInfoNVX-dataSize-arraylength# @dataSize@
---     /must/ be greater than @0@
+-- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
+--     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@
+--     bytes
 --
 -- There is currently no specification language written for this command.
 -- This section acts only as placeholder and to avoid dead links in the
@@ -857,16 +862,23 @@ cmdCuLaunchKernelNVX commandBuffer launchInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkCuModuleCreateInfoNVX-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
+--
+-- -   #VUID-VkCuModuleCreateInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
+--
+-- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
+--     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@
+--     bytes
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createCuModuleNVX'
 data CuModuleCreateInfoNVX = CuModuleCreateInfoNVX
-  { -- | #VUID-VkCuModuleCreateInfoNVX-dataSize-arraylength# @dataSize@ /must/ be
-    -- greater than @0@
+  { -- No documentation found for Nested "VkCuModuleCreateInfoNVX" "dataSize"
     dataSize :: Word64
-  , -- | #VUID-VkCuModuleCreateInfoNVX-pData-parameter# @pData@ /must/ be a valid
-    -- pointer to an array of @dataSize@ bytes
+  , -- No documentation found for Nested "VkCuModuleCreateInfoNVX" "pData"
     data' :: Ptr ()
   }
   deriving (Typeable)
@@ -888,7 +900,6 @@ instance ToCStruct CuModuleCreateInfoNVX where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (zero))
     poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
     f
 
@@ -1034,11 +1045,11 @@ instance ToCStruct CuLaunchInfoNVX where
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (blockDimY)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (blockDimZ)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (sharedMemBytes)
-    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (params)) :: CSize))
+    lift $ poke ((p `plusPtr` 56 :: Ptr CSize)) (fromIntegral ((Data.Vector.length $ (params))))
     pPParams' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (params)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPParams' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (params)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr ())))) (pPParams')
-    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) ((fromIntegral (Data.Vector.length $ (extras)) :: CSize))
+    lift $ poke ((p `plusPtr` 72 :: Ptr CSize)) (fromIntegral ((Data.Vector.length $ (extras))))
     pPExtras' <- ContT $ allocaBytes @(Ptr ()) ((Data.Vector.length (extras)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPExtras' `plusPtr` (8 * (i)) :: Ptr (Ptr ())) (e)) (extras)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ())))) (pPExtras')

@@ -29,6 +29,12 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_acceleration_structure
+--
+--     -   Interacts with VK_NV_ray_tracing
+--
 -- [__Contact__]
 --
 --     -   Tobias Hector

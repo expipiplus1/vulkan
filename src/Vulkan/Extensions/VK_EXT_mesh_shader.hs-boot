@@ -23,6 +23,14 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 VK_KHR_spirv_1_4>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_NV_device_generated_commands
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_mesh_shader.html SPV_EXT_mesh_shader>
+--
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
@@ -37,9 +45,6 @@
 --     2022-01-20
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_mesh_shader.html SPV_EXT_mesh_shader>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_mesh_shader.txt GLSL_EXT_mesh_shader>

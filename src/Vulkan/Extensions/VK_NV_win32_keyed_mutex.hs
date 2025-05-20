@@ -25,7 +25,9 @@
 --
 -- [__Deprecation State__]
 --
---     -   /Promoted/ to @VK_KHR_win32_keyed_mutex@ extension
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_keyed_mutex VK_KHR_win32_keyed_mutex>
+--         extension
 --
 -- [__Contact__]
 --

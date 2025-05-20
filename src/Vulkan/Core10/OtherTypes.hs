@@ -856,19 +856,19 @@ instance es ~ '[] => Zero (BufferMemoryBarrier es) where
 --     bit or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   #VUID-VkImageMemoryBarrier-image-03319# If @image@ has a
---     depth\/stencil format with both depth and stencil and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include either or both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
 -- -   #VUID-VkImageMemoryBarrier-image-03320# If @image@ has a
 --     depth\/stencil format with both depth and stencil and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
 --     feature is not enabled, then the @aspectMask@ member of
 --     @subresourceRange@ /must/ include both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier-image-03319# If @image@ has a
+--     depth\/stencil format with both depth and stencil and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include either or both
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --

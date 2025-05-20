@@ -20,7 +20,10 @@
 -- [__Ratification Status__]
 --     Ratified
 --
--- [__Extension and Version Dependencies__; __Deprecation State__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__Deprecation State__]
 --
 --     -   /Promoted/ to
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1-promotions Vulkan 1.1>
@@ -37,10 +40,6 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]
 --

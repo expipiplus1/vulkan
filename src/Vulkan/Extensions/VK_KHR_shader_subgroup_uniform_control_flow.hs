@@ -23,6 +23,10 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html SPV_KHR_subgroup_uniform_control_flow>
+--
 -- [__Contact__]
 --
 --     -   Alan Baker
@@ -39,9 +43,6 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   Requires SPIR-V 1.3.
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html SPV_KHR_subgroup_uniform_control_flow>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroupuniform_qualifier.txt GL_EXT_subgroupuniform_qualifier>

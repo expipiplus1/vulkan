@@ -15,12 +15,17 @@
 --     506
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>
+--
+-- [__Contact__]
 --
 --     -   Charles Hansen
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_low_latency2] @cshansen%0A*Here describe the issue or question you have about the VK_NV_low_latency2 extension* >
@@ -138,6 +143,13 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2023-11-15 (Charles Hansen)
+--
+--     -   Update vkGetLatencyTimingsNV. This is a breaking API change
+--         which brings behavior in line with other array querying
+--         commands. More background can be found in
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/2269>
+--
 -- -   Revision 1, 2023-09-25 (Charles Hansen)
 --
 --     -   Internal revisions
@@ -202,12 +214,9 @@ module Vulkan.Extensions.VK_NV_low_latency2  ( setLatencySleepModeNV
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
-import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Marshal.Alloc (callocBytes)
-import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -243,7 +252,6 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
@@ -293,6 +301,12 @@ foreign import ccall
 -- If @pSleepModeInfo@ is @NULL@, 'setLatencySleepModeNV' will disable low
 -- latency mode, low latency boost, and set the minimum present interval
 -- previously specified by 'LatencySleepModeInfoNV' to zero on @swapchain@.
+-- As an exception to the normal rules for objects which are externally
+-- synchronized, the swapchain passed to 'setLatencySleepModeNV' /may/ be
+-- simultaneously used by other threads in calls to functions other than
+-- 'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR'. Access to the
+-- swapchain data associated with this extension /must/ be atomic within
+-- the implementation.
 --
 -- == Return Codes
 --
@@ -433,7 +447,13 @@ foreign import ccall
 -- 'setLatencyMarkerNV' /can/ be called to provide timestamps for the
 -- application’s reference. These timestamps are returned with a call to
 -- 'getLatencyTimingsNV' alongside driver provided timestamps at various
--- points of interest with regards to latency within the application.
+-- points of interest with regards to latency within the application. As an
+-- exception to the normal rules for objects which are externally
+-- synchronized, the swapchain passed to 'setLatencyMarkerNV' /may/ be
+-- simultaneously used by other threads in calls to functions other than
+-- 'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR'. Access to the
+-- swapchain data associated with this extension /must/ be atomic within
+-- the implementation.
 --
 -- == Valid Usage (Implicit)
 --
@@ -480,7 +500,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetLatencyTimingsNV
-  :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr Word32 -> Ptr GetLatencyMarkerInfoNV -> IO ()) -> Ptr Device_T -> SwapchainKHR -> Ptr Word32 -> Ptr GetLatencyMarkerInfoNV -> IO ()
+  :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr GetLatencyMarkerInfoNV -> IO ()) -> Ptr Device_T -> SwapchainKHR -> Ptr GetLatencyMarkerInfoNV -> IO ()
 
 -- | vkGetLatencyTimingsNV - Get latency marker results
 --
@@ -489,12 +509,7 @@ foreign import ccall
 -- The timings returned by 'getLatencyTimingsNV' contain the timestamps
 -- requested from 'setLatencyMarkerNV' and additional
 -- implementation-specific markers defined in
--- 'LatencyTimingsFrameReportNV'. If @pTimings@ is @NULL@, then the maximum
--- number of queryable frame data is returned in @pTimingCount@. Otherwise,
--- @pTimingCount@ /must/ point to a variable set by the user to the number
--- of elements in the @pTimings@ array in @pGetLatencyMarkerInfo@, and on
--- return the variable is overwritten with the number of values actually
--- written to @pTimings@.
+-- 'LatencyTimingsFrameReportNV'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -518,22 +533,19 @@ getLatencyTimingsNV :: forall io
                        -- #VUID-vkGetLatencyTimingsNV-swapchain-parent# @swapchain@ /must/ have
                        -- been created, allocated, or retrieved from @device@
                        SwapchainKHR
-                    -> io (("timingCount" ::: Word32), GetLatencyMarkerInfoNV)
+                    -> io (GetLatencyMarkerInfoNV)
 getLatencyTimingsNV device swapchain = liftIO . evalContT $ do
   let vkGetLatencyTimingsNVPtr = pVkGetLatencyTimingsNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetLatencyTimingsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetLatencyTimingsNV is null" Nothing Nothing
   let vkGetLatencyTimingsNV' = mkVkGetLatencyTimingsNV vkGetLatencyTimingsNVPtr
-  pPTimingCount <- ContT $ bracket (callocBytes @Word32 4) free
   pPLatencyMarkerInfo <- ContT (withZeroCStruct @GetLatencyMarkerInfoNV)
   lift $ traceAroundEvent "vkGetLatencyTimingsNV" (vkGetLatencyTimingsNV'
                                                      (deviceHandle (device))
                                                      (swapchain)
-                                                     (pPTimingCount)
                                                      (pPLatencyMarkerInfo))
-  pTimingCount <- lift $ peek @Word32 pPTimingCount
   pLatencyMarkerInfo <- lift $ peekCStruct @GetLatencyMarkerInfoNV pPLatencyMarkerInfo
-  pure $ (pTimingCount, pLatencyMarkerInfo)
+  pure $ (pLatencyMarkerInfo)
 
 
 foreign import ccall
@@ -797,10 +809,22 @@ instance Zero SetLatencyMarkerInfoNV where
 --
 -- = Description
 --
--- The elements of @pTimings@ are arranged in the order they were requested
--- in, with the oldest data in the first entry.
+-- If @pTimings@ is @NULL@ then the maximum number of queryable frame data
+-- is returned in @timingCount@. Otherwise, @timingCount@ /must/ be set by
+-- the user to the number of elements in the @pTimings@ array, and on
+-- return the variable is overwritten with the number of values actually
+-- written to @pTimings@. The elements of @pTimings@ are arranged in the
+-- order they were requested in, with the oldest data in the first entry.
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkGetLatencyMarkerInfoNV-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_GET_LATENCY_MARKER_INFO_NV'
+--
+-- -   #VUID-VkGetLatencyMarkerInfoNV-pTimings-parameter# If @timingCount@
+--     is not @0@, and @pTimings@ is not @NULL@, @pTimings@ /must/ be a
+--     valid pointer to an array of @timingCount@
+--     'LatencyTimingsFrameReportNV' structures
 --
 -- = See Also
 --
@@ -808,12 +832,13 @@ instance Zero SetLatencyMarkerInfoNV where
 -- 'LatencyTimingsFrameReportNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getLatencyTimingsNV'
 data GetLatencyMarkerInfoNV = GetLatencyMarkerInfoNV
-  { -- | @pTimings@ is either @NULL@ or a pointer to an array of
+  { -- | @timingCount@ is an integer related to the number of of previous frames
+    -- of latency data available or queried, as described below.
+    timingCount :: Word32
+  , -- | @pTimings@ is either @NULL@ or a pointer to an array of
     -- 'LatencyTimingsFrameReportNV' structures.
-    --
-    -- #VUID-VkGetLatencyMarkerInfoNV-pTimings-parameter# @pTimings@ /must/ be
-    -- a valid pointer to a 'LatencyTimingsFrameReportNV' structure
-    timings :: Ptr LatencyTimingsFrameReportNV }
+    timings :: Ptr LatencyTimingsFrameReportNV
+  }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (GetLatencyMarkerInfoNV)
@@ -821,34 +846,36 @@ deriving instance Generic (GetLatencyMarkerInfoNV)
 deriving instance Show GetLatencyMarkerInfoNV
 
 instance ToCStruct GetLatencyMarkerInfoNV where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GetLatencyMarkerInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GET_LATENCY_MARKER_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr (Ptr LatencyTimingsFrameReportNV))) (timings)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (timingCount)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr LatencyTimingsFrameReportNV))) (timings)
     f
-  cStructSize = 24
+  cStructSize = 32
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GET_LATENCY_MARKER_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr (Ptr LatencyTimingsFrameReportNV))) (zero)
     f
 
 instance FromCStruct GetLatencyMarkerInfoNV where
   peekCStruct p = do
-    pTimings <- peek @(Ptr LatencyTimingsFrameReportNV) ((p `plusPtr` 16 :: Ptr (Ptr LatencyTimingsFrameReportNV)))
+    timingCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pTimings <- peek @(Ptr LatencyTimingsFrameReportNV) ((p `plusPtr` 24 :: Ptr (Ptr LatencyTimingsFrameReportNV)))
     pure $ GetLatencyMarkerInfoNV
-             pTimings
+             timingCount pTimings
 
 instance Storable GetLatencyMarkerInfoNV where
-  sizeOf ~_ = 24
+  sizeOf ~_ = 32
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero GetLatencyMarkerInfoNV where
   zero = GetLatencyMarkerInfoNV
+           zero
            zero
 
 
@@ -1463,11 +1490,11 @@ instance Read OutOfBandQueueTypeNV where
       conNameOutOfBandQueueTypeNV
       OutOfBandQueueTypeNV
 
-type NV_LOW_LATENCY_2_SPEC_VERSION = 1
+type NV_LOW_LATENCY_2_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_NV_LOW_LATENCY_2_SPEC_VERSION"
 pattern NV_LOW_LATENCY_2_SPEC_VERSION :: forall a . Integral a => a
-pattern NV_LOW_LATENCY_2_SPEC_VERSION = 1
+pattern NV_LOW_LATENCY_2_SPEC_VERSION = 2
 
 
 type NV_LOW_LATENCY_2_EXTENSION_NAME = "VK_NV_low_latency2"

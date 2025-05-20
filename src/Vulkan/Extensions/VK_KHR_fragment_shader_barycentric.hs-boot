@@ -23,6 +23,10 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_fragment_shader_barycentric.html SPV_KHR_fragment_shader_barycentric>
+--
 -- [__Contact__]
 --
 --     -   Stu Smith
@@ -39,9 +43,6 @@
 --     No known IP claims.
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_fragment_shader_barycentric.html SPV_KHR_fragment_shader_barycentric>
 --
 --     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_shader_barycentric.txt GL_EXT_fragment_shader_barycentric>

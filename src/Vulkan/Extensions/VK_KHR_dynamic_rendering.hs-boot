@@ -25,6 +25,18 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_AMD_mixed_attachment_samples
+--
+--     -   Interacts with VK_EXT_fragment_density_map
+--
+--     -   Interacts with VK_KHR_fragment_shading_rate
+--
+--     -   Interacts with VK_NVX_multiview_per_view_attributes
+--
+--     -   Interacts with VK_NV_framebuffer_mixed_samples
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -42,10 +54,6 @@
 --
 -- [__Last Modified Date__]
 --     2021-10-06
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.3 Core
 --
 -- [__Contributors__]
 --

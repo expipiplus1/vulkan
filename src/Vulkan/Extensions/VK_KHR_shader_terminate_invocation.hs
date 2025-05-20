@@ -25,6 +25,10 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html SPV_KHR_terminate_invocation>
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -39,14 +43,6 @@
 --
 -- [__Last Modified Date__]
 --     2020-08-11
---
--- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.3 Core
---
---     -   Requires the
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html SPV_KHR_terminate_invocation>
---         SPIR-V extension.
 --
 -- [__IP Status__]
 --     No known IP claims.

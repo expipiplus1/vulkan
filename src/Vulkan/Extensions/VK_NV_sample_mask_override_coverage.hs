@@ -20,7 +20,14 @@
 -- [__Ratification Status__]
 --     Not ratified
 --
--- [__Extension and Version Dependencies__; __Contact__]
+-- [__Extension and Version Dependencies__]
+--     None
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_sample_mask_override_coverage.html SPV_NV_sample_mask_override_coverage>
+--
+-- [__Contact__]
 --
 --     -   Piers Daniell
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_sample_mask_override_coverage] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_NV_sample_mask_override_coverage extension* >
@@ -34,9 +41,6 @@
 --     No known IP claims.
 --
 -- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_sample_mask_override_coverage.html SPV_NV_sample_mask_override_coverage>
 --
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/NV/NV_sample_mask_override_coverage.txt GL_NV_sample_mask_override_coverage>

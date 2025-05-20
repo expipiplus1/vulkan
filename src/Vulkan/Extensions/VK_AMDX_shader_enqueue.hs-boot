@@ -35,6 +35,14 @@
 --         of provisional header files for enablement and stability
 --         details.__
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_maintenance5
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMDX/SPV_AMDX_shader_enqueue.html SPV_AMDX_shader_enqueue>
+--
 -- [__Contact__]
 --
 --     -   Tobias Hector
@@ -47,11 +55,6 @@
 --
 -- [__Last Modified Date__]
 --     2021-07-22
---
--- [__Interactions and External Dependencies__]
---
---     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMDX_shader_enqueue.html SPV_AMDX_shader_enqueue>.
 --
 -- [__Provisional__]
 --     __This extension is /provisional/ and /should/ not be used in

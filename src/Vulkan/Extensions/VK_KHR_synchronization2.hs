@@ -25,6 +25,36 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_AMD_buffer_marker
+--
+--     -   Interacts with VK_EXT_blend_operation_advanced
+--
+--     -   Interacts with VK_EXT_conditional_rendering
+--
+--     -   Interacts with VK_EXT_fragment_density_map
+--
+--     -   Interacts with VK_EXT_mesh_shader
+--
+--     -   Interacts with VK_EXT_transform_feedback
+--
+--     -   Interacts with VK_KHR_acceleration_structure
+--
+--     -   Interacts with VK_KHR_fragment_shading_rate
+--
+--     -   Interacts with VK_KHR_ray_tracing_pipeline
+--
+--     -   Interacts with VK_NV_device_diagnostic_checkpoints
+--
+--     -   Interacts with VK_NV_device_generated_commands
+--
+--     -   Interacts with VK_NV_mesh_shader
+--
+--     -   Interacts with VK_NV_ray_tracing
+--
+--     -   Interacts with VK_NV_shading_rate_image
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -41,8 +71,6 @@
 --     2020-12-03
 --
 -- [__Interactions and External Dependencies__]
---
---     -   Promoted to Vulkan 1.3 Core
 --
 --     -   Interacts with @VK_KHR_create_renderpass2@
 --

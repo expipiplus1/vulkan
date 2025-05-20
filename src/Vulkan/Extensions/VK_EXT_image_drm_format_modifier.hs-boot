@@ -39,6 +39,10 @@
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_format_feature_flags2
+--
 -- [__Contact__]
 --
 --     -   Lina Versace

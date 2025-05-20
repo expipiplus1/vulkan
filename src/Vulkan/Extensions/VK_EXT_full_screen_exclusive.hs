@@ -29,6 +29,14 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
+--
+--     -   Interacts with VK_KHR_device_group
+--
+--     -   Interacts with VK_KHR_win32_surface
+--
 -- [__Contact__]
 --
 --     -   James Jones
