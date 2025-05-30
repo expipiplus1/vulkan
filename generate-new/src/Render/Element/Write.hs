@@ -285,7 +285,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         let t = layoutDoc (d <> line <> line)
         if getAll (reCanFormat e)
           then
-            liftIO (try (Ormolu.ormolu ormoluConfig "<stdin>" (T.unpack t)))
+            liftIO (try (Ormolu.ormolu ormoluConfig "<stdin>" $ T.unpack t))
               >>= \case
                     Left ex ->
                       error
@@ -456,7 +456,7 @@ readFileMaybe :: FilePath -> IO (Maybe Text)
 readFileMaybe f =
   (Just <$> T.readFile f) `catch` (\(_ :: IOException) -> pure Nothing)
 
--- If we don't put PatternSynonyms here the fourmolu eatst he comments on them 
+-- If we don't put PatternSynonyms here the fourmolu eatst he comments on them
 ormoluConfig :: Ormolu.Config Ormolu.RegionIndices
 ormoluConfig = Ormolu.defaultConfig
   { Ormolu.cfgDynOptions  = [Ormolu.DynOption "-XPatternSynonyms"]

@@ -3,6 +3,8 @@ module Render.Type.Preserve where
 import           Language.Haskell.TH            ( Name
                                                 , Type
                                                 )
+import           Prelude (Show)
+
 data Preserve
   = DoNotPreserve
     -- ^ Use more idiomatic haskell types
@@ -27,3 +29,4 @@ data ConstrainedVar
   = Extends {cVarBase :: Type, cVarName :: Name}
   | Inherits {cVarBase :: Type, cVarName :: Name}
   | Unconstrained {cVarName :: Name}
+  deriving (Show)
