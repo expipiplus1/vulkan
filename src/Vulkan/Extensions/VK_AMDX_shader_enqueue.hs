@@ -974,10 +974,10 @@ foreign import ccall
 --     a descriptor set /must/ have been bound to /n/ at the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for set /n/, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-None-08601# For each push constant that
@@ -986,11 +986,10 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-maintenance4-08602# If the
@@ -1001,20 +1000,22 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     create the current 'Vulkan.Extensions.Handles.ShaderEXT' , as
+--     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-None-08114# Descriptors in each bound
 --     descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
---     was not created with
+--     be valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-None-08115# If the descriptors used by
@@ -1067,14 +1068,6 @@ foreign import ccall
 --     feature is not enabled, a valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDispatchGraphAMDX-None-08607# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
---
 -- -   #VUID-vkCmdDispatchGraphAMDX-None-08608# If a pipeline is bound to
 --     the pipeline bind point used by this command, there /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -1117,6 +1110,14 @@ foreign import ccall
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-uniformBuffers-06935# If any stage of
 --     the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
@@ -1694,10 +1695,10 @@ foreign import ccall
 --     a descriptor set /must/ have been bound to /n/ at the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for set /n/, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08601# For each push
@@ -1706,11 +1707,10 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-maintenance4-08602# If the
@@ -1721,20 +1721,22 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     create the current 'Vulkan.Extensions.Handles.ShaderEXT' , as
+--     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08114# Descriptors in each
 --     bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
---     was not created with
+--     be valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08115# If the descriptors
@@ -1787,14 +1789,6 @@ foreign import ccall
 --     feature is not enabled, a valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08607# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
---
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08608# If a pipeline is
 --     bound to the pipeline bind point used by this command, there /must/
 --     not have been any calls to dynamic state setting commands for any
@@ -1837,6 +1831,14 @@ foreign import ccall
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-uniformBuffers-06935# If any
 --     stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to the
@@ -2447,10 +2449,10 @@ foreign import ccall
 --     a descriptor set /must/ have been bound to /n/ at the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for set /n/, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08601# For each push
@@ -2459,11 +2461,10 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-maintenance4-08602# If the
@@ -2474,20 +2475,22 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     create the current 'Vulkan.Extensions.Handles.ShaderEXT' , as
+--     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08114# Descriptors in
 --     each bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
---     was not created with
+--     be valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08115# If the
@@ -2540,14 +2543,6 @@ foreign import ccall
 --     feature is not enabled, a valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08607# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
---
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08608# If a pipeline
 --     is bound to the pipeline bind point used by this command, there
 --     /must/ not have been any calls to dynamic state setting commands for
@@ -2590,6 +2585,14 @@ foreign import ccall
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-uniformBuffers-06935# If
 --     any stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to
@@ -3282,12 +3285,10 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --     /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
 --
--- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-09007# If @flags@
---     includes
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
---     then the
+-- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-09007# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
---     feature /must/ be enabled
+--     is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-09008# If @flags@
 --     includes

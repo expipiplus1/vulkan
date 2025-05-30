@@ -1960,8 +1960,7 @@ foreign import ccall
 --     semaphore signal operation that has been submitted for execution and
 --     any
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     on which it depends (if any) /must/ have also been submitted for
---     execution
+--     on which it depends /must/ have also been submitted for execution
 --
 -- Any writes to memory backing the images referenced by the
 -- @pImageIndices@ and @pSwapchains@ members of @pPresentInfo@, that are

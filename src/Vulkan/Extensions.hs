@@ -28,6 +28,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_ANDROID_external_format_resolve
                           , module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
                           , module Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
+                          , module Vulkan.Extensions.VK_ARM_render_pass_striped
                           , module Vulkan.Extensions.VK_ARM_scheduling_controls
                           , module Vulkan.Extensions.VK_ARM_shader_core_builtins
                           , module Vulkan.Extensions.VK_ARM_shader_core_properties
@@ -92,6 +93,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_image_view_min_lod
                           , module Vulkan.Extensions.VK_EXT_index_type_uint8
                           , module Vulkan.Extensions.VK_EXT_inline_uniform_block
+                          , module Vulkan.Extensions.VK_EXT_layer_settings
                           , module Vulkan.Extensions.VK_EXT_legacy_dithering
                           , module Vulkan.Extensions.VK_EXT_line_rasterization
                           , module Vulkan.Extensions.VK_EXT_load_store_op_none
@@ -373,6 +375,7 @@ import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
 import Vulkan.Extensions.VK_ANDROID_external_format_resolve
 import Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
 import Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
+import Vulkan.Extensions.VK_ARM_render_pass_striped
 import Vulkan.Extensions.VK_ARM_scheduling_controls
 import Vulkan.Extensions.VK_ARM_shader_core_builtins
 import Vulkan.Extensions.VK_ARM_shader_core_properties
@@ -437,6 +440,7 @@ import Vulkan.Extensions.VK_EXT_image_sliced_view_of_3d
 import Vulkan.Extensions.VK_EXT_image_view_min_lod
 import Vulkan.Extensions.VK_EXT_index_type_uint8
 import Vulkan.Extensions.VK_EXT_inline_uniform_block
+import Vulkan.Extensions.VK_EXT_layer_settings
 import Vulkan.Extensions.VK_EXT_legacy_dithering
 import Vulkan.Extensions.VK_EXT_line_rasterization
 import Vulkan.Extensions.VK_EXT_load_store_op_none

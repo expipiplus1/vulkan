@@ -213,6 +213,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalD
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_IMG_relaxed_line_rasterization (PhysicalDeviceRelaxedLineRasterizationFeaturesIMG)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (PhysicalDeviceRenderPassStripedFeaturesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
@@ -1020,6 +1021,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelineFeaturesKHR',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch.PhysicalDeviceRayTracingPositionFetchFeaturesKHR',
 --     'Vulkan.Extensions.VK_IMG_relaxed_line_rasterization.PhysicalDeviceRelaxedLineRasterizationFeaturesIMG',
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.PhysicalDeviceRenderPassStripedFeaturesARM',
 --     'Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
@@ -1152,6 +1154,7 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRenderPassStripedFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSchedulingControlsFeaturesARM = Just f
     | Just Refl <- eqT @e @DeviceQueueShaderCoreControlCreateInfoARM = Just f
@@ -1229,7 +1232,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = Just f
+    | Just Refl <- eqT @e @(PhysicalDeviceClusterCullingShaderFeaturesHUAWEI '[]) = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubpassShadingFeaturesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDevice4444FormatsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevicePortabilitySubsetFeaturesKHR = Just f

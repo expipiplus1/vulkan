@@ -539,8 +539,8 @@ instance Zero ImportSemaphoreFdInfoKHR where
 --     refers to a handle type with copy payload transference semantics,
 --     @semaphore@ /must/ have an associated semaphore signal operation
 --     that has been submitted for execution and any semaphore signal
---     operations on which it depends (if any) /must/ have also been
---     submitted for execution
+--     operations on which it depends /must/ have also been submitted for
+--     execution
 --
 -- == Valid Usage (Implicit)
 --

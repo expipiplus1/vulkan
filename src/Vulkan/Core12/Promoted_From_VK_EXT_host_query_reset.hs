@@ -66,11 +66,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstQuery@ /must/ be less than the number of queries in
---     @queryPool@
+-- -   #VUID-vkResetQueryPool-firstQuery-09436# @firstQuery@ /must/ be less
+--     than the number of queries in @queryPool@
 --
--- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in @queryPool@
+-- -   #VUID-vkResetQueryPool-firstQuery-09437# The sum of @firstQuery@ and
+--     @queryCount@ /must/ be less than or equal to the number of queries
+--     in @queryPool@
 --
 -- -   #VUID-vkResetQueryPool-None-02665# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>

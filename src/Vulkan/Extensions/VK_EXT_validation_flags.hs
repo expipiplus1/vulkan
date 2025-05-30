@@ -15,7 +15,7 @@
 --     62
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -26,7 +26,7 @@
 -- [__Deprecation State__]
 --
 --     -   /Deprecated/ by
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_layer_settings VK_EXT_layer_settings>
 --         extension
 --
 -- [__Special Use__]
@@ -62,10 +62,10 @@
 -- contains an array of 'ValidationCheckEXT' values that will be disabled
 -- by the validation layers.
 --
--- == Deprecation by @VK_EXT_validation_features@
+-- == Deprecation by @VK_EXT_layer_settings@
 --
 -- Functionality in this extension is subsumed into the
--- @VK_EXT_validation_features@ extension.
+-- @VK_EXT_layer_settings@ extension.
 --
 -- == New Structures
 --
@@ -89,9 +89,13 @@
 --
 -- == Version History
 --
+-- -   Revision 3, 2023-09-25 (Christophe Riccio)
+--
+--     -   Marked as deprecated by VK_EXT_layer_settings
+--
 -- -   Revision 2, 2019-08-19 (Mark Lobodzinski)
 --
---     -   Marked as deprecated
+--     -   Marked as deprecated by VK_EXT_validation_features
 --
 -- -   Revision 1, 2016-08-26 (Courtney Goeltzenleuchter)
 --
@@ -259,11 +263,11 @@ instance Read ValidationCheckEXT where
       conNameValidationCheckEXT
       ValidationCheckEXT
 
-type EXT_VALIDATION_FLAGS_SPEC_VERSION = 2
+type EXT_VALIDATION_FLAGS_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_SPEC_VERSION"
 pattern EXT_VALIDATION_FLAGS_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_VALIDATION_FLAGS_SPEC_VERSION = 2
+pattern EXT_VALIDATION_FLAGS_SPEC_VERSION = 3
 
 
 type EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"

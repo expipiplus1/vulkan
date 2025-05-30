@@ -84,6 +84,7 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM
+                                                        , STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_PROPERTIES_NV
@@ -152,6 +153,11 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM
+                                                        , STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM
+                                                        , STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM
+                                                        , STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT
                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE
@@ -166,6 +172,7 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT
                                                         , STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI
                                                         , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_DISPLACEMENT_MICROMAP_NV
@@ -1100,6 +1107,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_low_latency2.LatencySubmissionPresentIdNV',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.LatencySurfaceCapabilitiesNV',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.LatencyTimingsFrameReportNV',
+-- 'Vulkan.Extensions.VK_EXT_layer_settings.LayerSettingsCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_MVK_macos_surface.MacOSSurfaceCreateInfoMVK',
 -- 'Vulkan.Core10.Memory.MappedMemoryRange',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo',
@@ -1164,6 +1172,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeaturesEXT',
 -- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderFeaturesHUAWEI',
 -- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderPropertiesHUAWEI',
+-- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI',
 -- 'Vulkan.Extensions.VK_AMD_device_coherent_memory.PhysicalDeviceCoherentMemoryFeaturesAMD',
 -- 'Vulkan.Extensions.VK_EXT_color_write_enable.PhysicalDeviceColorWriteEnableFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_compute_shader_derivatives.PhysicalDeviceComputeShaderDerivativesFeaturesNV',
@@ -1342,6 +1351,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch.PhysicalDeviceRayTracingPositionFetchFeaturesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV',
 -- 'Vulkan.Extensions.VK_IMG_relaxed_line_rasterization.PhysicalDeviceRelaxedLineRasterizationFeaturesIMG',
+-- 'Vulkan.Extensions.VK_ARM_render_pass_striped.PhysicalDeviceRenderPassStripedFeaturesARM',
+-- 'Vulkan.Extensions.VK_ARM_render_pass_striped.PhysicalDeviceRenderPassStripedPropertiesARM',
 -- 'Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
 -- 'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
@@ -1509,6 +1520,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.RenderPassInputAttachmentAspectCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.RenderPassSampleLocationsBeginInfoEXT',
+-- 'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeSubmitInfoARM',
 -- 'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassSubpassFeedbackCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.RenderingAreaInfoKHR',
@@ -1921,6 +1935,9 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM = Str
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM = StructureType 1000497000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT = StructureType 1000496000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT = StructureType 1000351002
 
@@ -2125,6 +2142,21 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QC
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM = StructureType 1000425000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM"
+pattern STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM = StructureType 1000424004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM"
+pattern STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM = StructureType 1000424003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM"
+pattern STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM = StructureType 1000424002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM = StructureType 1000424001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM = StructureType 1000424000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT = StructureType 1000422000
 
@@ -2166,6 +2198,9 @@ pattern STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT = 
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT = StructureType 1000411000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI = StructureType 1000404002
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI = StructureType 1000404001
@@ -4136,6 +4171,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM
+  , STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT
   , STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_PROPERTIES_NV
@@ -4204,6 +4240,11 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM
+  , STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM
+  , STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM
+  , STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT
   , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE
@@ -4218,6 +4259,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT
   , STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI
   , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_DISPLACEMENT_MICROMAP_NV
@@ -5182,6 +5224,10 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM"
     )
   ,
+    ( STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT
+    , "LAYER_SETTINGS_CREATE_INFO_EXT"
+    )
+  ,
     ( STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT
     , "MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT"
     )
@@ -5454,6 +5500,26 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM"
     )
   ,
+    ( STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM
+    , "RENDER_PASS_STRIPE_SUBMIT_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM
+    , "RENDER_PASS_STRIPE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM
+    , "RENDER_PASS_STRIPE_BEGIN_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM
+    , "PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM
+    , "PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
     , "PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT"
     )
@@ -5508,6 +5574,10 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT
     , "PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI
+    , "PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI

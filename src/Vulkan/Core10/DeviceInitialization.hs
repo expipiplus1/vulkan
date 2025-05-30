@@ -175,6 +175,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceProperties))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceQueueFamilyProperties))
 import Vulkan.Core10.Enums.InstanceCreateFlagBits (InstanceCreateFlags)
 import Vulkan.Core10.Handles (Instance_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_layer_settings (LayerSettingsCreateInfoEXT)
 import Vulkan.Core10.APIConstants (MAX_MEMORY_HEAPS)
 import Vulkan.Core10.APIConstants (MAX_MEMORY_TYPES)
 import Vulkan.Core10.APIConstants (MAX_PHYSICAL_DEVICE_NAME_SIZE)
@@ -1564,15 +1565,17 @@ instance Zero ApplicationInfo where
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT',
 --     'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_layer_settings.LayerSettingsCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_validation_features.ValidationFeaturesEXT',
 --     or 'Vulkan.Extensions.VK_EXT_validation_flags.ValidationFlagsEXT'
 --
 -- -   #VUID-VkInstanceCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique, with the exception of
 --     structures of type
---     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     or
---     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_layer_settings.LayerSettingsCreateInfoEXT'
 --
 -- -   #VUID-VkInstanceCreateInfo-flags-parameter# @flags@ /must/ be a
 --     valid combination of
@@ -1640,6 +1643,7 @@ instance Extensible InstanceCreateInfo where
     | Just Refl <- eqT @e @DirectDriverLoadingListLUNARG = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @DebugUtilsMessengerCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @LayerSettingsCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ValidationFeaturesEXT = Just f
     | Just Refl <- eqT @e @ValidationFlagsEXT = Just f
     | Just Refl <- eqT @e @DebugReportCallbackCreateInfoEXT = Just f

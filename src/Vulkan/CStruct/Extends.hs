@@ -402,6 +402,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (LatencySubmissionPre
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (LatencySurfaceCapabilitiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (LatencyTimingsFrameReportNV)
 import {-# SOURCE #-} Vulkan.Core10.LayerDiscovery (LayerProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_layer_settings (LayerSettingEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_layer_settings (LayerSettingsCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_MVK_macos_surface (MacOSSurfaceCreateInfoMVK)
 import {-# SOURCE #-} Vulkan.Core10.Memory (MappedMemoryRange)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
@@ -478,6 +480,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderPropertiesHUAWEI)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_device_coherent_memory (PhysicalDeviceCoherentMemoryFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_color_write_enable (PhysicalDeviceColorWriteEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
@@ -660,6 +663,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (PhysicalDeviceRayTracingPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_IMG_relaxed_line_rasterization (PhysicalDeviceRelaxedLineRasterizationFeaturesIMG)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (PhysicalDeviceRenderPassStripedFeaturesARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (PhysicalDeviceRenderPassStripedPropertiesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2PropertiesEXT)
@@ -834,6 +839,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (RenderPassF
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (RenderPassInputAttachmentAspectCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (RenderPassMultiviewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (RenderPassStripeBeginInfoARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (RenderPassStripeInfoARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (RenderPassStripeSubmitInfoARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
@@ -1114,6 +1122,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends CommandBufferInheritanceInfo CommandBufferInheritanceRenderingInfo = ()
   Extends CommandBufferInheritanceInfo AttachmentSampleCountInfoAMD = ()
   Extends CommandBufferInheritanceInfo MultiviewPerViewAttributesInfoNVX = ()
+  Extends CommandBufferSubmitInfo RenderPassStripeSubmitInfoARM = ()
   Extends ComputePipelineCreateInfo PipelineCreateFlags2CreateInfoKHR = ()
   Extends ComputePipelineCreateInfo PipelineCreationFeedbackCreateInfo = ()
   Extends ComputePipelineCreateInfo SubpassShadingPipelineCreateInfoHUAWEI = ()
@@ -1231,7 +1240,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSubpassShadingFeaturesHUAWEI = ()
-  Extends DeviceCreateInfo PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = ()
+  Extends DeviceCreateInfo (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI '[]) = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderTerminateInvocationFeatures = ()
@@ -1309,6 +1318,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
   Extends DeviceCreateInfo PhysicalDeviceSchedulingControlsFeaturesARM = ()
   Extends DeviceCreateInfo PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = ()
+  Extends DeviceCreateInfo PhysicalDeviceRenderPassStripedFeaturesARM = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends DeviceQueueCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
   Extends EventCreateInfo ExportMetalObjectCreateInfoEXT = ()
@@ -1384,6 +1394,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends InstanceCreateInfo DebugReportCallbackCreateInfoEXT = ()
   Extends InstanceCreateInfo ValidationFlagsEXT = ()
   Extends InstanceCreateInfo ValidationFeaturesEXT = ()
+  Extends InstanceCreateInfo LayerSettingsCreateInfoEXT = ()
   Extends InstanceCreateInfo DebugUtilsMessengerCreateInfoEXT = ()
   Extends InstanceCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends InstanceCreateInfo DirectDriverLoadingListLUNARG = ()
@@ -1408,6 +1419,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends MemoryAllocateInfo ImportScreenBufferInfoQNX = ()
   Extends MemoryRequirements2 MemoryDedicatedRequirements = ()
   Extends OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreatePrivateDataInfoNV = ()
+  Extends PhysicalDeviceClusterCullingShaderFeaturesHUAWEI PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI = ()
   Extends PhysicalDeviceExternalBufferInfo BufferUsageFlags2CreateInfoKHR = ()
   Extends PhysicalDeviceExternalSemaphoreInfo SemaphoreTypeCreateInfo = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = ()
@@ -1506,7 +1518,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSubpassShadingFeaturesHUAWEI = ()
-  Extends PhysicalDeviceFeatures2 PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = ()
+  Extends PhysicalDeviceFeatures2 (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI '[]) = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderTerminateInvocationFeatures = ()
@@ -1583,6 +1595,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCudaKernelLaunchFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSchedulingControlsFeaturesARM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceRenderPassStripedFeaturesARM = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1676,6 +1689,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceExternalFormatResolvePropertiesANDROID = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceCudaKernelLaunchPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceSchedulingControlsPropertiesARM = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceRenderPassStripedPropertiesARM = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfacePresentModeEXT = ()
@@ -1731,6 +1745,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends RenderPassBeginInfo RenderPassAttachmentBeginInfo = ()
   Extends RenderPassBeginInfo RenderPassTransformBeginInfoQCOM = ()
   Extends RenderPassBeginInfo MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM = ()
+  Extends RenderPassBeginInfo RenderPassStripeBeginInfoARM = ()
   Extends RenderPassCreateInfo RenderPassMultiviewCreateInfo = ()
   Extends RenderPassCreateInfo RenderPassInputAttachmentAspectCreateInfo = ()
   Extends RenderPassCreateInfo RenderPassFragmentDensityMapCreateInfoEXT = ()
@@ -1743,6 +1758,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends RenderingInfo RenderingFragmentDensityMapAttachmentInfoEXT = ()
   Extends RenderingInfo MultiviewPerViewAttributesInfoNVX = ()
   Extends RenderingInfo MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM = ()
+  Extends RenderingInfo RenderPassStripeBeginInfoARM = ()
   Extends SamplerCreateInfo SamplerYcbcrConversionInfo = ()
   Extends SamplerCreateInfo SamplerReductionModeCreateInfo = ()
   Extends SamplerCreateInfo SamplerCustomBorderColorCreateInfoEXT = ()
@@ -1918,6 +1934,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT -> go @DebugReportCallbackCreateInfoEXT
   STRUCTURE_TYPE_VALIDATION_FLAGS_EXT -> go @ValidationFlagsEXT
   STRUCTURE_TYPE_VALIDATION_FEATURES_EXT -> go @ValidationFeaturesEXT
+  STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT -> go @LayerSettingsCreateInfoEXT
   STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD -> go @PipelineRasterizationStateRasterizationOrderAMD
   STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV -> go @DedicatedAllocationImageCreateInfoNV
   STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV -> go @DedicatedAllocationBufferCreateInfoNV
@@ -2213,7 +2230,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR -> go @PhysicalDevicePortabilitySubsetPropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT -> go @PhysicalDevice4444FormatsFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_FEATURES_HUAWEI -> go @PhysicalDeviceSubpassShadingFeaturesHUAWEI
-  STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI -> go @PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI -> go @(PhysicalDeviceClusterCullingShaderFeaturesHUAWEI '[])
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI -> go @PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT -> go @PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
   STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR -> go @FragmentShadingRateAttachmentInfoKHR
   STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR -> go @PipelineFragmentShadingRateStateCreateInfoKHR
@@ -2403,6 +2421,10 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM -> go @PhysicalDeviceSchedulingControlsFeaturesARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM -> go @PhysicalDeviceSchedulingControlsPropertiesARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RELAXED_LINE_RASTERIZATION_FEATURES_IMG -> go @PhysicalDeviceRelaxedLineRasterizationFeaturesIMG
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM -> go @PhysicalDeviceRenderPassStripedFeaturesARM
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM -> go @PhysicalDeviceRenderPassStripedPropertiesARM
+  STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM -> go @RenderPassStripeBeginInfoARM
+  STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM -> go @RenderPassStripeSubmitInfoARM
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2463,6 +2485,7 @@ infix 6 ::&
 {-# complete (::&) :: DebugReportCallbackCreateInfoEXT #-}
 {-# complete (::&) :: ValidationFlagsEXT #-}
 {-# complete (::&) :: ValidationFeaturesEXT #-}
+{-# complete (::&) :: LayerSettingsCreateInfoEXT #-}
 {-# complete (::&) :: PipelineRasterizationStateRasterizationOrderAMD #-}
 {-# complete (::&) :: DedicatedAllocationImageCreateInfoNV #-}
 {-# complete (::&) :: DedicatedAllocationBufferCreateInfoNV #-}
@@ -2759,6 +2782,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDevice4444FormatsFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceSubpassShadingFeaturesHUAWEI #-}
 {-# complete (::&) :: PhysicalDeviceClusterCullingShaderFeaturesHUAWEI #-}
+{-# complete (::&) :: PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI #-}
 {-# complete (::&) :: PhysicalDeviceShaderImageAtomicInt64FeaturesEXT #-}
 {-# complete (::&) :: FragmentShadingRateAttachmentInfoKHR #-}
 {-# complete (::&) :: PipelineFragmentShadingRateStateCreateInfoKHR #-}
@@ -2948,6 +2972,10 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceSchedulingControlsFeaturesARM #-}
 {-# complete (::&) :: PhysicalDeviceSchedulingControlsPropertiesARM #-}
 {-# complete (::&) :: PhysicalDeviceRelaxedLineRasterizationFeaturesIMG #-}
+{-# complete (::&) :: PhysicalDeviceRenderPassStripedFeaturesARM #-}
+{-# complete (::&) :: PhysicalDeviceRenderPassStripedPropertiesARM #-}
+{-# complete (::&) :: RenderPassStripeBeginInfoARM #-}
+{-# complete (::&) :: RenderPassStripeSubmitInfoARM #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

@@ -28,12 +28,15 @@ instance ( Extendss BufferMemoryBarrier2 es
          , PeekChain es ) => FromCStruct (BufferMemoryBarrier2 es)
 
 
-data CommandBufferSubmitInfo
+type role CommandBufferSubmitInfo nominal
+data CommandBufferSubmitInfo (es :: [Type])
 
-instance ToCStruct CommandBufferSubmitInfo
-instance Show CommandBufferSubmitInfo
+instance ( Extendss CommandBufferSubmitInfo es
+         , PokeChain es ) => ToCStruct (CommandBufferSubmitInfo es)
+instance Show (Chain es) => Show (CommandBufferSubmitInfo es)
 
-instance FromCStruct CommandBufferSubmitInfo
+instance ( Extendss CommandBufferSubmitInfo es
+         , PeekChain es ) => FromCStruct (CommandBufferSubmitInfo es)
 
 
 data DependencyInfo

@@ -15,13 +15,19 @@
 --     248
 --
 -- [__Revision__]
---     5
+--     6
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
+--
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_layer_settings VK_EXT_layer_settings>
+--         extension
 --
 -- [__Special Use__]
 --
@@ -67,10 +73,10 @@
 -- values that disable specific validation layer features that are enabled
 -- by default.
 --
--- Note
+-- == Deprecation by @VK_EXT_layer_settings@
 --
--- The @VK_EXT_validation_features@ extension subsumes all the
--- functionality provided in the @VK_EXT_validation_flags@ extension.
+-- Functionality in this extension is subsumed into the
+-- @VK_EXT_layer_settings@ extension.
 --
 -- == New Structures
 --
@@ -115,6 +121,10 @@
 -- -   Revision 5, 2021-05-18 (Tony Barbour)
 --
 --     -   Add Shader Validation Cache disable
+--
+-- -   Revision 6, 2023-09-25 (Christophe Riccio)
+--
+--     -   Marked as deprecated by VK_EXT_layer_settings
 --
 -- == See Also
 --

@@ -1651,9 +1651,14 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
--- -   #VUID-VkSubpassDescription2-pColorAttachments-03070# If the
---     @VK_AMD_mixed_attachment_samples@ extension is enabled, all
---     attachments in @pColorAttachments@ that are not
+-- -   #VUID-VkSubpassDescription2-None-09456# If either of the following
+--     is enabled:
+--
+--     -   The @VK_AMD_mixed_attachment_samples@ extension
+--
+--     -   The @VK_NV_framebuffer_mixed_samples@ extension
+--
+--     all attachments in @pColorAttachments@ that are not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have a sample
 --     count that is smaller than or equal to the sample count of
 --     @pDepthStencilAttachment@ if it is not

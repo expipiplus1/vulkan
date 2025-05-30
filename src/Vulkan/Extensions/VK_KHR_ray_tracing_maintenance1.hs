@@ -434,10 +434,10 @@ foreign import ccall
 --     a descriptor set /must/ have been bound to /n/ at the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for set /n/, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08601# For each push constant
@@ -446,11 +446,10 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-maintenance4-08602# If the
@@ -461,20 +460,22 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     create the current 'Vulkan.Extensions.Handles.ShaderEXT' , as
+--     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08114# Descriptors in each
 --     bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
---     was not created with
+--     be valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08115# If the descriptors used
@@ -527,14 +528,6 @@ foreign import ccall
 --     feature is not enabled, a valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08607# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
---
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08608# If a pipeline is bound
 --     to the pipeline bind point used by this command, there /must/ not
 --     have been any calls to dynamic state setting commands for any state
@@ -577,6 +570,14 @@ foreign import ccall
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-uniformBuffers-06935# If any stage
 --     of the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
@@ -817,6 +818,14 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
 --     bound ray tracing pipeline
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-09458# If the bound ray
+--     tracing pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdSetRayTracingPipelineStackSizeKHR'
+--     /must/ have been called in the current command buffer prior to this
+--     trace command
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-maxPipelineRayRecursionDepth-03679#
 --     This command /must/ not cause a shader call instruction to be

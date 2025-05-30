@@ -1512,11 +1512,10 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
 --
--- -   #VUID-VkComputePipelineCreateInfo-flags-09007# If @flags@ includes
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
---     then the
+-- -   #VUID-VkComputePipelineCreateInfo-flags-09007# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
---     feature /must/ be enabled
+--     is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
 -- -   #VUID-VkComputePipelineCreateInfo-flags-09008# If @flags@ includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
@@ -2306,14 +2305,14 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 -- -   #VUID-VkPipelineViewportStateCreateInfo-viewportCount-04135# If the
 --     graphics pipeline is being created with
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
---     set then @viewportCount@ /must/ be @0@, otherwise it /must/ be
---     greater than @0@
+--     set then @viewportCount@ /must/ be @0@, otherwise @viewportCount@
+--     /must/ be greater than @0@
 --
 -- -   #VUID-VkPipelineViewportStateCreateInfo-scissorCount-04136# If the
 --     graphics pipeline is being created with
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
---     set then @scissorCount@ /must/ be @0@, otherwise it /must/ be
---     greater than @0@
+--     set then @scissorCount@ /must/ be @0@, otherwise @scissorCount@
+--     /must/ be greater than @0@
 --
 -- -   #VUID-VkPipelineViewportStateCreateInfo-viewportWScalingEnable-01726#
 --     If the @viewportWScalingEnable@ member of a

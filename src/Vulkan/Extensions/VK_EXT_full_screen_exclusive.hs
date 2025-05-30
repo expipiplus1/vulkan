@@ -400,8 +400,8 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pSurfaceInfo-06522#
 --     If @pSurfaceInfo->surface@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be supported by
---     @physicalDevice@, as reported by
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @pSurfaceInfo->surface@
+--     /must/ be supported by @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --
