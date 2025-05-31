@@ -11,22 +11,13 @@ import           Control.Monad.Trans.Resource
 import           Control.Monad.Trans.Maybe
 import           Data.Bits
 import qualified Data.ByteString                   as BS
-import           Data.Foldable
-import           Data.List                          ( nub
-                                                    , partition
-                                                    )
+import           Data.List                          ( nub )
 import           Data.Ord
 import           Data.String                        ( IsString )
-import           Data.Text                   hiding ( maximum
-                                                    , partition
-                                                    , elem
-                                                    )
-import qualified Data.Text                         as T
 import           Data.Text.Encoding
 import           Data.Traversable
 import qualified Data.Vector                       as V
 import           Data.Word
-import           Foreign.Ptr                        ( castPtr )
 import qualified SDL
 import qualified SDL.Video.Vulkan                  as SDL
 import           Say
@@ -48,10 +39,11 @@ import           Vulkan.Utils.Initialization (createDebugInstanceFromRequirement
 import           Vulkan.Utils.ShaderQQ.GLSL.Glslang ( vert
                                                     , frag )
 import           Vulkan.Zero
+import qualified Window
 
 main :: IO ()
 main = runResourceT $ do
-  withSDL
+  Window.withSDL
 
   VulkanWindow {..} <- withVulkanWindow windowWidth windowHeight
   renderPass        <- Main.createRenderPass vwDevice vwFormat
@@ -82,16 +74,12 @@ main = runResourceT $ do
 
 mainLoop :: IO () -> IO ()
 mainLoop draw = whileM $ do
-  quit <- Prelude.any isQuitEvent <$> awaitSDLEvents
+  quit <- Window.shouldQuit Window.NoLimit
   if quit
     then pure False
     else do
       draw
       pure True
-
--- wait for the next SDL event and slurp in others that have become available
-awaitSDLEvents :: IO [SDL.Event]
-awaitSDLEvents = (:) <$> SDL.waitEvent <*> SDL.pollEvents
 
 drawFrame
   :: Device
@@ -371,7 +359,7 @@ portabilityEnum = RequireInstanceExtension
 
 withVulkanWindow :: Int -> Int -> ResourceT IO VulkanWindow
 withVulkanWindow width height = do
-  window             <- withWindow appName width height
+  window             <- Window.createWindow appName width height
   windowExtensions <-
     liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
 
@@ -394,7 +382,7 @@ withVulkanWindow width height = do
                              DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                              DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
                              zero { message = "Debug Message Test" }
-  surface <- withSDLWindowSurface inst window
+  (_, surface) <- Window.createSurface inst window
   (dev, graphicsQueue, graphicsQueueFamilyIndex, presentQueue, swapchainFormat, swapchainExtent, swapchain) <-
     createGraphicalDevice inst surface
   (_, images) <- getSwapchainImagesKHR dev swapchain
@@ -433,50 +421,6 @@ appName = "Haskell Vulkan triangle example"
 windowWidth, windowHeight :: Int
 windowWidth = 800
 windowHeight = 600
-
--- -- | InstanceCreateInfo for an SDL window
--- windowInstanceCreateInfo
---   :: MonadIO m
---   => SDL.Window
---   -> m
---        ( InstanceCreateInfo
---            '[DebugUtilsMessengerCreateInfoEXT , ValidationFeaturesEXT]
---        )
--- windowInstanceCreateInfo window = do
---   windowExtensions <-
---     liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
---   availableExtensionNames <-
---     toList
---     .   fmap extensionName
---     .   snd
---     <$> enumerateInstanceExtensionProperties Nothing
---   availableLayerNames <-
---     toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
-
---   let requiredLayers     = []
---       optionalLayers     = ["VK_LAYER_KHRONOS_validation"]
---       requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME] <> windowExtensions
---       optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME, KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME]
---   extensions <- partitionOptReq "extension"
---                                 availableExtensionNames
---                                 optionalExtensions
---                                 requiredExtensions
---   layers <- partitionOptReq "layer"
---                             availableLayerNames
---                             optionalLayers
---                             requiredLayers
---   pure
---     $   zero
---           { applicationInfo       = Just zero { applicationName = Just appName
---                                               , apiVersion = API_VERSION_1_0
---                                               }
---           , enabledLayerNames     = V.fromList layers
---           , enabledExtensionNames = V.fromList extensions
---           , flags = INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
---           }
---     ::& debugUtilsMessengerCreateInfo
---     :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
---     :&  ()
 
 createGraphicalDevice
   :: Instance
@@ -664,72 +608,11 @@ debugUtilsMessengerCreateInfo = zero
   }
 
 ----------------------------------------------------------------
--- SDL helpers
-----------------------------------------------------------------
-
--- | Run something having initialized SDL
-withSDL :: ResourceT IO ()
-withSDL = do
-  _ <- allocate_ (SDL.initialize ([SDL.InitEvents, SDL.InitVideo] :: [SDL.InitFlag])) SDL.quit
-  _ <- allocate_ (SDL.vkLoadLibrary Nothing) SDL.vkUnloadLibrary
-  pure ()
-
--- | Create an SDL window and use it
-withWindow :: Text -> Int -> Int -> ResourceT IO SDL.Window
-withWindow title width height = allocate'
-  (SDL.createWindow
-    title
-    (SDL.defaultWindow
-      { SDL.windowInitialSize     = SDL.V2 (fromIntegral width)
-                                           (fromIntegral height)
-      , SDL.windowGraphicsContext = SDL.VulkanContext
-      }
-    )
-  )
-  SDL.destroyWindow
-
-isQuitEvent :: SDL.Event -> Bool
-isQuitEvent = \case
-  (SDL.Event _ SDL.QuitEvent) -> True
-  SDL.Event _ (SDL.KeyboardEvent (SDL.KeyboardEventData _ SDL.Released False (SDL.Keysym _ code _)))
-    | code == SDL.KeycodeQ || code == SDL.KeycodeEscape
-    -> True
-  _ -> False
-
--- | Get the Vulkan surface for an SDL window
-getSDLWindowSurface :: Instance -> SDL.Window -> IO SurfaceKHR
-getSDLWindowSurface inst window =
-  SurfaceKHR <$> SDL.vkCreateSurface window (castPtr (instanceHandle inst))
-
-withSDLWindowSurface :: Instance -> SDL.Window -> ResourceT IO SurfaceKHR
-withSDLWindowSurface inst window = allocate'
-  (getSDLWindowSurface inst window)
-  (\o -> destroySurfaceKHR inst o Nothing)
-
-----------------------------------------------------------------
--- Resource handling with 'managed'
+-- Resource handling with 'resourcet'
 ----------------------------------------------------------------
 
 allocate' :: IO a -> (a -> IO ()) -> ResourceT IO a
 allocate' c d = snd <$> allocate c d
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-partitionOptReq
-  :: (Show a, Eq a, MonadIO m) => Text -> [a] -> [a] -> [a] -> m [a]
-partitionOptReq type' available optional required = do
-  let (optHave, optMissing) = partition (`elem` available) optional
-      (reqHave, reqMissing) = partition (`elem` available) required
-      tShow                 = T.pack . show
-  for_ optMissing
-    $ \n -> sayErr $ "Missing optional " <> type' <> ": " <> tShow n
-  case reqMissing of
-    []  -> pure ()
-    [x] -> sayErr $ "Missing required " <> type' <> ": " <> tShow x
-    xs  -> sayErr $ "Missing required " <> type' <> "s: " <> tShow xs
-  pure (reqHave <> optHave)
 
 ----------------------------------------------------------------
 -- Bit utils
