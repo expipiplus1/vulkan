@@ -471,6 +471,7 @@ library
       Vulkan.Extensions.VK_KHR_android_surface
       Vulkan.Extensions.VK_KHR_bind_memory2
       Vulkan.Extensions.VK_KHR_buffer_device_address
+      Vulkan.Extensions.VK_KHR_calibrated_timestamps
       Vulkan.Extensions.VK_KHR_cooperative_matrix
       Vulkan.Extensions.VK_KHR_copy_commands2
       Vulkan.Extensions.VK_KHR_create_renderpass2
@@ -552,6 +553,7 @@ library
       Vulkan.Extensions.VK_KHR_timeline_semaphore
       Vulkan.Extensions.VK_KHR_uniform_buffer_standard_layout
       Vulkan.Extensions.VK_KHR_variable_pointers
+      Vulkan.Extensions.VK_KHR_vertex_attribute_divisor
       Vulkan.Extensions.VK_KHR_vulkan_memory_model
       Vulkan.Extensions.VK_KHR_wayland_surface
       Vulkan.Extensions.VK_KHR_win32_keyed_mutex

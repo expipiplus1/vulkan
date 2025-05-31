@@ -4,7 +4,7 @@
 
 ## [3.26.4] - 2025-05-31
 
-- Bump API version to v1.3.272
+- Bump API version to v1.3.273
 
 ## [3.26.3] - 2025-05-18
 

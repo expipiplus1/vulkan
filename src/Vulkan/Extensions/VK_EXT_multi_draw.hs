@@ -3894,6 +3894,32 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
 --     stages
 --
+-- -   #VUID-vkCmdDrawMultiEXT-pNext-09461# If the bound graphics pipeline
+--     state was created with
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'
+--     in the @pNext@ chain of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
+--     any member of
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'::@pVertexBindingDivisors@
+--     has a value other than @1@ in @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
+-- -   #VUID-vkCmdDrawMultiEXT-None-09462# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-objects shader objects>
+--     are used for drawing or the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, any member of the
+--     @pVertexBindingDescriptions@ parameter to the
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     call that sets this dynamic state has a value other than @1@ in
+--     @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
 -- -   #VUID-vkCmdDrawMultiEXT-None-04933# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiDraw multiDraw>
 --     feature /must/ be enabled
@@ -7715,6 +7741,32 @@ foreign import ccall
 --     @indexType@, where the index buffer, @indexType@, and @offset@ are
 --     specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'
+--
+-- -   #VUID-vkCmdDrawMultiIndexedEXT-pNext-09461# If the bound graphics
+--     pipeline state was created with
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'
+--     in the @pNext@ chain of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
+--     any member of
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'::@pVertexBindingDivisors@
+--     has a value other than @1@ in @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
+-- -   #VUID-vkCmdDrawMultiIndexedEXT-None-09462# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-objects shader objects>
+--     are used for drawing or the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, any member of the
+--     @pVertexBindingDescriptions@ parameter to the
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     call that sets this dynamic state has a value other than @1@ in
+--     @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
 --
 -- -   #VUID-vkCmdDrawMultiIndexedEXT-robustBufferAccess2-08798# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>

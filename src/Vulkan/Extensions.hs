@@ -182,6 +182,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_android_surface
                           , module Vulkan.Extensions.VK_KHR_bind_memory2
                           , module Vulkan.Extensions.VK_KHR_buffer_device_address
+                          , module Vulkan.Extensions.VK_KHR_calibrated_timestamps
                           , module Vulkan.Extensions.VK_KHR_cooperative_matrix
                           , module Vulkan.Extensions.VK_KHR_copy_commands2
                           , module Vulkan.Extensions.VK_KHR_create_renderpass2
@@ -263,6 +264,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_timeline_semaphore
                           , module Vulkan.Extensions.VK_KHR_uniform_buffer_standard_layout
                           , module Vulkan.Extensions.VK_KHR_variable_pointers
+                          , module Vulkan.Extensions.VK_KHR_vertex_attribute_divisor
                           , module Vulkan.Extensions.VK_KHR_vulkan_memory_model
                           , module Vulkan.Extensions.VK_KHR_wayland_surface
                           , module Vulkan.Extensions.VK_KHR_win32_keyed_mutex
@@ -529,6 +531,7 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure
 import Vulkan.Extensions.VK_KHR_android_surface
 import Vulkan.Extensions.VK_KHR_bind_memory2
 import Vulkan.Extensions.VK_KHR_buffer_device_address
+import Vulkan.Extensions.VK_KHR_calibrated_timestamps
 import Vulkan.Extensions.VK_KHR_cooperative_matrix
 import Vulkan.Extensions.VK_KHR_copy_commands2
 import Vulkan.Extensions.VK_KHR_create_renderpass2
@@ -610,6 +613,7 @@ import Vulkan.Extensions.VK_KHR_synchronization2
 import Vulkan.Extensions.VK_KHR_timeline_semaphore
 import Vulkan.Extensions.VK_KHR_uniform_buffer_standard_layout
 import Vulkan.Extensions.VK_KHR_variable_pointers
+import Vulkan.Extensions.VK_KHR_vertex_attribute_divisor
 import Vulkan.Extensions.VK_KHR_vulkan_memory_model
 import Vulkan.Extensions.VK_KHR_wayland_surface
 import Vulkan.Extensions.VK_KHR_win32_keyed_mutex

@@ -135,10 +135,13 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR' specifies that
 --     triangle primitives will be skipped during traversal using
---     @OpTraceRayKHR@.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
+--     instructions.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR' specifies that AABB
---     primitives will be skipped during traversal using @OpTraceRayKHR@.
+--     primitives will be skipped during traversal using
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
+--     instructions.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --     specifies that the shader group handles /can/ be saved and reused on

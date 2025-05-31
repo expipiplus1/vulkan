@@ -50,7 +50,7 @@
 -- buffer, or a previous secondary command buffer executed within the same
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands' call. It
 -- addresses a frequent scenario in applications that deal with window
--- resizing and want to improve utilization of re-usable secondary command
+-- resizing and want to improve utilization of reusable secondary command
 -- buffers. The functionality is provided through
 -- 'CommandBufferInheritanceViewportScissorInfoNV'. Viewport inheritance is
 -- effectively limited to the 2D rectangle; secondary command buffers must

@@ -125,7 +125,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.BufferView (BufferViewCreateInfo)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_calibrated_timestamps (CalibratedTimestampInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_calibrated_timestamps (CalibratedTimestampInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_synchronization2 (CheckpointData2NV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (CheckpointDataNV)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearAttachment)
@@ -730,8 +730,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout (PhysicalDeviceUniformBufferStandardLayoutFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (PhysicalDeviceVertexInputDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Properties)
@@ -791,7 +792,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMDX_shader_enqueue (PipelineShaderSt
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control (PipelineShaderStageRequiredSubgroupSizeCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PipelineTessellationDomainOriginStateCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineTessellationStateCreateInfo)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineVertexInputStateCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PipelineViewportDepthClipControlCreateInfoEXT)
@@ -954,7 +955,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pipeline (VertexInputAttributeDescription)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (VertexInputAttributeDescription2EXT)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (VertexInputBindingDescription)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (VertexInputBindingDescription2EXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (VertexInputBindingDivisorDescriptionEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (VertexInputBindingDivisorDescriptionKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NN_vi_surface (ViSurfaceCreateInfoNN)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (Viewport)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_viewport_swizzle (ViewportSwizzleNV)
@@ -1171,7 +1172,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderAtomicInt64Features = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderAtomicFloatFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderAtomicFloat2FeaturesEXT = ()
-  Extends DeviceCreateInfo PhysicalDeviceVertexAttributeDivisorFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceVertexAttributeDivisorFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceASTCDecodeFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceTransformFeedbackFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceRepresentativeFragmentTestFeaturesNV = ()
@@ -1451,7 +1452,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderAtomicInt64Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderAtomicFloatFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderAtomicFloat2FeaturesEXT = ()
-  Extends PhysicalDeviceFeatures2 PhysicalDeviceVertexAttributeDivisorFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceVertexAttributeDivisorFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceASTCDecodeFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceTransformFeedbackFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRepresentativeFragmentTestFeaturesNV = ()
@@ -1630,6 +1631,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceDescriptorIndexingProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceTimelineSemaphoreProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceVertexAttributeDivisorPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceVertexAttributeDivisorPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDevicePCIBusInfoPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceDepthStencilResolveProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceTransformFeedbackPropertiesEXT = ()
@@ -1714,7 +1716,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PipelineShaderStageCreateInfo PipelineRobustnessCreateInfoEXT = ()
   Extends PipelineShaderStageCreateInfo PipelineShaderStageNodeCreateInfoAMDX = ()
   Extends PipelineTessellationStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo = ()
-  Extends PipelineVertexInputStateCreateInfo PipelineVertexInputDivisorStateCreateInfoEXT = ()
+  Extends PipelineVertexInputStateCreateInfo PipelineVertexInputDivisorStateCreateInfoKHR = ()
   Extends PipelineViewportStateCreateInfo PipelineViewportWScalingStateCreateInfoNV = ()
   Extends PipelineViewportStateCreateInfo PipelineViewportSwizzleStateCreateInfoNV = ()
   Extends PipelineViewportStateCreateInfo PipelineViewportExclusiveScissorStateCreateInfoNV = ()
@@ -2068,8 +2070,9 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES -> go @PhysicalDeviceTimelineSemaphoreProperties
   STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO -> go @SemaphoreTypeCreateInfo
   STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO -> go @TimelineSemaphoreSubmitInfo
-  STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT -> go @PipelineVertexInputDivisorStateCreateInfoEXT
+  STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR -> go @PipelineVertexInputDivisorStateCreateInfoKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT -> go @PhysicalDeviceVertexAttributeDivisorPropertiesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_KHR -> go @PhysicalDeviceVertexAttributeDivisorPropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT -> go @PhysicalDevicePCIBusInfoPropertiesEXT
   STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID -> go @ImportAndroidHardwareBufferInfoANDROID
   STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID -> go @AndroidHardwareBufferUsageANDROID
@@ -2082,7 +2085,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES -> go @PhysicalDeviceShaderAtomicInt64Features
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT -> go @PhysicalDeviceShaderAtomicFloatFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT -> go @PhysicalDeviceShaderAtomicFloat2FeaturesEXT
-  STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT -> go @PhysicalDeviceVertexAttributeDivisorFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR -> go @PhysicalDeviceVertexAttributeDivisorFeaturesKHR
   STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV -> go @QueueFamilyCheckpointPropertiesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES -> go @PhysicalDeviceDepthStencilResolveProperties
   STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE -> go @SubpassDescriptionDepthStencilResolve
@@ -2619,8 +2622,9 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceTimelineSemaphoreProperties #-}
 {-# complete (::&) :: SemaphoreTypeCreateInfo #-}
 {-# complete (::&) :: TimelineSemaphoreSubmitInfo #-}
-{-# complete (::&) :: PipelineVertexInputDivisorStateCreateInfoEXT #-}
+{-# complete (::&) :: PipelineVertexInputDivisorStateCreateInfoKHR #-}
 {-# complete (::&) :: PhysicalDeviceVertexAttributeDivisorPropertiesEXT #-}
+{-# complete (::&) :: PhysicalDeviceVertexAttributeDivisorPropertiesKHR #-}
 {-# complete (::&) :: PhysicalDevicePCIBusInfoPropertiesEXT #-}
 {-# complete (::&) :: ImportAndroidHardwareBufferInfoANDROID #-}
 {-# complete (::&) :: AndroidHardwareBufferUsageANDROID #-}
@@ -2633,7 +2637,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceShaderAtomicInt64Features #-}
 {-# complete (::&) :: PhysicalDeviceShaderAtomicFloatFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceShaderAtomicFloat2FeaturesEXT #-}
-{-# complete (::&) :: PhysicalDeviceVertexAttributeDivisorFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceVertexAttributeDivisorFeaturesKHR #-}
 {-# complete (::&) :: QueueFamilyCheckpointPropertiesNV #-}
 {-# complete (::&) :: PhysicalDeviceDepthStencilResolveProperties #-}
 {-# complete (::&) :: SubpassDescriptionDepthStencilResolve #-}

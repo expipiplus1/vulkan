@@ -1994,6 +1994,9 @@ foreign import ccall
 -- 'PhysicalDeviceRayTracingPipelineFeaturesKHR'::@rayTracingPipelineShaderGroupHandleCaptureReplay@
 -- is enabled.
 --
+-- Pipelines are created and returned as described for
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-multiple Multiple Pipeline Creation>.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateRayTracingPipelinesKHR-flags-03415# If the @flags@

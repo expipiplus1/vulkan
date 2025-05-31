@@ -5570,6 +5570,32 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
 --     stages
 --
+-- -   #VUID-vkCmdDraw-pNext-09461# If the bound graphics pipeline state
+--     was created with
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'
+--     in the @pNext@ chain of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
+--     any member of
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'::@pVertexBindingDivisors@
+--     has a value other than @1@ in @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
+-- -   #VUID-vkCmdDraw-None-09462# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-objects shader objects>
+--     are used for drawing or the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, any member of the
+--     @pVertexBindingDescriptions@ parameter to the
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     call that sets this dynamic state has a value other than @1@ in
+--     @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-parameter# @commandBuffer@ /must/ be a
@@ -9348,6 +9374,32 @@ foreign import ccall
 --     index buffer, with @indexSize@ being based on the type specified by
 --     @indexType@, where the index buffer, @indexType@, and @offset@ are
 --     specified via 'cmdBindIndexBuffer'
+--
+-- -   #VUID-vkCmdDrawIndexed-pNext-09461# If the bound graphics pipeline
+--     state was created with
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'
+--     in the @pNext@ chain of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
+--     any member of
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'::@pVertexBindingDivisors@
+--     has a value other than @1@ in @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
+-- -   #VUID-vkCmdDrawIndexed-None-09462# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-objects shader objects>
+--     are used for drawing or the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, any member of the
+--     @pVertexBindingDescriptions@ parameter to the
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     call that sets this dynamic state has a value other than @1@ in
+--     @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
 --
 -- -   #VUID-vkCmdDrawIndexed-robustBufferAccess2-08798# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
@@ -18556,6 +18608,14 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
+-- -   #VUID-vkCmdCopyImage-srcImage-09460# If @srcImage@ and @dstImage@
+--     are the same, and any elements of @pRegions@ contains the
+--     @srcSubresource@ and @dstSubresource@ with matching @mipLevel@ and
+--     overlapping array layers, then the @srcImageLayout@ and
+--     @dstImageLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
+--
 -- -   #VUID-vkCmdCopyImage-dstImage-01996# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
@@ -19233,6 +19293,14 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
+--
+-- -   #VUID-vkCmdBlitImage-srcImage-09459# If @srcImage@ and @dstImage@
+--     are the same, and an elements of @pRegions@ contains the
+--     @srcSubresource@ and @dstSubresource@ with matching @mipLevel@ and
+--     overlapping array layers, then the @srcImageLayout@ and
+--     @dstImageLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
 -- -   #VUID-vkCmdBlitImage-dstImage-02000# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
@@ -23571,15 +23639,16 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
 -- another timestamp write in the same submission /must/ not have a lower
 -- value unless its value overflows the maximum supported integer bit width
--- of the query. If @VK_EXT_calibrated_timestamps@ is enabled, this extends
--- to timestamp writes across all submissions on the same logical device:
--- any timestamp write that
+-- of the query. If @VK_KHR_calibrated_timestamps@ or
+-- @VK_EXT_calibrated_timestamps@ is enabled, this extends to timestamp
+-- writes across all submissions on the same logical device: any timestamp
+-- write that
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
 -- another /must/ not have a lower value unless its value overflows the
 -- maximum supported integer bit width of the query. Timestamps written by
 -- this command /must/ be in the
--- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.TIME_DOMAIN_DEVICE_EXT'
--- <VkTimeDomainEXT.html time domain>. If an overflow occurs, the timestamp
+-- 'Vulkan.Extensions.VK_KHR_calibrated_timestamps.TIME_DOMAIN_DEVICE_KHR'
+-- <VkTimeDomainKHR.html time domain>. If an overflow occurs, the timestamp
 -- value /must/ wrap back to zero.
 --
 -- Note
@@ -23589,8 +23658,8 @@ foreign import ccall
 -- timestamp from a newer one to determine the execution time of a sequence
 -- of commands is only a reliable measurement if the two timestamp writes
 -- were performed in the same submission, or if the writes were performed
--- on the same logical device and @VK_EXT_calibrated_timestamps@ is
--- enabled.
+-- on the same logical device and @VK_KHR_calibrated_timestamps@ or
+-- @VK_EXT_calibrated_timestamps@ is enabled.
 --
 -- If 'cmdWriteTimestamp' is called while executing a render pass instance
 -- that has multiview enabled, the timestamp uses N consecutive query

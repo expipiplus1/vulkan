@@ -1281,15 +1281,16 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
 -- another timestamp write in the same submission /must/ not have a lower
 -- value unless its value overflows the maximum supported integer bit width
--- of the query. If @VK_EXT_calibrated_timestamps@ is enabled, this extends
--- to timestamp writes across all submissions on the same logical device:
--- any timestamp write that
+-- of the query. If @VK_KHR_calibrated_timestamps@ or
+-- @VK_EXT_calibrated_timestamps@ is enabled, this extends to timestamp
+-- writes across all submissions on the same logical device: any timestamp
+-- write that
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
 -- another /must/ not have a lower value unless its value overflows the
 -- maximum supported integer bit width of the query. Timestamps written by
 -- this command /must/ be in the
--- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.TIME_DOMAIN_DEVICE_EXT'
--- <VkTimeDomainEXT.html time domain>. If an overflow occurs, the timestamp
+-- 'Vulkan.Extensions.VK_KHR_calibrated_timestamps.TIME_DOMAIN_DEVICE_KHR'
+-- <VkTimeDomainKHR.html time domain>. If an overflow occurs, the timestamp
 -- value /must/ wrap back to zero.
 --
 -- Note
@@ -1299,8 +1300,8 @@ foreign import ccall
 -- timestamp from a newer one to determine the execution time of a sequence
 -- of commands is only a reliable measurement if the two timestamp writes
 -- were performed in the same submission, or if the writes were performed
--- on the same logical device and @VK_EXT_calibrated_timestamps@ is
--- enabled.
+-- on the same logical device and @VK_KHR_calibrated_timestamps@ or
+-- @VK_EXT_calibrated_timestamps@ is enabled.
 --
 -- If 'cmdWriteTimestamp2' is called while executing a render pass instance
 -- that has multiview enabled, the timestamp uses N consecutive query

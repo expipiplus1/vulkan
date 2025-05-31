@@ -485,8 +485,9 @@ foreign import ccall
 -- supported, at most @pFormatCount@ values will be written to
 -- @pImageFormatProperties@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
 -- will be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to
--- indicate that not all the available values were returned. Before
--- creating an image to be used as a optical flow frame, obtain the
+-- indicate that not all the available values were returned.
+--
+-- Before creating an image to be used as a optical flow frame, obtain the
 -- supported image creation parameters by querying with
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
 -- and
@@ -494,10 +495,11 @@ foreign import ccall
 -- using one of the reported formats and adding
 -- 'OpticalFlowImageFormatInfoNV' to the @pNext@ chain of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'.
+--
 -- When querying the parameters with
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 -- for images used for optical flow operations, the
--- 'OpticalFlowImageFormatInfoNV'::@usage@ field should contain one or more
+-- 'OpticalFlowImageFormatInfoNV'::@usage@ field /must/ contain one or more
 -- of the bits defined in 'OpticalFlowUsageFlagBitsNV'.
 --
 -- == Valid Usage (Implicit)

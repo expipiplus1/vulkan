@@ -540,15 +540,8 @@ foreign import ccall
 --
 -- = Description
 --
--- The implementation will create a pipeline in each element of
--- @pPipelines@ from the corresponding element of @pCreateInfos@. If
--- creation of any pipeline fails, that pipeline will be set to
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
---
--- If creation fails for a pipeline create info with a
--- 'ExecutionGraphPipelineCreateInfoAMDX'::@flags@ value that included
--- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT',
--- all pipelines at a greater index all automatically fail.
+-- Pipelines are created and returned as described for
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-multiple Multiple Pipeline Creation>.
 --
 -- == Valid Usage
 --

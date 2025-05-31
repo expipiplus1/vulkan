@@ -1,24 +1,24 @@
 {-# language CPP #-}
 -- | = Name
 --
--- VK_EXT_calibrated_timestamps - device extension
+-- VK_KHR_calibrated_timestamps - device extension
 --
--- == VK_EXT_calibrated_timestamps
+-- == VK_KHR_calibrated_timestamps
 --
 -- [__Name String__]
---     @VK_EXT_calibrated_timestamps@
+--     @VK_KHR_calibrated_timestamps@
 --
 -- [__Extension Type__]
 --     Device extension
 --
 -- [__Registered Extension Number__]
---     185
+--     544
 --
 -- [__Revision__]
---     2
+--     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_calibrated_timestamps] @drakos-amd%0A*Here describe the issue or question you have about the VK_EXT_calibrated_timestamps extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_calibrated_timestamps] @aqnuep%0A*Here describe the issue or question you have about the VK_KHR_calibrated_timestamps extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_calibrated_timestamps.adoc VK_EXT_calibrated_timestamps>
@@ -36,7 +36,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-10-04
+--     2023-07-12
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -49,7 +49,7 @@
 --
 --     -   Derrick Owens, AMD
 --
---     -   Daniel Rakos, AMD
+--     -   Daniel Rakos, RasterGrid
 --
 --     -   Faith Ekstrand, Intel
 --
@@ -62,66 +62,62 @@
 --
 -- == New Commands
 --
--- -   'getCalibratedTimestampsEXT'
+-- -   'getCalibratedTimestampsKHR'
 --
--- -   'getPhysicalDeviceCalibrateableTimeDomainsEXT'
+-- -   'getPhysicalDeviceCalibrateableTimeDomainsKHR'
 --
 -- == New Structures
 --
--- -   'CalibratedTimestampInfoEXT'
+-- -   'CalibratedTimestampInfoKHR'
 --
 -- == New Enums
 --
--- -   'TimeDomainEXT'
+-- -   'TimeDomainKHR'
 --
 -- == New Enum Constants
 --
--- -   'EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME'
+-- -   'KHR_CALIBRATED_TIMESTAMPS_EXTENSION_NAME'
 --
--- -   'EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION'
+-- -   'KHR_CALIBRATED_TIMESTAMPS_SPEC_VERSION'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR'
 --
 -- == Version History
 --
--- -   Revision 2, 2021-03-16 (Lionel Landwerlin)
+-- -   Revision 1, 2023-07-12 (Daniel Rakos)
 --
---     -   Specify requirement on device timestamps
---
--- -   Revision 1, 2018-10-04 (Daniel Rakos)
---
---     -   Internal revisions.
+--     -   Initial draft.
 --
 -- == See Also
 --
--- 'CalibratedTimestampInfoEXT', 'TimeDomainEXT',
--- 'getCalibratedTimestampsEXT',
--- 'getPhysicalDeviceCalibrateableTimeDomainsEXT'
+-- 'CalibratedTimestampInfoKHR', 'TimeDomainKHR',
+-- 'getCalibratedTimestampsKHR',
+-- 'getPhysicalDeviceCalibrateableTimeDomainsKHR'
 --
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_calibrated_timestamps Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( CalibratedTimestampInfoEXT
-                                                       , TimeDomainEXT
+module Vulkan.Extensions.VK_KHR_calibrated_timestamps  ( CalibratedTimestampInfoKHR
+                                                       , TimeDomainKHR
                                                        ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 
-data CalibratedTimestampInfoEXT
+data CalibratedTimestampInfoKHR
 
-instance ToCStruct CalibratedTimestampInfoEXT
-instance Show CalibratedTimestampInfoEXT
+instance ToCStruct CalibratedTimestampInfoKHR
+instance Show CalibratedTimestampInfoKHR
 
-instance FromCStruct CalibratedTimestampInfoEXT
+instance FromCStruct CalibratedTimestampInfoKHR
 
 
-data TimeDomainEXT
+data TimeDomainKHR
 

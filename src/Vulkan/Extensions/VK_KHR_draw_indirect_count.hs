@@ -57,7 +57,7 @@
 --
 -- == Description
 --
--- This extension is based off the @VK_AMD_draw_indirect_count@ extension.
+-- This extension is based on the @VK_AMD_draw_indirect_count@ extension.
 -- This extension allows an application to source the number of draws for
 -- indirect drawing calls from a buffer.
 --
@@ -92,7 +92,7 @@
 --
 -- -   Revision 1, 2017-08-25 (Piers Daniell)
 --
---     -   Initial draft based off VK_AMD_draw_indirect_count
+--     -   Initial draft based on VK_AMD_draw_indirect_count
 --
 -- == See Also
 --
