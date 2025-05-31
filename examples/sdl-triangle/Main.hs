@@ -4,11 +4,10 @@
 
 module Main where
 
-import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Extra
 import           Control.Monad.IO.Class
-import           Control.Monad.Managed
+import           Control.Monad.Trans.Resource
 import           Control.Monad.Trans.Maybe
 import           Data.Bits
 import qualified Data.ByteString                   as BS
@@ -38,22 +37,23 @@ import qualified Vulkan.Core10                 as CommandBufferBeginInfo (Comman
 import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import           Vulkan.Extensions.VK_EXT_debug_utils
-import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_portability_enumeration
 import           Vulkan.Extensions.VK_KHR_surface
 import qualified Vulkan.Extensions.VK_KHR_surface as SF
 import           Vulkan.Extensions.VK_KHR_swapchain
 import qualified Vulkan.Extensions.VK_KHR_swapchain as SW
+import           Vulkan.Requirement (InstanceRequirement(..))
 import           Vulkan.Utils.Debug
+import           Vulkan.Utils.Initialization (createDebugInstanceFromRequirements)
 import           Vulkan.Utils.ShaderQQ.GLSL.Glslang ( vert
                                                     , frag )
 import           Vulkan.Zero
 
 main :: IO ()
-main = runManaged $ do
+main = runResourceT $ do
   withSDL
 
-  VulkanWindow {..} <- withVulkanWindow appName windowWidth windowHeight
+  VulkanWindow {..} <- withVulkanWindow windowWidth windowHeight
   renderPass        <- Main.createRenderPass vwDevice vwFormat
   graphicsPipeline  <- createGraphicsPipeline vwDevice
                                               renderPass
@@ -126,10 +126,10 @@ drawFrame dev swapchain graphicsQueue presentQueue imageAvailableSemaphore rende
     _ <- queuePresentKHR presentQueue presentInfo
     pure ()
 
-createSemaphores :: Device -> Managed (Semaphore, Semaphore)
+createSemaphores :: Device -> ResourceT IO (Semaphore, Semaphore)
 createSemaphores dev = do
-  imageAvailableSemaphore <- withSemaphore dev zero Nothing allocate
-  renderFinishedSemaphore <- withSemaphore dev zero Nothing allocate
+  imageAvailableSemaphore <- withSemaphore dev zero Nothing allocate'
+  renderFinishedSemaphore <- withSemaphore dev zero Nothing allocate'
   pure (imageAvailableSemaphore, renderFinishedSemaphore)
 
 createCommandBuffers
@@ -139,18 +139,18 @@ createCommandBuffers
   -> Word32
   -> V.Vector Framebuffer
   -> Extent2D
-  -> Managed (V.Vector CommandBuffer)
+  -> ResourceT IO (V.Vector CommandBuffer)
 createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex framebuffers swapchainExtent
   = do
     let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex }
-    commandPool <- withCommandPool dev commandPoolCreateInfo Nothing allocate
+    commandPool <- withCommandPool dev commandPoolCreateInfo Nothing allocate'
     let commandBufferAllocateInfo :: CommandBufferAllocateInfo
         commandBufferAllocateInfo = zero
           { commandPool        = commandPool
           , level              = COMMAND_BUFFER_LEVEL_PRIMARY
           , commandBufferCount = fromIntegral $ V.length framebuffers
           }
-    buffers <- withCommandBuffers dev commandBufferAllocateInfo allocate
+    buffers <- withCommandBuffers dev commandBufferAllocateInfo allocate'
     _ <- liftIO . for (V.zip framebuffers buffers) $ \(framebuffer, buffer) ->
       useCommandBuffer
           buffer
@@ -173,7 +173,7 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
     pure buffers
 
 createShaders
-  :: Device -> Managed (V.Vector (SomeStruct PipelineShaderStageCreateInfo))
+  :: Device -> ResourceT IO (V.Vector (SomeStruct PipelineShaderStageCreateInfo))
 createShaders dev = do
   let fragCode = [frag|
         #version 450
@@ -210,8 +210,8 @@ createShaders dev = do
           fragColor = colors[gl_VertexIndex];
         }
       |]
-  fragModule <- withShaderModule dev zero { code = fragCode } Nothing allocate
-  vertModule <- withShaderModule dev zero { code = vertCode } Nothing allocate
+  fragModule <- withShaderModule dev zero { code = fragCode } Nothing allocate'
+  vertModule <- withShaderModule dev zero { code = vertCode } Nothing allocate'
   let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
                                        , module' = vertModule
                                        , name    = "main"
@@ -223,7 +223,7 @@ createShaders dev = do
   pure
     [SomeStruct vertShaderStageCreateInfo, SomeStruct fragShaderStageCreateInfo]
 
-createRenderPass :: Device -> Format -> Managed RenderPass
+createRenderPass :: Device -> Format -> ResourceT IO RenderPass
 createRenderPass dev swapchainImageFormat = do
   let
     attachmentDescription :: AttachmentDescription
@@ -263,13 +263,13 @@ createRenderPass dev swapchainImageFormat = do
          , dependencies = [subpassDependency]
          }
     Nothing
-    allocate
+    allocate'
 
 createGraphicsPipeline
-  :: Device -> RenderPass -> Extent2D -> Format -> Managed Pipeline
+  :: Device -> RenderPass -> Extent2D -> Format -> ResourceT IO Pipeline
 createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
   shaderStages   <- createShaders dev
-  pipelineLayout <- withPipelineLayout dev zero Nothing allocate
+  pipelineLayout <- withPipelineLayout dev zero Nothing allocate'
   let
     Extent2D {width = swapchainWidth, height = swapchainHeight} = swapchainExtent
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
@@ -330,14 +330,14 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
       }
   V.head
     .   snd
-    <$> withGraphicsPipelines dev zero [SomeStruct pipelineCreateInfo] Nothing allocate
+    <$> withGraphicsPipelines dev zero [SomeStruct pipelineCreateInfo] Nothing allocate'
 
 createFramebuffers
   :: Device
   -> V.Vector ImageView
   -> RenderPass
   -> Extent2D
-  -> Managed (V.Vector Framebuffer)
+  -> ResourceT IO (V.Vector Framebuffer)
 createFramebuffers dev imageViews renderPass Extent2D {width, height} =
   for imageViews $ \imageView -> do
     let framebufferCreateInfo :: FramebufferCreateInfo '[]
@@ -348,7 +348,7 @@ createFramebuffers dev imageViews renderPass Extent2D {width, height} =
           , height
           , layers      = 1
           }
-    withFramebuffer dev framebufferCreateInfo Nothing allocate
+    withFramebuffer dev framebufferCreateInfo Nothing allocate'
 
 data VulkanWindow = VulkanWindow
   { vwSdlWindow                :: SDL.Window
@@ -363,15 +363,33 @@ data VulkanWindow = VulkanWindow
   , vwPresentQueue             :: Queue
   }
 
-withVulkanWindow :: Text -> Int -> Int -> Managed VulkanWindow
-withVulkanWindow appName width height = do
+portabilityEnum :: InstanceRequirement
+portabilityEnum = RequireInstanceExtension
+  Nothing
+  KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
+  minBound
+
+withVulkanWindow :: Int -> Int -> ResourceT IO VulkanWindow
+withVulkanWindow width height = do
   window             <- withWindow appName width height
-  instanceCreateInfo <- windowInstanceCreateInfo window
-  inst               <- withInstance instanceCreateInfo Nothing allocate
+  windowExtensions <-
+    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
+
+  let instanceCreateInfo = zero
+        { applicationInfo =
+            Just zero
+              { applicationName = Just appName
+              , apiVersion = API_VERSION_1_0
+              }
+        -- , enabledLayerNames     = V.fromList layers
+        , enabledExtensionNames = V.fromList windowExtensions
+        , flags = INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
+        }
+  inst               <- createDebugInstanceFromRequirements [] [portabilityEnum] instanceCreateInfo
   _                  <- withDebugUtilsMessengerEXT inst
                                                    debugUtilsMessengerCreateInfo
                                                    Nothing
-                                                   allocate
+                                                   allocate'
   submitDebugUtilsMessageEXT inst
                              DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                              DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
@@ -397,7 +415,7 @@ withVulkanWindow appName width height = do
                                   }
         }
   imageViews <- for images
-    $ \i -> withImageView dev (imageViewCreateInfo i) Nothing allocate
+    $ \i -> withImageView dev (imageViewCreateInfo i) Nothing allocate'
   pure $ VulkanWindow window
                       dev
                       surface
@@ -416,54 +434,54 @@ windowWidth, windowHeight :: Int
 windowWidth = 800
 windowHeight = 600
 
--- | InstanceCreateInfo for an SDL window
-windowInstanceCreateInfo
-  :: MonadIO m
-  => SDL.Window
-  -> m
-       ( InstanceCreateInfo
-           '[DebugUtilsMessengerCreateInfoEXT , ValidationFeaturesEXT]
-       )
-windowInstanceCreateInfo window = do
-  windowExtensions <-
-    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
-  availableExtensionNames <-
-    toList
-    .   fmap extensionName
-    .   snd
-    <$> enumerateInstanceExtensionProperties Nothing
-  availableLayerNames <-
-    toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
+-- -- | InstanceCreateInfo for an SDL window
+-- windowInstanceCreateInfo
+--   :: MonadIO m
+--   => SDL.Window
+--   -> m
+--        ( InstanceCreateInfo
+--            '[DebugUtilsMessengerCreateInfoEXT , ValidationFeaturesEXT]
+--        )
+-- windowInstanceCreateInfo window = do
+--   windowExtensions <-
+--     liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
+--   availableExtensionNames <-
+--     toList
+--     .   fmap extensionName
+--     .   snd
+--     <$> enumerateInstanceExtensionProperties Nothing
+--   availableLayerNames <-
+--     toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
 
-  let requiredLayers     = []
-      optionalLayers     = ["VK_LAYER_KHRONOS_validation"]
-      requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME] <> windowExtensions
-      optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME, KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME]
-  extensions <- partitionOptReq "extension"
-                                availableExtensionNames
-                                optionalExtensions
-                                requiredExtensions
-  layers <- partitionOptReq "layer"
-                            availableLayerNames
-                            optionalLayers
-                            requiredLayers
-  pure
-    $   zero
-          { applicationInfo       = Just zero { applicationName = Just appName
-                                              , apiVersion = API_VERSION_1_0
-                                              }
-          , enabledLayerNames     = V.fromList layers
-          , enabledExtensionNames = V.fromList extensions
-          , flags = INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
-          }
-    ::& debugUtilsMessengerCreateInfo
-    :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
-    :&  ()
+--   let requiredLayers     = []
+--       optionalLayers     = ["VK_LAYER_KHRONOS_validation"]
+--       requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME] <> windowExtensions
+--       optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME, KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME]
+--   extensions <- partitionOptReq "extension"
+--                                 availableExtensionNames
+--                                 optionalExtensions
+--                                 requiredExtensions
+--   layers <- partitionOptReq "layer"
+--                             availableLayerNames
+--                             optionalLayers
+--                             requiredLayers
+--   pure
+--     $   zero
+--           { applicationInfo       = Just zero { applicationName = Just appName
+--                                               , apiVersion = API_VERSION_1_0
+--                                               }
+--           , enabledLayerNames     = V.fromList layers
+--           , enabledExtensionNames = V.fromList extensions
+--           , flags = INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
+--           }
+--     ::& debugUtilsMessengerCreateInfo
+--     :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
+--     :&  ()
 
 createGraphicalDevice
   :: Instance
   -> SurfaceKHR
-  -> Managed
+  -> ResourceT IO
        (Device, Queue, Word32, Queue, Format, Extent2D, SwapchainKHR)
 createGraphicalDevice inst surface = do
   let requiredDeviceExtensions = [KHR_SWAPCHAIN_EXTENSION_NAME]
@@ -484,7 +502,7 @@ createGraphicalDevice inst surface = do
         ]
       , enabledExtensionNames = requiredDeviceExtensions
       }
-  dev           <- withDevice physicalDevice deviceCreateInfo Nothing allocate
+  dev           <- withDevice physicalDevice deviceCreateInfo Nothing allocate'
   graphicsQueue <- getDeviceQueue dev graphicsQueueFamilyIndex 0
   presentQueue  <- getDeviceQueue dev presentQueueFamilyIndex 0
   let
@@ -520,7 +538,7 @@ createGraphicalDevice inst surface = do
           , presentMode        = presentMode
           , clipped            = True
           }
-  swapchain <- withSwapchainKHR dev swapchainCreateInfo Nothing allocate
+  swapchain <- withSwapchainKHR dev swapchainCreateInfo Nothing allocate'
   pure
     ( dev
     , graphicsQueue
@@ -650,17 +668,15 @@ debugUtilsMessengerCreateInfo = zero
 ----------------------------------------------------------------
 
 -- | Run something having initialized SDL
-withSDL :: Managed ()
-withSDL =
-  managed_
-    $ bracket_
-        (SDL.initialize ([SDL.InitEvents, SDL.InitVideo] :: [SDL.InitFlag]))
-        SDL.quit
-    . bracket_ (SDL.vkLoadLibrary Nothing) SDL.vkUnloadLibrary
+withSDL :: ResourceT IO ()
+withSDL = do
+  _ <- allocate_ (SDL.initialize ([SDL.InitEvents, SDL.InitVideo] :: [SDL.InitFlag])) SDL.quit
+  _ <- allocate_ (SDL.vkLoadLibrary Nothing) SDL.vkUnloadLibrary
+  pure ()
 
 -- | Create an SDL window and use it
-withWindow :: Text -> Int -> Int -> Managed SDL.Window
-withWindow title width height = managed $ bracket
+withWindow :: Text -> Int -> Int -> ResourceT IO SDL.Window
+withWindow title width height = allocate'
   (SDL.createWindow
     title
     (SDL.defaultWindow
@@ -685,8 +701,8 @@ getSDLWindowSurface :: Instance -> SDL.Window -> IO SurfaceKHR
 getSDLWindowSurface inst window =
   SurfaceKHR <$> SDL.vkCreateSurface window (castPtr (instanceHandle inst))
 
-withSDLWindowSurface :: Instance -> SDL.Window -> Managed SurfaceKHR
-withSDLWindowSurface inst window = managed $ bracket
+withSDLWindowSurface :: Instance -> SDL.Window -> ResourceT IO SurfaceKHR
+withSDLWindowSurface inst window = allocate'
   (getSDLWindowSurface inst window)
   (\o -> destroySurfaceKHR inst o Nothing)
 
@@ -694,8 +710,8 @@ withSDLWindowSurface inst window = managed $ bracket
 -- Resource handling with 'managed'
 ----------------------------------------------------------------
 
-allocate :: IO a -> (a -> IO ()) -> Managed a
-allocate c d = managed (bracket c d)
+allocate' :: IO a -> (a -> IO ()) -> ResourceT IO a
+allocate' c d = snd <$> allocate c d
 
 ----------------------------------------------------------------
 -- Utils
