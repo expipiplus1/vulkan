@@ -35,7 +35,7 @@ import           Render.Element
 import           Render.SpecInfo                ( HasSpecInfo
                                                 , SpecInfo(..)
                                                 )
-import           Render.Type                    ( cToHsType )
+import           Render.Type                    ( cToHsTypeWithHoles )
 import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
 import           Render.Names
 import           Spec.Types
@@ -94,6 +94,7 @@ renderSPIRVThing
      , HasSpecInfo r
      , HasMarshalledStructs r
      , HasRenderedNames r
+     , HasCallStack
      )
   => Text
   -> (a -> Text)
@@ -129,6 +130,7 @@ renderReq
      , HasSpecInfo r
      , HasMarshalledStructs r
      , HasRenderedNames r
+     , HasCallStack
      )
   => SPIRVRequirement
   -> Sem r ([Doc ()], [Doc ()])
@@ -142,8 +144,12 @@ renderReq = \case
     tellImportWithAll (mkName "Vulkan.Requirement.DeviceRequirement")
     tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
     tellLanguageExtension (LanguageExtension "OverloadedLists")
-    sTy <- cToHsType DoNotPreserve (TypeName s)
-    -- TODO: this is pretty lazy, import the accessors properly
+    -- Use the "holes" style (wildcard for extensible suffix) to avoid
+    -- introducing fresh type variables that violate runNoContext when the
+    -- struct is further extended (e.g. the new
+    -- VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI extending
+    -- VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI).
+    sTy <- cToHsTypeWithHoles DoNotPreserve (TypeName s)
     traverse_ tellImportWithAll (allTypeNames sTy)
     (otherInstReqs, otherDevReqs) <- minVersionAndExtensionsReqs rs
     getStruct                     <- input
@@ -200,8 +206,9 @@ renderReq = \case
     tellImportWithAll (mkName "Vulkan.Requirement.DeviceRequirement")
     tellImportWithAll (mkName "Vulkan.Requirement.InstanceRequirement")
     tellLanguageExtension (LanguageExtension "OverloadedLists")
-    -- TODO: this is pretty lazy, import the accessors properly
-    sTy <- cToHsType DoNotPreserve (TypeName p)
+    -- Same reasoning as above: employ the wildcard-hole variation for
+    -- extensible structs so that no additional type variables leak out.
+    sTy <- cToHsTypeWithHoles DoNotPreserve (TypeName p)
     traverse_ tellImportWithAll (allTypeNames sTy)
     sTyDoc <- renderType sTy
     let propertyMemberName = mkMemberName p m

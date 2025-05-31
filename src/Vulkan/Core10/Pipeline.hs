@@ -199,7 +199,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMDX_shader_enqueue (PipelineShaderSt
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control (PipelineShaderStageRequiredSubgroupSizeCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PipelineTessellationDomainOriginStateCreateInfo)
 import Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags (PipelineTessellationStateCreateFlags)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoKHR)
 import Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags (PipelineVertexInputStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PipelineViewportDepthClipControlCreateInfoEXT)
@@ -293,6 +293,9 @@ foreign import ccall
 -- 'PipelineShaderStageCreateInfo' structures for each of the desired
 -- active shader stages, as well as creation information for all relevant
 -- fixed-function stages, and a pipeline layout.
+--
+-- Pipelines are created and returned as described for
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-multiple Multiple Pipeline Creation>.
 --
 -- == Valid Usage
 --
@@ -443,6 +446,11 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> PipelineCache -> Word32 -> Ptr (SomeStruct ComputePipelineCreateInfo) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result) -> Ptr Device_T -> PipelineCache -> Word32 -> Ptr (SomeStruct ComputePipelineCreateInfo) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
 
 -- | vkCreateComputePipelines - Creates a new compute pipeline object
+--
+-- = Description
+--
+-- Pipelines are created and returned as described for
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-multiple Multiple Pipeline Creation>.
 --
 -- == Valid Usage
 --
@@ -1512,11 +1520,10 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
 --
--- -   #VUID-VkComputePipelineCreateInfo-flags-09007# If @flags@ includes
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
---     then the
+-- -   #VUID-VkComputePipelineCreateInfo-flags-09007# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
---     feature /must/ be enabled
+--     is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
 -- -   #VUID-VkComputePipelineCreateInfo-flags-09008# If @flags@ includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
@@ -1916,7 +1923,7 @@ instance Zero VertexInputAttributeDescription where
 --
 -- -   #VUID-VkPipelineVertexInputStateCreateInfo-pNext-pNext# @pNext@
 --     /must/ be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'
 --
 -- -   #VUID-VkPipelineVertexInputStateCreateInfo-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
@@ -1968,7 +1975,7 @@ instance Extensible PipelineVertexInputStateCreateInfo where
   getNext PipelineVertexInputStateCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PipelineVertexInputStateCreateInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @PipelineVertexInputDivisorStateCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @PipelineVertexInputDivisorStateCreateInfoKHR = Just f
     | otherwise = Nothing
 
 instance ( Extendss PipelineVertexInputStateCreateInfo es
@@ -2306,14 +2313,14 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 -- -   #VUID-VkPipelineViewportStateCreateInfo-viewportCount-04135# If the
 --     graphics pipeline is being created with
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
---     set then @viewportCount@ /must/ be @0@, otherwise it /must/ be
---     greater than @0@
+--     set then @viewportCount@ /must/ be @0@, otherwise @viewportCount@
+--     /must/ be greater than @0@
 --
 -- -   #VUID-VkPipelineViewportStateCreateInfo-scissorCount-04136# If the
 --     graphics pipeline is being created with
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
---     set then @scissorCount@ /must/ be @0@, otherwise it /must/ be
---     greater than @0@
+--     set then @scissorCount@ /must/ be @0@, otherwise @scissorCount@
+--     /must/ be greater than @0@
 --
 -- -   #VUID-VkPipelineViewportStateCreateInfo-viewportWScalingEnable-01726#
 --     If the @viewportWScalingEnable@ member of a
@@ -2567,7 +2574,7 @@ data PipelineRasterizationStateCreateInfo (es :: [Type]) = PipelineRasterization
     -- If the pipeline is not created with
     -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'
     -- present then enabling depth clamp will also disable clipping primitives
-    -- to the z planes of the frustrum as described in
+    -- to the z planes of the frustum as described in
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>.
     -- Otherwise depth clipping is controlled by the state set in
     -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'.

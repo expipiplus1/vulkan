@@ -807,8 +807,8 @@ foreign import ccall
 --     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-06525# If
---     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/
---     be supported by @physicalDevice@, as reported by
+--     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @surface@
+--     /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --
@@ -934,8 +934,8 @@ foreign import ccall
 --     handle
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-06525# If
---     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/
---     be supported by @physicalDevice@, as reported by
+--     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @surface@
+--     /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --

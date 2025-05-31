@@ -974,12 +974,12 @@ foreign import ccall
 --     @arrayLayers@ specified in @image@
 --
 -- -   #VUID-vkGetImageSubresourceLayout2KHR-format-08886# If @format@ of
---     the @image@ is a color format, @tiling@ of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', and does not
---     have a
+--     the @image@ is a color format that is not a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
---     the @aspectMask@ member of @pSubresource@ /must/ be
+--     and @tiling@ of the @image@ is
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', the
+--     @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-vkGetImageSubresourceLayout2KHR-format-04462# If @format@ of
@@ -1768,12 +1768,12 @@ instance es ~ '[] => Zero (SubresourceLayout2KHR es) where
 --     @arrayLayers@ specified in @pCreateInfo@
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-format-08886# If @format@ of
---     the @pCreateInfo@ is a color format, @tiling@ of the @pCreateInfo@
---     is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', and does not
---     have a
+--     the @image@ is a color format that is not a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
---     the @aspectMask@ member of @pSubresource@ /must/ be
+--     and @tiling@ of the @pCreateInfo@ is
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', the
+--     @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-VkDeviceImageSubresourceInfoKHR-format-04462# If @format@ of
@@ -1962,11 +1962,13 @@ type PipelineCreateFlags2KHR = PipelineCreateFlagBits2KHR
 --
 -- -   'PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR' specifies
 --     that triangle primitives will be skipped during traversal using
---     @OpTraceRayKHR@.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
+--     instructions.
 --
 -- -   'PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR' specifies that
 --     AABB primitives will be skipped during traversal using
---     @OpTraceRayKHR@.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
+--     instructions.
 --
 -- -   'PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --     specifies that the shader group handles /can/ be saved and reused on

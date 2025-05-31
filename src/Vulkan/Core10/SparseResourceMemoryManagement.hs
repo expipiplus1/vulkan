@@ -429,14 +429,14 @@ foreign import ccall
 --     semaphore
 --
 -- -   #VUID-vkQueueBindSparse-pWaitSemaphores-03245# All elements of the
---     @pWaitSemaphores@ member of all elements of @pBindInfo@ created with
---     a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+--     @pWaitSemaphores@ member of all elements of @pBindInfo@ referring to
+--     a semaphore created with a
+--     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY' /must/
 --     reference a semaphore signal operation that has been submitted for
 --     execution and any
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     on which it depends (if any) /must/ have also been submitted for
---     execution
+--     on which it depends /must/ have also been submitted for execution
 --
 -- == Valid Usage (Implicit)
 --

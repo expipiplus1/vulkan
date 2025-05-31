@@ -15,7 +15,7 @@
 --     405
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -38,7 +38,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-11-17
+--     2023-08-16
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -80,10 +80,10 @@
 -- pipeline.
 --
 -- A set of new built-in output variables are used to express a visible
--- cluster. In addition, a new built-in function is used to emit these
--- variables from CCS to the IA stage. The IA stage can use these variables
--- to fetches vertices of a visible cluster and drive vertex shaders to
--- shading these vertices.
+-- cluster, including per-cluster shading rate. In addition, a new built-in
+-- function is used to emit these variables from CCS to the IA stage. The
+-- IA stage can use these variables to fetches vertices of a visible
+-- cluster and drive vertex shaders to shading these vertices.
 --
 -- Note that CCS do not work with geometry or tessellation shaders, but
 -- both IA and vertex shaders are preserved. Vertex shaders are still used
@@ -98,6 +98,10 @@
 -- -   'cmdDrawClusterIndirectHUAWEI'
 --
 -- == New Structures
+--
+-- -   Extending 'PhysicalDeviceClusterCullingShaderFeaturesHUAWEI':
+--
+--     -   'PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -137,6 +141,8 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI'
 --
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI'
+--
 -- == New Built-In Variables
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-indexcounthuawei IndexCountHUAWEI>
@@ -154,6 +160,8 @@
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-firstinstancehuawei FirstInstanceHUAWEI>
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clusteridhuawei ClusterIDHUAWEI>
+--
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clustershadingratehuawei ClusterShadingRateHUAWEI>
 --
 -- == New SPIR-V Capability
 --
@@ -176,31 +184,13 @@
 -- > // - warpsize = 32
 -- > layout(local_size_x=GPU_GROUP_SIZE, local_size_y=1, local_size_z=1) in;
 -- >
--- >
--- > #define GPU_CLUSTER_DESCRIPTOR_BINDING      0
--- > #define GPU_DRAW_BUFFER_BINDING             1
--- > #define GPU_INSTANCE_DESCRIPTOR_BINDING     2
--- >
--- > const float pi_half = 1.570795;
--- > uint instance_id;
+-- > #define GPU_DRAW_BUFFER_BINDING             0
+-- > #define GPU_INSTANCE_DESCRIPTOR_BINDING     1
 -- >
 -- > struct BoundingSphere
 -- > {
 -- >   vec3 center;
 -- >   float radius;
--- > };
--- >
--- > struct BoundingCone
--- > {
--- >   vec3 normal;
--- >   float angle;
--- > };
--- >
--- > struct ClusterDescriptor
--- > {
--- >   BoundingSphere sphere;
--- >   BoundingCone cone;
--- >   uint instance_idx;
 -- > };
 -- >
 -- > struct InstanceData
@@ -238,14 +228,8 @@
 -- >   int  gl_VertexOffsetHUAWEI;
 -- >   uint gl_FirstInstanceHUAWEI;
 -- >   uint gl_ClusterIDHUAWEI;
+-- >   uint gl_ClusterShadingRateHUAWEI;
 -- > };
--- >
--- >
--- > layout(binding = GPU_CLUSTER_DESCRIPTOR_BINDING, std430) readonly buffer cluster_descriptor_ssbo
--- > {
--- >         ClusterDescriptor cluster_descriptors[];
--- > };
--- >
 -- >
 -- > layout(binding = GPU_DRAW_BUFFER_BINDING, std430) buffer draw_indirect_ssbo
 -- > {
@@ -258,13 +242,13 @@
 -- > };
 -- >
 -- >
--- > bool isFrontFaceVisible( vec3 sphere_center, float sphere_radius, vec3 cone_normal, float cone_angle )
+-- > float Distance(uint instance_id)
 -- > {
--- >   vec3 sphere_center_dir = normalize(sphere_center -
--- >                            instance_descriptors[instance_id].instance_data.view_origin);
+-- >     vec3 v = normalize(instance_descriptor[instance_id].sphere.center -
+-- >                      instance_descriptor[instance_id].instance_data.view_origin);
+-- >     float dist = sqrt(dot(v,v));
 -- >
--- >   float sin_cone_angle = sin(min(cone_angle, pi_half));
--- >   return dot(cone_normal, sphere_center_dir) < sin_cone_angle;
+-- >     return dist;
 -- > }
 -- >
 -- > bool isSphereOutsideFrustum( vec3 sphere_center, float sphere_radius )
@@ -284,38 +268,40 @@
 -- >
 -- > void main()
 -- > {
--- >     uint cluster_id = gl_GlobalInvocationID.x;
--- >     ClusterDescriptor desc = cluster_descriptors[cluster_id];
--- >
 -- >     // get instance description
--- >     instance_id = desc.instance_idx;
+-- >     instance_id = gl_GlobalInvocationID.x;
 -- >     InstanceDescriptor inst_desc = instance_descriptors[instance_id];
 -- >
 -- >     //instance based culling
--- >     bool instance_render = !isSphereOutsideFrustum(inst_desc.sphere.center, inst_desc.sphere.radius);
+-- >     bool render = !isSphereOutsideFrustum(inst_desc.sphere.center, inst_desc.sphere.radius);
 -- >
--- >     if( instance_render)
+-- >     if (render)
 -- >     {
--- >         // cluster based culling
--- >         bool render = (!isSphereOutsideFrustum(desc.sphere.center,
--- >         desc.sphere.radius) && isFrontFaceVisible(desc.sphere.center, desc.sphere.radius, desc.cone.norm
--- >         al, desc.cone.angle));
+-- >         // calculate distance
+-- >         float distance = Distance(instance_id);
 -- >
--- >         if (render)
--- >         {
--- >             // this cluster passed coarse-level culling, update built-in output variable.
--- >             // in case of indexed mode:
--- >             gl_IndexCountHUAWEI     = draw_commands[cluster_id].indexcount;
--- >             gl_InstanceCountHUAWEI  = draw_commands[cluster_id].instanceCount;
--- >             gl_FirstIndexHUAWEI     = draw_commands[cluster_id].firstIndex;
--- >             gl_VertexOffsetHUAWEI   = draw_commands[cluster_id].vertexoffset;
--- >             gl_FirstInstanceHUAWEI  = draw_commands[cluster_id].firstInstance;
--- >             gl_ClusterIDHUAWEI      = draw_commands[cluster_id].cluster_id;
+-- >         // update shading rate built-in variable
+-- >         if(distance > 0.7)
+-- >             gl_ClusterShadingRateHUAWEI =
+-- >                 gl_ShadingRateFlag4VerticalPixelsEXT | gl_ShadingRateFlag4HorizontalPixelsEXT;
+-- >         else if(distance > 0.3)
+-- >             gl_ClusterShadingRateHUAWEI =
+-- >                 gl_ShadingRateFlag2VerticalPixelsEXT | gl_ShadingRateFlag2HorizontalPixelsEXT;
+-- >         else
+-- >             gl_ClusterShadingRateHUAWEI = 0;
 -- >
--- >             // emit built-in output variables as a drawing command to subsequent
--- >             // rendering pipeline.
--- >             dispatchClusterHUAWEI();
--- >         }
+-- >         // this is a visible cluster, update built-in output variable.
+-- >         // in case of indexed mode:
+-- >         gl_IndexCountHUAWEI     = draw_commands[cluster_id].indexcount;
+-- >         gl_InstanceCountHUAWEI  = draw_commands[cluster_id].instanceCount;
+-- >         gl_FirstIndexHUAWEI     = draw_commands[cluster_id].firstIndex;
+-- >         gl_VertexOffsetHUAWEI   = draw_commands[cluster_id].vertexoffset;
+-- >         gl_FirstInstanceHUAWEI  = draw_commands[cluster_id].firstInstance;
+-- >         gl_ClusterIDHUAWEI      = draw_commands[cluster_id].cluster_id;
+-- >
+-- >         // emit built-in output variables as a drawing command to subsequent
+-- >         // rendering pipeline.
+-- >         dispatchClusterHUAWEI();
 -- >     }
 -- > }
 --
@@ -357,10 +343,15 @@
 --
 --     -   Grammar edits.
 --
+-- -   Revision 3, 2023-08-21 (YuChang Wang)
+--
+--     -   Add per-cluster shading rate.
+--
 -- == See Also
 --
 -- 'PhysicalDeviceClusterCullingShaderFeaturesHUAWEI',
 -- 'PhysicalDeviceClusterCullingShaderPropertiesHUAWEI',
+-- 'PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI',
 -- 'cmdDrawClusterHUAWEI', 'cmdDrawClusterIndirectHUAWEI'
 --
 -- == Document Notes
@@ -372,18 +363,25 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader  ( PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
                                                            , PhysicalDeviceClusterCullingShaderPropertiesHUAWEI
+                                                           , PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
                                                            ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+type role PhysicalDeviceClusterCullingShaderFeaturesHUAWEI nominal
+data PhysicalDeviceClusterCullingShaderFeaturesHUAWEI (es :: [Type])
 
-data PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+instance ( Extendss PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es)
+instance Show (Chain es) => Show (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es)
 
-instance ToCStruct PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
-instance Show PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
-
-instance FromCStruct PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+instance ( Extendss PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es)
 
 
 data PhysicalDeviceClusterCullingShaderPropertiesHUAWEI
@@ -392,4 +390,12 @@ instance ToCStruct PhysicalDeviceClusterCullingShaderPropertiesHUAWEI
 instance Show PhysicalDeviceClusterCullingShaderPropertiesHUAWEI
 
 instance FromCStruct PhysicalDeviceClusterCullingShaderPropertiesHUAWEI
+
+
+data PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
+
+instance ToCStruct PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
+instance Show PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
+
+instance FromCStruct PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
 

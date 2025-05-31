@@ -78,6 +78,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas 
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.FundamentalTypes (Rect2D)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (RenderPassStripeBeginInfoARM)
 import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentDensityMapAttachmentInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentShadingRateAttachmentInfoKHR)
@@ -989,7 +990,12 @@ instance Zero PipelineRenderingCreateInfo where
 --     element of @pColorAttachments@ is
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
---     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE' If the @pNext@
+--     chain contains a
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM'
+--     structure, the union of stripe areas defined by the elements of
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeInfoARM'::@pStripeInfos@
+--     /must/ cover the @renderArea@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1003,6 +1009,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT',
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX',
 --     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM',
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
@@ -1075,6 +1082,7 @@ instance Extensible RenderingInfo where
   getNext RenderingInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderingInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @RenderPassStripeBeginInfoARM = Just f
     | Just Refl <- eqT @e @MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM = Just f
     | Just Refl <- eqT @e @MultiviewPerViewAttributesInfoNVX = Just f
     | Just Refl <- eqT @e @RenderingFragmentDensityMapAttachmentInfoEXT = Just f

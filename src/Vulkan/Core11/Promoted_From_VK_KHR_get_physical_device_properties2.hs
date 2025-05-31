@@ -285,6 +285,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (PhysicalDeviceRayTracingPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_IMG_relaxed_line_rasterization (PhysicalDeviceRelaxedLineRasterizationFeaturesIMG)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (PhysicalDeviceRenderPassStripedFeaturesARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (PhysicalDeviceRenderPassStripedPropertiesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2PropertiesEXT)
@@ -346,8 +348,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout (PhysicalDeviceUniformBufferStandardLayoutFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (PhysicalDeviceVertexInputDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Properties)
@@ -901,6 +904,7 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRenderPassStripedFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSchedulingControlsFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCudaKernelLaunchFeaturesNV = Just f
@@ -977,7 +981,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = Just f
+    | Just Refl <- eqT @e @(PhysicalDeviceClusterCullingShaderFeaturesHUAWEI '[]) = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubpassShadingFeaturesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDevice4444FormatsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevicePortabilitySubsetFeaturesKHR = Just f
@@ -1044,7 +1048,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceRepresentativeFragmentTestFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceTransformFeedbackFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceASTCDecodeFeaturesEXT = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceVertexAttributeDivisorFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceVertexAttributeDivisorFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicFloat2FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicFloatFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicInt64Features = Just f
@@ -1185,6 +1189,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderPropertiesNV',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelinePropertiesKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV',
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.PhysicalDeviceRenderPassStripedPropertiesARM',
 --     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
@@ -1207,6 +1212,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreProperties',
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackPropertiesEXT',
 --     'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesEXT',
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR',
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Properties',
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Properties', or
 --     'Vulkan.Core13.PhysicalDeviceVulkan13Properties'
@@ -1243,6 +1249,7 @@ instance Extensible PhysicalDeviceProperties2 where
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRenderPassStripedPropertiesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSchedulingControlsPropertiesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCudaKernelLaunchPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalFormatResolvePropertiesANDROID = Just f
@@ -1302,6 +1309,7 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceTransformFeedbackPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDepthStencilResolveProperties = Just f
     | Just Refl <- eqT @e @PhysicalDevicePCIBusInfoPropertiesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceVertexAttributeDivisorPropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVertexAttributeDivisorPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceTimelineSemaphoreProperties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorIndexingProperties = Just f

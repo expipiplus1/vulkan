@@ -15,7 +15,7 @@
 --     405
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -38,7 +38,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-11-17
+--     2023-08-16
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -80,10 +80,10 @@
 -- pipeline.
 --
 -- A set of new built-in output variables are used to express a visible
--- cluster. In addition, a new built-in function is used to emit these
--- variables from CCS to the IA stage. The IA stage can use these variables
--- to fetches vertices of a visible cluster and drive vertex shaders to
--- shading these vertices.
+-- cluster, including per-cluster shading rate. In addition, a new built-in
+-- function is used to emit these variables from CCS to the IA stage. The
+-- IA stage can use these variables to fetches vertices of a visible
+-- cluster and drive vertex shaders to shading these vertices.
 --
 -- Note that CCS do not work with geometry or tessellation shaders, but
 -- both IA and vertex shaders are preserved. Vertex shaders are still used
@@ -98,6 +98,10 @@
 -- -   'cmdDrawClusterIndirectHUAWEI'
 --
 -- == New Structures
+--
+-- -   Extending 'PhysicalDeviceClusterCullingShaderFeaturesHUAWEI':
+--
+--     -   'PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -137,6 +141,8 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI'
 --
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI'
+--
 -- == New Built-In Variables
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-indexcounthuawei IndexCountHUAWEI>
@@ -154,6 +160,8 @@
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-firstinstancehuawei FirstInstanceHUAWEI>
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clusteridhuawei ClusterIDHUAWEI>
+--
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clustershadingratehuawei ClusterShadingRateHUAWEI>
 --
 -- == New SPIR-V Capability
 --
@@ -176,31 +184,13 @@
 -- > // - warpsize = 32
 -- > layout(local_size_x=GPU_GROUP_SIZE, local_size_y=1, local_size_z=1) in;
 -- >
--- >
--- > #define GPU_CLUSTER_DESCRIPTOR_BINDING      0
--- > #define GPU_DRAW_BUFFER_BINDING             1
--- > #define GPU_INSTANCE_DESCRIPTOR_BINDING     2
--- >
--- > const float pi_half = 1.570795;
--- > uint instance_id;
+-- > #define GPU_DRAW_BUFFER_BINDING             0
+-- > #define GPU_INSTANCE_DESCRIPTOR_BINDING     1
 -- >
 -- > struct BoundingSphere
 -- > {
 -- >   vec3 center;
 -- >   float radius;
--- > };
--- >
--- > struct BoundingCone
--- > {
--- >   vec3 normal;
--- >   float angle;
--- > };
--- >
--- > struct ClusterDescriptor
--- > {
--- >   BoundingSphere sphere;
--- >   BoundingCone cone;
--- >   uint instance_idx;
 -- > };
 -- >
 -- > struct InstanceData
@@ -238,14 +228,8 @@
 -- >   int  gl_VertexOffsetHUAWEI;
 -- >   uint gl_FirstInstanceHUAWEI;
 -- >   uint gl_ClusterIDHUAWEI;
+-- >   uint gl_ClusterShadingRateHUAWEI;
 -- > };
--- >
--- >
--- > layout(binding = GPU_CLUSTER_DESCRIPTOR_BINDING, std430) readonly buffer cluster_descriptor_ssbo
--- > {
--- >         ClusterDescriptor cluster_descriptors[];
--- > };
--- >
 -- >
 -- > layout(binding = GPU_DRAW_BUFFER_BINDING, std430) buffer draw_indirect_ssbo
 -- > {
@@ -258,13 +242,13 @@
 -- > };
 -- >
 -- >
--- > bool isFrontFaceVisible( vec3 sphere_center, float sphere_radius, vec3 cone_normal, float cone_angle )
+-- > float Distance(uint instance_id)
 -- > {
--- >   vec3 sphere_center_dir = normalize(sphere_center -
--- >                            instance_descriptors[instance_id].instance_data.view_origin);
+-- >     vec3 v = normalize(instance_descriptor[instance_id].sphere.center -
+-- >                      instance_descriptor[instance_id].instance_data.view_origin);
+-- >     float dist = sqrt(dot(v,v));
 -- >
--- >   float sin_cone_angle = sin(min(cone_angle, pi_half));
--- >   return dot(cone_normal, sphere_center_dir) < sin_cone_angle;
+-- >     return dist;
 -- > }
 -- >
 -- > bool isSphereOutsideFrustum( vec3 sphere_center, float sphere_radius )
@@ -284,38 +268,40 @@
 -- >
 -- > void main()
 -- > {
--- >     uint cluster_id = gl_GlobalInvocationID.x;
--- >     ClusterDescriptor desc = cluster_descriptors[cluster_id];
--- >
 -- >     // get instance description
--- >     instance_id = desc.instance_idx;
+-- >     instance_id = gl_GlobalInvocationID.x;
 -- >     InstanceDescriptor inst_desc = instance_descriptors[instance_id];
 -- >
 -- >     //instance based culling
--- >     bool instance_render = !isSphereOutsideFrustum(inst_desc.sphere.center, inst_desc.sphere.radius);
+-- >     bool render = !isSphereOutsideFrustum(inst_desc.sphere.center, inst_desc.sphere.radius);
 -- >
--- >     if( instance_render)
+-- >     if (render)
 -- >     {
--- >         // cluster based culling
--- >         bool render = (!isSphereOutsideFrustum(desc.sphere.center,
--- >         desc.sphere.radius) && isFrontFaceVisible(desc.sphere.center, desc.sphere.radius, desc.cone.norm
--- >         al, desc.cone.angle));
+-- >         // calculate distance
+-- >         float distance = Distance(instance_id);
 -- >
--- >         if (render)
--- >         {
--- >             // this cluster passed coarse-level culling, update built-in output variable.
--- >             // in case of indexed mode:
--- >             gl_IndexCountHUAWEI     = draw_commands[cluster_id].indexcount;
--- >             gl_InstanceCountHUAWEI  = draw_commands[cluster_id].instanceCount;
--- >             gl_FirstIndexHUAWEI     = draw_commands[cluster_id].firstIndex;
--- >             gl_VertexOffsetHUAWEI   = draw_commands[cluster_id].vertexoffset;
--- >             gl_FirstInstanceHUAWEI  = draw_commands[cluster_id].firstInstance;
--- >             gl_ClusterIDHUAWEI      = draw_commands[cluster_id].cluster_id;
+-- >         // update shading rate built-in variable
+-- >         if(distance > 0.7)
+-- >             gl_ClusterShadingRateHUAWEI =
+-- >                 gl_ShadingRateFlag4VerticalPixelsEXT | gl_ShadingRateFlag4HorizontalPixelsEXT;
+-- >         else if(distance > 0.3)
+-- >             gl_ClusterShadingRateHUAWEI =
+-- >                 gl_ShadingRateFlag2VerticalPixelsEXT | gl_ShadingRateFlag2HorizontalPixelsEXT;
+-- >         else
+-- >             gl_ClusterShadingRateHUAWEI = 0;
 -- >
--- >             // emit built-in output variables as a drawing command to subsequent
--- >             // rendering pipeline.
--- >             dispatchClusterHUAWEI();
--- >         }
+-- >         // this is a visible cluster, update built-in output variable.
+-- >         // in case of indexed mode:
+-- >         gl_IndexCountHUAWEI     = draw_commands[cluster_id].indexcount;
+-- >         gl_InstanceCountHUAWEI  = draw_commands[cluster_id].instanceCount;
+-- >         gl_FirstIndexHUAWEI     = draw_commands[cluster_id].firstIndex;
+-- >         gl_VertexOffsetHUAWEI   = draw_commands[cluster_id].vertexoffset;
+-- >         gl_FirstInstanceHUAWEI  = draw_commands[cluster_id].firstInstance;
+-- >         gl_ClusterIDHUAWEI      = draw_commands[cluster_id].cluster_id;
+-- >
+-- >         // emit built-in output variables as a drawing command to subsequent
+-- >         // rendering pipeline.
+-- >         dispatchClusterHUAWEI();
 -- >     }
 -- > }
 --
@@ -357,10 +343,15 @@
 --
 --     -   Grammar edits.
 --
+-- -   Revision 3, 2023-08-21 (YuChang Wang)
+--
+--     -   Add per-cluster shading rate.
+--
 -- == See Also
 --
 -- 'PhysicalDeviceClusterCullingShaderFeaturesHUAWEI',
 -- 'PhysicalDeviceClusterCullingShaderPropertiesHUAWEI',
+-- 'PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI',
 -- 'cmdDrawClusterHUAWEI', 'cmdDrawClusterIndirectHUAWEI'
 --
 -- == Document Notes
@@ -374,6 +365,7 @@ module Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader  ( cmdDrawClusterHUAWE
                                                            , cmdDrawClusterIndirectHUAWEI
                                                            , PhysicalDeviceClusterCullingShaderPropertiesHUAWEI(..)
                                                            , PhysicalDeviceClusterCullingShaderFeaturesHUAWEI(..)
+                                                           , PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI(..)
                                                            , HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION
                                                            , pattern HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION
                                                            , HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME
@@ -384,11 +376,15 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
@@ -396,6 +392,7 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -408,6 +405,7 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -416,6 +414,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
@@ -423,9 +422,17 @@ import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawClusterHUAWEI))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawClusterIndirectHUAWEI))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -603,10 +610,10 @@ foreign import ccall
 --     a descriptor set /must/ have been bound to /n/ at the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for set /n/, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-None-08601# For each push constant that
@@ -615,11 +622,10 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-maintenance4-08602# If the
@@ -630,20 +636,22 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     create the current 'Vulkan.Extensions.Handles.ShaderEXT' , as
+--     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-None-08114# Descriptors in each bound
 --     descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
---     was not created with
+--     be valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-None-08115# If the descriptors used by
@@ -696,14 +704,6 @@ foreign import ccall
 --     feature is not enabled, a valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDrawClusterHUAWEI-None-08607# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
---
 -- -   #VUID-vkCmdDrawClusterHUAWEI-None-08608# If a pipeline is bound to
 --     the pipeline bind point used by this command, there /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -746,6 +746,14 @@ foreign import ccall
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
+--
+-- -   #VUID-vkCmdDrawClusterHUAWEI-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-uniformBuffers-06935# If any stage of
 --     the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
@@ -1347,16 +1355,6 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawClusterHUAWEI-sampleLocationsPerPixel-07934# If the
---     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
---     state enabled, then the @sampleLocationsPerPixel@ member of
---     @pSampleLocationsInfo@ in the last call to
---     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
---     /must/ equal the @rasterizationSamples@ member of the
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
---     structure the bound graphics pipeline has been created with
---
 -- -   #VUID-vkCmdDrawClusterHUAWEI-None-07840# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' dynamic
@@ -1837,22 +1835,36 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-multisampledRenderToSingleSampled-07284#
 --     If rasterization is not disabled in the bound graphics pipeline, and
---     none of the @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature is enabled, then @rasterizationSamples@ for the currently
---     bound graphics pipeline /must/ be the same as the current subpass
---     color and\/or depth\/stencil attachments
+--     none of the following is enabled:
+--
+--     -   the @VK_AMD_mixed_attachment_samples@ extension
+--
+--     -   the @VK_NV_framebuffer_mixed_samples@ extension
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--         feature
+--
+--     then @rasterizationSamples@ for the currently bound graphics
+--     pipeline /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-None-08644# If a shader object is bound
 --     to any graphics stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the
---     @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature is enabled, then the most recent call to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the following is
+--     enabled:
+--
+--     -   the @VK_AMD_mixed_attachment_samples@ extension
+--
+--     -   the @VK_NV_framebuffer_mixed_samples@ extension
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--         feature
+--
+--     then the most recent call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --     in the current command buffer /must/ have set @rasterizationSamples@
 --     to be the same as the number of samples for the current render pass
@@ -1954,6 +1966,23 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawClusterHUAWEI-dynamicRenderingUnusedAttachments-08912#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled, and the current render pass instance was
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
+--     array with a @imageView@ equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
+--     corresponding element of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
+--     used to create the currently bound pipeline equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawClusterHUAWEI-dynamicRenderingUnusedAttachments-08911#
 --     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
@@ -1973,23 +2002,6 @@ foreign import ccall
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@,
 --     if it exists, /must/ be
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
---
--- -   #VUID-vkCmdDrawClusterHUAWEI-dynamicRenderingUnusedAttachments-08912#
---     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
---     feature is not enabled, and the current render pass instance was
---     begun with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
---     and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
---     greater than @0@, then each element of the
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ equal to
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
---     corresponding element of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
---     used to create the currently bound pipeline equal to
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-colorAttachmentCount-09362# If the
@@ -2397,9 +2409,7 @@ foreign import ccall
 --     the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-multisampledRenderToSingleSampled-07286#
---     If the current render pass instance was begun with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound pipeline was created without a
+--     If the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
@@ -2413,9 +2423,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdDrawClusterHUAWEI-multisampledRenderToSingleSampled-07287#
---     If the current render pass instance was begun with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound pipeline was created without a
+--     If the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
@@ -4264,10 +4272,10 @@ foreign import ccall
 --     a descriptor set /must/ have been bound to /n/ at the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for set /n/, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array that was used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-08601# For each push
@@ -4276,11 +4284,10 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
+--     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-maintenance4-08602# If the
@@ -4291,20 +4298,22 @@ foreign import ccall
 --     a push constant value /must/ have been set for the same pipeline
 --     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
 --     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' or
+--     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
+--     'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Core10.Handles.Pipeline' or
---     'Vulkan.Extensions.Handles.ShaderEXT', as described in
+--     create the current 'Vulkan.Extensions.Handles.ShaderEXT' , as
+--     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-08114# Descriptors in each
 --     bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
---     was not created with
+--     be valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-08115# If the descriptors
@@ -4357,14 +4366,6 @@ foreign import ccall
 --     feature is not enabled, a valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
 --
--- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-08607# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
---
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-08608# If a pipeline is
 --     bound to the pipeline bind point used by this command, there /must/
 --     not have been any calls to dynamic state setting commands for any
@@ -4407,6 +4408,14 @@ foreign import ccall
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
+--
+-- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-08607# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     is enabled, either a valid pipeline /must/ be bound to the pipeline
+--     bind point used by this command, or a valid combination of valid and
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
+--     bound to every supported shader stage corresponding to the pipeline
+--     bind point used by this command
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-uniformBuffers-06935# If any
 --     stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to the
@@ -5014,16 +5023,6 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-sampleLocationsPerPixel-07934#
---     If the bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
---     state enabled, then the @sampleLocationsPerPixel@ member of
---     @pSampleLocationsInfo@ in the last call to
---     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
---     /must/ equal the @rasterizationSamples@ member of the
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
---     structure the bound graphics pipeline has been created with
---
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-07840# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' dynamic
@@ -5505,22 +5504,36 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-multisampledRenderToSingleSampled-07284#
 --     If rasterization is not disabled in the bound graphics pipeline, and
---     none of the @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature is enabled, then @rasterizationSamples@ for the currently
---     bound graphics pipeline /must/ be the same as the current subpass
---     color and\/or depth\/stencil attachments
+--     none of the following is enabled:
+--
+--     -   the @VK_AMD_mixed_attachment_samples@ extension
+--
+--     -   the @VK_NV_framebuffer_mixed_samples@ extension
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--         feature
+--
+--     then @rasterizationSamples@ for the currently bound graphics
+--     pipeline /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-None-08644# If a shader object
 --     is bound to any graphics stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the
---     @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature is enabled, then the most recent call to
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and none of the following is
+--     enabled:
+--
+--     -   the @VK_AMD_mixed_attachment_samples@ extension
+--
+--     -   the @VK_NV_framebuffer_mixed_samples@ extension
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--         feature
+--
+--     then the most recent call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --     in the current command buffer /must/ have set @rasterizationSamples@
 --     to be the same as the number of samples for the current render pass
@@ -5623,6 +5636,23 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-dynamicRenderingUnusedAttachments-08912#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
+--     feature is not enabled, and the current render pass instance was
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
+--     array with a @imageView@ equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
+--     corresponding element of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
+--     used to create the currently bound pipeline equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-dynamicRenderingUnusedAttachments-08911#
 --     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
@@ -5642,23 +5672,6 @@ foreign import ccall
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@,
 --     if it exists, /must/ be
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
---
--- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-dynamicRenderingUnusedAttachments-08912#
---     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingUnusedAttachments dynamicRenderingUnusedAttachments>
---     feature is not enabled, and the current render pass instance was
---     begun with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
---     and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
---     greater than @0@, then each element of the
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ equal to
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
---     corresponding element of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
---     used to create the currently bound pipeline equal to
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-colorAttachmentCount-09362# If
@@ -6067,9 +6080,7 @@ foreign import ccall
 --     the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-multisampledRenderToSingleSampled-07286#
---     If the current render pass instance was begun with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound pipeline was created without a
+--     If the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
@@ -6083,9 +6094,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdDrawClusterIndirectHUAWEI-multisampledRenderToSingleSampled-07287#
---     If the current render pass instance was begun with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound pipeline was created without a
+--     If the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
@@ -7891,62 +7900,127 @@ instance Zero PhysicalDeviceClusterCullingShaderPropertiesHUAWEI where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_cluster_culling_shader VK_HUAWEI_cluster_culling_shader>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
-  { -- | #features-clustercullingShader# @clustercullingShader@ specifies whether
+data PhysicalDeviceClusterCullingShaderFeaturesHUAWEI (es :: [Type]) = PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | #features-clustercullingShader# @clustercullingShader@ specifies whether
     -- cluster culling shader is supported.
     clustercullingShader :: Bool
   , -- | #features-multiviewClusterCullingShader# @multiviewClusterCullingShader@
     -- specifies whether multiview is supported.
     multiviewClusterCullingShader :: Bool
   }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI (es :: [Type]))
+#endif
+deriving instance Show (Chain es) => Show (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es)
+
+instance Extensible PhysicalDeviceClusterCullingShaderFeaturesHUAWEI where
+  extensibleTypeName = "PhysicalDeviceClusterCullingShaderFeaturesHUAWEI"
+  setNext PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{..} next' = PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{next = next', ..}
+  getNext PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceClusterCullingShaderFeaturesHUAWEI e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI = Just f
+    | otherwise = Nothing
+
+instance ( Extendss PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es) where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (clustercullingShader))
+    lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (multiviewClusterCullingShader))
+    lift $ f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
+    lift $ f
+
+instance ( Extendss PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es) where
+  peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
+    clustercullingShader <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    multiviewClusterCullingShader <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
+    pure $ PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+             next
+             (bool32ToBool clustercullingShader)
+             (bool32ToBool multiviewClusterCullingShader)
+
+instance es ~ '[] => Zero (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI es) where
+  zero = PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+           ()
+           zero
+           zero
+
+
+-- | VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI - Structure
+-- describing whether cluster culling shader support VRS
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_cluster_culling_shader VK_HUAWEI_cluster_culling_shader>,
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI = PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
+  { -- | #features-clusterShadingRate# @clusterShadingRate@ specifies whether
+    -- per-cluster shading rates is supported.
+    clusterShadingRate :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI)
+deriving instance Generic (PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI)
 #endif
-deriving instance Show PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+deriving instance Show PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
 
-instance ToCStruct PhysicalDeviceClusterCullingShaderFeaturesHUAWEI where
+instance ToCStruct PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI)
+  pokeCStruct p PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (clustercullingShader))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (multiviewClusterCullingShader))
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (clusterShadingRate))
     f
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI)
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_VRS_FEATURES_HUAWEI)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
     f
 
-instance FromCStruct PhysicalDeviceClusterCullingShaderFeaturesHUAWEI where
+instance FromCStruct PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI where
   peekCStruct p = do
-    clustercullingShader <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    multiviewClusterCullingShader <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
-    pure $ PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
-             (bool32ToBool clustercullingShader)
-             (bool32ToBool multiviewClusterCullingShader)
+    clusterShadingRate <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    pure $ PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
+             (bool32ToBool clusterShadingRate)
 
-instance Storable PhysicalDeviceClusterCullingShaderFeaturesHUAWEI where
+instance Storable PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI where
   sizeOf ~_ = 24
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDeviceClusterCullingShaderFeaturesHUAWEI where
-  zero = PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
-           zero
+instance Zero PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI where
+  zero = PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI
            zero
 
 
-type HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION = 2
+type HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION"
 pattern HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION :: forall a . Integral a => a
-pattern HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION = 2
+pattern HUAWEI_CLUSTER_CULLING_SHADER_SPEC_VERSION = 3
 
 
 type HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME = "VK_HUAWEI_cluster_culling_shader"

@@ -1537,6 +1537,14 @@ instance Zero CopyBufferInfo2 where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
+-- -   #VUID-VkCopyImageInfo2-srcImage-09460# If @srcImage@ and @dstImage@
+--     are the same, and any elements of @pRegions@ contains the
+--     @srcSubresource@ and @dstSubresource@ with matching @mipLevel@ and
+--     overlapping array layers, then the @srcImageLayout@ and
+--     @dstImageLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
+--
 -- -   #VUID-VkCopyImageInfo2-dstImage-01996# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
@@ -2071,6 +2079,14 @@ instance Zero CopyImageInfo2 where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
+--
+-- -   #VUID-VkBlitImageInfo2-srcImage-09459# If @srcImage@ and @dstImage@
+--     are the same, and an elements of @pRegions@ contains the
+--     @srcSubresource@ and @dstSubresource@ with matching @mipLevel@ and
+--     overlapping array layers, then the @srcImageLayout@ and
+--     @dstImageLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
 -- -   #VUID-VkBlitImageInfo2-dstImage-02000# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>

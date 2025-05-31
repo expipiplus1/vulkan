@@ -1,5 +1,7 @@
-{-# language TemplateHaskellQuotes #-}
+{-# language NamedFieldPuns #-}
 {-# language NoStarIsType #-}
+{-# language TemplateHaskellQuotes #-}
+
 module Render.Type
   ( Preserve(..)
   , ExtensibleStructStyle(..)
@@ -15,6 +17,7 @@ module Render.Type
   , ConstrainedVar(..)
   ) where
 
+import qualified Data.List as L
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
 import           Foreign.C.Types
@@ -48,7 +51,7 @@ import           Spec.Types
 -- | The same as 'cToHsType' except type variables are written as @_@
 cToHsTypeWithHoles
   :: forall r
-   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, HasCallStack)
   => Preserve
   -> CType
   -> Sem r H.Type
@@ -57,7 +60,7 @@ cToHsTypeWithHoles = runNoContext .: cToHsType' UnwrappedHole
 -- | The same as 'cToHsType' except extensible structs are wrapped in @SomeStruct@
 cToHsTypeWrapped
   :: forall r
-   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, HasCallStack)
   => Preserve
   -> CType
   -> Sem r H.Type
@@ -85,7 +88,7 @@ cToHsTypeWithContext = cToHsType' Unwrapped
 
 cToHsType
   :: forall r
-   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, HasCallStack)
   => Preserve
   -> CType
   -> Sem r H.Type
@@ -212,6 +215,7 @@ data ContextState = ContextState
   , csPositiveVars :: [ConstrainedVar]
   , csNextVars     :: [Name]
   }
+  deriving (Show)
 
 type HasContextState r = Member (State ContextState) r
 
@@ -251,13 +255,17 @@ runRenderTypeContext a = do
   (s, r) <- runState initialContextState a
   pure (reverse (csNegativeVars s), reverse (csPositiveVars s), r)
 
-runNoContext :: HasErr r => Sem (State ContextState : r) a -> Sem r a
+runNoContext :: (HasErr r, HasCallStack) => Sem (State ContextState : r) a -> Sem r a
 runNoContext a = do
-  (s, r) <- runState initialContextState a
-  if null (csNegativeVars s <> csPositiveVars s)
-    then pure ()
-    else throw "Variables were inserted while getting the type with no context"
-  pure r
+  (ContextState{csNegativeVars, csPositiveVars}, r) <- runState initialContextState a
+  if null (csNegativeVars <> csPositiveVars)
+    then pure r
+    else throw . fromString $ L.unlines
+      [ "Variables were inserted while getting the type with no context:"
+      , '-' : show csNegativeVars
+      , '+' : show csPositiveVars
+      , prettyCallStack callStack
+      ]
 
 ----------------------------------------------------------------
 -- Utils

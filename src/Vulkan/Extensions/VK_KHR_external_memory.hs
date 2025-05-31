@@ -305,7 +305,7 @@
 -- instances and APIs other than that required to share the data contained
 -- in the memory objects explicitly shared. As specific examples, data from
 -- previously freed memory objects that used the same underlying physical
--- memory, and data from memory obects using adjacent physical memory must
+-- memory, and data from memory objects using adjacent physical memory must
 -- not be visible to applications importing an exported memory object.
 --
 -- 9) Must implementations validate external handles the application

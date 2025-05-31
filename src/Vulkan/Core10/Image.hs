@@ -386,12 +386,12 @@ foreign import ccall
 --     specified in @image@
 --
 -- -   #VUID-vkGetImageSubresourceLayout-format-08886# If @format@ of the
---     @image@ is a color format, @tiling@ of the @image@ is
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', and does not
---     have a
+--     @image@ is a color format that is not a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
---     the @aspectMask@ member of @pSubresource@ /must/ be
+--     and @tiling@ of the @image@ is
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', the
+--     @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-vkGetImageSubresourceLayout-format-04462# If @format@ of the
@@ -1339,7 +1339,18 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure whose @externalFormat@ member is not @0@, @usage@ /must/
 --     not include any usages except
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
+--     or 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
+--
+-- -   #VUID-VkImageCreateInfo-pNext-09457# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+--     structure whose @externalFormat@ member is not @0@, and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
+--     feature is not enabled, @usage@ /must/ not include
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-pNext-02398# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'

@@ -118,6 +118,7 @@ import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
 import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (RenderPassStripeSubmitInfoARM)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
@@ -1280,15 +1281,16 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
 -- another timestamp write in the same submission /must/ not have a lower
 -- value unless its value overflows the maximum supported integer bit width
--- of the query. If @VK_EXT_calibrated_timestamps@ is enabled, this extends
--- to timestamp writes across all submissions on the same logical device:
--- any timestamp write that
+-- of the query. If @VK_KHR_calibrated_timestamps@ or
+-- @VK_EXT_calibrated_timestamps@ is enabled, this extends to timestamp
+-- writes across all submissions on the same logical device: any timestamp
+-- write that
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-execution happens-after>
 -- another /must/ not have a lower value unless its value overflows the
 -- maximum supported integer bit width of the query. Timestamps written by
 -- this command /must/ be in the
--- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.TIME_DOMAIN_DEVICE_EXT'
--- <VkTimeDomainEXT.html time domain>. If an overflow occurs, the timestamp
+-- 'Vulkan.Extensions.VK_KHR_calibrated_timestamps.TIME_DOMAIN_DEVICE_KHR'
+-- <VkTimeDomainKHR.html time domain>. If an overflow occurs, the timestamp
 -- value /must/ wrap back to zero.
 --
 -- Note
@@ -1298,8 +1300,8 @@ foreign import ccall
 -- timestamp from a newer one to determine the execution time of a sequence
 -- of commands is only a reliable measurement if the two timestamp writes
 -- were performed in the same submission, or if the writes were performed
--- on the same logical device and @VK_EXT_calibrated_timestamps@ is
--- enabled.
+-- on the same logical device and @VK_KHR_calibrated_timestamps@ or
+-- @VK_EXT_calibrated_timestamps@ is enabled.
 --
 -- If 'cmdWriteTimestamp2' is called while executing a render pass instance
 -- that has multiview enabled, the timestamp uses N consecutive query
@@ -5197,6 +5199,7 @@ instance Zero DependencyInfo where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2',
+-- 'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeSubmitInfoARM',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'SubmitInfo2'
 data SemaphoreSubmitInfo = SemaphoreSubmitInfo
@@ -5283,13 +5286,33 @@ instance Zero SemaphoreSubmitInfo where
 -- -   #VUID-VkCommandBufferSubmitInfo-deviceMask-03891# If @deviceMask@ is
 --     not @0@, it /must/ be a valid device mask
 --
+-- -   #VUID-VkCommandBufferSubmitInfo-commandBuffer-09445# If any render
+--     pass instance in @commandBuffer@ was recorded with a
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM'
+--     structure in its pNext chain, a
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeSubmitInfoARM'
+--     /must/ be included in the @pNext@ chain
+--
+-- -   #VUID-VkCommandBufferSubmitInfo-pNext-09446# If a
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeSubmitInfoARM'
+--     is included in the @pNext@ chain, the value of
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeSubmitInfoARM'::@stripeSemaphoreInfoCount@
+--     /must/ be equal to the sum of the
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM'::@stripeInfoCount@
+--     parameters provided to render pass instances recorded in
+--     @commandBuffer@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkCommandBufferSubmitInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO'
 --
 -- -   #VUID-VkCommandBufferSubmitInfo-pNext-pNext# @pNext@ /must/ be
---     @NULL@
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeSubmitInfoARM'
+--
+-- -   #VUID-VkCommandBufferSubmitInfo-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkCommandBufferSubmitInfo-commandBuffer-parameter#
 --     @commandBuffer@ /must/ be a valid
@@ -5301,8 +5324,10 @@ instance Zero SemaphoreSubmitInfo where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'SubmitInfo2'
-data CommandBufferSubmitInfo = CommandBufferSubmitInfo
-  { -- | @commandBuffer@ is a 'Vulkan.Core10.Handles.CommandBuffer' to be
+data CommandBufferSubmitInfo (es :: [Type]) = CommandBufferSubmitInfo
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @commandBuffer@ is a 'Vulkan.Core10.Handles.CommandBuffer' to be
     -- submitted for execution.
     commandBuffer :: Ptr CommandBuffer_T
   , -- | @deviceMask@ is a bitmask indicating which devices in a device group
@@ -5310,44 +5335,54 @@ data CommandBufferSubmitInfo = CommandBufferSubmitInfo
     -- setting all bits corresponding to valid devices in the group to @1@.
     deviceMask :: Word32
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (CommandBufferSubmitInfo)
+deriving instance Generic (CommandBufferSubmitInfo (es :: [Type]))
 #endif
-deriving instance Show CommandBufferSubmitInfo
+deriving instance Show (Chain es) => Show (CommandBufferSubmitInfo es)
 
-instance ToCStruct CommandBufferSubmitInfo where
+instance Extensible CommandBufferSubmitInfo where
+  extensibleTypeName = "CommandBufferSubmitInfo"
+  setNext CommandBufferSubmitInfo{..} next' = CommandBufferSubmitInfo{next = next', ..}
+  getNext CommandBufferSubmitInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferSubmitInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @RenderPassStripeSubmitInfoARM = Just f
+    | otherwise = Nothing
+
+instance ( Extendss CommandBufferSubmitInfo es
+         , PokeChain es ) => ToCStruct (CommandBufferSubmitInfo es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CommandBufferSubmitInfo{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr (Ptr CommandBuffer_T))) (commandBuffer)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (deviceMask)
-    f
+  pokeCStruct p CommandBufferSubmitInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CommandBuffer_T))) (commandBuffer)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (deviceMask)
+    lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr (Ptr CommandBuffer_T))) (zero)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CommandBuffer_T))) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    lift $ f
 
-instance FromCStruct CommandBufferSubmitInfo where
+instance ( Extendss CommandBufferSubmitInfo es
+         , PeekChain es ) => FromCStruct (CommandBufferSubmitInfo es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     commandBuffer <- peek @(Ptr CommandBuffer_T) ((p `plusPtr` 16 :: Ptr (Ptr CommandBuffer_T)))
     deviceMask <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pure $ CommandBufferSubmitInfo
-             commandBuffer deviceMask
+             next commandBuffer deviceMask
 
-instance Storable CommandBufferSubmitInfo where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero CommandBufferSubmitInfo where
+instance es ~ '[] => Zero (CommandBufferSubmitInfo es) where
   zero = CommandBufferSubmitInfo
+           ()
            zero
            zero
 
@@ -5487,7 +5522,7 @@ data SubmitInfo2 (es :: [Type]) = SubmitInfo2
   , -- | @pCommandBufferInfos@ is a pointer to an array of
     -- 'CommandBufferSubmitInfo' structures describing command buffers to
     -- execute in the batch.
-    commandBufferInfos :: Vector CommandBufferSubmitInfo
+    commandBufferInfos :: Vector (SomeStruct CommandBufferSubmitInfo)
   , -- | @pSignalSemaphoreInfos@ is a pointer to an array of
     -- 'SemaphoreSubmitInfo' describing
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>.
@@ -5525,9 +5560,9 @@ instance ( Extendss SubmitInfo2 es
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreInfos' `plusPtr` (48 * (i)) :: Ptr SemaphoreSubmitInfo) (e)) (waitSemaphoreInfos)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr SemaphoreSubmitInfo))) (pPWaitSemaphoreInfos')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (commandBufferInfos)) :: Word32))
-    pPCommandBufferInfos' <- ContT $ allocaBytes @CommandBufferSubmitInfo ((Data.Vector.length (commandBufferInfos)) * 32)
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBufferInfos' `plusPtr` (32 * (i)) :: Ptr CommandBufferSubmitInfo) (e)) (commandBufferInfos)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CommandBufferSubmitInfo))) (pPCommandBufferInfos')
+    pPCommandBufferInfos' <- ContT $ allocaBytes @(CommandBufferSubmitInfo _) ((Data.Vector.length (commandBufferInfos)) * 32)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCommandBufferInfos' `plusPtr` (32 * (i)) :: Ptr (CommandBufferSubmitInfo _))) (e) . ($ ())) (commandBufferInfos)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (CommandBufferSubmitInfo _)))) (pPCommandBufferInfos')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (signalSemaphoreInfos)) :: Word32))
     pPSignalSemaphoreInfos' <- ContT $ allocaBytes @SemaphoreSubmitInfo ((Data.Vector.length (signalSemaphoreInfos)) * 48)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreInfos' `plusPtr` (48 * (i)) :: Ptr SemaphoreSubmitInfo) (e)) (signalSemaphoreInfos)
@@ -5551,8 +5586,8 @@ instance ( Extendss SubmitInfo2 es
     pWaitSemaphoreInfos <- peek @(Ptr SemaphoreSubmitInfo) ((p `plusPtr` 24 :: Ptr (Ptr SemaphoreSubmitInfo)))
     pWaitSemaphoreInfos' <- generateM (fromIntegral waitSemaphoreInfoCount) (\i -> peekCStruct @SemaphoreSubmitInfo ((pWaitSemaphoreInfos `advancePtrBytes` (48 * (i)) :: Ptr SemaphoreSubmitInfo)))
     commandBufferInfoCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
-    pCommandBufferInfos <- peek @(Ptr CommandBufferSubmitInfo) ((p `plusPtr` 40 :: Ptr (Ptr CommandBufferSubmitInfo)))
-    pCommandBufferInfos' <- generateM (fromIntegral commandBufferInfoCount) (\i -> peekCStruct @CommandBufferSubmitInfo ((pCommandBufferInfos `advancePtrBytes` (32 * (i)) :: Ptr CommandBufferSubmitInfo)))
+    pCommandBufferInfos <- peek @(Ptr (CommandBufferSubmitInfo _)) ((p `plusPtr` 40 :: Ptr (Ptr (CommandBufferSubmitInfo _))))
+    pCommandBufferInfos' <- generateM (fromIntegral commandBufferInfoCount) (\i -> peekSomeCStruct (forgetExtensions ((pCommandBufferInfos `advancePtrBytes` (32 * (i)) :: Ptr (CommandBufferSubmitInfo _)))))
     signalSemaphoreInfoCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pSignalSemaphoreInfos <- peek @(Ptr SemaphoreSubmitInfo) ((p `plusPtr` 56 :: Ptr (Ptr SemaphoreSubmitInfo)))
     pSignalSemaphoreInfos' <- generateM (fromIntegral signalSemaphoreInfoCount) (\i -> peekCStruct @SemaphoreSubmitInfo ((pSignalSemaphoreInfos `advancePtrBytes` (48 * (i)) :: Ptr SemaphoreSubmitInfo)))

@@ -25,6 +25,12 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vertex_attribute_divisor VK_KHR_vertex_attribute_divisor>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
@@ -78,11 +84,11 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT'
+--     -   'STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT'
 --
 -- == Issues
 --
@@ -166,23 +172,11 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor  ( PhysicalDeviceVertexAttributeDivisorFeaturesEXT
-                                                          , PhysicalDeviceVertexAttributeDivisorPropertiesEXT
-                                                          , PipelineVertexInputDivisorStateCreateInfoEXT
-                                                          , VertexInputBindingDivisorDescriptionEXT
-                                                          ) where
+module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor  (PhysicalDeviceVertexAttributeDivisorPropertiesEXT) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
-data PhysicalDeviceVertexAttributeDivisorFeaturesEXT
-
-instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT
-instance Show PhysicalDeviceVertexAttributeDivisorFeaturesEXT
-
-instance FromCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT
-
 
 data PhysicalDeviceVertexAttributeDivisorPropertiesEXT
 
@@ -190,20 +184,4 @@ instance ToCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT
 instance Show PhysicalDeviceVertexAttributeDivisorPropertiesEXT
 
 instance FromCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT
-
-
-data PipelineVertexInputDivisorStateCreateInfoEXT
-
-instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT
-instance Show PipelineVertexInputDivisorStateCreateInfoEXT
-
-instance FromCStruct PipelineVertexInputDivisorStateCreateInfoEXT
-
-
-data VertexInputBindingDivisorDescriptionEXT
-
-instance ToCStruct VertexInputBindingDivisorDescriptionEXT
-instance Show VertexInputBindingDivisorDescriptionEXT
-
-instance FromCStruct VertexInputBindingDivisorDescriptionEXT
 

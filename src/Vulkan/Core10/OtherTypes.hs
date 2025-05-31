@@ -1183,6 +1183,32 @@ instance Zero PipelineCacheHeaderVersionOne where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkDrawIndirectCommand-pNext-09461# If the bound graphics
+--     pipeline state was created with
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'
+--     in the @pNext@ chain of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
+--     any member of
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'::@pVertexBindingDivisors@
+--     has a value other than @1@ in @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
+-- -   #VUID-VkDrawIndirectCommand-None-09462# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-objects shader objects>
+--     are used for drawing or the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, any member of the
+--     @pVertexBindingDescriptions@ parameter to the
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     call that sets this dynamic state has a value other than @1@ in
+--     @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
 -- -   #VUID-VkDrawIndirectCommand-None-00500# For a given vertex buffer
 --     binding, any attribute data fetched /must/ be entirely contained
 --     within the corresponding vertex buffer binding, as described in
@@ -1262,6 +1288,32 @@ instance Zero DrawIndirectCommand where
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexed'.
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkDrawIndexedIndirectCommand-pNext-09461# If the bound
+--     graphics pipeline state was created with
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'
+--     in the @pNext@ chain of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
+--     any member of
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR'::@pVertexBindingDivisors@
+--     has a value other than @1@ in @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
+--
+-- -   #VUID-VkDrawIndexedIndirectCommand-None-09462# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-objects shader objects>
+--     are used for drawing or the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, any member of the
+--     @pVertexBindingDescriptions@ parameter to the
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     call that sets this dynamic state has a value other than @1@ in
+--     @divisor@, and
+--     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
+--     /must/ be @0@
 --
 -- -   #VUID-VkDrawIndexedIndirectCommand-robustBufferAccess2-08798# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>

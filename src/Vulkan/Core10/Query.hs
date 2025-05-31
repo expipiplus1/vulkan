@@ -395,20 +395,24 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstQuery@ /must/ be less than the number of queries in
---     @queryPool@
+-- -   #VUID-vkGetQueryPoolResults-firstQuery-09436# @firstQuery@ /must/ be
+--     less than the number of queries in @queryPool@
 --
--- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in @queryPool@
+-- -   #VUID-vkGetQueryPoolResults-firstQuery-09437# The sum of
+--     @firstQuery@ and @queryCount@ /must/ be less than or equal to the
+--     number of queries in @queryPool@
 --
--- -   If @queryCount@ is greater than 1, @stride@ /must/ not be zero
+-- -   #VUID-vkGetQueryPoolResults-queryCount-09438# If @queryCount@ is
+--     greater than 1, @stride@ /must/ not be zero
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-09439# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP', @flags@ /must/
 --     not contain
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-09440# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT',
@@ -416,18 +420,19 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT',
 --     or 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
 --
--- -   If the @queryType@ used to create @queryPool@ was
+-- -   #VUID-vkGetQueryPoolResults-queryType-09441# If the @queryType@ used
+--     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the @queryPool@ /must/ have been recorded once for each pass as
 --     retrieved via a call to
 --     'Vulkan.Extensions.VK_KHR_performance_query.getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
 --
--- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@, then @flags@ /must/ include
---     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
+-- -   #VUID-vkGetQueryPoolResults-queryType-09442# If the @queryType@ used
+--     to create @queryPool@ was @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@,
+--     then @flags@ /must/ include @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
 --
--- -   If @flags@ includes @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@, then it
---     /must/ not include
+-- -   #VUID-vkGetQueryPoolResults-flags-09443# If @flags@ includes
+--     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@, then it /must/ not include
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
 --
 -- -   #VUID-vkGetQueryPoolResults-None-09401# All queries used by the
