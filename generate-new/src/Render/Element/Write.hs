@@ -1,3 +1,5 @@
+{-# language CPP #-}
+
 module Render.Element.Write where
 
 import           Data.Char                      ( isLower )
@@ -285,7 +287,11 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         let t = layoutDoc (d <> line <> line)
         if getAll (reCanFormat e)
           then
+#if MIN_VERSION_fourmolu(0,11,0)
+            liftIO (try $ Ormolu.ormolu ormoluConfig "<stdin>" t)
+#else
             liftIO (try (Ormolu.ormolu ormoluConfig "<stdin>" $ T.unpack t))
+#endif
               >>= \case
                     Left ex ->
                       error
