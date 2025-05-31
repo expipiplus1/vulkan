@@ -582,6 +582,7 @@ executable sdl-triangle
     , transformers
     , vector
     , vulkan
+    , vulkan-examples
     , vulkan-utils
   default-language: Haskell2010
   if os(windows)
