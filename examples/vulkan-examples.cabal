@@ -575,7 +575,7 @@ executable sdl-triangle
       base <5
     , bytestring
     , extra
-    , managed
+    , resourcet
     , say
     , sdl2 >=2.5.2.0
     , text
