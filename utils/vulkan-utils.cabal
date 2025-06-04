@@ -38,6 +38,7 @@ library
       Vulkan.Utils.Initialization
       Vulkan.Utils.Misc
       Vulkan.Utils.QueueAssignment
+      Vulkan.Utils.Reflect
       Vulkan.Utils.Requirements
       Vulkan.Utils.Requirements.TH
       Vulkan.Utils.ShaderQQ.Backend.Glslang
@@ -98,6 +99,7 @@ library
       cbits/DebugCallback.c
   build-depends:
       base <5
+    , aeson
     , bytestring
     , containers
     , dependent-map

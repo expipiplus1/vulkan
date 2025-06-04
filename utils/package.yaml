@@ -24,6 +24,7 @@ library:
 
   dependencies:
   - base <5
+  - aeson
   - bytestring
   - containers
   - dependent-map
