@@ -22,7 +22,7 @@ jobs:
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
     - name: Install hub
       run: sudo apt-get install -y hub
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: 'recursive'
 

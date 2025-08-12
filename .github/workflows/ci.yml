@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: 'recursive'
     - uses: haskell-actions/setup@v2
@@ -152,7 +152,7 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: 'recursive'
     - uses: haskell-actions/setup@v2
@@ -254,7 +254,7 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: 'recursive'
     - uses: cachix/install-nix-action@V27
@@ -279,7 +279,7 @@ jobs:
   nix-sdist:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: 'recursive'
     - uses: cachix/install-nix-action@V27
@@ -295,7 +295,7 @@ jobs:
   nix-generator:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: 'recursive'
     - uses: cachix/install-nix-action@V27
@@ -311,7 +311,7 @@ jobs:
   nix-shell-profiling:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         submodules: 'recursive'
     - uses: cachix/install-nix-action@V27
@@ -327,7 +327,7 @@ jobs:
   shellcheck:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Install shellcheck
       run: |
         sudo apt-get install fd-find
