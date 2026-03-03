@@ -49,6 +49,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_b
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindImageMemoryDeviceGroupInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (BindImageMemorySwapchainInfoKHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (BindImagePlaneMemoryInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (BindMemoryStatusKHR)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
@@ -92,11 +93,26 @@ foreign import ccall
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
 --
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+-- feature is enabled, this command /must/ attempt to perform all of the
+-- memory binding operations described by @pBindInfos@, and /must/ not
+-- early exit on the first failure.
+--
+-- If any of the memory binding operations described by @pBindInfos@ fail,
+-- the 'Vulkan.Core10.Enums.Result.Result' returned by this command /must/
+-- be the return value of any one of the memory binding operations which
+-- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
+--
 -- Note
 --
--- If 'bindBufferMemory2' fails, and @bindInfoCount@ was greater than one,
--- then the buffers referenced by @pBindInfos@ will be in an indeterminate
--- state, and must not be used. Applications should destroy these buffers.
+-- If the 'bindBufferMemory2' command failed,
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR' structures
+-- were not included in the @pNext@ chains of each element of @pBindInfos@,
+-- and @bindInfoCount@ was greater than one, then the buffers referenced by
+-- @pBindInfos@ will be in an indeterminate state, and must not be used.
+--
+-- Applications should destroy these buffers.
 --
 -- == Return Codes
 --
@@ -159,11 +175,26 @@ foreign import ccall
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
 --
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+-- feature is enabled, this command /must/ attempt to perform all of the
+-- memory binding operations described by @pBindInfos@, and /must/ not
+-- early exit on the first failure.
+--
+-- If any of the memory binding operations described by @pBindInfos@ fail,
+-- the 'Vulkan.Core10.Enums.Result.Result' returned by this command /must/
+-- be the return value of any one of the memory binding operations which
+-- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
+--
 -- Note
 --
--- If 'bindImageMemory2' fails, and @bindInfoCount@ was greater than one,
--- then the images referenced by @pBindInfos@ will be in an indeterminate
--- state, and must not be used. Applications should destroy these images.
+-- If the 'bindImageMemory2' command failed,
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR' structures
+-- were not included in the @pNext@ chains of each element of @pBindInfos@,
+-- and @bindInfoCount@ was greater than one, then the images referenced by
+-- @pBindInfos@ will be in an indeterminate state, and must not be used.
+--
+-- Applications should destroy these images.
 --
 -- == Valid Usage
 --
@@ -389,9 +420,11 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 -- -   #VUID-VkBindBufferMemoryInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO'
 --
--- -   #VUID-VkBindBufferMemoryInfo-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
+-- -   #VUID-VkBindBufferMemoryInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
+--     or 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR'
 --
 -- -   #VUID-VkBindBufferMemoryInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -440,6 +473,7 @@ instance Extensible BindBufferMemoryInfo where
   getNext BindBufferMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindBufferMemoryInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @BindMemoryStatusKHR = Just f
     | Just Refl <- eqT @e @BindBufferMemoryDeviceGroupInfo = Just f
     | otherwise = Nothing
 
@@ -762,8 +796,8 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo',
 --     'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
---     or
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo',
+--     or 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR'
 --
 -- -   #VUID-VkBindImageMemoryInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -811,6 +845,7 @@ instance Extensible BindImageMemoryInfo where
   getNext BindImageMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindImageMemoryInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @BindMemoryStatusKHR = Just f
     | Just Refl <- eqT @e @BindImagePlaneMemoryInfo = Just f
     | Just Refl <- eqT @e @BindImageMemorySwapchainInfoKHR = Just f
     | Just Refl <- eqT @e @BindImageMemoryDeviceGroupInfo = Just f

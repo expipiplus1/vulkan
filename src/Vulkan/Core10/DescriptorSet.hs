@@ -1742,6 +1742,7 @@ instance Zero DescriptorImageInfo where
 -- 'Vulkan.Core10.Handles.BufferView', 'DescriptorBufferInfo',
 -- 'DescriptorImageInfo', 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
 -- 'updateDescriptorSets'
@@ -2248,9 +2249,10 @@ instance Zero CopyDescriptorSet where
 --     and @descriptorCount@ is equal to @1@, @pImmutableSamplers@ /must/
 --     not be @NULL@
 --
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorCount-00283# If
---     @descriptorCount@ is not @0@, @stageFlags@ /must/ be a valid
---     combination of
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorCount-09465# If
+--     @descriptorCount@ is not @0@, @stageFlags@ /must/ be
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ALL' or a
+--     valid combination of other
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' values
 --
 -- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-01510# If
@@ -2269,6 +2271,20 @@ instance Zero CopyDescriptorSet where
 --     @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     then @pImmutableSamplers@ /must/ be @NULL@
+--
+-- -   #VUID-VkDescriptorSetLayoutBinding-flags-09466# If
+--     'DescriptorSetLayoutCreateInfo'::@flags@ contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV',
+--     and @descriptorCount@ is not @0@, then @stageFlags@ /must/ be a
+--     valid combination of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     and
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
+--     values
 --
 -- == Valid Usage (Implicit)
 --
@@ -2402,9 +2418,12 @@ instance Zero DescriptorSetLayoutBinding where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-binding-00279# The
---     'DescriptorSetLayoutBinding'::@binding@ members of the elements of
---     the @pBindings@ array /must/ each have different values
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-binding-00279# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-perStageDescriptorSet perStageDescriptorSet>
+--     feature is not enabled, or @flags@ does not contain
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV',
+--     then the 'DescriptorSetLayoutBinding'::@binding@ members of the
+--     elements of the @pBindings@ array /must/ each have different values
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-00280# If @flags@
 --     contains
@@ -2512,6 +2531,21 @@ instance Zero DescriptorSetLayoutBinding where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     then @flags@ /must/ not contain
 --     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-09463# If @flags@
+--     contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV',
+--     then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-perStageDescriptorSet perStageDescriptorSet>
+--     /must/ be enabled
+--
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-09464# If @flags@
+--     contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV',
+--     then there /must/ not be any two elements of the @pBindings@ array
+--     with the same 'DescriptorSetLayoutBinding'::@binding@ value and
+--     their 'DescriptorSetLayoutBinding'::@stageFlags@ containing the same
+--     bit
 --
 -- == Valid Usage (Implicit)
 --
@@ -2625,6 +2659,12 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
 -- account for non-trivial descriptor consumption when choosing the
 -- @descriptorCount@ value, as indicated by
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@.
+--
+-- For simplicity the application /can/ use the
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6PropertiesKHR'::@maxCombinedImageSamplerDescriptorCount@
+-- property, which is sized to accommodate any and all
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
+-- supported by the implementation.
 --
 -- == Valid Usage
 --
@@ -2973,10 +3013,10 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --     is included in the @pNext@ chain, and
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'::@descriptorSetCount@
 --     is not zero, then
---     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'::pDescriptorCounts[i]
+--     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'::@pDescriptorCounts@[i]
 --     /must/ be less than or equal to
---     'DescriptorSetLayoutBinding'::descriptorCount for the corresponding
---     binding used to create @pSetLayouts@[i]
+--     'DescriptorSetLayoutBinding'::@descriptorCount@ for the
+--     corresponding binding used to create @pSetLayouts@[i]
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-04610# If any element
 --     of @pSetLayouts@ was created with the

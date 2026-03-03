@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorSetLayoutCreateFlagBits"
 module Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits  ( DescriptorSetLayoutCreateFlags
-                                                              , DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
+                                                              , DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV
+                                                                                                 , DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_INDIRECT_BINDABLE_BIT_NV
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT
@@ -33,6 +34,11 @@ type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 -- 'DescriptorSetLayoutCreateFlags'
 newtype DescriptorSetLayoutCreateFlagBits = DescriptorSetLayoutCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | 'DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV' specifies that binding
+-- numbers in descriptor sets using this layout /may/ represent different
+-- resources and\/or types of resources in each stage.
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV = DescriptorSetLayoutCreateFlagBits 0x00000040
 
 -- | 'DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT' specifies that
 -- descriptor sets using this layout /must/ be allocated from a descriptor
@@ -93,6 +99,10 @@ enumPrefixDescriptorSetLayoutCreateFlagBits = "DESCRIPTOR_SET_LAYOUT_CREATE_"
 showTableDescriptorSetLayoutCreateFlagBits :: [(DescriptorSetLayoutCreateFlagBits, String)]
 showTableDescriptorSetLayoutCreateFlagBits =
   [
+    ( DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV
+    , "PER_STAGE_BIT_NV"
+    )
+  ,
     ( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
     , "HOST_ONLY_POOL_BIT_EXT"
     )

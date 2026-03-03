@@ -461,7 +461,20 @@ There exists a package to build some example programs in the
 ## Current Status
 
 All the core Vulkan 1.0, 1.1, 1.2, and 1.3 functionality is here as well as all the
-extensions (except the video ones).
+extensions, with the exception of the video extensions listed below which are
+currently disabled in the generator:
+
+- `VK_KHR_video_queue`
+- `VK_KHR_video_decode_queue`
+- `VK_KHR_video_encode_queue`
+- `VK_KHR_video_decode_h264`, `VK_EXT_video_decode_h264`
+- `VK_KHR_video_encode_h264`, `VK_EXT_video_encode_h264`
+- `VK_KHR_video_decode_h265`, `VK_EXT_video_decode_h265`
+- `VK_KHR_video_encode_h265`, `VK_EXT_video_encode_h265`
+- `VK_KHR_video_maintenance1`
+
+The list is maintained in `forceDisabledExtensions` in
+[`generate-new/src/Bespoke.hs`](./generate-new/src/Bespoke.hs).
 
 This is currently a 64 bit only library.
 

@@ -254,10 +254,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdPushDescriptorSetKHR-pipelineBindPoint-00363#
---     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
---
 -- -   #VUID-vkCmdPushDescriptorSetKHR-set-00364# @set@ /must/ be less than
 --     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
 --     provided when @layout@ was created
@@ -269,6 +265,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdPushDescriptorSetKHR-pDescriptorWrites-06494# For each
 --     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
@@ -276,6 +274,10 @@ foreign import ccall
 --     @pDescriptorWrites@[i].@pImageInfo@ /must/ be a valid pointer to an
 --     array of @pDescriptorWrites@[i].@descriptorCount@ valid
 --     'Vulkan.Core10.DescriptorSet.DescriptorImageInfo' structures
+--
+-- -   #VUID-vkCmdPushDescriptorSetKHR-pipelineBindPoint-00363#
+--     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
+--     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
 --
 -- == Valid Usage (Implicit)
 --

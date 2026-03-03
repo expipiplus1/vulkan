@@ -1449,6 +1449,13 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkComputePipelineCreateInfo-None-09497# If the @pNext@ chain
+--     does not include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+--     structure, @flags@: must be a valid combination of
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
+--     values
+--
 -- -   #VUID-VkComputePipelineCreateInfo-flags-07984# If @flags@ contains
 --     the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
@@ -4033,6 +4040,13 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkGraphicsPipelineCreateInfo-None-09497# If the @pNext@ chain
+--     does not include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+--     structure, @flags@: must be a valid combination of
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
+--     values
+--
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07984# If @flags@ contains
 --     the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
@@ -4389,7 +4403,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'PipelineMultisampleStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pMultisampleState-09027# If
---     @pMultisampleState@ is not @NULL@ is /must/ be a valid pointer to a
+--     @pMultisampleState@ is not @NULL@ it /must/ be a valid pointer to a
 --     valid 'PipelineMultisampleStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-alphaToCoverageEnable-08891# If
@@ -6287,17 +6301,21 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     create each library /must/ be compatible or all equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-pMultisampleState-06629# If the
---     pipeline requires
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
---     @pMultisampleState@ /must/ be @NULL@ or a valid pointer to a valid
---     'PipelineMultisampleStateCreateInfo' structure
---
--- -   #VUID-VkGraphicsPipelineCreateInfo-renderpass-06631# If the pipeline
+-- -   #VUID-VkGraphicsPipelineCreateInfo-renderpass-06631# If @renderPass@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline
 --     requires
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
---     and @renderpass@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     then @pMultisampleState@ /must/ not be @NULL@
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
+--     and the @VK_EXT_extended_dynamic_state3@ extension is not enabled or
+--     any of the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT', or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--     dynamic states is not set, or
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
+--     is enabled on the device and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--     is not set, then @pMultisampleState@ /must/ be a valid pointer to a
+--     valid 'PipelineMultisampleStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-Input-06632# If the pipeline
 --     requires
@@ -6305,7 +6323,17 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     with a fragment shader that either enables
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-sampleshading sample shading>
 --     or decorates any variable in the @Input@ storage class with
---     @Sample@, then @pMultisampleState@ /must/ not be @NULL@
+--     @Sample@, and the @VK_EXT_extended_dynamic_state3@ extension is not
+--     enabled or any of the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT', or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--     dynamic states is not set, or
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
+--     is enabled on the device and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--     is not set, then @pMultisampleState@ /must/ be a valid pointer to a
+--     valid 'PipelineMultisampleStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06633# If
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
@@ -7154,11 +7182,6 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-sType-unique# The @sType@ value
 --     of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-parameter# @flags@ /must/
---     be a valid combination of
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
---     values
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-parameter# If
 --     @pDynamicState@ is not @NULL@, @pDynamicState@ /must/ be a valid

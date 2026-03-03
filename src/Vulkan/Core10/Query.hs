@@ -309,6 +309,11 @@ foreign import ccall
 -- defines specific meaning for values returned here, though
 -- implementations are free to return other values.
 --
+-- If the status value written is negative, indicating that the operations
+-- within the query completed unsuccessfully, then all other results
+-- written by this command are undefined unless otherwise specified for any
+-- of the results of the used query type.
+--
 -- Note
 --
 -- If
@@ -654,8 +659,8 @@ getQueryPoolResults device
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoKHR VkVideoDecodeH264ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoKHR VkVideoDecodeH265ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeUsageInfoKHR VkVideoDecodeUsageInfoKHR>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileInfoEXT VkVideoEncodeH264ProfileInfoEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileInfoEXT VkVideoEncodeH265ProfileInfoEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileInfoKHR VkVideoEncodeH264ProfileInfoKHR>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileInfoKHR VkVideoEncodeH265ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeUsageInfoKHR VkVideoEncodeUsageInfoKHR>,
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>

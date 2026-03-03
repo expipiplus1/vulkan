@@ -981,6 +981,10 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
 --     queries
 --
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-None-08370# If there is a bound
+--     video session, then it /must/ not have been created with
+--     @VK_VIDEO_SESSION_CREATE_INLINE_QUERIES_BIT_KHR@
+--
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-07128# If the @queryType@
 --     used to create @queryPool@ was
 --     @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@ and there is a bound video
@@ -991,13 +995,6 @@ foreign import ccall
 --     specified in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>::@pVideoProfile@
 --     the bound video session was created with
---
--- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-04862# If the @queryType@
---     used to create @queryPool@ was
---     @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@, then the
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#video-encode-operations video encode operations>
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-07129# If the @queryType@
 --     used to create @queryPool@ was
@@ -5166,6 +5163,12 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-counterBufferOffset-04568#
 --     @counterBufferOffset@ /must/ be a multiple of @4@
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-counterOffset-09474#
+--     @counterOffset@ /must/ be a multiple of @4@
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-vertexStride-09475#
+--     @vertexStride@ /must/ be a multiple of @4@
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-commandBuffer-02646#
 --     @commandBuffer@ /must/ not be a protected command buffer

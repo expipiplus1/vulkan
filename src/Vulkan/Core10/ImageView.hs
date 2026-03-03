@@ -807,6 +807,42 @@ instance Zero ImageSubresourceRange where
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
+-- -   #VUID-VkImageViewCreateInfo-image-08333# If @image@ was created with
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@ and @usage@
+--     contains @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@, then the image
+--     view’s
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain @VK_FORMAT_FEATURE_VIDEO_DECODE_OUTPUT_BIT_KHR@
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08334# If @image@ was created with
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@ and @usage@
+--     contains @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@, then the image
+--     view’s
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain @VK_FORMAT_FEATURE_VIDEO_DECODE_DPB_BIT_KHR@
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08335# If @image@ was created with
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then @usage@
+--     /must/ not include @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08336# If @image@ was created with
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@ and @usage@
+--     contains @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@, then the image
+--     view’s
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain @VK_FORMAT_FEATURE_VIDEO_ENCODE_INPUT_BIT_KHR@
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08337# If @image@ was created with
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@ and @usage@
+--     contains @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, then the image
+--     view’s
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain @VK_FORMAT_FEATURE_VIDEO_ENCODE_DPB_BIT_KHR@
+--
+-- -   #VUID-VkImageViewCreateInfo-image-08338# If @image@ was created with
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then @usage@
+--     /must/ not include @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@
+--
 -- -   #VUID-VkImageViewCreateInfo-usage-08932# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
 --     and any of the following is true:
@@ -925,8 +961,17 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-image-07072# If @image@ was created with
 --     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
---     flag and @format@ is a non-compressed format, the @levelCount@ and
---     @layerCount@ members of @subresourceRange@ /must/ both be @1@
+--     flag and @format@ is a non-compressed format, the @levelCount@
+--     member of @subresourceRange@ /must/ be @1@
+--
+-- -   #VUID-VkImageViewCreateInfo-image-09487# If @image@ was created with
+--     the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
+--     flag, the
+--     'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6PropertiesKHR'::@blockTexelViewCompatibleMultipleLayers@
+--     property is not set to 'Vulkan.Core10.FundamentalTypes.TRUE', and
+--     @format@ is a non-compressed format, then the @layerCount@ member of
+--     @subresourceRange@ /must/ be @1@
 --
 -- -   #VUID-VkImageViewCreateInfo-pNext-01585# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'

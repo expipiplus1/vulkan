@@ -50,6 +50,15 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO
                                                         , STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV
+                                                        , STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT
+                                                        , STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT
+                                                        , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR
+                                                        , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR
+                                                        , STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR
+                                                        , STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR
+                                                        , STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR
                                                         , STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_SCREEN_BUFFER_FEATURES_QNX
@@ -70,6 +79,7 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_SAMPLER_BLOCK_MATCH_WINDOW_CREATE_INFO_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_PROPERTIES_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV
                                                         , STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR
@@ -856,10 +866,13 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorBufferEmbeddedSamplersInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorSetsInfoKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBindVideoSessionMemoryInfoKHR VkBindVideoSessionMemoryInfoKHR>,
 -- 'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.BlitImageCubicWeightsInfoQCOM',
@@ -1289,6 +1302,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Properties',
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5FeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5PropertiesKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6FeaturesKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6PropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT',
 -- 'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionFeaturesNV',
 -- 'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionPropertiesNV',
@@ -1316,6 +1331,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_optical_flow.PhysicalDeviceOpticalFlowPropertiesNV',
 -- 'Vulkan.Extensions.VK_EXT_pci_bus_info.PhysicalDevicePCIBusInfoPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT',
+-- 'Vulkan.Extensions.VK_NV_per_stage_descriptor_set.PhysicalDevicePerStageDescriptorSetFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeatures',
@@ -1424,6 +1440,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.PhysicalDeviceVertexInputDynamicStateFeaturesEXT',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoFormatInfoKHR VkPhysicalDeviceVideoFormatInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoMaintenance1FeaturesKHR VkPhysicalDeviceVideoMaintenance1FeaturesKHR>,
 -- 'Vulkan.Core12.PhysicalDeviceVulkan11Features',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan11Properties',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Features',
@@ -1495,6 +1512,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.PrivateDataSlotCreateInfo',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.PushConstantsInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetWithTemplateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_low_latency.QueryLowLatencySupportNV',
 -- 'Vulkan.Core10.Query.QueryPoolCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
@@ -1556,6 +1576,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.SemaphoreSubmitInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreWaitInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.SetDescriptorBufferOffsetsInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.SetLatencyMarkerInfoNV',
 -- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT',
 -- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo',
@@ -1626,34 +1647,34 @@ import GHC.Show (Show(showsPrec))
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeInfoKHR VkVideoDecodeInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeUsageInfoKHR VkVideoDecodeUsageInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeCapabilitiesKHR VkVideoEncodeCapabilitiesKHR>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264CapabilitiesEXT VkVideoEncodeH264CapabilitiesEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264DpbSlotInfoEXT VkVideoEncodeH264DpbSlotInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264GopRemainingFrameInfoEXT VkVideoEncodeH264GopRemainingFrameInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264NaluSliceInfoEXT VkVideoEncodeH264NaluSliceInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264PictureInfoEXT VkVideoEncodeH264PictureInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileInfoEXT VkVideoEncodeH264ProfileInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264QualityLevelPropertiesEXT VkVideoEncodeH264QualityLevelPropertiesEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264RateControlInfoEXT VkVideoEncodeH264RateControlInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264RateControlLayerInfoEXT VkVideoEncodeH264RateControlLayerInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionCreateInfoEXT VkVideoEncodeH264SessionCreateInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersAddInfoEXT VkVideoEncodeH264SessionParametersAddInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersCreateInfoEXT VkVideoEncodeH264SessionParametersCreateInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersFeedbackInfoEXT VkVideoEncodeH264SessionParametersFeedbackInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersGetInfoEXT VkVideoEncodeH264SessionParametersGetInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265CapabilitiesEXT VkVideoEncodeH265CapabilitiesEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265DpbSlotInfoEXT VkVideoEncodeH265DpbSlotInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265GopRemainingFrameInfoEXT VkVideoEncodeH265GopRemainingFrameInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265NaluSliceSegmentInfoEXT VkVideoEncodeH265NaluSliceSegmentInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265PictureInfoEXT VkVideoEncodeH265PictureInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileInfoEXT VkVideoEncodeH265ProfileInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265QualityLevelPropertiesEXT VkVideoEncodeH265QualityLevelPropertiesEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265RateControlInfoEXT VkVideoEncodeH265RateControlInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265RateControlLayerInfoEXT VkVideoEncodeH265RateControlLayerInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionCreateInfoEXT VkVideoEncodeH265SessionCreateInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersAddInfoEXT VkVideoEncodeH265SessionParametersAddInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersCreateInfoEXT VkVideoEncodeH265SessionParametersCreateInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersFeedbackInfoEXT VkVideoEncodeH265SessionParametersFeedbackInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersGetInfoEXT VkVideoEncodeH265SessionParametersGetInfoEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264CapabilitiesKHR VkVideoEncodeH264CapabilitiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264DpbSlotInfoKHR VkVideoEncodeH264DpbSlotInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264GopRemainingFrameInfoKHR VkVideoEncodeH264GopRemainingFrameInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264NaluSliceInfoKHR VkVideoEncodeH264NaluSliceInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264PictureInfoKHR VkVideoEncodeH264PictureInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileInfoKHR VkVideoEncodeH264ProfileInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264QualityLevelPropertiesKHR VkVideoEncodeH264QualityLevelPropertiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264RateControlInfoKHR VkVideoEncodeH264RateControlInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264RateControlLayerInfoKHR VkVideoEncodeH264RateControlLayerInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionCreateInfoKHR VkVideoEncodeH264SessionCreateInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersAddInfoKHR VkVideoEncodeH264SessionParametersAddInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersCreateInfoKHR VkVideoEncodeH264SessionParametersCreateInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersFeedbackInfoKHR VkVideoEncodeH264SessionParametersFeedbackInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionParametersGetInfoKHR VkVideoEncodeH264SessionParametersGetInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265CapabilitiesKHR VkVideoEncodeH265CapabilitiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265DpbSlotInfoKHR VkVideoEncodeH265DpbSlotInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265GopRemainingFrameInfoKHR VkVideoEncodeH265GopRemainingFrameInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265NaluSliceSegmentInfoKHR VkVideoEncodeH265NaluSliceSegmentInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265PictureInfoKHR VkVideoEncodeH265PictureInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileInfoKHR VkVideoEncodeH265ProfileInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265QualityLevelPropertiesKHR VkVideoEncodeH265QualityLevelPropertiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265RateControlInfoKHR VkVideoEncodeH265RateControlInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265RateControlLayerInfoKHR VkVideoEncodeH265RateControlLayerInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionCreateInfoKHR VkVideoEncodeH265SessionCreateInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersAddInfoKHR VkVideoEncodeH265SessionParametersAddInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersCreateInfoKHR VkVideoEncodeH265SessionParametersCreateInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersFeedbackInfoKHR VkVideoEncodeH265SessionParametersFeedbackInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersGetInfoKHR VkVideoEncodeH265SessionParametersGetInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeInfoKHR VkVideoEncodeInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQualityLevelInfoKHR VkVideoEncodeQualityLevelInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQualityLevelPropertiesKHR VkVideoEncodeQualityLevelPropertiesKHR>,
@@ -1664,6 +1685,7 @@ import GHC.Show (Show(showsPrec))
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeUsageInfoKHR VkVideoEncodeUsageInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEndCodingInfoKHR VkVideoEndCodingInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoInlineQueryInfoKHR VkVideoInlineQueryInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoPictureResourceInfoKHR VkVideoPictureResourceInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>,
@@ -1835,6 +1857,33 @@ pattern STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = StructureType 48
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV = StructureType 1000546000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT"
+pattern STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT = StructureType 1000545008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT"
+pattern STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT = StructureType 1000545007
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR"
+pattern STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR = StructureType 1000545006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR"
+pattern STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR = StructureType 1000545005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR"
+pattern STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR = StructureType 1000545004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR"
+pattern STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR = StructureType 1000545003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR"
+pattern STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR = StructureType 1000545002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR = StructureType 1000545001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR = StructureType 1000545000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR"
 pattern STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR = StructureType 1000184000
 
@@ -1894,6 +1943,9 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_PROPERTIES_QCOM = Stru
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM = StructureType 1000518000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV = StructureType 1000516000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM"
 pattern STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM = StructureType 1000510001
@@ -4142,6 +4194,15 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO
   , STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV
+  , STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT
+  , STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT
+  , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR
+  , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR
+  , STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR
+  , STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR
+  , STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR
   , STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_SCREEN_BUFFER_FEATURES_QNX
@@ -4162,6 +4223,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_SAMPLER_BLOCK_MATCH_WINDOW_CREATE_INFO_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_PROPERTIES_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV
   , STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR
@@ -5094,6 +5156,42 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV"
     )
   ,
+    ( STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT
+    , "BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT
+    , "SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR
+    , "PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR
+    , "PUSH_DESCRIPTOR_SET_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR
+    , "PUSH_CONSTANTS_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR
+    , "BIND_DESCRIPTOR_SETS_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR
+    , "BIND_MEMORY_STATUS_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR
+    , "PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR
+    , "PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR"
+    )
+  ,
     ( STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR
     , "CALIBRATED_TIMESTAMP_INFO_KHR"
     )
@@ -5172,6 +5270,10 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM
     , "PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV
+    , "PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV"
     )
   ,
     ( STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM

@@ -163,6 +163,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core12.PhysicalDeviceVulkan11Properties',
 -- 'Vulkan.Core13.PhysicalDeviceVulkan13Properties',
 -- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ScreenBufferPropertiesQNX',
+-- 'Vulkan.Extensions.VK_KHR_maintenance6.SetDescriptorBufferOffsetsInfoEXT',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseMemoryBind',
