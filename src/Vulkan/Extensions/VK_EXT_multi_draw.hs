@@ -7730,8 +7730,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
 --     stages
 --
--- -   #VUID-vkCmdDrawMultiIndexedEXT-None-07312# An index buffer /must/ be
---     bound
+-- -   #VUID-vkCmdDrawMultiIndexedEXT-None-07312# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+--     is not enabled, a valid index buffer /must/ be bound
 --
 -- -   #VUID-vkCmdDrawMultiIndexedEXT-robustBufferAccess2-07825# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>

@@ -222,6 +222,8 @@ import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalD
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Properties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5PropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6FeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6PropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_budget (PhysicalDeviceMemoryBudgetPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionPropertiesNV)
@@ -249,6 +251,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (PhysicalDeviceOptica
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (PhysicalDeviceOpticalFlowPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pci_bus_info (PhysicalDevicePCIBusInfoPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pageable_device_local_memory (PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_per_stage_descriptor_set (PhysicalDevicePerStageDescriptorSetFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
@@ -909,6 +912,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceSchedulingControlsFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCudaKernelLaunchFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalFormatResolveFeaturesANDROID = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePerStageDescriptorSetFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageProcessing2FeaturesQCOM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCubicWeightsFeaturesQCOM = Just f
@@ -1062,6 +1066,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceHostQueryResetFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderFloat16Int8Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderDrawParametersFeatures = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMaintenance6FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance5FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance4Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceInlineUniformBlockFeatures = Just f
@@ -1169,6 +1174,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Properties',
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5PropertiesKHR',
+--     'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6PropertiesKHR',
 --     'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionPropertiesNV',
 --     'Vulkan.Extensions.VK_EXT_mesh_shader.PhysicalDeviceMeshShaderPropertiesEXT',
 --     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV',
@@ -1318,6 +1324,7 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceConservativeRasterizationPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryHostPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFloatControlsProperties = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMaintenance6PropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance5PropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance4Properties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance3Properties = Just f

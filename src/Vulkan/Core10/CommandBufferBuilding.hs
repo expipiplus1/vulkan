@@ -1497,10 +1497,6 @@ foreign import ccall
 --     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
 --     provided when @layout@ was created
 --
--- -   #VUID-vkCmdBindDescriptorSets-pipelineBindPoint-00361#
---     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
---
 -- -   #VUID-vkCmdBindDescriptorSets-pDynamicOffsets-01971# Each element of
 --     @pDynamicOffsets@ which corresponds to a descriptor binding with
 --     type
@@ -1518,7 +1514,7 @@ foreign import ccall
 -- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-01979# For each
 --     dynamic uniform or storage buffer binding in @pDescriptorSets@, the
 --     sum of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#dynamic-effective-offset effective offset>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-effective-offset effective offset>
 --     and the range of the binding /must/ be less than or equal to the
 --     size of the buffer
 --
@@ -1533,6 +1529,21 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DescriptorPool' with the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --     flag set
+--
+-- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-06563# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
+--     is not enabled, each element of @pDescriptorSets@ /must/ be a valid
+--     'Vulkan.Core10.Handles.DescriptorSet'
+--
+-- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-08010# Each element of
+--     @pDescriptorSets@ /must/ have been allocated with a
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' which was not created
+--     with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdBindDescriptorSets-pipelineBindPoint-00361#
+--     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
+--     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
 --
 -- -   #VUID-vkCmdBindDescriptorSets-graphicsPipelineLibrary-06754# If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
@@ -1665,6 +1676,16 @@ foreign import ccall
 
 -- | vkCmdBindIndexBuffer - Bind an index buffer to a command buffer
 --
+-- = Description
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+-- feature is enabled, @buffer@ /can/ be
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. If pname::buffer is
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- feature is enabled, every index fetched results in a value of zero.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindIndexBuffer-offset-08782# @offset@ /must/ be less
@@ -1692,13 +1713,22 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-indexTypeUint8 indexTypeUint8>
 --     feature /must/ be enabled
 --
+-- -   #VUID-vkCmdBindIndexBuffer-None-09493# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+--     is not enabled, @buffer@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCmdBindIndexBuffer-buffer-09494# If @buffer@ is
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', offset /must/ be zero
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdBindIndexBuffer-commandBuffer-parameter# @commandBuffer@
 --     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   #VUID-vkCmdBindIndexBuffer-buffer-parameter# @buffer@ /must/ be a
---     valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkCmdBindIndexBuffer-buffer-parameter# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Buffer' handle
 --
 -- -   #VUID-vkCmdBindIndexBuffer-indexType-parameter# @indexType@ /must/
 --     be a valid 'Vulkan.Core10.Enums.IndexType.IndexType' value
@@ -1715,8 +1745,9 @@ foreign import ccall
 --     called outside of a video coding scope
 --
 -- -   #VUID-vkCmdBindIndexBuffer-commonparent# Both of @buffer@, and
---     @commandBuffer@ /must/ have been created, allocated, or retrieved
---     from the same 'Vulkan.Core10.Handles.Device'
+--     @commandBuffer@ that are valid handles of non-ignored parameters
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -9365,7 +9396,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
 --     stages
 --
--- -   #VUID-vkCmdDrawIndexed-None-07312# An index buffer /must/ be bound
+-- -   #VUID-vkCmdDrawIndexed-None-07312# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+--     is not enabled, a valid index buffer /must/ be bound
 --
 -- -   #VUID-vkCmdDrawIndexed-robustBufferAccess2-07825# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
@@ -16957,8 +16990,9 @@ foreign import ccall
 --     be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDrawIndirectCount@
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-07312# An index buffer /must/ be
---     bound
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07312# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+--     is not enabled, a valid index buffer /must/ be bound
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-robustBufferAccess2-07825# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
@@ -23089,6 +23123,10 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
 --     queries
 --
+-- -   #VUID-vkCmdBeginQuery-None-08370# If there is a bound video session,
+--     then it /must/ not have been created with
+--     @VK_VIDEO_SESSION_CREATE_INLINE_QUERIES_BIT_KHR@
+--
 -- -   #VUID-vkCmdBeginQuery-queryType-07128# If the @queryType@ used to
 --     create @queryPool@ was @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@ and
 --     there is a bound video session, then @queryPool@ /must/ have been
@@ -23099,12 +23137,6 @@ foreign import ccall
 --     specified in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>::@pVideoProfile@
 --     the bound video session was created with
---
--- -   #VUID-vkCmdBeginQuery-queryType-04862# If the @queryType@ used to
---     create @queryPool@ was @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@,
---     then the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@
---     was allocated from /must/ support
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#video-encode-operations video encode operations>
 --
 -- -   #VUID-vkCmdBeginQuery-queryType-07129# If the @queryType@ used to
 --     create @queryPool@ was @VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR@,
@@ -23886,6 +23918,11 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryResultStatusKHR VkQueryResultStatusKHR>
 -- defines specific meaning for values returned here, though
 -- implementations are free to return other values.
+--
+-- If the status value written is negative, indicating that the operations
+-- within the query completed unsuccessfully, then all other results
+-- written by this command are undefined unless otherwise specified for any
+-- of the results of the used query type.
 --
 -- Results for any available query written by this command are final and
 -- represent the final result of the query. If

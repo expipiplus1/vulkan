@@ -405,7 +405,7 @@ instance Zero RenderPassStripeInfoARM where
 --
 -- -   #VUID-VkRenderPassStripeBeginInfoARM-pStripeInfos-parameter#
 --     @pStripeInfos@ /must/ be a valid pointer to an array of
---     @stripeInfoCount@ 'RenderPassStripeInfoARM' structures
+--     @stripeInfoCount@ valid 'RenderPassStripeInfoARM' structures
 --
 -- -   #VUID-VkRenderPassStripeBeginInfoARM-stripeInfoCount-arraylength#
 --     @stripeInfoCount@ /must/ be greater than @0@
@@ -416,14 +416,11 @@ instance Zero RenderPassStripeInfoARM where
 -- 'RenderPassStripeInfoARM',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassStripeBeginInfoARM = RenderPassStripeBeginInfoARM
-  { -- | @stripeInfoCount@ is the number of stripes in this render pass instance
-    stripeInfoCount :: Word32
-  , -- | @pStripeInfos@ is a pointer to an array of @stripeInfoCount@
+  { -- | @pStripeInfos@ is a pointer to an array of @stripeInfoCount@
     -- 'RenderPassStripeInfoARM' structures describing the stripes used by the
     -- render pass instance.
-    stripeInfos :: Ptr RenderPassStripeInfoARM
-  }
-  deriving (Typeable, Eq)
+    stripeInfos :: Vector RenderPassStripeInfoARM }
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (RenderPassStripeBeginInfoARM)
 #endif
@@ -431,38 +428,32 @@ deriving instance Show RenderPassStripeBeginInfoARM
 
 instance ToCStruct RenderPassStripeBeginInfoARM where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p RenderPassStripeBeginInfoARM{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (stripeInfoCount)
-    poke ((p `plusPtr` 24 :: Ptr (Ptr RenderPassStripeInfoARM))) (stripeInfos)
-    f
+  pokeCStruct p RenderPassStripeBeginInfoARM{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (stripeInfos)) :: Word32))
+    pPStripeInfos' <- ContT $ allocaBytes @RenderPassStripeInfoARM ((Data.Vector.length (stripeInfos)) * 32)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPStripeInfos' `plusPtr` (32 * (i)) :: Ptr RenderPassStripeInfoARM) (e)) (stripeInfos)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr RenderPassStripeInfoARM))) (pPStripeInfos')
+    lift $ f
   cStructSize = 32
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr (Ptr RenderPassStripeInfoARM))) (zero)
     f
 
 instance FromCStruct RenderPassStripeBeginInfoARM where
   peekCStruct p = do
     stripeInfoCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pStripeInfos <- peek @(Ptr RenderPassStripeInfoARM) ((p `plusPtr` 24 :: Ptr (Ptr RenderPassStripeInfoARM)))
+    pStripeInfos' <- generateM (fromIntegral stripeInfoCount) (\i -> peekCStruct @RenderPassStripeInfoARM ((pStripeInfos `advancePtrBytes` (32 * (i)) :: Ptr RenderPassStripeInfoARM)))
     pure $ RenderPassStripeBeginInfoARM
-             stripeInfoCount pStripeInfos
-
-instance Storable RenderPassStripeBeginInfoARM where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
+             pStripeInfos'
 
 instance Zero RenderPassStripeBeginInfoARM where
   zero = RenderPassStripeBeginInfoARM
-           zero
-           zero
+           mempty
 
 
 -- | VkRenderPassStripeSubmitInfoARM - Structure specifying striped rendering

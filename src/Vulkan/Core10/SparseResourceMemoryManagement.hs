@@ -779,6 +779,22 @@ instance Zero ImageSubresource where
 --     as described in section
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association>
 --
+-- -   #VUID-VkSparseMemoryBind-resourceOffset-09491# If the resource being
+--     bound is a 'Vulkan.Core10.Handles.Buffer', @resourceOffset@ and
+--     @memoryOffset@ /must/ be an integer multiple of the @alignment@ of
+--     the 'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
+--     returned from a call to
+--     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' with
+--     the buffer resource
+--
+-- -   #VUID-VkSparseMemoryBind-resourceOffset-09492# If the resource being
+--     bound is a 'Vulkan.Core10.Handles.Image', @resourceOffset@ and
+--     @memoryOffset@ /must/ be an integer multiple of the @alignment@ of
+--     the 'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
+--     returned from a call to
+--     'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements' with the
+--     image resource
+--
 -- -   #VUID-VkSparseMemoryBind-memory-01097# If @memory@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/ not have
 --     been created with a memory type that reports

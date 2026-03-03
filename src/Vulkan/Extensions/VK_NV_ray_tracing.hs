@@ -3072,6 +3072,13 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-None-09497# If the @pNext@
+--     chain does not include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+--     structure, @flags@: must be a valid combination of
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
+--     values
+--
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07984# If @flags@
 --     contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'

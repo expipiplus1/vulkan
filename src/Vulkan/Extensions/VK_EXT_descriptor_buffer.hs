@@ -727,16 +727,30 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
--- -   #VUID-vkGetDescriptorEXT-dataSize-08125# @dataSize@ /must/ equal the
---     size of a descriptor of type 'DescriptorGetInfoEXT'::@type@
---     determined by the value in
---     'PhysicalDeviceDescriptorBufferPropertiesEXT' , or determined by
+-- -   #VUID-vkGetDescriptorEXT-dataSize-08125# If @descriptorType@ is not
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     or @pImageInfo@ has a @imageView@ member that was not created with a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
+--     structure in its @pNext@ chain, @dataSize@ /must/ equal the size of
+--     a descriptor of type 'DescriptorGetInfoEXT'::@type@ determined by
+--     the value in 'PhysicalDeviceDescriptorBufferPropertiesEXT' , or
+--     determined by
 --     'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT'::@combinedImageSamplerDensityMapDescriptorSize@
 --     if @pDescriptorInfo@ specifies a
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     whose 'Vulkan.Core10.Handles.Sampler' was created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
 --     set
+--
+-- -   #VUID-vkGetDescriptorEXT-descriptorType-09469# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     and @pImageInfo@ has a @imageView@ member that was created with a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
+--     structure in its @pNext@ chain, @dataSize@ /must/ equal the size of
+--     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@combinedImageSamplerDescriptorSize@
+--     times
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@
 --
 -- -   #VUID-vkGetDescriptorEXT-pDescriptor-08016# @pDescriptor@ /must/ be
 --     a valid pointer to an array of at least @dataSize@ bytes
@@ -1004,10 +1018,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-None-08060# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
---     feature /must/ be enabled
---
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-pOffsets-08061# The offsets
 --     in @pOffsets@ /must/ be aligned to
 --     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@descriptorBufferOffsetAlignment@
@@ -1045,16 +1055,20 @@ foreign import ccall
 --     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
 --     provided when @layout@ was created
 --
--- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-pipelineBindPoint-08067#
---     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
---
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-firstSet-09006# The
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' for each set from
 --     @firstSet@ to @firstSet@ + @setCount@ when @layout@ was created
 --     /must/ have been created with the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     bit set
+--
+-- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-None-08060# The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-pipelineBindPoint-08067#
+--     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
+--     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
 --
 -- == Valid Usage (Implicit)
 --
@@ -1197,14 +1211,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-None-08068# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
---     feature /must/ be enabled
---
--- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-pipelineBindPoint-08069#
---     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
---
 -- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-set-08070# The
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' at index @set@ when
 --     @layout@ was created /must/ have been created with the
@@ -1215,6 +1221,14 @@ foreign import ccall
 --     /must/ be less than or equal to
 --     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
 --     provided when @layout@ was created
+--
+-- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-None-08068# The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-pipelineBindPoint-08069#
+--     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
+--     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
 --
 -- == Valid Usage (Implicit)
 --

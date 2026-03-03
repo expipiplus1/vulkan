@@ -94,11 +94,14 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (AttachmentSampl
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (BindAccelerationStructureMemoryInfoNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindBufferMemoryDeviceGroupInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2 (BindBufferMemoryInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (BindDescriptorBufferEmbeddedSamplersInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (BindDescriptorSetsInfoKHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindImageMemoryDeviceGroupInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2 (BindImageMemoryInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (BindImageMemorySwapchainInfoKHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (BindImagePlaneMemoryInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (BindIndexBufferIndirectCommandNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (BindMemoryStatusKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands_compute (BindPipelineIndirectCommandNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (BindShaderGroupIndirectCommandNV)
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (BindSparseInfo)
@@ -598,6 +601,8 @@ import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalD
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Properties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5PropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6FeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6PropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_budget (PhysicalDeviceMemoryBudgetPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionPropertiesNV)
@@ -626,6 +631,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (PhysicalDeviceOptica
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (PhysicalDeviceOpticalFlowPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pci_bus_info (PhysicalDevicePCIBusInfoPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pageable_device_local_memory (PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_per_stage_descriptor_set (PhysicalDevicePerStageDescriptorSetFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
@@ -811,6 +817,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PresentTimesIn
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (PrivateDataSlotCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (ProtectedSubmitInfo)
 import {-# SOURCE #-} Vulkan.Core10.PipelineLayout (PushConstantRange)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PushConstantsInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PushDescriptorSetInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PushDescriptorSetWithTemplateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency (QueryLowLatencySupportNV)
 import {-# SOURCE #-} Vulkan.Core10.Query (QueryPoolCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (QueryPoolPerformanceCreateInfoKHR)
@@ -877,6 +886,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (Sem
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (SemaphoreSubmitInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreTypeCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreWaitInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (SetDescriptorBufferOffsetsInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (SetLatencyMarkerInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (SetStateFlagsIndirectCommandNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_object (ShaderCreateInfoEXT)
@@ -1096,9 +1106,13 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends AttachmentDescription2 AttachmentDescriptionStencilLayout = ()
   Extends AttachmentReference2 AttachmentReferenceStencilLayout = ()
   Extends BindBufferMemoryInfo BindBufferMemoryDeviceGroupInfo = ()
+  Extends BindBufferMemoryInfo BindMemoryStatusKHR = ()
+  Extends BindDescriptorBufferEmbeddedSamplersInfoEXT PipelineLayoutCreateInfo = ()
+  Extends BindDescriptorSetsInfoKHR PipelineLayoutCreateInfo = ()
   Extends BindImageMemoryInfo BindImageMemoryDeviceGroupInfo = ()
   Extends BindImageMemoryInfo BindImageMemorySwapchainInfoKHR = ()
   Extends BindImageMemoryInfo BindImagePlaneMemoryInfo = ()
+  Extends BindImageMemoryInfo BindMemoryStatusKHR = ()
   Extends BindSparseInfo DeviceGroupBindSparseInfo = ()
   Extends BindSparseInfo TimelineSemaphoreSubmitInfo = ()
   Extends BindSparseInfo FrameBoundaryEXT = ()
@@ -1158,6 +1172,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceInlineUniformBlockFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceMaintenance4Features = ()
   Extends DeviceCreateInfo PhysicalDeviceMaintenance5FeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceMaintenance6FeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderDrawParametersFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderFloat16Int8Features = ()
   Extends DeviceCreateInfo PhysicalDeviceHostQueryResetFeatures = ()
@@ -1314,6 +1329,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceCubicWeightsFeaturesQCOM = ()
   Extends DeviceCreateInfo PhysicalDeviceImageProcessing2FeaturesQCOM = ()
   Extends DeviceCreateInfo PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = ()
+  Extends DeviceCreateInfo PhysicalDevicePerStageDescriptorSetFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceExternalFormatResolveFeaturesANDROID = ()
   Extends DeviceCreateInfo PhysicalDeviceCudaKernelLaunchFeaturesNV = ()
   Extends DeviceCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
@@ -1439,6 +1455,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceInlineUniformBlockFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMaintenance4Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMaintenance5FeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceMaintenance6FeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderDrawParametersFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderFloat16Int8Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceHostQueryResetFeatures = ()
@@ -1592,6 +1609,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCubicWeightsFeaturesQCOM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageProcessing2FeaturesQCOM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePerStageDescriptorSetFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExternalFormatResolveFeaturesANDROID = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCudaKernelLaunchFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSchedulingControlsFeaturesARM = ()
@@ -1623,6 +1641,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceMaintenance3Properties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceMaintenance4Properties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceMaintenance5PropertiesKHR = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceMaintenance6PropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFloatControlsProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceExternalMemoryHostPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceConservativeRasterizationPropertiesEXT = ()
@@ -1732,6 +1751,9 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PresentInfoKHR FrameBoundaryEXT = ()
   Extends PresentInfoKHR SwapchainPresentFenceInfoEXT = ()
   Extends PresentInfoKHR SwapchainPresentModeInfoEXT = ()
+  Extends PushConstantsInfoKHR PipelineLayoutCreateInfo = ()
+  Extends PushDescriptorSetInfoKHR PipelineLayoutCreateInfo = ()
+  Extends PushDescriptorSetWithTemplateInfoKHR PipelineLayoutCreateInfo = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceCreateInfoKHR = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceQueryCreateInfoINTEL = ()
   Extends QueueFamilyProperties2 QueueFamilyGlobalPriorityPropertiesKHR = ()
@@ -1778,6 +1800,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SemaphoreCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends SemaphoreCreateInfo ImportMetalSharedEventInfoEXT = ()
   Extends SemaphoreCreateInfo QueryLowLatencySupportNV = ()
+  Extends SetDescriptorBufferOffsetsInfoEXT PipelineLayoutCreateInfo = ()
   Extends ShaderCreateInfoEXT PipelineShaderStageRequiredSubgroupSizeCreateInfo = ()
   Extends ShaderModuleCreateInfo ShaderModuleValidationCacheCreateInfoEXT = ()
   Extends SubmitInfo Win32KeyedMutexAcquireReleaseInfoNV = ()
@@ -1932,6 +1955,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR -> go @BufferUsageFlags2CreateInfoKHR
   STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO -> go @(ShaderModuleCreateInfo '[])
   STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR -> go @PipelineCreateFlags2CreateInfoKHR
+  STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO -> go @PipelineLayoutCreateInfo
   STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR -> go @DisplayPresentInfoKHR
   STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT -> go @DebugReportCallbackCreateInfoEXT
   STRUCTURE_TYPE_VALIDATION_FLAGS_EXT -> go @ValidationFlagsEXT
@@ -2044,6 +2068,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES -> go @PhysicalDeviceMaintenance4Properties
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR -> go @PhysicalDeviceMaintenance5FeaturesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES_KHR -> go @PhysicalDeviceMaintenance5PropertiesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR -> go @PhysicalDeviceMaintenance6FeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR -> go @PhysicalDeviceMaintenance6PropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES -> go @PhysicalDeviceShaderDrawParametersFeatures
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES -> go @PhysicalDeviceShaderFloat16Int8Features
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES -> go @PhysicalDeviceFloatControlsProperties
@@ -2401,6 +2427,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_PROPERTIES_AMDX -> go @PhysicalDeviceShaderEnqueuePropertiesAMDX
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX -> go @PhysicalDeviceShaderEnqueueFeaturesAMDX
   STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX -> go @PipelineShaderStageNodeCreateInfoAMDX
+  STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR -> go @BindMemoryStatusKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_CUBIC_CLAMP_FEATURES_QCOM -> go @PhysicalDeviceCubicClampFeaturesQCOM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_DEGAMMA_FEATURES_QCOM -> go @PhysicalDeviceYcbcrDegammaFeaturesQCOM
   STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_YCBCR_DEGAMMA_CREATE_INFO_QCOM -> go @SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM
@@ -2412,6 +2439,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_SAMPLER_BLOCK_MATCH_WINDOW_CREATE_INFO_QCOM -> go @SamplerBlockMatchWindowCreateInfoQCOM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV -> go @PhysicalDeviceDescriptorPoolOverallocationFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT -> go @PhysicalDeviceLayeredDriverPropertiesMSFT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV -> go @PhysicalDevicePerStageDescriptorSetFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID -> go @PhysicalDeviceExternalFormatResolveFeaturesANDROID
   STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_PROPERTIES_ANDROID -> go @PhysicalDeviceExternalFormatResolvePropertiesANDROID
   STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID -> go @AndroidHardwareBufferFormatResolvePropertiesANDROID
@@ -2484,6 +2512,7 @@ infix 6 ::&
 {-# complete (::&) :: BufferUsageFlags2CreateInfoKHR #-}
 {-# complete (::&) :: ShaderModuleCreateInfo #-}
 {-# complete (::&) :: PipelineCreateFlags2CreateInfoKHR #-}
+{-# complete (::&) :: PipelineLayoutCreateInfo #-}
 {-# complete (::&) :: DisplayPresentInfoKHR #-}
 {-# complete (::&) :: DebugReportCallbackCreateInfoEXT #-}
 {-# complete (::&) :: ValidationFlagsEXT #-}
@@ -2596,6 +2625,8 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceMaintenance4Properties #-}
 {-# complete (::&) :: PhysicalDeviceMaintenance5FeaturesKHR #-}
 {-# complete (::&) :: PhysicalDeviceMaintenance5PropertiesKHR #-}
+{-# complete (::&) :: PhysicalDeviceMaintenance6FeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceMaintenance6PropertiesKHR #-}
 {-# complete (::&) :: PhysicalDeviceShaderDrawParametersFeatures #-}
 {-# complete (::&) :: PhysicalDeviceShaderFloat16Int8Features #-}
 {-# complete (::&) :: PhysicalDeviceFloatControlsProperties #-}
@@ -2953,6 +2984,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceShaderEnqueuePropertiesAMDX #-}
 {-# complete (::&) :: PhysicalDeviceShaderEnqueueFeaturesAMDX #-}
 {-# complete (::&) :: PipelineShaderStageNodeCreateInfoAMDX #-}
+{-# complete (::&) :: BindMemoryStatusKHR #-}
 {-# complete (::&) :: PhysicalDeviceCubicClampFeaturesQCOM #-}
 {-# complete (::&) :: PhysicalDeviceYcbcrDegammaFeaturesQCOM #-}
 {-# complete (::&) :: SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM #-}
@@ -2964,6 +2996,7 @@ infix 6 ::&
 {-# complete (::&) :: SamplerBlockMatchWindowCreateInfoQCOM #-}
 {-# complete (::&) :: PhysicalDeviceDescriptorPoolOverallocationFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceLayeredDriverPropertiesMSFT #-}
+{-# complete (::&) :: PhysicalDevicePerStageDescriptorSetFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceExternalFormatResolveFeaturesANDROID #-}
 {-# complete (::&) :: PhysicalDeviceExternalFormatResolvePropertiesANDROID #-}
 {-# complete (::&) :: AndroidHardwareBufferFormatResolvePropertiesANDROID #-}

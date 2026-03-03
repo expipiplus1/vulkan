@@ -1553,8 +1553,9 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- -   #VUID-VkImageCreateInfo-usage-04815# If @usage@ includes
 --     @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@,
 --     @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@, or
---     @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@, then the @pNext@ chain
---     /must/ include a
+--     @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@, and @flags@ does not
+--     include @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
+--     the @pNext@ chain /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
@@ -1565,14 +1566,29 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- -   #VUID-VkImageCreateInfo-usage-04816# If @usage@ includes
 --     @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@,
 --     @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@, or
---     @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, then the @pNext@ chain
---     /must/ include a
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, and @flags@ does not
+--     include @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
+--     the @pNext@ chain /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
 --     structure with a @videoCodecOperation@ member specifying an encode
 --     operation
+--
+-- -   #VUID-VkImageCreateInfo-flags-08328# If @flags@ includes
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoMaintenance1 videoMaintenance1>
+--     /must/ be enabled
+--
+-- -   #VUID-VkImageCreateInfo-flags-08329# If @flags@ includes
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@ and @usage@ does
+--     not include @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@, then @usage@
+--     /must/ not include @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@
+--
+-- -   #VUID-VkImageCreateInfo-flags-08331# If @flags@ includes
+--     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then @usage@
+--     /must/ not include @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06811# If the @pNext@ chain includes a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>

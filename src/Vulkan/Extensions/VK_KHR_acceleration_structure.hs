@@ -6060,13 +6060,6 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 --
 -- = Description
 --
--- If @deviceAddress@ is zero, no specific address is requested.
---
--- If @deviceAddress@ is not zero, @deviceAddress@ /must/ be an address
--- retrieved from an identically created acceleration structure on the same
--- implementation. The acceleration structure /must/ also be placed on an
--- identically created @buffer@ and at the same @offset@.
---
 -- Applications /should/ avoid creating acceleration structures with
 -- application-provided addresses and implementation-provided addresses in
 -- the same process, to reduce the likelihood of
@@ -6134,6 +6127,26 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-deviceAddress-03612# If
 --     @deviceAddress@ is not zero, @createFlags@ /must/ include
 --     'ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR'
+--
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-deviceAddress-09488# If
+--     @deviceAddress@ is not zero, it /must/ have been retrieved from an
+--     identically created acceleration structure, except for @buffer@ and
+--     @deviceAddress@
+--
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-deviceAddress-09489# If
+--     @deviceAddress@ is not zero, @buffer@ /must/ have been created
+--     identically to the @buffer@ used to create the acceleration
+--     structure from which @deviceAddress@ was retrieved, except for
+--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@
+--
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-deviceAddress-09490# If
+--     @deviceAddress@ is not zero, @buffer@ /must/ have been created with
+--     a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@
+--     that was retrieved from
+--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferOpaqueCaptureAddress'
+--     for the @buffer@ that was used to create the acceleration structure
+--     from which @deviceAddress@ was retrieved
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-createFlags-03613# If
 --     @createFlags@ includes
@@ -6237,7 +6250,8 @@ data AccelerationStructureCreateInfoKHR (es :: [Type]) = AccelerationStructureCr
   , -- | @deviceAddress@ is the device address requested for the acceleration
     -- structure if the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureCaptureReplay accelerationStructureCaptureReplay>
-    -- feature is being used.
+    -- feature is being used. If @deviceAddress@ is zero, no specific address
+    -- is requested.
     deviceAddress :: DeviceAddress
   }
   deriving (Typeable)

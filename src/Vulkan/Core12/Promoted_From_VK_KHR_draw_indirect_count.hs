@@ -7616,8 +7616,9 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-drawIndirectCount drawIndirectCount>
 --     is not enabled this function /must/ not be used
 --
--- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07312# An index buffer
---     /must/ be bound
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07312# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+--     is not enabled, a valid index buffer /must/ be bound
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-robustBufferAccess2-07825# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>

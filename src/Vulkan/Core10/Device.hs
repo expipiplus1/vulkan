@@ -173,6 +173,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_linear_color_attachment (PhysicalDeviceLinearColorAttachmentFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5FeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (PhysicalDeviceMemoryPriorityFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mesh_shader (PhysicalDeviceMeshShaderFeaturesEXT)
@@ -188,6 +189,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_non_seamless_cube_map (PhysicalDe
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (PhysicalDeviceOpacityMicromapFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (PhysicalDeviceOpticalFlowFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pageable_device_local_memory (PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_per_stage_descriptor_set (PhysicalDevicePerStageDescriptorSetFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
@@ -981,6 +983,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_linear_color_attachment.PhysicalDeviceLinearColorAttachmentFeaturesNV',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Features',
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5FeaturesKHR',
+--     'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6FeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_memory_priority.PhysicalDeviceMemoryPriorityFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_mesh_shader.PhysicalDeviceMeshShaderFeaturesEXT',
@@ -996,6 +999,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_opacity_micromap.PhysicalDeviceOpacityMicromapFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_optical_flow.PhysicalDeviceOpticalFlowFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT',
+--     'Vulkan.Extensions.VK_NV_per_stage_descriptor_set.PhysicalDevicePerStageDescriptorSetFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeatures',
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
@@ -1064,6 +1068,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers.PhysicalDeviceVariablePointersFeatures',
 --     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorFeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.PhysicalDeviceVertexInputDynamicStateFeaturesEXT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoMaintenance1FeaturesKHR VkPhysicalDeviceVideoMaintenance1FeaturesKHR>,
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Features',
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features',
 --     'Vulkan.Core13.PhysicalDeviceVulkan13Features',
@@ -1160,6 +1165,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @DeviceQueueShaderCoreControlCreateInfoARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCudaKernelLaunchFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalFormatResolveFeaturesANDROID = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePerStageDescriptorSetFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorPoolOverallocationFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageProcessing2FeaturesQCOM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCubicWeightsFeaturesQCOM = Just f
@@ -1316,6 +1322,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceHostQueryResetFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderFloat16Int8Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderDrawParametersFeatures = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMaintenance6FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance5FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance4Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceInlineUniformBlockFeatures = Just f

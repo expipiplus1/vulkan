@@ -225,6 +225,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_maintenance3
                           , module Vulkan.Extensions.VK_KHR_maintenance4
                           , module Vulkan.Extensions.VK_KHR_maintenance5
+                          , module Vulkan.Extensions.VK_KHR_maintenance6
                           , module Vulkan.Extensions.VK_KHR_map_memory2
                           , module Vulkan.Extensions.VK_KHR_multiview
                           , module Vulkan.Extensions.VK_KHR_performance_query
@@ -316,6 +317,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_memory_decompression
                           , module Vulkan.Extensions.VK_NV_mesh_shader
                           , module Vulkan.Extensions.VK_NV_optical_flow
+                          , module Vulkan.Extensions.VK_NV_per_stage_descriptor_set
                           , module Vulkan.Extensions.VK_NV_present_barrier
                           , module Vulkan.Extensions.VK_NV_ray_tracing
                           , module Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
@@ -574,6 +576,7 @@ import Vulkan.Extensions.VK_KHR_maintenance2
 import Vulkan.Extensions.VK_KHR_maintenance3
 import Vulkan.Extensions.VK_KHR_maintenance4
 import Vulkan.Extensions.VK_KHR_maintenance5
+import Vulkan.Extensions.VK_KHR_maintenance6
 import Vulkan.Extensions.VK_KHR_map_memory2
 import Vulkan.Extensions.VK_KHR_multiview
 import Vulkan.Extensions.VK_KHR_performance_query
@@ -665,6 +668,7 @@ import Vulkan.Extensions.VK_NV_low_latency2
 import Vulkan.Extensions.VK_NV_memory_decompression
 import Vulkan.Extensions.VK_NV_mesh_shader
 import Vulkan.Extensions.VK_NV_optical_flow
+import Vulkan.Extensions.VK_NV_per_stage_descriptor_set
 import Vulkan.Extensions.VK_NV_present_barrier
 import Vulkan.Extensions.VK_NV_ray_tracing
 import Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder

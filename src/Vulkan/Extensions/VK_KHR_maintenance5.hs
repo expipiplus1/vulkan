@@ -813,6 +813,14 @@ foreign import ccall
 -- @offset@. If @size@ is 'Vulkan.Core10.APIConstants.WHOLE_SIZE' then the
 -- bound size is from @offset@ to the end of the @buffer@.
 --
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+-- feature is enabled, @buffer@ /can/ be
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. If pname::buffer is
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- feature is enabled, every index fetched results in a value of zero.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindIndexBuffer2KHR-offset-08782# @offset@ /must/ be less
@@ -841,6 +849,14 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-indexTypeUint8 indexTypeUint8>
 --     feature /must/ be enabled
 --
+-- -   #VUID-vkCmdBindIndexBuffer2KHR-None-09493# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+--     is not enabled, @buffer@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCmdBindIndexBuffer2KHR-buffer-09494# If @buffer@ is
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', offset /must/ be zero
+--
 -- -   #VUID-vkCmdBindIndexBuffer2KHR-size-08767# If @size@ is not
 --     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be a multiple
 --     of the size of the type indicated by @indexType@
@@ -855,8 +871,9 @@ foreign import ccall
 --     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   #VUID-vkCmdBindIndexBuffer2KHR-buffer-parameter# @buffer@ /must/ be
---     a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-vkCmdBindIndexBuffer2KHR-buffer-parameter# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Buffer' handle
 --
 -- -   #VUID-vkCmdBindIndexBuffer2KHR-indexType-parameter# @indexType@
 --     /must/ be a valid 'Vulkan.Core10.Enums.IndexType.IndexType' value
@@ -873,8 +890,9 @@ foreign import ccall
 --     be called outside of a video coding scope
 --
 -- -   #VUID-vkCmdBindIndexBuffer2KHR-commonparent# Both of @buffer@, and
---     @commandBuffer@ /must/ have been created, allocated, or retrieved
---     from the same 'Vulkan.Core10.Handles.Device'
+--     @commandBuffer@ that are valid handles of non-ignored parameters
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --

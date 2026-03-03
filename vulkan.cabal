@@ -514,6 +514,7 @@ library
       Vulkan.Extensions.VK_KHR_maintenance3
       Vulkan.Extensions.VK_KHR_maintenance4
       Vulkan.Extensions.VK_KHR_maintenance5
+      Vulkan.Extensions.VK_KHR_maintenance6
       Vulkan.Extensions.VK_KHR_map_memory2
       Vulkan.Extensions.VK_KHR_multiview
       Vulkan.Extensions.VK_KHR_performance_query
@@ -602,6 +603,7 @@ library
       Vulkan.Extensions.VK_NV_memory_decompression
       Vulkan.Extensions.VK_NV_mesh_shader
       Vulkan.Extensions.VK_NV_optical_flow
+      Vulkan.Extensions.VK_NV_per_stage_descriptor_set
       Vulkan.Extensions.VK_NV_present_barrier
       Vulkan.Extensions.VK_NV_ray_tracing
       Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder

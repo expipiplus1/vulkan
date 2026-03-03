@@ -566,6 +566,18 @@ instance Zero PipelineRenderingCreateInfo where
 --     have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --
+-- -   #VUID-VkRenderingInfo-colorAttachmentCount-09476# If
+--     @colorAttachmentCount@ is not @0@ and there is an element of
+--     @pColorAttachments@ with either its @resolveMode@ member set to
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     or its @imageView@ member not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and its @resolveMode@
+--     member not set to
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', the
+--     @resolveImageView@ member of that element of @pColorAttachments@
+--     /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+--
 -- -   #VUID-VkRenderingInfo-pDepthAttachment-06547# If @pDepthAttachment@
 --     is not @NULL@ and @pDepthAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
@@ -576,6 +588,12 @@ instance Zero PipelineRenderingCreateInfo where
 --     is not @NULL@ and @pDepthAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pDepthAttachment->imageView@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   #VUID-VkRenderingInfo-pDepthAttachment-09477# If @pDepthAttachment@
+--     is not @NULL@ and @pDepthAttachment->resolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
+--     @pDepthAttachment->resolveImageView@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkRenderingInfo-pStencilAttachment-06548# If
@@ -591,6 +609,13 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pStencilAttachment->imageView@ /must/ have been created with a
 --     stencil usage including
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   #VUID-VkRenderingInfo-pStencilAttachment-09478# If
+--     @pStencilAttachment@ is not @NULL@ and
+--     @pStencilAttachment->resolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
+--     @pStencilAttachment->resolveImageView@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkRenderingInfo-colorAttachmentCount-06090# If
@@ -996,6 +1021,66 @@ instance Zero PipelineRenderingCreateInfo where
 --     structure, the union of stripe areas defined by the elements of
 --     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeInfoARM'::@pStripeInfos@
 --     /must/ cover the @renderArea@
+--
+-- -   #VUID-VkRenderingInfo-colorAttachmentCount-09479# If
+--     @colorAttachmentCount@ is not @0@ and the @imageView@ member of an
+--     element of @pColorAttachments@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', that @imageView@ /must/
+--     have been created with the identity swizzle
+--
+-- -   #VUID-VkRenderingInfo-colorAttachmentCount-09480# If
+--     @colorAttachmentCount@ is not @0@, and there is an element of
+--     @pColorAttachments@ with either its @resolveMode@ member set to
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     or its @imageView@ member not set to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and its @resolveMode@
+--     member not set to
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', the
+--     @resolveImageView@ member of that element of @pColorAttachments@
+--     /must/ have been created with the identity swizzle
+--
+-- -   #VUID-VkRenderingInfo-pDepthAttachment-09481# If @pDepthAttachment@
+--     is not @NULL@ and @pDepthAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pDepthAttachment->imageView@ /must/ have been created with the
+--     identity swizzle
+--
+-- -   #VUID-VkRenderingInfo-pDepthAttachment-09482# If @pDepthAttachment@
+--     is not @NULL@, @pDepthAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and
+--     @pDepthAttachment->resolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
+--     @pDepthAttachment->resolveImageView@ /must/ have been created with
+--     the identity swizzle
+--
+-- -   #VUID-VkRenderingInfo-pStencilAttachment-09483# If
+--     @pStencilAttachment@ is not @NULL@ and
+--     @pStencilAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pStencilAttachment->imageView@ /must/ have been created with the
+--     identity swizzle
+--
+-- -   #VUID-VkRenderingInfo-pStencilAttachment-09484# If
+--     @pStencilAttachment@ is not @NULL@, @pStencilAttachment->imageView@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', and
+--     @pStencilAttachment->resolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
+--     @pStencilAttachment->resolveImageView@ /must/ have been created with
+--     the identity swizzle
+--
+-- -   #VUID-VkRenderingInfo-imageView-09485# If the @imageView@ member of
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure included in the @pNext@ chain is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
+--     created with the identity swizzle
+--
+-- -   #VUID-VkRenderingInfo-imageView-09486# If the @imageView@ member of
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     structure included in the @pNext@ chain is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
+--     created with the identity swizzle
 --
 -- == Valid Usage (Implicit)
 --

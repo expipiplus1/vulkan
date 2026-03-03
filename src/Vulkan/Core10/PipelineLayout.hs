@@ -709,9 +709,6 @@ instance Zero PushConstantRange where
 -- -   #VUID-VkPipelineLayoutCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO'
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pNext-pNext# @pNext@ /must/ be
---     @NULL@
---
 -- -   #VUID-VkPipelineLayoutCreateInfo-flags-parameter# @flags@ /must/ be
 --     a valid combination of
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PipelineLayoutCreateFlagBits'

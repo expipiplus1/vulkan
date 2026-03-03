@@ -2,6 +2,9 @@
 
 ## WIP
 
+- Bump API version to v1.3.274
+- Disable VK_KHR_video_maintenance1 (depends on force-disabled video extensions)
+
 ## [3.26.4] - 2025-05-31
 
 - Bump API version to v1.3.273

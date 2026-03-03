@@ -419,8 +419,9 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkBufferCreateInfo-usage-04813# If @usage@ includes
 --     @VK_BUFFER_USAGE_VIDEO_DECODE_SRC_BIT_KHR@ or
---     @VK_BUFFER_USAGE_VIDEO_DECODE_DST_BIT_KHR@, then the @pNext@ chain
---     /must/ include a
+--     @VK_BUFFER_USAGE_VIDEO_DECODE_DST_BIT_KHR@, and @flags@ does not
+--     include @VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
+--     the @pNext@ chain /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
@@ -430,14 +431,20 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkBufferCreateInfo-usage-04814# If @usage@ includes
 --     @VK_BUFFER_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@ or
---     @VK_BUFFER_USAGE_VIDEO_ENCODE_DST_BIT_KHR@, then the @pNext@ chain
---     /must/ include a
+--     @VK_BUFFER_USAGE_VIDEO_ENCODE_DST_BIT_KHR@, and @flags@ does not
+--     include @VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
+--     the @pNext@ chain /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
 --     structure with a @videoCodecOperation@ member specifying an encode
 --     operation
+--
+-- -   #VUID-VkBufferCreateInfo-flags-08325# If @flags@ includes
+--     @VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoMaintenance1 videoMaintenance1>
+--     /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-size-06409# @size@ /must/ be less than or
 --     equal to

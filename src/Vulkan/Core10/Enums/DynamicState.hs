@@ -126,7 +126,7 @@ pattern DYNAMIC_STATE_LINE_WIDTH = DynamicState 2
 -- the @depthBiasConstantFactor@, @depthBiasClamp@ and
 -- @depthBiasSlopeFactor@ states in
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
--- ignored and /must/ be set dynamically with either
+-- ignored and /must/ be set dynamically with
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBias' or
 -- 'Vulkan.Extensions.VK_EXT_depth_bias_control.cmdSetDepthBias2EXT' before
 -- any draws are performed with
