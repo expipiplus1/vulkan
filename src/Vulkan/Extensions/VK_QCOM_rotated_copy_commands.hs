@@ -15,33 +15,35 @@
 --     334
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
---     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>
 --
 -- [__Contact__]
 --
---     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_rotated_copy_commands] @jackohound%0A*Here describe the issue or question you have about the VK_QCOM_rotated_copy_commands extension* >
+--     -   Matthew Netsch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_rotated_copy_commands] @mnetsch%0A*Here describe the issue or question you have about the VK_QCOM_rotated_copy_commands extension* >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-09-18
+--     2023-12-13
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   None
+--     -   This extension interacts with @VK_KHR_swapchain@
+--
+--     -   This extension interacts with @VK_KHR_surface@
 --
 -- [__Contributors__]
 --
 --     -   Jeff Leger, Qualcomm Technologies, Inc.
+--
+--     -   Matthew Netsch, Qualcomm Technologies, Inc.
 --
 -- == Description
 --
@@ -107,6 +109,10 @@
 -- == Version History
 --
 -- -   Revision 1, 2020-09-19 (Jeff Leger)
+--
+-- -   Revision 2, 2023-12-13 (Matthew Netsch)
+--
+--     -   Relax dependency on VK_KHR_swapchain
 --
 -- == See Also
 --
@@ -234,11 +240,11 @@ instance Zero CopyCommandTransformInfoQCOM where
            zero
 
 
-type QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 1
+type QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION"
 pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 1
+pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 2
 
 
 type QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME = "VK_QCOM_rotated_copy_commands"

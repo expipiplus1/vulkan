@@ -1545,11 +1545,6 @@ foreign import ccall
 --     @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
 --     parent 'Vulkan.Core10.Handles.CommandPool'’s queue family
 --
--- -   #VUID-vkCmdBindDescriptorSets-graphicsPipelineLibrary-06754# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
---     is not enabled, each element of @pDescriptorSets@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorSet'
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdBindDescriptorSets-commandBuffer-parameter#
@@ -1681,7 +1676,7 @@ foreign import ccall
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
 -- feature is enabled, @buffer@ /can/ be
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. If pname::buffer is
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. If @buffer@ is
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 -- feature is enabled, every index fetched results in a value of zero.
@@ -23410,10 +23405,6 @@ foreign import ccall
 -- -   #VUID-vkCmdEndQuery-None-07007# If called within a subpass of a
 --     render pass instance, the corresponding 'cmdBeginQuery'* command
 --     /must/ have been called previously within the same subpass
---
--- -   #VUID-vkCmdEndQuery-None-07008# If called outside of a render pass
---     instance, the corresponding 'cmdBeginQuery'* command /must/ have
---     been called outside of a render pass instance
 --
 -- == Valid Usage (Implicit)
 --

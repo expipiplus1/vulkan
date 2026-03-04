@@ -4739,7 +4739,7 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-pInfo-09074# If
---     @pInfo@::@pipelineBindPoint@ is of type
+--     @pInfo->pipelineBindPoint@ is of type
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE',
 --     then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCompute ::deviceGeneratedCompute>

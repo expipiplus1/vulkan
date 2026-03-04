@@ -1077,8 +1077,9 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --
--- -   #VUID-VkImageCreateInfo-samples-02258# @samples@ /must/ be a bit
---     value that is set in @imageCreateSampleCounts@ (as defined in
+-- -   #VUID-VkImageCreateInfo-samples-02258# @samples@ /must/ be a valid
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+--     that is set in @imageCreateSampleCounts@ (as defined in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
 -- -   #VUID-VkImageCreateInfo-usage-00968# If the

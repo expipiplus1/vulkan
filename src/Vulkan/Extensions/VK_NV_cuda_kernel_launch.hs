@@ -924,48 +924,7 @@ instance Zero CudaFunctionCreateInfoNV where
 -- and /may/ be altered or freed after 'cmdCudaLaunchKernelNV' has
 -- returned.
 --
--- == Valid Usage
---
--- -   #VUID-VkCudaLaunchInfoNV-gridDimX-09406# @gridDimX@ /must/ be less
---     than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
---
--- -   #VUID-VkCudaLaunchInfoNV-gridDimY-09407# @gridDimY@ /must/ be less
---     than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
---
--- -   #VUID-VkCudaLaunchInfoNV-gridDimZ-09408# @gridDimZ@ /must/ be less
---     than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
---
--- -   #VUID-VkCudaLaunchInfoNV-paramCount-09409# @paramCount@ /must/ be
---     the total amount of parameters listed in the @pParams@ table.
---
--- -   #VUID-VkCudaLaunchInfoNV-pParams-09410# @pParams@ /must/ be a
---     pointer to a table of @paramCount@ parameters, corresponding to the
---     arguments of @function@.
---
--- -   #VUID-VkCudaLaunchInfoNV-extraCount-09411# @extraCount@ must be 0
---
--- -   #VUID-VkCudaLaunchInfoNV-pExtras-09412# @pExtras@ must be NULL
---
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkCudaLaunchInfoNV-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV'
---
--- -   #VUID-VkCudaLaunchInfoNV-pNext-pNext# @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkCudaLaunchInfoNV-function-parameter# @function@ /must/ be a
---     valid 'Vulkan.Extensions.Handles.CudaFunctionNV' handle
---
--- -   #VUID-VkCudaLaunchInfoNV-pParams-parameter# If @paramCount@ is not
---     @0@, @pParams@ /must/ be a valid pointer to an array of @paramCount@
---     bytes
---
--- -   #VUID-VkCudaLaunchInfoNV-pExtras-parameter# If @extraCount@ is not
---     @0@, @pExtras@ /must/ be a valid pointer to an array of @extraCount@
---     bytes
 --
 -- = See Also
 --
@@ -975,17 +934,32 @@ instance Zero CudaFunctionCreateInfoNV where
 -- 'cmdCudaLaunchKernelNV'
 data CudaLaunchInfoNV = CudaLaunchInfoNV
   { -- | @function@ is the CUDA-Driver handle to the function being launched.
+    --
+    -- #VUID-VkCudaLaunchInfoNV-function-parameter# @function@ /must/ be a
+    -- valid 'Vulkan.Extensions.Handles.CudaFunctionNV' handle
     function :: CudaFunctionNV
   , -- | @gridDimX@ is the number of local workgroups to dispatch in the X
     -- dimension. It must be less than or equal to
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+    --
+    -- #VUID-VkCudaLaunchInfoNV-gridDimX-09406# @gridDimX@ /must/ be less than
+    -- or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
     gridDimX :: Word32
   , -- | @gridDimY@ is the number of local workgroups to dispatch in the Y
     -- dimension. It must be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+    --
+    -- #VUID-VkCudaLaunchInfoNV-gridDimY-09407# @gridDimY@ /must/ be less than
+    -- or equal to
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
     gridDimY :: Word32
   , -- | @gridDimZ@ is the number of local workgroups to dispatch in the Z
     -- dimension. It must be less than or equal to
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+    --
+    -- #VUID-VkCudaLaunchInfoNV-gridDimZ-09408# @gridDimZ@ /must/ be less than
+    -- or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
     gridDimZ :: Word32
   , -- | @blockDimX@ is block size in the X dimension.
@@ -999,8 +973,14 @@ data CudaLaunchInfoNV = CudaLaunchInfoNV
     sharedMemBytes :: Word32
   , -- | @pParams@ is a pointer to an array of @paramCount@ pointers,
     -- corresponding to the arguments of @function@.
+    --
+    -- #VUID-VkCudaLaunchInfoNV-pParams-09410# @pParams@ /must/ be a pointer to
+    -- a table of @paramCount@ parameters, corresponding to the arguments of
+    -- @function@.
     params :: Vector (Ptr ())
   , -- | @pExtras@ is reserved for future use.
+    --
+    -- #VUID-VkCudaLaunchInfoNV-pExtras-09412# @pExtras@ must be NULL
     extras :: Vector (Ptr ())
   }
   deriving (Typeable)

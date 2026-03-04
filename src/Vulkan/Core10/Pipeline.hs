@@ -1452,7 +1452,7 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- -   #VUID-VkComputePipelineCreateInfo-None-09497# If the @pNext@ chain
 --     does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
---     structure, @flags@: must be a valid combination of
+--     structure, @flags@ must be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
@@ -1604,11 +1604,6 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --
 -- -   #VUID-VkComputePipelineCreateInfo-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkComputePipelineCreateInfo-flags-parameter# @flags@ /must/ be
---     a valid combination of
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
---     values
 --
 -- -   #VUID-VkComputePipelineCreateInfo-stage-parameter# @stage@ /must/ be
 --     a valid 'PipelineShaderStageCreateInfo' structure
@@ -4043,7 +4038,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-09497# If the @pNext@ chain
 --     does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
---     structure, @flags@: must be a valid combination of
+--     structure, @flags@ must be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
@@ -6110,25 +6105,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
 --     an element of
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
---     includes the other subset, and any element of the @pSetLayouts@
---     array which @layout@ was created with was
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', then the corresponding
---     element of the @pSetLayouts@ array used to create the library’s
---     @layout@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06680# If
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
---     includes only one of
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
---     or
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
---     an element of
---     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
---     includes the other subset, and any element of the @pSetLayouts@
---     array used to create the library’s @layout@ was
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', then the corresponding
---     element of the @pSetLayouts@ array used to create this pipeline’s
---     @layout@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     includes the other subset, any element of the @pSetLayouts@ array
+--     when @layout@ was created and the corresponding element of the
+--     @pSetLayouts@ array used to create the library’s @layout@ /must/ not
+--     both be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pLibraries-06681# If one element
 --     of
@@ -6835,7 +6815,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     is enabled, then the index of the most significant bit in each
 --     element of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
---     /must/ be less than @pViewportState@::@viewportCount@
+--     /must/ be less than @pViewportState->viewportCount@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-07731# If the
 --     pipeline requires
@@ -6848,7 +6828,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     is enabled, then the index of the most significant bit in each
 --     element of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
---     /must/ be less than @pViewportState@::@scissorCount@
+--     /must/ be less than @pViewportState->scissorCount@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-08711# If @pStages@
 --     includes a fragment shader stage,
@@ -6878,8 +6858,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     @rasterizationSamples@ is not dynamic, and the @pNext@ chain
 --     includes a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
---     structure, @rasterizationSamples@ /must/ be a bit value that is set
---     in @imageCreateSampleCounts@ (as defined in
+--     structure, @rasterizationSamples@ /must/ be a valid
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+--     that is set in @imageCreateSampleCounts@ (as defined in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     for every element of @depthAttachmentFormat@,
 --     @stencilAttachmentFormat@ and the @pColorAttachmentFormats@ array

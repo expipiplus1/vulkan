@@ -3932,8 +3932,8 @@ foreign import ccall
 --     containing one or more valid instances of 'MultiDrawInfoEXT'
 --     structures
 --
--- -   #VUID-vkCmdDrawMultiEXT-stride-04936# @stride@ must be a multiple of
---     4
+-- -   #VUID-vkCmdDrawMultiEXT-stride-04936# @stride@ /must/ be a multiple
+--     of 4
 --
 -- == Valid Usage (Implicit)
 --
@@ -7795,7 +7795,7 @@ foreign import ccall
 --     containing one or more valid instances of 'MultiDrawIndexedInfoEXT'
 --     structures
 --
--- -   #VUID-vkCmdDrawMultiIndexedEXT-stride-04941# @stride@ must be a
+-- -   #VUID-vkCmdDrawMultiIndexedEXT-stride-04941# @stride@ /must/ be a
 --     multiple of 4
 --
 -- == Valid Usage (Implicit)

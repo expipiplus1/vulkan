@@ -3210,7 +3210,7 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-None-09497# If the
 --     @pNext@ chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
---     structure, @flags@: must be a valid combination of
+--     structure, @flags@ must be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
@@ -3382,11 +3382,6 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-sType-unique# The
 --     @sType@ value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-parameter#
---     @flags@ /must/ be a valid combination of
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
---     values
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-pStages-parameter# If
 --     @stageCount@ is not @0@, and @pStages@ is not @NULL@, @pStages@

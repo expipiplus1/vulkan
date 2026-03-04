@@ -3444,7 +3444,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-None-09497# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
---     structure, @flags@: must be a valid combination of
+--     structure, @flags@ must be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
@@ -3718,11 +3718,6 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-parameter# @flags@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
---     values
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pStages-parameter# If
 --     @stageCount@ is not @0@, @pStages@ /must/ be a valid pointer to an

@@ -891,7 +891,8 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
 --
 -- -   #VUID-VkAttachmentDescription2-samples-08745# @samples@ /must/ be a
---     bit value that is set in @imageCreateSampleCounts@ (as defined in
+--     valid 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
+--     value that is set in @imageCreateSampleCounts@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     for the given @format@
 --
@@ -1381,7 +1382,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- >         .a = VK_COMPONENT_SWIZZLE_IDENTITY},
 -- >     .xChromaOffset = properties.chromaOffsetX,
 -- >     .yChromaOffset = properties.chromaOffsetY,
--- >     .chromaFilter = ename:VK_FILTER_NEAREST,
+-- >     .chromaFilter = VK_FILTER_NEAREST,
 -- >     .forceExplicitReconstruction = ... };
 --
 -- where @properties@ is equal to

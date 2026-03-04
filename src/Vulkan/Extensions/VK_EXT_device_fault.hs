@@ -312,22 +312,22 @@ foreign import ccall
 -- -   #VUID-vkGetDeviceFaultInfoEXT-pFaultCounts-07337# If the value
 --     referenced by @pFaultCounts->addressInfoCount@ is not @0@, and
 --     @pFaultInfo->pAddressInfos@ is not @NULL@,
---     @pFaultInfo->pAddressInfos@ must be a valid pointer to an array of
+--     @pFaultInfo->pAddressInfos@ /must/ be a valid pointer to an array of
 --     @pFaultCounts->addressInfoCount@ 'DeviceFaultAddressInfoEXT'
 --     structures
 --
 -- -   #VUID-vkGetDeviceFaultInfoEXT-pFaultCounts-07338# If the value
 --     referenced by @pFaultCounts->vendorInfoCount@ is not @0@, and
 --     @pFaultInfo->pVendorInfos@ is not @NULL@, @pFaultInfo->pVendorInfos@
---     must be a valid pointer to an array of
+--     /must/ be a valid pointer to an array of
 --     @pFaultCounts->vendorInfoCount@ 'DeviceFaultVendorInfoEXT'
 --     structures
 --
 -- -   #VUID-vkGetDeviceFaultInfoEXT-pFaultCounts-07339# If the value
 --     referenced by @pFaultCounts->vendorBinarySize@ is not @0@, and
 --     @pFaultInfo->pVendorBinaryData@ is not @NULL@,
---     @pFaultInfo->pVendorBinaryData@ must be a valid pointer to an array
---     of @pFaultCounts->vendorBinarySize@ bytes
+--     @pFaultInfo->pVendorBinaryData@ /must/ be a valid pointer to an
+--     array of @pFaultCounts->vendorBinarySize@ bytes
 --
 -- == Valid Usage (Implicit)
 --
