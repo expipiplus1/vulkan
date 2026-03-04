@@ -780,7 +780,8 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
 --
 -- -   #VUID-VkAttachmentDescription-samples-08745# @samples@ /must/ be a
---     bit value that is set in @imageCreateSampleCounts@ (as defined in
+--     valid 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
+--     value that is set in @imageCreateSampleCounts@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     for the given @format@
 --
@@ -1438,7 +1439,7 @@ instance Zero AttachmentReference where
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkSubpassDescription-pDepthStencilAttachment-04438#
---     @pDepthStencilAttachment@ and @pColorAttachments@ must not contain
+--     @pDepthStencilAttachment@ and @pColorAttachments@ /must/ not contain
 --     references to the same attachment
 --
 -- == Valid Usage (Implicit)
@@ -2297,8 +2298,9 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE', then all pipelines to be
 -- bound with the subpass /must/ have the same value for
 -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
--- In all such cases, @rasterizationSamples@ /must/ be a bit value that is
--- set in
+-- In all such cases, @rasterizationSamples@ /must/ be a valid
+-- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value that
+-- is set in
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@framebufferNoAttachmentsSampleCounts@.
 --
 -- == Valid Usage

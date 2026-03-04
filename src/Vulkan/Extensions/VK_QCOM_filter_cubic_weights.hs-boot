@@ -25,8 +25,8 @@
 --
 -- [__Contact__]
 --
---     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_filter_cubic_weights] @jackohound%0A*Here describe the issue or question you have about the VK_QCOM_filter_cubic_weights extension* >
+--     -   Matthew Netsch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_filter_cubic_weights] @mnetsch%0A*Here describe the issue or question you have about the VK_QCOM_filter_cubic_weights extension* >
 --
 -- == Other Extension Metadata
 --

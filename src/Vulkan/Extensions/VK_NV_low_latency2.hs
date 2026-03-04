@@ -371,14 +371,12 @@ foreign import ccall
 --
 -- 'latencySleepNV' returns immediately. Applications /should/ use
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.waitSemaphores'
--- with
--- @pSleepInfo@::'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.signalSemaphore'
--- to delay host CPU work. CPU work refers to application work done before
--- presenting which includes but is not limited to: input sampling,
--- simulation, command buffer recording, command buffer submission, and
--- present submission. It is recommended to call this function before input
--- sampling. When using this function, it /should/ be called exactly once
--- between presents.
+-- with @pSleepInfo->signalSemaphore@ to delay host CPU work. CPU work
+-- refers to application work done before presenting which includes but is
+-- not limited to: input sampling, simulation, command buffer recording,
+-- command buffer submission, and present submission. It is recommended to
+-- call this function before input sampling. When using this function, it
+-- /should/ be called exactly once between presents.
 --
 -- == Return Codes
 --

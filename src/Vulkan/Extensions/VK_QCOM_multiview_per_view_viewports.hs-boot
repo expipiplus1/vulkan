@@ -25,8 +25,8 @@
 --
 -- [__Contact__]
 --
---     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_multiview_per_view_viewports] @jackohound%0A*Here describe the issue or question you have about the VK_QCOM_multiview_per_view_viewports extension* >
+--     -   Matthew Netsch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_multiview_per_view_viewports] @mnetsch%0A*Here describe the issue or question you have about the VK_QCOM_multiview_per_view_viewports extension* >
 --
 -- == Other Extension Metadata
 --

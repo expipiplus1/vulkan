@@ -1619,7 +1619,8 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with the identity swizzle
+--     been created with the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00337# If @descriptorType@
 --     is

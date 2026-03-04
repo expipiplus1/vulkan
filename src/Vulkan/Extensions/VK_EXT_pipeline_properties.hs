@@ -233,7 +233,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPipelinePropertiesEXT-pipeline-06738# The @pipeline@
---     member of @pPipelineInfo@ must have been created with @device@
+--     member of @pPipelineInfo@ /must/ have been created with @device@
 --
 -- -   #VUID-vkGetPipelinePropertiesEXT-pPipelineProperties-06739#
 --     @pPipelineProperties@ /must/ be a valid pointer to a

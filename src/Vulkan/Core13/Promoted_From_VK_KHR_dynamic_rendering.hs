@@ -1026,7 +1026,8 @@ instance Zero PipelineRenderingCreateInfo where
 --     @colorAttachmentCount@ is not @0@ and the @imageView@ member of an
 --     element of @pColorAttachments@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', that @imageView@ /must/
---     have been created with the identity swizzle
+--     have been created with the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderingInfo-colorAttachmentCount-09480# If
 --     @colorAttachmentCount@ is not @0@, and there is an element of
@@ -1037,13 +1038,14 @@ instance Zero PipelineRenderingCreateInfo where
 --     member not set to
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', the
 --     @resolveImageView@ member of that element of @pColorAttachments@
---     /must/ have been created with the identity swizzle
+--     /must/ have been created with the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderingInfo-pDepthAttachment-09481# If @pDepthAttachment@
 --     is not @NULL@ and @pDepthAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pDepthAttachment->imageView@ /must/ have been created with the
---     identity swizzle
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderingInfo-pDepthAttachment-09482# If @pDepthAttachment@
 --     is not @NULL@, @pDepthAttachment->imageView@ is not
@@ -1051,14 +1053,15 @@ instance Zero PipelineRenderingCreateInfo where
 --     @pDepthAttachment->resolveMode@ is not
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
 --     @pDepthAttachment->resolveImageView@ /must/ have been created with
---     the identity swizzle
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderingInfo-pStencilAttachment-09483# If
 --     @pStencilAttachment@ is not @NULL@ and
 --     @pStencilAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pStencilAttachment->imageView@ /must/ have been created with the
---     identity swizzle
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderingInfo-pStencilAttachment-09484# If
 --     @pStencilAttachment@ is not @NULL@, @pStencilAttachment->imageView@
@@ -1066,21 +1069,24 @@ instance Zero PipelineRenderingCreateInfo where
 --     @pStencilAttachment->resolveMode@ is not
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
 --     @pStencilAttachment->resolveImageView@ /must/ have been created with
---     the identity swizzle
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderingInfo-imageView-09485# If the @imageView@ member of
 --     a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
---     created with the identity swizzle
+--     created with the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderingInfo-imageView-09486# If the @imageView@ member of
 --     a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
---     created with the identity swizzle
+--     created with the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- == Valid Usage (Implicit)
 --

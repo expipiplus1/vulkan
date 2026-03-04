@@ -368,14 +368,16 @@ getPrivateData :: forall io
                -> -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' specifying
                   -- the type of object data is associated with.
                   --
-                  -- #VUID-vkGetPrivateData-objectType-04018# @objectType@ /must/ be
-                  -- 'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_DEVICE', or an object type
-                  -- whose parent is 'Vulkan.Core10.Handles.Device'
-                  --
                   -- #VUID-vkGetPrivateData-objectType-parameter# @objectType@ /must/ be a
                   -- valid 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
                   ObjectType
                -> -- | @objectHandle@ is a handle to the object data is associated with.
+                  --
+                  -- #VUID-vkGetPrivateData-objectType-04018# @objectHandle@ /must/ be
+                  -- @device@ or a child of @device@
+                  --
+                  -- #VUID-vkGetPrivateData-objectHandle-09498# @objectHandle@ /must/ be a
+                  -- valid handle to an object of type @objectType@
                   ("objectHandle" ::: Word64)
                -> -- | @privateDataSlot@ is a handle to a
                   -- 'Vulkan.Core13.Handles.PrivateDataSlot' specifying location of private

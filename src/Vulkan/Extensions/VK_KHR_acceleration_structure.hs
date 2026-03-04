@@ -4570,7 +4570,7 @@ foreign import ccall
 --     of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@ with a
 --     @geometryType@ of 'GEOMETRY_TYPE_INSTANCES_KHR', each
 --     'AccelerationStructureInstanceKHR'::@accelerationStructureReference@
---     value in @geometry.instances.data.hostAddress@ must be a valid
+--     value in @geometry.instances.data.hostAddress@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' object
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-04930# For any element
@@ -4579,7 +4579,7 @@ foreign import ccall
 --     'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' set, each
 --     @accelerationStructureReference@ in any structure in
 --     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
---     value in @geometry.instances.data.hostAddress@ must be a valid
+--     value in @geometry.instances.data.hostAddress@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' object
 --
 -- == Valid Usage (Implicit)

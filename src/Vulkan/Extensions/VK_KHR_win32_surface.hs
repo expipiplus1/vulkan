@@ -332,6 +332,35 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+-- Some Vulkan functions /may/ call the @SendMessage@ system API when
+-- interacting with a 'Vulkan.Extensions.Handles.SurfaceKHR' through a
+-- 'Vulkan.Extensions.Handles.SwapchainKHR'. In a multithreaded
+-- environment, calling @SendMessage@ from a thread that is not the thread
+-- associated with @pCreateInfo@::@hwnd@ will block until the application
+-- has processed the window message. Thus, applications /should/ either
+-- call these Vulkan functions on the message pump thread, or make sure
+-- their message pump is actively running. Failing to do so /may/ result in
+-- deadlocks.
+--
+-- The functions subject to this requirement are:
+--
+-- -   'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
+--
+-- -   'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR'
+--
+-- -   'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR' and
+--     'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImage2KHR'
+--
+-- -   'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'
+--
+-- -   'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.releaseSwapchainImagesEXT'
+--
+-- -   'Vulkan.Extensions.VK_EXT_full_screen_exclusive.acquireFullScreenExclusiveModeEXT'
+--
+-- -   'Vulkan.Extensions.VK_EXT_full_screen_exclusive.releaseFullScreenExclusiveModeEXT'
+--
+-- -   'Vulkan.Extensions.VK_EXT_hdr_metadata.setHdrMetadataEXT'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,

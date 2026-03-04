@@ -540,7 +540,7 @@ foreign import ccall
 -- = Description
 --
 -- 'setBufferCollectionImageConstraintsFUCHSIA' /may/ fail if
--- @pImageConstraintsInfo@::@formatConstraintsCount@ is larger than the
+-- @pImageConstraintsInfo->formatConstraintsCount@ is larger than the
 -- implementation-defined limit. If that occurs,
 -- 'setBufferCollectionImageConstraintsFUCHSIA' will return
 -- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
@@ -1495,34 +1495,34 @@ instance Zero ImageFormatConstraintsInfoFUCHSIA where
 --     its 'ImageFormatConstraintsInfoFUCHSIA'::@requiredFormatFeatures@
 --
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-pFormatConstraints-06396# If
---     @pFormatConstraints@::@imageCreateInfo@::@usage@ contains
+--     @pFormatConstraints->imageCreateInfo->usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT',
---     then @pFormatConstraints@::@requiredFormatFeatures@ /must/ contain
+--     then @pFormatConstraints->requiredFormatFeatures@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
 --
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-pFormatConstraints-06397# If
---     @pFormatConstraints@::@imageCreateInfo@::@usage@ contains
+--     @pFormatConstraints->imageCreateInfo->usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT',
---     then @pFormatConstraints@::@requiredFormatFeatures@ /must/ contain
+--     then @pFormatConstraints->requiredFormatFeatures@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_BIT'
 --
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-pFormatConstraints-06398# If
---     @pFormatConstraints@::@imageCreateInfo@::@usage@ contains
+--     @pFormatConstraints->imageCreateInfo->usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
---     then @pFormatConstraints@::@requiredFormatFeatures@ /must/ contain
+--     then @pFormatConstraints->requiredFormatFeatures@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-pFormatConstraints-06399# If
---     @pFormatConstraints@::@imageCreateInfo@::@usage@ contains
+--     @pFormatConstraints->imageCreateInfo->usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
---     then @pFormatConstraints@::@requiredFormatFeatures@ /must/ contain
+--     then @pFormatConstraints->requiredFormatFeatures@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-pFormatConstraints-06400# If
---     @pFormatConstraints@::@imageCreateInfo@::@usage@ contains
+--     @pFormatConstraints->imageCreateInfo->usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
---     then @pFormatConstraints@::@requiredFormatFeatures@ /must/ contain
---     at least one of
+--     then @pFormatConstraints->requiredFormatFeatures@ /must/ contain at
+--     least one of
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
@@ -1530,10 +1530,10 @@ instance Zero ImageFormatConstraintsInfoFUCHSIA where
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-attachmentFragmentShadingRate-06401#
 --     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     feature is enabled, and
---     @pFormatConstraints@::@imageCreateInfo@::@usage@ contains
+--     feature is enabled, and @pFormatConstraints->imageCreateInfo->usage@
+--     contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
---     then @pFormatConstraints@::@requiredFormatFeatures@ /must/ contain
+--     then @pFormatConstraints->requiredFormatFeatures@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- == Valid Usage (Implicit)

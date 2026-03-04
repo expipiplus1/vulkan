@@ -816,7 +816,7 @@ foreign import ccall
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
 -- feature is enabled, @buffer@ /can/ be
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. If pname::buffer is
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. If @buffer@ is
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 -- feature is enabled, every index fetched results in a value of zero.

@@ -262,7 +262,9 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-samples-01094#
---     @samples@ /must/ be a bit value that is set in
+--     @samples@ /must/ be a valid
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+--     that is set in
 --     'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
 --     returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'

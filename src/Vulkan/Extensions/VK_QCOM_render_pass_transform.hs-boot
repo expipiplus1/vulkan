@@ -15,29 +15,29 @@
 --     283
 --
 -- [__Revision__]
---     3
+--     4
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
+--     None
 --
 -- [__Contact__]
 --
---     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_transform] @jackohound%0A*Here describe the issue or question you have about the VK_QCOM_render_pass_transform extension* >
+--     -   Matthew Netsch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_transform] @mnetsch%0A*Here describe the issue or question you have about the VK_QCOM_render_pass_transform extension* >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-07-21
+--     2023-12-13
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   This extension requires @VK_KHR_swapchain@
+--     -   This extension interacts with @VK_KHR_swapchain@
+--
+--     -   This extension interacts with @VK_KHR_surface@
 --
 --     -   This extension interacts with @VK_EXT_fragment_density_map@
 --
@@ -52,6 +52,8 @@
 --     -   Brandon Light, Qualcomm Technologies, Inc.
 --
 --     -   Matthew Netsch, Qualcomm Technologies, Inc.
+--
+--     -   Arpit Agarwal, Qualcomm Technologies, Inc.
 --
 -- == Description
 --
@@ -251,6 +253,10 @@
 -- -   Revision 3, 2022-07-11 (Arpit Agarwal)
 --
 --     -   Adds interactions with VK_QCOM_tile_properties
+--
+-- -   Revision 4, 2023-12-13 (Matthew Netsch)
+--
+--     -   Relax dependencies on VK_KHR_surface and VK_KHR_swapchain
 --
 -- == See Also
 --

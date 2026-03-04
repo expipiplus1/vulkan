@@ -367,6 +367,19 @@ instance Zero ExternalImageFormatProperties where
 -- are returned in
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09499# If the @pNext@
+--     chain does not include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@: must be a valid combination of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
+--
+-- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09500# If the @pNext@
+--     chain does not include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@: must not be 0
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-sType-sType# @sType@ /must/
@@ -384,13 +397,6 @@ instance Zero ExternalImageFormatProperties where
 --     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
 --     values
---
--- -   #VUID-VkPhysicalDeviceExternalBufferInfo-usage-parameter# @usage@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
---
--- -   #VUID-VkPhysicalDeviceExternalBufferInfo-usage-requiredbitmask#
---     @usage@ /must/ not be @0@
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-handleType-parameter#
 --     @handleType@ /must/ be a valid
@@ -457,7 +463,6 @@ instance ( Extendss PhysicalDeviceExternalBufferInfo es
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 20 :: Ptr BufferUsageFlags)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr ExternalMemoryHandleTypeFlagBits)) (zero)
     lift $ f
 

@@ -313,8 +313,8 @@ instance Zero FramebufferAttachmentImageInfo where
 --     element of @pAttachments@ /must/ only specify a single mip level
 --
 -- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-03219# Each
---     element of @pAttachments@ /must/ have been created with the identity
---     swizzle
+--     element of @pAttachments@ /must/ have been created with the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-04114# Each
 --     element of @pAttachments@ /must/ have been created with
