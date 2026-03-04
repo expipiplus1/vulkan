@@ -2335,8 +2335,8 @@ foreign import ccall
 --     @pAccelerationStructures@ /must/ be bound to device memory
 --
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-query-04880# The
---     sum of @query@ plus @accelerationStructureCount@ /must/ be less than
---     or equal to the number of queries in @queryPool@
+--     sum of @firstQuery@ plus @accelerationStructureCount@ /must/ be less
+--     than or equal to the number of queries in @queryPool@
 --
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-04964#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
@@ -5721,8 +5721,8 @@ instance Zero AccelerationStructureGeometryKHR where
 --     /must/ not be 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR'
 --
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-pGeometries-03788#
---     Only one of @pGeometries@ or @ppGeometries@ /can/ be a valid
---     pointer, the other /must/ be @NULL@
+--     If @geometryCount@ is not @0@, exactly one of @pGeometries@ or
+--     @ppGeometries@ /must/ be a valid pointer, the other /must/ be @NULL@
 --
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-type-03789# If
 --     @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR', the

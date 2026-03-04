@@ -755,15 +755,12 @@ foreign import ccall
 --     times
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@
 --
--- -   #VUID-vkGetDescriptorEXT-pDescriptor-08016# @pDescriptor@ /must/ be
---     a valid pointer to an array of at least @dataSize@ bytes
---
 -- -   #VUID-vkGetDescriptorEXT-pDescriptorInfo-09507# If
 --     @pDescriptorInfo->type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     and @pDescriptorInfo->data.pCombinedImageSampler@ is @NULL@ or it
---     has a @imageView@ that is 'Vulkan.Core10.APIConstants.NULL_HANDLE'
---     then @dataSize@ /must/ be equal to the size of
+--     and it has a @imageView@ that is
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' then @dataSize@ /must/ be
+--     equal to the size of
 --     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@combinedImageSamplerDescriptorSize@
 --
 -- == Valid Usage (Implicit)

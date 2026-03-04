@@ -193,8 +193,10 @@ instance Zero FramebufferAttachmentsCreateInfo where
 -- == Valid Usage
 --
 -- -   #VUID-VkFramebufferAttachmentImageInfo-viewFormatCount-09536# If
---     @viewFormatCount@ is not 0, each element of @pViewFormats@ /must/
---     not be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--     @viewFormatCount@ is not 0, and the render pass is not being used
+--     with an external format resolve attachment, each element of
+--     @pViewFormats@ /must/ not be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- == Valid Usage (Implicit)
 --

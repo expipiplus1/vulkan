@@ -15,7 +15,7 @@
 --     417
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Ratified
@@ -32,11 +32,8 @@
 --     -   Kevin Petit
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_subgroup_rotate] @kpet%0A*Here describe the issue or question you have about the VK_KHR_shader_subgroup_rotate extension* >
 --
--- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_subgroup_rotate.adoc VK_KHR_shader_subgroup_rotate>
---
 -- [__Last Modified Date__]
---     2023-06-20
+--     2024-01-29
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -56,6 +53,8 @@
 --     -   Graeme Leese, Broadcom
 --
 --     -   Tom Olson, Arm Ltd.
+--
+--     -   Spencer Fricke, LunarG Inc.
 --
 -- This extension adds support for the subgroup rotate instruction defined
 -- in SPV_KHR_subgroup_rotate.
@@ -78,11 +77,25 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR'
 --
+-- -   Extending
+--     'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits':
+--
+--     -   'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
+--
+--     -   'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
+--
 -- == New SPIR-V Capabilities
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-GroupNonUniformRotateKHR GroupNonUniformRotateKHR>
 --
 -- == Version History
+--
+-- -   Revision 2, 2024-01-29 (Kévin Petit)
+--
+--     -   Add
+--         'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
+--         and
+--         'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
 --
 -- -   Revision 1, 2023-06-20 (Kévin Petit)
 --
@@ -202,11 +215,11 @@ instance Zero PhysicalDeviceShaderSubgroupRotateFeaturesKHR where
            zero
 
 
-type KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION = 1
+type KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION"
 pattern KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION = 1
+pattern KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION = 2
 
 
 type KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME = "VK_KHR_shader_subgroup_rotate"

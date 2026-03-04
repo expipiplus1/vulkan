@@ -32,9 +32,6 @@
 --     -   Kevin Petit
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_expect_assume] @kpet%0A*Here describe the issue or question you have about the VK_KHR_shader_expect_assume extension* >
 --
--- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_expect_assume.adoc VK_KHR_shader_expect_assume>
---
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]

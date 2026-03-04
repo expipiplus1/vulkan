@@ -57,6 +57,39 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 -- feature is supported, @supportedOperations@ /must/ include
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroup-quad >.
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>
+-- is supported, and the implementation advertises support with a
+-- 'Vulkan.Core10.ExtensionDiscovery.ExtensionProperties'::@specVersion@
+-- greater than or equal to 2, and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotate shaderSubgroupRotate>
+-- is supported,
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
+-- /must/ be returned in @subgroupSupportedOperations@. If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>
+-- is supported, and the implementation advertises support with a
+-- 'Vulkan.Core10.ExtensionDiscovery.ExtensionProperties'::@specVersion@
+-- greater than or equal to 2, and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotateClustered shaderSubgroupRotateClustered>
+-- is supported,
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
+-- /must/ be returned in @subgroupSupportedOperations@.
+--
+-- Note
+--
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
+-- and
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
+-- were added in version 2 of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>
+-- extension, after the initial release, so there are implementations that
+-- do not advertise these bits. Applications should use the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotate shaderSubgroupRotate>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotateClustered shaderSubgroupRotateClustered>
+-- features to determine and enable support. These bits are advertised here
+-- for consistency and for future dependencies.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also

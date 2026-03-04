@@ -49,6 +49,7 @@ import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImage
 import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
 import Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeatures(..))
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(..))
+import Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence (PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_shader_quad_control (PhysicalDeviceShaderQuadControlFeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeaturesKHR(..))
@@ -2584,6 +2585,20 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "MaximallyReconvergesKHR" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderMaximalReconvergence"
+          , checkFeature = \PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR{shaderMaximalReconvergence} -> shaderMaximalReconvergence
+          , enableFeature = \_ -> PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR{shaderMaximalReconvergence = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

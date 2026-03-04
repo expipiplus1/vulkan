@@ -674,7 +674,19 @@ foreign import ccall
 -- to handle when an application is minimised or otherwise intends to stop
 -- presenting for a time.
 --
--- == Valid Usage
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
@@ -683,6 +695,9 @@ foreign import ccall
 releaseFullScreenExclusiveModeEXT :: forall io
                                    . (MonadIO io)
                                   => -- | @device@ is the device associated with @swapchain@.
+                                     --
+                                     -- #VUID-vkReleaseFullScreenExclusiveModeEXT-device-parameter# @device@
+                                     -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                      Device
                                   -> -- | @swapchain@ is the swapchain to release exclusive full-screen access
                                      -- from.
@@ -694,6 +709,13 @@ releaseFullScreenExclusiveModeEXT :: forall io
                                      -- /must/ be a swapchain created with a 'SurfaceFullScreenExclusiveInfoEXT'
                                      -- structure, with @fullScreenExclusive@ set to
                                      -- 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
+                                     --
+                                     -- #VUID-vkReleaseFullScreenExclusiveModeEXT-swapchain-parameter#
+                                     -- @swapchain@ /must/ be a valid 'Vulkan.Extensions.Handles.SwapchainKHR'
+                                     -- handle
+                                     --
+                                     -- #VUID-vkReleaseFullScreenExclusiveModeEXT-swapchain-parent# @swapchain@
+                                     -- /must/ have been created, allocated, or retrieved from @device@
                                      SwapchainKHR
                                   -> io ()
 releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do

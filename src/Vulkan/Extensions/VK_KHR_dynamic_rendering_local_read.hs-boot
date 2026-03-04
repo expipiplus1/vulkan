@@ -42,7 +42,7 @@
 --
 --     -   Hans-Kristian Arntzen, Valve
 --
---     -   Connor Abbot, Valve
+--     -   Connor Abbott, Valve
 --
 --     -   Pan Gao, Huawei
 --
@@ -78,7 +78,7 @@
 --
 --     -   Marty Johnson, Khronos
 --
---     -   Huilong Wang, Huawei
+--     -   Wyvern Wang, Huawei
 --
 --     -   Jeff Bolz, Nvidia
 --

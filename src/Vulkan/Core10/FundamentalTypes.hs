@@ -702,6 +702,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_NV_low_latency2.SwapchainLatencyCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV',
 -- 'Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.TextureLODGatherFormatPropertiesAMD',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1ProfileInfoKHR VkVideoDecodeAV1ProfileInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264CapabilitiesKHR VkVideoEncodeH264CapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264GopRemainingFrameInfoKHR VkVideoEncodeH264GopRemainingFrameInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264PictureInfoKHR VkVideoEncodeH264PictureInfoKHR>,

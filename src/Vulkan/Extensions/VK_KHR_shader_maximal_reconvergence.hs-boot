@@ -32,9 +32,6 @@
 --     -   Alan Baker
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_maximal_reconvergence] @alan-baker%0A*Here describe the issue or question you have about the VK_KHR_shader_maximal_reconvergence extension* >
 --
--- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_maximal_reconvergence.adoc VK_KHR_shader_maximal_reconvergence>
---
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
@@ -87,6 +84,10 @@
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-MaximallyReconvergesKHR MaximallyReconvergesKHR>
 --
 -- == Version History
 --
