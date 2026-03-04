@@ -343,7 +343,7 @@ foreign import ccall
 --
 -- = Description
 --
--- If @pCreateInfo@::@pNext@ chain includes a pointer to a
+-- If @pCreateInfo->pNext@ chain includes a pointer to a
 -- 'ComputePipelineIndirectBufferInfoNV' structure, then the contents of
 -- that structure are ignored.
 --
@@ -355,7 +355,7 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineIndirectMemoryRequirementsNV-pCreateInfo-09083#
---     @pCreateInfo@::@flags@ /must/ include
+--     @pCreateInfo->flags@ /must/ include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
 -- == Valid Usage (Implicit)

@@ -320,7 +320,7 @@ getMemoryZirconHandlePropertiesFUCHSIA device
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'
 --
 -- -   #VUID-VkImportMemoryZirconHandleInfoFUCHSIA-handle-04772# @handle@
---     must be a valid VMO handle
+--     /must/ be a valid VMO handle
 --
 -- == Valid Usage (Implicit)
 --

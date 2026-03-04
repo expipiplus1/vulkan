@@ -797,7 +797,7 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 -- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-pBindingFlags-09379#
 --     If an element of @pBindingFlags@ includes
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT',
---     then it /must/ be the element with the the highest @binding@ number
+--     then it /must/ be the element with the highest @binding@ number
 --
 -- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingUniformBufferUpdateAfterBind-03005#
 --     If

@@ -727,9 +727,11 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
--- -   #VUID-vkGetDescriptorEXT-dataSize-08125# If @descriptorType@ is not
+-- -   #VUID-vkGetDescriptorEXT-dataSize-08125# If @pDescriptorInfo->type@
+--     is not
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     or @pImageInfo@ has a @imageView@ member that was not created with a
+--     or @pDescriptorInfo->data.pCombinedImageSampler@ has a @imageView@
+--     member that was not created with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain, @dataSize@ /must/ equal the size of
 --     a descriptor of type 'DescriptorGetInfoEXT'::@type@ determined by
@@ -742,10 +744,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
 --     set
 --
--- -   #VUID-vkGetDescriptorEXT-descriptorType-09469# If @descriptorType@
---     is
+-- -   #VUID-vkGetDescriptorEXT-descriptorType-09469# If
+--     @pDescriptorInfo->type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     and @pImageInfo@ has a @imageView@ member that was created with a
+--     and @pDescriptorInfo->data.pCombinedImageSampler@ has a @imageView@
+--     member that was created with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain, @dataSize@ /must/ equal the size of
 --     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@combinedImageSamplerDescriptorSize@
@@ -2430,12 +2433,23 @@ instance Zero DescriptorAddressInfoEXT where
 -- = Description
 --
 -- If a
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
 -- structure is present in the @pNext@ chain,
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'::@flags@
--- from that structure is used instead of @flags@ from this structure.
+-- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@
+-- from that structure is used instead of @usage@ from this structure.
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09499# If the @pNext@
+--     chain does not include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@: must be a valid combination of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
+--
+-- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09500# If the @pNext@
+--     chain does not include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@: must not be 0
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-bufferlessPushDescriptors-08056#
 --     If
@@ -2484,13 +2498,6 @@ instance Zero DescriptorAddressInfoEXT where
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkDescriptorBufferBindingInfoEXT-usage-parameter# @usage@
---     /must/ be a valid combination of
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
---
--- -   #VUID-VkDescriptorBufferBindingInfoEXT-usage-requiredbitmask#
---     @usage@ /must/ not be @0@
 --
 -- = See Also
 --
@@ -2544,7 +2551,6 @@ instance ( Extendss DescriptorBufferBindingInfoEXT es
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceAddress)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr BufferUsageFlags)) (zero)
     lift $ f
 
 instance ( Extendss DescriptorBufferBindingInfoEXT es
@@ -2672,26 +2678,26 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
 --     @pUniformTexelBuffer@ is not @NULL@ and
 --     @pUniformTexelBuffer->address@ is not zero,
---     @pUniformTexelBuffer->address@ must be an address within a
+--     @pUniformTexelBuffer->address@ /must/ be an address within a
 --     'Vulkan.Core10.Handles.Buffer' created on @device@
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-08025# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
 --     @pStorageTexelBuffer@ is not @NULL@ and
 --     @pStorageTexelBuffer->address@ is not zero,
---     @pStorageTexelBuffer->address@ must be an address within a
+--     @pStorageTexelBuffer->address@ /must/ be an address within a
 --     'Vulkan.Core10.Handles.Buffer' created on @device@
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-08026# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
 --     @pUniformBuffer@ is not @NULL@ and @pUniformBuffer->address@ is not
---     zero, @pUniformBuffer->address@ must be an address within a
+--     zero, @pUniformBuffer->address@ /must/ be an address within a
 --     'Vulkan.Core10.Handles.Buffer' created on @device@
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-08027# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
 --     @pStorageBuffer@ is not @NULL@ and @pStorageBuffer->address@ is not
---     zero, @pStorageBuffer->address@ must be an address within a
+--     zero, @pStorageBuffer->address@ /must/ be an address within a
 --     'Vulkan.Core10.Handles.Buffer' created on @device@
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-09427# If @type@ is

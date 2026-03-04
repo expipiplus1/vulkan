@@ -321,6 +321,17 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkBufferCreateInfo-None-09499# If the @pNext@ chain does not
+--     include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@: must be a valid combination of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
+--
+-- -   #VUID-VkBufferCreateInfo-None-09500# If the @pNext@ chain does not
+--     include a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     structure, @usage@: must not be 0
+--
 -- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
 --     @0@
 --
@@ -497,17 +508,6 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     or
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
---
--- -   #VUID-VkBufferCreateInfo-None-09205# If the @pNext@ chain does not
---     include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ must be a valid combination of
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
---
--- -   #VUID-VkBufferCreateInfo-None-09206# If the @pNext@ chain does not
---     include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ /must/ not be @0@
 --
 -- == Valid Usage (Implicit)
 --

@@ -490,7 +490,9 @@ instance Zero SampleLocationEXT where
 -- == Valid Usage
 --
 -- -   #VUID-VkSampleLocationsInfoEXT-sampleLocationsPerPixel-01526#
---     @sampleLocationsPerPixel@ /must/ be a bit value that is set in
+--     @sampleLocationsPerPixel@ /must/ be a valid
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+--     that is set in
 --     'PhysicalDeviceSampleLocationsPropertiesEXT'::@sampleLocationSampleCounts@
 --
 -- -   #VUID-VkSampleLocationsInfoEXT-sampleLocationsCount-01527#

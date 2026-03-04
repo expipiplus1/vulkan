@@ -236,7 +236,7 @@ foreign import ccall
 --     /must/ be 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-width-04981# Thread mask image
---     resolution must match the @width@ and @height@ in
+--     resolution /must/ match the @width@ and @height@ in
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR'
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-None-04982# Each element in the

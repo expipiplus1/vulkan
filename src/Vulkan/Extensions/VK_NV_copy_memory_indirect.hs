@@ -301,8 +301,8 @@ foreign import ccall
 -- region to an image region in the destination image. If the destination
 -- image is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', the
 -- starting slice and number of slices to copy are specified in
--- @pImageSubresources@::@baseArrayLayer@ and
--- @pImageSubresources@::@layerCount@ respectively. The copy /must/ be
+-- @pImageSubresources->baseArrayLayer@ and
+-- @pImageSubresources->layerCount@ respectively. The copy /must/ be
 -- performed on a queue that supports indirect copy operations, see
 -- 'PhysicalDeviceCopyMemoryIndirectPropertiesNV'.
 --

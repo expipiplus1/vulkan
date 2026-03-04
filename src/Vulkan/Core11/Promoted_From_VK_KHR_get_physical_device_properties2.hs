@@ -2007,7 +2007,9 @@ data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
     -- specifying the number of samples per texel.
     --
     -- #VUID-VkPhysicalDeviceSparseImageFormatInfo2-samples-01095# @samples@
-    -- /must/ be a bit value that is set in
+    -- /must/ be a valid
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value that
+    -- is set in
     -- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
     -- returned by
     -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'

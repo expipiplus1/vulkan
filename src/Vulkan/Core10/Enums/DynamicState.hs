@@ -495,8 +495,8 @@ pattern DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR = DynamicState 1000226000
 -- before any drawing commands.
 pattern DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV = DynamicState 1000205001
 
--- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV' specifies that the the
--- exclusive scissors /must/ be explicitly enabled with
+-- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV' specifies that the exclusive
+-- scissors /must/ be explicitly enabled with
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
 -- and the @exclusiveScissorCount@ value in
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
