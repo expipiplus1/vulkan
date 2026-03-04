@@ -758,6 +758,14 @@ foreign import ccall
 -- -   #VUID-vkGetDescriptorEXT-pDescriptor-08016# @pDescriptor@ /must/ be
 --     a valid pointer to an array of at least @dataSize@ bytes
 --
+-- -   #VUID-vkGetDescriptorEXT-pDescriptorInfo-09507# If
+--     @pDescriptorInfo->type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     and @pDescriptorInfo->data.pCombinedImageSampler@ is @NULL@ or it
+--     has a @imageView@ that is 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     then @dataSize@ /must/ be equal to the size of
+--     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@combinedImageSamplerDescriptorSize@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetDescriptorEXT-device-parameter# @device@ /must/ be a
@@ -2323,6 +2331,14 @@ instance Zero PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkDescriptorAddressInfoEXT-None-09508# If @address@ is not
+--     zero, and the descriptor is of type
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+--     then @format@ /must/ not be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-VkDescriptorAddressInfoEXT-address-08043# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, @address@ /must/ not be zero
@@ -2443,13 +2459,13 @@ instance Zero DescriptorAddressInfoEXT where
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09499# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@: must be a valid combination of
+--     structure, @usage@ must be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09500# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@: must not be 0
+--     structure, @usage@ must not be 0
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-bufferlessPushDescriptors-08056#
 --     If

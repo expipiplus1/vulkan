@@ -269,9 +269,7 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
 --     with @format@, @type@, @tiling@, and @usage@ equal to those in this
---     command and @flags@ equal to the value that is set in
---     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when the image is
---     created
+--     command
 --
 -- == Valid Usage (Implicit)
 --

@@ -32,6 +32,9 @@
 --     -   Kevin Petit
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_cooperative_matrix] @kpet%0A*Here describe the issue or question you have about the VK_KHR_cooperative_matrix extension* >
 --
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_cooperative_matrix.adoc VK_KHR_cooperative_matrix>
+--
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]

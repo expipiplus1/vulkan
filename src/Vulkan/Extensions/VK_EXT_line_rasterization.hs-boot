@@ -58,6 +58,13 @@
 -- lines (coverage to alpha) are supported, and stippled lines are
 -- supported for all three line rasterization modes.
 --
+-- == Promotion to @VK_KHR_line_rasterization@
+--
+-- All functionality in this extension is included in
+-- @VK_KHR_line_rasterization@, with the suffix changed to KHR. The
+-- original enum names are still available as aliases of the KHR
+-- functionality.
+--
 -- == New Commands
 --
 -- -   'cmdSetLineStippleEXT'
@@ -92,15 +99,15 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
+--     -   'DYNAMIC_STATE_LINE_STIPPLE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT'
+--     -   'STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT'
 --
 -- == Issues
 --
@@ -133,39 +140,10 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_line_rasterization  ( PhysicalDeviceLineRasterizationFeaturesEXT
-                                                    , PhysicalDeviceLineRasterizationPropertiesEXT
-                                                    , PipelineRasterizationLineStateCreateInfoEXT
-                                                    , LineRasterizationModeEXT
-                                                    ) where
-
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (ToCStruct)
-import Data.Kind (Type)
-
-data PhysicalDeviceLineRasterizationFeaturesEXT
-
-instance ToCStruct PhysicalDeviceLineRasterizationFeaturesEXT
-instance Show PhysicalDeviceLineRasterizationFeaturesEXT
-
-instance FromCStruct PhysicalDeviceLineRasterizationFeaturesEXT
+module Vulkan.Extensions.VK_EXT_line_rasterization  (LineRasterizationModeEXT) where
 
 
-data PhysicalDeviceLineRasterizationPropertiesEXT
-
-instance ToCStruct PhysicalDeviceLineRasterizationPropertiesEXT
-instance Show PhysicalDeviceLineRasterizationPropertiesEXT
-
-instance FromCStruct PhysicalDeviceLineRasterizationPropertiesEXT
-
-
-data PipelineRasterizationLineStateCreateInfoEXT
-
-instance ToCStruct PipelineRasterizationLineStateCreateInfoEXT
-instance Show PipelineRasterizationLineStateCreateInfoEXT
-
-instance FromCStruct PipelineRasterizationLineStateCreateInfoEXT
-
-
-data LineRasterizationModeEXT
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR)
+-- No documentation found for TopLevel "VkLineRasterizationModeEXT"
+type LineRasterizationModeEXT = LineRasterizationModeKHR
 

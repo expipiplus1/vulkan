@@ -1,9 +1,13 @@
 # Change Log
 
-## WIP
+## [3.27.0]
 
 - Bump API version to v1.3.274
 - Disable VK_KHR_video_maintenance1 (depends on force-disabled video extensions)
+- Bump API version to v1.3.275
+- Bump API version to v1.3.276
+  - A minor breaking change that debugMessage text is now Maybe.
+
 
 ## [3.26.4] - 2025-05-31
 

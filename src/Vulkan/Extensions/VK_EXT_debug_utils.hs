@@ -1863,10 +1863,6 @@ data DebugUtilsMessengerCreateInfoEXT = DebugUtilsMessengerCreateInfoEXT
     messageType :: DebugUtilsMessageTypeFlagsEXT
   , -- | @pfnUserCallback@ is the application callback function to call.
     --
-    -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-pfnUserCallback-01914#
-    -- @pfnUserCallback@ /must/ be a valid
-    -- 'PFN_vkDebugUtilsMessengerCallbackEXT'
-    --
     -- #VUID-VkDebugUtilsMessengerCreateInfoEXT-pfnUserCallback-parameter#
     -- @pfnUserCallback@ /must/ be a valid
     -- 'PFN_vkDebugUtilsMessengerCallbackEXT' value
@@ -1981,8 +1977,9 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --     If @pMessageIdName@ is not @NULL@, @pMessageIdName@ /must/ be a
 --     null-terminated UTF-8 string
 --
--- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pMessage-parameter#
---     @pMessage@ /must/ be a null-terminated UTF-8 string
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pMessage-parameter# If
+--     @pMessage@ is not @NULL@, @pMessage@ /must/ be a null-terminated
+--     UTF-8 string
 --
 -- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pQueueLabels-parameter#
 --     If @queueLabelCount@ is not @0@, @pQueueLabels@ /must/ be a valid
@@ -2011,19 +2008,21 @@ data DebugUtilsMessengerCallbackDataEXT (es :: [Type]) = DebugUtilsMessengerCall
     next :: Chain es
   , -- | @flags@ is @0@ and is reserved for future use.
     flags :: DebugUtilsMessengerCallbackDataFlagsEXT
-  , -- | @pMessageIdName@ is a null-terminated string that identifies the
-    -- particular message ID that is associated with the provided message. If
-    -- the message corresponds to a validation layer message, then this string
-    -- may contain the portion of the Vulkan specification that is believed to
-    -- have been violated.
+  , -- | @pMessageIdName@ is @NULL@ or a null-terminated UTF-8 string that
+    -- identifies the particular message ID that is associated with the
+    -- provided message. If the message corresponds to a validation layer
+    -- message, then this string may contain the portion of the Vulkan
+    -- specification that is believed to have been violated.
     messageIdName :: Maybe ByteString
   , -- | @messageIdNumber@ is the ID number of the triggering message. If the
     -- message corresponds to a validation layer message, then this number is
     -- related to the internal number associated with the message being
     -- triggered.
     messageIdNumber :: Int32
-  , -- | @pMessage@ is a null-terminated string detailing the trigger conditions.
-    message :: ByteString
+  , -- | @pMessage@ is @NULL@ if @messageTypes@ is equal to
+    -- 'DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT', or a
+    -- null-terminated UTF-8 string detailing the trigger conditions.
+    message :: Maybe ByteString
   , -- | @pQueueLabels@ is @NULL@ or a pointer to an array of
     -- 'DebugUtilsLabelEXT' active in the current 'Vulkan.Core10.Handles.Queue'
     -- at the time the callback was triggered. Refer to
@@ -2071,7 +2070,9 @@ instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
       Just j -> ContT $ useAsCString (j)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr CChar))) pMessageIdName''
     lift $ poke ((p `plusPtr` 32 :: Ptr Int32)) (messageIdNumber)
-    pMessage'' <- ContT $ useAsCString (message)
+    pMessage'' <- case (message) of
+      Nothing -> pure nullPtr
+      Just j -> ContT $ useAsCString (j)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CChar))) pMessage''
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueLabels)) :: Word32))
     pPQueueLabels' <- ContT $ allocaBytes @DebugUtilsLabelEXT ((Data.Vector.length (queueLabels)) * 40)
@@ -2093,8 +2094,6 @@ instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 32 :: Ptr Int32)) (zero)
-    pMessage'' <- ContT $ useAsCString (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CChar))) pMessage''
     lift $ f
 
 instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
@@ -2106,7 +2105,8 @@ instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
     pMessageIdName <- peek @(Ptr CChar) ((p `plusPtr` 24 :: Ptr (Ptr CChar)))
     pMessageIdName' <- maybePeek (\j -> packCString (j)) pMessageIdName
     messageIdNumber <- peek @Int32 ((p `plusPtr` 32 :: Ptr Int32))
-    pMessage <- packCString =<< peek ((p `plusPtr` 40 :: Ptr (Ptr CChar)))
+    pMessage <- peek @(Ptr CChar) ((p `plusPtr` 40 :: Ptr (Ptr CChar)))
+    pMessage' <- maybePeek (\j -> packCString (j)) pMessage
     queueLabelCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pQueueLabels <- peek @(Ptr DebugUtilsLabelEXT) ((p `plusPtr` 56 :: Ptr (Ptr DebugUtilsLabelEXT)))
     pQueueLabels' <- generateM (fromIntegral queueLabelCount) (\i -> peekCStruct @DebugUtilsLabelEXT ((pQueueLabels `advancePtrBytes` (40 * (i)) :: Ptr DebugUtilsLabelEXT)))
@@ -2121,7 +2121,7 @@ instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
              flags
              pMessageIdName'
              messageIdNumber
-             pMessage
+             pMessage'
              pQueueLabels'
              pCmdBufLabels'
              pObjects'
@@ -2132,7 +2132,7 @@ instance es ~ '[] => Zero (DebugUtilsMessengerCallbackDataEXT es) where
            zero
            Nothing
            zero
-           mempty
+           Nothing
            mempty
            mempty
            mempty

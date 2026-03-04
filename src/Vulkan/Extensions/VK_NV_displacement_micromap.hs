@@ -385,6 +385,14 @@ instance Zero PhysicalDeviceDisplacementMicromapPropertiesNV where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkAccelerationStructureTrianglesDisplacementMicromapNV-displacementBiasAndScaleFormat-09501#
+--     @displacementBiasAndScaleFormat@ /must/ not be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
+-- -   #VUID-VkAccelerationStructureTrianglesDisplacementMicromapNV-displacementVectorFormat-09502#
+--     @displacementVectorFormat@ /must/ not be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-VkAccelerationStructureTrianglesDisplacementMicromapNV-pUsageCounts-07992#
 --     Only one of @pUsageCounts@ or @ppUsageCounts@ /can/ be a valid
 --     pointer, the other /must/ be @NULL@

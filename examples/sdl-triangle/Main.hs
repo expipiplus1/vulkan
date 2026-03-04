@@ -426,7 +426,7 @@ withVulkanWindow width height = do
     inst
     DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
     DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-    zero{message = "Debug Message Test"}
+    zero{message = Just "Debug Message Test"}
   (_, surface) <- Window.createSurface inst window
   (dev, graphicsQueue, graphicsQueueFamilyIndex, presentQueue, swapchainFormat, swapchainExtent, swapchain) <-
     createGraphicalDevice inst surface

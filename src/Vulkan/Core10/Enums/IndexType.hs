@@ -2,7 +2,7 @@
 -- No documentation found for Chapter "IndexType"
 module Vulkan.Core10.Enums.IndexType  (IndexType( INDEX_TYPE_UINT16
                                                 , INDEX_TYPE_UINT32
-                                                , INDEX_TYPE_UINT8_EXT
+                                                , INDEX_TYPE_UINT8_KHR
                                                 , INDEX_TYPE_NONE_KHR
                                                 , ..
                                                 )) where
@@ -40,9 +40,9 @@ pattern INDEX_TYPE_UINT16 = IndexType 0
 -- values.
 pattern INDEX_TYPE_UINT32 = IndexType 1
 
--- | 'INDEX_TYPE_UINT8_EXT' specifies that indices are 8-bit unsigned integer
+-- | 'INDEX_TYPE_UINT8_KHR' specifies that indices are 8-bit unsigned integer
 -- values.
-pattern INDEX_TYPE_UINT8_EXT = IndexType 1000265000
+pattern INDEX_TYPE_UINT8_KHR = IndexType 1000265000
 
 -- | 'INDEX_TYPE_NONE_KHR' specifies that no indices are provided.
 pattern INDEX_TYPE_NONE_KHR = IndexType 1000165000
@@ -50,7 +50,7 @@ pattern INDEX_TYPE_NONE_KHR = IndexType 1000165000
 {-# COMPLETE
   INDEX_TYPE_UINT16
   , INDEX_TYPE_UINT32
-  , INDEX_TYPE_UINT8_EXT
+  , INDEX_TYPE_UINT8_KHR
   , INDEX_TYPE_NONE_KHR ::
     IndexType
   #-}
@@ -65,7 +65,7 @@ showTableIndexType :: [(IndexType, String)]
 showTableIndexType =
   [ (INDEX_TYPE_UINT16, "UINT16")
   , (INDEX_TYPE_UINT32, "UINT32")
-  , (INDEX_TYPE_UINT8_EXT, "UINT8_EXT")
+  , (INDEX_TYPE_UINT8_KHR, "UINT8_KHR")
   , (INDEX_TYPE_NONE_KHR, "NONE_KHR")
   ]
 

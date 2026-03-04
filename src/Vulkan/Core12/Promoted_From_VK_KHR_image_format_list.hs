@@ -40,6 +40,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- created as if the 'ImageFormatListCreateInfo' structure were not
 -- included in the @pNext@ chain of 'Vulkan.Core10.Image.ImageCreateInfo'.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkImageFormatListCreateInfo-viewFormatCount-09540# If
+--     @viewFormatCount@ is not 0, each element of @pViewFormats@ /must/
+--     not be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageFormatListCreateInfo-sType-sType# @sType@ /must/ be

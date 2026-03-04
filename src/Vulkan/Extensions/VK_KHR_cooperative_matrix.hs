@@ -32,6 +32,9 @@
 --     -   Kevin Petit
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_cooperative_matrix] @kpet%0A*Here describe the issue or question you have about the VK_KHR_cooperative_matrix extension* >
 --
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_cooperative_matrix.adoc VK_KHR_cooperative_matrix>
+--
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
@@ -427,33 +430,18 @@ data CooperativeMatrixPropertiesKHR = CooperativeMatrixPropertiesKHR
   , -- | @KSize@ is the number of columns in matrix @A@ and rows in matrix @B@.
     kSize :: Word32
   , -- | @AType@ is the component type of matrix @A@, of type 'ComponentTypeKHR'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesKHR-AType-parameter# @AType@ /must/
-    -- be a valid 'ComponentTypeKHR' value
     aType :: ComponentTypeKHR
   , -- | @BType@ is the component type of matrix @B@, of type 'ComponentTypeKHR'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesKHR-BType-parameter# @BType@ /must/
-    -- be a valid 'ComponentTypeKHR' value
     bType :: ComponentTypeKHR
   , -- | @CType@ is the component type of matrix @C@, of type 'ComponentTypeKHR'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesKHR-CType-parameter# @CType@ /must/
-    -- be a valid 'ComponentTypeKHR' value
     cType :: ComponentTypeKHR
   , -- | @ResultType@ is the component type of matrix
     -- 'Vulkan.Core10.Enums.Result.Result', of type 'ComponentTypeKHR'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesKHR-ResultType-parameter#
-    -- @ResultType@ /must/ be a valid 'ComponentTypeKHR' value
     resultType :: ComponentTypeKHR
   , -- | @saturatingAccumulation@ indicates whether the @SaturatingAccumulation@
     -- operand to @OpCooperativeMatrixMulAddKHR@ /must/ be present.
     saturatingAccumulation :: Bool
   , -- | @scope@ is the scope of all the matrix types, of type 'ScopeKHR'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesKHR-scope-parameter# @scope@ /must/
-    -- be a valid 'ScopeKHR' value
     scope :: ScopeKHR
   }
   deriving (Typeable, Eq)

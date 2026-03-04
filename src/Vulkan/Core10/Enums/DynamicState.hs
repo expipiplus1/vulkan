@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_STENCIL_COMPARE_MASK
                                                       , DYNAMIC_STATE_STENCIL_WRITE_MASK
                                                       , DYNAMIC_STATE_STENCIL_REFERENCE
+                                                      , DYNAMIC_STATE_LINE_STIPPLE_KHR
                                                       , DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
                                                       , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
                                                       , DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
@@ -30,6 +31,7 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT
                                                       , DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT
                                                       , DYNAMIC_STATE_RASTERIZATION_STREAM_EXT
+                                                      , DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
                                                       , DYNAMIC_STATE_COLOR_WRITE_MASK_EXT
                                                       , DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT
                                                       , DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT
@@ -40,12 +42,10 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT
                                                       , DYNAMIC_STATE_POLYGON_MODE_EXT
                                                       , DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT
-                                                      , DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
                                                       , DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
                                                       , DYNAMIC_STATE_LOGIC_OP_EXT
                                                       , DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
                                                       , DYNAMIC_STATE_VERTEX_INPUT_EXT
-                                                      , DYNAMIC_STATE_LINE_STIPPLE_EXT
                                                       , DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
                                                       , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
                                                       , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV
@@ -181,6 +181,9 @@ pattern DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 -- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
 
+-- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_LINE_STIPPLE_KHR"
+pattern DYNAMIC_STATE_LINE_STIPPLE_KHR = DynamicState 1000259000
+
 -- | 'DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT' specifies that the
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
 -- and
@@ -280,7 +283,7 @@ pattern DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT = DynamicState 10004550
 
 -- | 'DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT' specifies that the
 -- @stippledLineEnable@ state in
--- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
+-- 'Vulkan.Extensions.VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfoKHR'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
 -- before any draw call.
@@ -288,7 +291,7 @@ pattern DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT = DynamicState 1000455021
 
 -- | 'DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT' specifies that the
 -- @lineRasterizationMode@ state in
--- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
+-- 'Vulkan.Extensions.VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfoKHR'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
 -- before any draw call.
@@ -351,6 +354,14 @@ pattern DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT = DynamicState 1000455
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
 -- before any draw call.
 pattern DYNAMIC_STATE_RASTERIZATION_STREAM_EXT = DynamicState 1000455013
+
+-- | 'DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT' specifies that the
+-- @domainOrigin@ state in
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PipelineTessellationDomainOriginStateCreateInfo'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT = DynamicState 1000455002
 
 -- | 'DYNAMIC_STATE_COLOR_WRITE_MASK_EXT' specifies that the @colorWriteMask@
 -- state in 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState' will
@@ -428,14 +439,6 @@ pattern DYNAMIC_STATE_POLYGON_MODE_EXT = DynamicState 1000455004
 -- before any draw call.
 pattern DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT = DynamicState 1000455003
 
--- | 'DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT' specifies that the
--- @domainOrigin@ state in
--- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PipelineTessellationDomainOriginStateCreateInfo'
--- will be ignored and /must/ be set dynamically with
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
--- before any draw call.
-pattern DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT = DynamicState 1000455002
-
 -- | 'DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT' specifies that the
 -- @pColorWriteEnables@ state in
 -- 'Vulkan.Extensions.VK_EXT_color_write_enable.PipelineColorWriteCreateInfoEXT'
@@ -464,17 +467,6 @@ pattern DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT = DynamicState 1000377000
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 -- before any drawing commands
 pattern DYNAMIC_STATE_VERTEX_INPUT_EXT = DynamicState 1000352000
-
--- | 'DYNAMIC_STATE_LINE_STIPPLE_EXT' specifies that the @lineStippleFactor@
--- and @lineStipplePattern@ state in
--- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
--- will be ignored and /must/ be set dynamically with
--- 'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
--- before any draws are performed with a pipeline state with
--- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
--- member @stippledLineEnable@ set to
--- 'Vulkan.Core10.FundamentalTypes.TRUE'.
-pattern DYNAMIC_STATE_LINE_STIPPLE_EXT = DynamicState 1000259000
 
 -- | 'DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR' specifies that state in
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
@@ -707,6 +699,7 @@ pattern DYNAMIC_STATE_CULL_MODE = DynamicState 1000267000
   , DYNAMIC_STATE_STENCIL_COMPARE_MASK
   , DYNAMIC_STATE_STENCIL_WRITE_MASK
   , DYNAMIC_STATE_STENCIL_REFERENCE
+  , DYNAMIC_STATE_LINE_STIPPLE_KHR
   , DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
   , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
   , DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
@@ -728,6 +721,7 @@ pattern DYNAMIC_STATE_CULL_MODE = DynamicState 1000267000
   , DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT
   , DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT
   , DYNAMIC_STATE_RASTERIZATION_STREAM_EXT
+  , DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
   , DYNAMIC_STATE_COLOR_WRITE_MASK_EXT
   , DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT
   , DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT
@@ -738,12 +732,10 @@ pattern DYNAMIC_STATE_CULL_MODE = DynamicState 1000267000
   , DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT
   , DYNAMIC_STATE_POLYGON_MODE_EXT
   , DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT
-  , DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
   , DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
   , DYNAMIC_STATE_LOGIC_OP_EXT
   , DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
   , DYNAMIC_STATE_VERTEX_INPUT_EXT
-  , DYNAMIC_STATE_LINE_STIPPLE_EXT
   , DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
   , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
   , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV
@@ -796,6 +788,7 @@ showTableDynamicState =
     , "STENCIL_WRITE_MASK"
     )
   , (DYNAMIC_STATE_STENCIL_REFERENCE, "STENCIL_REFERENCE")
+  , (DYNAMIC_STATE_LINE_STIPPLE_KHR, "LINE_STIPPLE_KHR")
   ,
     ( DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
     , "ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT"
@@ -881,6 +874,10 @@ showTableDynamicState =
     , "RASTERIZATION_STREAM_EXT"
     )
   ,
+    ( DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
+    , "TESSELLATION_DOMAIN_ORIGIN_EXT"
+    )
+  ,
     ( DYNAMIC_STATE_COLOR_WRITE_MASK_EXT
     , "COLOR_WRITE_MASK_EXT"
     )
@@ -915,10 +912,6 @@ showTableDynamicState =
     , "DEPTH_CLAMP_ENABLE_EXT"
     )
   ,
-    ( DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
-    , "TESSELLATION_DOMAIN_ORIGIN_EXT"
-    )
-  ,
     ( DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
     , "COLOR_WRITE_ENABLE_EXT"
     )
@@ -928,7 +921,6 @@ showTableDynamicState =
     , "PATCH_CONTROL_POINTS_EXT"
     )
   , (DYNAMIC_STATE_VERTEX_INPUT_EXT, "VERTEX_INPUT_EXT")
-  , (DYNAMIC_STATE_LINE_STIPPLE_EXT, "LINE_STIPPLE_EXT")
   ,
     ( DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
     , "FRAGMENT_SHADING_RATE_KHR"

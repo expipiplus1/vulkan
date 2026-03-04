@@ -1091,61 +1091,29 @@ data BufferCollectionPropertiesFUCHSIA = BufferCollectionPropertiesFUCHSIA
   , -- | @formatFeatures@ is a bitmask of
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits' shared
     -- by the buffer collection
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-formatFeatures-parameter#
-    -- @formatFeatures@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits' values
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-formatFeatures-requiredbitmask#
-    -- @formatFeatures@ /must/ not be @0@
     formatFeatures :: FormatFeatureFlags
   , -- | @sysmemColorSpaceIndex@ is a 'SysmemColorSpaceFUCHSIA' struct specifying
     -- the color space
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-sysmemColorSpaceIndex-parameter#
-    -- @sysmemColorSpaceIndex@ /must/ be a valid 'SysmemColorSpaceFUCHSIA'
-    -- structure
     sysmemColorSpaceIndex :: SysmemColorSpaceFUCHSIA
   , -- | @samplerYcbcrConversionComponents@ is a
     -- 'Vulkan.Core10.ImageView.ComponentMapping' struct specifying the
     -- component mapping
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-samplerYcbcrConversionComponents-parameter#
-    -- @samplerYcbcrConversionComponents@ /must/ be a valid
-    -- 'Vulkan.Core10.ImageView.ComponentMapping' structure
     samplerYcbcrConversionComponents :: ComponentMapping
   , -- | @suggestedYcbcrModel@ is a
     -- 'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SamplerYcbcrModelConversion'
     -- value specifying the suggested Y′CBCR model
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-suggestedYcbcrModel-parameter#
-    -- @suggestedYcbcrModel@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SamplerYcbcrModelConversion'
-    -- value
     suggestedYcbcrModel :: SamplerYcbcrModelConversion
   , -- | @suggestedYcbcrRange@ is a
     -- 'Vulkan.Core11.Enums.SamplerYcbcrRange.SamplerYcbcrRange' value
     -- specifying the suggested Y′CBCR range
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-suggestedYcbcrRange-parameter#
-    -- @suggestedYcbcrRange@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.SamplerYcbcrRange.SamplerYcbcrRange' value
     suggestedYcbcrRange :: SamplerYcbcrRange
   , -- | @suggestedXChromaOffset@ is a
     -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation' value specifying the
     -- suggested X chroma offset
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-suggestedXChromaOffset-parameter#
-    -- @suggestedXChromaOffset@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation' value
     suggestedXChromaOffset :: ChromaLocation
   , -- | @suggestedYChromaOffset@ is a
     -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation' value specifying the
     -- suggested Y chroma offset
-    --
-    -- #VUID-VkBufferCollectionPropertiesFUCHSIA-suggestedYChromaOffset-parameter#
-    -- @suggestedYChromaOffset@ /must/ be a valid
-    -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation' value
     suggestedYChromaOffset :: ChromaLocation
   }
   deriving (Typeable)

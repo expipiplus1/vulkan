@@ -39,11 +39,27 @@
 --
 --     -   Interacts with VK_VERSION_1_3
 --
+--     -   Interacts with VK_EXT_blend_operation_advanced
+--
+--     -   Interacts with VK_EXT_conservative_rasterization
+--
+--     -   Interacts with VK_EXT_depth_clip_control
+--
+--     -   Interacts with VK_EXT_depth_clip_enable
+--
 --     -   Interacts with VK_EXT_fragment_density_map
+--
+--     -   Interacts with VK_EXT_line_rasterization
 --
 --     -   Interacts with VK_EXT_mesh_shader
 --
+--     -   Interacts with VK_EXT_provoking_vertex
+--
+--     -   Interacts with VK_EXT_sample_locations
+--
 --     -   Interacts with VK_EXT_subgroup_size_control
+--
+--     -   Interacts with VK_EXT_transform_feedback
 --
 --     -   Interacts with VK_KHR_device_group
 --
@@ -165,15 +181,11 @@
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
 --
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
---
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT'
 --
@@ -183,23 +195,13 @@
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
 --
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
---
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthTestEnableEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnableEXT'
 --
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
---
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
 --
@@ -213,15 +215,9 @@
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
---
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
---
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
---
--- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
 --
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
 --
@@ -242,6 +238,58 @@
 -- -   'destroyShaderEXT'
 --
 -- -   'getShaderBinaryDataEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced VK_EXT_blend_operation_advanced>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_control VK_EXT_depth_clip_control>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>
@@ -711,35 +759,25 @@
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthTestEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT',
@@ -829,8 +867,9 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , CoverageModulationModeNV(..)
                                                , CoverageReductionModeNV(..)
                                                , ConservativeRasterizationModeEXT(..)
-                                               , LineRasterizationModeEXT(..)
+                                               , LineRasterizationModeKHR(..)
                                                , ProvokingVertexModeEXT(..)
+                                               , LineRasterizationModeEXT
                                                , cmdSetCullModeEXT
                                                , cmdSetFrontFaceEXT
                                                , cmdSetPrimitiveTopologyEXT
@@ -1023,7 +1062,8 @@ import Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (ColorBlendEquationEXT(.
 import Vulkan.Extensions.VK_EXT_conservative_rasterization (ConservativeRasterizationModeEXT(..))
 import Vulkan.Extensions.VK_NV_framebuffer_mixed_samples (CoverageModulationModeNV(..))
 import Vulkan.Extensions.VK_NV_coverage_reduction_mode (CoverageReductionModeNV(..))
-import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT(..))
+import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT)
+import Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR(..))
 import Vulkan.Extensions.VK_EXT_provoking_vertex (ProvokingVertexModeEXT(..))
 import Vulkan.Extensions.Handles (ShaderEXT(..))
 import Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (VertexInputAttributeDescription2EXT(..))
@@ -1317,15 +1357,17 @@ foreign import ccall
 -- -   #VUID-vkDestroyShaderEXT-device-parameter# @device@ /must/ be a
 --     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   #VUID-vkDestroyShaderEXT-shader-parameter# @shader@ /must/ be a
---     valid 'Vulkan.Extensions.Handles.ShaderEXT' handle
+-- -   #VUID-vkDestroyShaderEXT-shader-parameter# If @shader@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @shader@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.ShaderEXT' handle
 --
 -- -   #VUID-vkDestroyShaderEXT-pAllocator-parameter# If @pAllocator@ is
 --     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   #VUID-vkDestroyShaderEXT-shader-parent# @shader@ /must/ have been
---     created, allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyShaderEXT-shader-parent# If @shader@ is a valid
+--     handle, it /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -2100,9 +2142,10 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --
 -- -   #VUID-VkShaderCreateInfoEXT-pCode-08450# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', and the identified entry point
---     includes any variables in its interface that are declared with the
---     @ClipDistance@ or @CullDistance@ @BuiltIn@ decoration, those
---     variables /must/ not have array sizes which sum to more than
+--     includes variables in its interface that are declared with the
+--     @ClipDistance@ @BuiltIn@ decoration and variables in its interface
+--     that are declared with the @CullDistance@ @BuiltIn@ decoration,
+--     those variables /must/ not have array sizes which sum to more than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxCombinedClipAndCullDistances@
 --
 -- -   #VUID-VkShaderCreateInfoEXT-pCode-08451# If @codeType@ is
