@@ -9,6 +9,8 @@ module Vulkan.Core11.Enums.SubgroupFeatureFlagBits  ( SubgroupFeatureFlags
                                                                              , SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
                                                                              , SUBGROUP_FEATURE_CLUSTERED_BIT
                                                                              , SUBGROUP_FEATURE_QUAD_BIT
+                                                                             , SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR
+                                                                             , SUBGROUP_FEATURE_ROTATE_BIT_KHR
                                                                              , SUBGROUP_FEATURE_PARTITIONED_BIT_NV
                                                                              , ..
                                                                              )
@@ -78,6 +80,17 @@ pattern SUBGROUP_FEATURE_CLUSTERED_BIT = SubgroupFeatureFlagBits 0x00000040
 -- @GroupNonUniformQuad@ capability.
 pattern SUBGROUP_FEATURE_QUAD_BIT = SubgroupFeatureFlagBits 0x00000080
 
+-- | #features-subgroup-rotate-clustered#
+-- 'SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR' specifies the device will
+-- accept SPIR-V shader modules that use the @ClusterSize@ operand to
+-- @OpGroupNonUniformRotateKHR@.
+pattern SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR = SubgroupFeatureFlagBits 0x00000400
+
+-- | #features-subgroup-rotate# 'SUBGROUP_FEATURE_ROTATE_BIT_KHR' specifies
+-- the device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformRotateKHR@ capability.
+pattern SUBGROUP_FEATURE_ROTATE_BIT_KHR = SubgroupFeatureFlagBits 0x00000200
+
 -- | #features-subgroup-partitioned# 'SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
 -- specifies the device will accept SPIR-V shader modules containing the
 -- @GroupNonUniformPartitionedNV@ capability.
@@ -111,6 +124,14 @@ showTableSubgroupFeatureFlagBits =
     , "CLUSTERED_BIT"
     )
   , (SUBGROUP_FEATURE_QUAD_BIT, "QUAD_BIT")
+  ,
+    ( SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR
+    , "ROTATE_CLUSTERED_BIT_KHR"
+    )
+  ,
+    ( SUBGROUP_FEATURE_ROTATE_BIT_KHR
+    , "ROTATE_BIT_KHR"
+    )
   ,
     ( SUBGROUP_FEATURE_PARTITIONED_BIT_NV
     , "PARTITIONED_BIT_NV"

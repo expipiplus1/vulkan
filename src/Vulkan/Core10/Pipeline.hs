@@ -5922,7 +5922,8 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'
 --     handle
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06603# If
+-- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06603# If the pipeline
+--     requires
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     or
@@ -6383,6 +6384,19 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
 --     the @pMultisampleState@ used to create that library /must/ be
 --     /identically defined/ @pMultisampleState@
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pLibraries-09567# If one element
+--     of
+--     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
+--     was created with
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT'
+--     and a value of @pMultisampleState->sampleShadingEnable@ equal
+--     'Vulkan.Core10.FundamentalTypes.TRUE', and if
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
+--     includes
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT',
+--     @pMultisampleState@ /must/ be /identically defined/ to that used to
+--     create the library
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06638# If
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@

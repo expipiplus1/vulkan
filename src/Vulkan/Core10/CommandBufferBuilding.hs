@@ -22906,9 +22906,10 @@ foreign import ccall
 --     view in the current subpass, dependency flags /must/ include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --
--- -   #VUID-vkCmdPipelineBarrier-None-09553# If neither the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageColorReadAccess shaderTileImageColorReadAccess>
---     nor
+-- -   #VUID-vkCmdPipelineBarrier-None-09553# If none of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageColorReadAccess shaderTileImageColorReadAccess>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageStencilReadAccess shaderTileImageStencilReadAccess>,
+--     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageDepthReadAccess shaderTileImageDepthReadAccess>
 --     features are enabled, and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>

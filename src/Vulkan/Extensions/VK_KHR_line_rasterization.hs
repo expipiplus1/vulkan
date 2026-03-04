@@ -223,7 +223,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdSetLineStippleEXT-lineStippleFactor-02776#
+-- -   #VUID-vkCmdSetLineStippleKHR-lineStippleFactor-02776#
 --     @lineStippleFactor@ /must/ be in the range [1,256]
 --
 -- == Valid Usage (Implicit)
@@ -500,46 +500,46 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesKHR where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02768#
+-- -   #VUID-VkPipelineRasterizationLineStateCreateInfoKHR-lineRasterizationMode-02768#
 --     If @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_KHR', then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-rectangularLines rectangularLines>
 --     feature /must/ be enabled
 --
--- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769#
+-- -   #VUID-VkPipelineRasterizationLineStateCreateInfoKHR-lineRasterizationMode-02769#
 --     If @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_BRESENHAM_KHR', then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bresenhamLines bresenhamLines>
 --     feature /must/ be enabled
 --
--- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02770#
+-- -   #VUID-VkPipelineRasterizationLineStateCreateInfoKHR-lineRasterizationMode-02770#
 --     If @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR', then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-smoothLines smoothLines>
 --     feature /must/ be enabled
 --
--- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02771#
+-- -   #VUID-VkPipelineRasterizationLineStateCreateInfoKHR-stippledLineEnable-02771#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_KHR', then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled
 --
--- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02772#
+-- -   #VUID-VkPipelineRasterizationLineStateCreateInfoKHR-stippledLineEnable-02772#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is 'LINE_RASTERIZATION_MODE_BRESENHAM_KHR',
 --     then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
 --     feature /must/ be enabled
 --
--- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02773#
+-- -   #VUID-VkPipelineRasterizationLineStateCreateInfoKHR-stippledLineEnable-02773#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR', then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
 --     feature /must/ be enabled
 --
--- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02774#
+-- -   #VUID-VkPipelineRasterizationLineStateCreateInfoKHR-stippledLineEnable-02774#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is 'LINE_RASTERIZATION_MODE_DEFAULT_KHR',
 --     then the

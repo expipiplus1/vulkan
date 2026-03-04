@@ -660,6 +660,7 @@ getQueryPoolResults device
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
 --     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryPoolVideoEncodeFeedbackCreateInfoKHR VkQueryPoolVideoEncodeFeedbackCreateInfoKHR>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1ProfileInfoKHR VkVideoDecodeAV1ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoKHR VkVideoDecodeH264ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoKHR VkVideoDecodeH265ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeUsageInfoKHR VkVideoDecodeUsageInfoKHR>,

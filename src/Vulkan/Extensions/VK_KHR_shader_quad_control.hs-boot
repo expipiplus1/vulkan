@@ -89,6 +89,10 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR'
 --
+-- == New SPIR-V Capabilities
+--
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-QuadControlKHR QuadControlKHR>
+--
 -- == Version History
 --
 -- -   Revision 1, 2023-11-01 (Tobias Hector)

@@ -52,6 +52,8 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern MAX_GLOBAL_PRIORITY_SIZE_KHR
                                    , MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
                                    , pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
+                                   , MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR
+                                   , pattern MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR
                                    , SHADER_INDEX_UNUSED_AMDX
                                    , pattern SHADER_INDEX_UNUSED_AMDX
                                    , pattern NULL_HANDLE
@@ -360,6 +362,13 @@ type MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_module_identifier VK_EXT_shader_module_identifier>
 pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT :: forall a . Integral a => a
 pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
+
+
+type MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR = 7
+
+-- No documentation found for TopLevel "VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR"
+pattern MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR :: forall a . Integral a => a
+pattern MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR = 7
 
 
 type SHADER_INDEX_UNUSED_AMDX = 0xffffffff

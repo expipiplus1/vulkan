@@ -81,6 +81,10 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR'
 --
+-- == New SPIR-V Capabilities
+--
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FloatControls2 FloatControls2>
+--
 -- == Version History
 --
 -- -   Revision 1, 2023-05-16 (Graeme Leese)
