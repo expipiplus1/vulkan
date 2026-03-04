@@ -195,6 +195,38 @@ foreign import ccall
 -- profile /must/ advertise the @VK_KHR_global_priority@ extension in
 -- @pProperties@.
 --
+-- Implementations claiming support for the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2024 Roadmap 2024>
+-- profile /must/ advertise the following extensions in @pProperties@:
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering_local_read VK_KHR_dynamic_rendering_local_read>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_load_store_op_none VK_KHR_load_store_op_none>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_quad_control VK_KHR_shader_quad_control>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_maximal_reconvergence VK_KHR_shader_maximal_reconvergence>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_uniform_control_flow VK_KHR_shader_subgroup_uniform_control_flow>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_float_controls2 VK_KHR_shader_float_controls2>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_expect_assume VK_KHR_shader_expect_assume>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_line_rasterization VK_KHR_line_rasterization>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vertex_attribute_divisor VK_KHR_vertex_attribute_divisor>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_index_type_uint8 VK_KHR_index_type_uint8>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_map_memory2 VK_KHR_map_memory2>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>
+--
 -- Note
 --
 -- Due to platform details on Android, 'enumerateDeviceExtensionProperties'

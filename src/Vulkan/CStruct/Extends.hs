@@ -527,6 +527,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_displacement_micromap (PhysicalDev
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_physical_device_drm (PhysicalDeviceDrmPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (PhysicalDeviceDynamicRenderingFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read (PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_dynamic_rendering_unused_attachments (PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state2 (PhysicalDeviceExtendedDynamicState2FeaturesEXT)
@@ -585,7 +586,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_sliced_view_of_3d (Physical
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_filter_cubic (PhysicalDeviceImageViewImageFormatInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (PhysicalDeviceImageViewMinLodFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (PhysicalDeviceImagelessFramebufferFeatures)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_index_type_uint8 (PhysicalDeviceIndexTypeUint8FeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_index_type_uint8 (PhysicalDeviceIndexTypeUint8FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (PhysicalDeviceInheritedViewportScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeatures)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockProperties)
@@ -593,8 +594,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_invocation_mask (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_MSFT_layered_driver (PhysicalDeviceLayeredDriverPropertiesMSFT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_legacy_dithering (PhysicalDeviceLegacyDitheringFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceLimits)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_linear_color_attachment (PhysicalDeviceLinearColorAttachmentFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (PhysicalDeviceMaintenance3Properties)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Features)
@@ -695,19 +696,24 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters 
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMDX_shader_enqueue (PhysicalDeviceShaderEnqueueFeaturesAMDX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMDX_shader_enqueue (PhysicalDeviceShaderEnqueuePropertiesAMDX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_expect_assume (PhysicalDeviceShaderExpectAssumeFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8 (PhysicalDeviceShaderFloat16Int8Features)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_float_controls2 (PhysicalDeviceShaderFloatControls2FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeatures)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence (PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_module_identifier (PhysicalDeviceShaderModuleIdentifierFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_module_identifier (PhysicalDeviceShaderModuleIdentifierPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_object (PhysicalDeviceShaderObjectFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_object (PhysicalDeviceShaderObjectPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_quad_control (PhysicalDeviceShaderQuadControlFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsPropertiesNV)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types (PhysicalDeviceShaderSubgroupExtendedTypesFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_shader_terminate_invocation (PhysicalDeviceShaderTerminateInvocationFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_tile_image (PhysicalDeviceShaderTileImageFeaturesEXT)
@@ -783,7 +789,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineMultisampleStateCreateInfo
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_properties (PipelinePropertiesIdentifierEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conservative_rasterization (PipelineRasterizationConservativeStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PipelineRasterizationDepthClipStateCreateInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PipelineRasterizationLineStateCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_line_rasterization (PipelineRasterizationLineStateCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PipelineRasterizationProvokingVertexStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineRasterizationStateCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_rasterization_order (PipelineRasterizationStateRasterizationOrderAMD)
@@ -857,9 +863,11 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPas
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (RenderingAreaInfoKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (RenderingAttachmentInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read (RenderingAttachmentLocationInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentDensityMapAttachmentInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentShadingRateAttachmentInfoKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (RenderingInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read (RenderingInputAttachmentIndexInfoKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (ResolveImageInfo2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (SRTDataNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationEXT)
@@ -1137,6 +1145,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends CommandBufferInheritanceInfo CommandBufferInheritanceRenderingInfo = ()
   Extends CommandBufferInheritanceInfo AttachmentSampleCountInfoAMD = ()
   Extends CommandBufferInheritanceInfo MultiviewPerViewAttributesInfoNVX = ()
+  Extends CommandBufferInheritanceInfo RenderingAttachmentLocationInfoKHR = ()
+  Extends CommandBufferInheritanceInfo RenderingInputAttachmentIndexInfoKHR = ()
   Extends CommandBufferSubmitInfo RenderPassStripeSubmitInfoARM = ()
   Extends ComputePipelineCreateInfo PipelineCreateFlags2CreateInfoKHR = ()
   Extends ComputePipelineCreateInfo PipelineCreationFeedbackCreateInfo = ()
@@ -1226,7 +1236,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceCoverageReductionModeFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderClockFeaturesKHR = ()
-  Extends DeviceCreateInfo PhysicalDeviceIndexTypeUint8FeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceIndexTypeUint8FeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderSMBuiltinsFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShaderInterlockFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSeparateDepthStencilLayoutsFeatures = ()
@@ -1235,7 +1245,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderDemoteToHelperInvocationFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceTexelBufferAlignmentFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSubgroupSizeControlFeatures = ()
-  Extends DeviceCreateInfo PhysicalDeviceLineRasterizationFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceLineRasterizationFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDevicePipelineCreationCacheControlFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceVulkan11Features = ()
   Extends DeviceCreateInfo PhysicalDeviceVulkan12Features = ()
@@ -1336,6 +1346,12 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceSchedulingControlsFeaturesARM = ()
   Extends DeviceCreateInfo PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = ()
   Extends DeviceCreateInfo PhysicalDeviceRenderPassStripedFeaturesARM = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderSubgroupRotateFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderExpectAssumeFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderFloatControls2FeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderQuadControlFeaturesKHR = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends DeviceQueueCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
   Extends EventCreateInfo ExportMetalObjectCreateInfoEXT = ()
@@ -1370,6 +1386,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends GraphicsPipelineCreateInfo MultiviewPerViewAttributesInfoNVX = ()
   Extends GraphicsPipelineCreateInfo GraphicsPipelineLibraryCreateInfoEXT = ()
   Extends GraphicsPipelineCreateInfo PipelineRobustnessCreateInfoEXT = ()
+  Extends GraphicsPipelineCreateInfo RenderingAttachmentLocationInfoKHR = ()
+  Extends GraphicsPipelineCreateInfo RenderingInputAttachmentIndexInfoKHR = ()
   Extends ImageBlit2 CopyCommandTransformInfoQCOM = ()
   Extends ImageCreateInfo DedicatedAllocationImageCreateInfoNV = ()
   Extends ImageCreateInfo ExternalMemoryImageCreateInfoNV = ()
@@ -1507,7 +1525,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCoverageReductionModeFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderClockFeaturesKHR = ()
-  Extends PhysicalDeviceFeatures2 PhysicalDeviceIndexTypeUint8FeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceIndexTypeUint8FeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderSMBuiltinsFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShaderInterlockFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSeparateDepthStencilLayoutsFeatures = ()
@@ -1516,7 +1534,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderDemoteToHelperInvocationFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceTexelBufferAlignmentFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSubgroupSizeControlFeatures = ()
-  Extends PhysicalDeviceFeatures2 PhysicalDeviceLineRasterizationFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceLineRasterizationFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevicePipelineCreationCacheControlFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVulkan11Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVulkan12Features = ()
@@ -1615,6 +1633,12 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSchedulingControlsFeaturesARM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRelaxedLineRasterizationFeaturesIMG = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRenderPassStripedFeaturesARM = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderSubgroupRotateFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderExpectAssumeFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderFloatControls2FeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderQuadControlFeaturesKHR = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1672,7 +1696,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceSubgroupSizeControlProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceSubpassShadingPropertiesHUAWEI = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceClusterCullingShaderPropertiesHUAWEI = ()
-  Extends PhysicalDeviceProperties2 PhysicalDeviceLineRasterizationPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceLineRasterizationPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceVulkan11Properties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceVulkan12Properties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceVulkan13Properties = ()
@@ -1724,7 +1748,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PipelineRasterizationStateCreateInfo PipelineRasterizationConservativeStateCreateInfoEXT = ()
   Extends PipelineRasterizationStateCreateInfo PipelineRasterizationStateStreamCreateInfoEXT = ()
   Extends PipelineRasterizationStateCreateInfo PipelineRasterizationDepthClipStateCreateInfoEXT = ()
-  Extends PipelineRasterizationStateCreateInfo PipelineRasterizationLineStateCreateInfoEXT = ()
+  Extends PipelineRasterizationStateCreateInfo PipelineRasterizationLineStateCreateInfoKHR = ()
   Extends PipelineRasterizationStateCreateInfo PipelineRasterizationProvokingVertexStateCreateInfoEXT = ()
   Extends PipelineRasterizationStateCreateInfo DepthBiasRepresentationInfoEXT = ()
   Extends PipelineShaderStageCreateInfo (ShaderModuleCreateInfo '[]) = ()
@@ -2203,7 +2227,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL -> go @PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
   STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL -> go @QueryPoolPerformanceQueryCreateInfoINTEL
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR -> go @PhysicalDeviceShaderClockFeaturesKHR
-  STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT -> go @PhysicalDeviceIndexTypeUint8FeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR -> go @PhysicalDeviceIndexTypeUint8FeaturesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV -> go @PhysicalDeviceShaderSMBuiltinsPropertiesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV -> go @PhysicalDeviceShaderSMBuiltinsFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_INTERLOCK_FEATURES_EXT -> go @PhysicalDeviceFragmentShaderInterlockFeaturesEXT
@@ -2222,9 +2246,9 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_PROPERTIES_HUAWEI -> go @PhysicalDeviceSubpassShadingPropertiesHUAWEI
   STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI -> go @PhysicalDeviceClusterCullingShaderPropertiesHUAWEI
   STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO -> go @MemoryOpaqueCaptureAddressAllocateInfo
-  STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT -> go @PhysicalDeviceLineRasterizationFeaturesEXT
-  STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT -> go @PhysicalDeviceLineRasterizationPropertiesEXT
-  STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT -> go @PipelineRasterizationLineStateCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR -> go @PhysicalDeviceLineRasterizationFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR -> go @PhysicalDeviceLineRasterizationPropertiesKHR
+  STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR -> go @PipelineRasterizationLineStateCreateInfoKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES -> go @PhysicalDevicePipelineCreationCacheControlFeatures
   STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES -> go @PhysicalDeviceVulkan11Features
   STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES -> go @PhysicalDeviceVulkan11Properties
@@ -2456,6 +2480,14 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM -> go @PhysicalDeviceRenderPassStripedPropertiesARM
   STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM -> go @RenderPassStripeBeginInfoARM
   STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM -> go @RenderPassStripeSubmitInfoARM
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR -> go @PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR -> go @PhysicalDeviceShaderSubgroupRotateFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR -> go @PhysicalDeviceShaderExpectAssumeFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR -> go @PhysicalDeviceShaderFloatControls2FeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR -> go @PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR
+  STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO_KHR -> go @RenderingAttachmentLocationInfoKHR
+  STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR -> go @RenderingInputAttachmentIndexInfoKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR -> go @PhysicalDeviceShaderQuadControlFeaturesKHR
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2760,7 +2792,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL #-}
 {-# complete (::&) :: QueryPoolPerformanceQueryCreateInfoINTEL #-}
 {-# complete (::&) :: PhysicalDeviceShaderClockFeaturesKHR #-}
-{-# complete (::&) :: PhysicalDeviceIndexTypeUint8FeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceIndexTypeUint8FeaturesKHR #-}
 {-# complete (::&) :: PhysicalDeviceShaderSMBuiltinsPropertiesNV #-}
 {-# complete (::&) :: PhysicalDeviceShaderSMBuiltinsFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceFragmentShaderInterlockFeaturesEXT #-}
@@ -2779,9 +2811,9 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceSubpassShadingPropertiesHUAWEI #-}
 {-# complete (::&) :: PhysicalDeviceClusterCullingShaderPropertiesHUAWEI #-}
 {-# complete (::&) :: MemoryOpaqueCaptureAddressAllocateInfo #-}
-{-# complete (::&) :: PhysicalDeviceLineRasterizationFeaturesEXT #-}
-{-# complete (::&) :: PhysicalDeviceLineRasterizationPropertiesEXT #-}
-{-# complete (::&) :: PipelineRasterizationLineStateCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceLineRasterizationFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceLineRasterizationPropertiesKHR #-}
+{-# complete (::&) :: PipelineRasterizationLineStateCreateInfoKHR #-}
 {-# complete (::&) :: PhysicalDevicePipelineCreationCacheControlFeatures #-}
 {-# complete (::&) :: PhysicalDeviceVulkan11Features #-}
 {-# complete (::&) :: PhysicalDeviceVulkan11Properties #-}
@@ -3013,6 +3045,14 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceRenderPassStripedPropertiesARM #-}
 {-# complete (::&) :: RenderPassStripeBeginInfoARM #-}
 {-# complete (::&) :: RenderPassStripeSubmitInfoARM #-}
+{-# complete (::&) :: PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceShaderSubgroupRotateFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceShaderExpectAssumeFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceShaderFloatControls2FeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR #-}
+{-# complete (::&) :: RenderingAttachmentLocationInfoKHR #-}
+{-# complete (::&) :: RenderingInputAttachmentIndexInfoKHR #-}
+{-# complete (::&) :: PhysicalDeviceShaderQuadControlFeaturesKHR #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

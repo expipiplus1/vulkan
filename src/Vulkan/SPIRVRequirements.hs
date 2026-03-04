@@ -42,12 +42,16 @@ import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDevi
 import Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures(..))
 import Vulkan.Extensions.VK_AMDX_shader_enqueue (PhysicalDeviceShaderEnqueueFeaturesAMDX(..))
+import Vulkan.Extensions.VK_KHR_shader_expect_assume (PhysicalDeviceShaderExpectAssumeFeaturesKHR(..))
+import Vulkan.Extensions.VK_KHR_shader_float_controls2 (PhysicalDeviceShaderFloatControls2FeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
 import Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeatures(..))
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(..))
+import Vulkan.Extensions.VK_KHR_shader_quad_control (PhysicalDeviceShaderQuadControlFeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV(..))
+import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_tile_image (PhysicalDeviceShaderTileImageFeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImageFeaturesNV(..))
 import Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackFeaturesEXT(..))
@@ -112,10 +116,15 @@ import Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (pattern KHR_RAY_TRAC
 import Vulkan.Extensions.VK_KHR_shader_atomic_int64 (pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_draw_parameters (pattern KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_expect_assume (pattern KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_float16_int8 (pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_float_controls2 (pattern KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_float_controls (pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (pattern KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence (pattern KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info (pattern KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_quad_control (pattern KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (pattern KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (pattern KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_storage_buffer_storage_class (pattern KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME)
@@ -760,6 +769,51 @@ spirvExtensionRequirements = \case
       [ RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_maximal_reconvergence" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_subgroup_rotate" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_expect_assume" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_float_controls2" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_quad_control" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]
@@ -2474,6 +2528,62 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = AMDX_SHADER_ENQUEUE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "GroupNonUniformRotateKHR" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderSubgroupRotate"
+          , checkFeature = \PhysicalDeviceShaderSubgroupRotateFeaturesKHR{shaderSubgroupRotate} -> shaderSubgroupRotate
+          , enableFeature = \PhysicalDeviceShaderSubgroupRotateFeaturesKHR{..} -> PhysicalDeviceShaderSubgroupRotateFeaturesKHR{shaderSubgroupRotate = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "ExpectAssumeKHR" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderExpectAssume"
+          , checkFeature = \PhysicalDeviceShaderExpectAssumeFeaturesKHR{shaderExpectAssume} -> shaderExpectAssume
+          , enableFeature = \_ -> PhysicalDeviceShaderExpectAssumeFeaturesKHR{shaderExpectAssume = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "FloatControls2" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderFloatControls2"
+          , checkFeature = \PhysicalDeviceShaderFloatControls2FeaturesKHR{shaderFloatControls2} -> shaderFloatControls2
+          , enableFeature = \_ -> PhysicalDeviceShaderFloatControls2FeaturesKHR{shaderFloatControls2 = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "QuadControlKHR" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderQuadControl"
+          , checkFeature = \PhysicalDeviceShaderQuadControlFeaturesKHR{shaderQuadControl} -> shaderQuadControl
+          , enableFeature = \_ -> PhysicalDeviceShaderQuadControlFeaturesKHR{shaderQuadControl = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

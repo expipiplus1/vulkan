@@ -25,6 +25,26 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_VERSION_1_1
+--
+--     -   Interacts with VK_EXT_blend_operation_advanced
+--
+--     -   Interacts with VK_EXT_conservative_rasterization
+--
+--     -   Interacts with VK_EXT_depth_clip_control
+--
+--     -   Interacts with VK_EXT_depth_clip_enable
+--
+--     -   Interacts with VK_EXT_line_rasterization
+--
+--     -   Interacts with VK_EXT_provoking_vertex
+--
+--     -   Interacts with VK_EXT_sample_locations
+--
+--     -   Interacts with VK_EXT_transform_feedback
+--
+--     -   Interacts with VK_KHR_maintenance2
+--
 --     -   Interacts with VK_NV_clip_space_w_scaling
 --
 --     -   Interacts with VK_NV_coverage_reduction_mode
@@ -89,41 +109,79 @@
 --
 -- -   'cmdSetAlphaToOneEnableEXT'
 --
--- -   'cmdSetColorBlendAdvancedEXT'
---
 -- -   'cmdSetColorBlendEnableEXT'
 --
 -- -   'cmdSetColorBlendEquationEXT'
 --
 -- -   'cmdSetColorWriteMaskEXT'
 --
--- -   'cmdSetConservativeRasterizationModeEXT'
---
 -- -   'cmdSetDepthClampEnableEXT'
---
--- -   'cmdSetDepthClipEnableEXT'
---
--- -   'cmdSetDepthClipNegativeOneToOneEXT'
---
--- -   'cmdSetExtraPrimitiveOverestimationSizeEXT'
---
--- -   'cmdSetLineRasterizationModeEXT'
---
--- -   'cmdSetLineStippleEnableEXT'
 --
 -- -   'cmdSetLogicOpEnableEXT'
 --
 -- -   'cmdSetPolygonModeEXT'
 --
--- -   'cmdSetProvokingVertexModeEXT'
---
 -- -   'cmdSetRasterizationSamplesEXT'
 --
--- -   'cmdSetRasterizationStreamEXT'
+-- -   'cmdSetSampleMaskEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced VK_EXT_blend_operation_advanced>
+-- is supported:
+--
+-- -   'cmdSetColorBlendAdvancedEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>
+-- is supported:
+--
+-- -   'cmdSetConservativeRasterizationModeEXT'
+--
+-- -   'cmdSetExtraPrimitiveOverestimationSizeEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_control VK_EXT_depth_clip_control>
+-- is supported:
+--
+-- -   'cmdSetDepthClipNegativeOneToOneEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>
+-- is supported:
+--
+-- -   'cmdSetDepthClipEnableEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>
+-- is supported:
+--
+-- -   'cmdSetLineRasterizationModeEXT'
+--
+-- -   'cmdSetLineStippleEnableEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>
+-- is supported:
+--
+-- -   'cmdSetProvokingVertexModeEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>
+-- is supported:
 --
 -- -   'cmdSetSampleLocationsEnableEXT'
 --
--- -   'cmdSetSampleMaskEXT'
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
+-- is supported:
+--
+-- -   'cmdSetRasterizationStreamEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- is supported:
 --
 -- -   'cmdSetTessellationDomainOriginEXT'
 --
@@ -204,49 +262,105 @@
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
---
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
---
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
---
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
---
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
---
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_PROPERTIES_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced VK_EXT_blend_operation_advanced>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_control VK_EXT_depth_clip_control>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
+--
+--     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>
@@ -339,16 +453,10 @@
 -- 'PhysicalDeviceExtendedDynamicState3FeaturesEXT',
 -- 'PhysicalDeviceExtendedDynamicState3PropertiesEXT',
 -- 'cmdSetAlphaToCoverageEnableEXT', 'cmdSetAlphaToOneEnableEXT',
--- 'cmdSetColorBlendAdvancedEXT', 'cmdSetColorBlendEnableEXT',
--- 'cmdSetColorBlendEquationEXT', 'cmdSetColorWriteMaskEXT',
--- 'cmdSetConservativeRasterizationModeEXT', 'cmdSetDepthClampEnableEXT',
--- 'cmdSetDepthClipEnableEXT', 'cmdSetDepthClipNegativeOneToOneEXT',
--- 'cmdSetExtraPrimitiveOverestimationSizeEXT',
--- 'cmdSetLineRasterizationModeEXT', 'cmdSetLineStippleEnableEXT',
+-- 'cmdSetColorBlendEnableEXT', 'cmdSetColorBlendEquationEXT',
+-- 'cmdSetColorWriteMaskEXT', 'cmdSetDepthClampEnableEXT',
 -- 'cmdSetLogicOpEnableEXT', 'cmdSetPolygonModeEXT',
--- 'cmdSetProvokingVertexModeEXT', 'cmdSetRasterizationSamplesEXT',
--- 'cmdSetRasterizationStreamEXT', 'cmdSetSampleLocationsEnableEXT',
--- 'cmdSetSampleMaskEXT', 'cmdSetTessellationDomainOriginEXT'
+-- 'cmdSetRasterizationSamplesEXT', 'cmdSetSampleMaskEXT'
 --
 -- == Document Notes
 --
@@ -402,8 +510,9 @@ module Vulkan.Extensions.VK_EXT_extended_dynamic_state3  ( cmdSetTessellationDom
                                                          , CoverageModulationModeNV(..)
                                                          , CoverageReductionModeNV(..)
                                                          , ConservativeRasterizationModeEXT(..)
-                                                         , LineRasterizationModeEXT(..)
+                                                         , LineRasterizationModeKHR(..)
                                                          , ProvokingVertexModeEXT(..)
+                                                         , LineRasterizationModeEXT
                                                          ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -494,7 +603,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkCmdSetTessellationDomainOriginEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetViewportSwizzleNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetViewportWScalingEnableNV))
 import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT)
-import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT(..))
+import Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR(..))
 import Vulkan.Core10.Enums.PolygonMode (PolygonMode)
 import Vulkan.Core10.Enums.PolygonMode (PolygonMode(..))
 import Vulkan.Extensions.VK_EXT_provoking_vertex (ProvokingVertexModeEXT)
@@ -512,7 +621,8 @@ import Vulkan.Extensions.VK_EXT_blend_operation_advanced (BlendOverlapEXT(..))
 import Vulkan.Extensions.VK_EXT_conservative_rasterization (ConservativeRasterizationModeEXT(..))
 import Vulkan.Extensions.VK_NV_framebuffer_mixed_samples (CoverageModulationModeNV(..))
 import Vulkan.Extensions.VK_NV_coverage_reduction_mode (CoverageReductionModeNV(..))
-import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT(..))
+import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT)
+import Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR(..))
 import Vulkan.Extensions.VK_EXT_provoking_vertex (ProvokingVertexModeEXT(..))
 import Vulkan.Extensions.VK_NV_viewport_swizzle (ViewportCoordinateSwizzleNV(..))
 import Vulkan.Extensions.VK_NV_viewport_swizzle (ViewportSwizzleNV(..))
@@ -596,6 +706,8 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
 cmdSetTessellationDomainOriginEXT :: forall io
@@ -1788,6 +1900,7 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetRasterizationStreamEXT :: forall io
                               . (MonadIO io)
@@ -1886,6 +1999,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
@@ -1991,6 +2105,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
@@ -2097,6 +2212,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
@@ -2194,6 +2310,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
@@ -2299,6 +2416,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced VK_EXT_blend_operation_advanced>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'ColorBlendAdvancedEXT', 'Vulkan.Core10.Handles.CommandBuffer'
@@ -2418,6 +2536,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_EXT_provoking_vertex.ProvokingVertexModeEXT'
@@ -2460,7 +2579,7 @@ foreign import ccall
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'::@lineRasterizationMode@
+-- 'Vulkan.Extensions.VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfoKHR'::@lineRasterizationMode@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -2478,21 +2597,21 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetLineRasterizationModeEXT-lineRasterizationMode-07418#
 --     If @lineRasterizationMode@ is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_KHR',
 --     then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-rectangularLines rectangularLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetLineRasterizationModeEXT-lineRasterizationMode-07419#
 --     If @lineRasterizationMode@ is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_KHR',
 --     then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bresenhamLines bresenhamLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetLineRasterizationModeEXT-lineRasterizationMode-07420#
 --     If @lineRasterizationMode@ is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR',
 --     then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-smoothLines smoothLines>
 --     feature /must/ be enabled
@@ -2540,6 +2659,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_EXT_line_rasterization.LineRasterizationModeEXT'
@@ -2582,7 +2702,7 @@ foreign import ccall
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'::@stippledLineEnable@
+-- 'Vulkan.Extensions.VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfoKHR'::@stippledLineEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -2636,6 +2756,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
@@ -2736,6 +2857,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_control VK_EXT_depth_clip_control>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state3 VK_EXT_extended_dynamic_state3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',

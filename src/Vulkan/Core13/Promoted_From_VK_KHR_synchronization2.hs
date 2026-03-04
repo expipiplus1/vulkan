@@ -878,7 +878,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdPipelineBarrier2-dependencyFlags-07891# If
 --     'cmdPipelineBarrier2' is called within a render pass instance, and
---     and the source stage masks of any memory barriers include
+--     the source stage masks of any memory barriers include
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>,
 --     then @dependencyFlags@ /must/ include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_BY_REGION_BIT'
@@ -898,21 +898,39 @@ foreign import ccall
 --     view in the current subpass, dependency flags /must/ include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --
--- -   #VUID-vkCmdPipelineBarrier2-shaderTileImageColorReadAccess-08718# If
---     'cmdPipelineBarrier2' is called within a render pass instance and
---     none of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageColorReadAccess shaderTileImageColorReadAccess>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageDepthReadAccess shaderTileImageDepthReadAccess>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageStencilReadAccess shaderTileImageStencilReadAccess>
---     features are enabled, the render pass /must/ not have been started
---     with
+-- -   #VUID-vkCmdPipelineBarrier2-None-09553# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageColorReadAccess shaderTileImageColorReadAccess>
+--     nor
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageDepthReadAccess shaderTileImageDepthReadAccess>
+--     features are enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, 'cmdPipelineBarrier2' /must/ not be called
+--     within a render pass instance started with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --
--- -   #VUID-vkCmdPipelineBarrier2-None-08719# If 'cmdPipelineBarrier2' is
+-- -   #VUID-vkCmdPipelineBarrier2-None-09554# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, and 'cmdPipelineBarrier2' is called within a
+--     render pass instance started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     there /must/ be no buffer or image memory barriers specified by this
+--     command
+--
+-- -   #VUID-vkCmdPipelineBarrier2-image-09555# If 'cmdPipelineBarrier2' is
 --     called within a render pass instance started with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     it /must/ adhere to the restrictions in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-barriers-explicit-renderpass-tileimage Explicit Render Pass Tile Image Access Synchronization>
+--     and the @image@ member of any image memory barrier is used as an
+--     attachment in the current render pass instance, it /must/ be in the
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
+--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' layout
+--
+-- -   #VUID-vkCmdPipelineBarrier2-srcStageMask-09556# If
+--     'cmdPipelineBarrier2' is called within a render pass instance
+--     started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     this command /must/ only specify
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>
+--     in @srcStageMask@ and @dstStageMask@
 --
 -- -   #VUID-vkCmdPipelineBarrier2-synchronization2-03848# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -3602,6 +3620,32 @@ instance Zero MemoryBarrier2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
 --     feature is not enabled, @newLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-09550# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
+--     then @image@ /must/ have been created with either
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT', or
+--     with both
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     and either of
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-dynamicRenderingLocalRead-09551# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, @oldLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
+--
+-- -   #VUID-VkImageMemoryBarrier2-dynamicRenderingLocalRead-09552# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, @newLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
 --
 -- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01486#
 --     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@

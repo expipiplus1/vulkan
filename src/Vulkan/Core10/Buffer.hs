@@ -324,13 +324,13 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-None-09499# If the @pNext@ chain does not
 --     include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@: must be a valid combination of
+--     structure, @usage@ must be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkBufferCreateInfo-None-09500# If the @pNext@ chain does not
 --     include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@: must not be 0
+--     structure, @usage@ must not be 0
 --
 -- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
 --     @0@

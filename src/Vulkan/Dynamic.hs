@@ -383,7 +383,9 @@ import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (RenderPassCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (RenderPassCreateInfo2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (RenderingAreaInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read (RenderingAttachmentLocationInfoKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (RenderingInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read (RenderingInputAttachmentIndexInfoKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (ResolveImageInfo2)
 import {-# SOURCE #-} Vulkan.Core10.Enums.Result (Result)
 import {-# SOURCE #-} Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
@@ -1169,7 +1171,7 @@ data DeviceCmds = DeviceCmds
   , pVkGetPipelineExecutablePropertiesKHR :: FunPtr (Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoKHR) -> ("pExecutableCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr PipelineExecutablePropertiesKHR) -> IO Result)
   , pVkGetPipelineExecutableStatisticsKHR :: FunPtr (Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pStatisticCount" ::: Ptr Word32) -> ("pStatistics" ::: Ptr PipelineExecutableStatisticKHR) -> IO Result)
   , pVkGetPipelineExecutableInternalRepresentationsKHR :: FunPtr (Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pInternalRepresentationCount" ::: Ptr Word32) -> ("pInternalRepresentations" ::: Ptr PipelineExecutableInternalRepresentationKHR) -> IO Result)
-  , pVkCmdSetLineStippleEXT :: FunPtr (Ptr CommandBuffer_T -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ())
+  , pVkCmdSetLineStippleKHR :: FunPtr (Ptr CommandBuffer_T -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ())
   , pVkCreateAccelerationStructureKHR :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct AccelerationStructureCreateInfoKHR)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureKHR) -> IO Result)
   , pVkCmdBuildAccelerationStructuresKHR :: FunPtr (Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("ppBuildRangeInfos" ::: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) -> IO ())
   , pVkCmdBuildAccelerationStructuresIndirectKHR :: FunPtr (Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("pIndirectDeviceAddresses" ::: Ptr DeviceAddress) -> ("pIndirectStrides" ::: Ptr Word32) -> ("ppMaxPrimitiveCounts" ::: Ptr (Ptr Word32)) -> IO ())
@@ -1347,6 +1349,8 @@ data DeviceCmds = DeviceCmds
   , pVkSetLatencyMarkerNV :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr SetLatencyMarkerInfoNV) -> IO ())
   , pVkGetLatencyTimingsNV :: FunPtr (Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr GetLatencyMarkerInfoNV) -> IO ())
   , pVkQueueNotifyOutOfBandNV :: FunPtr (Ptr Queue_T -> ("pQueueTypeInfo" ::: Ptr OutOfBandQueueTypeInfoNV) -> IO ())
+  , pVkCmdSetRenderingAttachmentLocationsKHR :: FunPtr (Ptr CommandBuffer_T -> ("pLocationInfo" ::: Ptr RenderingAttachmentLocationInfoKHR) -> IO ())
+  , pVkCmdSetRenderingInputAttachmentIndicesKHR :: FunPtr (Ptr CommandBuffer_T -> ("pLocationInfo" ::: Ptr RenderingInputAttachmentIndexInfoKHR) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -1833,7 +1837,14 @@ instance Zero DeviceCmds where
     nullFunPtr
     nullFunPtr
     nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2197,7 +2208,8 @@ initDeviceCmds instanceCmds handle = do
   vkGetPipelineExecutablePropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutablePropertiesKHR"#)
   vkGetPipelineExecutableStatisticsKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutableStatisticsKHR"#)
   vkGetPipelineExecutableInternalRepresentationsKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutableInternalRepresentationsKHR"#)
-  vkCmdSetLineStippleEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetLineStippleEXT"#)
+  vkCmdSetLineStippleKHR <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetLineStippleEXT"#)
+                                                   , (Ptr "vkCmdSetLineStippleKHR"#) ]
   vkCreateAccelerationStructureKHR <- getDeviceProcAddr' handle (Ptr "vkCreateAccelerationStructureKHR"#)
   vkCmdBuildAccelerationStructuresKHR <- getDeviceProcAddr' handle (Ptr "vkCmdBuildAccelerationStructuresKHR"#)
   vkCmdBuildAccelerationStructuresIndirectKHR <- getDeviceProcAddr' handle (Ptr "vkCmdBuildAccelerationStructuresIndirectKHR"#)
@@ -2409,6 +2421,8 @@ initDeviceCmds instanceCmds handle = do
   vkSetLatencyMarkerNV <- getDeviceProcAddr' handle (Ptr "vkSetLatencyMarkerNV"#)
   vkGetLatencyTimingsNV <- getDeviceProcAddr' handle (Ptr "vkGetLatencyTimingsNV"#)
   vkQueueNotifyOutOfBandNV <- getDeviceProcAddr' handle (Ptr "vkQueueNotifyOutOfBandNV"#)
+  vkCmdSetRenderingAttachmentLocationsKHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetRenderingAttachmentLocationsKHR"#)
+  vkCmdSetRenderingInputAttachmentIndicesKHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetRenderingInputAttachmentIndicesKHR"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -2717,7 +2731,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoKHR) -> ("pExecutableCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr PipelineExecutablePropertiesKHR) -> IO Result) vkGetPipelineExecutablePropertiesKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pStatisticCount" ::: Ptr Word32) -> ("pStatistics" ::: Ptr PipelineExecutableStatisticKHR) -> IO Result) vkGetPipelineExecutableStatisticsKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pExecutableInfo" ::: Ptr PipelineExecutableInfoKHR) -> ("pInternalRepresentationCount" ::: Ptr Word32) -> ("pInternalRepresentations" ::: Ptr PipelineExecutableInternalRepresentationKHR) -> IO Result) vkGetPipelineExecutableInternalRepresentationsKHR)
-    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ()) vkCmdSetLineStippleEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ()) vkCmdSetLineStippleKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct AccelerationStructureCreateInfoKHR)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureKHR) -> IO Result) vkCreateAccelerationStructureKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("ppBuildRangeInfos" ::: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) -> IO ()) vkCmdBuildAccelerationStructuresKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr AccelerationStructureBuildGeometryInfoKHR) -> ("pIndirectDeviceAddresses" ::: Ptr DeviceAddress) -> ("pIndirectStrides" ::: Ptr Word32) -> ("ppMaxPrimitiveCounts" ::: Ptr (Ptr Word32)) -> IO ()) vkCmdBuildAccelerationStructuresIndirectKHR)
@@ -2895,4 +2909,6 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr SetLatencyMarkerInfoNV) -> IO ()) vkSetLatencyMarkerNV)
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> ("pLatencyMarkerInfo" ::: Ptr GetLatencyMarkerInfoNV) -> IO ()) vkGetLatencyTimingsNV)
     (castFunPtr @_ @(Ptr Queue_T -> ("pQueueTypeInfo" ::: Ptr OutOfBandQueueTypeInfoNV) -> IO ()) vkQueueNotifyOutOfBandNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pLocationInfo" ::: Ptr RenderingAttachmentLocationInfoKHR) -> IO ()) vkCmdSetRenderingAttachmentLocationsKHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pLocationInfo" ::: Ptr RenderingInputAttachmentIndexInfoKHR) -> IO ()) vkCmdSetRenderingInputAttachmentIndicesKHR)
 

@@ -372,13 +372,13 @@ instance Zero ExternalImageFormatProperties where
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09499# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@: must be a valid combination of
+--     structure, @usage@ must be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09500# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@: must not be 0
+--     structure, @usage@ must not be 0
 --
 -- == Valid Usage (Implicit)
 --

@@ -606,6 +606,10 @@ getQueryPoolResults device
 --     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
 --     values
 --
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-09534# If @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS',
+--     @pipelineStatistics@ /must/ not be zero
+--
 -- -   #VUID-VkQueryPoolCreateInfo-queryType-03222# If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the @pNext@ chain /must/ include a

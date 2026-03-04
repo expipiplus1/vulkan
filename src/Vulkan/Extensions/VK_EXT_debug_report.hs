@@ -721,7 +721,8 @@ debugReportMessageEXT :: forall io
                       -> -- | @pLayerPrefix@ is the abbreviation of the component making this
                          -- event\/message.
                          ("layerPrefix" ::: ByteString)
-                      -> -- | @pMessage@ is a null-terminated string detailing the trigger conditions.
+                      -> -- | @pMessage@ is a null-terminated UTF-8 string detailing the trigger
+                         -- conditions.
                          ("message" ::: ByteString)
                       -> io ()
 debugReportMessageEXT instance'

@@ -1525,6 +1525,15 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     to the corresponding immutable sampler
 --
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-09506# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     @dstSet@ was allocated with a layout that included immutable
+--     samplers for @dstBinding@, and those samplers enable
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     then @imageView@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00327# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'

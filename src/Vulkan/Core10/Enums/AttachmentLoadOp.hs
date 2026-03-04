@@ -3,7 +3,7 @@
 module Vulkan.Core10.Enums.AttachmentLoadOp  (AttachmentLoadOp( ATTACHMENT_LOAD_OP_LOAD
                                                               , ATTACHMENT_LOAD_OP_CLEAR
                                                               , ATTACHMENT_LOAD_OP_DONT_CARE
-                                                              , ATTACHMENT_LOAD_OP_NONE_EXT
+                                                              , ATTACHMENT_LOAD_OP_NONE_KHR
                                                               , ..
                                                               )) where
 
@@ -54,16 +54,16 @@ pattern ATTACHMENT_LOAD_OP_CLEAR = AttachmentLoadOp 1
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
 pattern ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
 
--- | 'ATTACHMENT_LOAD_OP_NONE_EXT' specifies that the previous contents of
+-- | 'ATTACHMENT_LOAD_OP_NONE_KHR' specifies that the previous contents of
 -- the image will be undefined inside the render pass. No access type is
 -- used as the image is not accessed.
-pattern ATTACHMENT_LOAD_OP_NONE_EXT = AttachmentLoadOp 1000400000
+pattern ATTACHMENT_LOAD_OP_NONE_KHR = AttachmentLoadOp 1000400000
 
 {-# COMPLETE
   ATTACHMENT_LOAD_OP_LOAD
   , ATTACHMENT_LOAD_OP_CLEAR
   , ATTACHMENT_LOAD_OP_DONT_CARE
-  , ATTACHMENT_LOAD_OP_NONE_EXT ::
+  , ATTACHMENT_LOAD_OP_NONE_KHR ::
     AttachmentLoadOp
   #-}
 
@@ -78,7 +78,7 @@ showTableAttachmentLoadOp =
   [ (ATTACHMENT_LOAD_OP_LOAD, "LOAD")
   , (ATTACHMENT_LOAD_OP_CLEAR, "CLEAR")
   , (ATTACHMENT_LOAD_OP_DONT_CARE, "DONT_CARE")
-  , (ATTACHMENT_LOAD_OP_NONE_EXT, "NONE_EXT")
+  , (ATTACHMENT_LOAD_OP_NONE_KHR, "NONE_KHR")
   ]
 
 instance Show AttachmentLoadOp where

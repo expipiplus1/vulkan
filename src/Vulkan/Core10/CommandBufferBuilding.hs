@@ -1704,7 +1704,7 @@ foreign import ccall
 --     be 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
 --
 -- -   #VUID-vkCmdBindIndexBuffer-indexType-08787# If @indexType@ is
---     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT', the
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_KHR', the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-indexTypeUint8 indexTypeUint8>
 --     feature /must/ be enabled
 --
@@ -4341,9 +4341,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-08666# If the @VK_EXT_line_rasterization@
---     extension is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
+-- -   #VUID-vkCmdDraw-None-08666# If the @VK_KHR_line_rasterization@ or
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -4354,8 +4354,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-08667# If the @VK_EXT_line_rasterization@
---     extension is enabled, and a shader object is bound to the
+-- -   #VUID-vkCmdDraw-None-08667# If the @VK_KHR_line_rasterization@ or
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -4368,9 +4369,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-08668# If the @VK_EXT_line_rasterization@
---     extension is enabled, and a shader object that outputs line
---     primitives is bound to the
+-- -   #VUID-vkCmdDraw-None-08668# If the @VK_KHR_line_rasterization@ or
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -4390,9 +4391,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-08669# If the @VK_EXT_line_rasterization@
---     extension is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
+-- -   #VUID-vkCmdDraw-None-08669# If the @VK_KHR_line_rasterization@ or
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -4403,8 +4404,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-08670# If the @VK_EXT_line_rasterization@
---     extension is enabled, and a shader object is bound to the
+-- -   #VUID-vkCmdDraw-None-08670# If the @VK_KHR_line_rasterization@ or
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -4417,9 +4419,9 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-08671# If the @VK_EXT_line_rasterization@
---     extension is enabled, and a shader object that outputs line
---     primitives is bound to the
+-- -   #VUID-vkCmdDraw-None-08671# If the @VK_KHR_line_rasterization@ or
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object that outputs line primitives is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -4433,15 +4435,15 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDraw-None-07849# If the bound graphics pipeline state was
 --     created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_KHR'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.cmdSetLineStippleKHR'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
--- -   #VUID-vkCmdDraw-None-08672# If the @VK_EXT_line_rasterization@
---     extension is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
+-- -   #VUID-vkCmdDraw-None-08672# If the @VK_KHR_line_rasterization@ or
+--     @VK_EXT_line_rasterization@ extension is enabled, and a shader
+--     object is bound to any graphics stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -5119,7 +5121,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled
@@ -5132,7 +5134,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
 --     feature /must/ be enabled
@@ -5145,7 +5147,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
 --     feature /must/ be enabled
@@ -5158,7 +5160,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled and
@@ -5411,6 +5413,25 @@ foreign import ccall
 --     in the @Fragment@ @Execution@ @Model@ executed by this command
 --     /must/ be less than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFragmentDualSrcAttachments maxFragmentDualSrcAttachments>
+--
+-- -   #VUID-vkCmdDraw-None-09548# If the current render pass was begun
+--     with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, the value
+--     of each element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR'::@pColorAttachmentLocations@
+--     set by
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.cmdSetRenderingAttachmentLocationsKHR'
+--     /must/ match the value set for the corresponding element in the
+--     currently bound pipeline
+--
+-- -   #VUID-vkCmdDraw-None-09549# If the current render pass was begun
+--     with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, input
+--     attachment index mappings in the currently bound pipeline /must/
+--     match those set for the current render pass instance via
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
@@ -5722,7 +5743,7 @@ foreign import ccall
 -- Subsequent index values are retrieved from consecutive locations in the
 -- index buffer. Indices are first compared to the primitive restart value,
 -- then zero extended to 32 bits (if the @indexType@ is
--- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT' or
+-- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_KHR' or
 -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16') and have
 -- @vertexOffset@ added to them, before being supplied as the @vertexIndex@
 -- value.
@@ -8127,8 +8148,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08666# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -8140,8 +8162,8 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08667# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -8155,8 +8177,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08668# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object that outputs line primitives is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object that outputs line primitives is
+--     bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -8177,8 +8200,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08669# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -8190,8 +8214,8 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08670# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -8205,8 +8229,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08671# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object that outputs line primitives is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object that outputs line primitives is
+--     bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -8220,15 +8245,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexed-None-07849# If the bound graphics pipeline
 --     state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_KHR'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.cmdSetLineStippleKHR'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-08672# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -8907,7 +8933,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled
@@ -8920,7 +8946,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
 --     feature /must/ be enabled
@@ -8933,7 +8959,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
 --     feature /must/ be enabled
@@ -8946,7 +8972,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled and
@@ -9201,6 +9227,25 @@ foreign import ccall
 --     in the @Fragment@ @Execution@ @Model@ executed by this command
 --     /must/ be less than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFragmentDualSrcAttachments maxFragmentDualSrcAttachments>
+--
+-- -   #VUID-vkCmdDrawIndexed-None-09548# If the current render pass was
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, the value
+--     of each element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR'::@pColorAttachmentLocations@
+--     set by
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.cmdSetRenderingAttachmentLocationsKHR'
+--     /must/ match the value set for the corresponding element in the
+--     currently bound pipeline
+--
+-- -   #VUID-vkCmdDrawIndexed-None-09549# If the current render pass was
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, input
+--     attachment index mappings in the currently bound pipeline /must/
+--     match those set for the current render pass instance via
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
@@ -11935,8 +11980,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08666# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -11948,8 +11994,8 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08667# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -11963,8 +12009,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08668# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object that outputs line primitives is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object that outputs line primitives is
+--     bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -11985,8 +12032,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08669# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -11998,8 +12046,8 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08670# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -12013,8 +12061,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08671# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object that outputs line primitives is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object that outputs line primitives is
+--     bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -12028,15 +12077,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirect-None-07849# If the bound graphics pipeline
 --     state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_KHR'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.cmdSetLineStippleKHR'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-08672# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -12715,7 +12765,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled
@@ -12728,7 +12778,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
 --     feature /must/ be enabled
@@ -12741,7 +12791,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
 --     feature /must/ be enabled
@@ -12754,7 +12804,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled and
@@ -13009,6 +13059,25 @@ foreign import ccall
 --     in the @Fragment@ @Execution@ @Model@ executed by this command
 --     /must/ be less than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFragmentDualSrcAttachments maxFragmentDualSrcAttachments>
+--
+-- -   #VUID-vkCmdDrawIndirect-None-09548# If the current render pass was
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, the value
+--     of each element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR'::@pColorAttachmentLocations@
+--     set by
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.cmdSetRenderingAttachmentLocationsKHR'
+--     /must/ match the value set for the corresponding element in the
+--     currently bound pipeline
+--
+-- -   #VUID-vkCmdDrawIndirect-None-09549# If the current render pass was
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, input
+--     attachment index mappings in the currently bound pipeline /must/
+--     match those set for the current render pass instance via
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
 --
 -- -   #VUID-vkCmdDrawIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
@@ -15714,8 +15783,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08666# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -15727,8 +15797,8 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08667# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -15742,8 +15812,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08668# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object that outputs line primitives is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object that outputs line primitives is
+--     bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -15764,8 +15835,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08669# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -15777,8 +15849,8 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08670# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -15792,8 +15864,9 @@ foreign import ccall
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08671# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object that outputs line primitives is bound to the
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object that outputs line primitives is
+--     bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -15807,15 +15880,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07849# If the bound graphics
 --     pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_KHR'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.cmdSetLineStippleKHR'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-08672# If the
---     @VK_EXT_line_rasterization@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
+--     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
+--     is enabled, and a shader object is bound to any graphics stage, and
+--     the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -16495,7 +16569,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled
@@ -16508,7 +16582,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
 --     feature /must/ be enabled
@@ -16521,7 +16595,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
 --     feature /must/ be enabled
@@ -16534,7 +16608,7 @@ foreign import ccall
 --     dynamic states enabled, and if the current @stippledLineEnable@
 --     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
 --     @lineRasterizationMode@ state is
---     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_EXT',
+--     'Vulkan.Extensions.VK_KHR_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_KHR',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled and
@@ -16794,6 +16868,25 @@ foreign import ccall
 --     in the @Fragment@ @Execution@ @Model@ executed by this command
 --     /must/ be less than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFragmentDualSrcAttachments maxFragmentDualSrcAttachments>
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-09548# If the current render
+--     pass was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, the value
+--     of each element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR'::@pColorAttachmentLocations@
+--     set by
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.cmdSetRenderingAttachmentLocationsKHR'
+--     /must/ match the value set for the corresponding element in the
+--     currently bound pipeline
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-09549# If the current render
+--     pass was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     and there is no shader object bound to any graphics stage, input
+--     attachment index mappings in the currently bound pipeline /must/
+--     match those set for the current render pass instance via
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
@@ -21203,6 +21296,13 @@ foreign import ccall
 --     instance this is recorded in uses multiview, then @baseArrayLayer@
 --     /must/ be zero and @layerCount@ /must/ be one
 --
+-- -   #VUID-vkCmdClearAttachments-colorAttachment-09503# The
+--     @colorAttachment@ member of each element of @pAttachments@ /must/
+--     not identify a color attachment that is currently mapped to
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' in @commandBuffer@
+--     via
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR'
+--
 -- -   #VUID-vkCmdClearAttachments-aspectMask-09298# If the subpass this is
 --     recorded in performs an external format resolve, the @aspectMask@
 --     member of any element of @pAttachments@ /must/ not include
@@ -22786,7 +22886,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdPipelineBarrier-dependencyFlags-07891# If
 --     'cmdPipelineBarrier' is called within a render pass instance, and
---     and the source stage masks of any memory barriers include
+--     the source stage masks of any memory barriers include
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>,
 --     then @dependencyFlags@ /must/ include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_BY_REGION_BIT'
@@ -22806,21 +22906,39 @@ foreign import ccall
 --     view in the current subpass, dependency flags /must/ include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --
--- -   #VUID-vkCmdPipelineBarrier-shaderTileImageColorReadAccess-08718# If
---     'cmdPipelineBarrier' is called within a render pass instance and
---     none of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageColorReadAccess shaderTileImageColorReadAccess>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageDepthReadAccess shaderTileImageDepthReadAccess>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageStencilReadAccess shaderTileImageStencilReadAccess>
---     features are enabled, the render pass /must/ not have been started
---     with
+-- -   #VUID-vkCmdPipelineBarrier-None-09553# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageColorReadAccess shaderTileImageColorReadAccess>
+--     nor
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderTileImageDepthReadAccess shaderTileImageDepthReadAccess>
+--     features are enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, 'cmdPipelineBarrier' /must/ not be called
+--     within a render pass instance started with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --
--- -   #VUID-vkCmdPipelineBarrier-None-08719# If 'cmdPipelineBarrier' is
+-- -   #VUID-vkCmdPipelineBarrier-None-09554# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, and 'cmdPipelineBarrier' is called within a
+--     render pass instance started with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     there /must/ be no buffer or image memory barriers specified by this
+--     command
+--
+-- -   #VUID-vkCmdPipelineBarrier-image-09555# If 'cmdPipelineBarrier' is
 --     called within a render pass instance started with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     it /must/ adhere to the restrictions in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-barriers-explicit-renderpass-tileimage Explicit Render Pass Tile Image Access Synchronization>
+--     and the @image@ member of any image memory barrier is used as an
+--     attachment in the current render pass instance, it /must/ be in the
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
+--     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' layout
+--
+-- -   #VUID-vkCmdPipelineBarrier-srcStageMask-09556# If
+--     'cmdPipelineBarrier' is called within a render pass instance started
+--     with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     this command /must/ only specify
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>
+--     in @srcStageMask@ and @dstStageMask@
 --
 -- -   #VUID-vkCmdPipelineBarrier-srcStageMask-06461# Any pipeline stage
 --     included in @srcStageMask@ /must/ be supported by the capabilities
@@ -24512,6 +24630,24 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
 --     usage bit
 --
+-- -   #VUID-vkCmdBeginRenderPass-initialLayout-09537# If any of the
+--     @initialLayout@ or @finalLayout@ member of the
+--     'Vulkan.Core10.Pass.AttachmentDescription' structures or the
+--     @layout@ member of the 'Vulkan.Core10.Pass.AttachmentReference'
+--     structures specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
+--     then the corresponding attachment image view of the framebuffer
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including either
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT', or
+--     both
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     and either of
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdBeginRenderPass-commandBuffer-parameter# @commandBuffer@
@@ -25360,6 +25496,24 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary secondary command buffer>,
 --     each element of @pCommandBuffers@ /must/ not have been recorded with
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
+--
+-- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-09504# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     the color attachment mapping state specified by
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR'
+--     in the inheritance info of each element of @pCommandBuffers@ and in
+--     the current state of @commandBuffer@ /must/ match
+--
+-- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-09505# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     the input attachment mapping state specified by
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
+--     in the inheritance info of each element of @pCommandBuffers@ and in
+--     the current state of @commandBuffer@ /must/ match
 --
 -- == Valid Usage (Implicit)
 --
@@ -26446,7 +26600,10 @@ instance Zero ImageResolve where
 --     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
 --     structure included in the @pNext@ chain is not @0@, then
 --     @renderArea@ /must/ specify a render area that includes the union of
---     all per view render areas. If the @pNext@ chain contains a
+--     all per view render areas.
+--
+-- -   #VUID-VkRenderPassBeginInfo-pNext-09539# If the @pNext@ chain
+--     contains a
 --     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM'
 --     structure, the union of stripe areas defined by the elements of
 --     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeInfoARM'::@pStripeInfos@

@@ -376,6 +376,10 @@ foreign import ccall
 --     with
 --     'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT'
 --
+-- -   #VUID-vkSetEvent-event-09543# @event@ /must/ not be waited on by a
+--     command buffer in the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkSetEvent-device-parameter# @device@ /must/ be a valid

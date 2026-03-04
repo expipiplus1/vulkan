@@ -197,6 +197,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_draw_indirect_count
                           , module Vulkan.Extensions.VK_KHR_driver_properties
                           , module Vulkan.Extensions.VK_KHR_dynamic_rendering
+                          , module Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read
                           , module Vulkan.Extensions.VK_KHR_external_fence
                           , module Vulkan.Extensions.VK_KHR_external_fence_capabilities
                           , module Vulkan.Extensions.VK_KHR_external_fence_fd
@@ -220,6 +221,9 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_image_format_list
                           , module Vulkan.Extensions.VK_KHR_imageless_framebuffer
                           , module Vulkan.Extensions.VK_KHR_incremental_present
+                          , module Vulkan.Extensions.VK_KHR_index_type_uint8
+                          , module Vulkan.Extensions.VK_KHR_line_rasterization
+                          , module Vulkan.Extensions.VK_KHR_load_store_op_none
                           , module Vulkan.Extensions.VK_KHR_maintenance1
                           , module Vulkan.Extensions.VK_KHR_maintenance2
                           , module Vulkan.Extensions.VK_KHR_maintenance3
@@ -247,11 +251,16 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_shader_atomic_int64
                           , module Vulkan.Extensions.VK_KHR_shader_clock
                           , module Vulkan.Extensions.VK_KHR_shader_draw_parameters
+                          , module Vulkan.Extensions.VK_KHR_shader_expect_assume
                           , module Vulkan.Extensions.VK_KHR_shader_float16_int8
                           , module Vulkan.Extensions.VK_KHR_shader_float_controls
+                          , module Vulkan.Extensions.VK_KHR_shader_float_controls2
                           , module Vulkan.Extensions.VK_KHR_shader_integer_dot_product
+                          , module Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence
                           , module Vulkan.Extensions.VK_KHR_shader_non_semantic_info
+                          , module Vulkan.Extensions.VK_KHR_shader_quad_control
                           , module Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
+                          , module Vulkan.Extensions.VK_KHR_shader_subgroup_rotate
                           , module Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
                           , module Vulkan.Extensions.VK_KHR_shader_terminate_invocation
                           , module Vulkan.Extensions.VK_KHR_shared_presentable_image
@@ -548,6 +557,7 @@ import Vulkan.Extensions.VK_KHR_display_swapchain
 import Vulkan.Extensions.VK_KHR_draw_indirect_count
 import Vulkan.Extensions.VK_KHR_driver_properties
 import Vulkan.Extensions.VK_KHR_dynamic_rendering
+import Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read
 import Vulkan.Extensions.VK_KHR_external_fence
 import Vulkan.Extensions.VK_KHR_external_fence_capabilities
 import Vulkan.Extensions.VK_KHR_external_fence_fd
@@ -571,6 +581,9 @@ import Vulkan.Extensions.VK_KHR_global_priority
 import Vulkan.Extensions.VK_KHR_image_format_list
 import Vulkan.Extensions.VK_KHR_imageless_framebuffer
 import Vulkan.Extensions.VK_KHR_incremental_present
+import Vulkan.Extensions.VK_KHR_index_type_uint8
+import Vulkan.Extensions.VK_KHR_line_rasterization
+import Vulkan.Extensions.VK_KHR_load_store_op_none
 import Vulkan.Extensions.VK_KHR_maintenance1
 import Vulkan.Extensions.VK_KHR_maintenance2
 import Vulkan.Extensions.VK_KHR_maintenance3
@@ -598,11 +611,16 @@ import Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts
 import Vulkan.Extensions.VK_KHR_shader_atomic_int64
 import Vulkan.Extensions.VK_KHR_shader_clock
 import Vulkan.Extensions.VK_KHR_shader_draw_parameters
+import Vulkan.Extensions.VK_KHR_shader_expect_assume
 import Vulkan.Extensions.VK_KHR_shader_float16_int8
 import Vulkan.Extensions.VK_KHR_shader_float_controls
+import Vulkan.Extensions.VK_KHR_shader_float_controls2
 import Vulkan.Extensions.VK_KHR_shader_integer_dot_product
+import Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info
+import Vulkan.Extensions.VK_KHR_shader_quad_control
 import Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
+import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate
 import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation
 import Vulkan.Extensions.VK_KHR_shared_presentable_image

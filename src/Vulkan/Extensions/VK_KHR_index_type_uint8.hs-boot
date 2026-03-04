@@ -1,24 +1,24 @@
 {-# language CPP #-}
 -- | = Name
 --
--- VK_EXT_index_type_uint8 - device extension
+-- VK_KHR_index_type_uint8 - device extension
 --
--- == VK_EXT_index_type_uint8
+-- == VK_KHR_index_type_uint8
 --
 -- [__Name String__]
---     @VK_EXT_index_type_uint8@
+--     @VK_KHR_index_type_uint8@
 --
 -- [__Extension Type__]
 --     Device extension
 --
 -- [__Registered Extension Number__]
---     266
+--     534
 --
 -- [__Revision__]
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -28,12 +28,12 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_index_type_uint8] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_EXT_index_type_uint8 extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_index_type_uint8] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_KHR_index_type_uint8 extension* >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2019-05-02
+--     2023-06-06
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -53,49 +53,49 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
 --
---     -   'PhysicalDeviceIndexTypeUint8FeaturesEXT'
+--     -   'PhysicalDeviceIndexTypeUint8FeaturesKHR'
 --
 -- == New Enum Constants
 --
--- -   'EXT_INDEX_TYPE_UINT8_EXTENSION_NAME'
+-- -   'KHR_INDEX_TYPE_UINT8_EXTENSION_NAME'
 --
--- -   'EXT_INDEX_TYPE_UINT8_SPEC_VERSION'
+-- -   'KHR_INDEX_TYPE_UINT8_SPEC_VERSION'
 --
 -- -   Extending 'Vulkan.Core10.Enums.IndexType.IndexType':
 --
---     -   'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT'
+--     -   'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR'
 --
 -- == Version History
 --
--- -   Revision 1, 2019-05-02 (Piers Daniell)
+-- -   Revision 1, 2023-06-06 (Piers Daniell)
 --
 --     -   Internal revisions
 --
 -- == See Also
 --
--- 'PhysicalDeviceIndexTypeUint8FeaturesEXT'
+-- 'PhysicalDeviceIndexTypeUint8FeaturesKHR'
 --
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_index_type_uint8 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_index_type_uint8 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_index_type_uint8  (PhysicalDeviceIndexTypeUint8FeaturesEXT) where
+module Vulkan.Extensions.VK_KHR_index_type_uint8  (PhysicalDeviceIndexTypeUint8FeaturesKHR) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 
-data PhysicalDeviceIndexTypeUint8FeaturesEXT
+data PhysicalDeviceIndexTypeUint8FeaturesKHR
 
-instance ToCStruct PhysicalDeviceIndexTypeUint8FeaturesEXT
-instance Show PhysicalDeviceIndexTypeUint8FeaturesEXT
+instance ToCStruct PhysicalDeviceIndexTypeUint8FeaturesKHR
+instance Show PhysicalDeviceIndexTypeUint8FeaturesKHR
 
-instance FromCStruct PhysicalDeviceIndexTypeUint8FeaturesEXT
+instance FromCStruct PhysicalDeviceIndexTypeUint8FeaturesKHR
 

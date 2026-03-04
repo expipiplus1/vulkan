@@ -845,7 +845,7 @@ foreign import ccall
 --     not be 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
 --
 -- -   #VUID-vkCmdBindIndexBuffer2KHR-indexType-08787# If @indexType@ is
---     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT', the
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_KHR', the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-indexTypeUint8 indexTypeUint8>
 --     feature /must/ be enabled
 --

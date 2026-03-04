@@ -10,6 +10,7 @@ module Vulkan.Core10.Enums.ImageLayout  (ImageLayout( IMAGE_LAYOUT_UNDEFINED
                                                     , IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
                                                     , IMAGE_LAYOUT_PREINITIALIZED
                                                     , IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT
+                                                    , IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR
                                                     , IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR
                                                     , IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
                                                     , IMAGE_LAYOUT_SHARED_PRESENT_KHR
@@ -185,6 +186,19 @@ pattern IMAGE_LAYOUT_PREINITIALIZED = ImageLayout 8
 -- usage bits enabled.
 pattern IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT = ImageLayout 1000339000
 
+-- | 'IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR' /must/ only be used as either a
+-- storage image, or a color or depth\/stencil attachment and an input
+-- attachment. This layout is valid only for image subresources of images
+-- created with either
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT', or
+-- both
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+-- and either of
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+-- or
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'.
+pattern IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR = ImageLayout 1000232000
+
 -- | 'IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR' /must/ only
 -- be used as a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
@@ -272,6 +286,7 @@ pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 10
   , IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
   , IMAGE_LAYOUT_PREINITIALIZED
   , IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT
+  , IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR
   , IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR
   , IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
   , IMAGE_LAYOUT_SHARED_PRESENT_KHR
@@ -325,6 +340,10 @@ showTableImageLayout =
   ,
     ( IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT
     , "ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT"
+    )
+  ,
+    ( IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR
+    , "RENDERING_LOCAL_READ_KHR"
     )
   ,
     ( IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR

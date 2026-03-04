@@ -1658,11 +1658,6 @@ foreign import ccall
 --     The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --
--- -   #VUID-vkCopyAccelerationStructureKHR-deferredOperation-03677# If
---     @deferredOperation@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     it /must/ be a valid
---     'Vulkan.Extensions.Handles.DeferredOperationKHR' object
---
 -- -   #VUID-vkCopyAccelerationStructureKHR-deferredOperation-03678# Any
 --     previous deferred operation that was associated with
 --     @deferredOperation@ /must/ be complete
@@ -1948,11 +1943,6 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --     feature /must/ be enabled
 --
--- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-deferredOperation-03677#
---     If @deferredOperation@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be a valid
---     'Vulkan.Extensions.Handles.DeferredOperationKHR' object
---
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-deferredOperation-03678#
 --     Any previous deferred operation that was associated with
 --     @deferredOperation@ /must/ be complete
@@ -2201,11 +2191,6 @@ foreign import ccall
 --     The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --     feature /must/ be enabled
---
--- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-deferredOperation-03677#
---     If @deferredOperation@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be a valid
---     'Vulkan.Extensions.Handles.DeferredOperationKHR' object
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-deferredOperation-03678#
 --     Any previous deferred operation that was associated with
@@ -2762,6 +2747,11 @@ foreign import ccall
 -- 'copyMemoryToAccelerationStructureKHR' or
 -- 'cmdCopyMemoryToAccelerationStructureKHR' with a @mode@ of
 -- 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR' during replay.
+--
+-- Note
+--
+-- Memory does not need to be bound to the underlying buffer when
+-- 'createAccelerationStructureKHR' is called.
 --
 -- The input buffers passed to acceleration structure build commands will
 -- be referenced by the implementation for the duration of the command.
@@ -3399,6 +3389,9 @@ foreign import ccall
 --     device address containing a value obtained from
 --     'getAccelerationStructureDeviceAddressKHR' or @0@
 --
+-- -   #VUID-vkCmdBuildAccelerationStructuresKHR-commandBuffer-09547#
+--     @commandBuffer@ /must/ not be a protected command buffer
+--
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03675# For each
 --     @pInfos@[i], @dstAccelerationStructure@ /must/ have been created
 --     with a value of 'AccelerationStructureCreateInfoKHR'::@size@ greater
@@ -4004,6 +3997,9 @@ foreign import ccall
 --     device address containing a value obtained from
 --     'getAccelerationStructureDeviceAddressKHR' or @0@
 --
+-- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-commandBuffer-09547#
+--     @commandBuffer@ /must/ not be a protected command buffer
+--
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pIndirectDeviceAddresses-03645#
 --     For any element of @pIndirectDeviceAddresses@, if the buffer from
 --     which it was queried is non-sparse then it /must/ be bound
@@ -4029,9 +4025,6 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pIndirectStrides-03787#
 --     Each element of @pIndirectStrides@ /must/ be a multiple of @4@
---
--- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-commandBuffer-03649#
---     @commandBuffer@ /must/ not be a protected command buffer
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pIndirectDeviceAddresses-03651#
 --     Each 'AccelerationStructureBuildRangeInfoKHR' structure referenced
@@ -4470,11 +4463,6 @@ foreign import ccall
 --     array of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildRangeInfoKHR' structures
 --
--- -   #VUID-vkBuildAccelerationStructuresKHR-deferredOperation-03677# If
---     @deferredOperation@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     it /must/ be a valid
---     'Vulkan.Extensions.Handles.DeferredOperationKHR' object
---
 -- -   #VUID-vkBuildAccelerationStructuresKHR-deferredOperation-03678# Any
 --     previous deferred operation that was associated with
 --     @deferredOperation@ /must/ be complete
@@ -4729,6 +4717,17 @@ foreign import ccall
 --     @device@ was created with multiple physical devices, then the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
+--
+-- -   #VUID-vkGetAccelerationStructureDeviceAddressKHR-pInfo-09541# If the
+--     buffer on which @pInfo->accelerationStructure@ was placed is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-vkGetAccelerationStructureDeviceAddressKHR-pInfo-09542# The
+--     buffer on which @pInfo->accelerationStructure@ was placed /must/
+--     have been created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
+--     usage flag
 --
 -- == Valid Usage (Implicit)
 --

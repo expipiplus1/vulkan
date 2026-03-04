@@ -108,6 +108,8 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits (QueryPipelineStatisticFlags)
 import Vulkan.Core10.Handles (RenderPass)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read (RenderingAttachmentLocationInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read (RenderingInputAttachmentIndexInfoKHR)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.CStruct.Extends (SomeStruct)
@@ -756,8 +758,10 @@ instance Zero CommandBufferAllocateInfo where
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
 --     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX',
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR',
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX'
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-sType-unique# The @sType@ value
 --     of each struct in the @pNext@ chain /must/ be unique
@@ -839,6 +843,8 @@ instance Extensible CommandBufferInheritanceInfo where
   getNext CommandBufferInheritanceInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferInheritanceInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @RenderingInputAttachmentIndexInfoKHR = Just f
+    | Just Refl <- eqT @e @RenderingAttachmentLocationInfoKHR = Just f
     | Just Refl <- eqT @e @MultiviewPerViewAttributesInfoNVX = Just f
     | Just Refl <- eqT @e @AttachmentSampleCountInfoAMD = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceRenderingInfo = Just f

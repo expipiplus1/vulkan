@@ -275,7 +275,7 @@ foreign import ccall
 -- below.
 --
 -- For @infoType@ 'SHADER_INFO_TYPE_DISASSEMBLY_AMD', @pInfo@ is a pointer
--- to a UTF-8 null-terminated string containing human-readable disassembly.
+-- to a null-terminated UTF-8 string containing human-readable disassembly.
 -- The exact formatting and contents of the disassembly string are
 -- vendor-specific.
 --

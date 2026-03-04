@@ -608,29 +608,14 @@ data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV
   , -- | @KSize@ is the number of columns in matrix A and rows in matrix B.
     kSize :: Word32
   , -- | @AType@ is the component type of matrix A, of type 'ComponentTypeNV'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesNV-AType-parameter# @AType@ /must/ be
-    -- a valid 'ComponentTypeNV' value
     aType :: ComponentTypeNV
   , -- | @BType@ is the component type of matrix B, of type 'ComponentTypeNV'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesNV-BType-parameter# @BType@ /must/ be
-    -- a valid 'ComponentTypeNV' value
     bType :: ComponentTypeNV
   , -- | @CType@ is the component type of matrix C, of type 'ComponentTypeNV'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesNV-CType-parameter# @CType@ /must/ be
-    -- a valid 'ComponentTypeNV' value
     cType :: ComponentTypeNV
   , -- | @DType@ is the component type of matrix D, of type 'ComponentTypeNV'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesNV-DType-parameter# @DType@ /must/ be
-    -- a valid 'ComponentTypeNV' value
     dType :: ComponentTypeNV
   , -- | @scope@ is the scope of all the matrix types, of type 'ScopeNV'.
-    --
-    -- #VUID-VkCooperativeMatrixPropertiesNV-scope-parameter# @scope@ /must/ be
-    -- a valid 'ScopeNV' value
     scope :: ScopeNV
   }
   deriving (Typeable, Eq)

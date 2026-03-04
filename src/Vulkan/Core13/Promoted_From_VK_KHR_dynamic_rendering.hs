@@ -1015,8 +1015,9 @@ instance Zero PipelineRenderingCreateInfo where
 --     element of @pColorAttachments@ is
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
---     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE' If the @pNext@
---     chain contains a
+--     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkRenderingInfo-pNext-09535# If the @pNext@ chain contains a
 --     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM'
 --     structure, the union of stripe areas defined by the elements of
 --     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeInfoARM'::@pStripeInfos@

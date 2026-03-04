@@ -18,10 +18,16 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
+--
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_load_store_op_none VK_KHR_load_store_op_none>
+--         extension
 --
 -- [__Contact__]
 --
@@ -48,14 +54,19 @@
 -- unnecessary synchronization when an attachment is not written during a
 -- render pass.
 --
--- Additionally,
--- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_NONE_EXT' is
--- introduced to avoid unnecessary synchronization when an attachment is
--- not used during a render pass at all. In combination with
--- 'ATTACHMENT_STORE_OP_NONE_EXT', this is useful as an alternative to
--- preserve attachments in applications that cannot decide if an attachment
--- will be used in a render pass until after the necessary pipelines have
--- been created.
+-- Additionally, 'ATTACHMENT_LOAD_OP_NONE_EXT' is introduced to avoid
+-- unnecessary synchronization when an attachment is not used during a
+-- render pass at all. In combination with 'ATTACHMENT_STORE_OP_NONE_EXT',
+-- this is useful as an alternative to preserve attachments in applications
+-- that cannot decide if an attachment will be used in a render pass until
+-- after the necessary pipelines have been created.
+--
+-- == Promotion to @VK_KHR_load_store_op_none@
+--
+-- All functionality in this extension is included in
+-- @VK_KHR_load_store_op_none@, with the suffix changed to KHR. The
+-- original enum names are still available as aliases of the KHR
+-- functionality.
 --
 -- == New Enum Constants
 --
@@ -65,7 +76,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp':
 --
---     -   'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_NONE_EXT'
+--     -   'ATTACHMENT_LOAD_OP_NONE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
@@ -90,7 +101,8 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_load_store_op_none  ( pattern ATTACHMENT_STORE_OP_NONE_EXT
+module Vulkan.Extensions.VK_EXT_load_store_op_none  ( pattern ATTACHMENT_LOAD_OP_NONE_EXT
+                                                    , pattern ATTACHMENT_STORE_OP_NONE_EXT
                                                     , EXT_LOAD_STORE_OP_NONE_SPEC_VERSION
                                                     , pattern EXT_LOAD_STORE_OP_NONE_SPEC_VERSION
                                                     , EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME
@@ -98,7 +110,12 @@ module Vulkan.Extensions.VK_EXT_load_store_op_none  ( pattern ATTACHMENT_STORE_O
                                                     ) where
 
 import Data.String (IsString)
+import Vulkan.Core10.Enums.AttachmentLoadOp (AttachmentLoadOp(ATTACHMENT_LOAD_OP_NONE_KHR))
 import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE))
+-- No documentation found for TopLevel "VK_ATTACHMENT_LOAD_OP_NONE_EXT"
+pattern ATTACHMENT_LOAD_OP_NONE_EXT = ATTACHMENT_LOAD_OP_NONE_KHR
+
+
 -- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_EXT"
 pattern ATTACHMENT_STORE_OP_NONE_EXT = ATTACHMENT_STORE_OP_NONE
 

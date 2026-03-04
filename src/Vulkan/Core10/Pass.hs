@@ -785,6 +785,18 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     for the given @format@
 --
+-- -   #VUID-VkAttachmentDescription-dynamicRenderingLocalRead-09544# If
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
+--
+-- -   #VUID-VkAttachmentDescription-dynamicRenderingLocalRead-09545# If
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
+--
 -- -   #VUID-VkAttachmentDescription-format-06698# @format@ /must/ not be
 --     VK_FORMAT_UNDEFINED
 --
@@ -1013,6 +1025,11 @@ instance Zero AttachmentDescription where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
 --     feature is not enabled, @layout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--
+-- -   #VUID-VkAttachmentReference-dynamicRenderingLocalRead-09546# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
+--     feature is not enabled, @layout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR'
 --
 -- == Valid Usage (Implicit)
 --

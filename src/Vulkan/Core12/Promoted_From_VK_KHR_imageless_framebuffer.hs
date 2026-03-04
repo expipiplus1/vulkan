@@ -190,6 +190,12 @@ instance Zero FramebufferAttachmentsCreateInfo where
 -- pass, as specified by 'RenderPassAttachmentBeginInfo', /must/ be created
 -- with parameters that are identical to those specified here.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkFramebufferAttachmentImageInfo-viewFormatCount-09536# If
+--     @viewFormatCount@ is not 0, each element of @pViewFormats@ /must/
+--     not be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkFramebufferAttachmentImageInfo-sType-sType# @sType@ /must/
