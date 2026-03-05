@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shared_presentable_image - device extension
 --
--- == VK_KHR_shared_presentable_image
+-- = VK_KHR_shared_presentable_image
 --
 -- [__Name String__]
 --     @VK_KHR_shared_presentable_image@

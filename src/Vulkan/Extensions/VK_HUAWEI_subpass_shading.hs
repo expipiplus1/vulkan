@@ -3,7 +3,7 @@
 --
 -- VK_HUAWEI_subpass_shading - device extension
 --
--- == VK_HUAWEI_subpass_shading
+-- = VK_HUAWEI_subpass_shading
 --
 -- [__Name String__]
 --     @VK_HUAWEI_subpass_shading@
@@ -440,8 +440,6 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
---
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
@@ -471,7 +469,7 @@ getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI :: forall io
                                                  -- @renderpass@ /must/ have been created, allocated, or retrieved from
                                                  -- @device@
                                                  RenderPass
-                                              -> io (Result, ("maxWorkgroupSize" ::: Extent2D))
+                                              -> io (("maxWorkgroupSize" ::: Extent2D))
 getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI device
                                                 renderpass = liftIO . evalContT $ do
   let vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr = pVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI (case device of Device{deviceCmds} -> deviceCmds)
@@ -485,7 +483,7 @@ getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI device
                                                                                     (pPMaxWorkgroupSize))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMaxWorkgroupSize <- lift $ peekCStruct @Extent2D pPMaxWorkgroupSize
-  pure $ (r, pMaxWorkgroupSize)
+  pure $ (pMaxWorkgroupSize)
 
 
 foreign import ccall
@@ -1129,6 +1127,9 @@ data SubpassShadingPipelineCreateInfoHUAWEI = SubpassShadingPipelineCreateInfoHU
     -- See
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-compatibility Render Pass Compatibility>
     -- for more information.
+    --
+    -- #VUID-VkSubpassShadingPipelineCreateInfoHUAWEI-renderPass-parameter#
+    -- @renderPass@ /must/ be a valid 'Vulkan.Core10.Handles.RenderPass' handle
     renderPass :: RenderPass
   , -- | @subpass@ is the index of the subpass in the render pass where this
     -- pipeline will be used.

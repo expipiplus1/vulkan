@@ -3,7 +3,7 @@
 --
 -- VK_NV_acquire_winrt_display - device extension
 --
--- == VK_NV_acquire_winrt_display
+-- = VK_NV_acquire_winrt_display
 --
 -- [__Name String__]
 --     @VK_NV_acquire_winrt_display@

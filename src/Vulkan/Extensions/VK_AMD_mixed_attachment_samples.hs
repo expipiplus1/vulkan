@@ -3,7 +3,7 @@
 --
 -- VK_AMD_mixed_attachment_samples - device extension
 --
--- == VK_AMD_mixed_attachment_samples
+-- = VK_AMD_mixed_attachment_samples
 --
 -- [__Name String__]
 --     @VK_AMD_mixed_attachment_samples@

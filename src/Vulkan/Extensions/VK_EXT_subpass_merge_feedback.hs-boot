@@ -3,7 +3,7 @@
 --
 -- VK_EXT_subpass_merge_feedback - device extension
 --
--- == VK_EXT_subpass_merge_feedback
+-- = VK_EXT_subpass_merge_feedback
 --
 -- [__Name String__]
 --     @VK_EXT_subpass_merge_feedback@

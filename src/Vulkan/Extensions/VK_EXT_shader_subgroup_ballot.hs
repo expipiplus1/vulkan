@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_subgroup_ballot - device extension
 --
--- == VK_EXT_shader_subgroup_ballot
+-- = VK_EXT_shader_subgroup_ballot
 --
 -- [__Name String__]
 --     @VK_EXT_shader_subgroup_ballot@
@@ -67,9 +67,9 @@
 --
 -- This extension provides the ability for a group of invocations, which
 -- execute in parallel, to do limited forms of cross-invocation
--- communication via a group broadcast of a invocation value, or broadcast
--- of a bitarray representing a predicate value from each invocation in the
--- group.
+-- communication via a group broadcast of an invocation value, or broadcast
+-- of a bit array representing a predicate value from each invocation in
+-- the group.
 --
 -- This extension provides access to a number of additional built-in shader
 -- variables in Vulkan:

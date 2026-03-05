@@ -3,7 +3,7 @@
 --
 -- VK_EXT_astc_decode_mode - device extension
 --
--- == VK_EXT_astc_decode_mode
+-- = VK_EXT_astc_decode_mode
 --
 -- [__Name String__]
 --     @VK_EXT_astc_decode_mode@

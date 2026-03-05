@@ -3,7 +3,7 @@
 --
 -- VK_EXT_global_priority - device extension
 --
--- == VK_EXT_global_priority
+-- = VK_EXT_global_priority
 --
 -- [__Name String__]
 --     @VK_EXT_global_priority@

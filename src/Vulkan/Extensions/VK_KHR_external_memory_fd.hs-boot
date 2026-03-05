@@ -3,7 +3,7 @@
 --
 -- VK_KHR_external_memory_fd - device extension
 --
--- == VK_KHR_external_memory_fd
+-- = VK_KHR_external_memory_fd
 --
 -- [__Name String__]
 --     @VK_KHR_external_memory_fd@

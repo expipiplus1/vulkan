@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_object - device extension
 --
--- == VK_EXT_shader_object
+-- = VK_EXT_shader_object
 --
 -- [__Name String__]
 --     @VK_EXT_shader_object@
@@ -389,7 +389,9 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INCOMPATIBLE_SHADER_BINARY_EXT'
+--     -   'ERROR_INCOMPATIBLE_SHADER_BINARY_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Result.INCOMPATIBLE_SHADER_BINARY_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -800,6 +802,7 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , getShaderBinaryDataEXT
                                                , cmdBindShadersEXT
                                                , pattern STRUCTURE_TYPE_SHADER_REQUIRED_SUBGROUP_SIZE_CREATE_INFO_EXT
+                                               , pattern ERROR_INCOMPATIBLE_SHADER_BINARY_EXT
                                                , PhysicalDeviceShaderObjectFeaturesEXT(..)
                                                , PhysicalDeviceShaderObjectPropertiesEXT(..)
                                                , ShaderCreateInfoEXT(..)
@@ -1002,6 +1005,7 @@ import Vulkan.Core10.Pipeline (SpecializationInfo)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core10.Enums.Result (Result(INCOMPATIBLE_SHADER_BINARY_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO))
@@ -1254,6 +1258,8 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
+--     -   'Vulkan.Core10.Enums.Result.INCOMPATIBLE_SHADER_BINARY_EXT'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
@@ -1261,8 +1267,6 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_INCOMPATIBLE_SHADER_BINARY_EXT'
 --
 -- = See Also
 --
@@ -1281,7 +1285,7 @@ createShadersEXT :: forall io
                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
-                 -> io (("shaders" ::: Vector ShaderEXT))
+                 -> io (Result, ("shaders" ::: Vector ShaderEXT))
 createShadersEXT device createInfos allocator = liftIO . evalContT $ do
   let vkCreateShadersEXTPtr = pVkCreateShadersEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateShadersEXTPtr /= nullFunPtr) $
@@ -1301,7 +1305,7 @@ createShadersEXT device createInfos allocator = liftIO . evalContT $ do
                                                        (pPShaders))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pShaders <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @ShaderEXT ((pPShaders `advancePtrBytes` (8 * (i)) :: Ptr ShaderEXT)))
-  pure $ (pShaders)
+  pure $ (r, pShaders)
 
 -- | A convenience wrapper to make a compatible pair of calls to
 -- 'createShadersEXT' and 'destroyShaderEXT'
@@ -1311,12 +1315,12 @@ createShadersEXT device createInfos allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withShadersEXT :: forall io r . MonadIO io => Device -> Vector (SomeStruct ShaderCreateInfoEXT) -> Maybe AllocationCallbacks -> (io (Vector ShaderEXT) -> (Vector ShaderEXT -> io ()) -> r) -> r
+withShadersEXT :: forall io r . MonadIO io => Device -> Vector (SomeStruct ShaderCreateInfoEXT) -> Maybe AllocationCallbacks -> (io (Result, Vector ShaderEXT) -> ((Result, Vector ShaderEXT) -> io ()) -> r) -> r
 withShadersEXT device pCreateInfos pAllocator b =
   b (createShadersEXT device pCreateInfos pAllocator)
-    (\(o0) -> traverse_ (\o0Elem -> destroyShaderEXT device
-                                                       o0Elem
-                                                       pAllocator) o0)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyShaderEXT device
+                                                          o1Elem
+                                                          pAllocator) o1)
 
 
 foreign import ccall
@@ -1758,6 +1762,10 @@ cmdBindShadersEXT commandBuffer stages shaders = liftIO . evalContT $ do
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_SHADER_REQUIRED_SUBGROUP_SIZE_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_SHADER_REQUIRED_SUBGROUP_SIZE_CREATE_INFO_EXT = STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO
+
+
+-- No documentation found for TopLevel "VK_ERROR_INCOMPATIBLE_SHADER_BINARY_EXT"
+pattern ERROR_INCOMPATIBLE_SHADER_BINARY_EXT = INCOMPATIBLE_SHADER_BINARY_EXT
 
 
 -- | VkPhysicalDeviceShaderObjectFeaturesEXT - Structure describing whether

@@ -3,7 +3,7 @@
 --
 -- VK_NV_memory_decompression - device extension
 --
--- == VK_NV_memory_decompression
+-- = VK_NV_memory_decompression
 --
 -- [__Name String__]
 --     @VK_NV_memory_decompression@

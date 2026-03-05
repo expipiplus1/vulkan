@@ -3,7 +3,7 @@
 --
 -- VK_QNX_screen_surface - instance extension
 --
--- == VK_QNX_screen_surface
+-- = VK_QNX_screen_surface
 --
 -- [__Name String__]
 --     @VK_QNX_screen_surface@

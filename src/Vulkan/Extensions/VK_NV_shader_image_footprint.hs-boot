@@ -3,7 +3,7 @@
 --
 -- VK_NV_shader_image_footprint - device extension
 --
--- == VK_NV_shader_image_footprint
+-- = VK_NV_shader_image_footprint
 --
 -- [__Name String__]
 --     @VK_NV_shader_image_footprint@

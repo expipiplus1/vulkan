@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_multiview_per_view_render_areas - device extension
 --
--- == VK_QCOM_multiview_per_view_render_areas
+-- = VK_QCOM_multiview_per_view_render_areas
 --
 -- [__Name String__]
 --     @VK_QCOM_multiview_per_view_render_areas@

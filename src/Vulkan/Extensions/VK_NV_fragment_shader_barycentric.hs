@@ -3,7 +3,7 @@
 --
 -- VK_NV_fragment_shader_barycentric - device extension
 --
--- == VK_NV_fragment_shader_barycentric
+-- = VK_NV_fragment_shader_barycentric
 --
 -- [__Name String__]
 --     @VK_NV_fragment_shader_barycentric@

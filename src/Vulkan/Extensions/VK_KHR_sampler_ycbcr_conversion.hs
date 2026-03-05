@@ -3,7 +3,7 @@
 --
 -- VK_KHR_sampler_ycbcr_conversion - device extension
 --
--- == VK_KHR_sampler_ycbcr_conversion
+-- = VK_KHR_sampler_ycbcr_conversion
 --
 -- [__Name String__]
 --     @VK_KHR_sampler_ycbcr_conversion@

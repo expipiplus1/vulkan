@@ -3,7 +3,7 @@
 --
 -- VK_NV_cuda_kernel_launch - device extension
 --
--- == VK_NV_cuda_kernel_launch
+-- = VK_NV_cuda_kernel_launch
 --
 -- [__Name String__]
 --     @VK_NV_cuda_kernel_launch@

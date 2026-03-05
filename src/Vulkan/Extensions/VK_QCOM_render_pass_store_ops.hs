@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_render_pass_store_ops - device extension
 --
--- == VK_QCOM_render_pass_store_ops
+-- = VK_QCOM_render_pass_store_ops
 --
 -- [__Name String__]
 --     @VK_QCOM_render_pass_store_ops@

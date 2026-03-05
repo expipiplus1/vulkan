@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_tile_properties - device extension
 --
--- == VK_QCOM_tile_properties
+-- = VK_QCOM_tile_properties
 --
 -- [__Name String__]
 --     @VK_QCOM_tile_properties@

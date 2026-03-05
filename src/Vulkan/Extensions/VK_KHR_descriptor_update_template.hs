@@ -3,7 +3,7 @@
 --
 -- VK_KHR_descriptor_update_template - device extension
 --
--- == VK_KHR_descriptor_update_template
+-- = VK_KHR_descriptor_update_template
 --
 -- [__Name String__]
 --     @VK_KHR_descriptor_update_template@

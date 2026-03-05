@@ -3,7 +3,7 @@
 --
 -- VK_IMG_filter_cubic - device extension
 --
--- == VK_IMG_filter_cubic
+-- = VK_IMG_filter_cubic
 --
 -- [__Name String__]
 --     @VK_IMG_filter_cubic@

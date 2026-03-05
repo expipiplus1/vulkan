@@ -3,7 +3,7 @@
 --
 -- VK_AMD_draw_indirect_count - device extension
 --
--- == VK_AMD_draw_indirect_count
+-- = VK_AMD_draw_indirect_count
 --
 -- [__Name String__]
 --     @VK_AMD_draw_indirect_count@

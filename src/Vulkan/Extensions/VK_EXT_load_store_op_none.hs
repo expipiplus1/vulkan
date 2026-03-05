@@ -3,7 +3,7 @@
 --
 -- VK_EXT_load_store_op_none - device extension
 --
--- == VK_EXT_load_store_op_none
+-- = VK_EXT_load_store_op_none
 --
 -- [__Name String__]
 --     @VK_EXT_load_store_op_none@

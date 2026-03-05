@@ -3,7 +3,7 @@
 --
 -- VK_KHR_surface_protected_capabilities - instance extension
 --
--- == VK_KHR_surface_protected_capabilities
+-- = VK_KHR_surface_protected_capabilities
 --
 -- [__Name String__]
 --     @VK_KHR_surface_protected_capabilities@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pipeline_creation_cache_control - device extension
 --
--- == VK_EXT_pipeline_creation_cache_control
+-- = VK_EXT_pipeline_creation_cache_control
 --
 -- [__Name String__]
 --     @VK_EXT_pipeline_creation_cache_control@

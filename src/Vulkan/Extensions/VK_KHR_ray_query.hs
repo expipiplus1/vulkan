@@ -3,7 +3,7 @@
 --
 -- VK_KHR_ray_query - device extension
 --
--- == VK_KHR_ray_query
+-- = VK_KHR_ray_query
 --
 -- [__Name String__]
 --     @VK_KHR_ray_query@

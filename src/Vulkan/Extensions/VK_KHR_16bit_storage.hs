@@ -3,7 +3,7 @@
 --
 -- VK_KHR_16bit_storage - device extension
 --
--- == VK_KHR_16bit_storage
+-- = VK_KHR_16bit_storage
 --
 -- [__Name String__]
 --     @VK_KHR_16bit_storage@

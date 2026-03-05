@@ -3,7 +3,7 @@
 --
 -- VK_KHR_timeline_semaphore - device extension
 --
--- == VK_KHR_timeline_semaphore
+-- = VK_KHR_timeline_semaphore
 --
 -- [__Name String__]
 --     @VK_KHR_timeline_semaphore@

@@ -3,7 +3,7 @@
 --
 -- VK_NVX_binary_import - device extension
 --
--- == VK_NVX_binary_import
+-- = VK_NVX_binary_import
 --
 -- [__Name String__]
 --     @VK_NVX_binary_import@

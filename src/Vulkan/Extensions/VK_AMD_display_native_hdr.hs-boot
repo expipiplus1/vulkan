@@ -3,7 +3,7 @@
 --
 -- VK_AMD_display_native_hdr - device extension
 --
--- == VK_AMD_display_native_hdr
+-- = VK_AMD_display_native_hdr
 --
 -- [__Name String__]
 --     @VK_AMD_display_native_hdr@

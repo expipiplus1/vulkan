@@ -3,7 +3,7 @@
 --
 -- VK_EXT_ycbcr_image_arrays - device extension
 --
--- == VK_EXT_ycbcr_image_arrays
+-- = VK_EXT_ycbcr_image_arrays
 --
 -- [__Name String__]
 --     @VK_EXT_ycbcr_image_arrays@

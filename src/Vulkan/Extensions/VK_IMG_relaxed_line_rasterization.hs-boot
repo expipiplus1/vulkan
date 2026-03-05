@@ -3,7 +3,7 @@
 --
 -- VK_IMG_relaxed_line_rasterization - device extension
 --
--- == VK_IMG_relaxed_line_rasterization
+-- = VK_IMG_relaxed_line_rasterization
 --
 -- [__Name String__]
 --     @VK_IMG_relaxed_line_rasterization@

@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_trinary_minmax - device extension
 --
--- == VK_AMD_shader_trinary_minmax
+-- = VK_AMD_shader_trinary_minmax
 --
 -- [__Name String__]
 --     @VK_AMD_shader_trinary_minmax@

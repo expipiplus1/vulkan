@@ -3,7 +3,7 @@
 --
 -- VK_NV_ray_tracing_invocation_reorder - device extension
 --
--- == VK_NV_ray_tracing_invocation_reorder
+-- = VK_NV_ray_tracing_invocation_reorder
 --
 -- [__Name String__]
 --     @VK_NV_ray_tracing_invocation_reorder@

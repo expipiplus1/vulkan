@@ -3,7 +3,7 @@
 --
 -- VK_EXT_color_write_enable - device extension
 --
--- == VK_EXT_color_write_enable
+-- = VK_EXT_color_write_enable
 --
 -- [__Name String__]
 --     @VK_EXT_color_write_enable@

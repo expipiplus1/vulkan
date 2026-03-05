@@ -3,7 +3,7 @@
 --
 -- VK_NV_viewport_swizzle - device extension
 --
--- == VK_NV_viewport_swizzle
+-- = VK_NV_viewport_swizzle
 --
 -- [__Name String__]
 --     @VK_NV_viewport_swizzle@

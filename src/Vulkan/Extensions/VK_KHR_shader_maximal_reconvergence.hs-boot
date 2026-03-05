@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_maximal_reconvergence - device extension
 --
--- == VK_KHR_shader_maximal_reconvergence
+-- = VK_KHR_shader_maximal_reconvergence
 --
 -- [__Name String__]
 --     @VK_KHR_shader_maximal_reconvergence@
@@ -31,6 +31,9 @@
 --
 --     -   Alan Baker
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_maximal_reconvergence] @alan-baker%0A*Here describe the issue or question you have about the VK_KHR_shader_maximal_reconvergence extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_maximal_reconvergence.adoc VK_KHR_shader_maximal_reconvergence>
 --
 -- == Other Extension Metadata
 --

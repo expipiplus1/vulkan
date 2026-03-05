@@ -3,7 +3,7 @@
 --
 -- VK_EXT_external_memory_host - device extension
 --
--- == VK_EXT_external_memory_host
+-- = VK_EXT_external_memory_host
 --
 -- [__Name String__]
 --     @VK_EXT_external_memory_host@

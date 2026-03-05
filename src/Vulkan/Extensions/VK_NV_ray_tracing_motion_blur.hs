@@ -3,7 +3,7 @@
 --
 -- VK_NV_ray_tracing_motion_blur - device extension
 --
--- == VK_NV_ray_tracing_motion_blur
+-- = VK_NV_ray_tracing_motion_blur
 --
 -- [__Name String__]
 --     @VK_NV_ray_tracing_motion_blur@

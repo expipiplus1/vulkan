@@ -3,7 +3,7 @@
 --
 -- VK_FUCHSIA_external_semaphore - device extension
 --
--- == VK_FUCHSIA_external_semaphore
+-- = VK_FUCHSIA_external_semaphore
 --
 -- [__Name String__]
 --     @VK_FUCHSIA_external_semaphore@

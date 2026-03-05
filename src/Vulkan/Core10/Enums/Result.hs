@@ -19,7 +19,7 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , ERROR_FORMAT_NOT_SUPPORTED
                                           , ERROR_FRAGMENTED_POOL
                                           , ERROR_UNKNOWN
-                                          , ERROR_INCOMPATIBLE_SHADER_BINARY_EXT
+                                          , INCOMPATIBLE_SHADER_BINARY_EXT
                                           , ERROR_COMPRESSION_EXHAUSTED_EXT
                                           , OPERATION_NOT_DEFERRED_KHR
                                           , OPERATION_DEFERRED_KHR
@@ -180,9 +180,18 @@ pattern ERROR_FRAGMENTED_POOL = Result (-12)
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN = Result (-13)
 
--- | 'ERROR_INCOMPATIBLE_SHADER_BINARY_EXT' The provided binary shader code
--- is not compatible with this device.
-pattern ERROR_INCOMPATIBLE_SHADER_BINARY_EXT = Result 1000482000
+-- | 'INCOMPATIBLE_SHADER_BINARY_EXT' The provided binary shader code is not
+-- compatible with this device.
+--
+-- Note
+--
+-- In the initial version of the @VK_EXT_shader_object@ extension, this
+-- return code was named
+-- 'Vulkan.Extensions.VK_EXT_shader_object.ERROR_INCOMPATIBLE_SHADER_BINARY_EXT'
+-- and improperly described as an error code. The name has been changed,
+-- but the old name is retained as an alias for compatibility with old
+-- code.
+pattern INCOMPATIBLE_SHADER_BINARY_EXT = Result 1000482000
 
 -- | 'ERROR_COMPRESSION_EXHAUSTED_EXT' An image creation failed because
 -- internal resources required for compression are exhausted. This /must/
@@ -307,7 +316,7 @@ pattern ERROR_OUT_OF_POOL_MEMORY = Result (-1000069000)
   , ERROR_FORMAT_NOT_SUPPORTED
   , ERROR_FRAGMENTED_POOL
   , ERROR_UNKNOWN
-  , ERROR_INCOMPATIBLE_SHADER_BINARY_EXT
+  , INCOMPATIBLE_SHADER_BINARY_EXT
   , ERROR_COMPRESSION_EXHAUSTED_EXT
   , OPERATION_NOT_DEFERRED_KHR
   , OPERATION_DEFERRED_KHR
@@ -362,8 +371,8 @@ showTableResult =
   , (ERROR_FRAGMENTED_POOL, "ERROR_FRAGMENTED_POOL")
   , (ERROR_UNKNOWN, "ERROR_UNKNOWN")
   ,
-    ( ERROR_INCOMPATIBLE_SHADER_BINARY_EXT
-    , "ERROR_INCOMPATIBLE_SHADER_BINARY_EXT"
+    ( INCOMPATIBLE_SHADER_BINARY_EXT
+    , "INCOMPATIBLE_SHADER_BINARY_EXT"
     )
   ,
     ( ERROR_COMPRESSION_EXHAUSTED_EXT

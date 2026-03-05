@@ -3,7 +3,7 @@
 --
 -- VK_EXT_fragment_shader_interlock - device extension
 --
--- == VK_EXT_fragment_shader_interlock
+-- = VK_EXT_fragment_shader_interlock
 --
 -- [__Name String__]
 --     @VK_EXT_fragment_shader_interlock@

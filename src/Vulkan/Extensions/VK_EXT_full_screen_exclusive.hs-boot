@@ -3,7 +3,7 @@
 --
 -- VK_EXT_full_screen_exclusive - device extension
 --
--- == VK_EXT_full_screen_exclusive
+-- = VK_EXT_full_screen_exclusive
 --
 -- [__Name String__]
 --     @VK_EXT_full_screen_exclusive@

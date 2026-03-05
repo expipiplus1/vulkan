@@ -3,7 +3,7 @@
 --
 -- VK_KHR_dynamic_rendering_local_read - device extension
 --
--- == VK_KHR_dynamic_rendering_local_read
+-- = VK_KHR_dynamic_rendering_local_read
 --
 -- [__Name String__]
 --     @VK_KHR_dynamic_rendering_local_read@
@@ -566,8 +566,7 @@ instance Zero PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxColorAttachments maxColorAttachments>
 --
 -- -   #VUID-VkRenderingAttachmentLocationInfoKHR-pColorAttachmentLocations-09515#
---     Each element of @pColorAttachmentLocations@ /must/ be less than or
---     equal to
+--     Each element of @pColorAttachmentLocations@ /must/ be less than
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxColorAttachments maxColorAttachments>
 --
 -- == Valid Usage (Implicit)

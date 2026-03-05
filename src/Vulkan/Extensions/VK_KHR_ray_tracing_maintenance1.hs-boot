@@ -3,7 +3,7 @@
 --
 -- VK_KHR_ray_tracing_maintenance1 - device extension
 --
--- == VK_KHR_ray_tracing_maintenance1
+-- = VK_KHR_ray_tracing_maintenance1
 --
 -- [__Name String__]
 --     @VK_KHR_ray_tracing_maintenance1@

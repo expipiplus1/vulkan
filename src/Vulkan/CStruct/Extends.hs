@@ -424,6 +424,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryGetZir
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (MemoryHeap)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (MemoryHostPointerPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_map_memory2 (MemoryMapInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_map_memory_placed (MemoryMapPlacedInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (MemoryOpaqueCaptureAddressAllocateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (MemoryPriorityAllocateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.MemoryManagement (MemoryRequirements)
@@ -604,6 +605,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaint
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5PropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6PropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_map_memory_placed (PhysicalDeviceMapMemoryPlacedFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_map_memory_placed (PhysicalDeviceMapMemoryPlacedPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_budget (PhysicalDeviceMemoryBudgetPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionPropertiesNV)
@@ -682,6 +685,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (Ph
 import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsFeaturesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsPropertiesARM)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_atomic_float16_vector (PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64 (PhysicalDeviceShaderAtomicInt64Features)
@@ -1352,6 +1356,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderFloatControls2FeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderQuadControlFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV = ()
+  Extends DeviceCreateInfo PhysicalDeviceMapMemoryPlacedFeaturesEXT = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends DeviceQueueCreateInfo DeviceQueueShaderCoreControlCreateInfoARM = ()
   Extends EventCreateInfo ExportMetalObjectCreateInfoEXT = ()
@@ -1452,6 +1458,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends MemoryAllocateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends MemoryAllocateInfo ImportMetalBufferInfoEXT = ()
   Extends MemoryAllocateInfo ImportScreenBufferInfoQNX = ()
+  Extends MemoryMapInfoKHR MemoryMapPlacedInfoEXT = ()
   Extends MemoryRequirements2 MemoryDedicatedRequirements = ()
   Extends OpticalFlowSessionCreateInfoNV OpticalFlowSessionCreatePrivateDataInfoNV = ()
   Extends PhysicalDeviceClusterCullingShaderFeaturesHUAWEI PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI = ()
@@ -1639,6 +1646,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderFloatControls2FeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderQuadControlFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceMapMemoryPlacedFeaturesEXT = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1735,6 +1744,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceCudaKernelLaunchPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceSchedulingControlsPropertiesARM = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceRenderPassStripedPropertiesARM = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceMapMemoryPlacedPropertiesEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfacePresentModeEXT = ()
@@ -2488,6 +2498,10 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO_KHR -> go @RenderingAttachmentLocationInfoKHR
   STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR -> go @RenderingInputAttachmentIndexInfoKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR -> go @PhysicalDeviceShaderQuadControlFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_VECTOR_FEATURES_NV -> go @PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT -> go @PhysicalDeviceMapMemoryPlacedFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_PROPERTIES_EXT -> go @PhysicalDeviceMapMemoryPlacedPropertiesEXT
+  STRUCTURE_TYPE_MEMORY_MAP_PLACED_INFO_EXT -> go @MemoryMapPlacedInfoEXT
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -3053,6 +3067,10 @@ infix 6 ::&
 {-# complete (::&) :: RenderingAttachmentLocationInfoKHR #-}
 {-# complete (::&) :: RenderingInputAttachmentIndexInfoKHR #-}
 {-# complete (::&) :: PhysicalDeviceShaderQuadControlFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV #-}
+{-# complete (::&) :: PhysicalDeviceMapMemoryPlacedFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceMapMemoryPlacedPropertiesEXT #-}
+{-# complete (::&) :: MemoryMapPlacedInfoEXT #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

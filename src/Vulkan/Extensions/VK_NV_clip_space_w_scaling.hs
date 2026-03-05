@@ -3,7 +3,7 @@
 --
 -- VK_NV_clip_space_w_scaling - device extension
 --
--- == VK_NV_clip_space_w_scaling
+-- = VK_NV_clip_space_w_scaling
 --
 -- [__Name String__]
 --     @VK_NV_clip_space_w_scaling@

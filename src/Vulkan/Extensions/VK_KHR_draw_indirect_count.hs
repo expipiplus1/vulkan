@@ -3,7 +3,7 @@
 --
 -- VK_KHR_draw_indirect_count - device extension
 --
--- == VK_KHR_draw_indirect_count
+-- = VK_KHR_draw_indirect_count
 --
 -- [__Name String__]
 --     @VK_KHR_draw_indirect_count@

@@ -3,7 +3,7 @@
 --
 -- VK_ARM_rasterization_order_attachment_access - device extension
 --
--- == VK_ARM_rasterization_order_attachment_access
+-- = VK_ARM_rasterization_order_attachment_access
 --
 -- [__Name String__]
 --     @VK_ARM_rasterization_order_attachment_access@

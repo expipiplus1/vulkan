@@ -3,7 +3,7 @@
 --
 -- VK_EXT_image_compression_control_swapchain - device extension
 --
--- == VK_EXT_image_compression_control_swapchain
+-- = VK_EXT_image_compression_control_swapchain
 --
 -- [__Name String__]
 --     @VK_EXT_image_compression_control_swapchain@

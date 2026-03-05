@@ -3,7 +3,7 @@
 --
 -- VK_HUAWEI_subpass_shading - device extension
 --
--- == VK_HUAWEI_subpass_shading
+-- = VK_HUAWEI_subpass_shading
 --
 -- [__Name String__]
 --     @VK_HUAWEI_subpass_shading@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_fragment_shading_rate - device extension
 --
--- == VK_KHR_fragment_shading_rate
+-- = VK_KHR_fragment_shading_rate
 --
 -- [__Name String__]
 --     @VK_KHR_fragment_shading_rate@

@@ -3,7 +3,7 @@
 --
 -- VK_NV_external_memory_win32 - device extension
 --
--- == VK_NV_external_memory_win32
+-- = VK_NV_external_memory_win32
 --
 -- [__Name String__]
 --     @VK_NV_external_memory_win32@

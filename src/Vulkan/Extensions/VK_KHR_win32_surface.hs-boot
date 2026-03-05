@@ -3,7 +3,7 @@
 --
 -- VK_KHR_win32_surface - instance extension
 --
--- == VK_KHR_win32_surface
+-- = VK_KHR_win32_surface
 --
 -- [__Name String__]
 --     @VK_KHR_win32_surface@

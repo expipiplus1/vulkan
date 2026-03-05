@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_subgroup_uniform_control_flow - device extension
 --
--- == VK_KHR_shader_subgroup_uniform_control_flow
+-- = VK_KHR_shader_subgroup_uniform_control_flow
 --
 -- [__Name String__]
 --     @VK_KHR_shader_subgroup_uniform_control_flow@

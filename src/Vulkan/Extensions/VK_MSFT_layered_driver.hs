@@ -3,7 +3,7 @@
 --
 -- VK_MSFT_layered_driver - device extension
 --
--- == VK_MSFT_layered_driver
+-- = VK_MSFT_layered_driver
 --
 -- [__Name String__]
 --     @VK_MSFT_layered_driver@

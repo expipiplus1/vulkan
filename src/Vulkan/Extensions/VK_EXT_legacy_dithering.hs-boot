@@ -3,7 +3,7 @@
 --
 -- VK_EXT_legacy_dithering - device extension
 --
--- == VK_EXT_legacy_dithering
+-- = VK_EXT_legacy_dithering
 --
 -- [__Name String__]
 --     @VK_EXT_legacy_dithering@

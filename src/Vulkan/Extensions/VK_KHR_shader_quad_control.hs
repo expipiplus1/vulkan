@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_quad_control - device extension
 --
--- == VK_KHR_shader_quad_control
+-- = VK_KHR_shader_quad_control
 --
 -- [__Name String__]
 --     @VK_KHR_shader_quad_control@

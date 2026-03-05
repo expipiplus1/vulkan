@@ -3,7 +3,7 @@
 --
 -- VK_EXT_frame_boundary - device extension
 --
--- == VK_EXT_frame_boundary
+-- = VK_EXT_frame_boundary
 --
 -- [__Name String__]
 --     @VK_EXT_frame_boundary@

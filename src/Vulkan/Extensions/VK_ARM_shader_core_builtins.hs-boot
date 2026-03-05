@@ -3,7 +3,7 @@
 --
 -- VK_ARM_shader_core_builtins - device extension
 --
--- == VK_ARM_shader_core_builtins
+-- = VK_ARM_shader_core_builtins
 --
 -- [__Name String__]
 --     @VK_ARM_shader_core_builtins@

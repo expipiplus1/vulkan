@@ -106,7 +106,7 @@ library
       Vulkan.Core10.Enums.InternalAllocationType
       Vulkan.Core10.Enums.LogicOp
       Vulkan.Core10.Enums.MemoryHeapFlagBits
-      Vulkan.Core10.Enums.MemoryMapFlags
+      Vulkan.Core10.Enums.MemoryMapFlagBits
       Vulkan.Core10.Enums.MemoryPropertyFlagBits
       Vulkan.Core10.Enums.ObjectType
       Vulkan.Core10.Enums.PhysicalDeviceType
@@ -386,6 +386,7 @@ library
       Vulkan.Extensions.VK_EXT_legacy_dithering
       Vulkan.Extensions.VK_EXT_line_rasterization
       Vulkan.Extensions.VK_EXT_load_store_op_none
+      Vulkan.Extensions.VK_EXT_map_memory_placed
       Vulkan.Extensions.VK_EXT_memory_budget
       Vulkan.Extensions.VK_EXT_memory_priority
       Vulkan.Extensions.VK_EXT_mesh_shader
@@ -620,6 +621,7 @@ library
       Vulkan.Extensions.VK_NV_representative_fragment_test
       Vulkan.Extensions.VK_NV_sample_mask_override_coverage
       Vulkan.Extensions.VK_NV_scissor_exclusive
+      Vulkan.Extensions.VK_NV_shader_atomic_float16_vector
       Vulkan.Extensions.VK_NV_shader_image_footprint
       Vulkan.Extensions.VK_NV_shader_sm_builtins
       Vulkan.Extensions.VK_NV_shader_subgroup_partitioned

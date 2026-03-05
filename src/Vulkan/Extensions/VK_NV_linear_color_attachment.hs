@@ -3,7 +3,7 @@
 --
 -- VK_NV_linear_color_attachment - device extension
 --
--- == VK_NV_linear_color_attachment
+-- = VK_NV_linear_color_attachment
 --
 -- [__Name String__]
 --     @VK_NV_linear_color_attachment@

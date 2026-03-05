@@ -3,7 +3,7 @@
 --
 -- VK_NV_ray_tracing - device extension
 --
--- == VK_NV_ray_tracing
+-- = VK_NV_ray_tracing
 --
 -- [__Name String__]
 --     @VK_NV_ray_tracing@

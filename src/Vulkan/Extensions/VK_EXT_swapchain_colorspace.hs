@@ -3,7 +3,7 @@
 --
 -- VK_EXT_swapchain_colorspace - instance extension
 --
--- == VK_EXT_swapchain_colorspace
+-- = VK_EXT_swapchain_colorspace
 --
 -- [__Name String__]
 --     @VK_EXT_swapchain_colorspace@

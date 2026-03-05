@@ -3,7 +3,7 @@
 --
 -- VK_KHR_external_semaphore_capabilities - instance extension
 --
--- == VK_KHR_external_semaphore_capabilities
+-- = VK_KHR_external_semaphore_capabilities
 --
 -- [__Name String__]
 --     @VK_KHR_external_semaphore_capabilities@

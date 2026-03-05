@@ -3,7 +3,7 @@
 --
 -- VK_NV_win32_keyed_mutex - device extension
 --
--- == VK_NV_win32_keyed_mutex
+-- = VK_NV_win32_keyed_mutex
 --
 -- [__Name String__]
 --     @VK_NV_win32_keyed_mutex@

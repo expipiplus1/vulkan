@@ -3,7 +3,7 @@
 --
 -- VK_EXT_validation_features - instance extension
 --
--- == VK_EXT_validation_features
+-- = VK_EXT_validation_features
 --
 -- [__Name String__]
 --     @VK_EXT_validation_features@

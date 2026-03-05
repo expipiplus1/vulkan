@@ -3,7 +3,7 @@
 --
 -- VK_AMD_negative_viewport_height - device extension
 --
--- == VK_AMD_negative_viewport_height
+-- = VK_AMD_negative_viewport_height
 --
 -- [__Name String__]
 --     @VK_AMD_negative_viewport_height@

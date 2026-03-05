@@ -3,7 +3,7 @@
 --
 -- VK_NV_device_generated_commands - device extension
 --
--- == VK_NV_device_generated_commands
+-- = VK_NV_device_generated_commands
 --
 -- [__Name String__]
 --     @VK_NV_device_generated_commands@

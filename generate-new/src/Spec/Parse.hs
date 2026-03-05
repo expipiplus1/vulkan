@@ -127,8 +127,12 @@ parseSpec bs = do
             (V.fromList $ [ c | Element c <- contents n, "enums" == name c ])
         commandAliases <-
           parseCommandAliases . contents =<< oneChild "commands" n
-        let specEnums =
-              V.filter ((`V.notElem` disabledTypeNames) . eName)
+        let isDisabledEnum e =
+              V.elem (eName e) disabledTypeNames || case eType e of
+                ABitmask flagsName _ -> V.elem flagsName disabledTypeNames
+                AnEnum               -> False
+            specEnums =
+              V.filter (not . isDisabledEnum)
                 $ appendEnumExtensions
                     enumExtensions
                     (extraEnums @t <> emptyBitmasks <> nonEmptyEnums)
@@ -1436,13 +1440,21 @@ boolListAttr = listAttr $ \case
   b       -> throw $ "Can't parse bool:" <+> show b
 
 lenListAttr :: ByteString -> Node -> P (Vector ParameterLength)
-lenListAttr = listAttr $ \case
-  "null-terminated" -> pure NullTerminated
-  l | [param, member] <- tokenise "-&gt;" =<< tokenise "::" l -> do
-    s <- decode param
-    m <- decode member
-    pure $ NamedMemberLength (CName s) (CName m)
-  l -> NamedLength <$> decodeName l
+lenListAttr a n = case getAttr a n of
+  Nothing -> pure mempty
+  Just bs ->
+    V.fromList . catMaybes <$> traverse parseLen (BS.split ',' bs)
+ where
+  parseLen = \case
+    "null-terminated" -> pure (Just NullTerminated)
+    l | [param, member] <- tokenise "-&gt;" =<< tokenise "::" l -> do
+      s <- decode param
+      m <- decode member
+      pure . Just $ NamedMemberLength (CName s) (CName m)
+    -- Ignore purely numeric lengths like len="1", which indicate a
+    -- fixed-size (single element) pointer, not an array.
+    l | not (BS.null l), BS.all isDigit l -> pure Nothing
+    l -> Just . NamedLength <$> decodeName l
 
 tokenise :: ByteString -> ByteString -> [ByteString]
 tokenise x y = h

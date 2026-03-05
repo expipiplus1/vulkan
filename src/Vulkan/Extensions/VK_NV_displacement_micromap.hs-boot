@@ -3,7 +3,7 @@
 --
 -- VK_NV_displacement_micromap - device extension
 --
--- == VK_NV_displacement_micromap
+-- = VK_NV_displacement_micromap
 --
 -- [__Name String__]
 --     @VK_NV_displacement_micromap@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_ray_tracing_position_fetch - device extension
 --
--- == VK_KHR_ray_tracing_position_fetch
+-- = VK_KHR_ray_tracing_position_fetch
 --
 -- [__Name String__]
 --     @VK_KHR_ray_tracing_position_fetch@

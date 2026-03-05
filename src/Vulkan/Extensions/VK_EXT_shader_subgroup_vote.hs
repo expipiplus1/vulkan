@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_subgroup_vote - device extension
 --
--- == VK_EXT_shader_subgroup_vote
+-- = VK_EXT_shader_subgroup_vote
 --
 -- [__Name String__]
 --     @VK_EXT_shader_subgroup_vote@

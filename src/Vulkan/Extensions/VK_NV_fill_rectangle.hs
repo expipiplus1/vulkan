@@ -3,7 +3,7 @@
 --
 -- VK_NV_fill_rectangle - device extension
 --
--- == VK_NV_fill_rectangle
+-- = VK_NV_fill_rectangle
 --
 -- [__Name String__]
 --     @VK_NV_fill_rectangle@

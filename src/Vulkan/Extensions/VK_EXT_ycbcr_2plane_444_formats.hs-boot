@@ -3,7 +3,7 @@
 --
 -- VK_EXT_ycbcr_2plane_444_formats - device extension
 --
--- == VK_EXT_ycbcr_2plane_444_formats
+-- = VK_EXT_ycbcr_2plane_444_formats
 --
 -- [__Name String__]
 --     @VK_EXT_ycbcr_2plane_444_formats@

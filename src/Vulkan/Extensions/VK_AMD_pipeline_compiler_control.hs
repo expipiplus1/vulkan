@@ -3,7 +3,7 @@
 --
 -- VK_AMD_pipeline_compiler_control - device extension
 --
--- == VK_AMD_pipeline_compiler_control
+-- = VK_AMD_pipeline_compiler_control
 --
 -- [__Name String__]
 --     @VK_AMD_pipeline_compiler_control@

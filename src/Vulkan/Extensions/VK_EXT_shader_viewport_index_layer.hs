@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_viewport_index_layer - device extension
 --
--- == VK_EXT_shader_viewport_index_layer
+-- = VK_EXT_shader_viewport_index_layer
 --
 -- [__Name String__]
 --     @VK_EXT_shader_viewport_index_layer@

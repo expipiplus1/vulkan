@@ -3,7 +3,7 @@
 --
 -- VK_KHR_dynamic_rendering_local_read - device extension
 --
--- == VK_KHR_dynamic_rendering_local_read
+-- = VK_KHR_dynamic_rendering_local_read
 --
 -- [__Name String__]
 --     @VK_KHR_dynamic_rendering_local_read@

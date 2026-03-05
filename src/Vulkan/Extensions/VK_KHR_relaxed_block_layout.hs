@@ -3,7 +3,7 @@
 --
 -- VK_KHR_relaxed_block_layout - device extension
 --
--- == VK_KHR_relaxed_block_layout
+-- = VK_KHR_relaxed_block_layout
 --
 -- [__Name String__]
 --     @VK_KHR_relaxed_block_layout@

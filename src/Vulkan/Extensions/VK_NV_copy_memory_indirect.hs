@@ -3,7 +3,7 @@
 --
 -- VK_NV_copy_memory_indirect - device extension
 --
--- == VK_NV_copy_memory_indirect
+-- = VK_NV_copy_memory_indirect
 --
 -- [__Name String__]
 --     @VK_NV_copy_memory_indirect@

@@ -3,7 +3,7 @@
 --
 -- VK_MVK_macos_surface - instance extension
 --
--- == VK_MVK_macos_surface
+-- = VK_MVK_macos_surface
 --
 -- [__Name String__]
 --     @VK_MVK_macos_surface@

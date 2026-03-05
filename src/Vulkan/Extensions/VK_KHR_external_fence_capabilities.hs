@@ -3,7 +3,7 @@
 --
 -- VK_KHR_external_fence_capabilities - instance extension
 --
--- == VK_KHR_external_fence_capabilities
+-- = VK_KHR_external_fence_capabilities
 --
 -- [__Name String__]
 --     @VK_KHR_external_fence_capabilities@

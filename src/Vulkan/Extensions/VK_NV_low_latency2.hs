@@ -3,7 +3,7 @@
 --
 -- VK_NV_low_latency2 - device extension
 --
--- == VK_NV_low_latency2
+-- = VK_NV_low_latency2
 --
 -- [__Name String__]
 --     @VK_NV_low_latency2@
@@ -620,7 +620,9 @@ data LatencySleepModeInfoNV = LatencySleepModeInfoNV
     -- performance to provide additional latency savings at a cost of increased
     -- power consumption.
     lowLatencyBoost :: Bool
-  , -- No documentation found for Nested "VkLatencySleepModeInfoNV" "minimumIntervalUs"
+  , -- | @minimumIntervalUs@ is the microseconds between
+    -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' calls for a given
+    -- swapchain that 'latencySleepNV' will enforce.
     minimumIntervalUs :: Word32
   }
   deriving (Typeable, Eq)
@@ -1100,7 +1102,7 @@ instance Zero OutOfBandQueueTypeInfoNV where
 --
 -- For any submission to be tracked with low latency mode pacing, it needs
 -- to be associated with other submissions in a given present. Applications
--- :must include the VkLatencySubmissionPresentIdNV in the pNext chain of
+-- /must/ include the VkLatencySubmissionPresentIdNV in the pNext chain of
 -- 'Vulkan.Core10.Queue.queueSubmit' to associate that submission with the
 -- @presentId@ present for low latency mode.
 --

@@ -3,7 +3,7 @@
 --
 -- VK_ARM_shader_core_properties - device extension
 --
--- == VK_ARM_shader_core_properties
+-- = VK_ARM_shader_core_properties
 --
 -- [__Name String__]
 --     @VK_ARM_shader_core_properties@

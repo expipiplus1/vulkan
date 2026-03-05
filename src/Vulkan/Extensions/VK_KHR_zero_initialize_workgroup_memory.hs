@@ -3,7 +3,7 @@
 --
 -- VK_KHR_zero_initialize_workgroup_memory - device extension
 --
--- == VK_KHR_zero_initialize_workgroup_memory
+-- = VK_KHR_zero_initialize_workgroup_memory
 --
 -- [__Name String__]
 --     @VK_KHR_zero_initialize_workgroup_memory@

@@ -352,7 +352,7 @@ foreign import ccall
 --
 -- -   #VUID-vkQueueSubmit-queue-06448# If @queue@ was not created with
 --     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT',
---     there /must/ be no element of @pSubmits@ that includes an
+--     there /must/ be no element of @pSubmits@ that includes a
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo'
 --     structure in its @pNext@ chain with @protectedSubmit@ equal to
 --     'Vulkan.Core10.FundamentalTypes.TRUE'

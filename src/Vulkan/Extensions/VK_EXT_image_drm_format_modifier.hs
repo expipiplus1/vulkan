@@ -3,7 +3,7 @@
 --
 -- VK_EXT_image_drm_format_modifier - device extension
 --
--- == VK_EXT_image_drm_format_modifier
+-- = VK_EXT_image_drm_format_modifier
 --
 -- [__Name String__]
 --     @VK_EXT_image_drm_format_modifier@

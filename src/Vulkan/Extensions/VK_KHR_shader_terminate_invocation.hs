@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_terminate_invocation - device extension
 --
--- == VK_KHR_shader_terminate_invocation
+-- = VK_KHR_shader_terminate_invocation
 --
 -- [__Name String__]
 --     @VK_KHR_shader_terminate_invocation@

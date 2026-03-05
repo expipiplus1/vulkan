@@ -3,7 +3,7 @@
 --
 -- VK_KHR_pipeline_library - device extension
 --
--- == VK_KHR_pipeline_library
+-- = VK_KHR_pipeline_library
 --
 -- [__Name String__]
 --     @VK_KHR_pipeline_library@

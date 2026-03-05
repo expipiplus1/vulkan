@@ -3,7 +3,7 @@
 --
 -- VK_NV_scissor_exclusive - device extension
 --
--- == VK_NV_scissor_exclusive
+-- = VK_NV_scissor_exclusive
 --
 -- [__Name String__]
 --     @VK_NV_scissor_exclusive@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_private_data - device extension
 --
--- == VK_EXT_private_data
+-- = VK_EXT_private_data
 --
 -- [__Name String__]
 --     @VK_EXT_private_data@

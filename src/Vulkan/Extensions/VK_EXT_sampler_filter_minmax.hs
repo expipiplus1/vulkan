@@ -3,7 +3,7 @@
 --
 -- VK_EXT_sampler_filter_minmax - device extension
 --
--- == VK_EXT_sampler_filter_minmax
+-- = VK_EXT_sampler_filter_minmax
 --
 -- [__Name String__]
 --     @VK_EXT_sampler_filter_minmax@

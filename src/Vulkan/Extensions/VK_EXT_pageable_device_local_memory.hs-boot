@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pageable_device_local_memory - device extension
 --
--- == VK_EXT_pageable_device_local_memory
+-- = VK_EXT_pageable_device_local_memory
 --
 -- [__Name String__]
 --     @VK_EXT_pageable_device_local_memory@

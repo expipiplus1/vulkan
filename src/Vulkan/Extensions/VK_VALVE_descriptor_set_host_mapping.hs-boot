@@ -3,7 +3,7 @@
 --
 -- VK_VALVE_descriptor_set_host_mapping - device extension
 --
--- == VK_VALVE_descriptor_set_host_mapping
+-- = VK_VALVE_descriptor_set_host_mapping
 --
 -- [__Name String__]
 --     @VK_VALVE_descriptor_set_host_mapping@

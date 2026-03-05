@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_integer_dot_product - device extension
 --
--- == VK_KHR_shader_integer_dot_product
+-- = VK_KHR_shader_integer_dot_product
 --
 -- [__Name String__]
 --     @VK_KHR_shader_integer_dot_product@

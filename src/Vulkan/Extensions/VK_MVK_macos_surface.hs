@@ -3,7 +3,7 @@
 --
 -- VK_MVK_macos_surface - instance extension
 --
--- == VK_MVK_macos_surface
+-- = VK_MVK_macos_surface
 --
 -- [__Name String__]
 --     @VK_MVK_macos_surface@
@@ -191,7 +191,7 @@ foreign import ccall
 -- | vkCreateMacOSSurfaceMVK - Create a VkSurfaceKHR object for a macOS
 -- NSView
 --
--- = Parameters
+-- = Description
 --
 -- Note
 --
@@ -199,22 +199,6 @@ foreign import ccall
 -- been superseded by
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT' from the
 -- @VK_EXT_metal_surface@ extension.
---
--- = Description
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to a 'MacOSSurfaceCreateInfoMVK'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -255,11 +239,14 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 createMacOSSurfaceMVK :: forall io
                        . (MonadIO io)
-                      => -- No documentation found for Nested "vkCreateMacOSSurfaceMVK" "instance"
+                      => -- | @instance@ is the instance with which to associate the surface.
                          Instance
-                      -> -- No documentation found for Nested "vkCreateMacOSSurfaceMVK" "pCreateInfo"
+                      -> -- | @pCreateInfo@ is a pointer to a 'MacOSSurfaceCreateInfoMVK' structure
+                         -- containing parameters affecting the creation of the surface object.
                          MacOSSurfaceCreateInfoMVK
-                      -> -- No documentation found for Nested "vkCreateMacOSSurfaceMVK" "pAllocator"
+                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                         -- surface object when there is no more specific allocator available (see
+                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do

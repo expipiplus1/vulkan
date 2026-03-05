@@ -3,7 +3,7 @@
 --
 -- VK_EXT_sample_locations - device extension
 --
--- == VK_EXT_sample_locations
+-- = VK_EXT_sample_locations
 --
 -- [__Name String__]
 --     @VK_EXT_sample_locations@

@@ -3,7 +3,7 @@
 --
 -- VK_ARM_render_pass_striped - device extension
 --
--- == VK_ARM_render_pass_striped
+-- = VK_ARM_render_pass_striped
 --
 -- [__Name String__]
 --     @VK_ARM_render_pass_striped@

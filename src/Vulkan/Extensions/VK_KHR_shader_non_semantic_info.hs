@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_non_semantic_info - device extension
 --
--- == VK_KHR_shader_non_semantic_info
+-- = VK_KHR_shader_non_semantic_info
 --
 -- [__Name String__]
 --     @VK_KHR_shader_non_semantic_info@

@@ -3,7 +3,7 @@
 --
 -- VK_AMD_texture_gather_bias_lod - device extension
 --
--- == VK_AMD_texture_gather_bias_lod
+-- = VK_AMD_texture_gather_bias_lod
 --
 -- [__Name String__]
 --     @VK_AMD_texture_gather_bias_lod@

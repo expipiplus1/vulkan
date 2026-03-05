@@ -3,7 +3,7 @@
 --
 -- VK_KHR_present_wait - device extension
 --
--- == VK_KHR_present_wait
+-- = VK_KHR_present_wait
 --
 -- [__Name String__]
 --     @VK_KHR_present_wait@

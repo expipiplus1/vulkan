@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_demote_to_helper_invocation - device extension
 --
--- == VK_EXT_shader_demote_to_helper_invocation
+-- = VK_EXT_shader_demote_to_helper_invocation
 --
 -- [__Name String__]
 --     @VK_EXT_shader_demote_to_helper_invocation@

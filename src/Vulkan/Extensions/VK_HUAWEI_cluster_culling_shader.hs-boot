@@ -3,7 +3,7 @@
 --
 -- VK_HUAWEI_cluster_culling_shader - device extension
 --
--- == VK_HUAWEI_cluster_culling_shader
+-- = VK_HUAWEI_cluster_culling_shader
 --
 -- [__Name String__]
 --     @VK_HUAWEI_cluster_culling_shader@

@@ -47,7 +47,7 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.InternalAllocationType
                             , module Vulkan.Core10.Enums.LogicOp
                             , module Vulkan.Core10.Enums.MemoryHeapFlagBits
-                            , module Vulkan.Core10.Enums.MemoryMapFlags
+                            , module Vulkan.Core10.Enums.MemoryMapFlagBits
                             , module Vulkan.Core10.Enums.MemoryPropertyFlagBits
                             , module Vulkan.Core10.Enums.ObjectType
                             , module Vulkan.Core10.Enums.PhysicalDeviceType
@@ -143,7 +143,7 @@ import Vulkan.Core10.Enums.InstanceCreateFlagBits
 import Vulkan.Core10.Enums.InternalAllocationType
 import Vulkan.Core10.Enums.LogicOp
 import Vulkan.Core10.Enums.MemoryHeapFlagBits
-import Vulkan.Core10.Enums.MemoryMapFlags
+import Vulkan.Core10.Enums.MemoryMapFlagBits
 import Vulkan.Core10.Enums.MemoryPropertyFlagBits
 import Vulkan.Core10.Enums.ObjectType
 import Vulkan.Core10.Enums.PhysicalDeviceType

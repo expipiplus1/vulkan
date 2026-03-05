@@ -3,7 +3,7 @@
 --
 -- VK_KHR_portability_enumeration - instance extension
 --
--- == VK_KHR_portability_enumeration
+-- = VK_KHR_portability_enumeration
 --
 -- [__Name String__]
 --     @VK_KHR_portability_enumeration@

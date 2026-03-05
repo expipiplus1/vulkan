@@ -3,7 +3,7 @@
 --
 -- VK_INTEL_performance_query - device extension
 --
--- == VK_INTEL_performance_query
+-- = VK_INTEL_performance_query
 --
 -- [__Name String__]
 --     @VK_INTEL_performance_query@
@@ -49,7 +49,7 @@
 -- == Description
 --
 -- This extension allows an application to capture performance data to be
--- interpreted by a external application or library.
+-- interpreted by an external application or library.
 --
 -- Such a library is available at :
 -- <https://github.com/intel/metrics-discovery>

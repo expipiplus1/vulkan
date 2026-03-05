@@ -3,7 +3,7 @@
 --
 -- VK_NV_descriptor_pool_overallocation - device extension
 --
--- == VK_NV_descriptor_pool_overallocation
+-- = VK_NV_descriptor_pool_overallocation
 --
 -- [__Name String__]
 --     @VK_NV_descriptor_pool_overallocation@

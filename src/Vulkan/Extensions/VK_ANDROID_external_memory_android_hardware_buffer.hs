@@ -3,7 +3,7 @@
 --
 -- VK_ANDROID_external_memory_android_hardware_buffer - device extension
 --
--- == VK_ANDROID_external_memory_android_hardware_buffer
+-- = VK_ANDROID_external_memory_android_hardware_buffer
 --
 -- [__Name String__]
 --     @VK_ANDROID_external_memory_android_hardware_buffer@

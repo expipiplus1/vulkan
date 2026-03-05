@@ -3,7 +3,7 @@
 --
 -- VK_EXT_image_robustness - device extension
 --
--- == VK_EXT_image_robustness
+-- = VK_EXT_image_robustness
 --
 -- [__Name String__]
 --     @VK_EXT_image_robustness@

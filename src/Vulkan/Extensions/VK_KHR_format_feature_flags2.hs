@@ -3,7 +3,7 @@
 --
 -- VK_KHR_format_feature_flags2 - device extension
 --
--- == VK_KHR_format_feature_flags2
+-- = VK_KHR_format_feature_flags2
 --
 -- [__Name String__]
 --     @VK_KHR_format_feature_flags2@

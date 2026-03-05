@@ -3,7 +3,7 @@
 --
 -- VK_EXT_multi_draw - device extension
 --
--- == VK_EXT_multi_draw
+-- = VK_EXT_multi_draw
 --
 -- [__Name String__]
 --     @VK_EXT_multi_draw@

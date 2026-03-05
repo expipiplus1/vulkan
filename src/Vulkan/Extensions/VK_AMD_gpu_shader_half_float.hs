@@ -3,7 +3,7 @@
 --
 -- VK_AMD_gpu_shader_half_float - device extension
 --
--- == VK_AMD_gpu_shader_half_float
+-- = VK_AMD_gpu_shader_half_float
 --
 -- [__Name String__]
 --     @VK_AMD_gpu_shader_half_float@

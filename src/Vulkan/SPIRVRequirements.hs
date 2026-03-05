@@ -35,6 +35,7 @@ import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTraci
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR(..))
+import Vulkan.Extensions.VK_NV_shader_atomic_float16_vector (PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
 import Vulkan.Extensions.VK_ARM_shader_core_builtins (PhysicalDeviceShaderCoreBuiltinsFeaturesARM(..))
@@ -143,6 +144,7 @@ import Vulkan.Extensions.VK_NV_ray_tracing (pattern NV_RAY_TRACING_EXTENSION_NAM
 import Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder (pattern NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (pattern NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_sample_mask_override_coverage (pattern NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME)
+import Vulkan.Extensions.VK_NV_shader_atomic_float16_vector (pattern NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shader_image_footprint (pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
@@ -639,6 +641,15 @@ spirvExtensionRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "SPV_NV_shader_atomic_fp16_vector" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "SPV_EXT_fragment_fully_covered" ->
     (,)
       []
@@ -994,6 +1005,20 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "AtomicFloat16VectorNV" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderFloat16VectorAtomics"
+          , checkFeature = \PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV{shaderFloat16VectorAtomics} -> shaderFloat16VectorAtomics
+          , enableFeature = \_ -> PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV{shaderFloat16VectorAtomics = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

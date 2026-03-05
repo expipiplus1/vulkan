@@ -3,7 +3,7 @@
 --
 -- VK_LUNARG_direct_driver_loading - instance extension
 --
--- == VK_LUNARG_direct_driver_loading
+-- = VK_LUNARG_direct_driver_loading
 --
 -- [__Name String__]
 --     @VK_LUNARG_direct_driver_loading@

@@ -3,7 +3,7 @@
 --
 -- VK_NV_shading_rate_image - device extension
 --
--- == VK_NV_shading_rate_image
+-- = VK_NV_shading_rate_image
 --
 -- [__Name String__]
 --     @VK_NV_shading_rate_image@

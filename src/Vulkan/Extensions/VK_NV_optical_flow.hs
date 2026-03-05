@@ -3,7 +3,7 @@
 --
 -- VK_NV_optical_flow - device extension
 --
--- == VK_NV_optical_flow
+-- = VK_NV_optical_flow
 --
 -- [__Name String__]
 --     @VK_NV_optical_flow@
@@ -1934,26 +1934,27 @@ pattern OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV = OpticalFlowSessionBind
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV = OpticalFlowSessionBindingPointNV 3
 
 -- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV' specifies the
--- binding point for output flow vectors of default forward flow calcution.
+-- binding point for output flow vectors of default forward flow
+-- calculation.
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV = OpticalFlowSessionBindingPointNV 4
 
 -- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV' specifies
 -- the binding point for the optional output flow vector map of optional
--- backward flow calcution.
+-- backward flow calculation.
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV = OpticalFlowSessionBindingPointNV 5
 
 -- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV' specifies the binding point
--- for the optional output cost map of default forward flow calcution.
+-- for the optional output cost map of default forward flow calculation.
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV = OpticalFlowSessionBindingPointNV 6
 
 -- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV' specifies the
 -- binding point for the optional output cost map of optional backward flow
--- calcution.
+-- calculation.
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV = OpticalFlowSessionBindingPointNV 7
 
 -- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV' specifies the
 -- binding point for the optional global flow value of default forward flow
--- calcution.
+-- calculation.
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV = OpticalFlowSessionBindingPointNV 8
 
 {-# COMPLETE

@@ -3,7 +3,7 @@
 --
 -- VK_GOOGLE_display_timing - device extension
 --
--- == VK_GOOGLE_display_timing
+-- = VK_GOOGLE_display_timing
 --
 -- [__Name String__]
 --     @VK_GOOGLE_display_timing@

@@ -10,14 +10,10 @@ type FN_vkVoidFunction = () -> IO ()
 -- | PFN_vkVoidFunction - Placeholder function pointer type returned by
 -- queries
 --
--- = Parameters
---
--- This type is returned from command function pointer queries, and /must/
--- be
---
 -- = Description
 --
--- cast to an actual command function pointer before use.
+-- This type is returned from command function pointer queries, and /must/
+-- be cast to an actual command function pointer before use.
 --
 -- = See Also
 --

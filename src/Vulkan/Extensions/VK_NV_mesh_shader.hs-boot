@@ -3,7 +3,7 @@
 --
 -- VK_NV_mesh_shader - device extension
 --
--- == VK_NV_mesh_shader
+-- = VK_NV_mesh_shader
 --
 -- [__Name String__]
 --     @VK_NV_mesh_shader@

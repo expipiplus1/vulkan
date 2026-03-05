@@ -3,7 +3,7 @@
 --
 -- VK_FUCHSIA_imagepipe_surface - instance extension
 --
--- == VK_FUCHSIA_imagepipe_surface
+-- = VK_FUCHSIA_imagepipe_surface
 --
 -- [__Name String__]
 --     @VK_FUCHSIA_imagepipe_surface@

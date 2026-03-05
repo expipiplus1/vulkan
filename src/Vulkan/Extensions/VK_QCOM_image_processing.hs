@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_image_processing - device extension
 --
--- == VK_QCOM_image_processing
+-- = VK_QCOM_image_processing
 --
 -- [__Name String__]
 --     @VK_QCOM_image_processing@

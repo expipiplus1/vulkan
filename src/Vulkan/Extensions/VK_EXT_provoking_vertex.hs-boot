@@ -3,7 +3,7 @@
 --
 -- VK_EXT_provoking_vertex - device extension
 --
--- == VK_EXT_provoking_vertex
+-- = VK_EXT_provoking_vertex
 --
 -- [__Name String__]
 --     @VK_EXT_provoking_vertex@

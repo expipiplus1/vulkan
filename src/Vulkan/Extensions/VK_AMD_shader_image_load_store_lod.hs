@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_image_load_store_lod - device extension
 --
--- == VK_AMD_shader_image_load_store_lod
+-- = VK_AMD_shader_image_load_store_lod
 --
 -- [__Name String__]
 --     @VK_AMD_shader_image_load_store_lod@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_external_fence - device extension
 --
--- == VK_KHR_external_fence
+-- = VK_KHR_external_fence
 --
 -- [__Name String__]
 --     @VK_KHR_external_fence@

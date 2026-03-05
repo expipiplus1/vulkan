@@ -3,7 +3,7 @@
 --
 -- VK_EXT_attachment_feedback_loop_layout - device extension
 --
--- == VK_EXT_attachment_feedback_loop_layout
+-- = VK_EXT_attachment_feedback_loop_layout
 --
 -- [__Name String__]
 --     @VK_EXT_attachment_feedback_loop_layout@

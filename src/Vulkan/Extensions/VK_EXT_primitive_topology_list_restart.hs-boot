@@ -3,7 +3,7 @@
 --
 -- VK_EXT_primitive_topology_list_restart - device extension
 --
--- == VK_EXT_primitive_topology_list_restart
+-- = VK_EXT_primitive_topology_list_restart
 --
 -- [__Name String__]
 --     @VK_EXT_primitive_topology_list_restart@

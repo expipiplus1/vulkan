@@ -3,7 +3,7 @@
 --
 -- VK_ANDROID_external_format_resolve - device extension
 --
--- == VK_ANDROID_external_format_resolve
+-- = VK_ANDROID_external_format_resolve
 --
 -- [__Name String__]
 --     @VK_ANDROID_external_format_resolve@

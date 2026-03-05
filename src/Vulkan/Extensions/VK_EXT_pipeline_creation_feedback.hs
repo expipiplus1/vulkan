@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pipeline_creation_feedback - device extension
 --
--- == VK_EXT_pipeline_creation_feedback
+-- = VK_EXT_pipeline_creation_feedback
 --
 -- [__Name String__]
 --     @VK_EXT_pipeline_creation_feedback@

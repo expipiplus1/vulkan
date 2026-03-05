@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pipeline_library_group_handles - device extension
 --
--- == VK_EXT_pipeline_library_group_handles
+-- = VK_EXT_pipeline_library_group_handles
 --
 -- [__Name String__]
 --     @VK_EXT_pipeline_library_group_handles@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_transform_feedback - device extension
 --
--- == VK_EXT_transform_feedback
+-- = VK_EXT_transform_feedback
 --
 -- [__Name String__]
 --     @VK_EXT_transform_feedback@

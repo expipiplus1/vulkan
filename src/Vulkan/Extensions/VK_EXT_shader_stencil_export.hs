@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_stencil_export - device extension
 --
--- == VK_EXT_shader_stencil_export
+-- = VK_EXT_shader_stencil_export
 --
 -- [__Name String__]
 --     @VK_EXT_shader_stencil_export@

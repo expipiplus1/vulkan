@@ -3,7 +3,7 @@
 --
 -- VK_KHR_global_priority - device extension
 --
--- == VK_KHR_global_priority
+-- = VK_KHR_global_priority
 --
 -- [__Name String__]
 --     @VK_KHR_global_priority@
@@ -401,14 +401,6 @@ instance Zero PhysicalDeviceGlobalPriorityQueryFeaturesKHR where
 -- and 'QUEUE_GLOBAL_PRIORITY_REALTIME_KHR' is not allowed.
 --
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkQueueFamilyGlobalPriorityPropertiesKHR-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR'
---
--- -   #VUID-VkQueueFamilyGlobalPriorityPropertiesKHR-priorities-parameter#
---     Each element of @priorities@ /must/ be a valid
---     'QueueGlobalPriorityKHR' value
 --
 -- = See Also
 --

@@ -3,7 +3,7 @@
 --
 -- VK_NV_coverage_reduction_mode - device extension
 --
--- == VK_NV_coverage_reduction_mode
+-- = VK_NV_coverage_reduction_mode
 --
 -- [__Name String__]
 --     @VK_NV_coverage_reduction_mode@

@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_render_pass_transform - device extension
 --
--- == VK_QCOM_render_pass_transform
+-- = VK_QCOM_render_pass_transform
 --
 -- [__Name String__]
 --     @VK_QCOM_render_pass_transform@

@@ -3,7 +3,7 @@
 --
 -- VK_NV_external_memory - device extension
 --
--- == VK_NV_external_memory
+-- = VK_NV_external_memory
 --
 -- [__Name String__]
 --     @VK_NV_external_memory@

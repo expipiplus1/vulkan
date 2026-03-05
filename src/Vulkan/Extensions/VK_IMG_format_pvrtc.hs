@@ -3,7 +3,7 @@
 --
 -- VK_IMG_format_pvrtc - device extension
 --
--- == VK_IMG_format_pvrtc
+-- = VK_IMG_format_pvrtc
 --
 -- [__Name String__]
 --     @VK_IMG_format_pvrtc@

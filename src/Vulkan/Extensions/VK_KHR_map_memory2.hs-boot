@@ -3,7 +3,7 @@
 --
 -- VK_KHR_map_memory2 - device extension
 --
--- == VK_KHR_map_memory2
+-- = VK_KHR_map_memory2
 --
 -- [__Name String__]
 --     @VK_KHR_map_memory2@
@@ -66,6 +66,10 @@
 --
 -- -   'MemoryUnmapInfoKHR'
 --
+-- == New Enums
+--
+-- -   'MemoryUnmapFlagBitsKHR'
+--
 -- == New Bitmasks
 --
 -- -   'MemoryUnmapFlagsKHR'
@@ -94,8 +98,8 @@
 --
 -- == See Also
 --
--- 'MemoryMapInfoKHR', 'MemoryUnmapFlagsKHR', 'MemoryUnmapInfoKHR',
--- 'mapMemory2KHR', 'unmapMemory2KHR'
+-- 'MemoryMapInfoKHR', 'MemoryUnmapFlagBitsKHR', 'MemoryUnmapFlagsKHR',
+-- 'MemoryUnmapInfoKHR', 'mapMemory2KHR', 'unmapMemory2KHR'
 --
 -- == Document Notes
 --
@@ -111,13 +115,19 @@ module Vulkan.Extensions.VK_KHR_map_memory2  ( MemoryMapInfoKHR
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+type role MemoryMapInfoKHR nominal
+data MemoryMapInfoKHR (es :: [Type])
 
-data MemoryMapInfoKHR
+instance ( Extendss MemoryMapInfoKHR es
+         , PokeChain es ) => ToCStruct (MemoryMapInfoKHR es)
+instance Show (Chain es) => Show (MemoryMapInfoKHR es)
 
-instance ToCStruct MemoryMapInfoKHR
-instance Show MemoryMapInfoKHR
-
-instance FromCStruct MemoryMapInfoKHR
+instance ( Extendss MemoryMapInfoKHR es
+         , PeekChain es ) => FromCStruct (MemoryMapInfoKHR es)
 
 
 data MemoryUnmapInfoKHR

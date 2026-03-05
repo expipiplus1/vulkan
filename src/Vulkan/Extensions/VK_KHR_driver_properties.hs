@@ -3,7 +3,7 @@
 --
 -- VK_KHR_driver_properties - device extension
 --
--- == VK_KHR_driver_properties
+-- = VK_KHR_driver_properties
 --
 -- [__Name String__]
 --     @VK_KHR_driver_properties@

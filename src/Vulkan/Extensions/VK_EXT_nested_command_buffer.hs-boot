@@ -3,7 +3,7 @@
 --
 -- VK_EXT_nested_command_buffer - device extension
 --
--- == VK_EXT_nested_command_buffer
+-- = VK_EXT_nested_command_buffer
 --
 -- [__Name String__]
 --     @VK_EXT_nested_command_buffer@

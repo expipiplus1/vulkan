@@ -3,7 +3,7 @@
 --
 -- VK_NV_external_memory_capabilities - instance extension
 --
--- == VK_NV_external_memory_capabilities
+-- = VK_NV_external_memory_capabilities
 --
 -- [__Name String__]
 --     @VK_NV_external_memory_capabilities@

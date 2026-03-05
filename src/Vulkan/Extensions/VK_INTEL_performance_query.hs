@@ -3,7 +3,7 @@
 --
 -- VK_INTEL_performance_query - device extension
 --
--- == VK_INTEL_performance_query
+-- = VK_INTEL_performance_query
 --
 -- [__Name String__]
 --     @VK_INTEL_performance_query@
@@ -49,7 +49,7 @@
 -- == Description
 --
 -- This extension allows an application to capture performance data to be
--- interpreted by a external application or library.
+-- interpreted by an external application or library.
 --
 -- Such a library is available at :
 -- <https://github.com/intel/metrics-discovery>
@@ -554,7 +554,7 @@ foreign import ccall
 
 -- | vkCmdSetPerformanceMarkerINTEL - Markers
 --
--- = Parameters
+-- = Description
 --
 -- The last marker set onto a command buffer before the end of a query will
 -- be part of the query result.
@@ -704,9 +704,11 @@ foreign import ccall
 -- 'PerformanceStreamMarkerInfoINTEL'
 cmdSetPerformanceStreamMarkerINTEL :: forall io
                                     . (MonadIO io)
-                                   => -- No documentation found for Nested "vkCmdSetPerformanceStreamMarkerINTEL" "commandBuffer"
+                                   => -- | @commandBuffer@ is a 'Vulkan.Core10.Handles.CommandBuffer' into which a
+                                      -- stream marker is added.
                                       CommandBuffer
-                                   -> -- No documentation found for Nested "vkCmdSetPerformanceStreamMarkerINTEL" "pMarkerInfo"
+                                   -> -- | @pMarkerInfo@ is a pointer to a 'PerformanceStreamMarkerInfoINTEL'
+                                      -- structure describing the marker to insert.
                                       PerformanceStreamMarkerInfoINTEL
                                    -> io ()
 cmdSetPerformanceStreamMarkerINTEL commandBuffer
@@ -1077,15 +1079,6 @@ pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_
 
 -- | VkPerformanceValueINTEL - Container for value and types of parameters
 -- that can be queried
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPerformanceValueINTEL-type-parameter# @type@ /must/ be a
---     valid 'PerformanceValueTypeINTEL' value
---
--- -   #VUID-VkPerformanceValueINTEL-valueString-parameter# If @type@ is
---     'PERFORMANCE_VALUE_TYPE_STRING_INTEL', the @valueString@ member of
---     @data@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
 --

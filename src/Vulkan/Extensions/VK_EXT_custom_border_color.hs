@@ -3,7 +3,7 @@
 --
 -- VK_EXT_custom_border_color - device extension
 --
--- == VK_EXT_custom_border_color
+-- = VK_EXT_custom_border_color
 --
 -- [__Name String__]
 --     @VK_EXT_custom_border_color@

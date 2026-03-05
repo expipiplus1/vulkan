@@ -3,7 +3,7 @@
 --
 -- VK_NV_cooperative_matrix - device extension
 --
--- == VK_NV_cooperative_matrix
+-- = VK_NV_cooperative_matrix
 --
 -- [__Name String__]
 --     @VK_NV_cooperative_matrix@

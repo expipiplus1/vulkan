@@ -3,7 +3,7 @@
 --
 -- VK_GOOGLE_surfaceless_query - instance extension
 --
--- == VK_GOOGLE_surfaceless_query
+-- = VK_GOOGLE_surfaceless_query
 --
 -- [__Name String__]
 --     @VK_GOOGLE_surfaceless_query@

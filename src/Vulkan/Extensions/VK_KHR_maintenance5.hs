@@ -3,7 +3,7 @@
 --
 -- VK_KHR_maintenance5 - device extension
 --
--- == VK_KHR_maintenance5
+-- = VK_KHR_maintenance5
 --
 -- [__Name String__]
 --     @VK_KHR_maintenance5@
@@ -965,7 +965,7 @@ foreign import ccall
 -- specify extended inputs via chained input structures, and to return
 -- extended information via chained output structures.
 --
--- It is legal to call 'getImageSubresourceLayout2KHR' with a @image@
+-- It is legal to call 'getImageSubresourceLayout2KHR' with an @image@
 -- created with @tiling@ equal to
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', but the members
 -- of 'SubresourceLayout2KHR'::@subresourceLayout@ will have undefined

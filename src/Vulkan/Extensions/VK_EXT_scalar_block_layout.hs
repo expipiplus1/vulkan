@@ -3,7 +3,7 @@
 --
 -- VK_EXT_scalar_block_layout - device extension
 --
--- == VK_EXT_scalar_block_layout
+-- = VK_EXT_scalar_block_layout
 --
 -- [__Name String__]
 --     @VK_EXT_scalar_block_layout@

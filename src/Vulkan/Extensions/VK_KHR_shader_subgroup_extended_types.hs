@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_subgroup_extended_types - device extension
 --
--- == VK_KHR_shader_subgroup_extended_types
+-- = VK_KHR_shader_subgroup_extended_types
 --
 -- [__Name String__]
 --     @VK_KHR_shader_subgroup_extended_types@

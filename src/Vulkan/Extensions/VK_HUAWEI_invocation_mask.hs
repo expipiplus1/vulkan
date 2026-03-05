@@ -3,7 +3,7 @@
 --
 -- VK_HUAWEI_invocation_mask - device extension
 --
--- == VK_HUAWEI_invocation_mask
+-- = VK_HUAWEI_invocation_mask
 --
 -- [__Name String__]
 --     @VK_HUAWEI_invocation_mask@

@@ -3,7 +3,7 @@
 --
 -- VK_AMD_memory_overallocation_behavior - device extension
 --
--- == VK_AMD_memory_overallocation_behavior
+-- = VK_AMD_memory_overallocation_behavior
 --
 -- [__Name String__]
 --     @VK_AMD_memory_overallocation_behavior@

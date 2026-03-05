@@ -3,7 +3,7 @@
 --
 -- VK_EXT_memory_budget - device extension
 --
--- == VK_EXT_memory_budget
+-- = VK_EXT_memory_budget
 --
 -- [__Name String__]
 --     @VK_EXT_memory_budget@

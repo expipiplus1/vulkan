@@ -3,7 +3,7 @@
 --
 -- VK_NV_compute_shader_derivatives - device extension
 --
--- == VK_NV_compute_shader_derivatives
+-- = VK_NV_compute_shader_derivatives
 --
 -- [__Name String__]
 --     @VK_NV_compute_shader_derivatives@

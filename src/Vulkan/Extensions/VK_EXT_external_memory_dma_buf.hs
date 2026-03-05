@@ -3,7 +3,7 @@
 --
 -- VK_EXT_external_memory_dma_buf - device extension
 --
--- == VK_EXT_external_memory_dma_buf
+-- = VK_EXT_external_memory_dma_buf
 --
 -- [__Name String__]
 --     @VK_EXT_external_memory_dma_buf@

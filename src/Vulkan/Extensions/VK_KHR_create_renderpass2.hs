@@ -3,7 +3,7 @@
 --
 -- VK_KHR_create_renderpass2 - device extension
 --
--- == VK_KHR_create_renderpass2
+-- = VK_KHR_create_renderpass2
 --
 -- [__Name String__]
 --     @VK_KHR_create_renderpass2@

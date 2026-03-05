@@ -3,7 +3,7 @@
 --
 -- VK_GGP_frame_token - device extension
 --
--- == VK_GGP_frame_token
+-- = VK_GGP_frame_token
 --
 -- [__Name String__]
 --     @VK_GGP_frame_token@

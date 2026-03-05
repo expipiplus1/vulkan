@@ -3,7 +3,7 @@
 --
 -- VK_KHR_ray_tracing_pipeline - device extension
 --
--- == VK_KHR_ray_tracing_pipeline
+-- = VK_KHR_ray_tracing_pipeline
 --
 -- [__Name String__]
 --     @VK_KHR_ray_tracing_pipeline@

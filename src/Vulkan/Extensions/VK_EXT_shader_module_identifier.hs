@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_module_identifier - device extension
 --
--- == VK_EXT_shader_module_identifier
+-- = VK_EXT_shader_module_identifier
 --
 -- [__Name String__]
 --     @VK_EXT_shader_module_identifier@

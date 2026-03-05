@@ -3,7 +3,7 @@
 --
 -- VK_EXT_host_image_copy - device extension
 --
--- == VK_EXT_host_image_copy
+-- = VK_EXT_host_image_copy
 --
 -- [__Name String__]
 --     @VK_EXT_host_image_copy@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_subgroup_rotate - device extension
 --
--- == VK_KHR_shader_subgroup_rotate
+-- = VK_KHR_shader_subgroup_rotate
 --
 -- [__Name String__]
 --     @VK_KHR_shader_subgroup_rotate@
@@ -31,6 +31,9 @@
 --
 --     -   Kevin Petit
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_subgroup_rotate] @kpet%0A*Here describe the issue or question you have about the VK_KHR_shader_subgroup_rotate extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_subgroup_rotate.adoc VK_KHR_shader_subgroup_rotate>
 --
 -- [__Last Modified Date__]
 --     2024-01-29

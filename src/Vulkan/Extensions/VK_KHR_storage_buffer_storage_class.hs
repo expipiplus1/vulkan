@@ -3,7 +3,7 @@
 --
 -- VK_KHR_storage_buffer_storage_class - device extension
 --
--- == VK_KHR_storage_buffer_storage_class
+-- = VK_KHR_storage_buffer_storage_class
 --
 -- [__Name String__]
 --     @VK_KHR_storage_buffer_storage_class@

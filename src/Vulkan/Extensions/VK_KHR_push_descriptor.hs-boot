@@ -3,7 +3,7 @@
 --
 -- VK_KHR_push_descriptor - device extension
 --
--- == VK_KHR_push_descriptor
+-- = VK_KHR_push_descriptor
 --
 -- [__Name String__]
 --     @VK_KHR_push_descriptor@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_sampler_mirror_clamp_to_edge - device extension
 --
--- == VK_KHR_sampler_mirror_clamp_to_edge
+-- = VK_KHR_sampler_mirror_clamp_to_edge
 --
 -- [__Name String__]
 --     @VK_KHR_sampler_mirror_clamp_to_edge@

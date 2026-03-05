@@ -3,7 +3,7 @@
 --
 -- VK_GOOGLE_decorate_string - device extension
 --
--- == VK_GOOGLE_decorate_string
+-- = VK_GOOGLE_decorate_string
 --
 -- [__Name String__]
 --     @VK_GOOGLE_decorate_string@

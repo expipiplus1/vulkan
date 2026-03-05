@@ -3,7 +3,7 @@
 --
 -- VK_EXT_fragment_density_map - device extension
 --
--- == VK_EXT_fragment_density_map
+-- = VK_EXT_fragment_density_map
 --
 -- [__Name String__]
 --     @VK_EXT_fragment_density_map@

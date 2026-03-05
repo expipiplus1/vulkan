@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_render_pass_shader_resolve - device extension
 --
--- == VK_QCOM_render_pass_shader_resolve
+-- = VK_QCOM_render_pass_shader_resolve
 --
 -- [__Name String__]
 --     @VK_QCOM_render_pass_shader_resolve@

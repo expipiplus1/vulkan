@@ -3,7 +3,7 @@
 --
 -- VK_NV_shader_sm_builtins - device extension
 --
--- == VK_NV_shader_sm_builtins
+-- = VK_NV_shader_sm_builtins
 --
 -- [__Name String__]
 --     @VK_NV_shader_sm_builtins@

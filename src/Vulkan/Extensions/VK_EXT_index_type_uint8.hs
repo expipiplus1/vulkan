@@ -3,7 +3,7 @@
 --
 -- VK_EXT_index_type_uint8 - device extension
 --
--- == VK_EXT_index_type_uint8
+-- = VK_EXT_index_type_uint8
 --
 -- [__Name String__]
 --     @VK_EXT_index_type_uint8@

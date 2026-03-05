@@ -3,7 +3,7 @@
 --
 -- VK_KHR_device_group_creation - instance extension
 --
--- == VK_KHR_device_group_creation
+-- = VK_KHR_device_group_creation
 --
 -- [__Name String__]
 --     @VK_KHR_device_group_creation@

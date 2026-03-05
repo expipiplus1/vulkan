@@ -3,7 +3,7 @@
 --
 -- VK_EXT_depth_range_unrestricted - device extension
 --
--- == VK_EXT_depth_range_unrestricted
+-- = VK_EXT_depth_range_unrestricted
 --
 -- [__Name String__]
 --     @VK_EXT_depth_range_unrestricted@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_line_rasterization - device extension
 --
--- == VK_KHR_line_rasterization
+-- = VK_KHR_line_rasterization
 --
 -- [__Name String__]
 --     @VK_KHR_line_rasterization@

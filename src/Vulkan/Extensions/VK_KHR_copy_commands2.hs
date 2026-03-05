@@ -3,7 +3,7 @@
 --
 -- VK_KHR_copy_commands2 - device extension
 --
--- == VK_KHR_copy_commands2
+-- = VK_KHR_copy_commands2
 --
 -- [__Name String__]
 --     @VK_KHR_copy_commands2@

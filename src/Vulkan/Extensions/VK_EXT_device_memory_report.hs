@@ -3,7 +3,7 @@
 --
 -- VK_EXT_device_memory_report - device extension
 --
--- == VK_EXT_device_memory_report
+-- = VK_EXT_device_memory_report
 --
 -- [__Name String__]
 --     @VK_EXT_device_memory_report@

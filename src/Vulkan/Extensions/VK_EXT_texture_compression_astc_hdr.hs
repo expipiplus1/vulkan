@@ -3,7 +3,7 @@
 --
 -- VK_EXT_texture_compression_astc_hdr - device extension
 --
--- == VK_EXT_texture_compression_astc_hdr
+-- = VK_EXT_texture_compression_astc_hdr
 --
 -- [__Name String__]
 --     @VK_EXT_texture_compression_astc_hdr@

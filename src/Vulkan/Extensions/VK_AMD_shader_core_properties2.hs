@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_core_properties2 - device extension
 --
--- == VK_AMD_shader_core_properties2
+-- = VK_AMD_shader_core_properties2
 --
 -- [__Name String__]
 --     @VK_AMD_shader_core_properties2@

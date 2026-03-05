@@ -3,7 +3,7 @@
 --
 -- VK_EXT_conditional_rendering - device extension
 --
--- == VK_EXT_conditional_rendering
+-- = VK_EXT_conditional_rendering
 --
 -- [__Name String__]
 --     @VK_EXT_conditional_rendering@

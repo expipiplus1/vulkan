@@ -3,7 +3,7 @@
 --
 -- VK_KHR_display - instance extension
 --
--- == VK_KHR_display
+-- = VK_KHR_display
 --
 -- [__Name String__]
 --     @VK_KHR_display@

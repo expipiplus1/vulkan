@@ -3,7 +3,7 @@
 --
 -- VK_EXT_image_view_min_lod - device extension
 --
--- == VK_EXT_image_view_min_lod
+-- = VK_EXT_image_view_min_lod
 --
 -- [__Name String__]
 --     @VK_EXT_image_view_min_lod@

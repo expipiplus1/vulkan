@@ -3,7 +3,7 @@
 --
 -- VK_NV_scissor_exclusive - device extension
 --
--- == VK_NV_scissor_exclusive
+-- = VK_NV_scissor_exclusive
 --
 -- [__Name String__]
 --     @VK_NV_scissor_exclusive@
@@ -537,7 +537,7 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
 -- parameters of the exclusive scissor test. If this structure is not
 -- included in the @pNext@ chain, it is equivalent to specifying this
--- structure with a @exclusiveScissorCount@ of @0@.
+-- structure with an @exclusiveScissorCount@ of @0@.
 --
 -- == Valid Usage
 --

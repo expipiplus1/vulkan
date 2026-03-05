@@ -3,7 +3,7 @@
 --
 -- VK_EXT_calibrated_timestamps - device extension
 --
--- == VK_EXT_calibrated_timestamps
+-- = VK_EXT_calibrated_timestamps
 --
 -- [__Name String__]
 --     @VK_EXT_calibrated_timestamps@

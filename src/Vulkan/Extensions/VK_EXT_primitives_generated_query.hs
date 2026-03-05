@@ -3,7 +3,7 @@
 --
 -- VK_EXT_primitives_generated_query - device extension
 --
--- == VK_EXT_primitives_generated_query
+-- = VK_EXT_primitives_generated_query
 --
 -- [__Name String__]
 --     @VK_EXT_primitives_generated_query@

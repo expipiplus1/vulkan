@@ -3,7 +3,7 @@
 --
 -- VK_NV_present_barrier - device extension
 --
--- == VK_NV_present_barrier
+-- = VK_NV_present_barrier
 --
 -- [__Name String__]
 --     @VK_NV_present_barrier@
