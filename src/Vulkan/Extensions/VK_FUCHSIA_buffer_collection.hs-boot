@@ -3,7 +3,7 @@
 --
 -- VK_FUCHSIA_buffer_collection - device extension
 --
--- == VK_FUCHSIA_buffer_collection
+-- = VK_FUCHSIA_buffer_collection
 --
 -- [__Name String__]
 --     @VK_FUCHSIA_buffer_collection@

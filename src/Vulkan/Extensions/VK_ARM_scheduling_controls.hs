@@ -3,7 +3,7 @@
 --
 -- VK_ARM_scheduling_controls - device extension
 --
--- == VK_ARM_scheduling_controls
+-- = VK_ARM_scheduling_controls
 --
 -- [__Name String__]
 --     @VK_ARM_scheduling_controls@

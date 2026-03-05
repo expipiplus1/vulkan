@@ -524,13 +524,11 @@ foreign import ccall
 
 -- | vkGetDeviceProcAddr - Return a function pointer for a command
 --
--- = Parameters
+-- = Description
 --
 -- The table below defines the various use cases for 'getDeviceProcAddr'
 -- and expected return value (“fp” is “function pointer”) for each case. A
 -- valid returned function pointer (“fp”) /must/ not be @NULL@.
---
--- = Description
 --
 -- The returned function pointer is of type
 -- 'Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be cast to

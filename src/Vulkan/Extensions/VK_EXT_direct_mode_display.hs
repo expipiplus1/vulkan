@@ -3,7 +3,7 @@
 --
 -- VK_EXT_direct_mode_display - instance extension
 --
--- == VK_EXT_direct_mode_display
+-- = VK_EXT_direct_mode_display
 --
 -- [__Name String__]
 --     @VK_EXT_direct_mode_display@

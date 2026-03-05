@@ -3,7 +3,7 @@
 --
 -- VK_EXT_depth_clamp_zero_one - device extension
 --
--- == VK_EXT_depth_clamp_zero_one
+-- = VK_EXT_depth_clamp_zero_one
 --
 -- [__Name String__]
 --     @VK_EXT_depth_clamp_zero_one@

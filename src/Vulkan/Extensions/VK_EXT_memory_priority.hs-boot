@@ -3,7 +3,7 @@
 --
 -- VK_EXT_memory_priority - device extension
 --
--- == VK_EXT_memory_priority
+-- = VK_EXT_memory_priority
 --
 -- [__Name String__]
 --     @VK_EXT_memory_priority@

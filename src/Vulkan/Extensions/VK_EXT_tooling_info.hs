@@ -3,7 +3,7 @@
 --
 -- VK_EXT_tooling_info - device extension
 --
--- == VK_EXT_tooling_info
+-- = VK_EXT_tooling_info
 --
 -- [__Name String__]
 --     @VK_EXT_tooling_info@

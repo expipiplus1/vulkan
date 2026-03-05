@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_filter_cubic_weights - device extension
 --
--- == VK_QCOM_filter_cubic_weights
+-- = VK_QCOM_filter_cubic_weights
 --
 -- [__Name String__]
 --     @VK_QCOM_filter_cubic_weights@

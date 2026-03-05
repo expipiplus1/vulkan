@@ -3,7 +3,7 @@
 --
 -- VK_KHR_dedicated_allocation - device extension
 --
--- == VK_KHR_dedicated_allocation
+-- = VK_KHR_dedicated_allocation
 --
 -- [__Name String__]
 --     @VK_KHR_dedicated_allocation@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_mutable_descriptor_type - device extension
 --
--- == VK_EXT_mutable_descriptor_type
+-- = VK_EXT_mutable_descriptor_type
 --
 -- [__Name String__]
 --     @VK_EXT_mutable_descriptor_type@

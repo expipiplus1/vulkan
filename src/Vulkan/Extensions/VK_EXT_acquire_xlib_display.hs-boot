@@ -3,7 +3,7 @@
 --
 -- VK_EXT_acquire_xlib_display - instance extension
 --
--- == VK_EXT_acquire_xlib_display
+-- = VK_EXT_acquire_xlib_display
 --
 -- [__Name String__]
 --     @VK_EXT_acquire_xlib_display@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_hdr_metadata - device extension
 --
--- == VK_EXT_hdr_metadata
+-- = VK_EXT_hdr_metadata
 --
 -- [__Name String__]
 --     @VK_EXT_hdr_metadata@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_swapchain - device extension
 --
--- == VK_KHR_swapchain
+-- = VK_KHR_swapchain
 --
 -- [__Name String__]
 --     @VK_KHR_swapchain@
@@ -1932,6 +1932,128 @@ foreign import ccall
 -- order that they were acquired - applications can arbitrarily present any
 -- image that is currently acquired.
 --
+-- Note
+--
+-- The origin of the native orientation of the surface coordinate system is
+-- not specified in the Vulkan specification; it depends on the platform.
+-- For most platforms the origin is by default upper-left, meaning the
+-- pixel of the presented 'Vulkan.Core10.Handles.Image' at coordinates
+-- (0,0) would appear at the upper left pixel of the platform surface
+-- (assuming
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- and the display standing the right way up).
+--
+-- The result codes 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR' and
+-- 'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR' have the same meaning when
+-- returned by 'queuePresentKHR' as they do when returned by
+-- 'acquireNextImageKHR'. If any @swapchain@ member of @pPresentInfo@ was
+-- created with
+-- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
+-- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+-- will be returned if that swapchain does not have exclusive full-screen
+-- access, possibly for implementation-specific reasons outside of the
+-- application’s control. If multiple swapchains are presented, the result
+-- code is determined by applying the following rules in order:
+--
+-- -   If the device is lost,
+--     'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' is returned.
+--
+-- -   If any of the target surfaces are no longer available the error
+--     'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR' is returned.
+--
+-- -   If any of the presents would have a result of
+--     'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR' if issued
+--     separately then 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
+--     is returned.
+--
+-- -   If any of the presents would have a result of
+--     'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--     if issued separately then
+--     'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--     is returned.
+--
+-- -   If any of the presents would have a result of
+--     'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR' if issued separately
+--     then 'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR' is returned.
+--
+-- -   Otherwise 'Vulkan.Core10.Enums.Result.SUCCESS' is returned.
+--
+-- Any writes to memory backing the images referenced by the
+-- @pImageIndices@ and @pSwapchains@ members of @pPresentInfo@, that are
+-- available before 'queuePresentKHR' is executed, are automatically made
+-- visible to the read access performed by the presentation engine. This
+-- automatic visibility operation for an image happens-after the semaphore
+-- signal operation, and happens-before the presentation engine accesses
+-- the image.
+--
+-- Presentation is a read-only operation that will not affect the content
+-- of the presentable images. Upon reacquiring the image and transitioning
+-- it away from the
+-- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR' layout,
+-- the contents will be the same as they were prior to transitioning the
+-- image to the present source layout and presenting it. However, if a
+-- mechanism other than Vulkan is used to modify the platform window
+-- associated with the swapchain, the content of all presentable images in
+-- the swapchain becomes undefined.
+--
+-- Calls to 'queuePresentKHR' /may/ block, but /must/ return in finite
+-- time. The processing of the presentation happens in issue order with
+-- other queue operations, but semaphores /must/ be used to ensure that
+-- prior rendering and other commands in the specified queue complete
+-- before the presentation begins. The presentation command itself does not
+-- delay processing of subsequent commands on the queue. However,
+-- presentation requests sent to a particular queue are always performed in
+-- order. Exact presentation timing is controlled by the semantics of the
+-- presentation engine and native platform in use.
+--
+-- If an image is presented to a swapchain created from a display surface,
+-- the mode of the associated display will be updated, if necessary, to
+-- match the mode specified when creating the display surface. The mode
+-- switch and presentation of the specified image will be performed as one
+-- atomic operation.
+--
+-- Queueing an image for presentation defines a set of /queue operations/,
+-- including waiting on the semaphores and submitting a presentation
+-- request to the presentation engine. However, the scope of this set of
+-- queue operations does not include the actual processing of the image by
+-- the presentation engine.
+--
+-- If 'queuePresentKHR' fails to enqueue the corresponding set of queue
+-- operations, it /may/ return
+-- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' or
+-- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'. If it does, the
+-- implementation /must/ ensure that the state and contents of any
+-- resources or synchronization primitives referenced is unaffected by the
+-- call or its failure.
+--
+-- If 'queuePresentKHR' fails in such a way that the implementation is
+-- unable to make that guarantee, the implementation /must/ return
+-- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
+--
+-- However, if the presentation request is rejected by the presentation
+-- engine with an error 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR',
+-- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT',
+-- or 'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set of queue
+-- operations are still considered to be enqueued and thus any semaphore
+-- wait operation specified in 'PresentInfoKHR' will execute when the
+-- corresponding queue operation is complete.
+--
+-- 'queuePresentKHR' releases the acquisition of the images referenced by
+-- @imageIndices@. The queue family corresponding to the queue
+-- 'queuePresentKHR' is executed on /must/ have ownership of the presented
+-- images as defined in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-sharing Resource Sharing>.
+-- 'queuePresentKHR' does not alter the queue family ownership, but the
+-- presented images /must/ not be used again before they have been
+-- reacquired using 'acquireNextImageKHR'.
+--
+-- Note
+--
+-- The application /can/ continue to present any acquired images from a
+-- retired swapchain as long as the swapchain has not entered a state that
+-- causes 'queuePresentKHR' to return
+-- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkQueuePresentKHR-pSwapchains-01292# Each element of
@@ -1961,61 +2083,6 @@ foreign import ccall
 --     any
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     on which it depends /must/ have also been submitted for execution
---
--- Any writes to memory backing the images referenced by the
--- @pImageIndices@ and @pSwapchains@ members of @pPresentInfo@, that are
--- available before 'queuePresentKHR' is executed, are automatically made
--- visible to the read access performed by the presentation engine. This
--- automatic visibility operation for an image happens-after the semaphore
--- signal operation, and happens-before the presentation engine accesses
--- the image.
---
--- Queueing an image for presentation defines a set of /queue operations/,
--- including waiting on the semaphores and submitting a presentation
--- request to the presentation engine. However, the scope of this set of
--- queue operations does not include the actual processing of the image by
--- the presentation engine.
---
--- Note
---
--- The origin of the native orientation of the surface coordinate system is
--- not specified in the Vulkan specification; it depends on the platform.
--- For most platforms the origin is by default upper-left, meaning the
--- pixel of the presented 'Vulkan.Core10.Handles.Image' at coordinates
--- (0,0) would appear at the upper left pixel of the platform surface
--- (assuming
--- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
--- and the display standing the right way up).
---
--- If 'queuePresentKHR' fails to enqueue the corresponding set of queue
--- operations, it /may/ return
--- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' or
--- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'. If it does, the
--- implementation /must/ ensure that the state and contents of any
--- resources or synchronization primitives referenced is unaffected by the
--- call or its failure.
---
--- If 'queuePresentKHR' fails in such a way that the implementation is
--- unable to make that guarantee, the implementation /must/ return
--- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
---
--- However, if the presentation request is rejected by the presentation
--- engine with an error 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR',
--- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT',
--- or 'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set of queue
--- operations are still considered to be enqueued and thus any semaphore
--- wait operation specified in 'PresentInfoKHR' will execute when the
--- corresponding queue operation is complete.
---
--- Calls to 'queuePresentKHR' /may/ block, but /must/ return in finite
--- time.
---
--- If any @swapchain@ member of @pPresentInfo@ was created with
--- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
--- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
--- will be returned if that swapchain does not have exclusive full-screen
--- access, possibly for implementation-specific reasons outside of the
--- application’s control.
 --
 -- == Valid Usage (Implicit)
 --

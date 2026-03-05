@@ -3,7 +3,7 @@
 --
 -- VK_NV_framebuffer_mixed_samples - device extension
 --
--- == VK_NV_framebuffer_mixed_samples
+-- = VK_NV_framebuffer_mixed_samples
 --
 -- [__Name String__]
 --     @VK_NV_framebuffer_mixed_samples@

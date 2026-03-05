@@ -3,7 +3,7 @@
 --
 -- VK_NV_shader_subgroup_partitioned - device extension
 --
--- == VK_NV_shader_subgroup_partitioned
+-- = VK_NV_shader_subgroup_partitioned
 --
 -- [__Name String__]
 --     @VK_NV_shader_subgroup_partitioned@

@@ -450,7 +450,6 @@ fixedArrayScheme
   -> a
   -> ND r (MarshalScheme a)
 fixedArrayScheme wes wdh p = do
-  guard . V.null . lengths $ p
   case type' p of
     Array _ (SymbolicArraySize _) t
       | isByteArrayElem t -> pure ByteString
@@ -629,7 +628,9 @@ isReturnPtr p' = case type' p' of
 -- | Get all the @a@s which are sized with this name
 getSizedWith :: Marshalable a => CName -> Vector a -> Vector a
 getSizedWith lengthName = V.filter $ \v -> case lengths v of
-  (NamedLength len :<| _) | len == lengthName -> True
+  (NamedLength len :<| _) | len == lengthName -> case type' v of
+    Array{} -> False
+    _       -> True
   --  ^ TODO: Change this to [NamedLength len] and think about handling
   _ -> False
 

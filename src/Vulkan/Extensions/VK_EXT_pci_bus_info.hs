@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pci_bus_info - device extension
 --
--- == VK_EXT_pci_bus_info
+-- = VK_EXT_pci_bus_info
 --
 -- [__Name String__]
 --     @VK_EXT_pci_bus_info@

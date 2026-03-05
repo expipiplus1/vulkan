@@ -3,7 +3,7 @@
 --
 -- VK_EXT_border_color_swizzle - device extension
 --
--- == VK_EXT_border_color_swizzle
+-- = VK_EXT_border_color_swizzle
 --
 -- [__Name String__]
 --     @VK_EXT_border_color_swizzle@

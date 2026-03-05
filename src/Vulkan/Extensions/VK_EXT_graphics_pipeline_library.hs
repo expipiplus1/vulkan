@@ -3,7 +3,7 @@
 --
 -- VK_EXT_graphics_pipeline_library - device extension
 --
--- == VK_EXT_graphics_pipeline_library
+-- = VK_EXT_graphics_pipeline_library
 --
 -- [__Name String__]
 --     @VK_EXT_graphics_pipeline_library@

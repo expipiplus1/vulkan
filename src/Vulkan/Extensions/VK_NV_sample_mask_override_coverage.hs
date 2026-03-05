@@ -3,7 +3,7 @@
 --
 -- VK_NV_sample_mask_override_coverage - device extension
 --
--- == VK_NV_sample_mask_override_coverage
+-- = VK_NV_sample_mask_override_coverage
 --
 -- [__Name String__]
 --     @VK_NV_sample_mask_override_coverage@

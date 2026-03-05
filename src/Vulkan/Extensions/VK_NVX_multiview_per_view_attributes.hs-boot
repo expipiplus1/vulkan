@@ -3,7 +3,7 @@
 --
 -- VK_NVX_multiview_per_view_attributes - device extension
 --
--- == VK_NVX_multiview_per_view_attributes
+-- = VK_NVX_multiview_per_view_attributes
 --
 -- [__Name String__]
 --     @VK_NVX_multiview_per_view_attributes@

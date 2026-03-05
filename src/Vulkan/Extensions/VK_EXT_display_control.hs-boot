@@ -3,7 +3,7 @@
 --
 -- VK_EXT_display_control - device extension
 --
--- == VK_EXT_display_control
+-- = VK_EXT_display_control
 --
 -- [__Name String__]
 --     @VK_EXT_display_control@

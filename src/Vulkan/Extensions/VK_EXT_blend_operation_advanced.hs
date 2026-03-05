@@ -3,7 +3,7 @@
 --
 -- VK_EXT_blend_operation_advanced - device extension
 --
--- == VK_EXT_blend_operation_advanced
+-- = VK_EXT_blend_operation_advanced
 --
 -- [__Name String__]
 --     @VK_EXT_blend_operation_advanced@

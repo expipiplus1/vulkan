@@ -3,7 +3,7 @@
 --
 -- VK_AMD_gcn_shader - device extension
 --
--- == VK_AMD_gcn_shader
+-- = VK_AMD_gcn_shader
 --
 -- [__Name String__]
 --     @VK_AMD_gcn_shader@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_incremental_present - device extension
 --
--- == VK_KHR_incremental_present
+-- = VK_KHR_incremental_present
 --
 -- [__Name String__]
 --     @VK_KHR_incremental_present@

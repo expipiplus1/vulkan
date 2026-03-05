@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_image_atomic_int64 - device extension
 --
--- == VK_EXT_shader_image_atomic_int64
+-- = VK_EXT_shader_image_atomic_int64
 --
 -- [__Name String__]
 --     @VK_EXT_shader_image_atomic_int64@

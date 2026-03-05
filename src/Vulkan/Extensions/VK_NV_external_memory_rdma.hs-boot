@@ -3,7 +3,7 @@
 --
 -- VK_NV_external_memory_rdma - device extension
 --
--- == VK_NV_external_memory_rdma
+-- = VK_NV_external_memory_rdma
 --
 -- [__Name String__]
 --     @VK_NV_external_memory_rdma@

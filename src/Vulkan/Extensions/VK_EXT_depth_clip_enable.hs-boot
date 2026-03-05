@@ -3,7 +3,7 @@
 --
 -- VK_EXT_depth_clip_enable - device extension
 --
--- == VK_EXT_depth_clip_enable
+-- = VK_EXT_depth_clip_enable
 --
 -- [__Name String__]
 --     @VK_EXT_depth_clip_enable@

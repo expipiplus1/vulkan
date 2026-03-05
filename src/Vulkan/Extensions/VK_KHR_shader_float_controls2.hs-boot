@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_float_controls2 - device extension
 --
--- == VK_KHR_shader_float_controls2
+-- = VK_KHR_shader_float_controls2
 --
 -- [__Name String__]
 --     @VK_KHR_shader_float_controls2@

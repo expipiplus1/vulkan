@@ -3,7 +3,7 @@
 --
 -- VK_NV_dedicated_allocation_image_aliasing - device extension
 --
--- == VK_NV_dedicated_allocation_image_aliasing
+-- = VK_NV_dedicated_allocation_image_aliasing
 --
 -- [__Name String__]
 --     @VK_NV_dedicated_allocation_image_aliasing@

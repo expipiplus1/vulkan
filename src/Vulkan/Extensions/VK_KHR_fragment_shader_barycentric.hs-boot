@@ -3,7 +3,7 @@
 --
 -- VK_KHR_fragment_shader_barycentric - device extension
 --
--- == VK_KHR_fragment_shader_barycentric
+-- = VK_KHR_fragment_shader_barycentric
 --
 -- [__Name String__]
 --     @VK_KHR_fragment_shader_barycentric@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_descriptor_buffer - device extension
 --
--- == VK_EXT_descriptor_buffer
+-- = VK_EXT_descriptor_buffer
 --
 -- [__Name String__]
 --     @VK_EXT_descriptor_buffer@
@@ -730,7 +730,7 @@ foreign import ccall
 -- -   #VUID-vkGetDescriptorEXT-dataSize-08125# If @pDescriptorInfo->type@
 --     is not
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     or @pDescriptorInfo->data.pCombinedImageSampler@ has a @imageView@
+--     or @pDescriptorInfo->data.pCombinedImageSampler@ has an @imageView@
 --     member that was not created with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain, @dataSize@ /must/ equal the size of
@@ -747,7 +747,7 @@ foreign import ccall
 -- -   #VUID-vkGetDescriptorEXT-descriptorType-09469# If
 --     @pDescriptorInfo->type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     and @pDescriptorInfo->data.pCombinedImageSampler@ has a @imageView@
+--     and @pDescriptorInfo->data.pCombinedImageSampler@ has an @imageView@
 --     member that was created with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain, @dataSize@ /must/ equal the size of

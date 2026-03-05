@@ -3,7 +3,7 @@
 --
 -- VK_AMDX_shader_enqueue - device extension
 --
--- == VK_AMDX_shader_enqueue
+-- = VK_AMDX_shader_enqueue
 --
 -- [__Name String__]
 --     @VK_AMDX_shader_enqueue@

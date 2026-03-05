@@ -3,7 +3,7 @@
 --
 -- VK_EXT_layer_settings - instance extension
 --
--- == VK_EXT_layer_settings
+-- = VK_EXT_layer_settings
 --
 -- [__Name String__]
 --     @VK_EXT_layer_settings@

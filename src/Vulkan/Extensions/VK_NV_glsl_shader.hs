@@ -3,7 +3,7 @@
 --
 -- VK_NV_glsl_shader - device extension
 --
--- == VK_NV_glsl_shader
+-- = VK_NV_glsl_shader
 --
 -- [__Name String__]
 --     @VK_NV_glsl_shader@

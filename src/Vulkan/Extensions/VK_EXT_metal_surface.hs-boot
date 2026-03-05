@@ -3,7 +3,7 @@
 --
 -- VK_EXT_metal_surface - instance extension
 --
--- == VK_EXT_metal_surface
+-- = VK_EXT_metal_surface
 --
 -- [__Name String__]
 --     @VK_EXT_metal_surface@

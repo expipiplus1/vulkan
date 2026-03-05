@@ -3,7 +3,7 @@
 --
 -- VK_EXT_buffer_device_address - device extension
 --
--- == VK_EXT_buffer_device_address
+-- = VK_EXT_buffer_device_address
 --
 -- [__Name String__]
 --     @VK_EXT_buffer_device_address@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_rgba10x6_formats - device extension
 --
--- == VK_EXT_rgba10x6_formats
+-- = VK_EXT_rgba10x6_formats
 --
 -- [__Name String__]
 --     @VK_EXT_rgba10x6_formats@

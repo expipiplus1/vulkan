@@ -3,7 +3,7 @@
 --
 -- VK_EXT_post_depth_coverage - device extension
 --
--- == VK_EXT_post_depth_coverage
+-- = VK_EXT_post_depth_coverage
 --
 -- [__Name String__]
 --     @VK_EXT_post_depth_coverage@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_vulkan_memory_model - device extension
 --
--- == VK_KHR_vulkan_memory_model
+-- = VK_KHR_vulkan_memory_model
 --
 -- [__Name String__]
 --     @VK_KHR_vulkan_memory_model@

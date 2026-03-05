@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_draw_parameters - device extension
 --
--- == VK_KHR_shader_draw_parameters
+-- = VK_KHR_shader_draw_parameters
 --
 -- [__Name String__]
 --     @VK_KHR_shader_draw_parameters@

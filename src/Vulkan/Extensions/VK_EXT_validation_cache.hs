@@ -3,7 +3,7 @@
 --
 -- VK_EXT_validation_cache - device extension
 --
--- == VK_EXT_validation_cache
+-- = VK_EXT_validation_cache
 --
 -- [__Name String__]
 --     @VK_EXT_validation_cache@

@@ -3,7 +3,7 @@
 --
 -- VK_VALVE_mutable_descriptor_type - device extension
 --
--- == VK_VALVE_mutable_descriptor_type
+-- = VK_VALVE_mutable_descriptor_type
 --
 -- [__Name String__]
 --     @VK_VALVE_mutable_descriptor_type@

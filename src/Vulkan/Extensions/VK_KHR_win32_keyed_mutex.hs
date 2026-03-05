@@ -3,7 +3,7 @@
 --
 -- VK_KHR_win32_keyed_mutex - device extension
 --
--- == VK_KHR_win32_keyed_mutex
+-- = VK_KHR_win32_keyed_mutex
 --
 -- [__Name String__]
 --     @VK_KHR_win32_keyed_mutex@

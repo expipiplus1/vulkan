@@ -3,7 +3,7 @@
 --
 -- VK_EXT_host_query_reset - device extension
 --
--- == VK_EXT_host_query_reset
+-- = VK_EXT_host_query_reset
 --
 -- [__Name String__]
 --     @VK_EXT_host_query_reset@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_conservative_rasterization - device extension
 --
--- == VK_EXT_conservative_rasterization
+-- = VK_EXT_conservative_rasterization
 --
 -- [__Name String__]
 --     @VK_EXT_conservative_rasterization@

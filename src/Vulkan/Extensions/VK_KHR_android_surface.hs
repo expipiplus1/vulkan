@@ -3,7 +3,7 @@
 --
 -- VK_KHR_android_surface - instance extension
 --
--- == VK_KHR_android_surface
+-- = VK_KHR_android_surface
 --
 -- [__Name String__]
 --     @VK_KHR_android_surface@

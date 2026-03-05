@@ -3,7 +3,7 @@
 --
 -- VK_EXT_queue_family_foreign - device extension
 --
--- == VK_EXT_queue_family_foreign
+-- = VK_EXT_queue_family_foreign
 --
 -- [__Name String__]
 --     @VK_EXT_queue_family_foreign@

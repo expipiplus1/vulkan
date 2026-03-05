@@ -3,7 +3,7 @@
 --
 -- VK_KHR_uniform_buffer_standard_layout - device extension
 --
--- == VK_KHR_uniform_buffer_standard_layout
+-- = VK_KHR_uniform_buffer_standard_layout
 --
 -- [__Name String__]
 --     @VK_KHR_uniform_buffer_standard_layout@

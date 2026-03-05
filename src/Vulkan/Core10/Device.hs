@@ -175,6 +175,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_linear_color_attachment (PhysicalD
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6FeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_map_memory_placed (PhysicalDeviceMapMemoryPlacedFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (PhysicalDeviceMemoryPriorityFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mesh_shader (PhysicalDeviceMeshShaderFeaturesEXT)
@@ -223,6 +224,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversio
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (PhysicalDeviceScalarBlockLayoutFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_scheduling_controls (PhysicalDeviceSchedulingControlsFeaturesARM)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_atomic_float16_vector (PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64 (PhysicalDeviceShaderAtomicInt64Features)
@@ -991,6 +993,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Features',
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5FeaturesKHR',
 --     'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6FeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_map_memory_placed.PhysicalDeviceMapMemoryPlacedFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_memory_priority.PhysicalDeviceMemoryPriorityFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_mesh_shader.PhysicalDeviceMeshShaderFeaturesEXT',
@@ -1039,6 +1042,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout.PhysicalDeviceScalarBlockLayoutFeatures',
 --     'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsFeaturesARM',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.PhysicalDeviceSeparateDepthStencilLayoutsFeatures',
+--     'Vulkan.Extensions.VK_NV_shader_atomic_float16_vector.PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_shader_atomic_float2.PhysicalDeviceShaderAtomicFloat2FeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_shader_atomic_float.PhysicalDeviceShaderAtomicFloatFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64.PhysicalDeviceShaderAtomicInt64Features',
@@ -1171,6 +1175,8 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceMapMemoryPlacedFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderQuadControlFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderFloatControls2FeaturesKHR = Just f

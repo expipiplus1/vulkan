@@ -3,7 +3,7 @@
 --
 -- VK_QNX_external_memory_screen_buffer - device extension
 --
--- == VK_QNX_external_memory_screen_buffer
+-- = VK_QNX_external_memory_screen_buffer
 --
 -- [__Name String__]
 --     @VK_QNX_external_memory_screen_buffer@

@@ -3,7 +3,7 @@
 --
 -- VK_NV_per_stage_descriptor_set - device extension
 --
--- == VK_NV_per_stage_descriptor_set
+-- = VK_NV_per_stage_descriptor_set
 --
 -- [__Name String__]
 --     @VK_NV_per_stage_descriptor_set@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pipeline_properties - device extension
 --
--- == VK_EXT_pipeline_properties
+-- = VK_EXT_pipeline_properties
 --
 -- [__Name String__]
 --     @VK_EXT_pipeline_properties@

@@ -3,7 +3,7 @@
 --
 -- VK_FUCHSIA_external_memory - device extension
 --
--- == VK_FUCHSIA_external_memory
+-- = VK_FUCHSIA_external_memory
 --
 -- [__Name String__]
 --     @VK_FUCHSIA_external_memory@

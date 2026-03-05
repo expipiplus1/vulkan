@@ -3,7 +3,7 @@
 --
 -- VK_EXT_dynamic_rendering_unused_attachments - device extension
 --
--- == VK_EXT_dynamic_rendering_unused_attachments
+-- = VK_EXT_dynamic_rendering_unused_attachments
 --
 -- [__Name String__]
 --     @VK_EXT_dynamic_rendering_unused_attachments@
@@ -179,7 +179,7 @@ data PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT = PhysicalDevice
     -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' is allowed with a
     -- corresponding
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
-    -- element with a @imageView@ equal to
+    -- element with an @imageView@ equal to
     -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', or any pipeline
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
     -- element with a 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' format is

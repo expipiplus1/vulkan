@@ -3,7 +3,7 @@
 --
 -- VK_KHR_acceleration_structure - device extension
 --
--- == VK_KHR_acceleration_structure
+-- = VK_KHR_acceleration_structure
 --
 -- [__Name String__]
 --     @VK_KHR_acceleration_structure@
@@ -1657,6 +1657,7 @@ foreign import ccall
 -- -   #VUID-vkCopyAccelerationStructureKHR-accelerationStructureHostCommands-03582#
 --     The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
+--     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-deferredOperation-03678# Any
 --     previous deferred operation that was associated with
@@ -1667,7 +1668,6 @@ foreign import ccall
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03728# The @buffer@ used
 --     to create @pInfo->dst@ /must/ be bound to host-visible device memory
---     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03780# The @buffer@ used
 --     to create @pInfo->src@ /must/ be bound to memory that was not

@@ -3,7 +3,7 @@
 --
 -- VK_NV_geometry_shader_passthrough - device extension
 --
--- == VK_NV_geometry_shader_passthrough
+-- = VK_NV_geometry_shader_passthrough
 --
 -- [__Name String__]
 --     @VK_NV_geometry_shader_passthrough@

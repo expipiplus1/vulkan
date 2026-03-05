@@ -3,7 +3,7 @@
 --
 -- VK_GOOGLE_hlsl_functionality1 - device extension
 --
--- == VK_GOOGLE_hlsl_functionality1
+-- = VK_GOOGLE_hlsl_functionality1
 --
 -- [__Name String__]
 --     @VK_GOOGLE_hlsl_functionality1@

@@ -3,7 +3,7 @@
 --
 -- VK_NV_low_latency2 - device extension
 --
--- == VK_NV_low_latency2
+-- = VK_NV_low_latency2
 --
 -- [__Name String__]
 --     @VK_NV_low_latency2@

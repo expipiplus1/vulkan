@@ -3,7 +3,7 @@
 --
 -- VK_EXT_swapchain_maintenance1 - device extension
 --
--- == VK_EXT_swapchain_maintenance1
+-- = VK_EXT_swapchain_maintenance1
 --
 -- [__Name String__]
 --     @VK_EXT_swapchain_maintenance1@

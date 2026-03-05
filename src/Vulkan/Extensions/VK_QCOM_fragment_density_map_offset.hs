@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_fragment_density_map_offset - device extension
 --
--- == VK_QCOM_fragment_density_map_offset
+-- = VK_QCOM_fragment_density_map_offset
 --
 -- [__Name String__]
 --     @VK_QCOM_fragment_density_map_offset@

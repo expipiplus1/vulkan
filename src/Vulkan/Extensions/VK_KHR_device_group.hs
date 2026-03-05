@@ -3,7 +3,7 @@
 --
 -- VK_KHR_device_group - device extension
 --
--- == VK_KHR_device_group
+-- = VK_KHR_device_group
 --
 -- [__Name String__]
 --     @VK_KHR_device_group@

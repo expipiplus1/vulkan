@@ -3,7 +3,7 @@
 --
 -- VK_AMD_gpu_shader_int16 - device extension
 --
--- == VK_AMD_gpu_shader_int16
+-- = VK_AMD_gpu_shader_int16
 --
 -- [__Name String__]
 --     @VK_AMD_gpu_shader_int16@

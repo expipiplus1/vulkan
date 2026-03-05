@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_tile_image - device extension
 --
--- == VK_EXT_shader_tile_image
+-- = VK_EXT_shader_tile_image
 --
 -- [__Name String__]
 --     @VK_EXT_shader_tile_image@

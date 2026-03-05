@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_explicit_vertex_parameter - device extension
 --
--- == VK_AMD_shader_explicit_vertex_parameter
+-- = VK_AMD_shader_explicit_vertex_parameter
 --
 -- [__Name String__]
 --     @VK_AMD_shader_explicit_vertex_parameter@

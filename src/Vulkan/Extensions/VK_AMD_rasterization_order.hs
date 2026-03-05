@@ -3,7 +3,7 @@
 --
 -- VK_AMD_rasterization_order - device extension
 --
--- == VK_AMD_rasterization_order
+-- = VK_AMD_rasterization_order
 --
 -- [__Name String__]
 --     @VK_AMD_rasterization_order@

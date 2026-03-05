@@ -3,7 +3,7 @@
 --
 -- VK_AMD_buffer_marker - device extension
 --
--- == VK_AMD_buffer_marker
+-- = VK_AMD_buffer_marker
 --
 -- [__Name String__]
 --     @VK_AMD_buffer_marker@

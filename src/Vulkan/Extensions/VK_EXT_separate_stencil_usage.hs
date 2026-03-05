@@ -3,7 +3,7 @@
 --
 -- VK_EXT_separate_stencil_usage - device extension
 --
--- == VK_EXT_separate_stencil_usage
+-- = VK_EXT_separate_stencil_usage
 --
 -- [__Name String__]
 --     @VK_EXT_separate_stencil_usage@

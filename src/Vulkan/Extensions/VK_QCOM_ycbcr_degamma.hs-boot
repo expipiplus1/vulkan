@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_ycbcr_degamma - device extension
 --
--- == VK_QCOM_ycbcr_degamma
+-- = VK_QCOM_ycbcr_degamma
 --
 -- [__Name String__]
 --     @VK_QCOM_ycbcr_degamma@

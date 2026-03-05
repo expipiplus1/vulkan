@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_multiview_per_view_viewports - device extension
 --
--- == VK_QCOM_multiview_per_view_viewports
+-- = VK_QCOM_multiview_per_view_viewports
 --
 -- [__Name String__]
 --     @VK_QCOM_multiview_per_view_viewports@

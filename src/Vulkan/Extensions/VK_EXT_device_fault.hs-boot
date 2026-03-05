@@ -3,7 +3,7 @@
 --
 -- VK_EXT_device_fault - device extension
 --
--- == VK_EXT_device_fault
+-- = VK_EXT_device_fault
 --
 -- [__Name String__]
 --     @VK_EXT_device_fault@

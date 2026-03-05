@@ -3,7 +3,7 @@
 --
 -- VK_KHR_dynamic_rendering - device extension
 --
--- == VK_KHR_dynamic_rendering
+-- = VK_KHR_dynamic_rendering
 --
 -- [__Name String__]
 --     @VK_KHR_dynamic_rendering@

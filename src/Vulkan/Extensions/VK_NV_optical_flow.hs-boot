@@ -3,7 +3,7 @@
 --
 -- VK_NV_optical_flow - device extension
 --
--- == VK_NV_optical_flow
+-- = VK_NV_optical_flow
 --
 -- [__Name String__]
 --     @VK_NV_optical_flow@

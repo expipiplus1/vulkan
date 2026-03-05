@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_info - device extension
 --
--- == VK_AMD_shader_info
+-- = VK_AMD_shader_info
 --
 -- [__Name String__]
 --     @VK_AMD_shader_info@

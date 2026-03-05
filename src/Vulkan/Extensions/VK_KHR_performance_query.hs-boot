@@ -3,7 +3,7 @@
 --
 -- VK_KHR_performance_query - device extension
 --
--- == VK_KHR_performance_query
+-- = VK_KHR_performance_query
 --
 -- [__Name String__]
 --     @VK_KHR_performance_query@

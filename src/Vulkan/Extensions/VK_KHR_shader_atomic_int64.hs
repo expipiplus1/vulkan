@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_atomic_int64 - device extension
 --
--- == VK_KHR_shader_atomic_int64
+-- = VK_KHR_shader_atomic_int64
 --
 -- [__Name String__]
 --     @VK_KHR_shader_atomic_int64@

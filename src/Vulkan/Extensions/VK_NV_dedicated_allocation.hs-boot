@@ -3,7 +3,7 @@
 --
 -- VK_NV_dedicated_allocation - device extension
 --
--- == VK_NV_dedicated_allocation
+-- = VK_NV_dedicated_allocation
 --
 -- [__Name String__]
 --     @VK_NV_dedicated_allocation@

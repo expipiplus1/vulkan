@@ -3,7 +3,7 @@
 --
 -- VK_KHR_multiview - device extension
 --
--- == VK_KHR_multiview
+-- = VK_KHR_multiview
 --
 -- [__Name String__]
 --     @VK_KHR_multiview@

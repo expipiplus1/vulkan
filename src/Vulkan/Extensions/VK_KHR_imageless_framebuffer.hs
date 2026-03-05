@@ -3,7 +3,7 @@
 --
 -- VK_KHR_imageless_framebuffer - device extension
 --
--- == VK_KHR_imageless_framebuffer
+-- = VK_KHR_imageless_framebuffer
 --
 -- [__Name String__]
 --     @VK_KHR_imageless_framebuffer@

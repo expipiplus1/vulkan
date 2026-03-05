@@ -3,7 +3,7 @@
 --
 -- VK_KHR_workgroup_memory_explicit_layout - device extension
 --
--- == VK_KHR_workgroup_memory_explicit_layout
+-- = VK_KHR_workgroup_memory_explicit_layout
 --
 -- [__Name String__]
 --     @VK_KHR_workgroup_memory_explicit_layout@

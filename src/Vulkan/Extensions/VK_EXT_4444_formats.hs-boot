@@ -3,7 +3,7 @@
 --
 -- VK_EXT_4444_formats - device extension
 --
--- == VK_EXT_4444_formats
+-- = VK_EXT_4444_formats
 --
 -- [__Name String__]
 --     @VK_EXT_4444_formats@

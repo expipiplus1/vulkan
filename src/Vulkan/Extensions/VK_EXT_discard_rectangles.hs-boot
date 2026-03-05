@@ -3,7 +3,7 @@
 --
 -- VK_EXT_discard_rectangles - device extension
 --
--- == VK_EXT_discard_rectangles
+-- = VK_EXT_discard_rectangles
 --
 -- [__Name String__]
 --     @VK_EXT_discard_rectangles@

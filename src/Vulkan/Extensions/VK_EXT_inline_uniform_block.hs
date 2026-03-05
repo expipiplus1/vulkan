@@ -3,7 +3,7 @@
 --
 -- VK_EXT_inline_uniform_block - device extension
 --
--- == VK_EXT_inline_uniform_block
+-- = VK_EXT_inline_uniform_block
 --
 -- [__Name String__]
 --     @VK_EXT_inline_uniform_block@

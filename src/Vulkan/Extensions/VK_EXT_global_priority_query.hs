@@ -3,7 +3,7 @@
 --
 -- VK_EXT_global_priority_query - device extension
 --
--- == VK_EXT_global_priority_query
+-- = VK_EXT_global_priority_query
 --
 -- [__Name String__]
 --     @VK_EXT_global_priority_query@

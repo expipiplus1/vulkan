@@ -3,7 +3,7 @@
 --
 -- VK_EXT_display_surface_counter - instance extension
 --
--- == VK_EXT_display_surface_counter
+-- = VK_EXT_display_surface_counter
 --
 -- [__Name String__]
 --     @VK_EXT_display_surface_counter@

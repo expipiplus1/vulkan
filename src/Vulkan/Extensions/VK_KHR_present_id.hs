@@ -3,7 +3,7 @@
 --
 -- VK_KHR_present_id - device extension
 --
--- == VK_KHR_present_id
+-- = VK_KHR_present_id
 --
 -- [__Name String__]
 --     @VK_KHR_present_id@

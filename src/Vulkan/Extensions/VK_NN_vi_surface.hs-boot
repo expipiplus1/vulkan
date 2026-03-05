@@ -3,7 +3,7 @@
 --
 -- VK_NN_vi_surface - instance extension
 --
--- == VK_NN_vi_surface
+-- = VK_NN_vi_surface
 --
 -- [__Name String__]
 --     @VK_NN_vi_surface@

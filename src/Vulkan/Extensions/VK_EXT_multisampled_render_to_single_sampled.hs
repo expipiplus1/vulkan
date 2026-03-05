@@ -3,7 +3,7 @@
 --
 -- VK_EXT_multisampled_render_to_single_sampled - device extension
 --
--- == VK_EXT_multisampled_render_to_single_sampled
+-- = VK_EXT_multisampled_render_to_single_sampled
 --
 -- [__Name String__]
 --     @VK_EXT_multisampled_render_to_single_sampled@

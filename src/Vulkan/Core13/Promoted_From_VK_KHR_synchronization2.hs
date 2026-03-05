@@ -1083,9 +1083,9 @@ foreign import ccall
 -- -   #VUID-vkQueueSubmit2-commandBuffer-03867# If a command recorded into
 --     the @commandBuffer@ member of any element of the
 --     @pCommandBufferInfos@ member of any element of @pSubmits@ referenced
---     an 'Vulkan.Core10.Handles.Event', that event /must/ not be
---     referenced by a command that has been submitted to another queue and
---     is still in the /pending state/
+--     a 'Vulkan.Core10.Handles.Event', that event /must/ not be referenced
+--     by a command that has been submitted to another queue and is still
+--     in the /pending state/
 --
 -- -   #VUID-vkQueueSubmit2-semaphore-03868# The @semaphore@ member of any
 --     binary semaphore element of the @pSignalSemaphoreInfos@ member of

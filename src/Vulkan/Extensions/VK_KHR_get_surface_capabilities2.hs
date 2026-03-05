@@ -3,7 +3,7 @@
 --
 -- VK_KHR_get_surface_capabilities2 - instance extension
 --
--- == VK_KHR_get_surface_capabilities2
+-- = VK_KHR_get_surface_capabilities2
 --
 -- [__Name String__]
 --     @VK_KHR_get_surface_capabilities2@
@@ -541,9 +541,10 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
 --     structure /must/ be included in the @pNext@ chain
 --
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-07919# If the
---     @VK_GOOGLE_surfaceless_query@ extension is not enabled, @surface@
---     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-07919# If surface is
+--     not VK_NULL_HANDLE, and the @VK_GOOGLE_surfaceless_query@ extension
+--     is not enabled, @surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Valid Usage (Implicit)
 --
@@ -560,10 +561,6 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice
 --
 -- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
---
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-parameter# If
---     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @surface@
---     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- = See Also
 --

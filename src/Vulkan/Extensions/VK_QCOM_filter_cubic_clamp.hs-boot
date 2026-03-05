@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_filter_cubic_clamp - device extension
 --
--- == VK_QCOM_filter_cubic_clamp
+-- = VK_QCOM_filter_cubic_clamp
 --
 -- [__Name String__]
 --     @VK_QCOM_filter_cubic_clamp@

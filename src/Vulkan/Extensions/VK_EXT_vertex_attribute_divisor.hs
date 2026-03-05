@@ -3,7 +3,7 @@
 --
 -- VK_EXT_vertex_attribute_divisor - device extension
 --
--- == VK_EXT_vertex_attribute_divisor
+-- = VK_EXT_vertex_attribute_divisor
 --
 -- [__Name String__]
 --     @VK_EXT_vertex_attribute_divisor@

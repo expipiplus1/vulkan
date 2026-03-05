@@ -3,7 +3,7 @@
 --
 -- VK_EXT_debug_marker - device extension
 --
--- == VK_EXT_debug_marker
+-- = VK_EXT_debug_marker
 --
 -- [__Name String__]
 --     @VK_EXT_debug_marker@

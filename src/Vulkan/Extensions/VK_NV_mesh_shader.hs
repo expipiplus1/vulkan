@@ -3,7 +3,7 @@
 --
 -- VK_NV_mesh_shader - device extension
 --
--- == VK_NV_mesh_shader
+-- = VK_NV_mesh_shader
 --
 -- [__Name String__]
 --     @VK_NV_mesh_shader@
@@ -1851,7 +1851,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ not equal to
+--     array with an @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
@@ -1868,7 +1868,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ equal to
+--     array with an @imageView@ equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
@@ -1885,7 +1885,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ not equal to
+--     array with an @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
@@ -5512,7 +5512,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ not equal to
+--     array with an @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
@@ -5529,7 +5529,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ equal to
+--     array with an @imageView@ equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
@@ -5546,7 +5546,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ not equal to
+--     array with an @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
@@ -9235,7 +9235,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ not equal to
+--     array with an @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
@@ -9252,7 +9252,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ equal to
+--     array with an @imageView@ equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
@@ -9269,7 +9269,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
---     array with a @imageView@ not equal to
+--     array with an @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of

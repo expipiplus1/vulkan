@@ -3,7 +3,7 @@
 --
 -- VK_KHR_separate_depth_stencil_layouts - device extension
 --
--- == VK_KHR_separate_depth_stencil_layouts
+-- = VK_KHR_separate_depth_stencil_layouts
 --
 -- [__Name String__]
 --     @VK_KHR_separate_depth_stencil_layouts@

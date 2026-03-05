@@ -3,7 +3,7 @@
 --
 -- VK_EXT_descriptor_indexing - device extension
 --
--- == VK_EXT_descriptor_indexing
+-- = VK_EXT_descriptor_indexing
 --
 -- [__Name String__]
 --     @VK_EXT_descriptor_indexing@

@@ -3,7 +3,7 @@
 --
 -- VK_MVK_ios_surface - instance extension
 --
--- == VK_MVK_ios_surface
+-- = VK_MVK_ios_surface
 --
 -- [__Name String__]
 --     @VK_MVK_ios_surface@
@@ -190,7 +190,7 @@ foreign import ccall
 
 -- | vkCreateIOSSurfaceMVK - Create a VkSurfaceKHR object for an iOS UIView
 --
--- = Parameters
+-- = Description
 --
 -- Note
 --
@@ -198,21 +198,6 @@ foreign import ccall
 -- superseded by
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT' from the
 -- @VK_EXT_metal_surface@ extension.
---
--- = Description
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to a 'IOSSurfaceCreateInfoMVK' structure
---     containing parameters affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -252,11 +237,14 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 createIOSSurfaceMVK :: forall io
                      . (MonadIO io)
-                    => -- No documentation found for Nested "vkCreateIOSSurfaceMVK" "instance"
+                    => -- | @instance@ is the instance with which to associate the surface.
                        Instance
-                    -> -- No documentation found for Nested "vkCreateIOSSurfaceMVK" "pCreateInfo"
+                    -> -- | @pCreateInfo@ is a pointer to a 'IOSSurfaceCreateInfoMVK' structure
+                       -- containing parameters affecting the creation of the surface object.
                        IOSSurfaceCreateInfoMVK
-                    -> -- No documentation found for Nested "vkCreateIOSSurfaceMVK" "pAllocator"
+                    -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                       -- surface object when there is no more specific allocator available (see
+                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (SurfaceKHR)
 createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do

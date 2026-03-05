@@ -3,7 +3,7 @@
 --
 -- VK_KHR_swapchain_mutable_format - device extension
 --
--- == VK_KHR_swapchain_mutable_format
+-- = VK_KHR_swapchain_mutable_format
 --
 -- [__Name String__]
 --     @VK_KHR_swapchain_mutable_format@

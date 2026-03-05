@@ -3,7 +3,7 @@
 --
 -- VK_KHR_get_memory_requirements2 - device extension
 --
--- == VK_KHR_get_memory_requirements2
+-- = VK_KHR_get_memory_requirements2
 --
 -- [__Name String__]
 --     @VK_KHR_get_memory_requirements2@

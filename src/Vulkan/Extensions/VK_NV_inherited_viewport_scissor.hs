@@ -3,7 +3,7 @@
 --
 -- VK_NV_inherited_viewport_scissor - device extension
 --
--- == VK_NV_inherited_viewport_scissor
+-- = VK_NV_inherited_viewport_scissor
 --
 -- [__Name String__]
 --     @VK_NV_inherited_viewport_scissor@

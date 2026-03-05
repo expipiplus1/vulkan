@@ -3,7 +3,7 @@
 --
 -- VK_GOOGLE_user_type - device extension
 --
--- == VK_GOOGLE_user_type
+-- = VK_GOOGLE_user_type
 --
 -- [__Name String__]
 --     @VK_GOOGLE_user_type@

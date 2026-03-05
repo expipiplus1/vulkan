@@ -3,7 +3,7 @@
 --
 -- VK_INTEL_shader_integer_functions2 - device extension
 --
--- == VK_INTEL_shader_integer_functions2
+-- = VK_INTEL_shader_integer_functions2
 --
 -- [__Name String__]
 --     @VK_INTEL_shader_integer_functions2@

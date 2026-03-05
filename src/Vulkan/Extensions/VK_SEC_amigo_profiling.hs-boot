@@ -3,7 +3,7 @@
 --
 -- VK_SEC_amigo_profiling - device extension
 --
--- == VK_SEC_amigo_profiling
+-- = VK_SEC_amigo_profiling
 --
 -- [__Name String__]
 --     @VK_SEC_amigo_profiling@

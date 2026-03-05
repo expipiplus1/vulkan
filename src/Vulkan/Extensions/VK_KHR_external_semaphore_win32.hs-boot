@@ -3,7 +3,7 @@
 --
 -- VK_KHR_external_semaphore_win32 - device extension
 --
--- == VK_KHR_external_semaphore_win32
+-- = VK_KHR_external_semaphore_win32
 --
 -- [__Name String__]
 --     @VK_KHR_external_semaphore_win32@

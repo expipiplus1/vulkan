@@ -3,7 +3,7 @@
 --
 -- VK_EXT_subgroup_size_control - device extension
 --
--- == VK_EXT_subgroup_size_control
+-- = VK_EXT_subgroup_size_control
 --
 -- [__Name String__]
 --     @VK_EXT_subgroup_size_control@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_metal_objects - device extension
 --
--- == VK_EXT_metal_objects
+-- = VK_EXT_metal_objects
 --
 -- [__Name String__]
 --     @VK_EXT_metal_objects@

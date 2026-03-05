@@ -3,7 +3,7 @@
 --
 -- VK_NV_representative_fragment_test - device extension
 --
--- == VK_NV_representative_fragment_test
+-- = VK_NV_representative_fragment_test
 --
 -- [__Name String__]
 --     @VK_NV_representative_fragment_test@

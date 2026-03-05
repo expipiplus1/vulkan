@@ -1825,8 +1825,9 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and has a format of
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'::@pFragmentShadingRateAttachment@
---     /must/ either be @NULL@ or a 'AttachmentReference2' structure with a
---     @attachment@ value of 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--     /must/ either be @NULL@ or a 'AttachmentReference2' structure with
+--     an @attachment@ value of
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkSubpassDescription2-externalFormatResolve-09348# If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>

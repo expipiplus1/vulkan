@@ -3,7 +3,7 @@
 --
 -- VK_KHR_maintenance5 - device extension
 --
--- == VK_KHR_maintenance5
+-- = VK_KHR_maintenance5
 --
 -- [__Name String__]
 --     @VK_KHR_maintenance5@

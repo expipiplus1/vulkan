@@ -3,7 +3,7 @@
 --
 -- VK_KHR_depth_stencil_resolve - device extension
 --
--- == VK_KHR_depth_stencil_resolve
+-- = VK_KHR_depth_stencil_resolve
 --
 -- [__Name String__]
 --     @VK_KHR_depth_stencil_resolve@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pipeline_robustness - device extension
 --
--- == VK_EXT_pipeline_robustness
+-- = VK_EXT_pipeline_robustness
 --
 -- [__Name String__]
 --     @VK_EXT_pipeline_robustness@

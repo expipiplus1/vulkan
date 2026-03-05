@@ -3,7 +3,7 @@
 --
 -- VK_NVX_image_view_handle - device extension
 --
--- == VK_NVX_image_view_handle
+-- = VK_NVX_image_view_handle
 --
 -- [__Name String__]
 --     @VK_NVX_image_view_handle@

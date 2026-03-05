@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_ballot - device extension
 --
--- == VK_AMD_shader_ballot
+-- = VK_AMD_shader_ballot
 --
 -- [__Name String__]
 --     @VK_AMD_shader_ballot@

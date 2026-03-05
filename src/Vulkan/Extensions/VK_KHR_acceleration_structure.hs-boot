@@ -3,7 +3,7 @@
 --
 -- VK_KHR_acceleration_structure - device extension
 --
--- == VK_KHR_acceleration_structure
+-- = VK_KHR_acceleration_structure
 --
 -- [__Name String__]
 --     @VK_KHR_acceleration_structure@

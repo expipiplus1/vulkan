@@ -3,7 +3,7 @@
 --
 -- VK_KHR_image_format_list - device extension
 --
--- == VK_KHR_image_format_list
+-- = VK_KHR_image_format_list
 --
 -- [__Name String__]
 --     @VK_KHR_image_format_list@

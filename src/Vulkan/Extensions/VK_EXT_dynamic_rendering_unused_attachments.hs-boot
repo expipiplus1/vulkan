@@ -3,7 +3,7 @@
 --
 -- VK_EXT_dynamic_rendering_unused_attachments - device extension
 --
--- == VK_EXT_dynamic_rendering_unused_attachments
+-- = VK_EXT_dynamic_rendering_unused_attachments
 --
 -- [__Name String__]
 --     @VK_EXT_dynamic_rendering_unused_attachments@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_depth_bias_control - device extension
 --
--- == VK_EXT_depth_bias_control
+-- = VK_EXT_depth_bias_control
 --
 -- [__Name String__]
 --     @VK_EXT_depth_bias_control@

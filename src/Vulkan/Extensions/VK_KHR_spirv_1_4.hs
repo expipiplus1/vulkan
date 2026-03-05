@@ -3,7 +3,7 @@
 --
 -- VK_KHR_spirv_1_4 - device extension
 --
--- == VK_KHR_spirv_1_4
+-- = VK_KHR_spirv_1_4
 --
 -- [__Name String__]
 --     @VK_KHR_spirv_1_4@

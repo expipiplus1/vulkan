@@ -3,7 +3,7 @@
 --
 -- VK_NV_corner_sampled_image - device extension
 --
--- == VK_NV_corner_sampled_image
+-- = VK_NV_corner_sampled_image
 --
 -- [__Name String__]
 --     @VK_NV_corner_sampled_image@

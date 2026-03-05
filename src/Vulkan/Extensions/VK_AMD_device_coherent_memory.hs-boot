@@ -3,7 +3,7 @@
 --
 -- VK_AMD_device_coherent_memory - device extension
 --
--- == VK_AMD_device_coherent_memory
+-- = VK_AMD_device_coherent_memory
 --
 -- [__Name String__]
 --     @VK_AMD_device_coherent_memory@

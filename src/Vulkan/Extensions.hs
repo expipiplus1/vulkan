@@ -97,6 +97,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_legacy_dithering
                           , module Vulkan.Extensions.VK_EXT_line_rasterization
                           , module Vulkan.Extensions.VK_EXT_load_store_op_none
+                          , module Vulkan.Extensions.VK_EXT_map_memory_placed
                           , module Vulkan.Extensions.VK_EXT_memory_budget
                           , module Vulkan.Extensions.VK_EXT_memory_priority
                           , module Vulkan.Extensions.VK_EXT_mesh_shader
@@ -334,6 +335,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_representative_fragment_test
                           , module Vulkan.Extensions.VK_NV_sample_mask_override_coverage
                           , module Vulkan.Extensions.VK_NV_scissor_exclusive
+                          , module Vulkan.Extensions.VK_NV_shader_atomic_float16_vector
                           , module Vulkan.Extensions.VK_NV_shader_image_footprint
                           , module Vulkan.Extensions.VK_NV_shader_sm_builtins
                           , module Vulkan.Extensions.VK_NV_shader_subgroup_partitioned
@@ -457,6 +459,7 @@ import Vulkan.Extensions.VK_EXT_layer_settings
 import Vulkan.Extensions.VK_EXT_legacy_dithering
 import Vulkan.Extensions.VK_EXT_line_rasterization
 import Vulkan.Extensions.VK_EXT_load_store_op_none
+import Vulkan.Extensions.VK_EXT_map_memory_placed
 import Vulkan.Extensions.VK_EXT_memory_budget
 import Vulkan.Extensions.VK_EXT_memory_priority
 import Vulkan.Extensions.VK_EXT_mesh_shader
@@ -694,6 +697,7 @@ import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
 import Vulkan.Extensions.VK_NV_representative_fragment_test
 import Vulkan.Extensions.VK_NV_sample_mask_override_coverage
 import Vulkan.Extensions.VK_NV_scissor_exclusive
+import Vulkan.Extensions.VK_NV_shader_atomic_float16_vector
 import Vulkan.Extensions.VK_NV_shader_image_footprint
 import Vulkan.Extensions.VK_NV_shader_sm_builtins
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned

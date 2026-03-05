@@ -3,7 +3,7 @@
 --
 -- VK_KHR_variable_pointers - device extension
 --
--- == VK_KHR_variable_pointers
+-- = VK_KHR_variable_pointers
 --
 -- [__Name String__]
 --     @VK_KHR_variable_pointers@

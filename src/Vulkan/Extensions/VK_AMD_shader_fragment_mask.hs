@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_fragment_mask - device extension
 --
--- == VK_AMD_shader_fragment_mask
+-- = VK_AMD_shader_fragment_mask
 --
 -- [__Name String__]
 --     @VK_AMD_shader_fragment_mask@

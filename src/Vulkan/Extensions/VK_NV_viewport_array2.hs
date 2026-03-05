@@ -3,7 +3,7 @@
 --
 -- VK_NV_viewport_array2 - device extension
 --
--- == VK_NV_viewport_array2
+-- = VK_NV_viewport_array2
 --
 -- [__Name String__]
 --     @VK_NV_viewport_array2@

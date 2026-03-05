@@ -3,7 +3,7 @@
 --
 -- VK_KHR_swapchain - device extension
 --
--- == VK_KHR_swapchain
+-- = VK_KHR_swapchain
 --
 -- [__Name String__]
 --     @VK_KHR_swapchain@

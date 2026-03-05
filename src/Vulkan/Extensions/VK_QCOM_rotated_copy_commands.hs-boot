@@ -3,7 +3,7 @@
 --
 -- VK_QCOM_rotated_copy_commands - device extension
 --
--- == VK_QCOM_rotated_copy_commands
+-- = VK_QCOM_rotated_copy_commands
 --
 -- [__Name String__]
 --     @VK_QCOM_rotated_copy_commands@

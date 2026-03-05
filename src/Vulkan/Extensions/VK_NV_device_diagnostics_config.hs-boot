@@ -3,7 +3,7 @@
 --
 -- VK_NV_device_diagnostics_config - device extension
 --
--- == VK_NV_device_diagnostics_config
+-- = VK_NV_device_diagnostics_config
 --
 -- [__Name String__]
 --     @VK_NV_device_diagnostics_config@

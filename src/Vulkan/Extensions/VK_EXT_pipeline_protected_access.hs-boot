@@ -3,7 +3,7 @@
 --
 -- VK_EXT_pipeline_protected_access - device extension
 --
--- == VK_EXT_pipeline_protected_access
+-- = VK_EXT_pipeline_protected_access
 --
 -- [__Name String__]
 --     @VK_EXT_pipeline_protected_access@

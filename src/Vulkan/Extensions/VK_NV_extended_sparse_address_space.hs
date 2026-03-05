@@ -3,7 +3,7 @@
 --
 -- VK_NV_extended_sparse_address_space - device extension
 --
--- == VK_NV_extended_sparse_address_space
+-- = VK_NV_extended_sparse_address_space
 --
 -- [__Name String__]
 --     @VK_NV_extended_sparse_address_space@

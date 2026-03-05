@@ -3,7 +3,7 @@
 --
 -- VK_EXT_validation_flags - instance extension
 --
--- == VK_EXT_validation_flags
+-- = VK_EXT_validation_flags
 --
 -- [__Name String__]
 --     @VK_EXT_validation_flags@

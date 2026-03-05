@@ -1501,8 +1501,8 @@ instance Zero DescriptorImageInfo where
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02738# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and if any element of @pImageInfo@ has a @imageView@ member that was
---     created with a
+--     and if any element of @pImageInfo@ has an @imageView@ member that
+--     was created with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain, then @dstSet@ /must/ have been
 --     allocated with a layout that included immutable samplers for

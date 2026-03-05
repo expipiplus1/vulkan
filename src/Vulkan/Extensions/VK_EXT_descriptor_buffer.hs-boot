@@ -3,7 +3,7 @@
 --
 -- VK_EXT_descriptor_buffer - device extension
 --
--- == VK_EXT_descriptor_buffer
+-- = VK_EXT_descriptor_buffer
 --
 -- [__Name String__]
 --     @VK_EXT_descriptor_buffer@

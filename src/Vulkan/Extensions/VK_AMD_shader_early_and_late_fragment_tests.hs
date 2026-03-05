@@ -3,7 +3,7 @@
 --
 -- VK_AMD_shader_early_and_late_fragment_tests - device extension
 --
--- == VK_AMD_shader_early_and_late_fragment_tests
+-- = VK_AMD_shader_early_and_late_fragment_tests
 --
 -- [__Name String__]
 --     @VK_AMD_shader_early_and_late_fragment_tests@

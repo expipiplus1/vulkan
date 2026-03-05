@@ -11,7 +11,8 @@ module Vulkan.Core10.Memory  ( allocateMemory
                              , getDeviceMemoryCommitment
                              , MemoryAllocateInfo(..)
                              , MappedMemoryRange(..)
-                             , MemoryMapFlags(..)
+                             , MemoryMapFlagBits(..)
+                             , MemoryMapFlags
                              ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -91,8 +92,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalBufferI
 import {-# SOURCE #-} Vulkan.Extensions.VK_QNX_external_memory_screen_buffer (ImportScreenBufferInfoQNX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedAllocateInfo)
-import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags)
-import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags(..))
+import Vulkan.Core10.Enums.MemoryMapFlagBits (MemoryMapFlagBits(..))
+import Vulkan.Core10.Enums.MemoryMapFlagBits (MemoryMapFlags)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (MemoryOpaqueCaptureAddressAllocateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (MemoryPriorityAllocateInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
@@ -107,7 +108,8 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MAPPED_MEMORY_RANGE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags(..))
+import Vulkan.Core10.Enums.MemoryMapFlagBits (MemoryMapFlagBits(..))
+import Vulkan.Core10.Enums.MemoryMapFlagBits (MemoryMapFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -503,6 +505,10 @@ foreign import ccall
 -- -   #VUID-vkMapMemory-memory-00683# @memory@ /must/ not have been
 --     allocated with multiple instances
 --
+-- -   #VUID-vkMapMemory-flags-09568#
+--     'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT'
+--     /must/ not be set in @flags@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkMapMemory-device-parameter# @device@ /must/ be a valid
@@ -511,7 +517,9 @@ foreign import ccall
 -- -   #VUID-vkMapMemory-memory-parameter# @memory@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   #VUID-vkMapMemory-flags-zerobitmask# @flags@ /must/ be @0@
+-- -   #VUID-vkMapMemory-flags-parameter# @flags@ /must/ be a valid
+--     combination of
+--     'Vulkan.Core10.Enums.MemoryMapFlagBits.MemoryMapFlagBits' values
 --
 -- -   #VUID-vkMapMemory-ppData-parameter# @ppData@ /must/ be a valid
 --     pointer to a pointer value
@@ -542,7 +550,7 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
+-- 'Vulkan.Core10.Enums.MemoryMapFlagBits.MemoryMapFlags'
 mapMemory :: forall io
            . (MonadIO io)
           => -- | @device@ is the logical device that owns the memory.
@@ -557,7 +565,9 @@ mapMemory :: forall io
              -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to map from @offset@ to the end
              -- of the allocation.
              DeviceSize
-          -> -- | @flags@ is reserved for future use.
+          -> -- | @flags@ is a bitmask of
+             -- 'Vulkan.Core10.Enums.MemoryMapFlagBits.MemoryMapFlagBits' specifying
+             -- additional parameters of the memory map operation.
              MemoryMapFlags
           -> io (("data" ::: Ptr ()))
 mapMemory device memory offset size flags = liftIO . evalContT $ do

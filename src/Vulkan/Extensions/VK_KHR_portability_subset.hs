@@ -3,7 +3,7 @@
 --
 -- VK_KHR_portability_subset - device extension
 --
--- == VK_KHR_portability_subset
+-- = VK_KHR_portability_subset
 --
 -- [__Name String__]
 --     @VK_KHR_portability_subset@

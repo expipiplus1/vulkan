@@ -3,7 +3,7 @@
 --
 -- VK_EXT_texel_buffer_alignment - device extension
 --
--- == VK_EXT_texel_buffer_alignment
+-- = VK_EXT_texel_buffer_alignment
 --
 -- [__Name String__]
 --     @VK_EXT_texel_buffer_alignment@

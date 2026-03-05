@@ -3,7 +3,7 @@
 --
 -- VK_EXT_extended_dynamic_state3 - device extension
 --
--- == VK_EXT_extended_dynamic_state3
+-- = VK_EXT_extended_dynamic_state3
 --
 -- [__Name String__]
 --     @VK_EXT_extended_dynamic_state3@

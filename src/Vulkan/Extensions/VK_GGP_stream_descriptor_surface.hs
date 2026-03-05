@@ -3,7 +3,7 @@
 --
 -- VK_GGP_stream_descriptor_surface - instance extension
 --
--- == VK_GGP_stream_descriptor_surface
+-- = VK_GGP_stream_descriptor_surface
 --
 -- [__Name String__]
 --     @VK_GGP_stream_descriptor_surface@

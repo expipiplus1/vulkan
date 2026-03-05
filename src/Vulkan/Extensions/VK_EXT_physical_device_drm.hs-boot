@@ -3,7 +3,7 @@
 --
 -- VK_EXT_physical_device_drm - device extension
 --
--- == VK_EXT_physical_device_drm
+-- = VK_EXT_physical_device_drm
 --
 -- [__Name String__]
 --     @VK_EXT_physical_device_drm@

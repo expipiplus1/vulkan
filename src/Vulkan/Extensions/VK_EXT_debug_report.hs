@@ -3,7 +3,7 @@
 --
 -- VK_EXT_debug_report - instance extension
 --
--- == VK_EXT_debug_report
+-- = VK_EXT_debug_report
 --
 -- [__Name String__]
 --     @VK_EXT_debug_report@

@@ -3,7 +3,7 @@
 --
 -- VK_KHR_get_physical_device_properties2 - instance extension
 --
--- == VK_KHR_get_physical_device_properties2
+-- = VK_KHR_get_physical_device_properties2
 --
 -- [__Name String__]
 --     @VK_KHR_get_physical_device_properties2@

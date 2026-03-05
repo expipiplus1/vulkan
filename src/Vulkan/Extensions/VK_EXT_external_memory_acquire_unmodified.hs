@@ -3,7 +3,7 @@
 --
 -- VK_EXT_external_memory_acquire_unmodified - device extension
 --
--- == VK_EXT_external_memory_acquire_unmodified
+-- = VK_EXT_external_memory_acquire_unmodified
 --
 -- [__Name String__]
 --     @VK_EXT_external_memory_acquire_unmodified@

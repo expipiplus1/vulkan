@@ -3,7 +3,7 @@
 --
 -- VK_EXT_acquire_drm_display - instance extension
 --
--- == VK_EXT_acquire_drm_display
+-- = VK_EXT_acquire_drm_display
 --
 -- [__Name String__]
 --     @VK_EXT_acquire_drm_display@

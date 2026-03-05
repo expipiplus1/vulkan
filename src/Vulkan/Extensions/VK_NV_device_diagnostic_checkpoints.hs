@@ -3,7 +3,7 @@
 --
 -- VK_NV_device_diagnostic_checkpoints - device extension
 --
--- == VK_NV_device_diagnostic_checkpoints
+-- = VK_NV_device_diagnostic_checkpoints
 --
 -- [__Name String__]
 --     @VK_NV_device_diagnostic_checkpoints@

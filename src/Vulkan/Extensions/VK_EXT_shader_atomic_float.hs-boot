@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_atomic_float - device extension
 --
--- == VK_EXT_shader_atomic_float
+-- = VK_EXT_shader_atomic_float
 --
 -- [__Name String__]
 --     @VK_EXT_shader_atomic_float@

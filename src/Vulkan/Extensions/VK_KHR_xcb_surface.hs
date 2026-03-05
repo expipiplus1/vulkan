@@ -3,7 +3,7 @@
 --
 -- VK_KHR_xcb_surface - instance extension
 --
--- == VK_KHR_xcb_surface
+-- = VK_KHR_xcb_surface
 --
 -- [__Name String__]
 --     @VK_KHR_xcb_surface@

@@ -3,7 +3,7 @@
 --
 -- VK_EXT_surface_maintenance1 - instance extension
 --
--- == VK_EXT_surface_maintenance1
+-- = VK_EXT_surface_maintenance1
 --
 -- [__Name String__]
 --     @VK_EXT_surface_maintenance1@

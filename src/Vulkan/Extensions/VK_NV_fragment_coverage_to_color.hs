@@ -3,7 +3,7 @@
 --
 -- VK_NV_fragment_coverage_to_color - device extension
 --
--- == VK_NV_fragment_coverage_to_color
+-- = VK_NV_fragment_coverage_to_color
 --
 -- [__Name String__]
 --     @VK_NV_fragment_coverage_to_color@

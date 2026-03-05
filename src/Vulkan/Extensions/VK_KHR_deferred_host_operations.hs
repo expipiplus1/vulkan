@@ -3,7 +3,7 @@
 --
 -- VK_KHR_deferred_host_operations - device extension
 --
--- == VK_KHR_deferred_host_operations
+-- = VK_KHR_deferred_host_operations
 --
 -- [__Name String__]
 --     @VK_KHR_deferred_host_operations@

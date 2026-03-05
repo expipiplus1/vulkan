@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_float16_int8 - device extension
 --
--- == VK_KHR_shader_float16_int8
+-- = VK_KHR_shader_float16_int8
 --
 -- [__Name String__]
 --     @VK_KHR_shader_float16_int8@

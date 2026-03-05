@@ -3,7 +3,7 @@
 --
 -- VK_EXT_opacity_micromap - device extension
 --
--- == VK_EXT_opacity_micromap
+-- = VK_EXT_opacity_micromap
 --
 -- [__Name String__]
 --     @VK_EXT_opacity_micromap@

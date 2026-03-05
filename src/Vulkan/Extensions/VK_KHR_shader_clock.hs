@@ -3,7 +3,7 @@
 --
 -- VK_KHR_shader_clock - device extension
 --
--- == VK_KHR_shader_clock
+-- = VK_KHR_shader_clock
 --
 -- [__Name String__]
 --     @VK_KHR_shader_clock@

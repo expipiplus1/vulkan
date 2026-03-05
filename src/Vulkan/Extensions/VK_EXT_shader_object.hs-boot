@@ -3,7 +3,7 @@
 --
 -- VK_EXT_shader_object - device extension
 --
--- == VK_EXT_shader_object
+-- = VK_EXT_shader_object
 --
 -- [__Name String__]
 --     @VK_EXT_shader_object@
@@ -389,7 +389,9 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INCOMPATIBLE_SHADER_BINARY_EXT'
+--     -   'ERROR_INCOMPATIBLE_SHADER_BINARY_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Result.INCOMPATIBLE_SHADER_BINARY_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
