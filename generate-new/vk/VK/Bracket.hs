@@ -99,6 +99,10 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "MicromapEXT"
     , cdBracket "IndirectCommandsLayoutEXT"
     , cdBracket "IndirectExecutionSetEXT"
+    , cdBracket "TensorARM"
+    , cdBracket "TensorViewARM"
+    , cdBracket "DataGraphPipelineSessionARM"
+    , cdBracket "ExternalComputeQueueNV"
     , pure withCommmandBuffers
     , afBracket "Memory"
     , pure withDescriptorSets

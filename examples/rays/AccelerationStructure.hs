@@ -82,7 +82,7 @@ createTLAS sceneBuffers = do
   release instMapKey
 
   let buildGeometries =
-        [ zero
+        [ SomeStruct zero
             { geometryType = GEOMETRY_TYPE_INSTANCES_KHR
             , geometry = Instances AccelerationStructureGeometryInstancesDataKHR
                            { arrayOfPointers = False
@@ -169,7 +169,7 @@ createBLAS sceneBuffers = do
                        , mode = BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR -- ignored but used later
                        , srcAccelerationStructure = NULL_HANDLE -- ignored
                        , dstAccelerationStructure = NULL_HANDLE -- ignored
-                       , geometries = [sceneGeom]
+                       , geometries = [SomeStruct sceneGeom]
                        , scratchData = zero
                        }
       maxPrimitiveCounts = [sceneSize sceneBuffers]
@@ -187,7 +187,7 @@ createBLAS sceneBuffers = do
 sceneGeometry
   :: SceneBuffers
   -> V
-       ( AccelerationStructureGeometryKHR
+       ( AccelerationStructureGeometryKHR '[]
        , Vector AccelerationStructureBuildRangeInfoKHR
        )
 sceneGeometry SceneBuffers {..} = do
@@ -196,7 +196,7 @@ sceneGeometry SceneBuffers {..} = do
         { data'  = DeviceAddressConst boxAddr
         , stride = fromIntegral (sizeOf (undefined :: AabbPositionsKHR))
         }
-      geom :: AccelerationStructureGeometryKHR
+      geom :: AccelerationStructureGeometryKHR '[]
       geom = zero { geometryType = GEOMETRY_TYPE_AABBS_KHR
                   , flags        = GEOMETRY_OPAQUE_BIT_KHR
                   , geometry     = Aabbs boxData

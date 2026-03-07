@@ -150,7 +150,8 @@ specSpecInfo Spec {..} siTypeSize =
       in  go
     siExtensionType =
       let exMap = Map.fromList
-            [ (exName, exType) | Extension {..} <- toList specExtensions ]
+            $  [ (exName, exType) | Extension {..} <- toList specExtensions ]
+            <> [ (exName, exType) | Extension {..} <- toList specDisabledExtensions ]
       in  (`Map.lookup` exMap)
     siExtensionDeps =
       let

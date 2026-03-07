@@ -97,6 +97,20 @@ forceDisabledExtensions =
   , "VK_KHR_video_encode_queue"
   , "VK_KHR_video_queue"
   , "VK_KHR_video_maintenance1"
+  , "VK_KHR_video_maintenance2"
+  , "VK_KHR_video_decode_vp9"
+  , "VK_KHR_video_encode_intra_refresh"
+  , "VK_VALVE_video_encode_rgb_conversion"
+    -- C parser can't handle members where type name == member name
+  , "VK_SEC_ubm_surface"
+    -- Bitfield structs: size calculator can't handle C bitfields
+  , "VK_NV_cluster_acceleration_structure"
+  , "VK_NV_partitioned_acceleration_structure"
+    -- Marshaling: const VkDeviceAddress* without len attribute
+  , "VK_ARM_performance_counters_by_region"
+    -- Platform-specific: OHOS types not available
+  , "VK_OHOS_external_memory"
+  , "VK_OHOS_surface"
     -- Unresolved queries in Vulkan-Docs
   -- , "VK_HUAWEI_subpass_shading" -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1564
   ]
