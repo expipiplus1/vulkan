@@ -255,7 +255,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_full_screen_exclusive Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -425,17 +425,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -511,11 +515,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -599,13 +607,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -676,11 +688,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -876,7 +892,8 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
-  { -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"
+  { -- | @fullScreenExclusiveSupported@ is a boolean describing whether the
+    -- surface is able to make use of exclusive full-screen access.
     fullScreenExclusiveSupported :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -919,6 +936,28 @@ instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
 -- | VkFullScreenExclusiveEXT - Hint values an application can specify
 -- affecting full-screen transition behavior
 --
+-- = Description
+--
+-- -   'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT' specifies that the
+--     implementation /should/ determine the appropriate full-screen method
+--     by whatever means it deems appropriate.
+--
+-- -   'FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT' specifies that the
+--     implementation /may/ use full-screen exclusive mechanisms when
+--     available. Such mechanisms /may/ result in better performance
+--     and\/or the availability of different presentation capabilities, but
+--     /may/ require a more disruptive transition during swapchain
+--     initialization, first presentation and\/or destruction.
+--
+-- -   'FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT' specifies that the
+--     implementation /should/ avoid using full-screen mechanisms which
+--     rely on disruptive transitions.
+--
+-- -   'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' specifies that
+--     the application will manage full-screen exclusive mode by using the
+--     'acquireFullScreenExclusiveModeEXT' and
+--     'releaseFullScreenExclusiveModeEXT' commands.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
@@ -926,28 +965,16 @@ instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
 newtype FullScreenExclusiveEXT = FullScreenExclusiveEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT' specifies that the implementation
--- /should/ determine the appropriate full-screen method by whatever means
--- it deems appropriate.
+-- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT"
 pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = FullScreenExclusiveEXT 0
 
--- | 'FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT' specifies that the implementation
--- /may/ use full-screen exclusive mechanisms when available. Such
--- mechanisms /may/ result in better performance and\/or the availability
--- of different presentation capabilities, but /may/ require a more
--- disruptive transition during swapchain initialization, first
--- presentation and\/or destruction.
+-- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT"
 pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = FullScreenExclusiveEXT 1
 
--- | 'FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT' specifies that the implementation
--- /should/ avoid using full-screen mechanisms which rely on disruptive
--- transitions.
+-- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT"
 pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = FullScreenExclusiveEXT 2
 
--- | 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' specifies that the
--- application will manage full-screen exclusive mode by using the
--- 'acquireFullScreenExclusiveModeEXT' and
--- 'releaseFullScreenExclusiveModeEXT' commands.
+-- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT"
 pattern FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = FullScreenExclusiveEXT 3
 
 {-# COMPLETE

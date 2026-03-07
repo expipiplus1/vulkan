@@ -99,7 +99,7 @@
 -- is inconvenient.
 --
 -- 3) On some hardware, this query cannot be implemented if
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
 -- is enabled. How will this be handled?
 --
 -- __RESOLVED__: A feature flag is exposed by this extension for this. On
@@ -135,7 +135,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_primitives_generated_query Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_primitives_generated_query Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

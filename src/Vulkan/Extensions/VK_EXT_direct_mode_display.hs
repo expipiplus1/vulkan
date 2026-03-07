@@ -99,7 +99,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_direct_mode_display Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_direct_mode_display Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -114,6 +114,7 @@ module Vulkan.Extensions.VK_EXT_direct_mode_display  ( releaseDisplayEXT
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Control.Monad.IO.Class (MonadIO)
@@ -131,6 +132,8 @@ import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (DisplayKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -148,7 +151,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     None
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -176,10 +182,10 @@ releaseDisplayEXT physicalDevice display = liftIO $ do
   unless (vkReleaseDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseDisplayEXT is null" Nothing Nothing
   let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT vkReleaseDisplayEXTPtr
-  _ <- traceAroundEvent "vkReleaseDisplayEXT" (vkReleaseDisplayEXT'
+  r <- traceAroundEvent "vkReleaseDisplayEXT" (vkReleaseDisplayEXT'
                                                  (physicalDeviceHandle (physicalDevice))
                                                  (display))
-  pure $ ()
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 type EXT_DIRECT_MODE_DISPLAY_SPEC_VERSION = 1

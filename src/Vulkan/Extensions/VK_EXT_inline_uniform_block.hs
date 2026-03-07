@@ -125,9 +125,9 @@
 -- functionality.
 --
 -- Vulkan 1.3 adds
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.3-new-features additional functionality related to this extension>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions-1.3-new-features additional functionality related to this extension>
 -- in the form of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
 -- limit.
 --
 -- == Issues
@@ -175,7 +175,7 @@
 -- inline uniform blocks.
 --
 -- 5) Is the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBindingVariableDescriptorCount descriptorBindingVariableDescriptorCount>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingVariableDescriptorCount descriptorBindingVariableDescriptorCount>
 -- feature introduced by @VK_EXT_descriptor_indexing@ supported for inline
 -- uniform blocks?
 --
@@ -201,7 +201,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_inline_uniform_block Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_inline_uniform_block Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

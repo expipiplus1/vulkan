@@ -37,10 +37,12 @@ instance Show PipelineRenderingCreateInfo
 instance FromCStruct PipelineRenderingCreateInfo
 
 
-data RenderingAttachmentInfo
+type role RenderingAttachmentInfo nominal
+data RenderingAttachmentInfo (es :: [Type])
 
-instance ToCStruct RenderingAttachmentInfo
-instance Show RenderingAttachmentInfo
+instance ( Extendss RenderingAttachmentInfo es
+         , PokeChain es ) => ToCStruct (RenderingAttachmentInfo es)
+instance Show (Chain es) => Show (RenderingAttachmentInfo es)
 
 
 type role RenderingInfo nominal

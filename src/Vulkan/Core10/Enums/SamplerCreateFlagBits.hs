@@ -28,12 +28,39 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 --
 -- = Description
 --
+-- -   #samplers-subsamplesampler# 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
+--     specifies that the sampler will read from an image created with
+--     @flags@ containing
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
+--
+-- -   'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies
+--     that the implementation /may/ use approximations when reconstructing
+--     a full color value for texture access from a subsampled image.
+--
+-- -   'SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT' specifies that
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-cubemapedge cube map edge handling>
+--     is not performed.
+--
+-- -   #samplers-imageprocessingsampler#
+--     'SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM' specifies that the
+--     sampler will read from images using only
+--     @OpImageSampleWeightedQCOM@, @OpImageBoxFilterQCOM@,
+--     @OpImageBlockMatchGatherSSDQCOM@, @OpImageBlockMatchGatherSADQCOM@,
+--     @OpImageBlockMatchWindowSSDQCOM@, @OpImageBlockMatchWindowSADQCOM@,
+--     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@.
+--
 -- The approximations used when
 -- 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' is specified
 -- are implementation defined. Some implementations /may/ interpolate
 -- between fragment density levels in a subsampled image. In that case,
 -- this bit /may/ be used to decide whether the interpolation factors are
 -- calculated per fragment or at a coarser granularity.
+--
+-- -   'SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies
+--     that the sampler /can/ be used with descriptor buffers when
+--     capturing and replaying (e.g. for trace capture and replay), see
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     for more detail.
 --
 -- = See Also
 --
@@ -42,36 +69,19 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 newtype SamplerCreateFlagBits = SamplerCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | #samplers-imageprocessingsampler#
--- 'SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM' specifies that the sampler
--- will read from images using only @OpImageWeightedSampleQCOM@,
--- @OpImageBoxFilterQCOM@, @OpImageBlockMatchGatherSSDQCOM@,
--- @OpImageBlockMatchGatherSADQCOM@, @OpImageBlockMatchWindowSSDQCOM@,
--- @OpImageBlockMatchWindowSADQCOM@, @OpImageBlockMatchSSDQCOM@, or
--- @OpImageBlockMatchSADQCOM@.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM"
 pattern SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM = SamplerCreateFlagBits 0x00000010
 
--- | 'SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT' specifies that
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-cubemapedge cube map edge handling>
--- is not performed.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT"
 pattern SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT = SamplerCreateFlagBits 0x00000004
 
--- | 'SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies that
--- the sampler /can/ be used with descriptor buffers when capturing and
--- replaying (e.g. for trace capture and replay), see
--- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
--- for more detail.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
 pattern SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = SamplerCreateFlagBits 0x00000008
 
--- | 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies that
--- the implementation /may/ use approximations when reconstructing a full
--- color value for texture access from a subsampled image.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"
 pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = SamplerCreateFlagBits 0x00000002
 
--- | #samplers-subsamplesampler# 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
--- specifies that the sampler will read from an image created with @flags@
--- containing
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"
 pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = SamplerCreateFlagBits 0x00000001
 
 conNameSamplerCreateFlagBits :: String

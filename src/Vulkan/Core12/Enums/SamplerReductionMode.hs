@@ -18,6 +18,26 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkSamplerReductionMode - Specify reduction mode for texture filtering
 --
+-- = Description
+--
+-- -   'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE' specifies that texel
+--     values are combined by computing a weighted average of values in the
+--     footprint, using weights as specified in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-unnormalized-to-integer the image operations chapter>.
+--
+-- -   'SAMPLER_REDUCTION_MODE_MIN' specifies that texel values are
+--     combined by taking the component-wise minimum of values in the
+--     footprint with non-zero weights.
+--
+-- -   'SAMPLER_REDUCTION_MODE_MAX' specifies that texel values are
+--     combined by taking the component-wise maximum of values in the
+--     footprint with non-zero weights.
+--
+-- -   'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM' specifies
+--     values are combined as described by
+--     'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE', followed by a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-texel-range-clamp texel range clamp>.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax VK_EXT_sampler_filter_minmax>,
@@ -26,26 +46,16 @@ import GHC.Show (Show(showsPrec))
 newtype SamplerReductionMode = SamplerReductionMode Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE' specifies that texel values
--- are combined by computing a weighted average of values in the footprint,
--- using weights as specified in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-unnormalized-to-integer the image operations chapter>.
+-- No documentation found for Nested "VkSamplerReductionMode" "VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE"
 pattern SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE = SamplerReductionMode 0
 
--- | 'SAMPLER_REDUCTION_MODE_MIN' specifies that texel values are combined by
--- taking the component-wise minimum of values in the footprint with
--- non-zero weights.
+-- No documentation found for Nested "VkSamplerReductionMode" "VK_SAMPLER_REDUCTION_MODE_MIN"
 pattern SAMPLER_REDUCTION_MODE_MIN = SamplerReductionMode 1
 
--- | 'SAMPLER_REDUCTION_MODE_MAX' specifies that texel values are combined by
--- taking the component-wise maximum of values in the footprint with
--- non-zero weights.
+-- No documentation found for Nested "VkSamplerReductionMode" "VK_SAMPLER_REDUCTION_MODE_MAX"
 pattern SAMPLER_REDUCTION_MODE_MAX = SamplerReductionMode 2
 
--- | 'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM' specifies
--- values are combined as described by
--- 'SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE', followed by a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-range-clamp texel range clamp>.
+-- No documentation found for Nested "VkSamplerReductionMode" "VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM"
 pattern SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_RANGECLAMP_QCOM = SamplerReductionMode 1000521000
 
 {-# COMPLETE

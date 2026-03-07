@@ -41,10 +41,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceUniformBufferStandardLayoutFeatures' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceUniformBufferStandardLayoutFeatures', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -59,7 +62,7 @@ data PhysicalDeviceUniformBufferStandardLayoutFeatures = PhysicalDeviceUniformBu
     -- @uniformBufferStandardLayout@ indicates that the implementation supports
     -- the same layouts for uniform buffers as for storage and other kinds of
     -- buffers. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
     uniformBufferStandardLayout :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

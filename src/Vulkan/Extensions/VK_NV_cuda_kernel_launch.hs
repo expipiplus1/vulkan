@@ -21,7 +21,9 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     None
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
@@ -179,7 +181,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_cuda_kernel_launch Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_cuda_kernel_launch Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -322,6 +324,9 @@ foreign import ccall
 -- -   #VUID-vkCreateCudaModuleNV-pModule-parameter# @pModule@ /must/ be a
 --     valid pointer to a 'Vulkan.Extensions.Handles.CudaModuleNV' handle
 --
+-- -   #VUID-vkCreateCudaModuleNV-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -333,6 +338,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -347,7 +356,7 @@ createCudaModuleNV :: forall io
                    -> -- | @pCreateInfo@ is a pointer to a 'CudaModuleCreateInfoNV' structure.
                       CudaModuleCreateInfoNV
                    -> -- | @pAllocator@ controls host memory allocation as described in the
-                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                       -- chapter.
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (CudaModuleNV)
@@ -421,6 +430,15 @@ foreign import ccall
 -- event of a new driver version or if using a different device
 -- architecture, this cache /may/ become invalid.
 --
+-- This query does not behave consistently with the behavior described in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-binaryresults Opaque Binary Data Results>,
+-- for historical reasons.
+--
+-- If the amount of data available is larger than the passed @pDataSize@,
+-- the query returns a 'Vulkan.Core10.Enums.Result.INCOMPLETE' success
+-- status instead of a
+-- 'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR' error status.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetCudaModuleCacheNV-device-parameter# @device@ /must/ be a
@@ -444,13 +462,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -516,6 +538,9 @@ foreign import ccall
 --     be a valid pointer to a 'Vulkan.Extensions.Handles.CudaFunctionNV'
 --     handle
 --
+-- -   #VUID-vkCreateCudaFunctionNV-device-queuecount# The device /must/
+--     have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -527,6 +552,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -541,7 +570,7 @@ createCudaFunctionNV :: forall io
                      -> -- | @pCreateInfo@ is a pointer to a 'CudaFunctionCreateInfoNV' structure.
                         CudaFunctionCreateInfoNV
                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (CudaFunctionNV)
@@ -614,7 +643,7 @@ destroyCudaModuleNV :: forall io
                     -> -- | @module@ is the handle of the CUDA module to destroy.
                        CudaModuleNV
                     -> -- | @pAllocator@ controls host memory allocation as described in the
-                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                       -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                        -- chapter.
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
@@ -670,7 +699,7 @@ destroyCudaFunctionNV :: forall io
                       -> -- | @function@ is the handle of the CUDA function to destroy.
                          CudaFunctionNV
                       -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
@@ -718,7 +747,12 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCudaLaunchKernelNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
+--
+-- -   #VUID-vkCmdCudaLaunchKernelNV-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCudaLaunchKernelNV-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -735,9 +769,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCudaLaunchKernelNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1074,9 +1113,13 @@ instance Zero CudaLaunchInfoNV where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCudaKernelLaunchFeaturesNV' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCudaKernelLaunchFeaturesNV', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

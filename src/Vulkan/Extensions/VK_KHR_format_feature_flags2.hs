@@ -25,6 +25,16 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_2
+--
+--     -   Interacts with VK_EXT_filter_cubic
+--
+--     -   Interacts with VK_EXT_sampler_filter_minmax
+--
+--     -   Interacts with VK_IMG_filter_cubic
+--
 -- [__Deprecation State__]
 --
 --     -   /Promoted/ to
@@ -77,16 +87,15 @@
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits',
 -- 'FormatFeatureFlagBits2KHR' adds the following bits :
 --
--- -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
---     and
---     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
---     specify that an implementation supports reading and writing,
---     respectively, a given 'Vulkan.Core10.Enums.Format.Format' through
---     storage operations without specifying the format in the shader.
+-- -   'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR' and
+--     'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR' specify that
+--     an implementation supports reading and writing, respectively, a
+--     given 'Vulkan.Core10.Enums.Format.Format' through storage operations
+--     without specifying the format in the shader.
 --
--- -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
---     specifies that an implementation supports depth comparison performed
---     by @OpImage*Dref*@ instructions on a given
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR' specifies
+--     that an implementation supports depth comparison performed by
+--     @OpImage*Dref*@ instructions on a given
 --     'Vulkan.Core10.Enums.Format.Format'. Previously the result of
 --     executing a @OpImage*Dref*@ instruction on an image view, where the
 --     @format@ was not one of the depth\/stencil formats with a depth
@@ -94,14 +103,13 @@
 --     instructions can be used.
 --
 -- Prior to version 2 of this extension, implementations exposing the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageReadWithoutFormat shaderStorageImageReadWithoutFormat>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderStorageImageReadWithoutFormat shaderStorageImageReadWithoutFormat>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageWriteWithoutFormat shaderStorageImageWriteWithoutFormat>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderStorageImageWriteWithoutFormat shaderStorageImageWriteWithoutFormat>
 -- features may not report
--- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
--- and
--- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
--- in 'FormatProperties3KHR'::@bufferFeatures@. Despite this, buffer
+-- 'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR' and
+-- 'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR' in
+-- 'FormatProperties3KHR'::@bufferFeatures@. Despite this, buffer
 -- reads\/writes are supported as intended by the original features.
 --
 -- == New Structures
@@ -125,9 +133,84 @@
 --
 -- -   'KHR_FORMAT_FEATURE_FLAGS_2_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
+--
+--     -   'FORMAT_FEATURE_2_BLIT_DST_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_DISJOINT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR'
+--
+--     -   'FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic VK_EXT_filter_cubic>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_IMG_filter_cubic VK_IMG_filter_cubic>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax VK_EXT_sampler_filter_minmax>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
+--
+--     -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR'
 --
 -- == Promotion to Vulkan 1.3
 --
@@ -156,11 +239,38 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_format_feature_flags2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_format_feature_flags2  ( pattern STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_BLIT_DST_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_DISJOINT_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT
                                                        , FormatFeatureFlags2KHR
                                                        , FormatFeatureFlagBits2KHR
                                                        , FormatProperties3KHR
@@ -174,9 +284,171 @@ import Data.String (IsString)
 import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2)
 import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
 import Vulkan.Core13.Promoted_From_VK_KHR_format_feature_flags2 (FormatProperties3)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_BLIT_DST_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_BLIT_SRC_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_DISJOINT_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_STORAGE_IMAGE_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_TRANSFER_DST_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_TRANSFER_SRC_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT))
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_VERTEX_BUFFER_BIT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_FORMAT_PROPERTIES_3))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR"
 pattern STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR = STRUCTURE_TYPE_FORMAT_PROPERTIES_3
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR"
+pattern FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR = FORMAT_FEATURE_2_STORAGE_IMAGE_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR"
+pattern FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR = FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR"
+pattern FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR = FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR"
+pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR = FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR"
+pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR = FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR"
+pattern FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR = FORMAT_FEATURE_2_VERTEX_BUFFER_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR"
+pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR = FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR"
+pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR = FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"
+pattern FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR = FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR"
+pattern FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR = FORMAT_FEATURE_2_BLIT_SRC_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_BLIT_DST_BIT_KHR"
+pattern FORMAT_FEATURE_2_BLIT_DST_BIT_KHR = FORMAT_FEATURE_2_BLIT_DST_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR"
+pattern FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR = FORMAT_FEATURE_2_TRANSFER_SRC_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR"
+pattern FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR = FORMAT_FEATURE_2_TRANSFER_DST_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR"
+pattern FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR = FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_DISJOINT_BIT_KHR"
+pattern FORMAT_FEATURE_2_DISJOINT_BIT_KHR = FORMAT_FEATURE_2_DISJOINT_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR"
+pattern FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR = FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR"
+pattern FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR = FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR"
+pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR = FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR = FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT
 
 
 -- No documentation found for TopLevel "VkFormatFeatureFlags2KHR"

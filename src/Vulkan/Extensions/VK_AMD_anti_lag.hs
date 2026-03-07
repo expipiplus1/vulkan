@@ -21,7 +21,9 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     None
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -104,7 +106,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_anti_lag Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_anti_lag Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -191,7 +193,7 @@ foreign import ccall
 --
 -- This command should be executed immediately before the application
 -- processes user input. If @pData@ is not @NULL@ and
--- 'AntiLagDataAMD'::@presentationInfo@ is not @NULL@, this command
+-- 'AntiLagDataAMD'::@pPresentationInfo@ is not @NULL@, this command
 -- /should/ be executed again before
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR', with
 -- @pPresentationInfo@ set to matching values.
@@ -199,7 +201,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkAntiLagUpdateAMD-antiLag-10061# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-antiLag antiLag>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-antiLag antiLag>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -249,9 +251,13 @@ antiLagUpdateAMD device data' = liftIO . evalContT $ do
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceAntiLagFeaturesAMD' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
--- enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceAntiLagFeaturesAMD', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -457,6 +463,15 @@ instance Zero AntiLagPresentationInfoAMD where
 
 -- | VkAntiLagModeAMD - Set the status of the anti-lag feature
 --
+-- = Description
+--
+-- -   'ANTI_LAG_MODE_DRIVER_CONTROL_AMD' specifies that anti-lag will be
+--     enabled or disabled depending on driver settings.
+--
+-- -   'ANTI_LAG_MODE_ON_AMD' specifies that anti-lag will be enabled.
+--
+-- -   'ANTI_LAG_MODE_OFF_AMD' specifies that anti-lag will be disabled.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_anti_lag VK_AMD_anti_lag>,
@@ -464,14 +479,13 @@ instance Zero AntiLagPresentationInfoAMD where
 newtype AntiLagModeAMD = AntiLagModeAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'ANTI_LAG_MODE_DRIVER_CONTROL_AMD' specifies that anti-lag will be
--- enabled or disabled depending on driver settings.
+-- No documentation found for Nested "VkAntiLagModeAMD" "VK_ANTI_LAG_MODE_DRIVER_CONTROL_AMD"
 pattern ANTI_LAG_MODE_DRIVER_CONTROL_AMD = AntiLagModeAMD 0
 
--- | 'ANTI_LAG_MODE_ON_AMD' specifies that anti-lag will be enabled.
+-- No documentation found for Nested "VkAntiLagModeAMD" "VK_ANTI_LAG_MODE_ON_AMD"
 pattern ANTI_LAG_MODE_ON_AMD = AntiLagModeAMD 1
 
--- | 'ANTI_LAG_MODE_OFF_AMD' specifies that anti-lag will be disabled.
+-- No documentation found for Nested "VkAntiLagModeAMD" "VK_ANTI_LAG_MODE_OFF_AMD"
 pattern ANTI_LAG_MODE_OFF_AMD = AntiLagModeAMD 2
 
 {-# COMPLETE
@@ -516,6 +530,14 @@ instance Read AntiLagModeAMD where
 
 -- | VkAntiLagStageAMD - Report the application stage
 --
+-- = Description
+--
+-- -   'ANTI_LAG_STAGE_INPUT_AMD' specifies the stage before processing
+--     input.
+--
+-- -   'ANTI_LAG_STAGE_PRESENT_AMD' specifies the stage before
+--     'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_anti_lag VK_AMD_anti_lag>,
@@ -523,11 +545,10 @@ instance Read AntiLagModeAMD where
 newtype AntiLagStageAMD = AntiLagStageAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'ANTI_LAG_STAGE_INPUT_AMD' specifies the stage before processing input.
+-- No documentation found for Nested "VkAntiLagStageAMD" "VK_ANTI_LAG_STAGE_INPUT_AMD"
 pattern ANTI_LAG_STAGE_INPUT_AMD = AntiLagStageAMD 0
 
--- | 'ANTI_LAG_STAGE_PRESENT_AMD' specifies the stage before
--- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
+-- No documentation found for Nested "VkAntiLagStageAMD" "VK_ANTI_LAG_STAGE_PRESENT_AMD"
 pattern ANTI_LAG_STAGE_PRESENT_AMD = AntiLagStageAMD 1
 
 {-# COMPLETE

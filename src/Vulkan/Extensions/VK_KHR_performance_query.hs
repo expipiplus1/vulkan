@@ -459,7 +459,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -665,17 +665,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -809,6 +813,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
 --
 -- = See Also
@@ -915,9 +923,13 @@ pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PERFORMANCE_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePerformanceQueryFeaturesKHR' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePerformanceQueryFeaturesKHR', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1208,7 +1220,7 @@ instance Zero PerformanceCounterDescriptionKHR where
 --
 -- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-performanceCounterQueryPools-03237#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-pCounterIndices-03321#
@@ -1441,6 +1453,19 @@ instance Zero PerformanceCounterResultKHR where
 
 -- | VkPerformanceCounterScopeKHR - Supported counter scope types
 --
+-- = Description
+--
+-- -   'PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR' - the performance
+--     counter scope is a single complete command buffer.
+--
+-- -   'PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR' - the performance
+--     counter scope is zero or more complete render passes. The
+--     performance query containing the performance counter /must/ begin
+--     and end outside a render pass instance.
+--
+-- -   'PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR' - the performance counter
+--     scope is zero or more commands.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
@@ -1448,18 +1473,13 @@ instance Zero PerformanceCounterResultKHR where
 newtype PerformanceCounterScopeKHR = PerformanceCounterScopeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR' - the performance counter
--- scope is a single complete command buffer.
+-- No documentation found for Nested "VkPerformanceCounterScopeKHR" "VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR"
 pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = PerformanceCounterScopeKHR 0
 
--- | 'PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR' - the performance counter
--- scope is zero or more complete render passes. The performance query
--- containing the performance counter /must/ begin and end outside a render
--- pass instance.
+-- No documentation found for Nested "VkPerformanceCounterScopeKHR" "VK_PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR"
 pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR = PerformanceCounterScopeKHR 1
 
--- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR' - the performance counter scope
--- is zero or more commands.
+-- No documentation found for Nested "VkPerformanceCounterScopeKHR" "VK_PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR"
 pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR = PerformanceCounterScopeKHR 2
 
 {-# COMPLETE
@@ -1510,6 +1530,41 @@ instance Read PerformanceCounterScopeKHR where
 
 -- | VkPerformanceCounterUnitKHR - Supported counter unit types
 --
+-- = Description
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_GENERIC_KHR' - the performance counter
+--     unit is a generic data point.
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR' - the performance counter
+--     unit is a percentage (%).
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR' - the performance counter
+--     unit is a value of nanoseconds (ns).
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_BYTES_KHR' - the performance counter unit
+--     is a value of bytes.
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR' - the performance
+--     counter unit is a value of bytes\/s.
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_KELVIN_KHR' - the performance counter unit
+--     is a temperature reported in Kelvin.
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_WATTS_KHR' - the performance counter unit
+--     is a value of watts (W).
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_VOLTS_KHR' - the performance counter unit
+--     is a value of volts (V).
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_AMPS_KHR' - the performance counter unit
+--     is a value of amps (A).
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_HERTZ_KHR' - the performance counter unit
+--     is a value of hertz (Hz).
+--
+-- -   'PERFORMANCE_COUNTER_UNIT_CYCLES_KHR' - the performance counter unit
+--     is a value of cycles.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
@@ -1517,48 +1572,37 @@ instance Read PerformanceCounterScopeKHR where
 newtype PerformanceCounterUnitKHR = PerformanceCounterUnitKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_COUNTER_UNIT_GENERIC_KHR' - the performance counter unit is
--- a generic data point.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_GENERIC_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR = PerformanceCounterUnitKHR 0
 
--- | 'PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR' - the performance counter unit
--- is a percentage (%).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR = PerformanceCounterUnitKHR 1
 
--- | 'PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR' - the performance counter
--- unit is a value of nanoseconds (ns).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR = PerformanceCounterUnitKHR 2
 
--- | 'PERFORMANCE_COUNTER_UNIT_BYTES_KHR' - the performance counter unit is a
--- value of bytes.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_BYTES_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR = PerformanceCounterUnitKHR 3
 
--- | 'PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR' - the performance
--- counter unit is a value of bytes\/s.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR = PerformanceCounterUnitKHR 4
 
--- | 'PERFORMANCE_COUNTER_UNIT_KELVIN_KHR' - the performance counter unit is
--- a temperature reported in Kelvin.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_KELVIN_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR = PerformanceCounterUnitKHR 5
 
--- | 'PERFORMANCE_COUNTER_UNIT_WATTS_KHR' - the performance counter unit is a
--- value of watts (W).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_WATTS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR = PerformanceCounterUnitKHR 6
 
--- | 'PERFORMANCE_COUNTER_UNIT_VOLTS_KHR' - the performance counter unit is a
--- value of volts (V).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_VOLTS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR = PerformanceCounterUnitKHR 7
 
--- | 'PERFORMANCE_COUNTER_UNIT_AMPS_KHR' - the performance counter unit is a
--- value of amps (A).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_AMPS_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR = PerformanceCounterUnitKHR 8
 
--- | 'PERFORMANCE_COUNTER_UNIT_HERTZ_KHR' - the performance counter unit is a
--- value of hertz (Hz).
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_HERTZ_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR = PerformanceCounterUnitKHR 9
 
--- | 'PERFORMANCE_COUNTER_UNIT_CYCLES_KHR' - the performance counter unit is
--- a value of cycles.
+-- No documentation found for Nested "VkPerformanceCounterUnitKHR" "VK_PERFORMANCE_COUNTER_UNIT_CYCLES_KHR"
 pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR = PerformanceCounterUnitKHR 10
 
 {-# COMPLETE
@@ -1649,6 +1693,26 @@ instance Read PerformanceCounterUnitKHR where
 
 -- | VkPerformanceCounterStorageKHR - Supported counter storage types
 --
+-- = Description
+--
+-- -   'PERFORMANCE_COUNTER_STORAGE_INT32_KHR' - the performance counter
+--     storage is a 32-bit signed integer.
+--
+-- -   'PERFORMANCE_COUNTER_STORAGE_INT64_KHR' - the performance counter
+--     storage is a 64-bit signed integer.
+--
+-- -   'PERFORMANCE_COUNTER_STORAGE_UINT32_KHR' - the performance counter
+--     storage is a 32-bit unsigned integer.
+--
+-- -   'PERFORMANCE_COUNTER_STORAGE_UINT64_KHR' - the performance counter
+--     storage is a 64-bit unsigned integer.
+--
+-- -   'PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR' - the performance counter
+--     storage is a 32-bit floating-point.
+--
+-- -   'PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR' - the performance counter
+--     storage is a 64-bit floating-point.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
@@ -1656,28 +1720,22 @@ instance Read PerformanceCounterUnitKHR where
 newtype PerformanceCounterStorageKHR = PerformanceCounterStorageKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PERFORMANCE_COUNTER_STORAGE_INT32_KHR' - the performance counter
--- storage is a 32-bit signed integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_INT32_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR = PerformanceCounterStorageKHR 0
 
--- | 'PERFORMANCE_COUNTER_STORAGE_INT64_KHR' - the performance counter
--- storage is a 64-bit signed integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_INT64_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR = PerformanceCounterStorageKHR 1
 
--- | 'PERFORMANCE_COUNTER_STORAGE_UINT32_KHR' - the performance counter
--- storage is a 32-bit unsigned integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_UINT32_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR = PerformanceCounterStorageKHR 2
 
--- | 'PERFORMANCE_COUNTER_STORAGE_UINT64_KHR' - the performance counter
--- storage is a 64-bit unsigned integer.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_UINT64_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR = PerformanceCounterStorageKHR 3
 
--- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR' - the performance counter
--- storage is a 32-bit floating-point.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = PerformanceCounterStorageKHR 4
 
--- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR' - the performance counter
--- storage is a 64-bit floating-point.
+-- No documentation found for Nested "VkPerformanceCounterStorageKHR" "VK_PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR"
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = PerformanceCounterStorageKHR 5
 
 {-# COMPLETE
@@ -1746,6 +1804,17 @@ type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBi
 -- | VkPerformanceCounterDescriptionFlagBitsKHR - Bitmask specifying usage
 -- behavior for a counter
 --
+-- = Description
+--
+-- -   'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
+--     specifies that recording the counter /may/ have a noticeable
+--     performance impact.
+--
+-- -   'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR'
+--     specifies that concurrently recording the counter while other
+--     submitted command buffers are running /may/ impact the accuracy of
+--     the recording.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
@@ -1753,14 +1822,10 @@ type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBi
 newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescriptionFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
--- specifies that recording the counter /may/ have a noticeable performance
--- impact.
+-- No documentation found for Nested "VkPerformanceCounterDescriptionFlagBitsKHR" "VK_PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR"
 pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000001
 
--- | 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR'
--- specifies that concurrently recording the counter while other submitted
--- command buffers are running /may/ impact the accuracy of the recording.
+-- No documentation found for Nested "VkPerformanceCounterDescriptionFlagBitsKHR" "VK_PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR"
 pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000002
 
 conNamePerformanceCounterDescriptionFlagBitsKHR :: String

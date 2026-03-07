@@ -54,7 +54,7 @@
 --
 -- == Description
 --
--- This extension provides the 'ValidationFlagsEXT' struct that can be
+-- This extension provides the 'ValidationFlagsEXT' structure that can be
 -- included in the @pNext@ chain of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- as the @pCreateInfo@ parameter of
@@ -108,7 +108,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_validation_flags Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_validation_flags Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -213,6 +213,14 @@ instance Zero ValidationFlagsEXT where
 
 -- | VkValidationCheckEXT - Specify validation checks to disable
 --
+-- = Description
+--
+-- -   'VALIDATION_CHECK_ALL_EXT' specifies that all validation checks are
+--     disabled.
+--
+-- -   'VALIDATION_CHECK_SHADERS_EXT' specifies that shader validation is
+--     disabled.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags VK_EXT_validation_flags>,
@@ -220,12 +228,10 @@ instance Zero ValidationFlagsEXT where
 newtype ValidationCheckEXT = ValidationCheckEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'VALIDATION_CHECK_ALL_EXT' specifies that all validation checks are
--- disabled.
+-- No documentation found for Nested "VkValidationCheckEXT" "VK_VALIDATION_CHECK_ALL_EXT"
 pattern VALIDATION_CHECK_ALL_EXT = ValidationCheckEXT 0
 
--- | 'VALIDATION_CHECK_SHADERS_EXT' specifies that shader validation is
--- disabled.
+-- No documentation found for Nested "VkValidationCheckEXT" "VK_VALIDATION_CHECK_SHADERS_EXT"
 pattern VALIDATION_CHECK_SHADERS_EXT = ValidationCheckEXT 1
 
 {-# COMPLETE

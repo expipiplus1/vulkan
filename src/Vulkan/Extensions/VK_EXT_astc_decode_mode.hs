@@ -153,7 +153,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_astc_decode_mode Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_astc_decode_mode Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -201,7 +201,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --     'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32'
 --
 -- -   #VUID-VkImageViewASTCDecodeModeEXT-decodeMode-02231# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-astc-decodeModeSharedExponent decodeModeSharedExponent>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-astc-decodeModeSharedExponent decodeModeSharedExponent>
 --     feature is not enabled, @decodeMode@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32'
 --
@@ -211,7 +211,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- -   #VUID-VkImageViewASTCDecodeModeEXT-format-04084# @format@ of the
 --     image view /must/ be one of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC Compressed Image Formats>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#appendix-compressedtex-astc ASTC Compressed Image Formats>
 --
 -- If @format@ uses sRGB encoding then the @decodeMode@ has no effect.
 --
@@ -286,9 +286,13 @@ instance Zero ImageViewASTCDecodeModeEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceASTCDecodeFeaturesEXT' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceASTCDecodeFeaturesEXT', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

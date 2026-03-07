@@ -79,7 +79,7 @@
 -- acceleration structure.
 --
 -- An application adds
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR'
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR'
 -- to the acceleration structure at build time. Then, if the hit is a
 -- triangle geometry, the shader (any-hit or closest hit for ray pipelines
 -- or using ray query) /can/ fetch the three, three-component vertex
@@ -102,7 +102,9 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -110,13 +112,13 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-hittrianglevertexpositions HitTriangleVertexPositionsKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-hittrianglevertexpositions HitTriangleVertexPositionsKHR>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTracingPositionFetchKHR RayTracingPositionFetchKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-RayTracingPositionFetchKHR RayTracingPositionFetchKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryPositionFetchKHR RayQueryPositionFetchKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-RayQueryPositionFetchKHR RayQueryPositionFetchKHR>
 --
 -- == Issues
 --
@@ -135,11 +137,12 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_position_fetch Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_tracing_position_fetch Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch  ( PhysicalDeviceRayTracingPositionFetchFeaturesKHR(..)
+module Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch  ( pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR
+                                                            , PhysicalDeviceRayTracingPositionFetchFeaturesKHR(..)
                                                             , KHR_RAY_TRACING_POSITION_FETCH_SPEC_VERSION
                                                             , pattern KHR_RAY_TRACING_POSITION_FETCH_SPEC_VERSION
                                                             , KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME
@@ -169,9 +172,15 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(..))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR = BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR
+
+
 -- | VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR - Structure
 -- describing support for fetching vertex positions of hit triangles
 --
@@ -187,9 +196,13 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructu
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceRayTracingPositionFetchFeaturesKHR' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceRayTracingPositionFetchFeaturesKHR', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

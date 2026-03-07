@@ -93,7 +93,7 @@
 -- == Issues
 --
 -- 1) How should we handle steroescopic-3D swapchains? We need to add a
--- layer for each rectangle. One approach is to create another struct
+-- layer for each rectangle. One approach is to create another structure
 -- containing the 'Vulkan.Core10.FundamentalTypes.Rect2D' plus layer, and
 -- have 'PresentRegionsKHR' point to an array of that struct. Another
 -- approach is to have two parallel arrays, @pRectangles@ and @pLayers@,
@@ -158,7 +158,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_incremental_present Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_incremental_present Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

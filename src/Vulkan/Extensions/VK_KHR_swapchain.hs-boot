@@ -499,7 +499,7 @@
 -- 'Vulkan.Core10.Enums.Format.Format' when creating a swapchain?
 --
 -- __RESOLVED__: While Vulkan itself is color space agnostic (e.g. even the
--- meaning of R, G, B and A can be freely defined by the rendering
+-- meaning of R, G, B, and A can be freely defined by the rendering
 -- application), the swapchain eventually will have to present the images
 -- on a display device with specific color reproduction characteristics. If
 -- any color space transformations are necessary before an image can be
@@ -913,8 +913,8 @@
 --
 --     -   Made improvements to several descriptions.
 --
---     -   Changed the status of several issues from PROPOSED to RESOLVED,
---         leaving no unresolved issues.
+--     -   Changed the status of several issues, leaving no unresolved
+--         issues.
 --
 --     -   Resolved several TODOs, did miscellaneous cleanup, etc.
 --
@@ -1069,7 +1069,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

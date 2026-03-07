@@ -149,7 +149,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_shader_info Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_shader_info Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -283,6 +283,16 @@ foreign import ccall
 -- @infoType@ 'SHADER_INFO_TYPE_BINARY_AMD', are left to the vendor and are
 -- not further specified by this extension.
 --
+-- This query does not behave consistently with the behavior described in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-binaryresults Opaque Binary Data Results>,
+-- for historical reasons.
+--
+-- If the amount of data available is larger than the passed @pInfoSize@,
+-- the query returns up to the size of the passed buffer, and signals
+-- overflow with a 'Vulkan.Core10.Enums.Result.INCOMPLETE' success status
+-- instead of returning a
+-- 'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR' error status.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetShaderInfoAMD-device-parameter# @device@ /must/ be a
@@ -312,15 +322,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_FEATURE_NOT_PRESENT'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -579,6 +593,17 @@ instance Zero ShaderStatisticsInfoAMD where
 -- | VkShaderInfoTypeAMD - Enum specifying which type of shader information
 -- to query
 --
+-- = Description
+--
+-- -   'SHADER_INFO_TYPE_STATISTICS_AMD' specifies that device resources
+--     used by a shader will be queried.
+--
+-- -   'SHADER_INFO_TYPE_BINARY_AMD' specifies that implementation-specific
+--     information will be queried.
+--
+-- -   'SHADER_INFO_TYPE_DISASSEMBLY_AMD' specifies that human-readable
+--     disassembly of a shader.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
@@ -586,16 +611,13 @@ instance Zero ShaderStatisticsInfoAMD where
 newtype ShaderInfoTypeAMD = ShaderInfoTypeAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SHADER_INFO_TYPE_STATISTICS_AMD' specifies that device resources used
--- by a shader will be queried.
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_STATISTICS_AMD"
 pattern SHADER_INFO_TYPE_STATISTICS_AMD = ShaderInfoTypeAMD 0
 
--- | 'SHADER_INFO_TYPE_BINARY_AMD' specifies that implementation-specific
--- information will be queried.
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_BINARY_AMD"
 pattern SHADER_INFO_TYPE_BINARY_AMD = ShaderInfoTypeAMD 1
 
--- | 'SHADER_INFO_TYPE_DISASSEMBLY_AMD' specifies that human-readable
--- disassembly of a shader.
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD"
 pattern SHADER_INFO_TYPE_DISASSEMBLY_AMD = ShaderInfoTypeAMD 2
 
 {-# COMPLETE

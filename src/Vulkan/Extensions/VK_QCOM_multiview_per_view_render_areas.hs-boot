@@ -21,7 +21,9 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     None
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -62,7 +64,7 @@
 -- The extension enables a multiview render pass instance to define
 -- per-view render areas. For each view of a multiview render pass
 -- instance, only those pixels in the per-view render area are affected by
--- load, store and resolve operations.
+-- load, store, and resolve operations.
 --
 -- == New Structures
 --
@@ -154,7 +156,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_multiview_per_view_render_areas Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_multiview_per_view_render_areas Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

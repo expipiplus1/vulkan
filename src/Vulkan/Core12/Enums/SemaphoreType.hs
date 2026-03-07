@@ -16,6 +16,20 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkSemaphoreType - Specifies the type of a semaphore object
 --
+-- = Description
+--
+-- -   'SEMAPHORE_TYPE_BINARY' specifies a /binary semaphore/ type that has
+--     a boolean payload indicating whether the semaphore is currently
+--     signaled or unsignaled. When created, the semaphore is in the
+--     unsignaled state.
+--
+-- -   'SEMAPHORE_TYPE_TIMELINE' specifies a /timeline semaphore/ type that
+--     has a strictly increasing 64-bit unsigned integer payload indicating
+--     whether the semaphore is signaled with respect to a particular
+--     reference value. When created, the semaphore payload has the value
+--     given by the @initialValue@ field of
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
@@ -24,17 +38,10 @@ import GHC.Show (Show(showsPrec))
 newtype SemaphoreType = SemaphoreType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SEMAPHORE_TYPE_BINARY' specifies a /binary semaphore/ type that has a
--- boolean payload indicating whether the semaphore is currently signaled
--- or unsignaled. When created, the semaphore is in the unsignaled state.
+-- No documentation found for Nested "VkSemaphoreType" "VK_SEMAPHORE_TYPE_BINARY"
 pattern SEMAPHORE_TYPE_BINARY = SemaphoreType 0
 
--- | 'SEMAPHORE_TYPE_TIMELINE' specifies a /timeline semaphore/ type that has
--- a strictly increasing 64-bit unsigned integer payload indicating whether
--- the semaphore is signaled with respect to a particular reference value.
--- When created, the semaphore payload has the value given by the
--- @initialValue@ field of
--- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.
+-- No documentation found for Nested "VkSemaphoreType" "VK_SEMAPHORE_TYPE_TIMELINE"
 pattern SEMAPHORE_TYPE_TIMELINE = SemaphoreType 1
 
 {-# COMPLETE

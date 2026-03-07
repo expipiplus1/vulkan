@@ -59,9 +59,9 @@
 --     sample in the pixel coverage is covered, the color sample is
 --     covered. This is the default mode.
 --
--- -   Truncate: When there are more raster samples (N) than color
---     samples(M), there is one to one association of the first M raster
---     samples to the M color samples; other raster samples are ignored.
+-- -   Truncate: When there are more raster samples (N) than color samples
+--     (M), there is one to one association of the first M raster samples
+--     to the M color samples; other raster samples are ignored.
 --
 -- When the number of raster samples is equal to the color samples, there
 -- is a one to one mapping between them in either of the above modes.
@@ -89,7 +89,7 @@
 --     -   'PhysicalDeviceCoverageReductionModeFeaturesNV'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo':
 --
 --     -   'PipelineCoverageReductionStateCreateInfoNV'
 --
@@ -128,7 +128,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -258,15 +258,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -320,9 +324,13 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCoverageReductionModeFeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCoverageReductionModeFeaturesNV', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -334,7 +342,7 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReductionModeFeaturesNV
   { -- | #features-coverageReductionMode# @coverageReductionMode@ indicates
     -- whether the implementation supports coverage reduction modes. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
     coverageReductionMode :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -588,6 +596,19 @@ instance Read PipelineCoverageReductionStateCreateFlagsNV where
 
 -- | VkCoverageReductionModeNV - Specify the coverage reduction mode
 --
+-- = Description
+--
+-- -   'COVERAGE_REDUCTION_MODE_MERGE_NV' specifies that each color sample
+--     will be associated with an implementation-dependent subset of
+--     samples in the pixel coverage. If any of those associated samples
+--     are covered, the color sample is covered.
+--
+-- -   'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color
+--     samples present in the color attachments, a color sample is covered
+--     if the pixel coverage sample with the same
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+--     i is covered; other pixel coverage samples are discarded.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
@@ -597,17 +618,10 @@ instance Read PipelineCoverageReductionStateCreateFlagsNV where
 newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COVERAGE_REDUCTION_MODE_MERGE_NV' specifies that each color sample will
--- be associated with an implementation-dependent subset of samples in the
--- pixel coverage. If any of those associated samples are covered, the
--- color sample is covered.
+-- No documentation found for Nested "VkCoverageReductionModeNV" "VK_COVERAGE_REDUCTION_MODE_MERGE_NV"
 pattern COVERAGE_REDUCTION_MODE_MERGE_NV = CoverageReductionModeNV 0
 
--- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color samples
--- present in the color attachments, a color sample is covered if the pixel
--- coverage sample with the same
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
--- i is covered; other pixel coverage samples are discarded.
+-- No documentation found for Nested "VkCoverageReductionModeNV" "VK_COVERAGE_REDUCTION_MODE_TRUNCATE_NV"
 pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
 
 {-# COMPLETE

@@ -66,7 +66,8 @@
 --
 --     -   'PhysicalDeviceDepthClipControlFeaturesEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo':
 --
 --     -   'PipelineViewportDepthClipControlCreateInfoEXT'
 --
@@ -105,8 +106,8 @@
 -- __RESOLVED__: No. It is highly unlikely that the depth range is changed
 -- to anything other than [0, 1] in the future. Should that happen a new
 -- extension will be required to extend such an enum, and that extension
--- might as well add a new struct to chain to
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pNext@
+-- might as well add a new structure to chain to
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo'::@pNext@
 -- instead.
 --
 -- == Version History
@@ -126,7 +127,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clip_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_clip_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

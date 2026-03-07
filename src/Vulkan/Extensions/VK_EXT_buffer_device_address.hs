@@ -135,7 +135,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-PhysicalStorageBufferAddresses PhysicalStorageBufferAddressesEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-PhysicalStorageBufferAddresses PhysicalStorageBufferAddressesEXT>
 --
 -- == Issues
 --
@@ -166,7 +166,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_buffer_device_address Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_buffer_device_address Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -257,9 +257,13 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceBufferDeviceAddressFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceBufferDeviceAddressFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- The 'PhysicalDeviceBufferDeviceAddressFeaturesEXT' structure has the
 -- same members as the
@@ -291,7 +295,7 @@ data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAd
   , -- | #features-bufferDeviceAddressMultiDeviceEXT#
     -- @bufferDeviceAddressMultiDevice@ indicates that the implementation
     -- supports the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressEXT bufferDeviceAddress>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressEXT bufferDeviceAddress>
     -- feature for logical devices created with multiple physical devices. If
     -- this feature is not supported, buffer addresses /must/ not be queried on
     -- a logical device created with more than one physical device.
@@ -359,11 +363,19 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 --
 -- If this structure is not present, it is as if @deviceAddress@ is zero.
 --
--- Apps /should/ avoid creating buffers with app-provided addresses and
--- implementation-provided addresses in the same process, to reduce the
--- likelihood of 'ERROR_INVALID_DEVICE_ADDRESS_EXT' errors.
+-- Applications /should/ avoid creating buffers with application-provided
+-- addresses and implementation-provided addresses in the same process, to
+-- reduce the likelihood of 'ERROR_INVALID_DEVICE_ADDRESS_EXT' errors.
 --
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkBufferDeviceAddressCreateInfoEXT-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT'
+--
+-- -   #VUID-VkBufferDeviceAddressCreateInfoEXT-deviceAddress-parameter# If
+--     @deviceAddress@ is not @0@, @deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
 --
 -- = See Also
 --
@@ -391,7 +403,6 @@ instance ToCStruct BufferDeviceAddressCreateInfoEXT where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceAddress)) (zero)
     f
 
 instance FromCStruct BufferDeviceAddressCreateInfoEXT where

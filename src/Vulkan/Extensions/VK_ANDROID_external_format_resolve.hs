@@ -122,7 +122,9 @@
 -- -   Extending
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits':
 --
---     -   'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--     -   'RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--
+--     -   'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_BIT_ANDROID'
 --
 -- == Version History
 --
@@ -137,11 +139,12 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ANDROID_external_format_resolve Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_ANDROID_external_format_resolve Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_ANDROID_external_format_resolve  ( PhysicalDeviceExternalFormatResolveFeaturesANDROID(..)
+module Vulkan.Extensions.VK_ANDROID_external_format_resolve  ( pattern RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID
+                                                             , PhysicalDeviceExternalFormatResolveFeaturesANDROID(..)
                                                              , PhysicalDeviceExternalFormatResolvePropertiesANDROID(..)
                                                              , AndroidHardwareBufferFormatResolvePropertiesANDROID(..)
                                                              , ANDROID_EXTERNAL_FORMAT_RESOLVE_SPEC_VERSION
@@ -173,9 +176,15 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
+import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_BIT_ANDROID))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_PROPERTIES_ANDROID))
+-- No documentation found for TopLevel "VK_RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID"
+pattern RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID = RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_BIT_ANDROID
+
+
 -- | VkPhysicalDeviceExternalFormatResolveFeaturesANDROID - Structure
 -- describing whether external format resolves are supported
 --
@@ -187,10 +196,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceExternalFormatResolveFeaturesANDROID' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceExternalFormatResolveFeaturesANDROID', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

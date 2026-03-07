@@ -122,7 +122,9 @@
 -- -   Extending
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits':
 --
---     -   'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--     -   'RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
+--
+--     -   'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_BIT_ANDROID'
 --
 -- == Version History
 --
@@ -137,7 +139,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ANDROID_external_format_resolve Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_ANDROID_external_format_resolve Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

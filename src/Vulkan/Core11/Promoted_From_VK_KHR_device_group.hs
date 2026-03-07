@@ -104,6 +104,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
@@ -205,8 +206,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDeviceMask-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, compute, or transfer
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- == Host Synchronization
 --
@@ -222,13 +225,19 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Both                                                                                                                        | Graphics                                                                                                              | State                                                                                                                                  |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Transfer                                                                                                              |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Both                                                                                                                        | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDeviceMask is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDeviceMask :: forall io
@@ -327,7 +336,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
 --     the image view’s @levelCount@ and @layerCount@ /must/ be 1
 --
--- -   #VUID-vkCmdDispatchBase-unnormalizedCoordinates-09636# If a
+-- -   #VUID-vkCmdDispatchBase-None-08609# If a
 --     'Vulkan.Core10.Handles.Sampler' created with
 --     @unnormalizedCoordinates@ equal to
 --     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
@@ -335,6 +344,24 @@ foreign import ccall
 --     the image view’s @viewType@ /must/ be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
+--
+-- -   #VUID-vkCmdDispatchBase-None-08610# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the sampler /must/ not be used with any of the SPIR-V
+--     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
+--     @ImplicitLod@, @Dref@ or @Proj@ in their name
+--
+-- -   #VUID-vkCmdDispatchBase-None-08611# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the sampler /must/ not be used with any of the SPIR-V
+--     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
+--     includes a LOD bias or any offset values
 --
 -- -   #VUID-vkCmdDispatchBase-None-06479# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
@@ -468,29 +495,35 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdDispatchBase-None-08600# For each set /n/ that is
---     statically used by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
---     a descriptor set /must/ have been bound to /n/ at the same pipeline
---     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
---     compatible for set /n/, with the
---     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
---     'Vulkan.Core10.Handles.Pipeline' or the
+-- -   #VUID-vkCmdDispatchBase-None-08600# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
+--     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag or as part of a pipeline without the
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag, and that shader statically uses a set /n/, a descriptor set
+--     /must/ have been bound to /n/ at the same pipeline bind point, with
+--     a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
+--     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
+--     the current 'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
 --     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatchBase-None-08601# For each push constant that is
---     statically used by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
---     a push constant value /must/ have been set for the same pipeline
---     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
---     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
---     'Vulkan.Core10.Handles.Pipeline' or the
+-- -   #VUID-vkCmdDispatchBase-None-08601# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
+--     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag or as part of a pipeline without the
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag, and that shader statically uses a push constant value, that
+--     value /must/ have been set for the same pipeline bind point, with a
+--     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility compatible for push constants>
+--     with the 'Vulkan.Core10.Handles.PipelineLayout' used to create the
+--     current 'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
---     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--     current 'Vulkan.Extensions.Handles.ShaderEXT'
 --
 -- -   #VUID-vkCmdDispatchBase-None-10068# For each array of resources that
 --     is used by
@@ -499,31 +532,38 @@ foreign import ccall
 --     the descriptor count for the identified binding in the descriptor
 --     sets used by this command
 --
--- -   #VUID-vkCmdDispatchBase-maintenance4-08602# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
---     feature is not enabled, then for each push constant that is
---     statically used by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
---     a push constant value /must/ have been set for the same pipeline
---     bind point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
---     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
---     'Vulkan.Core10.Handles.Pipeline' or the
+-- -   #VUID-vkCmdDispatchBase-maintenance4-08602# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
+--     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag or as part of a pipeline without the
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag, and that shader statically uses a push constant value, that
+--     value /must/ have been set for the same pipeline bind point, with a
+--     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility compatible for push constants>
+--     with the 'Vulkan.Core10.Handles.PipelineLayout' used to create the
+--     current 'Vulkan.Core10.Handles.Pipeline' or the
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' and
 --     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Extensions.Handles.ShaderEXT' , as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--     create the current 'Vulkan.Extensions.Handles.ShaderEXT'
 --
 -- -   #VUID-vkCmdDispatchBase-None-08114# Descriptors in each bound
 --     descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid as described by
+--     be valid if they are accessed as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command and the bound
+--     by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
+--     point used by this command and the bound
 --     'Vulkan.Core10.Handles.Pipeline' was not created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatchBase-imageLayout-00344# If an image descriptor is
+--     accessed by a shader, the
+--     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' /must/ match the
+--     subresource accessible from the 'Vulkan.Core10.Handles.ImageView' as
+--     defined by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-layouts-matching-rule image layout matching rules>
 --
 -- -   #VUID-vkCmdDispatchBase-None-08115# If the descriptors used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
@@ -580,57 +620,13 @@ foreign import ccall
 --     the pipeline bind point used by this command, since that pipeline
 --     was bound
 --
--- -   #VUID-vkCmdDispatchBase-None-08609# If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command or any
---     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
---     to the pipeline bind point used by this command accesses a
---     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
---     coordinates, that sampler /must/ not be used to sample from any
---     'Vulkan.Core10.Handles.Image' with a
---     'Vulkan.Core10.Handles.ImageView' of the type
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D',
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE',
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY',
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' or
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
---     any shader stage
---
--- -   #VUID-vkCmdDispatchBase-None-08610# If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command or any
---     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
---     to the pipeline bind point used by this command accesses a
---     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
---     coordinates, that sampler /must/ not be used with any of the SPIR-V
---     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   #VUID-vkCmdDispatchBase-None-08611# If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command or any
---     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
---     to the pipeline bind point used by this command accesses a
---     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
---     coordinates, that sampler /must/ not be used with any of the SPIR-V
---     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   #VUID-vkCmdDispatchBase-None-08607# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     feature is enabled, either a valid pipeline /must/ be bound to the
---     pipeline bind point used by this command, or a valid combination of
---     valid and 'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects
---     /must/ be bound to every supported shader stage corresponding to the
---     pipeline bind point used by this command
---
 -- -   #VUID-vkCmdDispatchBase-uniformBuffers-06935# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command accesses a uniform buffer, and that stage
 --     was created without enabling either
---     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT'
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS'
 --     or
---     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT'
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2'
 --     for @uniformBuffers@, and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     feature is not enabled, that stage /must/ not access values outside
@@ -650,9 +646,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command accesses a storage buffer, and that stage
 --     was created without enabling either
---     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT'
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS'
 --     or
---     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT'
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2'
 --     for @storageBuffers@, and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     feature is not enabled, that stage /must/ not access values outside
@@ -675,21 +671,6 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding bound shaders>
 --     /must/ not be a protected resource
 --
--- -   #VUID-vkCmdDispatchBase-None-06550# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     accesses a 'Vulkan.Core10.Handles.Sampler' or
---     'Vulkan.Core10.Handles.ImageView' object that enables
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
---     that object /must/ only be used with @OpImageSample*@ or
---     @OpImageSparseSample*@ instructions
---
--- -   #VUID-vkCmdDispatchBase-ConstOffset-06551# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     accesses a 'Vulkan.Core10.Handles.Sampler' or
---     'Vulkan.Core10.Handles.ImageView' object that enables
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
---     that object /must/ not use the @ConstOffset@ and @Offset@ operands
---
 -- -   #VUID-vkCmdDispatchBase-viewType-07752# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
 --     command, then the image view’s @viewType@ /must/ match the @Dim@
@@ -697,22 +678,23 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-image-dimensions ???>
 --
 -- -   #VUID-vkCmdDispatchBase-format-07753# If a
---     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' is accessed as a result of this
 --     command, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat numeric type>
---     of the image view’s @format@ and the @Sampled@ @Type@ operand of the
+--     of the view’s @format@ and the @Sampled@ @Type@ operand of the
 --     @OpTypeImage@ /must/ match
 --
 -- -   #VUID-vkCmdDispatchBase-OpImageWrite-08795# If a
 --     'Vulkan.Core10.Handles.ImageView' created with a format other than
---     'Vulkan.Core10.Enums.Format.FORMAT_A8_UNORM_KHR' is accessed using
+--     'Vulkan.Core10.Enums.Format.FORMAT_A8_UNORM' is accessed using
 --     @OpImageWrite@ as a result of this command, then the @Type@ of the
 --     @Texel@ operand of that instruction /must/ have at least as many
 --     components as the image view’s format
 --
 -- -   #VUID-vkCmdDispatchBase-OpImageWrite-08796# If a
 --     'Vulkan.Core10.Handles.ImageView' created with the format
---     'Vulkan.Core10.Enums.Format.FORMAT_A8_UNORM_KHR' is accessed using
+--     'Vulkan.Core10.Enums.Format.FORMAT_A8_UNORM' is accessed using
 --     @OpImageWrite@ as a result of this command, then the @Type@ of the
 --     @Texel@ operand of that instruction /must/ have four components
 --
@@ -768,16 +750,16 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command
 --
--- -   #VUID-vkCmdDispatchBase-OpImageWeightedSampleQCOM-06971# If
---     @OpImageWeightedSampleQCOM@ is used to sample a
+-- -   #VUID-vkCmdDispatchBase-OpImageSampleWeightedQCOM-06971# If
+--     @OpImageSampleWeightedQCOM@ is used to sample a
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM'
 --
--- -   #VUID-vkCmdDispatchBase-OpImageWeightedSampleQCOM-06972# If
---     @OpImageWeightedSampleQCOM@ uses a 'Vulkan.Core10.Handles.ImageView'
+-- -   #VUID-vkCmdDispatchBase-OpImageSampleWeightedQCOM-06972# If
+--     @OpImageSampleWeightedQCOM@ uses a 'Vulkan.Core10.Handles.ImageView'
 --     as a sample weight image as a result of this command, then the image
 --     view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
@@ -814,8 +796,8 @@ foreign import ccall
 --     specified reference coordinates /must/ not fail
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
--- -   #VUID-vkCmdDispatchBase-OpImageWeightedSampleQCOM-06977# If
---     @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
+-- -   #VUID-vkCmdDispatchBase-OpImageSampleWeightedQCOM-06977# If
+--     @OpImageSampleWeightedQCOM@, @OpImageBoxFilterQCOM@,
 --     @OpImageBlockMatchWindowSSDQCOM@, @OpImageBlockMatchWindowSADQCOM@,
 --     @OpImageBlockMatchGatherSSDQCOM@, @OpImageBlockMatchGatherSADQCOM@,
 --     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
@@ -823,8 +805,8 @@ foreign import ccall
 --     the sampler /must/ have been created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
--- -   #VUID-vkCmdDispatchBase-OpImageWeightedSampleQCOM-06978# If any
---     command other than @OpImageWeightedSampleQCOM@,
+-- -   #VUID-vkCmdDispatchBase-OpImageSampleWeightedQCOM-06978# If any
+--     command other than @OpImageSampleWeightedQCOM@,
 --     @OpImageBoxFilterQCOM@, @OpImageBlockMatchWindowSSDQCOM@,
 --     @OpImageBlockMatchWindowSADQCOM@, @OpImageBlockMatchGatherSSDQCOM@,
 --     @OpImageBlockMatchGatherSADQCOM@, @OpImageBlockMatchSSDQCOM@, or
@@ -866,9 +848,458 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     is accessed as a result of this command, the image subresource
+--     is accessed as a result of this command, all image subresources
 --     identified by that descriptor /must/ be in the image layout
 --     identified when the descriptor was written
+--
+-- -   #VUID-vkCmdDispatchBase-commandBuffer-10746# The
+--     'Vulkan.Core10.Handles.DeviceMemory' object allocated from a
+--     'Vulkan.Core10.DeviceInitialization.MemoryHeap' with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property that is bound to a resource accessed as a result of this
+--     command /must/ be the active bound
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-bind-tile-memory bound tile memory object>
+--     in @commandBuffer@
+--
+-- -   #VUID-vkCmdDispatchBase-None-10678# If this command is recorded
+--     inside a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-tile-shading tile shading render pass>
+--     instance, the stages corresponding to the pipeline bind point used
+--     by this command /must/ only include
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT',
+--     and\/or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
+--
+-- -   #VUID-vkCmdDispatchBase-None-10679# If this command is recorded
+--     where
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is enabled, there /must/ be no access to any image while the image
+--     was be transitioned to the
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--     layout
+--
+-- -   #VUID-vkCmdDispatchBase-pDescription-09900# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     descriptor is accessed as a result of this command, then the
+--     underlying 'Vulkan.Extensions.Handles.TensorARM' object /must/ have
+--     been created with the
+--     'Vulkan.Extensions.VK_ARM_tensors.TENSOR_USAGE_SHADER_BIT_ARM' usage
+--     flag set
+--
+-- -   #VUID-vkCmdDispatchBase-dimensionCount-09905# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     descriptor is accessed as a result of this command, then the @Rank@
+--     of the @OpTypeTensorARM@ of the tensor resource variable /must/ be
+--     equal to the @dimensionCount@ provided via
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM'::@pDescription@
+--     when creating the underlying 'Vulkan.Extensions.Handles.TensorARM'
+--     object
+--
+-- -   #VUID-vkCmdDispatchBase-OpTypeTensorARM-09906# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     descriptor is accessed as a result of this command, then the element
+--     type of the @OpTypeTensorARM@ of the tensor resource variable /must/
+--     be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-tensor-formats compatible>
+--     with the 'Vulkan.Core10.Enums.Format.Format' of the
+--     'Vulkan.Extensions.Handles.TensorViewARM' used for the access
+--
+-- -   #VUID-vkCmdDispatchBase-None-11297# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     and a shader accesses a @OpTypeStruct@ decorated with @Block@ or
+--     @BufferBlock@ using that mapping, the calculated offset for the
+--     resource heap /must/ be a multiple of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-bufferDescriptorAlignment bufferDescriptorAlignment>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11298# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     and a shader accesses an @OpTypeImage@ or @OpTypeSampledImage@ using
+--     that mapping, the calculated offset for the resource heap /must/ be
+--     a multiple of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-imageDescriptorAlignment imageDescriptorAlignment>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11299# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     and a shader accesses an @OpTypeSampler@ or @OpTypeSampledImage@
+--     using that mapping, the calculated offset for the sampler heap
+--     /must/ be a multiple of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-samplerDescriptorAlignment samplerDescriptorAlignment>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11397# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     and a shader accesses an @OpTypeTensorARM@ using that mapping, the
+--     calculated offset for the resource heap /must/ be a multiple of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-tensorDescriptorAlignment tensorDescriptorAlignment>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11300# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     and a shader accesses a resource using that mapping, the value of
+--     the address at the expected location in push data /must/ be a
+--     multiple of 4
+--
+-- -   #VUID-vkCmdDispatchBase-None-11301# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     and a shader accesses a resource using that mapping, the value of
+--     the address at the expected location in push data /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' backed by physical
+--     memory at every offset specified by each mapping
+--
+-- -   #VUID-vkCmdDispatchBase-None-11302# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     and a shader accesses a resource using that mapping, the value of
+--     the address at the expected location in push data /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress'
+--
+-- -   #VUID-vkCmdDispatchBase-None-11304# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a resource using that mapping, the value of
+--     the address at the expected location in push data /must/ be a
+--     multiple of 8
+--
+-- -   #VUID-vkCmdDispatchBase-None-11305# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a resource using that mapping, the value of
+--     the address at the expected location in push data /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' backed by physical
+--     memory at every offset specified by each mapping
+--
+-- -   #VUID-vkCmdDispatchBase-None-11306# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a resource using that mapping, the value of
+--     the address pointed to by the address in push data /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress'
+--
+-- -   #VUID-vkCmdDispatchBase-None-11308# For each
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps descriptor heap>
+--     that is statically used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     either directly or via a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>,
+--     a valid descriptor heap /must/ be bound
+--
+-- -   #VUID-vkCmdDispatchBase-None-11309# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding bound shader>
+--     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag or as part of a pipeline with the
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag, execution of this command /must/ not result in any descriptor
+--     read accessing data outside of the user range of the respective heap
+--     bound by @vkCmdBind*HeapEXT@ commands
+--
+-- -   #VUID-vkCmdDispatchBase-None-11372# If any stage of the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a uniform buffer or uniform
+--     texel buffer through a descriptor in the bound resource heap, that
+--     stage was created without enabling either
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS'
+--     or
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2'
+--     for @uniformBuffers@, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+--     feature is not enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, that stage /must/ not access values outside
+--     of the range of the descriptor specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     when the descriptor was written
+--
+-- -   #VUID-vkCmdDispatchBase-None-11373# If any stage of the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a storage buffer or storage
+--     texel buffer through a descriptor in the bound resource heap, that
+--     stage was created without enabling either
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS'
+--     or
+--     'Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2'
+--     for @storageBuffers@, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+--     feature is not enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, that stage /must/ not access values outside
+--     of the range of the descriptor specified by
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     when the descriptor was written
+--
+-- -   #VUID-vkCmdDispatchBase-None-11374# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+--     feature is not enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and any
+--     'Vulkan.Extensions.Handles.ShaderEXT' bound to a stage corresponding
+--     to the pipeline bind point used by this command accesses a uniform
+--     buffer, uniform texel buffer, storage buffer, or storage texel
+--     buffer, that shader /must/ not access values outside of the range of
+--     the buffer as specified by
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     when the descriptor was written
+--
+-- -   #VUID-vkCmdDispatchBase-pBindInfo-11375# If any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding bound shader>
+--     uses an embedded sampler via a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>,
+--     the value of @pBindInfo->reservedRangeSize@ set for
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.cmdBindSamplerHeapEXT'
+--     /must/ be greater than or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minSamplerHeapReservedRangeWithEmbedded minSamplerHeapReservedRangeWithEmbedded>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11376# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding bound shader>
+--     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag or as part of a pipeline with the
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag, and that shader statically uses a push constant value, that
+--     value /must/ have been set by
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.cmdPushDataEXT'
+--
+-- -   #VUID-vkCmdDispatchBase-None-11398# If a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding bound shader>
+--     was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a resource using that mapping, the access
+--     /must/ not be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-execution-memory-access-bounds out of bounds>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11437# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a resource using that mapping, the buffer from
+--     which the address in push data was queried /must/ have been created
+--     with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
+--     usage flag set
+--
+-- -   #VUID-vkCmdDispatchBase-None-11438# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a uniform buffer using that mapping, the
+--     address that the uniform buffer is mapped to /must/ have been
+--     queried from a buffer created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
+--     usage flag set
+--
+-- -   #VUID-vkCmdDispatchBase-None-11441# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a uniform buffer using that mapping, the
+--     address that the uniform buffer is mapped to /must/ be aligned to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minUniformBufferOffsetAlignment minUniformBufferOffsetAlignment>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11439# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a storage buffer using that mapping, the
+--     address that the storage buffer is mapped to /must/ have been
+--     queried from a buffer created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
+--     usage flag set
+--
+-- -   #VUID-vkCmdDispatchBase-None-11442# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses a storage buffer using that mapping, the
+--     address that the storage buffer is mapped to /must/ be aligned to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minStorageBufferOffsetAlignment minStorageBufferOffsetAlignment>
+--
+-- -   #VUID-vkCmdDispatchBase-None-11485# If a pipeline is bound to the
+--     pipeline bind point used by this command, or shader is bound to a
+--     shader stage used by this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     and a shader accesses an acceleration structure using that mapping,
+--     the address that the acceleration structure is mapped to /must/ be
+--     an acceleration structure address retrieved from a
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' object via
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.getAccelerationStructureDeviceAddressKHR'
+--     or handle retrieved from a
+--     'Vulkan.Extensions.Handles.AccelerationStructureNV' object via
+--     'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureHandleNV'
+--
+-- -   #VUID-vkCmdDispatchBase-index-11450# If a shader uses a sampler
+--     descriptor to sample an image as a result of this command, and that
+--     sampler descriptor uses a custom border color with an index defined
+--     by
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.SamplerCustomBorderColorIndexCreateInfoEXT',
+--     the value of
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.SamplerCustomBorderColorIndexCreateInfoEXT'::@index@
+--     /must/ have been registered before this command was recorded, and
+--     still be registered during the sampling operation, with an
+--     identically defined color
+--
+-- -   #VUID-vkCmdDispatchBase-protectedNoFault-11455# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, a pipeline is bound to the pipeline bind point
+--     used by this command, or a shader is bound to a shader stage used by
+--     this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     the address that the resource is mapped to /must/ have been queried
+--     from a buffer created without the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--     create flag set
+--
+-- -   #VUID-vkCmdDispatchBase-protectedNoFault-11456# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, a pipeline is bound to the pipeline bind point
+--     used by this command, or a shader is bound to a shader stage used by
+--     this command, and it was created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT',
+--     the address of the indirect memory /must/ have been queried from a
+--     buffer created without the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--     create flag set
+--
+-- -   #VUID-vkCmdDispatchBase-None-10672# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is not enabled, this command /must/ be called outside of a render
+--     pass instance
+--
+-- -   #VUID-vkCmdDispatchBase-aspectMask-10673# If this command is
+--     recorded where
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is enabled, and if the 'Vulkan.Core10.Handles.Pipeline' object bound
+--     to the pipeline bind point used by this command writes to a variable
+--     of storage class @Storage@ @Class@ @TileAttachmentQCOM@, the
+--     corresponding 'Vulkan.Core10.Handles.ImageView' using /must/ not
+--     have been created with an @aspectMask@ that contains
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-vkCmdDispatchBase-None-10674# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tileShadingPerTileDispatch tileShadingPerTileDispatch>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDispatchBase-None-10675# Memory backing image
+--     subresources used as
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-tile-shading-attachment-access tile attachments>
+--     in the current render pass /must/ not be written in any way other
+--     than as a tile attachment by this command
+--
+-- -   #VUID-vkCmdDispatchBase-None-10676# If any recorded command in the
+--     current subpass will write to an image subresource as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-tile-shading-attachment-access tile attachment>,
+--     this command /must/ not read from the memory backing that image
+--     subresource in any other way than as a tile attachment
+--
+-- -   #VUID-vkCmdDispatchBase-None-10743# If there is no bound compute
+--     pipeline, a valid 'Vulkan.Extensions.Handles.ShaderEXT' /must/ be
+--     bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
+--     stage
 --
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
@@ -922,8 +1353,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchBase-baseGroupX-00427# If any of @baseGroupX@,
 --     @baseGroupY@, or @baseGroupZ@ are not zero, then the bound compute
 --     pipeline /must/ have been created with the
---     'PIPELINE_CREATE_DISPATCH_BASE' flag or the bound compute shader
---     object /must/ have been created with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DISPATCH_BASE_BIT'
+--     flag or the bound compute shader object /must/ have been created
+--     with the
 --     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DISPATCH_BASE_BIT_EXT'
 --     flag
 --
@@ -938,10 +1370,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
 --
--- -   #VUID-vkCmdDispatchBase-renderpass# This command /must/ only be
---     called outside of a render pass instance
+-- -   #VUID-vkCmdDispatchBase-suspended# This command /must/ not be called
+--     between suspended render pass instances
 --
 -- -   #VUID-vkCmdDispatchBase-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -960,12 +1393,18 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
+-- == Conditional Rendering
+--
+-- vkCmdDispatchBase is affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDispatchBase :: forall io
@@ -1054,6 +1493,15 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_MASK_BIT'
 --     is set, @deviceMask@ /must/ not be zero
 --
+-- -   #VUID-VkMemoryAllocateFlagsInfo-flags-10760# If the allocation is
+--     performing a memory import operation, then @flags@ /must/ not
+--     contain
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_ZERO_INITIALIZE_BIT_EXT'
+--
+-- -   #VUID-VkMemoryAllocateFlagsInfo-flags-10761# If the allocation uses
+--     protected memory, then @flags@ /must/ not contain
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_ZERO_INITIALIZE_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkMemoryAllocateFlagsInfo-sType-sType# @sType@ /must/ be
@@ -1066,6 +1514,7 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MemoryAllocateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -1133,10 +1582,10 @@ instance Zero MemoryAllocateFlagsInfo where
 -- begins. In addition, commands transitioning to the next subpass in a
 -- render pass instance and commands ending the render pass instance, and,
 -- accordingly render pass
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load>,
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations store>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-load-operations load>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-store-operations store>,
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-resolve-operations multisample resolve>
 -- operations and subpass dependencies corresponding to the render pass
 -- instance, are executed on the physical devices included in the device
 -- mask provided here.
@@ -1184,12 +1633,12 @@ instance Zero MemoryAllocateFlagsInfo where
 -- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06168# The sum of the
 --     @offset.x@ and @extent.width@ members of any element of
 --     @pDeviceRenderAreas@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferWidth>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferWidth>
 --
 -- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06169# The sum of the
 --     @offset.y@ and @extent.height@ members of any element of
 --     @pDeviceRenderAreas@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferHeight maxFramebufferHeight>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxFramebufferHeight maxFramebufferHeight>
 --
 -- -   #VUID-VkDeviceGroupRenderPassBeginInfo-extent-08998# The
 --     @extent.width@ member of any element of @pDeviceRenderAreas@ /must/
@@ -1212,6 +1661,7 @@ instance Zero MemoryAllocateFlagsInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -1279,6 +1729,7 @@ instance Zero DeviceGroupRenderPassBeginInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupCommandBufferBeginInfo = DeviceGroupCommandBufferBeginInfo
@@ -1379,6 +1830,7 @@ instance Zero DeviceGroupCommandBufferBeginInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupSubmitInfo = DeviceGroupSubmitInfo
@@ -1483,6 +1935,7 @@ instance Zero DeviceGroupSubmitInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupBindSparseInfo = DeviceGroupBindSparseInfo

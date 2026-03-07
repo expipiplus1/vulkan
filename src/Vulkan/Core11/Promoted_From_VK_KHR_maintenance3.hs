@@ -105,6 +105,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3 VK_KHR_maintenance3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
@@ -162,6 +163,7 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3 VK_KHR_maintenance3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -175,7 +177,10 @@ data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
     maxPerSetDescriptors :: Word32
   , -- | #extension-limits-maxMemoryAllocationSize# @maxMemoryAllocationSize@ is
     -- the maximum size of a memory allocation that /can/ be created, even if
-    -- there is more space available in the heap.
+    -- there is more space available in the heap. If
+    -- 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ is larger
+    -- the error 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY' /may/
+    -- be returned.
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -239,15 +244,15 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountLayoutSupport'
 --
 -- -   #VUID-VkDescriptorSetLayoutSupport-sType-unique# The @sType@ value
---     of each struct in the @pNext@ chain /must/ be unique
+--     of each structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3 VK_KHR_maintenance3>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getDescriptorSetLayoutSupport',
--- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'
+-- 'getDescriptorSetLayoutSupport', 'getDescriptorSetLayoutSupport'
 data DescriptorSetLayoutSupport (es :: [Type]) = DescriptorSetLayoutSupport
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es

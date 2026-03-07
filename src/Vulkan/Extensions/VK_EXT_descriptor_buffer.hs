@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --                     
@@ -46,6 +46,12 @@
 --     -   Interacts with VK_KHR_acceleration_structure
 --
 --     -   Interacts with VK_NV_ray_tracing
+--
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>
+--         extension
 --
 -- [__Contact__]
 --
@@ -103,6 +109,13 @@
 -- descriptors directly in memory, making the management of descriptor data
 -- more explicit.
 --
+-- == Deprecation by @VK_EXT_descriptor_heap@
+--
+-- Functionality in this extension is deprecated by the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>
+-- extension. See
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#legacy-descriptor-sets Descriptor Management: Replaced by Descriptor Heaps>.
+--
 -- == New Commands
 --
 -- -   'cmdBindDescriptorBufferEmbeddedSamplersEXT'
@@ -154,7 +167,9 @@
 --     'Vulkan.Core10.ImageView.ImageViewCreateInfo',
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
---     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV':
+--     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM',
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM':
 --
 --     -   'OpaqueCaptureDescriptorDataCreateInfoEXT'
 --
@@ -226,7 +241,7 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     -   'IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits':
@@ -292,7 +307,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_descriptor_buffer Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_descriptor_buffer Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -307,6 +322,7 @@ module Vulkan.Extensions.VK_EXT_descriptor_buffer  ( getDescriptorSetLayoutSizeE
                                                    , getImageViewOpaqueCaptureDescriptorDataEXT
                                                    , getSamplerOpaqueCaptureDescriptorDataEXT
                                                    , getAccelerationStructureOpaqueCaptureDescriptorDataEXT
+                                                   , pattern IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
                                                    , PhysicalDeviceDescriptorBufferFeaturesEXT(..)
                                                    , PhysicalDeviceDescriptorBufferPropertiesEXT(..)
                                                    , PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT(..)
@@ -391,12 +407,13 @@ import Vulkan.Extensions.Handles (AccelerationStructureNV)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (BufferUsageFlags2CreateInfo)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_tensors (DescriptorGetTensorInfoARM)
 import Vulkan.Core10.DescriptorSet (DescriptorImageInfo)
 import Vulkan.Core10.Handles (DescriptorSetLayout)
 import Vulkan.Core10.Handles (DescriptorSetLayout(..))
@@ -448,6 +465,8 @@ import Vulkan.Core10.Enums.DescriptorType (DescriptorType(DESCRIPTOR_TYPE_STORAG
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType(DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER))
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType(DESCRIPTOR_TYPE_UNIFORM_BUFFER))
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType(DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER))
+import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
+import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT))
@@ -514,12 +533,22 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetDescriptorSetLayoutSizeEXT-None-08011# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetDescriptorSetLayoutSizeEXT-layout-08012# @layout@ /must/
 --     have been created with the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     flag set
+--
+-- -   #VUID-vkGetDescriptorSetLayoutSizeEXT-layout-11811# @layout@ /must/
+--     have not been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT'
+--     flag set
+--
+-- -   #VUID-vkGetDescriptorSetLayoutSizeEXT-layout-11812# @layout@ /must/
+--     have not been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT'
 --     flag set
 --
 -- == Valid Usage (Implicit)
@@ -607,23 +636,33 @@ foreign import ccall
 -- that @binding@ /must/ have the largest offset of any @binding@.
 --
 -- A descriptor @binding@ with type
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.DESCRIPTOR_TYPE_MUTABLE_VALVE'
--- /can/ be used. Any potential types in
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'::@pDescriptorTypes@
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT' /can/
+-- be used. Any potential types in
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'::@pDescriptorTypes@
 -- for @binding@ share the same offset. If the size of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-mutable mutable descriptor>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-mutable mutable descriptor>
 -- is larger than the size of a concrete descriptor type being accessed,
 -- the padding area is ignored by the implementation.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkGetDescriptorSetLayoutBindingOffsetEXT-None-08013# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetDescriptorSetLayoutBindingOffsetEXT-layout-08014#
 --     @layout@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     flag set
+--
+-- -   #VUID-vkGetDescriptorSetLayoutBindingOffsetEXT-layout-11813#
+--     @layout@ /must/ have not been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT'
+--     flag set
+--
+-- -   #VUID-vkGetDescriptorSetLayoutBindingOffsetEXT-layout-11814#
+--     @layout@ /must/ have not been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT'
 --     flag set
 --
 -- == Valid Usage (Implicit)
@@ -680,7 +719,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetDescriptorEXT
-  :: FunPtr (Ptr Device_T -> Ptr DescriptorGetInfoEXT -> CSize -> Ptr () -> IO ()) -> Ptr Device_T -> Ptr DescriptorGetInfoEXT -> CSize -> Ptr () -> IO ()
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorGetInfoEXT) -> CSize -> Ptr () -> IO ()) -> Ptr Device_T -> Ptr (SomeStruct DescriptorGetInfoEXT) -> CSize -> Ptr () -> IO ()
 
 -- | vkGetDescriptorEXT - To get a descriptor to place in a buffer
 --
@@ -718,7 +757,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetDescriptorEXT-None-08015# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetDescriptorEXT-dataSize-08125# If @pDescriptorInfo->type@
@@ -776,13 +815,13 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>,
 -- 'DescriptorGetInfoEXT', 'Vulkan.Core10.Handles.Device'
-getDescriptorEXT :: forall io
-                  . (MonadIO io)
+getDescriptorEXT :: forall a io
+                  . (Extendss DescriptorGetInfoEXT a, PokeChain a, MonadIO io)
                  => -- | @device@ is the logical device that gets the descriptor.
                     Device
                  -> -- | @pDescriptorInfo@ is a pointer to a 'DescriptorGetInfoEXT' structure
                     -- specifying the parameters of the descriptor to get.
-                    ("descriptorInfo" ::: DescriptorGetInfoEXT)
+                    ("descriptorInfo" ::: DescriptorGetInfoEXT a)
                  -> -- | @dataSize@ is the amount of the descriptor data to get in bytes.
                     ("dataSize" ::: Word64)
                  -> -- | @pDescriptor@ is a pointer to an application-allocated buffer where the
@@ -800,7 +839,7 @@ getDescriptorEXT device
   pDescriptorInfo <- ContT $ withCStruct (descriptorInfo)
   lift $ traceAroundEvent "vkGetDescriptorEXT" (vkGetDescriptorEXT'
                                                   (deviceHandle (device))
-                                                  pDescriptorInfo
+                                                  (forgetExtensions pDescriptorInfo)
                                                   (CSize (dataSize))
                                                   (descriptor))
   pure $ ()
@@ -826,8 +865,20 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCmdBindDescriptorBuffersEXT-commandBuffer-11295# If
+--     @commandBuffer@ is a secondary command buffer, it /must/ have begun
+--     with
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.CommandBufferInheritanceDescriptorHeapInfoEXT'::@pSamplerHeapBindInfo@
+--     equal to @NULL@
+--
+-- -   #VUID-vkCmdBindDescriptorBuffersEXT-commandBuffer-11296# If
+--     @commandBuffer@ is a secondary command buffer, it /must/ have begun
+--     with
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.CommandBufferInheritanceDescriptorHeapInfoEXT'::@pResourceHeapBindInfo@
+--     equal to @NULL@
+--
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-None-08047# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-maxSamplerDescriptorBufferBindings-08048#
@@ -853,26 +904,30 @@ foreign import ccall
 --     /must/ be less than or equal to
 --     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@maxDescriptorBufferBindings@
 --
--- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08052# For any
---     element of @pBindingInfos@, if the buffer from which @address@ was
---     queried is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08053# For any
+-- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08053# For each
 --     element of @pBindingInfos@, the buffer from which @address@ was
 --     queried /must/ have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
---     bit set if it contains sampler descriptor data
+--     usage flag set if it contains sampler descriptor data
 --
--- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08054# For any
+-- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08054# For each
 --     element of @pBindingInfos@, the buffer from which @address@ was
 --     queried /must/ have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
---     bit set if it contains resource descriptor data
+--     usage flag set if it contains resource descriptor data
 --
--- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08055# For any
---     element of @pBindingInfos@, @usage@ /must/ match the buffer from
---     which @address@ was queried
+-- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08055# For each
+--     element of @pBindingInfos@, at least one buffer from which @address@
+--     was queried must contain @usage@
+--
+-- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-09947# For all
+--     elements of @pBindingInfos@, the buffer from which @address@ was
+--     queried /must/ have been created with the
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM'
+--     usage flag set if the command pool from which @commandBuffer@ was
+--     allocated from was created with any element of
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'::pProcessingEngines
+--     with @isForeign@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -890,7 +945,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_DATA_GRAPH_BIT_ARM', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -912,9 +970,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_DATA_GRAPH_BIT_ARM                                                                                           |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBindDescriptorBuffersEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -958,8 +1022,8 @@ foreign import ccall
 -- 'cmdSetDescriptorBufferOffsetsEXT' binds @setCount@ pairs of descriptor
 -- buffers, specified by indices into the binding points bound using
 -- 'cmdBindDescriptorBuffersEXT', and buffer offsets to set numbers
--- [@firstSet@..@firstSet@+@descriptorSetCount@-1] for subsequent
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-bindpoint-commands bound pipeline commands>
+-- [@firstSet@..@firstSet@+@setCount@-1] for subsequent
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-bindpoint-commands bound pipeline commands>
 -- set by @pipelineBindPoint@. Set [@firstSet@ + i] is bound to the
 -- descriptor buffer at binding @pBufferIndices@[i] at an offset of
 -- @pOffsets@[i]. Any bindings that were previously applied via these sets,
@@ -967,7 +1031,7 @@ foreign import ccall
 -- are no longer valid. Other sets will also be invalidated upon calling
 -- this command if @layout@ differs from the pipeline layout used to bind
 -- those other sets, as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 --
 -- After binding descriptors, applications /can/ modify descriptor memory
 -- either by performing writes on the host or with device commands. When
@@ -998,7 +1062,7 @@ foreign import ccall
 --
 -- Dynamically accessing a resource through descriptor data from an unbound
 -- region of a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-partially-resident-buffers sparse partially-resident buffer>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#sparsememory-partially-resident-buffers sparse partially-resident buffer>
 -- will result in invalid descriptor data being read, and therefore
 -- undefined behavior.
 --
@@ -1017,6 +1081,18 @@ foreign import ccall
 -- but enabling those features is not required to get this behavior.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-commandBuffer-11295# If
+--     @commandBuffer@ is a secondary command buffer, it /must/ have begun
+--     with
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.CommandBufferInheritanceDescriptorHeapInfoEXT'::@pSamplerHeapBindInfo@
+--     equal to @NULL@
+--
+-- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-commandBuffer-11296# If
+--     @commandBuffer@ is a secondary command buffer, it /must/ have begun
+--     with
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.CommandBufferInheritanceDescriptorHeapInfoEXT'::@pResourceHeapBindInfo@
+--     equal to @NULL@
 --
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-pOffsets-08061# The offsets
 --     in @pOffsets@ /must/ be aligned to
@@ -1062,8 +1138,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     bit set
 --
+-- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-firstSet-11803# The
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' for each set from
+--     @firstSet@ to @firstSet@ + @setCount@ when @layout@ was created
+--     /must/ not have been created with the
+--     'Vulkan.Extensions.VK_KHR_push_descriptor.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+--     bit set
+--
+-- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-firstSet-11804# The
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' for each set from
+--     @firstSet@ to @firstSet@ + @setCount@ when @layout@ was created
+--     /must/ not have been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT'
+--     bit set
+--
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-None-08060# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-pipelineBindPoint-08067#
@@ -1097,7 +1187,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_DATA_GRAPH_BIT_ARM', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDescriptorBufferOffsetsEXT-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -1123,9 +1216,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_DATA_GRAPH_BIT_ARM                                                                                           |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDescriptorBufferOffsetsEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1199,7 +1298,7 @@ foreign import ccall
 -- 'cmdBindDescriptorBufferEmbeddedSamplersEXT' binds the embedded
 -- immutable samplers in @set@ of @layout@ to @set@ for the command buffer
 -- for subsequent
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-bindpoint-commands bound pipeline commands>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-bindpoint-commands bound pipeline commands>
 -- set by @pipelineBindPoint@. Any previous binding to this set by
 -- 'cmdSetDescriptorBufferOffsetsEXT' or this command is overwritten. Any
 -- sets that were last bound by a call to
@@ -1207,9 +1306,21 @@ foreign import ccall
 -- invalidated upon calling this command. Other sets will also be
 -- invalidated upon calling this command if @layout@ differs from the
 -- pipeline layout used to bind those other sets, as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-commandBuffer-11295#
+--     If @commandBuffer@ is a secondary command buffer, it /must/ have
+--     begun with
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.CommandBufferInheritanceDescriptorHeapInfoEXT'::@pSamplerHeapBindInfo@
+--     equal to @NULL@
+--
+-- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-commandBuffer-11296#
+--     If @commandBuffer@ is a secondary command buffer, it /must/ have
+--     begun with
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.CommandBufferInheritanceDescriptorHeapInfoEXT'::@pResourceHeapBindInfo@
+--     equal to @NULL@
 --
 -- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-set-08070# The
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' at index @set@ when
@@ -1223,7 +1334,7 @@ foreign import ccall
 --     provided when @layout@ was created
 --
 -- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-None-08068# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-pipelineBindPoint-08069#
@@ -1250,7 +1361,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-commandBuffer-cmdpool#
 --     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdBindDescriptorBufferEmbeddedSamplersEXT-videocoding# This
 --     command /must/ only be called outside of a video coding scope
@@ -1273,9 +1386,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBindDescriptorBufferEmbeddedSamplersEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1327,7 +1445,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetBufferOpaqueCaptureDescriptorDataEXT-None-08072# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetBufferOpaqueCaptureDescriptorDataEXT-pData-08073# @pData@
@@ -1337,7 +1455,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetBufferOpaqueCaptureDescriptorDataEXT-device-08074# If
 --     @device@ was created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1360,9 +1478,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1407,7 +1529,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetImageOpaqueCaptureDescriptorDataEXT-None-08076# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetImageOpaqueCaptureDescriptorDataEXT-pData-08077# @pData@
@@ -1417,7 +1539,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetImageOpaqueCaptureDescriptorDataEXT-device-08078# If
 --     @device@ was created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1440,9 +1562,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1487,7 +1613,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetImageViewOpaqueCaptureDescriptorDataEXT-None-08080# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetImageViewOpaqueCaptureDescriptorDataEXT-pData-08081#
@@ -1497,7 +1623,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetImageViewOpaqueCaptureDescriptorDataEXT-device-08082# If
 --     @device@ was created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1520,9 +1646,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1567,7 +1697,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetSamplerOpaqueCaptureDescriptorDataEXT-None-08084# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetSamplerOpaqueCaptureDescriptorDataEXT-pData-08085#
@@ -1577,7 +1707,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetSamplerOpaqueCaptureDescriptorDataEXT-device-08086# If
 --     @device@ was created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1600,9 +1730,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1648,7 +1782,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT-None-08088#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT-pData-08089#
@@ -1658,7 +1792,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT-device-08090#
 --     If @device@ was created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1681,9 +1815,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1719,6 +1857,10 @@ getAccelerationStructureOpaqueCaptureDescriptorDataEXT device
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
+-- No documentation found for TopLevel "VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
+pattern IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT
+
+
 -- | VkPhysicalDeviceDescriptorBufferFeaturesEXT - Structure describing the
 -- descriptor buffer features that can be supported by an implementation
 --
@@ -1734,9 +1876,13 @@ getAccelerationStructureOpaqueCaptureDescriptorDataEXT device
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDescriptorBufferFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDescriptorBufferFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1755,8 +1901,10 @@ data PhysicalDeviceDescriptorBufferFeaturesEXT = PhysicalDeviceDescriptorBufferF
     -- descriptor buffers. If this is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- all resources created with
     -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
-    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
+    -- 'IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
     -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
+    -- 'Vulkan.Extensions.VK_ARM_tensors.TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM',
+    -- 'Vulkan.Extensions.VK_ARM_tensors.TENSOR_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM',
     -- 'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
     -- or
     -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
@@ -1833,17 +1981,16 @@ instance Zero PhysicalDeviceDescriptorBufferFeaturesEXT where
 -- = Description
 --
 -- A descriptor binding with type
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.DESCRIPTOR_TYPE_MUTABLE_VALVE'
--- has a descriptor size which is implied by the descriptor types included
--- in the
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'::@pDescriptorTypes@
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT' has a
+-- descriptor size which is implied by the descriptor types included in the
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'::@pDescriptorTypes@
 -- list. The descriptor size is equal to the maximum size of any descriptor
 -- type included in the @pDescriptorTypes@ list.
 --
 -- As there is no way to request robust and non-robust descriptors
 -- separately, or specify robust\/non-robust descriptors in the set layout,
 -- if the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 -- feature is enabled then robust descriptors are always used.
 --
 -- If the 'PhysicalDeviceDescriptorBufferPropertiesEXT' structure is
@@ -1871,9 +2018,9 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- descriptors, immediately followed by an array of sampler descriptors.
     combinedImageSamplerDescriptorSingleArray :: Bool
   , -- | #limits-bufferlessPushDescriptors# @bufferlessPushDescriptors@ indicates
-    -- that the implementation does not require a buffer created with
+    -- that the implementation does not require a buffer created with the
     -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
-    -- to be bound when using push descriptors.
+    -- usage flag set to be bound when using push descriptors.
     bufferlessPushDescriptors :: Bool
   , -- | #limits-allowSamplerImageViewPostSubmitCreation#
     -- @allowSamplerImageViewPostSubmitCreation@ indicates that the
@@ -1940,7 +2087,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- maximum size in bytes of the opaque data used for capture and replay
     -- with acceleration structures.
     accelerationStructureCaptureReplayDescriptorDataSize :: Word64
-  , -- | #limits-samplerDescriptorSize# @samplerDescriptorSize@ indicates the
+  , -- | #limits-samplerDescriptorSizeEXT# @samplerDescriptorSize@ indicates the
     -- size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' descriptor.
     samplerDescriptorSize :: Word64
@@ -1963,7 +2110,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- @uniformTexelBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is not enabled.
     uniformTexelBufferDescriptorSize :: Word64
   , -- | #limits-robustUniformTexelBufferDescriptorSize#
@@ -1971,14 +2118,14 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustUniformTexelBufferDescriptorSize :: Word64
   , -- | #limits-storageTexelBufferDescriptorSize#
     -- @storageTexelBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is not enabled.
     storageTexelBufferDescriptorSize :: Word64
   , -- | #limits-robustStorageTexelBufferDescriptorSize#
@@ -1986,7 +2133,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustStorageTexelBufferDescriptorSize :: Word64
   , -- | #limits-uniformBufferDescriptorSize# @uniformBufferDescriptorSize@
@@ -1998,7 +2145,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- @robustUniformBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustUniformBufferDescriptorSize :: Word64
   , -- | #limits-storageBufferDescriptorSize# @storageBufferDescriptorSize@
@@ -2010,7 +2157,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- @robustStorageBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustStorageBufferDescriptorSize :: Word64
   , -- | #limits-inputAttachmentDescriptorSize# @inputAttachmentDescriptorSize@
@@ -2038,19 +2185,24 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
   , -- | #limits-samplerDescriptorBufferAddressSpaceSize#
     -- @samplerDescriptorBufferAddressSpaceSize@ indicates the total size in
     -- bytes of the address space available for descriptor buffers created with
-    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'.
+    -- the
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+    -- usage flag set.
     samplerDescriptorBufferAddressSpaceSize :: DeviceSize
   , -- | #limits-resourceDescriptorBufferAddressSpaceSize#
     -- @resourceDescriptorBufferAddressSpaceSize@ indicates the total size in
     -- bytes of the address space available for descriptor buffers created with
-    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'.
+    -- the
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+    -- usage flag set.
     resourceDescriptorBufferAddressSpaceSize :: DeviceSize
   , -- | #limits-descriptorBufferAddressSpaceSize#
     -- @descriptorBufferAddressSpaceSize@ indicates the total size in bytes of
-    -- the address space available for descriptor buffers created with both
+    -- the address space available for descriptor buffers created with both the
     -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
     -- and
-    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'.
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+    -- usage flags set.
     descriptorBufferAddressSpaceSize :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -2332,7 +2484,7 @@ instance Zero PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT where
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-VkDescriptorAddressInfoEXT-address-08043# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, @address@ /must/ not be zero
 --
 -- -   #VUID-VkDescriptorAddressInfoEXT-nullDescriptor-08938# If @address@
@@ -2342,16 +2494,22 @@ instance Zero PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT where
 --     is not zero, @range@ /must/ not be
 --     'Vulkan.Core10.APIConstants.WHOLE_SIZE'
 --
--- -   #VUID-VkDescriptorAddressInfoEXT-None-08044# If @address@ is not
---     zero, @address@ /must/ be a valid device address at an offset within
---     a 'Vulkan.Core10.Handles.Buffer'
---
--- -   #VUID-VkDescriptorAddressInfoEXT-range-08045# @range@ /must/ be less
---     than or equal to the size of the buffer containing @address@ minus
---     the offset of @address@ from the base address of the buffer
+-- -   #VUID-VkDescriptorAddressInfoEXT-range-08045# If @address@ is not
+--     zero, then @range@ /must/ be less than or equal to the size of the
+--     buffer containing @address@ minus the offset of @address@ from the
+--     base address of the buffer
 --
 -- -   #VUID-VkDescriptorAddressInfoEXT-range-08940# @range@ /must/ not be
 --     zero
+--
+-- -   #VUID-VkDescriptorAddressInfoEXT-None-12271# If Vulkan 1.3 is not
+--     supported and the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-ycbcr2plane444Formats ycbcr2plane444Formats>
+--     feature is not enabled, @format@ /must/ not be
+--     'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_444_UNORM',
+--     'Vulkan.Core10.Enums.Format.FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16',
+--     'Vulkan.Core10.Enums.Format.FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16',
+--     or 'Vulkan.Core10.Enums.Format.FORMAT_G16_B16R16_2PLANE_444_UNORM'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2361,11 +2519,15 @@ instance Zero PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT where
 -- -   #VUID-VkDescriptorAddressInfoEXT-pNext-pNext# @pNext@ /must/ be
 --     @NULL@
 --
+-- -   #VUID-VkDescriptorAddressInfoEXT-address-parameter# If @address@ is
+--     not @0@, @address@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
+--
 -- -   #VUID-VkDescriptorAddressInfoEXT-format-parameter# @format@ /must/
 --     be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 -- feature is enabled, @address@ /can/ be zero. Loads from a null
 -- descriptor return zero values and stores and atomics to a null
 -- descriptor are discarded.
@@ -2409,7 +2571,6 @@ instance ToCStruct DescriptorAddressInfoEXT where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceAddress)) (zero)
     poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
     poke ((p `plusPtr` 32 :: Ptr Format)) (zero)
     f
@@ -2441,27 +2602,34 @@ instance Zero DescriptorAddressInfoEXT where
 -- = Description
 --
 -- If the @pNext@ chain includes a
--- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'::@usage@
 -- from that structure is used instead of @usage@ from this structure.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09499# If the @pNext@
 --     chain does not include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09500# If the @pNext@
 --     chain does not include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ not be 0
+--
+-- -   #VUID-VkDescriptorBufferBindingInfoEXT-usage-10998# The @usage@ must
+--     include at least one of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT',
+--     or
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-bufferlessPushDescriptors-08056#
 --     If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', and @usage@ contains
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT',
 --     then the @pNext@ chain /must/ include a
@@ -2474,23 +2642,26 @@ instance Zero DescriptorAddressInfoEXT where
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-usage-08122# If @usage@
 --     includes
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT',
---     @address@ /must/ be an address within a valid buffer that was
---     created with
+--     @address@ /must/ be a device address allocated to the application
+--     from a buffer created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+--     usage flag set
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-usage-08123# If @usage@
 --     includes
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT',
---     @address@ /must/ be an address within a valid buffer that was
---     created with
+--     @address@ /must/ be a device address allocated to the application
+--     from a buffer created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     usage flag set
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-usage-08124# If @usage@
 --     includes
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT',
---     @address@ /must/ be an address within a valid buffer that was
---     created with
+--     @address@ /must/ be a device address allocated to the application
+--     from a buffer created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
+--     usage flag set
 --
 -- == Valid Usage (Implicit)
 --
@@ -2501,11 +2672,15 @@ instance Zero DescriptorAddressInfoEXT where
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-pNext-pNext# Each @pNext@
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --     or 'DescriptorBufferBindingPushDescriptorBufferHandleEXT'
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
+--     value of each structure in the @pNext@ chain /must/ be unique
+--
+-- -   #VUID-VkDescriptorBufferBindingInfoEXT-address-parameter# @address@
+--     /must/ be a valid 'Vulkan.Core10.FundamentalTypes.DeviceAddress'
+--     value
 --
 -- = See Also
 --
@@ -2523,7 +2698,12 @@ data DescriptorBufferBindingInfoEXT (es :: [Type]) = DescriptorBufferBindingInfo
   , -- | @usage@ is a bitmask of
     -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' specifying
     -- the 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@ for the buffer from
-    -- which @address@ was queried.
+    -- which @address@ was queried. Usage flags other than
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT',
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT',
+    -- and
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
+    -- are ignored.
     usage :: BufferUsageFlags
   }
   deriving (Typeable)
@@ -2539,7 +2719,7 @@ instance Extensible DescriptorBufferBindingInfoEXT where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorBufferBindingInfoEXT e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @DescriptorBufferBindingPushDescriptorBufferHandleEXT = Just f
-    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfoKHR = Just f
+    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfo = Just f
     | otherwise = Nothing
 
 instance ( Extendss DescriptorBufferBindingInfoEXT es
@@ -2584,7 +2764,7 @@ instance es ~ '[] => Zero (DescriptorBufferBindingInfoEXT es) where
 -- == Valid Usage
 --
 -- -   #VUID-VkDescriptorBufferBindingPushDescriptorBufferHandleEXT-bufferlessPushDescriptors-08059#
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
@@ -2682,39 +2862,13 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 --     member of @data@ /must/ be a 'Vulkan.Core10.Handles.ImageView'
 --     created on @device@, or 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   #VUID-VkDescriptorGetInfoEXT-type-08024# If @type@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
---     @pUniformTexelBuffer@ is not @NULL@ and
---     @pUniformTexelBuffer->address@ is not zero,
---     @pUniformTexelBuffer->address@ /must/ be an address within a
---     'Vulkan.Core10.Handles.Buffer' created on @device@
---
--- -   #VUID-VkDescriptorGetInfoEXT-type-08025# If @type@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
---     @pStorageTexelBuffer@ is not @NULL@ and
---     @pStorageTexelBuffer->address@ is not zero,
---     @pStorageTexelBuffer->address@ /must/ be an address within a
---     'Vulkan.Core10.Handles.Buffer' created on @device@
---
--- -   #VUID-VkDescriptorGetInfoEXT-type-08026# If @type@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
---     @pUniformBuffer@ is not @NULL@ and @pUniformBuffer->address@ is not
---     zero, @pUniformBuffer->address@ /must/ be an address within a
---     'Vulkan.Core10.Handles.Buffer' created on @device@
---
--- -   #VUID-VkDescriptorGetInfoEXT-type-08027# If @type@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
---     @pStorageBuffer@ is not @NULL@ and @pStorageBuffer->address@ is not
---     zero, @pStorageBuffer->address@ /must/ be an address within a
---     'Vulkan.Core10.Handles.Buffer' created on @device@
---
 -- -   #VUID-VkDescriptorGetInfoEXT-type-09427# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
 --     @pUniformBuffer@ is not @NULL@ , the number of texel buffer elements
 --     given by (⌊@pUniformBuffer->range@ \/ (texel block size)⌋ × (texels
 --     per block)) where texel block size and texels per block are as
 --     defined in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-compatibility Compatible Formats>
 --     table for @pUniformBuffer->format@, /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
@@ -2724,7 +2878,7 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 --     given by (⌊@pStorageBuffer->range@ \/ (texel block size)⌋ × (texels
 --     per block)) where texel block size and texels per block are as
 --     defined in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-compatibility Compatible Formats>
 --     table for @pStorageBuffer->format@, /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
@@ -2743,12 +2897,114 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 --     @device@, returned by
 --     'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureHandleNV'
 --
+-- -   #VUID-VkDescriptorGetInfoEXT-type-09701# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM', a
+--     'Vulkan.Extensions.VK_ARM_tensors.DescriptorGetTensorInfoARM'
+--     structure /must/ be included in the @pNext@ chain and @data@ is
+--     ignored
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12216# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     and @pCombinedImageSampler->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @pCombinedImageSampler->imageView@ member of @data@ /must/ have been
+--     created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12217# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     @pSampledImage@ is not @NULL@, and @pSampledImage->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @pSampledImage->imageView@ member of @data@ /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12218# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     @pStorageImage@ is not @NULL@, and @pStorageImage->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @pStorageImage->imageView@ member of @data@ /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12219# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     the @pInputAttachmentImage->imageView@ member of @data@ /must/ have
+--     been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12220# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
+--     @pUniformBuffer@ is not @NULL@ and @pUniformBuffer->address@ is not
+--     zero, @pUniformBuffer->address@ /must/ be a device address allocated
+--     to the application from a buffer created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
+--     usage flag set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12221# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
+--     @pStorageBuffer@ is not @NULL@ and @pStorageBuffer->address@ is not
+--     zero, @pStorageBuffer->address@ /must/ be a device address allocated
+--     to the application from a buffer created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
+--     usage flag set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12222# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
+--     @pUniformTexelBuffer@ is not @NULL@ and
+--     @pUniformTexelBuffer->address@ is not zero,
+--     @pUniformTexelBuffer->address@ /must/ be a device address allocated
+--     to the application from a buffer created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
+--     usage flag set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12223# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+--     @pStorageTexelBuffer@ is not @NULL@ and
+--     @pStorageTexelBuffer->address@ is not zero,
+--     @pStorageTexelBuffer->address@ /must/ be a device address allocated
+--     to the application from a buffer created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
+--     usage flag set
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12265# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+--     and @pUniformBuffer@ is not @NULL@, @pUniformBuffer->address@ /must/
+--     be aligned to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minUniformBufferOffsetAlignment@
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12266# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
+--     and @pStorageBuffer@ is not @NULL@, @pStorageBuffer->address@ /must/
+--     be aligned to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minStorageBufferOffsetAlignment@
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12269# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
+--     and @pUniformTexelBuffer@ is not @NULL@,
+--     @pUniformTexelBuffer->address@ /must/ be a multiple of the effective
+--     alignment requirement as determined by
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minTexelBufferOffsetAlignment minTexelBufferOffsetAlignment>
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-type-12270# If @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+--     the and @pStorageTexelBuffer@ is not @NULL@,
+--     @pStorageTexelBuffer->address@ /must/ be a multiple of the effective
+--     alignment requirement as determined by
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minTexelBufferOffsetAlignment minTexelBufferOffsetAlignment>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT'
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_ARM_tensors.DescriptorGetTensorInfoARM'
+--
+-- -   #VUID-VkDescriptorGetInfoEXT-sType-unique# The @sType@ value of each
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-parameter# @type@ /must/ be a
 --     valid 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
@@ -2810,30 +3066,51 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 --     of @data@ /must/ be a valid pointer to a valid
 --     'DescriptorAddressInfoEXT' structure
 --
+-- -   #VUID-VkDescriptorGetInfoEXT-accelerationStructure-parameter# If
+--     @type@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+--     the @accelerationStructure@ member of @data@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>,
 -- 'DescriptorDataEXT',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getDescriptorEXT'
-data DescriptorGetInfoEXT = DescriptorGetInfoEXT
-  { -- | @type@ is the type of descriptor to get.
+data DescriptorGetInfoEXT (es :: [Type]) = DescriptorGetInfoEXT
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @type@ is the type of descriptor to get.
     type' :: DescriptorType
-  , -- | @data@ is a structure containing the information needed to get the
-    -- descriptor.
+  , -- | @data@ is a 'DescriptorDataEXT' union containing the information needed
+    -- to get the descriptor.
     data' :: DescriptorDataEXT
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (DescriptorGetInfoEXT)
+deriving instance Generic (DescriptorGetInfoEXT (es :: [Type]))
 #endif
-deriving instance Show DescriptorGetInfoEXT
+deriving instance Show (Chain es) => Show (DescriptorGetInfoEXT es)
 
-instance ToCStruct DescriptorGetInfoEXT where
+instance Extensible DescriptorGetInfoEXT where
+  extensibleTypeName = "DescriptorGetInfoEXT"
+  setNext DescriptorGetInfoEXT{..} next' = DescriptorGetInfoEXT{next = next', ..}
+  getNext DescriptorGetInfoEXT{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorGetInfoEXT e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @DescriptorGetTensorInfoARM = Just f
+    | otherwise = Nothing
+
+instance ( Extendss DescriptorGetInfoEXT es
+         , PokeChain es ) => ToCStruct (DescriptorGetInfoEXT es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorGetInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorType)) (type')
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr DescriptorDataEXT)) (data') . ($ ())
     lift $ f
@@ -2841,20 +3118,25 @@ instance ToCStruct DescriptorGetInfoEXT where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorType)) (zero)
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr DescriptorDataEXT)) (zero) . ($ ())
     lift $ f
 
-instance FromCStruct DescriptorGetInfoEXT where
+instance ( Extendss DescriptorGetInfoEXT es
+         , PeekChain es ) => FromCStruct (DescriptorGetInfoEXT es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     type' <- peek @DescriptorType ((p `plusPtr` 16 :: Ptr DescriptorType))
     data' <- peekDescriptorDataEXT type' ((p `plusPtr` 24 :: Ptr DescriptorDataEXT))
     pure $ DescriptorGetInfoEXT
-             type' data'
+             next type' data'
 
-instance Zero DescriptorGetInfoEXT where
+instance es ~ '[] => Zero (DescriptorGetInfoEXT es) where
   zero = DescriptorGetInfoEXT
+           ()
            zero
            zero
 
@@ -2937,8 +3219,8 @@ data ImageCaptureDescriptorDataInfoEXT = ImageCaptureDescriptorDataInfoEXT
     --
     -- #VUID-VkImageCaptureDescriptorDataInfoEXT-image-08079# @image@ /must/
     -- have been created with
-    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
-    -- set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
+    -- 'IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' set in
+    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
     --
     -- #VUID-VkImageCaptureDescriptorDataInfoEXT-image-parameter# @image@
     -- /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
@@ -3233,10 +3515,21 @@ instance Zero AccelerationStructureCaptureDescriptorDataInfoEXT where
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
 -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'
 -- or
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR'
 -- structure.
+--
+-- When providing opaque capture data for an image, if the @pNext@ chain of
+-- 'Vulkan.Core10.Image.ImageCreateInfo' or
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM' contains an
+-- instance of both this structure and
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.OpaqueCaptureDataCreateInfoEXT',
+-- they /should/ both specify data from the same original resource. If they
+-- have capture data from different original resources, resource creation
+-- is much more likely to fail.
 --
 -- == Valid Usage (Implicit)
 --
@@ -3250,6 +3543,8 @@ data OpaqueCaptureDescriptorDataCreateInfoEXT = OpaqueCaptureDescriptorDataCreat
     -- 'getBufferOpaqueCaptureDescriptorDataEXT',
     -- 'getImageOpaqueCaptureDescriptorDataEXT',
     -- 'getImageViewOpaqueCaptureDescriptorDataEXT',
+    -- 'Vulkan.Extensions.VK_ARM_tensors.getTensorOpaqueCaptureDescriptorDataARM',
+    -- 'Vulkan.Extensions.VK_ARM_tensors.getTensorViewOpaqueCaptureDescriptorDataARM',
     -- 'getSamplerOpaqueCaptureDescriptorDataEXT', or
     -- 'getAccelerationStructureOpaqueCaptureDescriptorDataEXT'.
     --

@@ -18,12 +18,17 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
 --
 -- [__Contact__]
 --
@@ -72,13 +77,19 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT'
+--     -   'PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT'
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT'
+--     -   'PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT'
+--
+-- == Promotion to Vulkan 1.4
+--
+-- Functionality in this extension is included in core Vulkan 1.4 with the
+-- EXT suffix omitted. The original type, enum, and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Version History
 --
@@ -93,107 +104,41 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_pipeline_protected_access Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_pipeline_protected_access Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_pipeline_protected_access  ( PhysicalDevicePipelineProtectedAccessFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_pipeline_protected_access  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT
+                                                           , pattern PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT
+                                                           , pattern PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
+                                                           , PhysicalDevicePipelineProtectedAccessFeaturesEXT
                                                            , EXT_PIPELINE_PROTECTED_ACCESS_SPEC_VERSION
                                                            , pattern EXT_PIPELINE_PROTECTED_ACCESS_SPEC_VERSION
                                                            , EXT_PIPELINE_PROTECTED_ACCESS_EXTENSION_NAME
                                                            , pattern EXT_PIPELINE_PROTECTED_ACCESS_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT))
--- | VkPhysicalDevicePipelineProtectedAccessFeaturesEXT - Structure
--- describing support for specifying protected access on individual
--- pipelines
---
--- = Members
---
--- This structure describes the following feature:
---
--- = Description
---
--- If the 'PhysicalDevicePipelineProtectedAccessFeaturesEXT' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePipelineProtectedAccessFeaturesEXT' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_protected_access VK_EXT_pipeline_protected_access>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDevicePipelineProtectedAccessFeaturesEXT = PhysicalDevicePipelineProtectedAccessFeaturesEXT
-  { -- | #features-pipelineProtectedAccess# @pipelineProtectedAccess@ indicates
-    -- whether the implementation supports specifying protected access on
-    -- individual pipelines.
-    pipelineProtectedAccess :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDevicePipelineProtectedAccessFeaturesEXT)
-#endif
-deriving instance Show PhysicalDevicePipelineProtectedAccessFeaturesEXT
+import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality' (PhysicalDevicePipelineProtectedAccessFeatures)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES
 
-instance ToCStruct PhysicalDevicePipelineProtectedAccessFeaturesEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDevicePipelineProtectedAccessFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (pipelineProtectedAccess))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDevicePipelineProtectedAccessFeaturesEXT where
-  peekCStruct p = do
-    pipelineProtectedAccess <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDevicePipelineProtectedAccessFeaturesEXT
-             (bool32ToBool pipelineProtectedAccess)
+-- No documentation found for TopLevel "VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT"
+pattern PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT = PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT
 
-instance Storable PhysicalDevicePipelineProtectedAccessFeaturesEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDevicePipelineProtectedAccessFeaturesEXT where
-  zero = PhysicalDevicePipelineProtectedAccessFeaturesEXT
-           zero
+-- No documentation found for TopLevel "VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT"
+pattern PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT = PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT
+
+
+-- No documentation found for TopLevel "VkPhysicalDevicePipelineProtectedAccessFeaturesEXT"
+type PhysicalDevicePipelineProtectedAccessFeaturesEXT = PhysicalDevicePipelineProtectedAccessFeatures
 
 
 type EXT_PIPELINE_PROTECTED_ACCESS_SPEC_VERSION = 1

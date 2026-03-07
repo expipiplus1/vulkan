@@ -29,6 +29,12 @@
 --         of provisional header files for enablement and stability
 --         details.__
 --
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cluster_acceleration_structure VK_NV_cluster_acceleration_structure>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
@@ -108,7 +114,9 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV'
 --
 -- -   Extending
 --     'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapTypeEXT':
@@ -132,9 +140,11 @@
 --
 -- (1) What is the status of this extension?
 --
--- -   Provisional and expected to change. The broad structure and encoding
---     format are stable, but there will likely be changes to the
---     structures, enumerant values, and shader interface.
+-- -   Deprecated. The VK_NV_cluster_acceleration_structure extension is
+--     not a one-to-one replacement for this extension but enables similar
+--     performance improvements for high-tessellation geometry and is
+--     considered the preferred direction to improve high-tessellation
+--     geometry performance.
 --
 -- == Version History
 --
@@ -153,7 +163,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_displacement_micromap Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_displacement_micromap Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DeviceQueueCreateFlagBits"
 module Vulkan.Core10.Enums.DeviceQueueCreateFlagBits  ( DeviceQueueCreateFlags
-                                                      , DeviceQueueCreateFlagBits( DEVICE_QUEUE_CREATE_PROTECTED_BIT
+                                                      , DeviceQueueCreateFlagBits( DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR
+                                                                                 , DEVICE_QUEUE_CREATE_PROTECTED_BIT
                                                                                  , ..
                                                                                  )
                                                       ) where
@@ -21,6 +22,15 @@ type DeviceQueueCreateFlags = DeviceQueueCreateFlagBits
 
 -- | VkDeviceQueueCreateFlagBits - Bitmask specifying behavior of the queue
 --
+-- = Description
+--
+-- -   'DEVICE_QUEUE_CREATE_PROTECTED_BIT' specifies that the device queue
+--     is a protected-capable queue.
+--
+-- -   'DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR' specifies that
+--     the device queue is internally synchronized and does not require
+--     external synchronization.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
@@ -28,18 +38,29 @@ type DeviceQueueCreateFlags = DeviceQueueCreateFlagBits
 newtype DeviceQueueCreateFlagBits = DeviceQueueCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEVICE_QUEUE_CREATE_PROTECTED_BIT' specifies that the device queue is a
--- protected-capable queue.
+-- No documentation found for Nested "VkDeviceQueueCreateFlagBits" "VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR"
+pattern DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR = DeviceQueueCreateFlagBits 0x00000004
+
+-- No documentation found for Nested "VkDeviceQueueCreateFlagBits" "VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT"
 pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT = DeviceQueueCreateFlagBits 0x00000001
 
 conNameDeviceQueueCreateFlagBits :: String
 conNameDeviceQueueCreateFlagBits = "DeviceQueueCreateFlagBits"
 
 enumPrefixDeviceQueueCreateFlagBits :: String
-enumPrefixDeviceQueueCreateFlagBits = "DEVICE_QUEUE_CREATE_PROTECTED_BIT"
+enumPrefixDeviceQueueCreateFlagBits = "DEVICE_QUEUE_CREATE_"
 
 showTableDeviceQueueCreateFlagBits :: [(DeviceQueueCreateFlagBits, String)]
-showTableDeviceQueueCreateFlagBits = [(DEVICE_QUEUE_CREATE_PROTECTED_BIT, "")]
+showTableDeviceQueueCreateFlagBits =
+  [
+    ( DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR
+    , "INTERNALLY_SYNCHRONIZED_BIT_KHR"
+    )
+  ,
+    ( DEVICE_QUEUE_CREATE_PROTECTED_BIT
+    , "PROTECTED_BIT"
+    )
+  ]
 
 instance Show DeviceQueueCreateFlagBits where
   showsPrec =

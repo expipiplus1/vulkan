@@ -17,6 +17,26 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkImageTiling - Specifies the tiling arrangement of data in an image
 --
+-- = Description
+--
+-- -   'IMAGE_TILING_OPTIMAL' specifies optimal tiling (texels are laid out
+--     in an implementation-dependent arrangement, for more efficient
+--     memory access).
+--
+-- -   'IMAGE_TILING_LINEAR' specifies linear tiling (texels are laid out
+--     in memory in row-major order, possibly with some padding on each
+--     row).
+--
+-- -   'IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT' specifies that the image’s
+--     tiling is defined by a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
+--     The modifier is specified at image creation with
+--     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
+--     and /can/ be queried with
+--     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.getImageDrmFormatModifierPropertiesEXT'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -30,24 +50,13 @@ import GHC.Show (Show(showsPrec))
 newtype ImageTiling = ImageTiling Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'IMAGE_TILING_OPTIMAL' specifies optimal tiling (texels are laid out in
--- an implementation-dependent arrangement, for more efficient memory
--- access).
+-- No documentation found for Nested "VkImageTiling" "VK_IMAGE_TILING_OPTIMAL"
 pattern IMAGE_TILING_OPTIMAL = ImageTiling 0
 
--- | 'IMAGE_TILING_LINEAR' specifies linear tiling (texels are laid out in
--- memory in row-major order, possibly with some padding on each row).
+-- No documentation found for Nested "VkImageTiling" "VK_IMAGE_TILING_LINEAR"
 pattern IMAGE_TILING_LINEAR = ImageTiling 1
 
--- | 'IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT' specifies that the image’s tiling
--- is defined by a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
--- The modifier is specified at image creation with
--- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT'
--- or
--- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
--- and /can/ be queried with
--- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.getImageDrmFormatModifierPropertiesEXT'.
+-- No documentation found for Nested "VkImageTiling" "VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT"
 pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT = ImageTiling 1000158000
 
 {-# COMPLETE

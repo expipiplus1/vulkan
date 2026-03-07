@@ -54,8 +54,8 @@
 --
 -- == Description
 --
--- This extension enables tighter array and struct packing to be used with
--- uniform buffers.
+-- This extension enables tighter array and structure packing to be used
+-- with uniform buffers.
 --
 -- It modifies the alignment rules for uniform buffers, allowing for
 -- tighter packing of arrays and structures. This allows, for example, the
@@ -100,7 +100,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_uniform_buffer_standard_layout Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_uniform_buffer_standard_layout Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -93,7 +93,7 @@
 --
 -- > vec4 textureBlockMatchWindowSAD( sampler2D target,
 -- >                                  uvec2 targetCoord,
--- >                                  samler2D reference,
+-- >                                  sampler2D reference,
 -- >                                  uvec2 refCoord,
 -- >                                  uvec2 blocksize) {
 -- >     // compareMode (MIN or MAX) comes from the vkSampler associated with `target`
@@ -135,7 +135,7 @@
 --
 -- > vec4 textureBlockMatchGatherSAD( sampler2D target,
 -- >                                  uvec2 targetCoord,
--- >                                  samler2D reference,
+-- >                                  sampler2D reference,
 -- >                                  uvec2 refCoord,
 -- >                                  uvec2 blocksize) {
 -- >     vec4 out;
@@ -205,7 +205,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_image_processing2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_image_processing2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -269,9 +269,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_B
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceImageProcessing2FeaturesQCOM' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceImageProcessing2FeaturesQCOM', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -456,6 +460,14 @@ instance Zero SamplerBlockMatchWindowCreateInfoQCOM where
 
 -- | VkBlockMatchWindowCompareModeQCOM - Block match window compare modes
 --
+-- = Description
+--
+-- -   'BLOCK_MATCH_WINDOW_COMPARE_MODE_MIN_QCOM' specifies that windowed
+--     block match operations return the minimum error within the window.
+--
+-- -   'BLOCK_MATCH_WINDOW_COMPARE_MODE_MAX_QCOM' specifies that windowed
+--     block match operations return the maximum error within the window.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_image_processing2 VK_QCOM_image_processing2>,
@@ -463,12 +475,10 @@ instance Zero SamplerBlockMatchWindowCreateInfoQCOM where
 newtype BlockMatchWindowCompareModeQCOM = BlockMatchWindowCompareModeQCOM Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'BLOCK_MATCH_WINDOW_COMPARE_MODE_MIN_QCOM' specifies that windowed block
--- match operations return the minimum error within the window.
+-- No documentation found for Nested "VkBlockMatchWindowCompareModeQCOM" "VK_BLOCK_MATCH_WINDOW_COMPARE_MODE_MIN_QCOM"
 pattern BLOCK_MATCH_WINDOW_COMPARE_MODE_MIN_QCOM = BlockMatchWindowCompareModeQCOM 0
 
--- | 'BLOCK_MATCH_WINDOW_COMPARE_MODE_MAX_QCOM' specifies that windowed block
--- match operations return the maximum error within the window.
+-- No documentation found for Nested "VkBlockMatchWindowCompareModeQCOM" "VK_BLOCK_MATCH_WINDOW_COMPARE_MODE_MAX_QCOM"
 pattern BLOCK_MATCH_WINDOW_COMPARE_MODE_MAX_QCOM = BlockMatchWindowCompareModeQCOM 1
 
 {-# COMPLETE

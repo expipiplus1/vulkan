@@ -114,7 +114,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED_EXT'
+--     -   'ERROR_VALIDATION_FAILED_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -143,8 +143,8 @@
 --
 -- To capture events that occur while creating or destroying an instance an
 -- application /can/ link a 'DebugReportCallbackCreateInfoEXT' structure to
--- the @pNext@ element of the
--- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
+-- the @pNext@ chain of the
+-- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
@@ -251,8 +251,8 @@
 --
 -- __RESOLVED__: Due to the different nature of dispatchable and
 -- nondispatchable handles there is no generic way (that we know of) that
--- works for common compilers with 32bit, 64bit, C and C++. We recommend
--- applications use the same cast that the validation layers use:
+-- works for common C and C++ compilers in both 32-bit and 64-bit ABIs. We
+-- recommend applications use the same cast that the validation layers use:
 --
 -- +
 --
@@ -322,7 +322,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_debug_report Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_debug_report Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

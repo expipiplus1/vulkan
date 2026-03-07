@@ -1,0 +1,170 @@
+{-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_texture_compression_astc_3d - device extension
+--
+-- = VK_EXT_texture_compression_astc_3d
+--
+-- [__Name String__]
+--     @VK_EXT_texture_compression_astc_3d@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     289
+--
+-- [__Revision__]
+--     1
+--
+-- [__Ratification Status__]
+--     Ratified
+--
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__Contact__]
+--
+--     -   Jan-Harald Fredriksen
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texture_compression_astc_3d] @janharaldfredriksen-arm%0A*Here describe the issue or question you have about the VK_EXT_texture_compression_astc_3d extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_texture_compression_astc_3d.adoc VK_EXT_texture_compression_astc_3d>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2025-06-09
+--
+-- [__IP Status__]
+--     No known issues.
+--
+-- [__Contributors__]
+--
+--     -   Jan-Harald Fredriksen, Arm
+--
+-- == Description
+--
+-- This extension adds support for 3D textures compressed using the
+-- Adaptive Scalable Texture Compression (ASTC) format.
+--
+-- These formats are compressed in 3D. As such, each slice will contain
+-- data for a Width x Height x Depth block of the texture. All transfer
+-- operations are done at the granularity of block dimensions.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceTextureCompressionASTC3DFeaturesEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_TEXTURE_COMPRESSION_ASTC_3D_EXTENSION_NAME'
+--
+-- -   'EXT_TEXTURE_COMPRESSION_ASTC_3D_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.Format.Format':
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT'
+--
+-- == Issues
+--
+-- None.
+--
+-- == Version History
+--
+-- -   Revision 1, 2025-06-09 (Jan-Harald Fredriksen)
+--
+--     -   Initial version
+--
+-- == See Also
+--
+-- No cross-references are available
+--
+-- == Document Notes
+--
+-- For more information, see the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_texture_compression_astc_3d Vulkan Specification>.
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
+module Vulkan.Extensions.VK_EXT_texture_compression_astc_3d  (PhysicalDeviceTextureCompressionASTC3DFeaturesEXT) where
+
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
+data PhysicalDeviceTextureCompressionASTC3DFeaturesEXT
+
+instance ToCStruct PhysicalDeviceTextureCompressionASTC3DFeaturesEXT
+instance Show PhysicalDeviceTextureCompressionASTC3DFeaturesEXT
+
+instance FromCStruct PhysicalDeviceTextureCompressionASTC3DFeaturesEXT
+

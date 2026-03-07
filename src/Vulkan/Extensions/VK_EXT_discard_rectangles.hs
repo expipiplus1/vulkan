@@ -51,7 +51,7 @@
 --
 -- This extension provides additional orthogonally aligned “discard
 -- rectangles” specified in framebuffer-space coordinates that restrict
--- rasterization of all points, lines and triangles.
+-- rasterization of all points, lines, and triangles.
 --
 -- From zero to an implementation-dependent limit (specified by
 -- @maxDiscardRectangles@) number of discard rectangles can be operational
@@ -85,7 +85,8 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'PipelineDiscardRectangleStateCreateInfoEXT'
 --
@@ -140,7 +141,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -240,11 +241,11 @@ foreign import ccall
 --
 -- This command sets the discard rectangles for subsequent drawing commands
 -- when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'::@pDiscardRectangles@
 -- values used to create the currently active pipeline.
@@ -294,7 +295,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDiscardRectangleEXT-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -316,9 +318,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDiscardRectangleEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -369,11 +376,11 @@ foreign import ccall
 --
 -- This command sets the discard rectangle enable for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is implied by the
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 -- value used to create the currently active pipeline, where a non-zero
@@ -399,7 +406,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDiscardRectangleEnableEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDiscardRectangleEnableEXT-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -418,9 +426,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDiscardRectangleEnableEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -462,11 +475,11 @@ foreign import ccall
 --
 -- This command sets the discard rectangle mode for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleMode@
 -- value used to create the currently active pipeline.
@@ -494,7 +507,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDiscardRectangleModeEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDiscardRectangleModeEXT-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -513,9 +527,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDiscardRectangleModeEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -613,22 +632,37 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 -- is ignored. If the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
 -- dynamic state is not enabled for the pipeline the presence of this
--- structure in the 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
--- chain, and a @discardRectangleCount@ greater than zero, implicitly
--- enables discard rectangles in the pipeline, otherwise discard rectangles
--- /must/ enabled or disabled by 'cmdSetDiscardRectangleEnableEXT'. If the
+-- structure in the
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo' chain, and a
+-- @discardRectangleCount@ greater than zero, implicitly enables discard
+-- rectangles in the pipeline, otherwise discard rectangles /must/ enabled
+-- or disabled by 'cmdSetDiscardRectangleEnableEXT'. If the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
 -- dynamic state is enabled for the pipeline, the @discardRectangleMode@
 -- member is ignored, and the discard rectangle mode /must/ be set by
 -- 'cmdSetDiscardRectangleModeEXT'.
 --
 -- When this structure is included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo', it defines
 -- parameters of the discard rectangle test. If the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 -- dynamic state is not enabled, and this structure is not included in the
 -- @pNext@ chain, it is equivalent to specifying this structure with a
--- @discardRectangleCount@ of @0@.
+-- @discardRectangleCount@ of @0@. If all
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT',
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT',
+-- and
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+-- dynamic states are enabled, the application /can/ omit this structure
+-- from the @pNext@ chain of
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo' and still
+-- use discard rectangles by setting all state dynamically. In this case
+-- 'cmdSetDiscardRectangleEXT' /must/ be called to set the discard
+-- rectangle for all indices [0, @maxDiscardRectangles@) before drawing
+-- with discard rectangles enabled. Individual discard rectangles /can/ be
+-- made ineffective by setting their
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D'::@extent.width@ and
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D'::@extent.height@ to zero.
 --
 -- == Valid Usage (Implicit)
 --
@@ -742,6 +776,14 @@ instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
 
 -- | VkDiscardRectangleModeEXT - Specify the discard rectangle mode
 --
+-- = Description
+--
+-- -   'DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT' specifies that the discard
+--     rectangle test is inclusive.
+--
+-- -   'DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' specifies that the discard
+--     rectangle test is exclusive.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
@@ -750,12 +792,10 @@ instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
 newtype DiscardRectangleModeEXT = DiscardRectangleModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT' specifies that the discard
--- rectangle test is inclusive.
+-- No documentation found for Nested "VkDiscardRectangleModeEXT" "VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT"
 pattern DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = DiscardRectangleModeEXT 0
 
--- | 'DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' specifies that the discard
--- rectangle test is exclusive.
+-- No documentation found for Nested "VkDiscardRectangleModeEXT" "VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT"
 pattern DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = DiscardRectangleModeEXT 1
 
 {-# COMPLETE

@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --                     
@@ -46,6 +46,12 @@
 --     -   Interacts with VK_KHR_acceleration_structure
 --
 --     -   Interacts with VK_NV_ray_tracing
+--
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>
+--         extension
 --
 -- [__Contact__]
 --
@@ -103,6 +109,13 @@
 -- descriptors directly in memory, making the management of descriptor data
 -- more explicit.
 --
+-- == Deprecation by @VK_EXT_descriptor_heap@
+--
+-- Functionality in this extension is deprecated by the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>
+-- extension. See
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#legacy-descriptor-sets Descriptor Management: Replaced by Descriptor Heaps>.
+--
 -- == New Commands
 --
 -- -   'cmdBindDescriptorBufferEmbeddedSamplersEXT'
@@ -154,7 +167,9 @@
 --     'Vulkan.Core10.ImageView.ImageViewCreateInfo',
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
---     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV':
+--     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM',
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM':
 --
 --     -   'OpaqueCaptureDescriptorDataCreateInfoEXT'
 --
@@ -226,7 +241,7 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     -   'IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits':
@@ -292,7 +307,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_descriptor_buffer Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_descriptor_buffer Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -361,12 +376,15 @@ instance Show DescriptorBufferBindingPushDescriptorBufferHandleEXT
 instance FromCStruct DescriptorBufferBindingPushDescriptorBufferHandleEXT
 
 
-data DescriptorGetInfoEXT
+type role DescriptorGetInfoEXT nominal
+data DescriptorGetInfoEXT (es :: [Type])
 
-instance ToCStruct DescriptorGetInfoEXT
-instance Show DescriptorGetInfoEXT
+instance ( Extendss DescriptorGetInfoEXT es
+         , PokeChain es ) => ToCStruct (DescriptorGetInfoEXT es)
+instance Show (Chain es) => Show (DescriptorGetInfoEXT es)
 
-instance FromCStruct DescriptorGetInfoEXT
+instance ( Extendss DescriptorGetInfoEXT es
+         , PeekChain es ) => FromCStruct (DescriptorGetInfoEXT es)
 
 
 data ImageCaptureDescriptorDataInfoEXT

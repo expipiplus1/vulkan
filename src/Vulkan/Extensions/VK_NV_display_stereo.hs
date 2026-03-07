@@ -99,7 +99,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_display_stereo Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_display_stereo Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -257,6 +257,26 @@ instance Zero DisplayModeStereoPropertiesNV where
 
 -- | VkDisplaySurfaceStereoTypeNV - 3D Stereo type
 --
+-- = Description
+--
+-- -   'DISPLAY_SURFACE_STEREO_TYPE_NONE_NV' specifies no configuration for
+--     stereo presentation. This is the default behavior if
+--     'DisplaySurfaceStereoCreateInfoNV' is not provided.
+--
+-- -   'DISPLAY_SURFACE_STEREO_TYPE_ONBOARD_DIN_NV' specifies configuration
+--     for glasses that connect via a DIN connector on the back of the
+--     graphics card.
+--
+-- -   'DISPLAY_SURFACE_STEREO_TYPE_HDMI_3D_NV' specifies configuration for
+--     HDMI 3D compatible display devices with their own stereo emitters.
+--     This is also known as HDMI Frame Packed Stereo, where the left and
+--     right eye images are stacked into a single frame with a doubled
+--     pixel clock and refresh rate.
+--
+-- -   'DISPLAY_SURFACE_STEREO_TYPE_INBAND_DISPLAYPORT_NV' specifies
+--     configuration for DisplayPort display devices with in-band stereo
+--     signaling and emitters.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_display_stereo VK_NV_display_stereo>,
@@ -264,26 +284,16 @@ instance Zero DisplayModeStereoPropertiesNV where
 newtype DisplaySurfaceStereoTypeNV = DisplaySurfaceStereoTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DISPLAY_SURFACE_STEREO_TYPE_NONE_NV' specifies no configuration for
--- stereo presentation. This is the default behavior if
--- 'DisplaySurfaceStereoCreateInfoNV' is not provided.
+-- No documentation found for Nested "VkDisplaySurfaceStereoTypeNV" "VK_DISPLAY_SURFACE_STEREO_TYPE_NONE_NV"
 pattern DISPLAY_SURFACE_STEREO_TYPE_NONE_NV = DisplaySurfaceStereoTypeNV 0
 
--- | 'DISPLAY_SURFACE_STEREO_TYPE_ONBOARD_DIN_NV' specifies configuration for
--- glasses that connect via a DIN connector on the back of the graphics
--- card.
+-- No documentation found for Nested "VkDisplaySurfaceStereoTypeNV" "VK_DISPLAY_SURFACE_STEREO_TYPE_ONBOARD_DIN_NV"
 pattern DISPLAY_SURFACE_STEREO_TYPE_ONBOARD_DIN_NV = DisplaySurfaceStereoTypeNV 1
 
--- | 'DISPLAY_SURFACE_STEREO_TYPE_HDMI_3D_NV' specifies configuration for
--- HDMI 3D compatible display devices with their own stereo emitters. This
--- is also known as HDMI Frame Packed Stereo, where the left and right eye
--- images are stacked into a single frame with a doubled pixel clock and
--- refresh rate.
+-- No documentation found for Nested "VkDisplaySurfaceStereoTypeNV" "VK_DISPLAY_SURFACE_STEREO_TYPE_HDMI_3D_NV"
 pattern DISPLAY_SURFACE_STEREO_TYPE_HDMI_3D_NV = DisplaySurfaceStereoTypeNV 2
 
--- | 'DISPLAY_SURFACE_STEREO_TYPE_INBAND_DISPLAYPORT_NV' specifies
--- configuration for DisplayPort display devices with in-band stereo
--- signaling and emitters.
+-- No documentation found for Nested "VkDisplaySurfaceStereoTypeNV" "VK_DISPLAY_SURFACE_STEREO_TYPE_INBAND_DISPLAYPORT_NV"
 pattern DISPLAY_SURFACE_STEREO_TYPE_INBAND_DISPLAYPORT_NV = DisplaySurfaceStereoTypeNV 3
 
 {-# COMPLETE

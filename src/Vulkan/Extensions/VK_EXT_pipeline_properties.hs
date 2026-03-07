@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -143,7 +143,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_pipeline_properties Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_pipeline_properties Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -241,7 +241,7 @@ foreign import ccall
 --     'PipelinePropertiesIdentifierEXT' structure
 --
 -- -   #VUID-vkGetPipelinePropertiesEXT-None-06766# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelinePropertiesIdentifier pipelinePropertiesIdentifier>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelinePropertiesIdentifier pipelinePropertiesIdentifier>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -263,11 +263,16 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_properties VK_EXT_pipeline_properties>,
 -- 'Vulkan.CStruct.Extends.BaseOutStructure',
--- 'Vulkan.Core10.Handles.Device', 'PipelineInfoEXT'
+-- 'Vulkan.Core10.Handles.Device',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineInfoKHR'
 getPipelinePropertiesEXT :: forall io
                           . (MonadIO io)
                          => -- | @device@ is the logical device that created the pipeline.
@@ -366,9 +371,13 @@ instance Zero PipelinePropertiesIdentifierEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePipelinePropertiesFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePipelinePropertiesFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

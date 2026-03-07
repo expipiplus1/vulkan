@@ -78,7 +78,7 @@
 -- requirements for half-precision floating-point SPIR-V operations. This
 -- extension does not enable use of 8-bit integer types or 16-bit
 -- floating-point types in any
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-iointerfaces shader input and output interfaces>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-iointerfaces shader input and output interfaces>
 -- and therefore does not supersede the @VK_KHR_8bit_storage@ or
 -- @VK_KHR_16bit_storage@ extensions.
 --
@@ -89,6 +89,11 @@
 -- extension is not, both the @shaderFloat16@ and @shaderInt8@ capabilities
 -- are optional. The original type, enum, and command names are still
 -- available as aliases of the core functionality.
+--
+-- == Promotion to Vulkan 1.4
+--
+-- If Vulkan 1.4 is supported, support for the @shaderInt8@ capability is
+-- required.
 --
 -- == New Structures
 --
@@ -125,7 +130,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_float16_int8 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_shader_float16_int8 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

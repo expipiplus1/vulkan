@@ -50,7 +50,7 @@
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT' object type, which is
 -- managed similarly to the existing 'Vulkan.Core10.Handles.PipelineCache'.
 --
--- The new struct 'ShaderModuleValidationCacheCreateInfoEXT' can be
+-- The new structure 'ShaderModuleValidationCacheCreateInfoEXT' can be
 -- included in the @pNext@ chain at
 -- 'Vulkan.Core10.Shader.createShaderModule' time. It contains a
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT' to use when validating
@@ -75,7 +75,7 @@
 -- -   'ValidationCacheCreateInfoEXT'
 --
 -- -   Extending 'Vulkan.Core10.Shader.ShaderModuleCreateInfo',
---     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
+--     'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo':
 --
 --     -   'ShaderModuleValidationCacheCreateInfoEXT'
 --
@@ -116,7 +116,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_validation_cache Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_validation_cache Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -270,6 +270,9 @@ foreign import ccall
 --     @pValidationCache@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
 --
+-- -   #VUID-vkCreateValidationCacheEXT-device-queuecount# The device
+--     /must/ have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -279,6 +282,10 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -294,7 +301,7 @@ createValidationCacheEXT :: forall io
                             -- containing the initial parameters for the validation cache object.
                             ValidationCacheCreateInfoEXT
                          -> -- | @pAllocator@ controls host memory allocation as described in the
-                            -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                            -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                             -- chapter.
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (ValidationCacheEXT)
@@ -389,7 +396,7 @@ destroyValidationCacheEXT :: forall io
                           -> -- | @validationCache@ is the handle of the validation cache to destroy.
                              ValidationCacheEXT
                           -> -- | @pAllocator@ controls host memory allocation as described in the
-                             -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                             -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io ()
@@ -485,6 +492,16 @@ foreign import ccall
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
+-- This query does not behave consistently with the behavior described in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-binaryresults Opaque Binary Data Results>,
+-- for historical reasons.
+--
+-- If the amount of data available is larger than the passed @pDataSize@,
+-- the query returns up to the size of the passed buffer, and signals
+-- overflow with a 'Vulkan.Core10.Enums.Result.INCOMPLETE' success status
+-- instead of returning a
+-- 'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR' error status.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetValidationCacheDataEXT-device-parameter# @device@ /must/
@@ -509,15 +526,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -614,9 +635,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -753,7 +778,9 @@ data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreat
   { -- | @validationCache@ is the validation cache object from which the results
     -- of prior validation attempts will be written, and to which new
     -- validation results for this 'Vulkan.Core10.Handles.ShaderModule' will be
-    -- written (if not already present).
+    -- written (if not already present). The implementation /must/ not access
+    -- this object outside of the duration of the command this structure is
+    -- passed to.
     --
     -- #VUID-VkShaderModuleValidationCacheCreateInfoEXT-validationCache-parameter#
     -- @validationCache@ /must/ be a valid
@@ -839,6 +866,11 @@ instance Read ValidationCacheCreateFlagsEXT where
 
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
 --
+-- = Description
+--
+-- -   'VALIDATION_CACHE_HEADER_VERSION_ONE_EXT' specifies version one of
+--     the validation cache.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
@@ -848,8 +880,7 @@ newtype ValidationCacheHeaderVersionEXT = ValidationCacheHeaderVersionEXT Int32
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'VALIDATION_CACHE_HEADER_VERSION_ONE_EXT' specifies version one of the
--- validation cache.
+-- No documentation found for Nested "VkValidationCacheHeaderVersionEXT" "VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT"
 pattern VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = ValidationCacheHeaderVersionEXT 1
 
 {-# COMPLETE VALIDATION_CACHE_HEADER_VERSION_ONE_EXT :: ValidationCacheHeaderVersionEXT #-}

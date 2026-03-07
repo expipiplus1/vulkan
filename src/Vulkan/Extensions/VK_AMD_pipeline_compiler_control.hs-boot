@@ -54,8 +54,9 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo',
 --     'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX':
 --
 --     -   'PipelineCompilerControlCreateInfoAMD'
@@ -99,7 +100,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_pipeline_compiler_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

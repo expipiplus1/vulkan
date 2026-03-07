@@ -21,7 +21,11 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 VK_KHR_spirv_1_4>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 --
@@ -49,13 +53,13 @@
 --         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_ray_tracing.txt GLSL_EXT_ray_tracing>
 --
 --     -   This extension interacts with
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.2 Vulkan 1.2>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions-1.2 Vulkan 1.2>
 --         and @VK_KHR_vulkan_memory_model@, adding the
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-call-related shader-call-related>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shader-call-related shader-call-related>
 --         relation of invocations,
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-call-order shader-call-order>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shader-call-order shader-call-order>
 --         partial order of dynamic instances of instructions, and the
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-shadercall ShaderCallKHR>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-scope-shadercall ShaderCallKHR>
 --         scope.
 --
 --     -   This extension interacts with @VK_KHR_pipeline_library@,
@@ -259,6 +263,11 @@
 --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
 --
 -- -   Extending
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
+--
+--     -   'PIPELINE_CREATE_2_RAY_TRACING_SKIP_BUILT_IN_PRIMITIVES_BIT_KHR'
+--
+-- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
 --     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
@@ -292,43 +301,43 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIdKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIdKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-launchsize LaunchSizeKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-launchsize LaunchSizeKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-worldrayorigin WorldRayOriginKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-worldrayorigin WorldRayOriginKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-worldraydirection WorldRayDirectionKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-worldraydirection WorldRayDirectionKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-objectrayorigin ObjectRayOriginKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-objectrayorigin ObjectRayOriginKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-objectraydirection ObjectRayDirectionKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-objectraydirection ObjectRayDirectionKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raytmin RayTminKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-raytmin RayTminKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raytmax RayTmaxKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-raytmax RayTmaxKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-instancecustomindex InstanceCustomIndexKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-instancecustomindex InstanceCustomIndexKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-instanceid InstanceId>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-instanceid InstanceId>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-objecttoworld ObjectToWorldKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-objecttoworld ObjectToWorldKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-worldtoobject WorldToObjectKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-worldtoobject WorldToObjectKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-hitkind HitKindKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-hitkind HitKindKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-incomingrayflags IncomingRayFlagsKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-incomingrayflags IncomingRayFlagsKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raygeometryindex RayGeometryIndexKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-raygeometryindex RayGeometryIndexKHR>
 --
 -- -   (modified)@PrimitiveId@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTracingKHR RayTracingKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-RayTracingKHR RayTracingKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTraversalPrimitiveCullingKHR RayTraversalPrimitiveCullingKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-RayTraversalPrimitiveCullingKHR RayTraversalPrimitiveCullingKHR>
 --
 -- == Issues
 --
@@ -350,7 +359,7 @@
 --
 -- -   removed vkCompileDeferredNV compilation functionality and replaced
 --     with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations deferred host operations>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#deferred-host-operations deferred host operations>
 --     interactions for ray tracing
 --
 -- -   added 'PhysicalDeviceRayTracingPipelineFeaturesKHR' structure
@@ -375,17 +384,17 @@
 --     device build
 --
 -- -   added
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-library pipeline library>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-library pipeline library>
 --     support for ray tracing
 --
 -- -   added
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-traversal-watertight watertightness guarantees>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-traversal-watertight watertightness guarantees>
 --
 -- -   added no-null-shader pipeline flags
 --     (@VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_*_SHADERS_BIT_KHR@)
 --
 -- -   added
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-shader-call memory model interactions>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-tracing-shader-call memory model interactions>
 --     with ray tracing and define how subgroups work and can be repacked
 --
 -- (2) Can you give a more detailed comparison of differences and
@@ -416,7 +425,7 @@
 --         added @libraries@, @pLibraryInterface@, and @pDynamicState@)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV'
---         → VkPhysicalDeviceRayTracingPropertiesKHR (renamed
+--         → 'PhysicalDeviceRayTracingPipelinePropertiesKHR' (renamed
 --         @maxTriangleCount@ to @maxPrimitiveCount@, added
 --         @shaderGroupHandleCaptureReplaySize@)
 --
@@ -427,7 +436,7 @@
 --         → 'createRayTracingPipelinesKHR' (different struct, changed
 --         functionality)
 --
--- -   Added enums, structures and commands:
+-- -   Added enums, structures, and commands:
 --
 --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
 --         'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
@@ -609,15 +618,16 @@
 --     makes it more obvious that this is zero-based.
 --
 -- (6) Why is @VK_KHR_pipeline_library@ an interaction instead of a
--- required dependency, particularly when the “Feature Requirements”
--- section says it is required to be supported anyhow?
+-- required dependency, particularly when the “Device Extensions” section
+-- says it is required to be supported anyhow?
 --
--- __RESOLVED__: If the @VK_KHR_pipeline_library@ extensino were a required
+-- __RESOLVED__: If the @VK_KHR_pipeline_library@ extension were a required
 -- dependency, then every application would need to enable the extension
 -- whether or not they actually want to use the pipeline library
 -- functionality. Developers found this to be annoying and unfriendly
 -- behavior. We do wish to require all __implementations__ to support it
--- though, and thus it is listed in the feature requirements section.
+-- though, and thus it is listed as a requirement in device extensions
+-- section.
 --
 -- == Sample Code
 --
@@ -710,7 +720,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_tracing_pipeline Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

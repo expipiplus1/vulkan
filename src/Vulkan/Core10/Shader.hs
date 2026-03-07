@@ -98,17 +98,18 @@ foreign import ccall
 --
 -- Once a shader module has been created, any entry points it contains
 -- /can/ be used in pipeline shader stages as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-compute Compute Pipelines>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-compute Compute Pipelines>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics Graphics Pipelines>
+-- .
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance5 maintenance5>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance5 maintenance5>
 -- feature is enabled, shader module creation can be omitted entirely.
 -- Instead, applications should provide the 'ShaderModuleCreateInfo'
 -- structure directly in to pipeline creation by chaining it to
--- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'. This avoids the
--- overhead of creating and managing an additional object.
+-- 'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo'. This
+-- avoids the overhead of creating and managing an additional object.
 --
 -- == Valid Usage
 --
@@ -145,11 +146,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_SHADER_NV'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_SHADER_NV'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -166,7 +171,7 @@ createShaderModule :: forall a io
                    -> -- | @pCreateInfo@ is a pointer to a 'ShaderModuleCreateInfo' structure.
                       (ShaderModuleCreateInfo a)
                    -> -- | @pAllocator@ controls host memory allocation as described in the
-                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                       -- chapter.
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (ShaderModule)
@@ -263,7 +268,7 @@ destroyShaderModule :: forall io
                     -> -- | @shaderModule@ is the handle of the shader module to destroy.
                        ShaderModule
                     -> -- | @pAllocator@ controls host memory allocation as described in the
-                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                       -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                        -- chapter.
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()

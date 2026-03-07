@@ -27,6 +27,12 @@
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_invocation_reorder.html SPV_NV_shader_invocation_reorder>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_ray_tracing_invocation_reorder VK_EXT_ray_tracing_invocation_reorder>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Eric Werness
@@ -80,6 +86,13 @@
 --
 -- -   'NV_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder.RayTracingInvocationReorderModeEXT':
+--
+--     -   'RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV'
+--
+--     -   'RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV'
@@ -94,7 +107,7 @@
 -- <https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen SPIR-V Intrinsics>.
 --
 -- The codes for shader invocation reorder are obtained from
--- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
+-- <https://github.khronos.org/SPIRV-Registry/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
 --
 -- > #define ShaderInvocationReorderNV 5383
 -- > #define HitObjectAttributeNV 5385
@@ -227,33 +240,29 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_ray_tracing_invocation_reorder Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_ray_tracing_invocation_reorder Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder  ( PhysicalDeviceRayTracingInvocationReorderFeaturesNV(..)
+module Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder  ( pattern RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV
+                                                               , pattern RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV
+                                                               , PhysicalDeviceRayTracingInvocationReorderFeaturesNV(..)
                                                                , PhysicalDeviceRayTracingInvocationReorderPropertiesNV(..)
-                                                               , RayTracingInvocationReorderModeNV( RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV
-                                                                                                  , RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV
-                                                                                                  , ..
-                                                                                                  )
+                                                               , RayTracingInvocationReorderModeNV
                                                                , NV_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION
                                                                , pattern NV_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION
                                                                , NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
                                                                , pattern NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
+                                                               , RayTracingInvocationReorderModeEXT(..)
                                                                ) where
 
-import Vulkan.Internal.Utils (enumReadPrec)
-import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Show (showsPrec)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -262,17 +271,26 @@ import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
-import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
-import GHC.Read (Read(readPrec))
-import GHC.Show (Show(showsPrec))
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder (RayTracingInvocationReorderModeEXT)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder (RayTracingInvocationReorderModeEXT(RAY_TRACING_INVOCATION_REORDER_MODE_NONE_EXT))
+import Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder (RayTracingInvocationReorderModeEXT(RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV))
+import Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder (RayTracingInvocationReorderModeEXT(..))
+-- No documentation found for TopLevel "VK_RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV"
+pattern RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV = RAY_TRACING_INVOCATION_REORDER_MODE_NONE_EXT
+
+
+-- No documentation found for TopLevel "VK_RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV"
+pattern RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV = RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_EXT
+
+
 -- | VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV - Structure
 -- describing feature to control ray tracing invocation reordering
 --
@@ -288,10 +306,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceRayTracingInvocationReorderFeaturesNV' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceRayTracingInvocationReorderFeaturesNV', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -301,7 +322,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingInvocationReorderFeaturesNV = PhysicalDeviceRayTracingInvocationReorderFeaturesNV
-  { -- | #features-rayTracingInvocationReorder# @rayTracingInvocationReorder@
+  { -- | #features-rayTracingInvocationReorderNV# @rayTracingInvocationReorder@
     -- indicates that the implementation supports
     -- @SPV_NV_shader_invocation_reorder@.
     rayTracingInvocationReorder :: Bool }
@@ -365,12 +386,12 @@ instance Zero PhysicalDeviceRayTracingInvocationReorderFeaturesNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_invocation_reorder VK_NV_ray_tracing_invocation_reorder>,
--- 'RayTracingInvocationReorderModeNV',
+-- 'Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder.RayTracingInvocationReorderModeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingInvocationReorderPropertiesNV = PhysicalDeviceRayTracingInvocationReorderPropertiesNV
   { -- | @rayTracingInvocationReorderReorderingHint@ is a hint indicating if the
     -- implementation will actually reorder at the reorder calls.
-    rayTracingInvocationReorderReorderingHint :: RayTracingInvocationReorderModeNV }
+    rayTracingInvocationReorderReorderingHint :: RayTracingInvocationReorderModeEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (PhysicalDeviceRayTracingInvocationReorderPropertiesNV)
@@ -382,19 +403,19 @@ instance ToCStruct PhysicalDeviceRayTracingInvocationReorderPropertiesNV where
   pokeCStruct p PhysicalDeviceRayTracingInvocationReorderPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr RayTracingInvocationReorderModeNV)) (rayTracingInvocationReorderReorderingHint)
+    poke ((p `plusPtr` 16 :: Ptr RayTracingInvocationReorderModeEXT)) (rayTracingInvocationReorderReorderingHint)
     f
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr RayTracingInvocationReorderModeNV)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr RayTracingInvocationReorderModeEXT)) (zero)
     f
 
 instance FromCStruct PhysicalDeviceRayTracingInvocationReorderPropertiesNV where
   peekCStruct p = do
-    rayTracingInvocationReorderReorderingHint <- peek @RayTracingInvocationReorderModeNV ((p `plusPtr` 16 :: Ptr RayTracingInvocationReorderModeNV))
+    rayTracingInvocationReorderReorderingHint <- peek @RayTracingInvocationReorderModeEXT ((p `plusPtr` 16 :: Ptr RayTracingInvocationReorderModeEXT))
     pure $ PhysicalDeviceRayTracingInvocationReorderPropertiesNV
              rayTracingInvocationReorderReorderingHint
 
@@ -409,64 +430,9 @@ instance Zero PhysicalDeviceRayTracingInvocationReorderPropertiesNV where
            zero
 
 
--- | VkRayTracingInvocationReorderModeNV - Enum providing a hint on how the
--- application /may/ reorder
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_invocation_reorder VK_NV_ray_tracing_invocation_reorder>,
--- 'PhysicalDeviceRayTracingInvocationReorderPropertiesNV'
-newtype RayTracingInvocationReorderModeNV = RayTracingInvocationReorderModeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
+-- No documentation found for TopLevel "VkRayTracingInvocationReorderModeNV"
+type RayTracingInvocationReorderModeNV = RayTracingInvocationReorderModeEXT
 
--- | 'RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV' specifies that the
--- implementation is likely to not reorder at reorder calls.
-pattern RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV = RayTracingInvocationReorderModeNV 0
-
--- | 'RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV' specifies that the
--- implementation is likely to reorder at reorder calls.
-pattern RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV = RayTracingInvocationReorderModeNV 1
-
-{-# COMPLETE
-  RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV
-  , RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV ::
-    RayTracingInvocationReorderModeNV
-  #-}
-
-conNameRayTracingInvocationReorderModeNV :: String
-conNameRayTracingInvocationReorderModeNV = "RayTracingInvocationReorderModeNV"
-
-enumPrefixRayTracingInvocationReorderModeNV :: String
-enumPrefixRayTracingInvocationReorderModeNV = "RAY_TRACING_INVOCATION_REORDER_MODE_"
-
-showTableRayTracingInvocationReorderModeNV :: [(RayTracingInvocationReorderModeNV, String)]
-showTableRayTracingInvocationReorderModeNV =
-  [
-    ( RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV
-    , "NONE_NV"
-    )
-  ,
-    ( RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV
-    , "REORDER_NV"
-    )
-  ]
-
-instance Show RayTracingInvocationReorderModeNV where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixRayTracingInvocationReorderModeNV
-      showTableRayTracingInvocationReorderModeNV
-      conNameRayTracingInvocationReorderModeNV
-      (\(RayTracingInvocationReorderModeNV x) -> x)
-      (showsPrec 11)
-
-instance Read RayTracingInvocationReorderModeNV where
-  readPrec =
-    enumReadPrec
-      enumPrefixRayTracingInvocationReorderModeNV
-      showTableRayTracingInvocationReorderModeNV
-      conNameRayTracingInvocationReorderModeNV
-      RayTracingInvocationReorderModeNV
 
 type NV_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION = 1
 

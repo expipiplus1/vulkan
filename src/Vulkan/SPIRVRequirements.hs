@@ -14,153 +14,13 @@ import Data.Bits ((.&.))
 import Data.ByteString (ByteString)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (PhysicalDevice)
-import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures(..))
-import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT(..))
-import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI(..))
-import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesKHR(..))
-import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
-import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesKHR(..))
-import Vulkan.Extensions.VK_NV_cooperative_matrix2 (PhysicalDeviceCooperativeMatrix2FeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesKHR(..))
-import Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV(..))
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures(..))
-import Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT(..))
-import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..))
-import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
-import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..))
-import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT(..))
-import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR(..))
-import Vulkan.Extensions.VK_QCOM_image_processing2 (PhysicalDeviceImageProcessing2FeaturesQCOM(..))
-import Vulkan.Extensions.VK_QCOM_image_processing (PhysicalDeviceImageProcessingFeaturesQCOM(..))
-import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
-import Vulkan.Extensions.VK_NV_raw_access_chains (PhysicalDeviceRawAccessChainsFeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
-import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR(..))
-import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
-import Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR(..))
-import Vulkan.Extensions.VK_NV_shader_atomic_float16_vector (PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(..))
-import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
-import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
-import Vulkan.Extensions.VK_ARM_shader_core_builtins (PhysicalDeviceShaderCoreBuiltinsFeaturesARM(..))
-import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
-import Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures(..))
-import Vulkan.Extensions.VK_AMDX_shader_enqueue (PhysicalDeviceShaderEnqueueFeaturesAMDX(..))
-import Vulkan.Extensions.VK_KHR_shader_expect_assume (PhysicalDeviceShaderExpectAssumeFeaturesKHR(..))
-import Vulkan.Extensions.VK_KHR_shader_float_controls2 (PhysicalDeviceShaderFloatControls2FeaturesKHR(..))
-import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT(..))
-import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
-import Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeatures(..))
-import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(..))
-import Vulkan.Extensions.VK_KHR_shader_quad_control (PhysicalDeviceShaderQuadControlFeaturesKHR(..))
-import Vulkan.Extensions.VK_EXT_shader_replicated_composites (PhysicalDeviceShaderReplicatedCompositesFeaturesEXT(..))
-import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeaturesKHR(..))
-import Vulkan.Extensions.VK_EXT_shader_tile_image (PhysicalDeviceShaderTileImageFeaturesEXT(..))
-import Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImageFeaturesNV(..))
-import Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDeviceTransformFeedbackFeaturesEXT(..))
-import Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan11Features(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan11Properties)
 import Vulkan.Core12 (PhysicalDeviceVulkan11Properties(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan12Features(..))
-import Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
-import Vulkan.Core12 (PhysicalDeviceVulkan12Properties(..))
-import Vulkan.Core13 (PhysicalDeviceVulkan13Features(..))
-import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(..))
-import Vulkan.Extensions.VK_AMDX_shader_enqueue (pattern AMDX_SHADER_ENQUEUE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_gpu_shader_int16 (pattern AMD_GPU_SHADER_INT16_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_ballot (pattern AMD_SHADER_BALLOT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (pattern AMD_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter (pattern AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_fragment_mask (pattern AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_image_load_store_lod (pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_shader_trinary_minmax (pattern AMD_SHADER_TRINARY_MINMAX_EXTENSION_NAME)
-import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (pattern AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME)
-import Vulkan.Extensions.VK_ARM_shader_core_builtins (pattern ARM_SHADER_CORE_BUILTINS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_buffer_device_address (pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_conservative_rasterization (pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_mesh_shader (pattern EXT_MESH_SHADER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_opacity_micromap (pattern EXT_OPACITY_MICROMAP_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_post_depth_coverage (pattern EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (pattern EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (pattern EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_replicated_composites (pattern EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_stencil_export (pattern EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_subgroup_ballot (pattern EXT_SHADER_SUBGROUP_BALLOT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_subgroup_vote (pattern EXT_SHADER_SUBGROUP_VOTE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_tile_image (pattern EXT_SHADER_TILE_IMAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_shader_viewport_index_layer (pattern EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_EXT_transform_feedback (pattern EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_GOOGLE_decorate_string (pattern GOOGLE_DECORATE_STRING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1 (pattern GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME)
-import Vulkan.Extensions.VK_GOOGLE_user_type (pattern GOOGLE_USER_TYPE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (pattern HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_HUAWEI_subpass_shading (pattern HUAWEI_SUBPASS_SHADING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_8bit_storage (pattern KHR_8BIT_STORAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_buffer_device_address (pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (pattern KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (pattern KHR_COOPERATIVE_MATRIX_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_device_group (pattern KHR_DEVICE_GROUP_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_format_feature_flags2 (pattern KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (pattern KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_fragment_shading_rate (pattern KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_multiview (pattern KHR_MULTIVIEW_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_ray_query (pattern KHR_RAY_QUERY_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (pattern KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (pattern KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (pattern KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_atomic_int64 (pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_draw_parameters (pattern KHR_SHADER_DRAW_PARAMETERS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_expect_assume (pattern KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_float16_int8 (pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_float_controls2 (pattern KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_float_controls (pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (pattern KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence (pattern KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_non_semantic_info (pattern KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_quad_control (pattern KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_relaxed_extended_instruction (pattern KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (pattern KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (pattern KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_storage_buffer_storage_class (pattern KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_variable_pointers (pattern KHR_VARIABLE_POINTERS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_vulkan_memory_model (pattern KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME)
-import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (pattern KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME)
 import Vulkan.Version (pattern MAKE_API_VERSION)
-import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_compute_shader_derivatives (pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_cooperative_matrix2 (pattern NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_cooperative_matrix (pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_geometry_shader_passthrough (pattern NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_mesh_shader (pattern NV_MESH_SHADER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_raw_access_chains (pattern NV_RAW_ACCESS_CHAINS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_ray_tracing (pattern NV_RAY_TRACING_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder (pattern NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (pattern NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_sample_mask_override_coverage (pattern NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shader_atomic_float16_vector (pattern NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shader_image_footprint (pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
-import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_QCOM_image_processing2 (pattern QCOM_IMAGE_PROCESSING_2_EXTENSION_NAME)
-import Vulkan.Extensions.VK_QCOM_image_processing (pattern QCOM_IMAGE_PROCESSING_EXTENSION_NAME)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ARITHMETIC_BIT))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
@@ -169,8 +29,6 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_BASIC_BIT))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_CLUSTERED_BIT))
-import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
-import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_PARTITIONED_BIT_NV))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_QUAD_BIT))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
@@ -189,96 +47,16 @@ spirvExtensionRequirements = \case
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
-  "SPV_AMD_shader_explicit_vertex_parameter" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_gcn_shader" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_GCN_SHADER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_gpu_shader_half_float" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_gpu_shader_int16" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_GPU_SHADER_INT16_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_shader_ballot" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_BALLOT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_shader_fragment_mask" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_shader_image_load_store_lod" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_shader_trinary_minmax" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_TRINARY_MINMAX_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_texture_gather_bias_lod" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMD_shader_early_and_late_fragment_tests" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_AMD_shader_explicit_vertex_parameter" -> (,) [] []
+  "SPV_AMD_gcn_shader" -> (,) [] []
+  "SPV_AMD_gpu_shader_half_float" -> (,) [] []
+  "SPV_AMD_gpu_shader_int16" -> (,) [] []
+  "SPV_AMD_shader_ballot" -> (,) [] []
+  "SPV_AMD_shader_fragment_mask" -> (,) [] []
+  "SPV_AMD_shader_image_load_store_lod" -> (,) [] []
+  "SPV_AMD_shader_trinary_minmax" -> (,) [] []
+  "SPV_AMD_texture_gather_bias_lod" -> (,) [] []
+  "SPV_AMD_shader_early_and_late_fragment_tests" -> (,) [] []
   "SPV_KHR_shader_draw_parameters" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0]
@@ -291,15 +69,7 @@ spirvExtensionRequirements = \case
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
-  "SPV_KHR_shader_clock" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_CLOCK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_KHR_shader_clock" -> (,) [] []
   "SPV_KHR_float_controls" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
@@ -308,109 +78,22 @@ spirvExtensionRequirements = \case
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
-  "SPV_KHR_post_depth_coverage" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_shader_stencil_export" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_shader_ballot" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_SUBGROUP_BALLOT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_subgroup_vote" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_SUBGROUP_VOTE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_sample_mask_override_coverage" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_geometry_shader_passthrough" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_mesh_shader" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_MESH_SHADER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_viewport_array2" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_shader_subgroup_partitioned" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_shader_invocation_reorder" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_KHR_post_depth_coverage" -> (,) [] []
+  "SPV_EXT_shader_stencil_export" -> (,) [] []
+  "SPV_KHR_shader_ballot" -> (,) [] []
+  "SPV_KHR_subgroup_vote" -> (,) [] []
+  "SPV_NV_sample_mask_override_coverage" -> (,) [] []
+  "SPV_NV_geometry_shader_passthrough" -> (,) [] []
+  "SPV_NV_mesh_shader" -> (,) [] []
+  "SPV_NV_viewport_array2" -> (,) [] []
+  "SPV_NV_shader_subgroup_partitioned" -> (,) [] []
+  "SPV_EXT_shader_subgroup_partitioned" -> (,) [] []
+  "SPV_NV_shader_invocation_reorder" -> (,) [] []
   "SPV_EXT_shader_viewport_index_layer" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 2 0]
-  "SPV_NVX_multiview_per_view_attributes" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_NVX_multiview_per_view_attributes" -> (,) [] []
   "SPV_EXT_descriptor_indexing" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
@@ -419,180 +102,36 @@ spirvExtensionRequirements = \case
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 2 0]
-  "SPV_NV_compute_shader_derivatives" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_fragment_shader_barycentric" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_shader_image_footprint" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_shading_rate" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADING_RATE_IMAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_ray_tracing" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAY_TRACING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_ray_tracing" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_ray_query" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_QUERY_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_ray_cull_mask" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_GOOGLE_hlsl_functionality1" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_GOOGLE_user_type" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = GOOGLE_USER_TYPE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_GOOGLE_decorate_string" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = GOOGLE_DECORATE_STRING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_fragment_invocation_density" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_NV_compute_shader_derivatives" -> (,) [] []
+  "SPV_NV_fragment_shader_barycentric" -> (,) [] []
+  "SPV_NV_shader_image_footprint" -> (,) [] []
+  "SPV_NV_shading_rate" -> (,) [] []
+  "SPV_NV_ray_tracing" -> (,) [] []
+  "SPV_KHR_ray_tracing" -> (,) [] []
+  "SPV_KHR_ray_query" -> (,) [] []
+  "SPV_KHR_ray_cull_mask" -> (,) [] []
+  "SPV_GOOGLE_hlsl_functionality1" -> (,) [] []
+  "SPV_GOOGLE_user_type" -> (,) [] []
+  "SPV_GOOGLE_decorate_string" -> (,) [] []
+  "SPV_EXT_fragment_invocation_density" -> (,) [] []
   "SPV_KHR_physical_storage_buffer" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 2 0]
-  "SPV_EXT_physical_storage_buffer" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_cooperative_matrix" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_shader_sm_builtins" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_SM_BUILTINS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_fragment_shader_interlock" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_EXT_physical_storage_buffer" -> (,) [] []
+  "SPV_NV_cooperative_matrix" -> (,) [] []
+  "SPV_NV_shader_sm_builtins" -> (,) [] []
+  "SPV_EXT_fragment_shader_interlock" -> (,) [] []
   "SPV_EXT_demote_to_helper_invocation" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
-  "SPV_KHR_fragment_shading_rate" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_KHR_fragment_shading_rate" -> (,) [] []
   "SPV_KHR_non_semantic_info" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
-  "SPV_EXT_shader_image_int64" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_EXT_shader_image_int64" -> (,) [] []
   "SPV_KHR_terminate_invocation" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
@@ -601,297 +140,70 @@ spirvExtensionRequirements = \case
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
-  "SPV_KHR_workgroup_memory_explicit_layout" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_shader_atomic_float_add" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_fragment_shader_barycentric" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_subgroup_uniform_control_flow" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
-      [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
-  "SPV_EXT_shader_atomic_float_min_max" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_shader_atomic_float16_add" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_shader_atomic_fp16_vector" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_fragment_fully_covered" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_KHR_workgroup_memory_explicit_layout" -> (,) [] []
+  "SPV_EXT_shader_atomic_float_add" -> (,) [] []
+  "SPV_KHR_fragment_shader_barycentric" -> (,) [] []
+  "SPV_KHR_subgroup_uniform_control_flow" -> (,) [] []
+  "SPV_EXT_shader_atomic_float_min_max" -> (,) [] []
+  "SPV_EXT_shader_atomic_float16_add" -> (,) [] []
+  "SPV_NV_shader_atomic_fp16_vector" -> (,) [] []
+  "SPV_EXT_fragment_fully_covered" -> (,) [] []
   "SPV_KHR_integer_dot_product" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
-  "SPV_INTEL_shader_integer_functions2" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_INTEL_shader_integer_functions2" -> (,) [] []
   "SPV_KHR_device_group" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
-  "SPV_QCOM_image_processing" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_QCOM_image_processing2" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = QCOM_IMAGE_PROCESSING_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_mesh_shader" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_MESH_SHADER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_ray_tracing_position_fetch" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_shader_tile_image" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_TILE_IMAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_opacity_micromap" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_OPACITY_MICROMAP_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_cooperative_matrix" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_COOPERATIVE_MATRIX_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_ARM_core_builtins" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = ARM_SHADER_CORE_BUILTINS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_AMDX_shader_enqueue" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMDX_SHADER_ENQUEUE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_HUAWEI_cluster_culling_shader" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_HUAWEI_subpass_shading" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = HUAWEI_SUBPASS_SHADING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_ray_tracing_motion_blur" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_maximal_reconvergence" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "SPV_QCOM_image_processing" -> (,) [] []
+  "SPV_QCOM_image_processing2" -> (,) [] []
+  "SPV_QCOM_cooperative_matrix_conversion" -> (,) [] []
+  "SPV_EXT_mesh_shader" -> (,) [] []
+  "SPV_KHR_ray_tracing_position_fetch" -> (,) [] []
+  "SPV_EXT_shader_tile_image" -> (,) [] []
+  "SPV_EXT_opacity_micromap" -> (,) [] []
+  "SPV_KHR_cooperative_matrix" -> (,) [] []
+  "SPV_ARM_core_builtins" -> (,) [] []
+  "SPV_HUAWEI_cluster_culling_shader" -> (,) [] []
+  "SPV_HUAWEI_subpass_shading" -> (,) [] []
+  "SPV_NV_ray_tracing_motion_blur" -> (,) [] []
+  "SPV_KHR_maximal_reconvergence" -> (,) [] []
   "SPV_KHR_subgroup_rotate" ->
     (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+      [RequireInstanceVersion $ MAKE_API_VERSION 1 4 0]
+      [RequireDeviceVersion $ MAKE_API_VERSION 1 4 0]
   "SPV_KHR_expect_assume" ->
     (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+      [RequireInstanceVersion $ MAKE_API_VERSION 1 4 0]
+      [RequireDeviceVersion $ MAKE_API_VERSION 1 4 0]
   "SPV_KHR_float_controls2" ->
     (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_quad_control" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_raw_access_chains" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAW_ACCESS_CHAINS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_compute_shader_derivatives" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_EXT_replicated_composites" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_KHR_relaxed_extended_instruction" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_cooperative_matrix2" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SPV_NV_tensor_addressing" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+      [RequireInstanceVersion $ MAKE_API_VERSION 1 4 0]
+      [RequireDeviceVersion $ MAKE_API_VERSION 1 4 0]
+  "SPV_KHR_fma" -> (,) [] []
+  "SPV_KHR_quad_control" -> (,) [] []
+  "SPV_KHR_bfloat16" -> (,) [] []
+  "SPV_NV_raw_access_chains" -> (,) [] []
+  "SPV_KHR_compute_shader_derivatives" -> (,) [] []
+  "SPV_EXT_replicated_composites" -> (,) [] []
+  "SPV_KHR_relaxed_extended_instruction" -> (,) [] []
+  "SPV_NV_cooperative_matrix2" -> (,) [] []
+  "SPV_NV_tensor_addressing" -> (,) [] []
+  "SPV_NV_linear_swept_spheres" -> (,) [] []
+  "SPV_NV_cluster_acceleration_structure" -> (,) [] []
+  "SPV_NV_cooperative_vector" -> (,) [] []
+  "SPV_NV_push_constant_bank" -> (,) [] []
+  "SPV_EXT_shader_invocation_reorder" -> (,) [] []
+  "SPV_QCOM_tile_shading" -> (,) [] []
+  "SPV_ARM_tensors" -> (,) [] []
+  "SPV_EXT_float8" -> (,) [] []
+  "SPV_ARM_graph" -> (,) [] []
+  "SPV_KHR_untyped_pointers" -> (,) [] []
+  "SPV_EXT_shader_64bit_indexing" -> (,) [] []
+  "SPV_EXT_long_vector" -> (,) [] []
+  "SPV_EXT_descriptor_heap" -> (,) [] []
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
@@ -972,133 +284,15 @@ spirvCapabilityRequirements = \case
           }
       , RequireDeviceVersion $ MAKE_API_VERSION 1 0 0
       ]
-  "Int64Atomics" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderBufferInt64Atomics"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderBufferInt64Atomics} -> shaderBufferInt64Atomics
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderBufferInt64Atomics = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "AtomicFloat16AddEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderBufferFloat16AtomicAdd"
-          , checkFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat16AtomicAdd} -> shaderBufferFloat16AtomicAdd
-          , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{..} -> PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat16AtomicAdd = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "AtomicFloat32AddEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderBufferFloat32AtomicAdd"
-          , checkFeature = \PhysicalDeviceShaderAtomicFloatFeaturesEXT{shaderBufferFloat32AtomicAdd} -> shaderBufferFloat32AtomicAdd
-          , enableFeature = \PhysicalDeviceShaderAtomicFloatFeaturesEXT{..} -> PhysicalDeviceShaderAtomicFloatFeaturesEXT{shaderBufferFloat32AtomicAdd = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "AtomicFloat64AddEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderBufferFloat64AtomicAdd"
-          , checkFeature = \PhysicalDeviceShaderAtomicFloatFeaturesEXT{shaderBufferFloat64AtomicAdd} -> shaderBufferFloat64AtomicAdd
-          , enableFeature = \PhysicalDeviceShaderAtomicFloatFeaturesEXT{..} -> PhysicalDeviceShaderAtomicFloatFeaturesEXT{shaderBufferFloat64AtomicAdd = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "AtomicFloat16MinMaxEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderBufferFloat16AtomicMinMax"
-          , checkFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat16AtomicMinMax} -> shaderBufferFloat16AtomicMinMax
-          , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{..} -> PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat16AtomicMinMax = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "AtomicFloat32MinMaxEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderBufferFloat32AtomicMinMax"
-          , checkFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat32AtomicMinMax} -> shaderBufferFloat32AtomicMinMax
-          , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{..} -> PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat32AtomicMinMax = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "AtomicFloat64MinMaxEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderBufferFloat64AtomicMinMax"
-          , checkFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat64AtomicMinMax} -> shaderBufferFloat64AtomicMinMax
-          , enableFeature = \PhysicalDeviceShaderAtomicFloat2FeaturesEXT{..} -> PhysicalDeviceShaderAtomicFloat2FeaturesEXT{shaderBufferFloat64AtomicMinMax = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "AtomicFloat16VectorNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderFloat16VectorAtomics"
-          , checkFeature = \PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV{shaderFloat16VectorAtomics} -> shaderFloat16VectorAtomics
-          , enableFeature = \_ -> PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV{shaderFloat16VectorAtomics = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_ATOMIC_FLOAT16_VECTOR_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "Int64ImageEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderImageInt64Atomics"
-          , checkFeature = \PhysicalDeviceShaderImageAtomicInt64FeaturesEXT{shaderImageInt64Atomics} -> shaderImageInt64Atomics
-          , enableFeature = \PhysicalDeviceShaderImageAtomicInt64FeaturesEXT{..} -> PhysicalDeviceShaderImageAtomicInt64FeaturesEXT{shaderImageInt64Atomics = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "Int64Atomics" -> (,) [] []
+  "AtomicFloat16AddEXT" -> (,) [] []
+  "AtomicFloat32AddEXT" -> (,) [] []
+  "AtomicFloat64AddEXT" -> (,) [] []
+  "AtomicFloat16MinMaxEXT" -> (,) [] []
+  "AtomicFloat32MinMaxEXT" -> (,) [] []
+  "AtomicFloat64MinMaxEXT" -> (,) [] []
+  "AtomicFloat16VectorNV" -> (,) [] []
+  "Int64ImageEXT" -> (,) [] []
   "Int16" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 0 0]
@@ -1357,87 +551,15 @@ spirvCapabilityRequirements = \case
           }
       , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
       ]
-  "ShaderClockKHR" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_CLOCK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "StencilExportEXT" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SubgroupBallotKHR" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_SUBGROUP_BALLOT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SubgroupVoteKHR" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_SUBGROUP_VOTE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ImageReadWriteLodAMD" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ImageGatherBiasLodAMD" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentMaskAMD" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SampleMaskOverrideCoverageNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "GeometryShaderPassthroughNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "ShaderClockKHR" -> (,) [] []
+  "StencilExportEXT" -> (,) [] []
+  "SubgroupBallotKHR" -> (,) [] []
+  "SubgroupVoteKHR" -> (,) [] []
+  "ImageReadWriteLodAMD" -> (,) [] []
+  "ImageGatherBiasLodAMD" -> (,) [] []
+  "FragmentMaskAMD" -> (,) [] []
+  "SampleMaskOverrideCoverageNV" -> (,) [] []
+  "GeometryShaderPassthroughNV" -> (,) [] []
   "ShaderViewportIndex" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
@@ -1458,33 +580,9 @@ spirvCapabilityRequirements = \case
           }
       , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
       ]
-  "ShaderViewportIndexLayerEXT" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ShaderViewportMaskNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "PerViewAttributesNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "ShaderViewportIndexLayerEXT" -> (,) [] []
+  "ShaderViewportMaskNV" -> (,) [] []
+  "PerViewAttributesNV" -> (,) [] []
   "StorageBuffer16BitAccess" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
@@ -1597,1172 +695,115 @@ spirvCapabilityRequirements = \case
           }
       , RequireDeviceVersion $ MAKE_API_VERSION 1 1 0
       ]
-  "GroupNonUniformPartitionedNV" ->
-    (,)
-      []
-      [ RequireDeviceProperty
-          { propertyName = "VkPhysicalDeviceVulkan11Properties"
-          , checkProperty = \p -> SUBGROUP_FEATURE_PARTITIONED_BIT_NV .&&. subgroupSupportedOperations (p :: PhysicalDeviceVulkan11Properties)
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SampleMaskPostDepthCoverage" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "GroupNonUniformPartitionedEXT" -> (,) [] []
+  "SampleMaskPostDepthCoverage" -> (,) [] []
   "ShaderNonUniform" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
       [RequireDeviceVersion $ MAKE_API_VERSION 1 2 0]
-  "RuntimeDescriptorArray" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "runtimeDescriptorArray"
-          , checkFeature = \PhysicalDeviceVulkan12Features{runtimeDescriptorArray} -> runtimeDescriptorArray
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{runtimeDescriptorArray = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "InputAttachmentArrayDynamicIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderInputAttachmentArrayDynamicIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderInputAttachmentArrayDynamicIndexing} -> shaderInputAttachmentArrayDynamicIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderInputAttachmentArrayDynamicIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "UniformTexelBufferArrayDynamicIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderUniformTexelBufferArrayDynamicIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderUniformTexelBufferArrayDynamicIndexing} -> shaderUniformTexelBufferArrayDynamicIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderUniformTexelBufferArrayDynamicIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "StorageTexelBufferArrayDynamicIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderStorageTexelBufferArrayDynamicIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderStorageTexelBufferArrayDynamicIndexing} -> shaderStorageTexelBufferArrayDynamicIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderStorageTexelBufferArrayDynamicIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "UniformBufferArrayNonUniformIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderUniformBufferArrayNonUniformIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderUniformBufferArrayNonUniformIndexing} -> shaderUniformBufferArrayNonUniformIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderUniformBufferArrayNonUniformIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SampledImageArrayNonUniformIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderSampledImageArrayNonUniformIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderSampledImageArrayNonUniformIndexing} -> shaderSampledImageArrayNonUniformIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderSampledImageArrayNonUniformIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "StorageBufferArrayNonUniformIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderStorageBufferArrayNonUniformIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderStorageBufferArrayNonUniformIndexing} -> shaderStorageBufferArrayNonUniformIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderStorageBufferArrayNonUniformIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "StorageImageArrayNonUniformIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderStorageImageArrayNonUniformIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderStorageImageArrayNonUniformIndexing} -> shaderStorageImageArrayNonUniformIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderStorageImageArrayNonUniformIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "InputAttachmentArrayNonUniformIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderInputAttachmentArrayNonUniformIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderInputAttachmentArrayNonUniformIndexing} -> shaderInputAttachmentArrayNonUniformIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderInputAttachmentArrayNonUniformIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "UniformTexelBufferArrayNonUniformIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderUniformTexelBufferArrayNonUniformIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderUniformTexelBufferArrayNonUniformIndexing} -> shaderUniformTexelBufferArrayNonUniformIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderUniformTexelBufferArrayNonUniformIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "StorageTexelBufferArrayNonUniformIndexing" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderStorageTexelBufferArrayNonUniformIndexing"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderStorageTexelBufferArrayNonUniformIndexing} -> shaderStorageTexelBufferArrayNonUniformIndexing
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderStorageTexelBufferArrayNonUniformIndexing = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentFullyCoveredEXT" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "Float16" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderFloat16"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderFloat16} -> shaderFloat16
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderFloat16 = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "Int8" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderInt8"
-          , checkFeature = \PhysicalDeviceVulkan12Features{shaderInt8} -> shaderInt8
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{shaderInt8 = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "StorageBuffer8BitAccess" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "storageBuffer8BitAccess"
-          , checkFeature = \PhysicalDeviceVulkan12Features{storageBuffer8BitAccess} -> storageBuffer8BitAccess
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{storageBuffer8BitAccess = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_8BIT_STORAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "UniformAndStorageBuffer8BitAccess" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "uniformAndStorageBuffer8BitAccess"
-          , checkFeature = \PhysicalDeviceVulkan12Features{uniformAndStorageBuffer8BitAccess} -> uniformAndStorageBuffer8BitAccess
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{uniformAndStorageBuffer8BitAccess = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_8BIT_STORAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "StoragePushConstant8" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "storagePushConstant8"
-          , checkFeature = \PhysicalDeviceVulkan12Features{storagePushConstant8} -> storagePushConstant8
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{storagePushConstant8 = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_8BIT_STORAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "VulkanMemoryModel" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "vulkanMemoryModel"
-          , checkFeature = \PhysicalDeviceVulkan12Features{vulkanMemoryModel} -> vulkanMemoryModel
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{vulkanMemoryModel = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "VulkanMemoryModelDeviceScope" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "vulkanMemoryModelDeviceScope"
-          , checkFeature = \PhysicalDeviceVulkan12Features{vulkanMemoryModelDeviceScope} -> vulkanMemoryModelDeviceScope
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{vulkanMemoryModelDeviceScope = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "DenormPreserve" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceProperty
-          { propertyName = "VkPhysicalDeviceVulkan12Properties"
-          , checkProperty = \p -> shaderDenormPreserveFloat16 (p :: PhysicalDeviceVulkan12Properties)
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "DenormFlushToZero" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceProperty
-          { propertyName = "VkPhysicalDeviceVulkan12Properties"
-          , checkProperty = \p -> shaderDenormFlushToZeroFloat16 (p :: PhysicalDeviceVulkan12Properties)
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "SignedZeroInfNanPreserve" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceProperty
-          { propertyName = "VkPhysicalDeviceVulkan12Properties"
-          , checkProperty = \p -> shaderSignedZeroInfNanPreserveFloat16 (p :: PhysicalDeviceVulkan12Properties)
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RoundingModeRTE" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceProperty
-          { propertyName = "VkPhysicalDeviceVulkan12Properties"
-          , checkProperty = \p -> shaderRoundingModeRTEFloat16 (p :: PhysicalDeviceVulkan12Properties)
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RoundingModeRTZ" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceProperty
-          { propertyName = "VkPhysicalDeviceVulkan12Properties"
-          , checkProperty = \p -> shaderRoundingModeRTZFloat16 (p :: PhysicalDeviceVulkan12Properties)
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ComputeDerivativeGroupQuadsKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "computeDerivativeGroupQuads"
-          , checkFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupQuads} -> computeDerivativeGroupQuads
-          , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{..} -> PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupQuads = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ComputeDerivativeGroupLinearKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "computeDerivativeGroupLinear"
-          , checkFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupLinear} -> computeDerivativeGroupLinear
-          , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{..} -> PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupLinear = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ImageFootprintNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "imageFootprint"
-          , checkFeature = \PhysicalDeviceShaderImageFootprintFeaturesNV{imageFootprint} -> imageFootprint
-          , enableFeature = \_ -> PhysicalDeviceShaderImageFootprintFeaturesNV{imageFootprint = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "MeshShadingNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_MESH_SHADER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayTracingKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "rayTracingPipeline"
-          , checkFeature = \PhysicalDeviceRayTracingPipelineFeaturesKHR{rayTracingPipeline} -> rayTracingPipeline
-          , enableFeature = \PhysicalDeviceRayTracingPipelineFeaturesKHR{..} -> PhysicalDeviceRayTracingPipelineFeaturesKHR{rayTracingPipeline = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayQueryKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "rayQuery"
-          , checkFeature = \PhysicalDeviceRayQueryFeaturesKHR{rayQuery} -> rayQuery
-          , enableFeature = \_ -> PhysicalDeviceRayQueryFeaturesKHR{rayQuery = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_QUERY_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayTraversalPrimitiveCullingKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "rayTraversalPrimitiveCulling"
-          , checkFeature = \PhysicalDeviceRayTracingPipelineFeaturesKHR{rayTraversalPrimitiveCulling} -> rayTraversalPrimitiveCulling
-          , enableFeature = \PhysicalDeviceRayTracingPipelineFeaturesKHR{..} -> PhysicalDeviceRayTracingPipelineFeaturesKHR{rayTraversalPrimitiveCulling = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayCullMaskKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "rayTracingMaintenance1"
-          , checkFeature = \PhysicalDeviceRayTracingMaintenance1FeaturesKHR{rayTracingMaintenance1} -> rayTracingMaintenance1
-          , enableFeature = \PhysicalDeviceRayTracingMaintenance1FeaturesKHR{..} -> PhysicalDeviceRayTracingMaintenance1FeaturesKHR{rayTracingMaintenance1 = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayTracingNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAY_TRACING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayTracingMotionBlurNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "rayTracingMotionBlur"
-          , checkFeature = \PhysicalDeviceRayTracingMotionBlurFeaturesNV{rayTracingMotionBlur} -> rayTracingMotionBlur
-          , enableFeature = \PhysicalDeviceRayTracingMotionBlurFeaturesNV{..} -> PhysicalDeviceRayTracingMotionBlurFeaturesNV{rayTracingMotionBlur = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TransformFeedback" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "transformFeedback"
-          , checkFeature = \PhysicalDeviceTransformFeedbackFeaturesEXT{transformFeedback} -> transformFeedback
-          , enableFeature = \PhysicalDeviceTransformFeedbackFeaturesEXT{..} -> PhysicalDeviceTransformFeedbackFeaturesEXT{transformFeedback = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "GeometryStreams" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "geometryStreams"
-          , checkFeature = \PhysicalDeviceTransformFeedbackFeaturesEXT{geometryStreams} -> geometryStreams
-          , enableFeature = \PhysicalDeviceTransformFeedbackFeaturesEXT{..} -> PhysicalDeviceTransformFeedbackFeaturesEXT{geometryStreams = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentDensityEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "fragmentDensityMap"
-          , checkFeature = \PhysicalDeviceFragmentDensityMapFeaturesEXT{fragmentDensityMap} -> fragmentDensityMap
-          , enableFeature = \PhysicalDeviceFragmentDensityMapFeaturesEXT{..} -> PhysicalDeviceFragmentDensityMapFeaturesEXT{fragmentDensityMap = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "PhysicalStorageBufferAddresses" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
-      [ RequireDeviceFeature
-          { featureName = "bufferDeviceAddress"
-          , checkFeature = \PhysicalDeviceVulkan12Features{bufferDeviceAddress} -> bufferDeviceAddress
-          , enableFeature = \PhysicalDeviceVulkan12Features{..} -> PhysicalDeviceVulkan12Features{bufferDeviceAddress = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 2 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CooperativeMatrixNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrix"
-          , checkFeature = \PhysicalDeviceCooperativeMatrixFeaturesNV{cooperativeMatrix} -> cooperativeMatrix
-          , enableFeature = \PhysicalDeviceCooperativeMatrixFeaturesNV{..} -> PhysicalDeviceCooperativeMatrixFeaturesNV{cooperativeMatrix = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "IntegerFunctions2INTEL" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderIntegerFunctions2"
-          , checkFeature = \PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL{shaderIntegerFunctions2} -> shaderIntegerFunctions2
-          , enableFeature = \_ -> PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL{shaderIntegerFunctions2 = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ShaderSMBuiltinsNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderSMBuiltins"
-          , checkFeature = \PhysicalDeviceShaderSMBuiltinsFeaturesNV{shaderSMBuiltins} -> shaderSMBuiltins
-          , enableFeature = \_ -> PhysicalDeviceShaderSMBuiltinsFeaturesNV{shaderSMBuiltins = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADER_SM_BUILTINS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentShaderSampleInterlockEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "fragmentShaderSampleInterlock"
-          , checkFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT{fragmentShaderSampleInterlock} -> fragmentShaderSampleInterlock
-          , enableFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT{..} -> PhysicalDeviceFragmentShaderInterlockFeaturesEXT{fragmentShaderSampleInterlock = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentShaderPixelInterlockEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "fragmentShaderPixelInterlock"
-          , checkFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT{fragmentShaderPixelInterlock} -> fragmentShaderPixelInterlock
-          , enableFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT{..} -> PhysicalDeviceFragmentShaderInterlockFeaturesEXT{fragmentShaderPixelInterlock = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentShaderShadingRateInterlockEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "fragmentShaderShadingRateInterlock"
-          , checkFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT{fragmentShaderShadingRateInterlock} -> fragmentShaderShadingRateInterlock
-          , enableFeature = \PhysicalDeviceFragmentShaderInterlockFeaturesEXT{..} -> PhysicalDeviceFragmentShaderInterlockFeaturesEXT{fragmentShaderShadingRateInterlock = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "DemoteToHelperInvocation" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderDemoteToHelperInvocation"
-          , checkFeature = \PhysicalDeviceVulkan13Features{shaderDemoteToHelperInvocation} -> shaderDemoteToHelperInvocation
-          , enableFeature = \PhysicalDeviceVulkan13Features{..} -> PhysicalDeviceVulkan13Features{shaderDemoteToHelperInvocation = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentShadingRateKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "pipelineFragmentShadingRate"
-          , checkFeature = \PhysicalDeviceFragmentShadingRateFeaturesKHR{pipelineFragmentShadingRate} -> pipelineFragmentShadingRate
-          , enableFeature = \PhysicalDeviceFragmentShadingRateFeaturesKHR{..} -> PhysicalDeviceFragmentShadingRateFeaturesKHR{pipelineFragmentShadingRate = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "WorkgroupMemoryExplicitLayoutKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "workgroupMemoryExplicitLayout"
-          , checkFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{workgroupMemoryExplicitLayout} -> workgroupMemoryExplicitLayout
-          , enableFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{..} -> PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{workgroupMemoryExplicitLayout = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "WorkgroupMemoryExplicitLayout8BitAccessKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "workgroupMemoryExplicitLayout8BitAccess"
-          , checkFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{workgroupMemoryExplicitLayout8BitAccess} -> workgroupMemoryExplicitLayout8BitAccess
-          , enableFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{..} -> PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{workgroupMemoryExplicitLayout8BitAccess = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "WorkgroupMemoryExplicitLayout16BitAccessKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "workgroupMemoryExplicitLayout16BitAccess"
-          , checkFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{workgroupMemoryExplicitLayout16BitAccess} -> workgroupMemoryExplicitLayout16BitAccess
-          , enableFeature = \PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{..} -> PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{workgroupMemoryExplicitLayout16BitAccess = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "DotProductInputAll" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderIntegerDotProduct"
-          , checkFeature = \PhysicalDeviceVulkan13Features{shaderIntegerDotProduct} -> shaderIntegerDotProduct
-          , enableFeature = \PhysicalDeviceVulkan13Features{..} -> PhysicalDeviceVulkan13Features{shaderIntegerDotProduct = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "DotProductInput4x8Bit" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderIntegerDotProduct"
-          , checkFeature = \PhysicalDeviceVulkan13Features{shaderIntegerDotProduct} -> shaderIntegerDotProduct
-          , enableFeature = \PhysicalDeviceVulkan13Features{..} -> PhysicalDeviceVulkan13Features{shaderIntegerDotProduct = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "DotProductInput4x8BitPacked" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderIntegerDotProduct"
-          , checkFeature = \PhysicalDeviceVulkan13Features{shaderIntegerDotProduct} -> shaderIntegerDotProduct
-          , enableFeature = \PhysicalDeviceVulkan13Features{..} -> PhysicalDeviceVulkan13Features{shaderIntegerDotProduct = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "DotProduct" ->
-    (,)
-      [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
-      [ RequireDeviceFeature
-          { featureName = "shaderIntegerDotProduct"
-          , checkFeature = \PhysicalDeviceVulkan13Features{shaderIntegerDotProduct} -> shaderIntegerDotProduct
-          , enableFeature = \PhysicalDeviceVulkan13Features{..} -> PhysicalDeviceVulkan13Features{shaderIntegerDotProduct = True, ..}
-          }
-      , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentBarycentricKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "fragmentShaderBarycentric"
-          , checkFeature = \PhysicalDeviceFragmentShaderBarycentricFeaturesKHR{fragmentShaderBarycentric} -> fragmentShaderBarycentric
-          , enableFeature = \_ -> PhysicalDeviceFragmentShaderBarycentricFeaturesKHR{fragmentShaderBarycentric = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TextureSampleWeightedQCOM" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "textureSampleWeighted"
-          , checkFeature = \PhysicalDeviceImageProcessingFeaturesQCOM{textureSampleWeighted} -> textureSampleWeighted
-          , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM{..} -> PhysicalDeviceImageProcessingFeaturesQCOM{textureSampleWeighted = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TextureBoxFilterQCOM" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "textureBoxFilter"
-          , checkFeature = \PhysicalDeviceImageProcessingFeaturesQCOM{textureBoxFilter} -> textureBoxFilter
-          , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM{..} -> PhysicalDeviceImageProcessingFeaturesQCOM{textureBoxFilter = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TextureBlockMatchQCOM" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "textureBlockMatch"
-          , checkFeature = \PhysicalDeviceImageProcessingFeaturesQCOM{textureBlockMatch} -> textureBlockMatch
-          , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM{..} -> PhysicalDeviceImageProcessingFeaturesQCOM{textureBlockMatch = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TextureBlockMatch2QCOM" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "textureBlockMatch2"
-          , checkFeature = \PhysicalDeviceImageProcessing2FeaturesQCOM{textureBlockMatch2} -> textureBlockMatch2
-          , enableFeature = \_ -> PhysicalDeviceImageProcessing2FeaturesQCOM{textureBlockMatch2 = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = QCOM_IMAGE_PROCESSING_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "MeshShadingEXT" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_MESH_SHADER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayTracingOpacityMicromapEXT" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_OPACITY_MICROMAP_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CoreBuiltinsARM" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderCoreBuiltins"
-          , checkFeature = \PhysicalDeviceShaderCoreBuiltinsFeaturesARM{shaderCoreBuiltins} -> shaderCoreBuiltins
-          , enableFeature = \_ -> PhysicalDeviceShaderCoreBuiltinsFeaturesARM{shaderCoreBuiltins = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = ARM_SHADER_CORE_BUILTINS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ShaderInvocationReorderNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ClusterCullingShadingHUAWEI" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "clustercullingShader"
-          , checkFeature = \PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{clustercullingShader} -> clustercullingShader
-          , enableFeature = \PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{..} -> PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{clustercullingShader = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayTracingPositionFetchKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "rayTracingPositionFetch"
-          , checkFeature = \PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch} -> rayTracingPositionFetch
-          , enableFeature = \_ -> PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RayQueryPositionFetchKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "rayTracingPositionFetch"
-          , checkFeature = \PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch} -> rayTracingPositionFetch
-          , enableFeature = \_ -> PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TileImageColorReadAccessEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderTileImageColorReadAccess"
-          , checkFeature = \PhysicalDeviceShaderTileImageFeaturesEXT{shaderTileImageColorReadAccess} -> shaderTileImageColorReadAccess
-          , enableFeature = \PhysicalDeviceShaderTileImageFeaturesEXT{..} -> PhysicalDeviceShaderTileImageFeaturesEXT{shaderTileImageColorReadAccess = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_TILE_IMAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TileImageDepthReadAccessEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderTileImageDepthReadAccess"
-          , checkFeature = \PhysicalDeviceShaderTileImageFeaturesEXT{shaderTileImageDepthReadAccess} -> shaderTileImageDepthReadAccess
-          , enableFeature = \PhysicalDeviceShaderTileImageFeaturesEXT{..} -> PhysicalDeviceShaderTileImageFeaturesEXT{shaderTileImageDepthReadAccess = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_TILE_IMAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TileImageStencilReadAccessEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderTileImageStencilReadAccess"
-          , checkFeature = \PhysicalDeviceShaderTileImageFeaturesEXT{shaderTileImageStencilReadAccess} -> shaderTileImageStencilReadAccess
-          , enableFeature = \PhysicalDeviceShaderTileImageFeaturesEXT{..} -> PhysicalDeviceShaderTileImageFeaturesEXT{shaderTileImageStencilReadAccess = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_TILE_IMAGE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CooperativeMatrixKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrix"
-          , checkFeature = \PhysicalDeviceCooperativeMatrixFeaturesKHR{cooperativeMatrix} -> cooperativeMatrix
-          , enableFeature = \PhysicalDeviceCooperativeMatrixFeaturesKHR{..} -> PhysicalDeviceCooperativeMatrixFeaturesKHR{cooperativeMatrix = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_COOPERATIVE_MATRIX_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ShaderEnqueueAMDX" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderEnqueue"
-          , checkFeature = \PhysicalDeviceShaderEnqueueFeaturesAMDX{shaderEnqueue} -> shaderEnqueue
-          , enableFeature = \PhysicalDeviceShaderEnqueueFeaturesAMDX{..} -> PhysicalDeviceShaderEnqueueFeaturesAMDX{shaderEnqueue = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = AMDX_SHADER_ENQUEUE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "GroupNonUniformRotateKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderSubgroupRotate"
-          , checkFeature = \PhysicalDeviceShaderSubgroupRotateFeaturesKHR{shaderSubgroupRotate} -> shaderSubgroupRotate
-          , enableFeature = \PhysicalDeviceShaderSubgroupRotateFeaturesKHR{..} -> PhysicalDeviceShaderSubgroupRotateFeaturesKHR{shaderSubgroupRotate = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ExpectAssumeKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderExpectAssume"
-          , checkFeature = \PhysicalDeviceShaderExpectAssumeFeaturesKHR{shaderExpectAssume} -> shaderExpectAssume
-          , enableFeature = \_ -> PhysicalDeviceShaderExpectAssumeFeaturesKHR{shaderExpectAssume = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_EXPECT_ASSUME_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FloatControls2" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderFloatControls2"
-          , checkFeature = \PhysicalDeviceShaderFloatControls2FeaturesKHR{shaderFloatControls2} -> shaderFloatControls2
-          , enableFeature = \_ -> PhysicalDeviceShaderFloatControls2FeaturesKHR{shaderFloatControls2 = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "QuadControlKHR" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderQuadControl"
-          , checkFeature = \PhysicalDeviceShaderQuadControlFeaturesKHR{shaderQuadControl} -> shaderQuadControl
-          , enableFeature = \_ -> PhysicalDeviceShaderQuadControlFeaturesKHR{shaderQuadControl = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "RawAccessChainsNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderRawAccessChains"
-          , checkFeature = \PhysicalDeviceRawAccessChainsFeaturesNV{shaderRawAccessChains} -> shaderRawAccessChains
-          , enableFeature = \_ -> PhysicalDeviceRawAccessChainsFeaturesNV{shaderRawAccessChains = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_RAW_ACCESS_CHAINS_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ReplicatedCompositesEXT" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shaderReplicatedComposites"
-          , checkFeature = \PhysicalDeviceShaderReplicatedCompositesFeaturesEXT{shaderReplicatedComposites} -> shaderReplicatedComposites
-          , enableFeature = \_ -> PhysicalDeviceShaderReplicatedCompositesFeaturesEXT{shaderReplicatedComposites = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "TensorAddressingNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrixTensorAddressing"
-          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing} -> cooperativeMatrixTensorAddressing
-          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CooperativeMatrixReductionsNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrixReductions"
-          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixReductions} -> cooperativeMatrixReductions
-          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixReductions = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CooperativeMatrixConversionsNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrixConversions"
-          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixConversions} -> cooperativeMatrixConversions
-          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixConversions = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CooperativeMatrixPerElementOperationsNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrixPerElementOperations"
-          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixPerElementOperations} -> cooperativeMatrixPerElementOperations
-          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixPerElementOperations = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CooperativeMatrixTensorAddressingNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrixTensorAddressing"
-          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing} -> cooperativeMatrixTensorAddressing
-          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "CooperativeMatrixBlockLoadsNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "cooperativeMatrixBlockLoads"
-          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixBlockLoads} -> cooperativeMatrixBlockLoads
-          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixBlockLoads = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
+  "RuntimeDescriptorArray" -> (,) [] []
+  "InputAttachmentArrayDynamicIndexing" -> (,) [] []
+  "UniformTexelBufferArrayDynamicIndexing" -> (,) [] []
+  "StorageTexelBufferArrayDynamicIndexing" -> (,) [] []
+  "UniformBufferArrayNonUniformIndexing" -> (,) [] []
+  "SampledImageArrayNonUniformIndexing" -> (,) [] []
+  "StorageBufferArrayNonUniformIndexing" -> (,) [] []
+  "StorageImageArrayNonUniformIndexing" -> (,) [] []
+  "InputAttachmentArrayNonUniformIndexing" -> (,) [] []
+  "UniformTexelBufferArrayNonUniformIndexing" -> (,) [] []
+  "StorageTexelBufferArrayNonUniformIndexing" -> (,) [] []
+  "FragmentFullyCoveredEXT" -> (,) [] []
+  "Float16" -> (,) [] []
+  "Int8" -> (,) [] []
+  "StorageBuffer8BitAccess" -> (,) [] []
+  "UniformAndStorageBuffer8BitAccess" -> (,) [] []
+  "StoragePushConstant8" -> (,) [] []
+  "VulkanMemoryModel" -> (,) [] []
+  "VulkanMemoryModelDeviceScope" -> (,) [] []
+  "DenormPreserve" -> (,) [] []
+  "DenormFlushToZero" -> (,) [] []
+  "SignedZeroInfNanPreserve" -> (,) [] []
+  "RoundingModeRTE" -> (,) [] []
+  "RoundingModeRTZ" -> (,) [] []
+  "ComputeDerivativeGroupQuadsKHR" -> (,) [] []
+  "ComputeDerivativeGroupLinearKHR" -> (,) [] []
+  "ImageFootprintNV" -> (,) [] []
+  "MeshShadingNV" -> (,) [] []
+  "RayTracingKHR" -> (,) [] []
+  "RayQueryKHR" -> (,) [] []
+  "RayTraversalPrimitiveCullingKHR" -> (,) [] []
+  "RayCullMaskKHR" -> (,) [] []
+  "RayTracingNV" -> (,) [] []
+  "RayTracingMotionBlurNV" -> (,) [] []
+  "TransformFeedback" -> (,) [] []
+  "GeometryStreams" -> (,) [] []
+  "FragmentDensityEXT" -> (,) [] []
+  "PhysicalStorageBufferAddresses" -> (,) [] []
+  "CooperativeMatrixNV" -> (,) [] []
+  "IntegerFunctions2INTEL" -> (,) [] []
+  "ShaderSMBuiltinsNV" -> (,) [] []
+  "FragmentShaderSampleInterlockEXT" -> (,) [] []
+  "FragmentShaderPixelInterlockEXT" -> (,) [] []
+  "FragmentShaderShadingRateInterlockEXT" -> (,) [] []
+  "DemoteToHelperInvocation" -> (,) [] []
+  "FragmentShadingRateKHR" -> (,) [] []
+  "WorkgroupMemoryExplicitLayoutKHR" -> (,) [] []
+  "WorkgroupMemoryExplicitLayout8BitAccessKHR" -> (,) [] []
+  "WorkgroupMemoryExplicitLayout16BitAccessKHR" -> (,) [] []
+  "DotProductInputAll" -> (,) [] []
+  "DotProductInput4x8Bit" -> (,) [] []
+  "DotProductInput4x8BitPacked" -> (,) [] []
+  "DotProduct" -> (,) [] []
+  "FragmentBarycentricKHR" -> (,) [] []
+  "TextureSampleWeightedQCOM" -> (,) [] []
+  "TextureBoxFilterQCOM" -> (,) [] []
+  "TextureBlockMatchQCOM" -> (,) [] []
+  "TextureBlockMatch2QCOM" -> (,) [] []
+  "MeshShadingEXT" -> (,) [] []
+  "RayTracingOpacityMicromapEXT" -> (,) [] []
+  "CoreBuiltinsARM" -> (,) [] []
+  "ShaderInvocationReorderNV" -> (,) [] []
+  "ClusterCullingShadingHUAWEI" -> (,) [] []
+  "RayTracingPositionFetchKHR" -> (,) [] []
+  "RayQueryPositionFetchKHR" -> (,) [] []
+  "TileImageColorReadAccessEXT" -> (,) [] []
+  "TileImageDepthReadAccessEXT" -> (,) [] []
+  "TileImageStencilReadAccessEXT" -> (,) [] []
+  "CooperativeMatrixKHR" -> (,) [] []
+  "CooperativeMatrixConversionQCOM" -> (,) [] []
+  "ShaderEnqueueAMDX" -> (,) [] []
+  "GroupNonUniformRotateKHR" -> (,) [] []
+  "ExpectAssumeKHR" -> (,) [] []
+  "FloatControls2" -> (,) [] []
+  "QuadControlKHR" -> (,) [] []
+  "BFloat16TypeKHR" -> (,) [] []
+  "BFloat16DotProductKHR" -> (,) [] []
+  "BFloat16CooperativeMatrixKHR" -> (,) [] []
+  "RawAccessChainsNV" -> (,) [] []
+  "ReplicatedCompositesEXT" -> (,) [] []
+  "TensorAddressingNV" -> (,) [] []
+  "CooperativeMatrixReductionsNV" -> (,) [] []
+  "CooperativeMatrixConversionsNV" -> (,) [] []
+  "CooperativeMatrixPerElementOperationsNV" -> (,) [] []
+  "CooperativeMatrixTensorAddressingNV" -> (,) [] []
+  "CooperativeMatrixBlockLoadsNV" -> (,) [] []
+  "RayTracingSpheresGeometryNV" -> (,) [] []
+  "RayTracingLinearSweptSpheresGeometryNV" -> (,) [] []
+  "RayTracingClusterAccelerationStructureNV" -> (,) [] []
+  "CooperativeVectorNV" -> (,) [] []
+  "CooperativeVectorTrainingNV" -> (,) [] []
+  "PushConstantBanksNV" -> (,) [] []
+  "ShaderInvocationReorderEXT" -> (,) [] []
+  "TileShadingQCOM" -> (,) [] []
+  "TensorsARM" -> (,) [] []
+  "StorageTensorArrayDynamicIndexingARM" -> (,) [] []
+  "StorageTensorArrayNonUniformIndexingARM" -> (,) [] []
+  "Float8EXT" -> (,) [] []
+  "Float8CooperativeMatrixEXT" -> (,) [] []
+  "GraphARM" -> (,) [] []
+  "UntypedPointersKHR" -> (,) [] []
+  "FMAKHR" -> (,) [] []
+  "Shader64BitIndexingEXT" -> (,) [] []
+  "LongVectorEXT" -> (,) [] []
+  "DescriptorHeapEXT" -> (,) [] []
   _ -> ([], [])

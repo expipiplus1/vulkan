@@ -23,6 +23,12 @@
 -- [__Extension and Version Dependencies__]
 --     None
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_resolve VK_EXT_custom_resolve>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Matthew Netsch
@@ -76,9 +82,9 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlagBits':
 --
---     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM'
+--     -   'SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM'
 --
---     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM'
+--     -   'SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM'
 --
 -- == Issues
 --
@@ -92,7 +98,7 @@
 -- VK_KHR_create_renderpass2.
 --
 -- 2) Should the VK_SAMPLE_COUNT_1_BIT be required for each
--- pColorAttachment and the DepthStencilAttachent?
+-- pColorAttachment and the DepthStencilAttachment?
 --
 -- __RESOLVED__ No.
 --
@@ -107,9 +113,7 @@
 -- To be more specific, it should be the last subpass in a subpass
 -- dependency chain.
 --
--- 4) Do we need the
--- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM'
--- bit?
+-- 4) Do we need the 'SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM' bit?
 --
 -- __RESOLVED__ Yes.
 --
@@ -152,17 +156,30 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_render_pass_shader_resolve Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve  ( QCOM_RENDER_PASS_SHADER_RESOLVE_SPEC_VERSION
+module Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve  ( pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
+                                                             , pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
+                                                             , QCOM_RENDER_PASS_SHADER_RESOLVE_SPEC_VERSION
                                                              , pattern QCOM_RENDER_PASS_SHADER_RESOLVE_SPEC_VERSION
                                                              , QCOM_RENDER_PASS_SHADER_RESOLVE_EXTENSION_NAME
                                                              , pattern QCOM_RENDER_PASS_SHADER_RESOLVE_EXTENSION_NAME
                                                              ) where
 
 import Data.String (IsString)
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlagBits(SUBPASS_DESCRIPTION_CUSTOM_RESOLVE_BIT_EXT))
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlagBits(SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_EXT))
+-- No documentation found for TopLevel "VK_SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM"
+pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM = SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM"
+pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM = SUBPASS_DESCRIPTION_CUSTOM_RESOLVE_BIT_EXT
+
 
 type QCOM_RENDER_PASS_SHADER_RESOLVE_SPEC_VERSION = 4
 

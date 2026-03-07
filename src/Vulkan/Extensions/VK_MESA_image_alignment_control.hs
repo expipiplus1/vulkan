@@ -114,7 +114,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_MESA_image_alignment_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_MESA_image_alignment_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -167,9 +167,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceImageAlignmentControlFeaturesMESA' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceImageAlignmentControlFeaturesMESA', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -312,7 +316,7 @@ instance Zero PhysicalDeviceImageAlignmentControlPropertiesMESA where
 -- would enable image compression - the implementation /should/ not use
 -- @maximumRequestedAlignment@, and /should/ return the smallest alignment
 -- which does not compromise compression. If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControl imageCompressionControl>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-imageCompressionControl imageCompressionControl>
 -- feature is enabled, the application /can/ chain a
 -- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
 -- with
@@ -329,11 +333,11 @@ instance Zero PhysicalDeviceImageAlignmentControlPropertiesMESA where
 -- -   #VUID-VkImageAlignmentControlCreateInfoMESA-maximumRequestedAlignment-09656#
 --     If @maximumRequestedAlignment@ is not 0, the bitwise-and of
 --     @maximumRequestedAlignment@ and
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-supportedImageAlignmentMask supportedImageAlignmentMask>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-supportedImageAlignmentMask supportedImageAlignmentMask>
 --     /must/ be non-zero
 --
 -- -   #VUID-VkImageAlignmentControlCreateInfoMESA-imageAlignmentControl-09657#
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageAlignmentControl imageAlignmentControl>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-imageAlignmentControl imageAlignmentControl>
 --     /must/ be enabled
 --
 -- == Valid Usage (Implicit)

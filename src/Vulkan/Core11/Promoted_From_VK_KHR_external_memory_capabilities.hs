@@ -59,7 +59,7 @@ import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (BufferUsageFlags2CreateInfo)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -106,6 +106,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalBufferProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalBufferInfo'
@@ -162,10 +163,12 @@ getPhysicalDeviceExternalBufferProperties physicalDevice
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalBufferProperties', 'ExternalImageFormatProperties',
 -- 'Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits.ExternalMemoryFeatureFlags',
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags'
+-- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
+-- 'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM'
 data ExternalMemoryProperties = ExternalMemoryProperties
   { -- | @externalMemoryFeatures@ is a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits.ExternalMemoryFeatureFlagBits'
@@ -255,6 +258,7 @@ instance Zero ExternalMemoryProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -308,6 +312,7 @@ instance Zero PhysicalDeviceExternalImageFormatInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryProperties',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -362,21 +367,21 @@ instance Zero ExternalImageFormatProperties where
 -- Only usage flags representable in
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' are
 -- returned in this structure’s @usage@. If the @pNext@ chain includes a
--- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 -- structure, all usage flags of the buffer are returned in
--- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'::@usage@.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09499# If the @pNext@
 --     chain does not include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09500# If the @pNext@
 --     chain does not include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ not be 0
 --
 -- == Valid Usage (Implicit)
@@ -387,10 +392,10 @@ instance Zero ExternalImageFormatProperties where
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-pNext-pNext# @pNext@ /must/
 --     be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
+--     value of each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-flags-parameter# @flags@
 --     /must/ be a valid combination of
@@ -404,13 +409,14 @@ instance Zero ExternalImageFormatProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalBufferProperties',
--- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferPropertiesKHR'
+-- 'getPhysicalDeviceExternalBufferProperties'
 data PhysicalDeviceExternalBufferInfo (es :: [Type]) = PhysicalDeviceExternalBufferInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -442,7 +448,7 @@ instance Extensible PhysicalDeviceExternalBufferInfo where
   getNext PhysicalDeviceExternalBufferInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceExternalBufferInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfoKHR = Just f
+    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfo = Just f
     | otherwise = Nothing
 
 instance ( Extendss PhysicalDeviceExternalBufferInfo es
@@ -491,11 +497,12 @@ instance es ~ '[] => Zero (PhysicalDeviceExternalBufferInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryProperties',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalBufferProperties',
--- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferPropertiesKHR'
+-- 'getPhysicalDeviceExternalBufferProperties'
 data ExternalBufferProperties = ExternalBufferProperties
   { -- | @externalMemoryProperties@ is a 'ExternalMemoryProperties' structure
     -- specifying various capabilities of the external handle type when used
@@ -585,11 +592,11 @@ instance Zero ExternalBufferProperties where
 -- where such a restriction exists as defined in the compatibility table
 -- for the particular object type:
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility External memory handle types compatibility>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-memory-handle-types-compatibility External memory handle types compatibility>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility External semaphore handle types compatibility>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-semaphore-handle-types-compatibility External semaphore handle types compatibility>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-fence-handle-types-compatibility External fence handle types compatibility>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-fence-handle-types-compatibility External fence handle types compatibility>
 --
 -- If @deviceLUIDValid@ is 'Vulkan.Core10.FundamentalTypes.FALSE', the
 -- values of @deviceLUID@ and @deviceNodeMask@ are undefined. If
@@ -607,7 +614,7 @@ instance Zero ExternalBufferProperties where
 --
 -- Although they have identical descriptions,
 -- 'PhysicalDeviceIDProperties'::@deviceUUID@ may differ from
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'::@pipelineCacheUUID@.
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'::@properties.pipelineCacheUUID@.
 -- The former is intended to identify and correlate devices across API and
 -- driver boundaries, while the latter is used to identify a compatible
 -- device and driver combination to use when serializing and de-serializing
@@ -657,6 +664,9 @@ instance Zero ExternalBufferProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_capabilities VK_KHR_external_fence_capabilities>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_capabilities VK_KHR_external_semaphore_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'

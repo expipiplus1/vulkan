@@ -104,6 +104,19 @@
 --
 --     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT'
 --
+-- -   Extending
+--     'Vulkan.Core13.Enums.ToolPurposeFlagBits.ToolPurposeFlagBits':
+--
+--     -   'TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT'
+--
+--     -   'TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT'
+--
+--     -   'TOOL_PURPOSE_PROFILING_BIT_EXT'
+--
+--     -   'TOOL_PURPOSE_TRACING_BIT_EXT'
+--
+--     -   'TOOL_PURPOSE_VALIDATION_BIT_EXT'
+--
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>
 -- is supported:
@@ -188,11 +201,16 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_tooling_info Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_tooling_info Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_tooling_info  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT
+                                              , pattern TOOL_PURPOSE_VALIDATION_BIT_EXT
+                                              , pattern TOOL_PURPOSE_PROFILING_BIT_EXT
+                                              , pattern TOOL_PURPOSE_TRACING_BIT_EXT
+                                              , pattern TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT
+                                              , pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT
                                               , getPhysicalDeviceToolPropertiesEXT
                                               , ToolPurposeFlagsEXT
                                               , ToolPurposeFlagBitsEXT
@@ -209,8 +227,38 @@ import Vulkan.Core13.Promoted_From_VK_EXT_tooling_info (PhysicalDeviceToolProper
 import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlagBits)
 import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES))
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlags)
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlagBits(TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT))
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlags)
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlagBits(TOOL_PURPOSE_MODIFYING_FEATURES_BIT))
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlags)
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlagBits(TOOL_PURPOSE_PROFILING_BIT))
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlags)
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlagBits(TOOL_PURPOSE_TRACING_BIT))
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlags)
+import Vulkan.Core13.Enums.ToolPurposeFlagBits (ToolPurposeFlagBits(TOOL_PURPOSE_VALIDATION_BIT))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES
+
+
+-- No documentation found for TopLevel "VK_TOOL_PURPOSE_VALIDATION_BIT_EXT"
+pattern TOOL_PURPOSE_VALIDATION_BIT_EXT = TOOL_PURPOSE_VALIDATION_BIT
+
+
+-- No documentation found for TopLevel "VK_TOOL_PURPOSE_PROFILING_BIT_EXT"
+pattern TOOL_PURPOSE_PROFILING_BIT_EXT = TOOL_PURPOSE_PROFILING_BIT
+
+
+-- No documentation found for TopLevel "VK_TOOL_PURPOSE_TRACING_BIT_EXT"
+pattern TOOL_PURPOSE_TRACING_BIT_EXT = TOOL_PURPOSE_TRACING_BIT
+
+
+-- No documentation found for TopLevel "VK_TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT"
+pattern TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT_EXT = TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT
+
+
+-- No documentation found for TopLevel "VK_TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT"
+pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT_EXT = TOOL_PURPOSE_MODIFYING_FEATURES_BIT
 
 
 -- No documentation found for TopLevel "vkGetPhysicalDeviceToolPropertiesEXT"

@@ -16,11 +16,13 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -32,11 +34,10 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -45,13 +46,16 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandPool)
 import Vulkan.Core10.Handles (CommandPool(..))
 import Vulkan.Core10.Enums.CommandPoolCreateFlagBits (CommandPoolCreateFlags)
 import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..))
 import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph (DataGraphProcessingEngineCreateInfoARM)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
@@ -59,8 +63,16 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkResetCommandPool))
 import Vulkan.Core10.Handles (Device_T)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO))
@@ -75,7 +87,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateCommandPool
-  :: FunPtr (Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result) -> Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct CommandPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct CommandPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result
 
 -- | vkCreateCommandPool - Create a new command pool object
 --
@@ -102,6 +114,9 @@ foreign import ccall
 --     /must/ be a valid pointer to a 'Vulkan.Core10.Handles.CommandPool'
 --     handle
 --
+-- -   #VUID-vkCreateCommandPool-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -110,9 +125,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -120,15 +139,15 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createCommandPool :: forall io
-                   . (MonadIO io)
+createCommandPool :: forall a io
+                   . (Extendss CommandPoolCreateInfo a, PokeChain a, MonadIO io)
                   => -- | @device@ is the logical device that creates the command pool.
                      Device
                   -> -- | @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
                      -- specifying the state of the command pool object.
-                     CommandPoolCreateInfo
+                     (CommandPoolCreateInfo a)
                   -> -- | @pAllocator@ controls host memory allocation as described in the
-                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (CommandPool)
@@ -144,7 +163,7 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
   pPCommandPool <- ContT $ bracket (callocBytes @CommandPool 8) free
   r <- lift $ traceAroundEvent "vkCreateCommandPool" (vkCreateCommandPool'
                                                         (deviceHandle (device))
-                                                        pCreateInfo
+                                                        (forgetExtensions pCreateInfo)
                                                         pAllocator
                                                         (pPCommandPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -159,7 +178,7 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withCommandPool :: forall io r . MonadIO io => Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> (io CommandPool -> (CommandPool -> io ()) -> r) -> r
+withCommandPool :: forall a io r . (Extendss CommandPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> CommandPoolCreateInfo a -> Maybe AllocationCallbacks -> (io CommandPool -> (CommandPool -> io ()) -> r) -> r
 withCommandPool device pCreateInfo pAllocator b =
   b (createCommandPool device pCreateInfo pAllocator)
     (\(o0) -> destroyCommandPool device o0 pAllocator)
@@ -181,17 +200,17 @@ foreign import ccall
 --
 -- Any primary command buffer allocated from another
 -- 'Vulkan.Core10.Handles.CommandPool' that is in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- and has a secondary command buffer allocated from @commandPool@ recorded
 -- into it, becomes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkDestroyCommandPool-commandPool-00041# All
 --     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
 --     @commandPool@ /must/ not be in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   #VUID-vkDestroyCommandPool-commandPool-00042# If
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -236,7 +255,7 @@ destroyCommandPool :: forall io
                    -> -- | @commandPool@ is the handle of the command pool to destroy.
                       CommandPool
                    -> -- | @pAllocator@ controls host memory allocation as described in the
-                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                       -- chapter.
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
@@ -270,21 +289,21 @@ foreign import ccall
 -- command buffers allocated from the command pool back to the command
 -- pool. All command buffers that have been allocated from the command pool
 -- are put in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle initial state>.
 --
 -- Any primary command buffer allocated from another
 -- 'Vulkan.Core10.Handles.CommandPool' that is in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- and has a secondary command buffer allocated from @commandPool@ recorded
 -- into it, becomes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkResetCommandPool-commandPool-00040# All
 --     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
 --     @commandPool@ /must/ not be in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
@@ -315,6 +334,10 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -351,10 +374,44 @@ resetCommandPool device commandPool flags = liftIO $ do
 -- == Valid Usage
 --
 -- -   #VUID-VkCommandPoolCreateInfo-flags-02860# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-protectedMemory protectedMemory>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-protectedMemory protectedMemory>
 --     feature is not enabled, the
 --     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_PROTECTED_BIT'
 --     bit of @flags@ /must/ not be set
+--
+-- -   #VUID-VkCommandPoolCreateInfo-pNext-09908# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'
+--     structure, then @queueFamilyIndex@ /must/ designate a queue family
+--     that supports
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_DATA_GRAPH_BIT_ARM'
+--
+-- -   #VUID-VkCommandPoolCreateInfo-pNext-09909# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'
+--     structure, each member of @pProcessingEngines@ /must/ be identical
+--     to
+--     'Vulkan.Extensions.VK_ARM_data_graph.QueueFamilyDataGraphPropertiesARM'::@engine@
+--     retrieved from
+--     'Vulkan.Extensions.VK_ARM_data_graph.getPhysicalDeviceQueueFamilyDataGraphPropertiesARM'
+--     with @queueFamilyIndex@ and the @physicalDevice@ that was used to
+--     create @device@
+--
+-- -   #VUID-VkCommandPoolCreateInfo-queueFamilyIndex-11830# If
+--     @queueFamilyIndex@ designates a queue family that supports
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_DATA_GRAPH_BIT_ARM' and
+--     enumerates a foreign engine through
+--     'Vulkan.Extensions.VK_ARM_data_graph.getPhysicalDeviceQueueFamilyDataGraphPropertiesARM'
+--     with type
+--     'Vulkan.Extensions.VK_ARM_data_graph.PHYSICAL_DEVICE_DATA_GRAPH_PROCESSING_ENGINE_TYPE_NEURAL_QCOM'
+--     or
+--     'Vulkan.Extensions.VK_ARM_data_graph.PHYSICAL_DEVICE_DATA_GRAPH_PROCESSING_ENGINE_TYPE_COMPUTE_QCOM',
+--     the @pNext@ chain must include
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'
+--     with
+--     'Vulkan.Extensions.VK_ARM_data_graph.PhysicalDeviceDataGraphProcessingEngineARM'::@isForeign@
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' for all elements of
+--     @pProcessingEngines@
 --
 -- == Valid Usage (Implicit)
 --
@@ -362,6 +419,11 @@ resetCommandPool device commandPool flags = liftIO $ do
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO'
 --
 -- -   #VUID-VkCommandPoolCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'
+--
+-- -   #VUID-VkCommandPoolCreateInfo-sType-unique# The @sType@ value of
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkCommandPoolCreateInfo-flags-parameter# @flags@ /must/ be a
 --     valid combination of
@@ -373,55 +435,67 @@ resetCommandPool device commandPool flags = liftIO $ do
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createCommandPool'
-data CommandPoolCreateInfo = CommandPoolCreateInfo
-  { -- | @flags@ is a bitmask of
+data CommandPoolCreateInfo (es :: [Type]) = CommandPoolCreateInfo
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
     -- indicating usage behavior for the pool and command buffers allocated
     -- from it.
     flags :: CommandPoolCreateFlags
   , -- | @queueFamilyIndex@ designates a queue family as described in section
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-queueprops Queue Family Properties>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-queueprops Queue Family Properties>.
     -- All command buffers allocated from this command pool /must/ be submitted
     -- on queues from the same queue family.
     queueFamilyIndex :: Word32
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (CommandPoolCreateInfo)
+deriving instance Generic (CommandPoolCreateInfo (es :: [Type]))
 #endif
-deriving instance Show CommandPoolCreateInfo
+deriving instance Show (Chain es) => Show (CommandPoolCreateInfo es)
 
-instance ToCStruct CommandPoolCreateInfo where
+instance Extensible CommandPoolCreateInfo where
+  extensibleTypeName = "CommandPoolCreateInfo"
+  setNext CommandPoolCreateInfo{..} next' = CommandPoolCreateInfo{next = next', ..}
+  getNext CommandPoolCreateInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandPoolCreateInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @DataGraphProcessingEngineCreateInfoARM = Just f
+    | otherwise = Nothing
+
+instance ( Extendss CommandPoolCreateInfo es
+         , PokeChain es ) => ToCStruct (CommandPoolCreateInfo es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CommandPoolCreateInfo{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags)) (flags)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (queueFamilyIndex)
-    f
+  pokeCStruct p CommandPoolCreateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags)) (flags)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (queueFamilyIndex)
+    lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    lift $ f
 
-instance FromCStruct CommandPoolCreateInfo where
+instance ( Extendss CommandPoolCreateInfo es
+         , PeekChain es ) => FromCStruct (CommandPoolCreateInfo es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     flags <- peek @CommandPoolCreateFlags ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags))
     queueFamilyIndex <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pure $ CommandPoolCreateInfo
-             flags queueFamilyIndex
+             next flags queueFamilyIndex
 
-instance Storable CommandPoolCreateInfo where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero CommandPoolCreateInfo where
+instance es ~ '[] => Zero (CommandPoolCreateInfo es) where
   zero = CommandPoolCreateInfo
+           ()
            zero
            zero
 

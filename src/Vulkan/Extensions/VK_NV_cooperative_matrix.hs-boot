@@ -101,7 +101,7 @@
 -- -   'NV_COOPERATIVE_MATRIX_SPEC_VERSION'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR':
+--     'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR':
 --
 --     -   'COMPONENT_TYPE_FLOAT16_NV'
 --
@@ -145,7 +145,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixNV CooperativeMatrixNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixNV CooperativeMatrixNV>
 --
 -- == Issues
 --
@@ -178,7 +178,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_cooperative_matrix Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_cooperative_matrix Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

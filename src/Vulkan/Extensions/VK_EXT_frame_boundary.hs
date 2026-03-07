@@ -21,7 +21,9 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     None
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -112,7 +114,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_frame_boundary Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_frame_boundary Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -189,7 +191,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- The application /can/ associate frame boundary information to a queue
 -- submission call by adding a 'FrameBoundaryEXT' structure to the @pNext@
 -- chain of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-submission queue submission>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR', or
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo'.
 --
@@ -205,7 +207,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- identifiers between frames.
 --
 -- The @pImages@ and @pBuffers@ arrays contain a list of images and buffers
--- which store the \"end result\" of the frame. As the concept of frame is
+-- which store the “end result” of the frame. As the concept of frame is
 -- application-dependent, not all frames /may/ produce their results in
 -- images or buffers, yet this is a sufficiently common case to be handled
 -- by 'FrameBoundaryEXT'. Note that no extra information, such as image
@@ -385,9 +387,13 @@ instance Zero FrameBoundaryEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceFrameBoundaryFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceFrameBoundaryFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -443,6 +449,13 @@ type FrameBoundaryFlagsEXT = FrameBoundaryFlagBitsEXT
 -- | VkFrameBoundaryFlagBitsEXT - Bitmask specifying whether a queue
 -- submission is the last one for a given frame
 --
+-- = Description
+--
+-- -   'FRAME_BOUNDARY_FRAME_END_BIT_EXT' specifies that this queue
+--     submission is the last one for this frame, i.e. once this queue
+--     submission has terminated, then the work for this frame is
+--     completed.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_frame_boundary VK_EXT_frame_boundary>,
@@ -450,9 +463,7 @@ type FrameBoundaryFlagsEXT = FrameBoundaryFlagBitsEXT
 newtype FrameBoundaryFlagBitsEXT = FrameBoundaryFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'FRAME_BOUNDARY_FRAME_END_BIT_EXT' specifies that this queue submission
--- is the last one for this frame, i.e. once this queue submission has
--- terminated, then the work for this frame is completed.
+-- No documentation found for Nested "VkFrameBoundaryFlagBitsEXT" "VK_FRAME_BOUNDARY_FRAME_END_BIT_EXT"
 pattern FRAME_BOUNDARY_FRAME_END_BIT_EXT = FrameBoundaryFlagBitsEXT 0x00000001
 
 conNameFrameBoundaryFlagBitsEXT :: String

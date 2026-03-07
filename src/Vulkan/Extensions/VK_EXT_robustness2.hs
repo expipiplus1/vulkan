@@ -25,6 +25,12 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_robustness2 VK_KHR_robustness2>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Liam Middlebrook
@@ -52,9 +58,9 @@
 -- return zero. Rather than allowing multiple possible (0,0,0,x) vectors,
 -- the out of bounds values are treated as zero, and then missing
 -- components are inserted based on the format as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#images-component-substitution>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input-extraction vertex input attribute extraction>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fxvertex-input-extraction vertex input attribute extraction>.
 --
 -- These additional requirements /may/ be expensive on some
 -- implementations, and should only be enabled when truly necessary.
@@ -63,6 +69,12 @@
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' /can/ be used instead of a
 -- valid handle. Accesses to null descriptors have well-defined behavior,
 -- and do not rely on robustness.
+--
+-- == Promotion to @VK_KHR_robustness2@
+--
+-- All functionality in this extension is included in @VK_KHR_robustness2@,
+-- with the suffix changed to KHR. The original type, enum, and command
+-- names are still available as aliases of the core functionality.
 --
 -- == New Structures
 --
@@ -85,9 +97,9 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT'
 --
 -- == Issues
 --
@@ -123,234 +135,43 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_robustness2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_robustness2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_robustness2  ( PhysicalDeviceRobustness2FeaturesEXT(..)
-                                             , PhysicalDeviceRobustness2PropertiesEXT(..)
+module Vulkan.Extensions.VK_EXT_robustness2  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT
+                                             , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT
+                                             , PhysicalDeviceRobustness2FeaturesEXT
+                                             , PhysicalDeviceRobustness2PropertiesEXT
                                              , EXT_ROBUSTNESS_2_SPEC_VERSION
                                              , pattern EXT_ROBUSTNESS_2_SPEC_VERSION
                                              , EXT_ROBUSTNESS_2_EXTENSION_NAME
                                              , pattern EXT_ROBUSTNESS_2_EXTENSION_NAME
+                                             , PhysicalDeviceRobustness2FeaturesKHR(..)
+                                             , PhysicalDeviceRobustness2PropertiesKHR(..)
                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.FundamentalTypes (DeviceSize)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT))
--- | VkPhysicalDeviceRobustness2FeaturesEXT - Structure describing the
--- out-of-bounds behavior for an implementation
---
--- = Members
---
--- This structure describes the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceRobustness2FeaturesEXT' structure is included in
--- the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceRobustness2FeaturesEXT' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
---
--- == Valid Usage
---
--- -   #VUID-VkPhysicalDeviceRobustness2FeaturesEXT-robustBufferAccess2-04000#
---     If @robustBufferAccess2@ is enabled then
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
---     /must/ also be enabled
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkPhysicalDeviceRobustness2FeaturesEXT-sType-sType# @sType@
---     /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT'
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_robustness2 VK_EXT_robustness2>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceRobustness2FeaturesEXT = PhysicalDeviceRobustness2FeaturesEXT
-  { -- | #features-robustBufferAccess2# @robustBufferAccess2@ indicates whether
-    -- buffer accesses are tightly bounds-checked against the range of the
-    -- descriptor. Uniform buffers /must/ be bounds-checked to the range of the
-    -- descriptor, where the range is rounded up to a multiple of
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>.
-    -- Storage buffers /must/ be bounds-checked to the range of the descriptor,
-    -- where the range is rounded up to a multiple of
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>.
-    -- Out of bounds buffer loads will return zero values, and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures image load, sample, and atomic operations>
-    -- from texel buffers will have (0,0,1) values
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
-    -- based on the format.
-    robustBufferAccess2 :: Bool
-  , -- | #features-robustImageAccess2# @robustImageAccess2@ indicates whether
-    -- image accesses are tightly bounds-checked against the dimensions of the
-    -- image view. Out of bounds
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures image load, sample, and atomic operations>
-    -- from images will return zero values, with (0,0,1) values
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
-    -- based on the format.
-    robustImageAccess2 :: Bool
-  , -- | #features-nullDescriptor# @nullDescriptor@ indicates whether descriptors
-    -- /can/ be written with a 'Vulkan.Core10.APIConstants.NULL_HANDLE'
-    -- resource or view, which are considered valid to access and act as if the
-    -- descriptor were bound to nothing.
-    nullDescriptor :: Bool
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceRobustness2FeaturesEXT)
-#endif
-deriving instance Show PhysicalDeviceRobustness2FeaturesEXT
-
-instance ToCStruct PhysicalDeviceRobustness2FeaturesEXT where
-  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceRobustness2FeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (robustBufferAccess2))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (robustImageAccess2))
-    poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (nullDescriptor))
-    f
-  cStructSize = 32
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
-
-instance FromCStruct PhysicalDeviceRobustness2FeaturesEXT where
-  peekCStruct p = do
-    robustBufferAccess2 <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    robustImageAccess2 <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
-    nullDescriptor <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
-    pure $ PhysicalDeviceRobustness2FeaturesEXT
-             (bool32ToBool robustBufferAccess2)
-             (bool32ToBool robustImageAccess2)
-             (bool32ToBool nullDescriptor)
-
-instance Storable PhysicalDeviceRobustness2FeaturesEXT where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceRobustness2FeaturesEXT where
-  zero = PhysicalDeviceRobustness2FeaturesEXT
-           zero
-           zero
-           zero
+import Vulkan.Extensions.VK_KHR_robustness2 (PhysicalDeviceRobustness2FeaturesKHR)
+import Vulkan.Extensions.VK_KHR_robustness2 (PhysicalDeviceRobustness2PropertiesKHR)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR))
+import Vulkan.Extensions.VK_KHR_robustness2 (PhysicalDeviceRobustness2FeaturesKHR(..))
+import Vulkan.Extensions.VK_KHR_robustness2 (PhysicalDeviceRobustness2PropertiesKHR(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR
 
 
--- | VkPhysicalDeviceRobustness2PropertiesEXT - Structure describing robust
--- buffer access properties supported by an implementation
---
--- = Description
---
--- If the 'PhysicalDeviceRobustness2PropertiesEXT' structure is included in
--- the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
--- it is filled in with each corresponding implementation-dependent
--- property.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_robustness2 VK_EXT_robustness2>,
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2PropertiesEXT
-  { -- | #limits-robustStorageBufferAccessSizeAlignment#
-    -- @robustStorageBufferAccessSizeAlignment@ is the number of bytes that the
-    -- range of a storage buffer descriptor is rounded up to when used for
-    -- bounds-checking when the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
-    -- feature is enabled. This value /must/ be either 1 or 4.
-    robustStorageBufferAccessSizeAlignment :: DeviceSize
-  , -- | #limits-robustUniformBufferAccessSizeAlignment#
-    -- @robustUniformBufferAccessSizeAlignment@ is the number of bytes that the
-    -- range of a uniform buffer descriptor is rounded up to when used for
-    -- bounds-checking when the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
-    -- feature is enabled. This value /must/ be a power of two in the range [1,
-    -- 256].
-    robustUniformBufferAccessSizeAlignment :: DeviceSize
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceRobustness2PropertiesEXT)
-#endif
-deriving instance Show PhysicalDeviceRobustness2PropertiesEXT
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR
 
-instance ToCStruct PhysicalDeviceRobustness2PropertiesEXT where
-  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceRobustness2PropertiesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (robustStorageBufferAccessSizeAlignment)
-    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (robustUniformBufferAccessSizeAlignment)
-    f
-  cStructSize = 32
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
-    f
 
-instance FromCStruct PhysicalDeviceRobustness2PropertiesEXT where
-  peekCStruct p = do
-    robustStorageBufferAccessSizeAlignment <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
-    robustUniformBufferAccessSizeAlignment <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
-    pure $ PhysicalDeviceRobustness2PropertiesEXT
-             robustStorageBufferAccessSizeAlignment
-             robustUniformBufferAccessSizeAlignment
+-- No documentation found for TopLevel "VkPhysicalDeviceRobustness2FeaturesEXT"
+type PhysicalDeviceRobustness2FeaturesEXT = PhysicalDeviceRobustness2FeaturesKHR
 
-instance Storable PhysicalDeviceRobustness2PropertiesEXT where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDeviceRobustness2PropertiesEXT where
-  zero = PhysicalDeviceRobustness2PropertiesEXT
-           zero
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceRobustness2PropertiesEXT"
+type PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2PropertiesKHR
 
 
 type EXT_ROBUSTNESS_2_SPEC_VERSION = 1

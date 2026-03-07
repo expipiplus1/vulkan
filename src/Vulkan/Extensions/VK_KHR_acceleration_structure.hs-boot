@@ -406,7 +406,7 @@
 --     'cmdCopyMemoryToAccelerationStructureKHR')
 --
 -- -   document
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
 --
 -- -   added 'PhysicalDeviceAccelerationStructureFeaturesKHR' structure
 --
@@ -414,7 +414,7 @@
 --     ('cmdBuildAccelerationStructuresIndirectKHR')
 --
 -- -   added
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#host-acceleration-structure host acceleration structure>
 --     commands
 --
 -- -   reworked geometry structures so they could be better shared between
@@ -557,7 +557,7 @@
 --         → 'cmdWriteAccelerationStructuresPropertiesKHR' (different
 --         acceleration structure types)
 --
--- -   Added enums, structures and commands:
+-- -   Added enums, structures, and commands:
 --
 --     -   'GEOMETRY_TYPE_INSTANCES_KHR' to 'GeometryTypeKHR' enum
 --
@@ -685,7 +685,7 @@
 --         structure and require one of them be @NULL@
 --
 -- -   added
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     support for acceleration structures
 --
 -- -   changed the @update@ member of
@@ -1137,7 +1137,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -1241,10 +1241,12 @@ instance ToCStruct AccelerationStructureGeometryInstancesDataKHR
 instance Show AccelerationStructureGeometryInstancesDataKHR
 
 
-data AccelerationStructureGeometryKHR
+type role AccelerationStructureGeometryKHR nominal
+data AccelerationStructureGeometryKHR (es :: [Type])
 
-instance ToCStruct AccelerationStructureGeometryKHR
-instance Show AccelerationStructureGeometryKHR
+instance ( Extendss AccelerationStructureGeometryKHR es
+         , PokeChain es ) => ToCStruct (AccelerationStructureGeometryKHR es)
+instance Show (Chain es) => Show (AccelerationStructureGeometryKHR es)
 
 
 type role AccelerationStructureGeometryTrianglesDataKHR nominal

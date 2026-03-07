@@ -30,17 +30,17 @@ import GHC.Show (Show(showsPrec))
 -- -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709' specifies the color model
 --     conversion from Y′CBCR to R′G′B′ defined in BT.709 and described in
 --     the “BT.709 Y′CBCR conversion” section of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601' specifies the color model
 --     conversion from Y′CBCR to R′G′B′ defined in BT.601 and described in
 --     the “BT.601 Y′CBCR conversion” section of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020' specifies the color
 --     model conversion from Y′CBCR to R′G′B′ defined in BT.2020 and
 --     described in the “BT.2020 Y′CBCR conversion” section of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- In the @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_*@ color models, for the
 -- input to the sampler Y′CBCR range expansion and model conversion:
@@ -79,10 +79,12 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatProperties2ANDROID',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionPropertiesFUCHSIA',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkNativeBufferFormatPropertiesOHOS VkNativeBufferFormatPropertiesOHOS>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 -- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ScreenBufferFormatPropertiesQNX'
 newtype SamplerYcbcrModelConversion = SamplerYcbcrModelConversion Int32

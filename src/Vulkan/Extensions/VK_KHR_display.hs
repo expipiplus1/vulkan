@@ -237,7 +237,7 @@
 -- __RESOLVED__: Defer. This could be a separate extension on top of the
 -- base WSI specs.
 --
--- 13) How many display objects should be enumerated for \"tiled\" display
+-- 13) How many display objects should be enumerated for “tiled” display
 -- devices? There are ongoing design discussions among lower-level display
 -- API authors regarding how to expose displays if they are one physical
 -- display device to an end user, but may internally be implemented as two
@@ -309,7 +309,7 @@
 --
 --     -   Reordered and grouped functions.
 --
---     -   Added functions to query count of display, mode and overlay.
+--     -   Added functions to query count of display, mode, and overlay.
 --
 --     -   Added native display handle, which may be needed on some
 --         platforms to create a native Window.
@@ -495,7 +495,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_display Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_display Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -685,15 +685,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -769,15 +773,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -862,15 +870,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -960,15 +972,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1053,11 +1069,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1078,7 +1098,7 @@ createDisplayModeKHR :: forall io
                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                         -- display mode object when there is no more specific allocator available
                         -- (see
-                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                        -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DisplayModeKHR)
 createDisplayModeKHR physicalDevice
@@ -1143,9 +1163,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1221,9 +1245,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1244,7 +1272,7 @@ createDisplayPlaneSurfaceKHR :: forall a io
                                 (DisplaySurfaceCreateInfoKHR a)
                              -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                                 -- surface object when there is no more specific allocator available (see
-                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                                -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (SurfaceKHR)
 createDisplayPlaneSurfaceKHR instance'
@@ -1850,7 +1878,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --     'Vulkan.Extensions.VK_NV_display_stereo.DisplaySurfaceStereoCreateInfoNV'
 --
 -- -   #VUID-VkDisplaySurfaceCreateInfoKHR-sType-unique# The @sType@ value
---     of each struct in the @pNext@ chain /must/ be unique
+--     of each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkDisplaySurfaceCreateInfoKHR-flags-zerobitmask# @flags@
 --     /must/ be @0@
@@ -2069,6 +2097,26 @@ type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
 
 -- | VkDisplayPlaneAlphaFlagBitsKHR - Alpha blending type
 --
+-- = Description
+--
+-- -   'DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR' specifies that the source image
+--     will be treated as opaque.
+--
+-- -   'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR' specifies that a global alpha
+--     value /must/ be specified that will be applied to all pixels in the
+--     source image.
+--
+-- -   'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR' specifies that the alpha
+--     value will be determined by the alpha component of the source
+--     image’s pixels. If the source format contains no alpha values, no
+--     blending will be applied. The source alpha values are not
+--     premultiplied into the source image’s other color components.
+--
+-- -   'DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR' is equivalent
+--     to 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR', except the source alpha
+--     values are assumed to be premultiplied into the source image’s other
+--     color components.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
@@ -2076,26 +2124,16 @@ type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
 newtype DisplayPlaneAlphaFlagBitsKHR = DisplayPlaneAlphaFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR' specifies that the source image
--- will be treated as opaque.
+-- No documentation found for Nested "VkDisplayPlaneAlphaFlagBitsKHR" "VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
 pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000001
 
--- | 'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR' specifies that a global alpha value
--- /must/ be specified that will be applied to all pixels in the source
--- image.
+-- No documentation found for Nested "VkDisplayPlaneAlphaFlagBitsKHR" "VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR"
 pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000002
 
--- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR' specifies that the alpha value
--- will be determined by the alpha component of the source image’s pixels.
--- If the source format contains no alpha values, no blending will be
--- applied. The source alpha values are not premultiplied into the source
--- image’s other color components.
+-- No documentation found for Nested "VkDisplayPlaneAlphaFlagBitsKHR" "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR"
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000004
 
--- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR' is equivalent to
--- 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR', except the source alpha values
--- are assumed to be premultiplied into the source image’s other color
--- components.
+-- No documentation found for Nested "VkDisplayPlaneAlphaFlagBitsKHR" "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR"
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000008
 
 conNameDisplayPlaneAlphaFlagBitsKHR :: String

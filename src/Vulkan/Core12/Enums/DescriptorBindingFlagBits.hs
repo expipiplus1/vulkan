@@ -27,6 +27,71 @@ type DescriptorBindingFlags = DescriptorBindingFlagBits
 --
 -- = Description
 --
+-- -   'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT' specifies that if
+--     descriptors in this binding are updated between when the descriptor
+--     set is bound in a command buffer and when that command buffer is
+--     submitted to a queue, then the submission will use the most recently
+--     set descriptors for this binding and the updates do not invalidate
+--     the command buffer. Descriptor bindings created with this flag are
+--     also partially exempt from the external synchronization requirement
+--     in
+--     'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
+--     and 'Vulkan.Core10.DescriptorSet.updateDescriptorSets'. Multiple
+--     descriptors with this flag set /can/ be updated concurrently in
+--     different threads, though the same descriptor /must/ not be updated
+--     concurrently by two threads. Descriptors with this flag set /can/ be
+--     updated concurrently with the set being bound to a command buffer in
+--     another thread, but not concurrently with the set being reset or
+--     freed.
+--
+-- -   'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' specifies that descriptors
+--     in this binding that are not /dynamically used/ need not contain
+--     valid descriptors at the time the descriptors are consumed. A
+--     descriptor is dynamically used if any shader invocation executes an
+--     instruction that performs any memory access using the descriptor. If
+--     a descriptor is not dynamically used, any resource referenced by the
+--     descriptor is not considered to be referenced during command
+--     execution.
+--
+-- -   'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' specifies that
+--     descriptors in this binding /can/ be updated after a command buffer
+--     has bound this descriptor set, or while a command buffer that uses
+--     this descriptor set is pending execution, as long as the descriptors
+--     that are updated are not used by those command buffers. Descriptor
+--     bindings created with this flag are also partially exempt from the
+--     external synchronization requirement in
+--     'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
+--     and 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' in the same
+--     way as for 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'. If
+--     'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' is also set, then
+--     descriptors /can/ be updated as long as they are not dynamically
+--     used by any shader invocations. If
+--     'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' is not set, then
+--     descriptors /can/ be updated as long as they are not statically used
+--     by any shader invocations.
+--
+-- -   'DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT' specifies that
+--     this is a /variable-sized descriptor binding/ whose size will be
+--     specified when a descriptor set is allocated using this layout. The
+--     value of @descriptorCount@ is treated as an upper bound on the size
+--     of the binding. This /must/ only be used for the last binding in the
+--     descriptor set layout (i.e. the binding with the largest value of
+--     @binding@). For the purposes of counting against limits such as
+--     @maxDescriptorSet@* and @maxPerStageDescriptor@*, the full value of
+--     @descriptorCount@ is counted, except for descriptor bindings with a
+--     descriptor type of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
+--     when
+--     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@flags@
+--     does not contain
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'.
+--     In this case, @descriptorCount@ specifies the upper bound on the
+--     byte size of the binding; thus it counts against the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
+--     and
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
+--     limits instead.
+--
 -- Note that while 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT' and
 -- 'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' both involve
 -- updates to descriptor sets after they are bound,
@@ -43,68 +108,16 @@ type DescriptorBindingFlags = DescriptorBindingFlagBits
 newtype DescriptorBindingFlagBits = DescriptorBindingFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT' specifies that if descriptors
--- in this binding are updated between when the descriptor set is bound in
--- a command buffer and when that command buffer is submitted to a queue,
--- then the submission will use the most recently set descriptors for this
--- binding and the updates do not invalidate the command buffer. Descriptor
--- bindings created with this flag are also partially exempt from the
--- external synchronization requirement in
--- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
--- and 'Vulkan.Core10.DescriptorSet.updateDescriptorSets'. Multiple
--- descriptors with this flag set /can/ be updated concurrently in
--- different threads, though the same descriptor /must/ not be updated
--- concurrently by two threads. Descriptors with this flag set /can/ be
--- updated concurrently with the set being bound to a command buffer in
--- another thread, but not concurrently with the set being reset or freed.
+-- No documentation found for Nested "VkDescriptorBindingFlagBits" "VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT"
 pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = DescriptorBindingFlagBits 0x00000001
 
--- | 'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' specifies that
--- descriptors in this binding /can/ be updated after a command buffer has
--- bound this descriptor set, or while a command buffer that uses this
--- descriptor set is pending execution, as long as the descriptors that are
--- updated are not used by those command buffers. Descriptor bindings
--- created with this flag are also partially exempt from the external
--- synchronization requirement in
--- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
--- and 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' in the same way
--- as for 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'. If
--- 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' is also set, then descriptors
--- /can/ be updated as long as they are not dynamically used by any shader
--- invocations. If 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' is not set,
--- then descriptors /can/ be updated as long as they are not statically
--- used by any shader invocations.
+-- No documentation found for Nested "VkDescriptorBindingFlagBits" "VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT"
 pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = DescriptorBindingFlagBits 0x00000002
 
--- | 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' specifies that descriptors in
--- this binding that are not /dynamically used/ need not contain valid
--- descriptors at the time the descriptors are consumed. A descriptor is
--- dynamically used if any shader invocation executes an instruction that
--- performs any memory access using the descriptor. If a descriptor is not
--- dynamically used, any resource referenced by the descriptor is not
--- considered to be referenced during command execution.
+-- No documentation found for Nested "VkDescriptorBindingFlagBits" "VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT"
 pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = DescriptorBindingFlagBits 0x00000004
 
--- | 'DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT' specifies that this
--- is a /variable-sized descriptor binding/ whose size will be specified
--- when a descriptor set is allocated using this layout. The value of
--- @descriptorCount@ is treated as an upper bound on the size of the
--- binding. This /must/ only be used for the last binding in the descriptor
--- set layout (i.e. the binding with the largest value of @binding@). For
--- the purposes of counting against limits such as @maxDescriptorSet@* and
--- @maxPerStageDescriptor@*, the full value of @descriptorCount@ is
--- counted, except for descriptor bindings with a descriptor type of
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
--- when
--- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@flags@
--- does not contain
--- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'.
--- In this case, @descriptorCount@ specifies the upper bound on the byte
--- size of the binding; thus it counts against the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
--- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
--- limits instead.
+-- No documentation found for Nested "VkDescriptorBindingFlagBits" "VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT"
 pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = DescriptorBindingFlagBits 0x00000008
 
 conNameDescriptorBindingFlagBits :: String

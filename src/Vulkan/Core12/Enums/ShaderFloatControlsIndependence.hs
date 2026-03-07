@@ -18,6 +18,19 @@ import GHC.Show (Show(showsPrec))
 -- | VkShaderFloatControlsIndependence - Bitmask specifying whether, and how,
 -- shader float controls can be set separately
 --
+-- = Description
+--
+-- -   'SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY' specifies that
+--     shader float controls for 32-bit floating-point /can/ be set
+--     independently; other bit widths /must/ be set identically to each
+--     other.
+--
+-- -   'SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL' specifies that shader float
+--     controls for all bit widths /can/ be set independently.
+--
+-- -   'SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE' specifies that shader
+--     float controls for all bit widths /must/ be set identically.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_float_controls VK_KHR_shader_float_controls>,
@@ -27,17 +40,13 @@ import GHC.Show (Show(showsPrec))
 newtype ShaderFloatControlsIndependence = ShaderFloatControlsIndependence Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY' specifies that shader
--- float controls for 32-bit floating-point /can/ be set independently;
--- other bit widths /must/ be set identically to each other.
+-- No documentation found for Nested "VkShaderFloatControlsIndependence" "VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY"
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = ShaderFloatControlsIndependence 0
 
--- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL' specifies that shader float
--- controls for all bit widths /can/ be set independently.
+-- No documentation found for Nested "VkShaderFloatControlsIndependence" "VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL"
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL = ShaderFloatControlsIndependence 1
 
--- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE' specifies that shader float
--- controls for all bit widths /must/ be set identically.
+-- No documentation found for Nested "VkShaderFloatControlsIndependence" "VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE"
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE = ShaderFloatControlsIndependence 2
 
 {-# COMPLETE

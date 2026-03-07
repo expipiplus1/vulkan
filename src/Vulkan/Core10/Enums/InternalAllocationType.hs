@@ -15,6 +15,11 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkInternalAllocationType - Allocation type
 --
+-- = Description
+--
+-- -   'INTERNAL_ALLOCATION_TYPE_EXECUTABLE' specifies that the allocation
+--     is intended for execution by the host.
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification',
@@ -23,8 +28,7 @@ import GHC.Show (Show(showsPrec))
 newtype InternalAllocationType = InternalAllocationType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'INTERNAL_ALLOCATION_TYPE_EXECUTABLE' specifies that the allocation is
--- intended for execution by the host.
+-- No documentation found for Nested "VkInternalAllocationType" "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
 pattern INTERNAL_ALLOCATION_TYPE_EXECUTABLE = InternalAllocationType 0
 
 {-# COMPLETE INTERNAL_ALLOCATION_TYPE_EXECUTABLE :: InternalAllocationType #-}

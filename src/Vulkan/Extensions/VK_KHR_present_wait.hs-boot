@@ -113,7 +113,7 @@
 -- presentation. This should be the easiest to implement as the driver need
 -- only track the largest present ID completed. This is also the
 -- \'natural\' consequence of interpreting the existing vkWaitForPresentKHR
--- specificationn.
+-- specification.
 --
 -- __OPTION C__: Finish both waits when both have completed. This will
 -- complete the earlier presentation later than the actual presentation
@@ -135,7 +135,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_present_wait Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_present_wait Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

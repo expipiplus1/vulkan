@@ -69,7 +69,7 @@
 --
 -- -   'PipelineIndirectDeviceAddressInfoNV'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo':
+-- -   Extending 'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo':
 --
 --     -   'ComputePipelineIndirectBufferInfoNV'
 --
@@ -123,7 +123,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_generated_commands_compute Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_device_generated_commands_compute Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -178,7 +178,7 @@ import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
-import Vulkan.Core10.Pipeline (ComputePipelineCreateInfo)
+import Vulkan.Core10.ComputePipeline (ComputePipelineCreateInfo)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
@@ -219,10 +219,10 @@ foreign import ccall
 -- of synchronization barriers. The writes to the address /must/ be
 -- synchronized using stages
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COPY_BIT' and
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
+-- 'Vulkan.Extensions.VK_NV_device_generated_commands.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
 -- and with access masks
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_MEMORY_WRITE_BIT' and
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'
+-- 'Vulkan.Extensions.VK_NV_device_generated_commands.ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'
 -- respectively before using the results in preprocessing.
 --
 -- == Valid Usage
@@ -243,7 +243,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdUpdatePipelineIndirectBufferNV-deviceGeneratedComputePipelines-09021#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -265,11 +265,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdUpdatePipelineIndirectBufferNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- -   #VUID-vkCmdUpdatePipelineIndirectBufferNV-renderpass# This command
 --     /must/ only be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdUpdatePipelineIndirectBufferNV-suspended# This command
+--     /must/ not be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdUpdatePipelineIndirectBufferNV-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -292,10 +297,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdUpdatePipelineIndirectBufferNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -348,7 +358,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPipelineIndirectMemoryRequirementsNV-deviceGeneratedComputePipelines-09082#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineIndirectMemoryRequirementsNV-pCreateInfo-09083#
@@ -362,7 +372,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPipelineIndirectMemoryRequirementsNV-pCreateInfo-parameter#
 --     @pCreateInfo@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo' structure
+--     'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo' structure
 --
 -- -   #VUID-vkGetPipelineIndirectMemoryRequirementsNV-pMemoryRequirements-parameter#
 --     @pMemoryRequirements@ /must/ be a valid pointer to a
@@ -372,7 +382,7 @@ foreign import ccall
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands_compute VK_NV_device_generated_commands_compute>,
--- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+-- 'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
 getPipelineIndirectMemoryRequirementsNV :: forall a b io
@@ -384,9 +394,10 @@ getPipelineIndirectMemoryRequirementsNV :: forall a b io
                                            , MonadIO io )
                                         => -- | @device@ is the logical device that owns the buffer.
                                            Device
-                                        -> -- | @pCreateInfo@ is a 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
-                                           -- structure specifying the creation parameters of the compute pipeline
-                                           -- whose memory requirements are being queried.
+                                        -> -- | @pCreateInfo@ is a
+                                           -- 'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo' structure
+                                           -- specifying the creation parameters of the compute pipeline whose memory
+                                           -- requirements are being queried.
                                            (ComputePipelineCreateInfo a)
                                         -> io (MemoryRequirements2 b)
 getPipelineIndirectMemoryRequirementsNV device
@@ -419,7 +430,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPipelineIndirectDeviceAddressNV-deviceGeneratedComputePipelines-09078#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -471,35 +482,36 @@ getPipelineIndirectDeviceAddressNV device info = liftIO . evalContT $ do
 --
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-deviceGeneratedComputePipelines-09009#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-flags-09010# The
 --     pipeline creation flags in
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'::@flags@ /must/
---     include
+--     'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo'::@flags@
+--     /must/ include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-deviceAddress-09011#
 --     @deviceAddress@ /must/ be aligned to the
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'::@alignment@,
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'::@memoryRequirements.alignment@,
 --     as returned by 'getPipelineIndirectMemoryRequirementsNV'
 --
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-deviceAddress-09012#
 --     @deviceAddress@ /must/ have been allocated from a buffer that was
---     created with usage
+--     created with both the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
 --     and
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     usage flags set
 --
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-size-09013# @size@
 --     /must/ be greater than or equal to the
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'::@size@,
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'::@memoryRequirements.size@,
 --     as returned by 'getPipelineIndirectMemoryRequirementsNV'
 --
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-pipelineDeviceAddressCaptureReplay-09014#
 --     If @pipelineDeviceAddressCaptureReplay@ is non-zero then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputeCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputeCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-pipelineDeviceAddressCaptureReplay-09015#
@@ -521,6 +533,15 @@ getPipelineIndirectDeviceAddressNV device info = liftIO . evalContT $ do
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-sType-sType# @sType@
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMPUTE_PIPELINE_INDIRECT_BUFFER_INFO_NV'
+--
+-- -   #VUID-VkComputePipelineIndirectBufferInfoNV-deviceAddress-parameter#
+--     @deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
+--
+-- -   #VUID-VkComputePipelineIndirectBufferInfoNV-pipelineDeviceAddressCaptureReplay-parameter#
+--     If @pipelineDeviceAddressCaptureReplay@ is not @0@,
+--     @pipelineDeviceAddressCaptureReplay@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
 --
 -- = See Also
 --
@@ -562,7 +583,6 @@ instance ToCStruct ComputePipelineIndirectBufferInfoNV where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr DeviceAddress)) (zero)
     poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr DeviceAddress)) (zero)
     f
 
 instance FromCStruct ComputePipelineIndirectBufferInfoNV where
@@ -602,10 +622,13 @@ instance Zero ComputePipelineIndirectBufferInfoNV where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV'
--- /can/ also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV', it /must/ add
+-- an instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -618,19 +641,19 @@ data PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV = PhysicalDeviceDevi
   { -- | #features-deviceGeneratedCompute# @deviceGeneratedCompute@ indicates
     -- whether the implementation supports functionality to generate dispatch
     -- commands and push constants for the compute pipeline on the device. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands Device-Generated Commands>.
     deviceGeneratedCompute :: Bool
   , -- | #features-deviceGeneratedComputePipelines#
     -- @deviceGeneratedComputePipelines@ indicates whether the implementation
     -- supports functionality to generate commands to bind compute pipelines on
     -- the device. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands Device-Generated Commands>.
     deviceGeneratedComputePipelines :: Bool
   , -- | #features-deviceGeneratedComputeCaptureReplay#
     -- @deviceGeneratedComputeCaptureReplay@ indicates whether the
     -- implementation supports functionality to capture compute pipeline
     -- address and reuse later for replay in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands Device-Generated Commands>.
     deviceGeneratedComputeCaptureReplay :: Bool
   }
   deriving (Typeable, Eq)
@@ -780,7 +803,7 @@ instance Zero PipelineIndirectDeviceAddressInfoNV where
 --
 -- -   #VUID-VkBindPipelineIndirectCommandNV-deviceGeneratedComputePipelines-09091#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkBindPipelineIndirectCommandNV-None-09092# The referenced
@@ -794,6 +817,12 @@ instance Zero PipelineIndirectDeviceAddressInfoNV where
 -- -   #VUID-VkBindPipelineIndirectCommandNV-None-09094# The referenced
 --     pipeline’s address /must/ have been queried with
 --     'getPipelineIndirectDeviceAddressNV'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkBindPipelineIndirectCommandNV-pipelineAddress-parameter#
+--     @pipelineAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
 --
 -- = See Also
 --

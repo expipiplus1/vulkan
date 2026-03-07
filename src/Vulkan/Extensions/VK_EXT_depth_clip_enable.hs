@@ -55,7 +55,7 @@
 --
 -- This extension allows the depth clipping operation, that is normally
 -- implicitly controlled by
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@,
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@,
 -- to instead be controlled explicitly by
 -- 'PipelineRasterizationDepthClipStateCreateInfoEXT'::@depthClipEnable@.
 --
@@ -72,7 +72,7 @@
 --     -   'PhysicalDeviceDepthClipEnableFeaturesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationDepthClipStateCreateInfoEXT'
 --
@@ -105,7 +105,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clip_enable Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_clip_enable Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -166,9 +166,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDepthClipEnableFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDepthClipEnableFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -182,7 +186,7 @@ data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFea
     -- implementation supports setting the depth clipping operation explicitly
     -- via the 'PipelineRasterizationDepthClipStateCreateInfoEXT' pipeline
     -- state. Otherwise depth clipping is only enabled when
-    -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
+    -- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
     -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     depthClipEnable :: Bool }
   deriving (Typeable, Eq)
@@ -242,7 +246,7 @@ data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDep
     flags :: PipelineRasterizationDepthClipStateCreateFlagsEXT
   , -- | @depthClipEnable@ controls whether depth clipping is enabled as
     -- described in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>.
     depthClipEnable :: Bool
   }
   deriving (Typeable, Eq)

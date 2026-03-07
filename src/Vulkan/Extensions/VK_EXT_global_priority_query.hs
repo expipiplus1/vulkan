@@ -35,10 +35,13 @@
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>
 --         extension
 --
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Contact__]
 --
 --     -   Yiwei Zhang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority_query] @zhangyiwei%0A*Here describe the issue or question you have about the VK_EXT_global_priority_query extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority_query] @zzyiwei%0A*Here describe the issue or question you have about the VK_EXT_global_priority_query extension* >
 --
 -- == Other Extension Metadata
 --
@@ -82,7 +85,7 @@
 --
 -- -   'EXT_GLOBAL_PRIORITY_QUERY_SPEC_VERSION'
 --
--- -   'Vulkan.Core10.APIConstants.MAX_GLOBAL_PRIORITY_SIZE_EXT'
+-- -   'MAX_GLOBAL_PRIORITY_SIZE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -121,7 +124,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_global_priority_query Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_global_priority_query Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -134,42 +137,32 @@ module Vulkan.Extensions.VK_EXT_global_priority_query  ( pattern STRUCTURE_TYPE_
                                                        , pattern EXT_GLOBAL_PRIORITY_QUERY_SPEC_VERSION
                                                        , EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME
                                                        , pattern EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME
-                                                       , PhysicalDeviceGlobalPriorityQueryFeaturesKHR(..)
-                                                       , QueueFamilyGlobalPriorityPropertiesKHR(..)
-                                                       , QueueGlobalPriorityKHR(..)
-                                                       , MAX_GLOBAL_PRIORITY_SIZE_KHR
-                                                       , pattern MAX_GLOBAL_PRIORITY_SIZE_KHR
                                                        ) where
 
 import Data.String (IsString)
-import Vulkan.Extensions.VK_KHR_global_priority (PhysicalDeviceGlobalPriorityQueryFeaturesKHR)
-import Vulkan.Extensions.VK_KHR_global_priority (QueueFamilyGlobalPriorityPropertiesKHR)
-import Vulkan.Core10.APIConstants (pattern MAX_GLOBAL_PRIORITY_SIZE_KHR)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR))
-import Vulkan.Core10.APIConstants (MAX_GLOBAL_PRIORITY_SIZE_KHR)
-import Vulkan.Extensions.VK_KHR_global_priority (PhysicalDeviceGlobalPriorityQueryFeaturesKHR(..))
-import Vulkan.Extensions.VK_KHR_global_priority (QueueFamilyGlobalPriorityPropertiesKHR(..))
-import Vulkan.Extensions.VK_KHR_global_priority (QueueGlobalPriorityKHR(..))
-import Vulkan.Core10.APIConstants (pattern MAX_GLOBAL_PRIORITY_SIZE_KHR)
+import Vulkan.Core14.Promoted_From_VK_KHR_global_priority (PhysicalDeviceGlobalPriorityQueryFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_global_priority (QueueFamilyGlobalPriorityProperties)
+import Vulkan.Core10.APIConstants (pattern MAX_GLOBAL_PRIORITY_SIZE)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES
 
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT"
-pattern STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT = STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR
+pattern STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT = STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES
 
 
 -- No documentation found for TopLevel "VK_MAX_GLOBAL_PRIORITY_SIZE_EXT"
-pattern MAX_GLOBAL_PRIORITY_SIZE_EXT = MAX_GLOBAL_PRIORITY_SIZE_KHR
+pattern MAX_GLOBAL_PRIORITY_SIZE_EXT = MAX_GLOBAL_PRIORITY_SIZE
 
 
 -- No documentation found for TopLevel "VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT"
-type PhysicalDeviceGlobalPriorityQueryFeaturesEXT = PhysicalDeviceGlobalPriorityQueryFeaturesKHR
+type PhysicalDeviceGlobalPriorityQueryFeaturesEXT = PhysicalDeviceGlobalPriorityQueryFeatures
 
 
 -- No documentation found for TopLevel "VkQueueFamilyGlobalPriorityPropertiesEXT"
-type QueueFamilyGlobalPriorityPropertiesEXT = QueueFamilyGlobalPriorityPropertiesKHR
+type QueueFamilyGlobalPriorityPropertiesEXT = QueueFamilyGlobalPriorityProperties
 
 
 type EXT_GLOBAL_PRIORITY_QUERY_SPEC_VERSION = 1

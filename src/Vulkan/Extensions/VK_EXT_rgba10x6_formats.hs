@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
@@ -51,7 +51,7 @@
 -- This extension enables the
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16'
 -- format to be used without a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- enabled.
 --
 -- == New Structures
@@ -105,7 +105,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_rgba10x6_formats Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_rgba10x6_formats Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -154,9 +154,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceRGBA10X6FormatsFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceRGBA10X6FormatsFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -173,7 +177,7 @@ data PhysicalDeviceRGBA10X6FormatsFeaturesEXT = PhysicalDeviceRGBA10X6FormatsFea
     -- @subresourceRange.aspectMask@ equal to
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' without
     -- a
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
     -- enabled.
     formatRgba10x6WithoutYCbCrSampler :: Bool }
   deriving (Typeable, Eq)

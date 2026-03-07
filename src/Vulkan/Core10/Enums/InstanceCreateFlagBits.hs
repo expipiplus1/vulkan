@@ -21,6 +21,13 @@ type InstanceCreateFlags = InstanceCreateFlagBits
 
 -- | VkInstanceCreateFlagBits - Bitmask specifying behavior of the instance
 --
+-- = Description
+--
+-- -   'INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR' specifies that the
+--     instance will enumerate available Vulkan Portability-compliant
+--     physical devices and groups in addition to the Vulkan physical
+--     devices and groups that are enumerated by default.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -28,10 +35,7 @@ type InstanceCreateFlags = InstanceCreateFlagBits
 newtype InstanceCreateFlagBits = InstanceCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR' specifies that the
--- instance will enumerate available Vulkan Portability-compliant physical
--- devices and groups in addition to the Vulkan physical devices and groups
--- that are enumerated by default.
+-- No documentation found for Nested "VkInstanceCreateFlagBits" "VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR"
 pattern INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR = InstanceCreateFlagBits 0x00000001
 
 conNameInstanceCreateFlagBits :: String

@@ -74,14 +74,14 @@
 --
 -- == Description
 --
--- This extension allows fragment shader invocations to read color, depth
+-- This extension allows fragment shader invocations to read color, depth,
 -- and stencil values at their pixel location in rasterization order. The
 -- functionality is only available when using dynamic render passes
 -- introduced by VK_KHR_dynamic_rendering. Example use cases are
 -- programmable blending and deferred shading.
 --
 -- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>
 -- for more information.
 --
 -- == New Structures
@@ -152,7 +152,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_tile_image Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_tile_image Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -203,9 +203,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderTileImageFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceShaderTileImageFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -306,7 +310,7 @@ data PhysicalDeviceShaderTileImagePropertiesEXT = PhysicalDeviceShaderTileImageP
   , -- | @shaderTileImageReadSampleFromPixelRateInvocation@ is a boolean that
     -- will be 'Vulkan.Core10.FundamentalTypes.TRUE' if reading from samples
     -- from a pixel rate fragment invocation is supported when
-    -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+    -- 'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
     -- > 1.
     shaderTileImageReadSampleFromPixelRateInvocation :: Bool
   , -- | @shaderTileImageReadFromHelperInvocation@ is a boolean that will be

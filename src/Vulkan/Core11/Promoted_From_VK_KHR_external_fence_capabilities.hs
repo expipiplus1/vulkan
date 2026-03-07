@@ -68,6 +68,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_capabilities VK_KHR_external_fence_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalFenceProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalFenceInfo'
@@ -123,11 +124,12 @@ getPhysicalDeviceExternalFenceProperties physicalDevice
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_capabilities VK_KHR_external_fence_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalFenceProperties',
--- 'Vulkan.Extensions.VK_KHR_external_fence_capabilities.getPhysicalDeviceExternalFencePropertiesKHR'
+-- 'getPhysicalDeviceExternalFenceProperties'
 data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
   { -- | @handleType@ is a
     -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
@@ -189,12 +191,13 @@ instance Zero PhysicalDeviceExternalFenceInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_capabilities VK_KHR_external_fence_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.ExternalFenceFeatureFlags',
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalFenceProperties',
--- 'Vulkan.Extensions.VK_KHR_external_fence_capabilities.getPhysicalDeviceExternalFencePropertiesKHR'
+-- 'getPhysicalDeviceExternalFenceProperties'
 data ExternalFenceProperties = ExternalFenceProperties
   { -- | @exportFromImportedHandleTypes@ is a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'

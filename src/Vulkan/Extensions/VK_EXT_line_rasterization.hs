@@ -31,6 +31,9 @@
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_line_rasterization VK_KHR_line_rasterization>
 --         extension
 --
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Special Use__]
 --
 --     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse CAD support>
@@ -89,7 +92,7 @@
 --     -   'PhysicalDeviceLineRasterizationPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationLineStateCreateInfoEXT'
 --
@@ -106,6 +109,17 @@
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
 --     -   'DYNAMIC_STATE_LINE_STIPPLE_EXT'
+--
+-- -   Extending
+--     'Vulkan.Core14.Enums.LineRasterizationMode.LineRasterizationMode':
+--
+--     -   'LINE_RASTERIZATION_MODE_BRESENHAM_EXT'
+--
+--     -   'LINE_RASTERIZATION_MODE_DEFAULT_EXT'
+--
+--     -   'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT'
+--
+--     -   'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -139,7 +153,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -147,6 +161,10 @@ module Vulkan.Extensions.VK_EXT_line_rasterization  ( pattern STRUCTURE_TYPE_PHY
                                                     , pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT
                                                     , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT
                                                     , pattern DYNAMIC_STATE_LINE_STIPPLE_EXT
+                                                    , pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT
+                                                    , pattern LINE_RASTERIZATION_MODE_RECTANGULAR_EXT
+                                                    , pattern LINE_RASTERIZATION_MODE_BRESENHAM_EXT
+                                                    , pattern LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT
                                                     , cmdSetLineStippleEXT
                                                     , LineRasterizationModeEXT
                                                     , PhysicalDeviceLineRasterizationFeaturesEXT
@@ -156,62 +174,72 @@ module Vulkan.Extensions.VK_EXT_line_rasterization  ( pattern STRUCTURE_TYPE_PHY
                                                     , pattern EXT_LINE_RASTERIZATION_SPEC_VERSION
                                                     , EXT_LINE_RASTERIZATION_EXTENSION_NAME
                                                     , pattern EXT_LINE_RASTERIZATION_EXTENSION_NAME
-                                                    , PhysicalDeviceLineRasterizationFeaturesKHR(..)
-                                                    , PhysicalDeviceLineRasterizationPropertiesKHR(..)
-                                                    , PipelineRasterizationLineStateCreateInfoKHR(..)
-                                                    , cmdSetLineStippleKHR
-                                                    , LineRasterizationModeKHR(..)
                                                     ) where
 
 import Data.String (IsString)
-import Vulkan.Extensions.VK_KHR_line_rasterization (cmdSetLineStippleKHR)
-import Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR)
-import Vulkan.Extensions.VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationFeaturesKHR)
-import Vulkan.Extensions.VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationPropertiesKHR)
-import Vulkan.Extensions.VK_KHR_line_rasterization (PipelineRasterizationLineStateCreateInfoKHR)
-import Vulkan.Core10.Enums.DynamicState (DynamicState(DYNAMIC_STATE_LINE_STIPPLE_KHR))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR))
-import Vulkan.Extensions.VK_KHR_line_rasterization (cmdSetLineStippleKHR)
-import Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR(..))
-import Vulkan.Extensions.VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationFeaturesKHR(..))
-import Vulkan.Extensions.VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationPropertiesKHR(..))
-import Vulkan.Extensions.VK_KHR_line_rasterization (PipelineRasterizationLineStateCreateInfoKHR(..))
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (cmdSetLineStipple)
+import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode)
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PhysicalDeviceLineRasterizationFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PhysicalDeviceLineRasterizationProperties)
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PipelineRasterizationLineStateCreateInfo)
+import Vulkan.Core10.Enums.DynamicState (DynamicState(DYNAMIC_STATE_LINE_STIPPLE))
+import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode(LINE_RASTERIZATION_MODE_BRESENHAM))
+import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode(LINE_RASTERIZATION_MODE_DEFAULT))
+import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode(LINE_RASTERIZATION_MODE_RECTANGULAR))
+import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode(LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES
 
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT"
-pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR
+pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT = STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO
 
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES
 
 
 -- No documentation found for TopLevel "VK_DYNAMIC_STATE_LINE_STIPPLE_EXT"
-pattern DYNAMIC_STATE_LINE_STIPPLE_EXT = DYNAMIC_STATE_LINE_STIPPLE_KHR
+pattern DYNAMIC_STATE_LINE_STIPPLE_EXT = DYNAMIC_STATE_LINE_STIPPLE
+
+
+-- No documentation found for TopLevel "VK_LINE_RASTERIZATION_MODE_DEFAULT_EXT"
+pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT = LINE_RASTERIZATION_MODE_DEFAULT
+
+
+-- No documentation found for TopLevel "VK_LINE_RASTERIZATION_MODE_RECTANGULAR_EXT"
+pattern LINE_RASTERIZATION_MODE_RECTANGULAR_EXT = LINE_RASTERIZATION_MODE_RECTANGULAR
+
+
+-- No documentation found for TopLevel "VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT"
+pattern LINE_RASTERIZATION_MODE_BRESENHAM_EXT = LINE_RASTERIZATION_MODE_BRESENHAM
+
+
+-- No documentation found for TopLevel "VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT"
+pattern LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT = LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH
 
 
 -- No documentation found for TopLevel "vkCmdSetLineStippleEXT"
-cmdSetLineStippleEXT = cmdSetLineStippleKHR
+cmdSetLineStippleEXT = cmdSetLineStipple
 
 
 -- No documentation found for TopLevel "VkLineRasterizationModeEXT"
-type LineRasterizationModeEXT = LineRasterizationModeKHR
+type LineRasterizationModeEXT = LineRasterizationMode
 
 
 -- No documentation found for TopLevel "VkPhysicalDeviceLineRasterizationFeaturesEXT"
-type PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizationFeaturesKHR
+type PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizationFeatures
 
 
 -- No documentation found for TopLevel "VkPhysicalDeviceLineRasterizationPropertiesEXT"
-type PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizationPropertiesKHR
+type PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizationProperties
 
 
 -- No documentation found for TopLevel "VkPipelineRasterizationLineStateCreateInfoEXT"
-type PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStateCreateInfoKHR
+type PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStateCreateInfo
 
 
 type EXT_LINE_RASTERIZATION_SPEC_VERSION = 1

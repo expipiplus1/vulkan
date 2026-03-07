@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -86,7 +86,7 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2',
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
---     'Vulkan.Extensions.VK_KHR_maintenance5.SubresourceLayout2KHR':
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2':
 --
 --     -   'ImageCompressionPropertiesEXT'
 --
@@ -143,7 +143,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_compression_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_image_compression_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -191,9 +191,6 @@ module Vulkan.Extensions.VK_EXT_image_compression_control  ( pattern STRUCTURE_T
                                                            , pattern EXT_IMAGE_COMPRESSION_CONTROL_SPEC_VERSION
                                                            , EXT_IMAGE_COMPRESSION_CONTROL_EXTENSION_NAME
                                                            , pattern EXT_IMAGE_COMPRESSION_CONTROL_EXTENSION_NAME
-                                                           , ImageSubresource2KHR(..)
-                                                           , SubresourceLayout2KHR(..)
-                                                           , getImageSubresourceLayout2KHR
                                                            , ImageSubresource2EXT
                                                            , SubresourceLayout2EXT
                                                            , getImageSubresourceLayout2EXT
@@ -233,21 +230,18 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2))
 import Vulkan.Extensions.VK_EXT_host_image_copy (getImageSubresourceLayout2EXT)
-import Vulkan.Extensions.VK_KHR_maintenance5 (getImageSubresourceLayout2KHR)
 import Vulkan.Extensions.VK_EXT_host_image_copy (ImageSubresource2EXT)
-import Vulkan.Extensions.VK_KHR_maintenance5 (ImageSubresource2KHR(..))
 import Vulkan.Extensions.VK_EXT_host_image_copy (SubresourceLayout2EXT)
-import Vulkan.Extensions.VK_KHR_maintenance5 (SubresourceLayout2KHR(..))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT"
-pattern STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR
+pattern STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT = STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2
 
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT"
-pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR
+pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT = STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2
 
 
 -- | VkImageCompressionControlEXT - Specify image compression properties
@@ -278,9 +272,10 @@ pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT = STRUCTURE_TYPE_IMAGE_SUBRESOURC
 --
 -- Some combinations of compression properties may not be supported. For
 -- example, some implementations may not support different fixed-rate
--- compression rates per plane of a multi-planar format and will not be
--- able to enable fixed-rate compression for any plane if the requested
--- rates differ.
+-- compression rates per plane of a
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>
+-- and will not be able to enable fixed-rate compression for any plane if
+-- the requested rates differ.
 --
 -- = See Also
 --
@@ -361,9 +356,13 @@ instance Zero ImageCompressionControlEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceImageCompressionControlFeaturesEXT' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceImageCompressionControlFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -486,6 +485,23 @@ type ImageCompressionFlagsEXT = ImageCompressionFlagBitsEXT
 --
 -- = Description
 --
+-- -   'IMAGE_COMPRESSION_DEFAULT_EXT' specifies that the default image
+--     compression setting is used. Implementations /must/ not apply
+--     fixed-rate compression.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT' specifies that the
+--     implementation /may/ choose any supported fixed-rate compression
+--     setting in an implementation-defined manner based on the properties
+--     of the image.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT' specifies that
+--     fixed-rate compression /may/ be used and that the allowed
+--     compression rates are specified by
+--     'ImageCompressionControlEXT'::@pFixedRateFlags@.
+--
+-- -   'IMAGE_COMPRESSION_DISABLED_EXT' specifies that all lossless and
+--     fixed-rate compression /should/ be disabled.
+--
 -- If 'ImageCompressionControlEXT'::@flags@ is
 -- 'IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT', then the @i@th member of
 -- the @pFixedRateFlags@ array specifies the allowed compression rates for
@@ -503,24 +519,16 @@ type ImageCompressionFlagsEXT = ImageCompressionFlagBitsEXT
 newtype ImageCompressionFlagBitsEXT = ImageCompressionFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'IMAGE_COMPRESSION_DEFAULT_EXT' specifies that the default image
--- compression setting is used. Implementations /must/ not apply fixed-rate
--- compression.
+-- No documentation found for Nested "VkImageCompressionFlagBitsEXT" "VK_IMAGE_COMPRESSION_DEFAULT_EXT"
 pattern IMAGE_COMPRESSION_DEFAULT_EXT = ImageCompressionFlagBitsEXT 0x00000000
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT' specifies that the
--- implementation /may/ choose any supported fixed-rate compression setting
--- in an implementation-defined manner based on the properties of the
--- image.
+-- No documentation found for Nested "VkImageCompressionFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT = ImageCompressionFlagBitsEXT 0x00000001
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT' specifies that fixed-rate
--- compression /may/ be used and that the allowed compression rates are
--- specified by 'ImageCompressionControlEXT'::@pFixedRateFlags@.
+-- No documentation found for Nested "VkImageCompressionFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT = ImageCompressionFlagBitsEXT 0x00000002
 
--- | 'IMAGE_COMPRESSION_DISABLED_EXT' specifies that all lossless and
--- fixed-rate compression /should/ be disabled.
+-- No documentation found for Nested "VkImageCompressionFlagBitsEXT" "VK_IMAGE_COMPRESSION_DISABLED_EXT"
 pattern IMAGE_COMPRESSION_DISABLED_EXT = ImageCompressionFlagBitsEXT 0x00000004
 
 conNameImageCompressionFlagBitsEXT :: String
@@ -573,6 +581,57 @@ type ImageCompressionFixedRateFlagsEXT = ImageCompressionFixedRateFlagBitsEXT
 --
 -- = Description
 --
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT' specifies that fixed-rate
+--     compression /must/ not be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [1,2) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [2,3) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [3,4) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [4,5) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [5,6) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [6,7) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [7,8) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [8,9) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [9,10) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [10,11) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of [11,12) bits per component
+--     /may/ be used.
+--
+-- -   'IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT' specifies that
+--     fixed-rate compression with a bitrate of at least 12 bits per
+--     component /may/ be used.
+--
 -- If the format has a different bit rate for different components,
 -- 'ImageCompressionControlEXT'::@pFixedRateFlags@ describes the rate of
 -- the component with the largest number of bits assigned to it, scaled pro
@@ -604,57 +663,43 @@ type ImageCompressionFixedRateFlagsEXT = ImageCompressionFixedRateFlagBitsEXT
 newtype ImageCompressionFixedRateFlagBitsEXT = ImageCompressionFixedRateFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT' specifies that fixed-rate
--- compression /must/ not be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000000
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [1,2) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000001
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [2,3) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000002
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [3,4) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000004
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [4,5) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000008
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [5,6) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000010
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [6,7) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000020
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [7,8) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000040
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [8,9) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000080
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [9,10) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000100
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [10,11) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000200
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of [11,12) bits per component /may/ be used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000400
 
--- | 'IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT' specifies that fixed-rate
--- compression with a bitrate of at least 12 bits per component /may/ be
--- used.
+-- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000800
 
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_13BPC_BIT_EXT"

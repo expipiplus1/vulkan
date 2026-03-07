@@ -6,7 +6,7 @@ module Vulkan.Core10.FuncPointers  ( PFN_vkVoidFunction
 
 import Foreign.Ptr (FunPtr)
 
-type FN_vkVoidFunction = () -> IO ()
+type FN_vkVoidFunction = IO ()
 -- | PFN_vkVoidFunction - Placeholder function pointer type returned by
 -- queries
 --
@@ -17,6 +17,7 @@ type FN_vkVoidFunction = () -> IO ()
 --
 -- = See Also
 --
+-- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.PFN_vkGetInstanceProcAddrLUNARG',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr',
 -- 'Vulkan.Core10.DeviceInitialization.getInstanceProcAddr'

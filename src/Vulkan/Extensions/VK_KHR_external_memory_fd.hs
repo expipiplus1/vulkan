@@ -121,7 +121,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_memory_fd Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_external_memory_fd Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -222,9 +222,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -279,9 +283,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -349,8 +357,9 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00667# If @handleType@ is
+-- -   #VUID-VkImportMemoryFdInfoKHR-handleType-09862# If @handleType@ is
 --     not @0@, it /must/ be supported for import, as reported by
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
@@ -372,11 +381,11 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 -- -   #VUID-VkImportMemoryFdInfoKHR-fd-01746# The memory represented by
 --     @fd@ /must/ have been created from a physical device and driver that
 --     is compatible with @device@ and @handleType@, as described in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-fd-01520# @fd@ /must/ obey any
 --     requirements listed for @handleType@ in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --

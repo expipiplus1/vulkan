@@ -81,7 +81,7 @@
 --
 -- This extension adds transform feedback to the Vulkan API by exposing the
 -- SPIR-V @TransformFeedback@ and @GeometryStreams@ capabilities to capture
--- vertex, tessellation or geometry shader outputs to one or more buffers.
+-- vertex, tessellation, or geometry shader outputs to one or more buffers.
 -- It adds API functionality to bind transform feedback buffers to capture
 -- the primitives emitted by the graphics pipeline from SPIR-V outputs
 -- decorated for transform feedback. The transform feedback capture can be
@@ -130,7 +130,7 @@
 --     -   'PhysicalDeviceTransformFeedbackPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationStateStreamCreateInfoEXT'
 --
@@ -208,7 +208,7 @@
 -- A query pool created with this type will capture 2 integers -
 -- numPrimitivesWritten and numPrimitivesNeeded - for the specified vertex
 -- stream output from the last
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
 -- The vertex stream output queried is zero by default, but can be
 -- specified with the new 'cmdBeginQueryIndexedEXT' and
 -- 'cmdEndQueryIndexedEXT' commands.
@@ -226,7 +226,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_transform_feedback Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_transform_feedback Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

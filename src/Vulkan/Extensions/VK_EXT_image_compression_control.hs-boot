@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -86,7 +86,7 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2',
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
---     'Vulkan.Extensions.VK_KHR_maintenance5.SubresourceLayout2KHR':
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2':
 --
 --     -   'ImageCompressionPropertiesEXT'
 --
@@ -143,7 +143,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_compression_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_image_compression_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

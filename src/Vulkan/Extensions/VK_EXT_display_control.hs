@@ -142,7 +142,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_display_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_display_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -283,6 +283,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
@@ -346,6 +350,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
@@ -360,7 +368,7 @@ registerDeviceEventEXT :: forall io
                           -- describing the event of interest to the application.
                           DeviceEventInfoEXT
                        -> -- | @pAllocator@ controls host memory allocation as described in the
-                          -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                          -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                           -- chapter.
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io (Fence)
@@ -429,6 +437,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
@@ -445,7 +457,7 @@ registerDisplayEventEXT :: forall io
                            -- describing the event of interest to the application.
                            DisplayEventInfoEXT
                         -> -- | @pAllocator@ controls host memory allocation as described in the
-                           -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                           -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                            -- chapter.
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (Fence)
@@ -521,11 +533,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -626,7 +642,10 @@ instance Zero DisplayPowerInfoEXT where
 -- 'DeviceEventTypeEXT', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'registerDeviceEventEXT'
 data DeviceEventInfoEXT = DeviceEventInfoEXT
-  { -- | #VUID-VkDeviceEventInfoEXT-deviceEvent-parameter# @deviceEvent@ /must/
+  { -- | @deviceEvent@ is a 'DeviceEventTypeEXT' value specifying when the fence
+    -- will be signaled.
+    --
+    -- #VUID-VkDeviceEventInfoEXT-deviceEvent-parameter# @deviceEvent@ /must/
     -- be a valid 'DeviceEventTypeEXT' value
     deviceEvent :: DeviceEventTypeEXT }
   deriving (Typeable, Eq)
@@ -791,6 +810,20 @@ instance Zero SwapchainCounterCreateInfoEXT where
 
 -- | VkDisplayPowerStateEXT - Possible power states for a display
 --
+-- = Description
+--
+-- -   'DISPLAY_POWER_STATE_OFF_EXT' specifies that the display is powered
+--     down.
+--
+-- -   'DISPLAY_POWER_STATE_SUSPEND_EXT' specifies that the display is put
+--     into a low power mode, from which it /may/ be able to transition
+--     back to 'DISPLAY_POWER_STATE_ON_EXT' more quickly than if it were in
+--     'DISPLAY_POWER_STATE_OFF_EXT'. This state /may/ be the same as
+--     'DISPLAY_POWER_STATE_OFF_EXT'.
+--
+-- -   'DISPLAY_POWER_STATE_ON_EXT' specifies that the display is powered
+--     on.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
@@ -798,18 +831,13 @@ instance Zero SwapchainCounterCreateInfoEXT where
 newtype DisplayPowerStateEXT = DisplayPowerStateEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DISPLAY_POWER_STATE_OFF_EXT' specifies that the display is powered
--- down.
+-- No documentation found for Nested "VkDisplayPowerStateEXT" "VK_DISPLAY_POWER_STATE_OFF_EXT"
 pattern DISPLAY_POWER_STATE_OFF_EXT = DisplayPowerStateEXT 0
 
--- | 'DISPLAY_POWER_STATE_SUSPEND_EXT' specifies that the display is put into
--- a low power mode, from which it /may/ be able to transition back to
--- 'DISPLAY_POWER_STATE_ON_EXT' more quickly than if it were in
--- 'DISPLAY_POWER_STATE_OFF_EXT'. This state /may/ be the same as
--- 'DISPLAY_POWER_STATE_OFF_EXT'.
+-- No documentation found for Nested "VkDisplayPowerStateEXT" "VK_DISPLAY_POWER_STATE_SUSPEND_EXT"
 pattern DISPLAY_POWER_STATE_SUSPEND_EXT = DisplayPowerStateEXT 1
 
--- | 'DISPLAY_POWER_STATE_ON_EXT' specifies that the display is powered on.
+-- No documentation found for Nested "VkDisplayPowerStateEXT" "VK_DISPLAY_POWER_STATE_ON_EXT"
 pattern DISPLAY_POWER_STATE_ON_EXT = DisplayPowerStateEXT 2
 
 {-# COMPLETE
@@ -854,6 +882,14 @@ instance Read DisplayPowerStateEXT where
 
 -- | VkDeviceEventTypeEXT - Events that can occur on a device object
 --
+-- = Description
+--
+-- -   'DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT' specifies that the fence is
+--     signaled when a display is plugged into or unplugged from the
+--     specified device. Applications /can/ use this notification to
+--     determine when they need to re-enumerate the available displays on a
+--     device.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
@@ -861,10 +897,7 @@ instance Read DisplayPowerStateEXT where
 newtype DeviceEventTypeEXT = DeviceEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT' specifies that the fence is
--- signaled when a display is plugged into or unplugged from the specified
--- device. Applications /can/ use this notification to determine when they
--- need to re-enumerate the available displays on a device.
+-- No documentation found for Nested "VkDeviceEventTypeEXT" "VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT"
 pattern DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = DeviceEventTypeEXT 0
 
 {-# COMPLETE DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT :: DeviceEventTypeEXT #-}
@@ -897,6 +930,12 @@ instance Read DeviceEventTypeEXT where
 
 -- | VkDisplayEventTypeEXT - Events that can occur on a display object
 --
+-- = Description
+--
+-- -   'DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT' specifies that the fence is
+--     signaled when the first pixel of the next display refresh cycle
+--     leaves the display engine for the display.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
@@ -904,9 +943,7 @@ instance Read DeviceEventTypeEXT where
 newtype DisplayEventTypeEXT = DisplayEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT' specifies that the fence is
--- signaled when the first pixel of the next display refresh cycle leaves
--- the display engine for the display.
+-- No documentation found for Nested "VkDisplayEventTypeEXT" "VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT"
 pattern DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = DisplayEventTypeEXT 0
 
 {-# COMPLETE DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT :: DisplayEventTypeEXT #-}

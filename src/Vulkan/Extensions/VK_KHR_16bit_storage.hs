@@ -94,6 +94,11 @@
 -- The original type, enum, and command names are still available as
 -- aliases of the core functionality.
 --
+-- == Promotion to Vulkan 1.4
+--
+-- If Vulkan 1.4 is supported, support for the @storageBuffer16BitAccess@
+-- capability is required.
+--
 -- == New Structures
 --
 -- -   Extending
@@ -114,13 +119,13 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-StorageBuffer16BitAccess StorageBuffer16BitAccess>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-StorageBuffer16BitAccess StorageBuffer16BitAccess>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-UniformAndStorageBuffer16BitAccess UniformAndStorageBuffer16BitAccess>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-UniformAndStorageBuffer16BitAccess UniformAndStorageBuffer16BitAccess>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-StoragePushConstant16 StoragePushConstant16>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-StoragePushConstant16 StoragePushConstant16>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-StorageInputOutput16 StorageInputOutput16>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-StorageInputOutput16 StorageInputOutput16>
 --
 -- == Version History
 --
@@ -135,7 +140,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_16bit_storage Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_16bit_storage Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

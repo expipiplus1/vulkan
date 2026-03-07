@@ -41,9 +41,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceImageRobustnessFeatures' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceImageRobustnessFeatures', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -54,15 +58,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageRobustnessFeatures = PhysicalDeviceImageRobustnessFeatures
-  { -- | #extension-features-robustImageAccess# @robustImageAccess@ indicates
-    -- whether image accesses are tightly bounds-checked against the dimensions
-    -- of the image view.
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-input-validation Invalid texels>
-    -- resulting from out of bounds image loads will be replaced as described
-    -- in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement>,
-    -- with either (0,0,1) or (0,0,0) values inserted for missing G, B, or A
-    -- components based on the format.
+  { -- | #extension-features-robustImageAccess# @robustImageAccess@ enables
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-robust-image-access>
+    -- guarantees for shader image accesses.
     robustImageAccess :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

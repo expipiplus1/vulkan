@@ -32,6 +32,60 @@ type MemoryPropertyFlags = MemoryPropertyFlagBits
 --
 -- = Description
 --
+-- -   'MEMORY_PROPERTY_DEVICE_LOCAL_BIT' bit specifies that memory
+--     allocated with this type is the most efficient for device access.
+--     This property will be set if and only if the memory type belongs to
+--     a heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_DEVICE_LOCAL_BIT'
+--     set.
+--
+-- -   'MEMORY_PROPERTY_HOST_VISIBLE_BIT' bit specifies that memory
+--     allocated with this type /can/ be mapped for host access using
+--     'Vulkan.Core10.Memory.mapMemory'.
+--
+-- -   #memory-coherent# 'MEMORY_PROPERTY_HOST_COHERENT_BIT' bit specifies
+--     that the host cache management commands
+--     'Vulkan.Core10.Memory.flushMappedMemoryRanges' and
+--     'Vulkan.Core10.Memory.invalidateMappedMemoryRanges' are not needed
+--     to manage
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-available-and-visible availability and visibility>
+--     on the host.
+--
+-- -   'MEMORY_PROPERTY_HOST_CACHED_BIT' bit specifies that memory
+--     allocated with this type is cached on the host. Host memory accesses
+--     to uncached memory are slower than to cached memory, however
+--     uncached memory is always host coherent.
+--
+-- -   'MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT' bit specifies that the memory
+--     type only allows device access to the memory. Memory types /must/
+--     not have both 'MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT' and
+--     'MEMORY_PROPERTY_HOST_VISIBLE_BIT' set. Additionally, the object’s
+--     backing memory /may/ be provided by the implementation lazily as
+--     specified in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-device-lazy_allocation Lazily Allocated Memory>.
+--
+-- -   'MEMORY_PROPERTY_PROTECTED_BIT' bit specifies that the memory type
+--     only allows device access to the memory, and allows protected queue
+--     operations to access the memory. Memory types /must/ not have
+--     'MEMORY_PROPERTY_PROTECTED_BIT' set and any of
+--     'MEMORY_PROPERTY_HOST_VISIBLE_BIT' set, or
+--     'MEMORY_PROPERTY_HOST_COHERENT_BIT' set, or
+--     'MEMORY_PROPERTY_HOST_CACHED_BIT' set.
+--
+-- -   'MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD' bit specifies that device
+--     accesses to allocations of this memory type are automatically made
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-available-and-visible available and visible>
+--     on the device. If paired with 'MEMORY_PROPERTY_HOST_COHERENT_BIT',
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
+--     are also performed automatically between host and device.
+--
+-- -   'MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD' bit specifies that memory
+--     allocated with this type is not cached on the device. Uncached
+--     device memory is always device coherent.
+--
+-- -   'MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV' bit specifies that external
+--     devices can access this memory directly.
+--
 -- For any memory allocated with both the
 -- 'MEMORY_PROPERTY_HOST_COHERENT_BIT' and the
 -- 'MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD', host or device accesses also
@@ -57,66 +111,31 @@ type MemoryPropertyFlags = MemoryPropertyFlagBits
 newtype MemoryPropertyFlagBits = MemoryPropertyFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'MEMORY_PROPERTY_DEVICE_LOCAL_BIT' bit specifies that memory allocated
--- with this type is the most efficient for device access. This property
--- will be set if and only if the memory type belongs to a heap with the
--- 'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_DEVICE_LOCAL_BIT'
--- set.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT"
 pattern MEMORY_PROPERTY_DEVICE_LOCAL_BIT = MemoryPropertyFlagBits 0x00000001
 
--- | 'MEMORY_PROPERTY_HOST_VISIBLE_BIT' bit specifies that memory allocated
--- with this type /can/ be mapped for host access using
--- 'Vulkan.Core10.Memory.mapMemory'.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT"
 pattern MEMORY_PROPERTY_HOST_VISIBLE_BIT = MemoryPropertyFlagBits 0x00000002
 
--- | #memory-coherent# 'MEMORY_PROPERTY_HOST_COHERENT_BIT' bit specifies that
--- the host cache management commands
--- 'Vulkan.Core10.Memory.flushMappedMemoryRanges' and
--- 'Vulkan.Core10.Memory.invalidateMappedMemoryRanges' are not needed to
--- manage
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible availability and visibility>
--- on the host.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT"
 pattern MEMORY_PROPERTY_HOST_COHERENT_BIT = MemoryPropertyFlagBits 0x00000004
 
--- | 'MEMORY_PROPERTY_HOST_CACHED_BIT' bit specifies that memory allocated
--- with this type is cached on the host. Host memory accesses to uncached
--- memory are slower than to cached memory, however uncached memory is
--- always host coherent.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_HOST_CACHED_BIT"
 pattern MEMORY_PROPERTY_HOST_CACHED_BIT = MemoryPropertyFlagBits 0x00000008
 
--- | 'MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT' bit specifies that the memory
--- type only allows device access to the memory. Memory types /must/ not
--- have both 'MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT' and
--- 'MEMORY_PROPERTY_HOST_VISIBLE_BIT' set. Additionally, the object’s
--- backing memory /may/ be provided by the implementation lazily as
--- specified in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-lazy_allocation Lazily Allocated Memory>.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT"
 pattern MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = MemoryPropertyFlagBits 0x00000010
 
--- | 'MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV' bit specifies that external
--- devices can access this memory directly.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV"
 pattern MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV = MemoryPropertyFlagBits 0x00000100
 
--- | 'MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD' bit specifies that memory
--- allocated with this type is not cached on the device. Uncached device
--- memory is always device coherent.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD"
 pattern MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD = MemoryPropertyFlagBits 0x00000080
 
--- | 'MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD' bit specifies that device
--- accesses to allocations of this memory type are automatically made
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible available and visible>
--- on the device. If paired with 'MEMORY_PROPERTY_HOST_COHERENT_BIT',
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
--- are also performed automatically between host and device.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD"
 pattern MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD = MemoryPropertyFlagBits 0x00000040
 
--- | 'MEMORY_PROPERTY_PROTECTED_BIT' bit specifies that the memory type only
--- allows device access to the memory, and allows protected queue
--- operations to access the memory. Memory types /must/ not have
--- 'MEMORY_PROPERTY_PROTECTED_BIT' set and any of
--- 'MEMORY_PROPERTY_HOST_VISIBLE_BIT' set, or
--- 'MEMORY_PROPERTY_HOST_COHERENT_BIT' set, or
--- 'MEMORY_PROPERTY_HOST_CACHED_BIT' set.
+-- No documentation found for Nested "VkMemoryPropertyFlagBits" "VK_MEMORY_PROPERTY_PROTECTED_BIT"
 pattern MEMORY_PROPERTY_PROTECTED_BIT = MemoryPropertyFlagBits 0x00000020
 
 conNameMemoryPropertyFlagBits :: String

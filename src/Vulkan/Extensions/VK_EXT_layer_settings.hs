@@ -68,8 +68,8 @@
 -- This extension provides a mechanism for configuring programmatically
 -- through the Vulkan API the behavior of layers.
 --
--- This extension provides the 'LayerSettingsCreateInfoEXT' struct that can
--- be included in the @pNext@ chain of the
+-- This extension provides the 'LayerSettingsCreateInfoEXT' structure that
+-- can be included in the @pNext@ chain of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- as the @pCreateInfo@ parameter of
 -- 'Vulkan.Core10.DeviceInitialization.createInstance'.
@@ -175,7 +175,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_layer_settings Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_layer_settings Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -387,6 +387,32 @@ instance Zero LayerSettingEXT where
 
 -- | VkLayerSettingTypeEXT - Type of the values that can be passed to a layer
 --
+-- = Description
+--
+-- -   'LAYER_SETTING_TYPE_BOOL32_EXT' specifies that the layer setting’s
+--     type is 'Vulkan.Core10.FundamentalTypes.Bool32'.
+--
+-- -   'LAYER_SETTING_TYPE_INT32_EXT' specifies that the layer setting’s
+--     type is signed 32-bit integer.
+--
+-- -   'LAYER_SETTING_TYPE_INT64_EXT' specifies that the layer setting’s
+--     type is signed 64-bit integer.
+--
+-- -   'LAYER_SETTING_TYPE_UINT32_EXT' specifies that the layer setting’s
+--     type is unsigned 32-bit integer.
+--
+-- -   'LAYER_SETTING_TYPE_UINT64_EXT' specifies that the layer setting’s
+--     type is unsigned 64-bit integer.
+--
+-- -   'LAYER_SETTING_TYPE_FLOAT32_EXT' specifies that the layer setting’s
+--     type is 32-bit floating-point.
+--
+-- -   'LAYER_SETTING_TYPE_FLOAT64_EXT' specifies that the layer setting’s
+--     type is 64-bit floating-point.
+--
+-- -   'LAYER_SETTING_TYPE_STRING_EXT' specifies that the layer setting’s
+--     type is a pointer to a null-terminated UTF-8 string.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_layer_settings VK_EXT_layer_settings>,
@@ -394,36 +420,28 @@ instance Zero LayerSettingEXT where
 newtype LayerSettingTypeEXT = LayerSettingTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'LAYER_SETTING_TYPE_BOOL32_EXT' specifies that the layer setting’s type
--- is 'Vulkan.Core10.FundamentalTypes.Bool32'.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_BOOL32_EXT"
 pattern LAYER_SETTING_TYPE_BOOL32_EXT = LayerSettingTypeEXT 0
 
--- | 'LAYER_SETTING_TYPE_INT32_EXT' specifies that the layer setting’s type
--- is signed 32-bit integer.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_INT32_EXT"
 pattern LAYER_SETTING_TYPE_INT32_EXT = LayerSettingTypeEXT 1
 
--- | 'LAYER_SETTING_TYPE_INT64_EXT' specifies that the layer setting’s type
--- is signed 64-bit integer.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_INT64_EXT"
 pattern LAYER_SETTING_TYPE_INT64_EXT = LayerSettingTypeEXT 2
 
--- | 'LAYER_SETTING_TYPE_UINT32_EXT' specifies that the layer setting’s type
--- is unsigned 32-bit integer.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_UINT32_EXT"
 pattern LAYER_SETTING_TYPE_UINT32_EXT = LayerSettingTypeEXT 3
 
--- | 'LAYER_SETTING_TYPE_UINT64_EXT' specifies that the layer setting’s type
--- is unsigned 64-bit integer.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_UINT64_EXT"
 pattern LAYER_SETTING_TYPE_UINT64_EXT = LayerSettingTypeEXT 4
 
--- | 'LAYER_SETTING_TYPE_FLOAT32_EXT' specifies that the layer setting’s type
--- is 32-bit floating-point.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_FLOAT32_EXT"
 pattern LAYER_SETTING_TYPE_FLOAT32_EXT = LayerSettingTypeEXT 5
 
--- | 'LAYER_SETTING_TYPE_FLOAT64_EXT' specifies that the layer setting’s type
--- is 64-bit floating-point.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_FLOAT64_EXT"
 pattern LAYER_SETTING_TYPE_FLOAT64_EXT = LayerSettingTypeEXT 6
 
--- | 'LAYER_SETTING_TYPE_STRING_EXT' specifies that the layer setting’s type
--- is a pointer to a null-terminated UTF-8 string.
+-- No documentation found for Nested "VkLayerSettingTypeEXT" "VK_LAYER_SETTING_TYPE_STRING_EXT"
 pattern LAYER_SETTING_TYPE_STRING_EXT = LayerSettingTypeEXT 7
 
 {-# COMPLETE

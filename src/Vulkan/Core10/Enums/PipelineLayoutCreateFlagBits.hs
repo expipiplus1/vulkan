@@ -21,6 +21,15 @@ type PipelineLayoutCreateFlags = PipelineLayoutCreateFlagBits
 
 -- | VkPipelineLayoutCreateFlagBits - Pipeline layout creation flag bits
 --
+-- = Description
+--
+-- -   'PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT' specifies that
+--     implementations /must/ ensure that the properties and\/or absence of
+--     a particular descriptor set do not influence any other properties of
+--     the pipeline layout. This allows pipelines libraries linked without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'
+--     to be created with a subset of the total descriptor sets.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_graphics_pipeline_library VK_EXT_graphics_pipeline_library>,
@@ -28,12 +37,7 @@ type PipelineLayoutCreateFlags = PipelineLayoutCreateFlagBits
 newtype PipelineLayoutCreateFlagBits = PipelineLayoutCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT' specifies that
--- implementations /must/ ensure that the properties and\/or absence of a
--- particular descriptor set do not influence any other properties of the
--- pipeline layout. This allows pipelines libraries linked without
--- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'
--- to be created with a subset of the total descriptor sets.
+-- No documentation found for Nested "VkPipelineLayoutCreateFlagBits" "VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT"
 pattern PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT = PipelineLayoutCreateFlagBits 0x00000002
 
 conNamePipelineLayoutCreateFlagBits :: String

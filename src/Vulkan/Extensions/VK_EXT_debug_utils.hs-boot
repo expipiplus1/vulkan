@@ -159,7 +159,10 @@
 --
 --     -   'DebugUtilsMessengerCreateInfoEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.ResourceDescriptorInfoEXT',
+--     'Vulkan.Core10.Sampler.SamplerCreateInfo':
 --
 --     -   'DebugUtilsObjectNameInfoEXT'
 --
@@ -218,8 +221,8 @@
 --
 -- To capture events that occur while creating or destroying an instance an
 -- application /can/ link a 'DebugUtilsMessengerCreateInfoEXT' structure to
--- the @pNext@ element of the
--- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
+-- the @pNext@ chain of the
+-- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
@@ -473,7 +476,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

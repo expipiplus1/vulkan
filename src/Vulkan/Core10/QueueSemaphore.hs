@@ -100,6 +100,9 @@ foreign import ccall
 -- -   #VUID-vkCreateSemaphore-pSemaphore-parameter# @pSemaphore@ /must/ be
 --     a valid pointer to a 'Vulkan.Core10.Handles.Semaphore' handle
 --
+-- -   #VUID-vkCreateSemaphore-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -108,9 +111,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -126,7 +133,7 @@ createSemaphore :: forall a io
                    -- containing information about how the semaphore is to be created.
                    (SemaphoreCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (Semaphore)
@@ -219,7 +226,7 @@ destroySemaphore :: forall io
                  -> -- | @semaphore@ is the handle of the semaphore to destroy.
                     Semaphore
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
@@ -265,8 +272,8 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
 --
 -- -   #VUID-VkSemaphoreCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique, with the exception of
---     structures of type
+--     structure in the @pNext@ chain /must/ be unique, with the exception
+--     of structures of type
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkSemaphoreCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@

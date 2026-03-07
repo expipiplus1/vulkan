@@ -54,7 +54,8 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'PipelineFragmentShadingRateEnumStateCreateInfoNV'
 --
@@ -166,7 +167,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_fragment_shading_rate_enums Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_fragment_shading_rate_enums Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -269,11 +270,11 @@ foreign import ccall
 --
 -- This command sets the pipeline fragment shading rate and combiner
 -- operation for subsequent drawing commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineFragmentShadingRateEnumStateCreateInfoNV' values used to create
 -- the currently active pipeline.
@@ -288,13 +289,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-pipelineFragmentShadingRate-04576#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
 --     feature is not enabled, @shadingRate@ /must/ be
 --     'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-supersampleFragmentShadingRates-04577#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
 --     feature is not enabled, @shadingRate@ /must/ not be
 --     'FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV',
 --     'FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV',
@@ -303,38 +304,38 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-noInvocationFragmentShadingRates-04578#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
 --     feature is not enabled, @shadingRate@ /must/ not be
 --     'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-fragmentShadingRateEnums-04579#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentShadingRateEnums fragmentShadingRateEnums>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-fragmentShadingRateEnums fragmentShadingRateEnums>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-pipelineFragmentShadingRate-04580#
 --     One of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>,
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>,
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
 --     features /must/ be enabled
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-primitiveFragmentShadingRate-04581#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
 --     feature is not enabled, @combinerOps@[0] /must/ be
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-attachmentFragmentShadingRate-04582#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
 --     feature is not enabled, @combinerOps@[1] /must/ be
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-fragmentSizeNonTrivialCombinerOps-04583#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentSizeNonTrivialCombinerOps>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentSizeNonTrivialCombinerOps>
 --     limit is not supported, elements of @combinerOps@ /must/ be either
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --     or
@@ -360,7 +361,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -379,9 +381,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetFragmentShadingRateEnumNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -400,12 +407,12 @@ cmdSetFragmentShadingRateEnumNV :: forall io
                                 -> -- | @combinerOps@ specifies a
                                    -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateCombinerOpKHR'
                                    -- determining how the
-                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
-                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
+                                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
+                                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
                                    -- and
-                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
+                                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
                                    -- are
-                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
+                                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
                                    -- for fragments generated by subsequent drawing commands.
                                    ("combinerOps" ::: (FragmentShadingRateCombinerOpKHR, FragmentShadingRateCombinerOpKHR))
                                 -> io ()
@@ -444,9 +451,13 @@ cmdSetFragmentShadingRateEnumNV commandBuffer
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceFragmentShadingRateEnumsFeaturesNV' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceFragmentShadingRateEnumsFeaturesNV', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -534,7 +545,7 @@ instance Zero PhysicalDeviceFragmentShadingRateEnumsFeaturesNV where
 -- property.
 --
 -- These properties are related to
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate fragment shading rates>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate fragment shading rates>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -550,10 +561,6 @@ data PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = PhysicalDeviceFragment
     -- indicating the maximum number of fragment shader invocations per
     -- fragment supported in pipeline, primitive, and attachment fragment
     -- shading rates.
-    --
-    -- #VUID-VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV-maxFragmentShadingRateInvocationCount-parameter#
-    -- @maxFragmentShadingRateInvocationCount@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
     maxFragmentShadingRateInvocationCount :: SampleCountFlagBits }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -600,7 +607,7 @@ instance Zero PhysicalDeviceFragmentShadingRateEnumsPropertiesNV where
 -- = Description
 --
 -- If the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' includes a
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo' includes a
 -- 'PipelineFragmentShadingRateEnumStateCreateInfoNV' structure, then that
 -- structure includes parameters controlling the pipeline fragment shading
 -- rate.
@@ -631,12 +638,12 @@ data PipelineFragmentShadingRateEnumStateCreateInfoNV = PipelineFragmentShadingR
   , -- | @combinerOps@ specifies
     -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateCombinerOpKHR'
     -- values determining how the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
     -- are
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
     -- for fragments generated by drawing commands using the created pipeline.
     combinerOps :: (FragmentShadingRateCombinerOpKHR, FragmentShadingRateCombinerOpKHR)
   }
@@ -700,17 +707,58 @@ instance Zero PipelineFragmentShadingRateEnumStateCreateInfoNV where
 --
 -- = Description
 --
+-- -   'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV' specifies a
+--     fragment size of 1x1 pixels.
+--
+-- -   'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV' specifies a
+--     fragment size of 1x2 pixels.
+--
+-- -   'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV' specifies a
+--     fragment size of 2x1 pixels.
+--
+-- -   'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV' specifies a
+--     fragment size of 2x2 pixels.
+--
+-- -   'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV' specifies a
+--     fragment size of 2x4 pixels.
+--
+-- -   'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV' specifies a
+--     fragment size of 4x2 pixels.
+--
+-- -   'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV' specifies a
+--     fragment size of 4x4 pixels.
+--
+-- -   'FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV' specifies a
+--     fragment size of 1x1 pixels, with two fragment shader invocations
+--     per fragment.
+--
+-- -   'FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV' specifies a
+--     fragment size of 1x1 pixels, with four fragment shader invocations
+--     per fragment.
+--
+-- -   'FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV' specifies a
+--     fragment size of 1x1 pixels, with eight fragment shader invocations
+--     per fragment.
+--
+-- -   'FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV' specifies a
+--     fragment size of 1x1 pixels, with sixteen fragment shader
+--     invocations per fragment.
+--
+-- -   'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV' specifies that any
+--     portions of a primitive that use that shading rate should be
+--     discarded without invoking any fragment shader.
+--
 -- To use the shading rates
 -- 'FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV',
 -- 'FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV',
 -- 'FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV', and
 -- 'FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV' as a pipeline,
 -- primitive, or attachment shading rate, the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
 -- feature /must/ be enabled. To use the shading rate
 -- 'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV' as a pipeline, primitive, or
 -- attachment shading rate, the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
 -- feature /must/ be enabled.
 --
 -- = See Also
@@ -721,54 +769,40 @@ instance Zero PipelineFragmentShadingRateEnumStateCreateInfoNV where
 newtype FragmentShadingRateNV = FragmentShadingRateNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV' specifies a fragment
--- size of 1x1 pixels.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV"
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV = FragmentShadingRateNV 0
 
--- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV' specifies a
--- fragment size of 1x2 pixels.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV"
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_1X2_PIXELS_NV = FragmentShadingRateNV 1
 
--- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV' specifies a
--- fragment size of 2x1 pixels.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV"
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X1_PIXELS_NV = FragmentShadingRateNV 4
 
--- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV' specifies a
--- fragment size of 2x2 pixels.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV"
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X2_PIXELS_NV = FragmentShadingRateNV 5
 
--- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV' specifies a
--- fragment size of 2x4 pixels.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV"
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_2X4_PIXELS_NV = FragmentShadingRateNV 6
 
--- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV' specifies a
--- fragment size of 4x2 pixels.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV"
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X2_PIXELS_NV = FragmentShadingRateNV 9
 
--- | 'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV' specifies a
--- fragment size of 4x4 pixels.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV"
 pattern FRAGMENT_SHADING_RATE_1_INVOCATION_PER_4X4_PIXELS_NV = FragmentShadingRateNV 10
 
--- | 'FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
--- size of 1x1 pixels, with two fragment shader invocations per fragment.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV"
 pattern FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 11
 
--- | 'FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
--- size of 1x1 pixels, with four fragment shader invocations per fragment.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV"
 pattern FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 12
 
--- | 'FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
--- size of 1x1 pixels, with eight fragment shader invocations per fragment.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV"
 pattern FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 13
 
--- | 'FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV' specifies a fragment
--- size of 1x1 pixels, with sixteen fragment shader invocations per
--- fragment.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV"
 pattern FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV = FragmentShadingRateNV 14
 
--- | 'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV' specifies that any portions of
--- a primitive that use that shading rate should be discarded without
--- invoking any fragment shader.
+-- No documentation found for Nested "VkFragmentShadingRateNV" "VK_FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV"
 pattern FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV = FragmentShadingRateNV 15
 
 {-# COMPLETE
@@ -865,6 +899,24 @@ instance Read FragmentShadingRateNV where
 -- | VkFragmentShadingRateTypeNV - Enumeration with fragment shading rate
 -- types
 --
+-- = Description
+--
+-- -   'FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV' specifies that a
+--     graphics pipeline should obtain its pipeline fragment shading rate
+--     and shading rate combiner state from the
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
+--     structure and that any state specified by the
+--     'PipelineFragmentShadingRateEnumStateCreateInfoNV' structure should
+--     be ignored.
+--
+-- -   'FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV' specifies that a graphics
+--     pipeline should obtain its pipeline fragment shading rate and
+--     shading rate combiner state from the
+--     'PipelineFragmentShadingRateEnumStateCreateInfoNV' structure and
+--     that any state specified by the
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
+--     structure should be ignored.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_shading_rate_enums VK_NV_fragment_shading_rate_enums>,
@@ -872,22 +924,10 @@ instance Read FragmentShadingRateNV where
 newtype FragmentShadingRateTypeNV = FragmentShadingRateTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV' specifies that a graphics
--- pipeline should obtain its pipeline fragment shading rate and shading
--- rate combiner state from the
--- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
--- structure and that any state specified by the
--- 'PipelineFragmentShadingRateEnumStateCreateInfoNV' structure should be
--- ignored.
+-- No documentation found for Nested "VkFragmentShadingRateTypeNV" "VK_FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV"
 pattern FRAGMENT_SHADING_RATE_TYPE_FRAGMENT_SIZE_NV = FragmentShadingRateTypeNV 0
 
--- | 'FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV' specifies that a graphics pipeline
--- should obtain its pipeline fragment shading rate and shading rate
--- combiner state from the
--- 'PipelineFragmentShadingRateEnumStateCreateInfoNV' structure and that
--- any state specified by the
--- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
--- structure should be ignored.
+-- No documentation found for Nested "VkFragmentShadingRateTypeNV" "VK_FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV"
 pattern FRAGMENT_SHADING_RATE_TYPE_ENUMS_NV = FragmentShadingRateTypeNV 1
 
 {-# COMPLETE

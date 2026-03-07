@@ -111,7 +111,7 @@
 -- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo',
 --     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo':
 --
 --     -   'ExternalFormatANDROID'
@@ -288,7 +288,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

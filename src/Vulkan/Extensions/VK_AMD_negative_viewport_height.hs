@@ -60,7 +60,7 @@
 -- the y-axis.
 --
 -- -   Allow negative height to be specified in the
---     'Vulkan.Core10.Pipeline.Viewport'::@height@ field to perform
+--     'Vulkan.Core10.GraphicsPipeline.Viewport'::@height@ field to perform
 --     y-inversion of the clip-space to framebuffer-space transform. This
 --     allows apps to avoid having to use @gl_Position.y = -gl_Position.y@
 --     in shaders also targeting other APIs.
@@ -93,7 +93,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_negative_viewport_height Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_negative_viewport_height Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

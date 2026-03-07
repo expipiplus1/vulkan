@@ -49,7 +49,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_b
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindImageMemoryDeviceGroupInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (BindImageMemorySwapchainInfoKHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (BindImagePlaneMemoryInfo)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (BindMemoryStatusKHR)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality' (BindMemoryStatus)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
@@ -94,7 +94,7 @@ foreign import ccall
 -- bindings into a single command.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance6 maintenance6>
 -- feature is enabled, this command /must/ attempt to perform all of the
 -- memory binding operations described by @pBindInfos@, and /must/ not
 -- early exit on the first failure.
@@ -105,10 +105,11 @@ foreign import ccall
 -- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
 -- If the 'bindBufferMemory2' command failed,
--- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR' structures
--- were not included in the @pNext@ chains of each element of @pBindInfos@,
--- and @bindInfoCount@ was greater than one, then the buffers referenced by
--- @pBindInfos@ will be in an indeterminate state, and must not be used.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
+-- structures were not included in the @pNext@ chains of each element of
+-- @pBindInfos@, and @bindInfoCount@ was greater than one, then the buffers
+-- referenced by @pBindInfos@ will be in an indeterminate state, and must
+-- not be used.
 --
 -- Applications should destroy these buffers.
 --
@@ -120,14 +121,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BindBufferMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindBufferMemory2 :: forall io
@@ -174,7 +180,7 @@ foreign import ccall
 -- bindings into a single command.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance6 maintenance6>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance6 maintenance6>
 -- feature is enabled, this command /must/ attempt to perform all of the
 -- memory binding operations described by @pBindInfos@, and /must/ not
 -- early exit on the first failure.
@@ -185,10 +191,11 @@ foreign import ccall
 -- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
 -- If the 'bindImageMemory2' command failed,
--- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR' structures
--- were not included in the @pNext@ chains of each element of @pBindInfos@,
--- and @bindInfoCount@ was greater than one, then the images referenced by
--- @pBindInfos@ will be in an indeterminate state, and must not be used.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
+-- structures were not included in the @pNext@ chains of each element of
+-- @pBindInfos@, and @bindInfoCount@ was greater than one, then the images
+-- referenced by @pBindInfos@ will be in an indeterminate state, and must
+-- not be used.
 --
 -- Applications should destroy these images.
 --
@@ -223,12 +230,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BindImageMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindImageMemory2 :: forall io
@@ -275,16 +287,42 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' with
 --     @buffer@
 --
--- -   #VUID-VkBindBufferMemoryInfo-memoryOffset-01036# @memoryOffset@
---     /must/ be an integer multiple of the @alignment@ member of the
+-- -   #VUID-VkBindBufferMemoryInfo-None-10739# If @memory@ was not
+--     allocated from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @memoryOffset@ /must/ be an integer multiple of the
+--     @alignment@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
 --     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' with
 --     @buffer@
 --
--- -   #VUID-VkBindBufferMemoryInfo-size-01037# The @size@ member of the
+-- -   #VUID-VkBindBufferMemoryInfo-memory-10740# If @memory@ was allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @memoryOffset@ /must/ be an integer multiple of the
+--     @alignment@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to
+--     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' with
+--     @buffer@
+--
+-- -   #VUID-VkBindBufferMemoryInfo-None-10741# If @memory@ was not
+--     allocated from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @size@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
+--     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' with
+--     @buffer@ /must/ be less than or equal to the size of @memory@ minus
+--     @memoryOffset@
+--
+-- -   #VUID-VkBindBufferMemoryInfo-memory-10742# If @memory@ was allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @size@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to
 --     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' with
 --     @buffer@ /must/ be less than or equal to the size of @memory@ minus
 --     @memoryOffset@
@@ -308,6 +346,14 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     /must/ equal
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
 --     and @memoryOffset@ /must/ be zero
+--
+-- -   #VUID-VkBindBufferMemoryInfo-memory-10925# If the
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
+--     allocated included a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure in its @pNext@ chain,
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     /must/ have been 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkBindBufferMemoryInfo-None-01898# If @buffer@ was created
 --     with the
@@ -369,7 +415,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddress@
 --     feature is enabled and @buffer@ was created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
---     bit set, @memory@ /must/ have been allocated with the
+--     usage flag set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
@@ -404,6 +450,15 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
 --
+-- -   #VUID-VkBindBufferMemoryInfo-buffer-11408# If the @buffer@ was
+--     created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT'
+--     or
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
+--
 -- -   #VUID-VkBindBufferMemoryInfo-pNext-01605# If the @pNext@ chain
 --     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
@@ -420,10 +475,11 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
---     or 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR'
+--     or
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
 --
 -- -   #VUID-VkBindBufferMemoryInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBindBufferMemoryInfo-buffer-parameter# @buffer@ /must/ be a
 --     valid 'Vulkan.Core10.Handles.Buffer' handle
@@ -435,13 +491,18 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     @memory@ /must/ have been created, allocated, or retrieved from the
 --     same 'Vulkan.Core10.Handles.Device'
 --
+-- == Host Synchronization
+--
+-- -   Host access to @buffer@ /must/ be externally synchronized
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindBufferMemory2',
--- 'Vulkan.Extensions.VK_KHR_bind_memory2.bindBufferMemory2KHR'
+-- 'bindBufferMemory2'
 data BindBufferMemoryInfo (es :: [Type]) = BindBufferMemoryInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -469,7 +530,7 @@ instance Extensible BindBufferMemoryInfo where
   getNext BindBufferMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindBufferMemoryInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @BindMemoryStatusKHR = Just f
+    | Just Refl <- eqT @e @BindMemoryStatus = Just f
     | Just Refl <- eqT @e @BindBufferMemoryDeviceGroupInfo = Just f
     | otherwise = Nothing
 
@@ -570,6 +631,14 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     parameter of the image being bound /must/ be equal to or smaller
 --     than the original image for which the allocation was created
 --
+-- -   #VUID-VkBindImageMemoryInfo-memory-10926# If the
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
+--     allocated included a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure in its @pNext@ chain,
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--     /must/ have been 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-VkBindImageMemoryInfo-None-01901# If image was created with
 --     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
@@ -625,16 +694,16 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
 --
--- -   #VUID-VkBindImageMemoryInfo-descriptorBufferCaptureReplay-08113# If
---     the @image@ was created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+-- -   #VUID-VkBindImageMemoryInfo-image-08113# If the @image@ was created
+--     with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
 -- -   #VUID-VkBindImageMemoryInfo-image-09202# If the @image@ was created
 --     with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
@@ -642,8 +711,11 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 -- -   #VUID-VkBindImageMemoryInfo-pNext-01615# If the @pNext@ chain does
 --     not include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
---     structure, @memory@ /must/ have been allocated using one of the
---     memory types allowed in the @memoryTypeBits@ member of the
+--     structure, and @memory@ was not allocated from a memory heap with
+--     the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, then @memory@ /must/ have been allocated using one of
+--     the memory types allowed in the @memoryTypeBits@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
@@ -652,8 +724,11 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 -- -   #VUID-VkBindImageMemoryInfo-pNext-01616# If the @pNext@ chain does
 --     not include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
---     structure, @memoryOffset@ /must/ be an integer multiple of the
---     @alignment@ member of the
+--     structure, and @memory@ was not allocated from a memory heap with
+--     the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, then @memoryOffset@ /must/ be an integer multiple of
+--     the @alignment@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
@@ -662,12 +737,39 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 -- -   #VUID-VkBindImageMemoryInfo-pNext-01617# If the @pNext@ chain does
 --     not include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
---     structure, the difference of the size of @memory@ and @memoryOffset@
---     /must/ be greater than or equal to the @size@ member of the
---     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
+--     structure, and @memory@ was not allocated from a memory heap with
+--     the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, then the difference of the size of @memory@ and
+--     @memoryOffset@ /must/ be greater than or equal to the @size@ member
+--     of the 'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 --     with the same @image@
+--
+-- -   #VUID-VkBindImageMemoryInfo-pNext-12329# If the @pNext@ chain does
+--     not include a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
+--     structure, and @memory@ was allocated from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, then @memoryOffset@ /must/ be an integer multiple of
+--     the @alignment@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
+--     with @image@
+--
+-- -   #VUID-VkBindImageMemoryInfo-pNext-12330# If the @pNext@ chain does
+--     not include a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
+--     structure, and @memory@ was allocated from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, then @size@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
+--     with @image@ /must/ be less than or equal to the size of @memory@
+--     minus @memoryOffset@
 --
 -- -   #VUID-VkBindImageMemoryInfo-pNext-01618# If the @pNext@ chain
 --     includes a
@@ -793,10 +895,11 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo',
 --     'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo',
---     or 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR'
+--     or
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
 --
 -- -   #VUID-VkBindImageMemoryInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBindImageMemoryInfo-image-parameter# @image@ /must/ be a
 --     valid 'Vulkan.Core10.Handles.Image' handle
@@ -806,14 +909,19 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     have been created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
+-- == Host Synchronization
+--
+-- -   Host access to @image@ /must/ be externally synchronized
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindImageMemory2',
--- 'Vulkan.Extensions.VK_KHR_bind_memory2.bindImageMemory2KHR'
+-- 'bindImageMemory2'
 data BindImageMemoryInfo (es :: [Type]) = BindImageMemoryInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -841,7 +949,7 @@ instance Extensible BindImageMemoryInfo where
   getNext BindImageMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindImageMemoryInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @BindMemoryStatusKHR = Just f
+    | Just Refl <- eqT @e @BindMemoryStatus = Just f
     | Just Refl <- eqT @e @BindImagePlaneMemoryInfo = Just f
     | Just Refl <- eqT @e @BindImageMemorySwapchainInfoKHR = Just f
     | Just Refl <- eqT @e @BindImageMemoryDeviceGroupInfo = Just f

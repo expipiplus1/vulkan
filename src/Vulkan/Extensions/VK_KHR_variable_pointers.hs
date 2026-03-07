@@ -88,9 +88,17 @@
 --
 -- All functionality in this extension is included in core Vulkan 1.1, with
 -- the KHR suffix omitted, however support for the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-variablePointersStorageBuffer variablePointersStorageBuffer>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-variablePointersStorageBuffer variablePointersStorageBuffer>
 -- feature is made optional. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
+--
+-- == Promotion to Vulkan 1.4
+--
+-- If Vulkan 1.4 is supported, support for the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-variablePointers variablePointers>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-variablePointersStorageBuffer variablePointersStorageBuffer>
+-- features is required.
 --
 -- == New Structures
 --
@@ -116,9 +124,9 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointers VariablePointers>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-VariablePointers VariablePointers>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointersStorageBuffer VariablePointersStorageBuffer>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-VariablePointersStorageBuffer VariablePointersStorageBuffer>
 --
 -- == Issues
 --
@@ -155,7 +163,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_variable_pointers Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_variable_pointers Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

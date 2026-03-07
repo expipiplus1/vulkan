@@ -90,9 +90,9 @@
 --
 -- -   'KHR_DRIVER_PROPERTIES_SPEC_VERSION'
 --
--- -   'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE_KHR'
+-- -   'MAX_DRIVER_INFO_SIZE_KHR'
 --
--- -   'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE_KHR'
+-- -   'MAX_DRIVER_NAME_SIZE_KHR'
 --
 -- -   Extending 'Vulkan.Core12.Enums.DriverId.DriverId':
 --
@@ -137,11 +137,13 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_driver_properties Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_driver_properties Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_driver_properties  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
+                                                   , pattern MAX_DRIVER_NAME_SIZE_KHR
+                                                   , pattern MAX_DRIVER_INFO_SIZE_KHR
                                                    , pattern DRIVER_ID_AMD_PROPRIETARY_KHR
                                                    , pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR
                                                    , pattern DRIVER_ID_MESA_RADV_KHR
@@ -154,8 +156,6 @@ module Vulkan.Extensions.VK_KHR_driver_properties  ( pattern STRUCTURE_TYPE_PHYS
                                                    , pattern DRIVER_ID_GOOGLE_SWIFTSHADER_KHR
                                                    , pattern DRIVER_ID_GGP_PROPRIETARY_KHR
                                                    , pattern DRIVER_ID_BROADCOM_PROPRIETARY_KHR
-                                                   , pattern MAX_DRIVER_NAME_SIZE_KHR
-                                                   , pattern MAX_DRIVER_INFO_SIZE_KHR
                                                    , DriverIdKHR
                                                    , ConformanceVersionKHR
                                                    , PhysicalDeviceDriverPropertiesKHR
@@ -186,6 +186,14 @@ import Vulkan.Core10.APIConstants (pattern MAX_DRIVER_NAME_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES
+
+
+-- No documentation found for TopLevel "VK_MAX_DRIVER_NAME_SIZE_KHR"
+pattern MAX_DRIVER_NAME_SIZE_KHR = MAX_DRIVER_NAME_SIZE
+
+
+-- No documentation found for TopLevel "VK_MAX_DRIVER_INFO_SIZE_KHR"
+pattern MAX_DRIVER_INFO_SIZE_KHR = MAX_DRIVER_INFO_SIZE
 
 
 -- No documentation found for TopLevel "VK_DRIVER_ID_AMD_PROPRIETARY_KHR"
@@ -234,14 +242,6 @@ pattern DRIVER_ID_GGP_PROPRIETARY_KHR = DRIVER_ID_GGP_PROPRIETARY
 
 -- No documentation found for TopLevel "VK_DRIVER_ID_BROADCOM_PROPRIETARY_KHR"
 pattern DRIVER_ID_BROADCOM_PROPRIETARY_KHR = DRIVER_ID_BROADCOM_PROPRIETARY
-
-
--- No documentation found for TopLevel "VK_MAX_DRIVER_NAME_SIZE_KHR"
-pattern MAX_DRIVER_NAME_SIZE_KHR = MAX_DRIVER_NAME_SIZE
-
-
--- No documentation found for TopLevel "VK_MAX_DRIVER_INFO_SIZE_KHR"
-pattern MAX_DRIVER_INFO_SIZE_KHR = MAX_DRIVER_INFO_SIZE
 
 
 -- No documentation found for TopLevel "VkDriverIdKHR"

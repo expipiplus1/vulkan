@@ -93,7 +93,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_LUNARG_direct_driver_loading Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -338,6 +338,14 @@ instance Read DirectDriverLoadingFlagsLUNARG where
 -- | VkDirectDriverLoadingModeLUNARG - Specify loader behavior of added
 -- drivers
 --
+-- = Description
+--
+-- -   'DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG' specifies that the
+--     provided drivers are used instead of the system-loaded drivers.
+--
+-- -   'DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG' specifies that the
+--     provided drivers are used in addition to the system-loaded drivers.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading VK_LUNARG_direct_driver_loading>,
@@ -345,12 +353,10 @@ instance Read DirectDriverLoadingFlagsLUNARG where
 newtype DirectDriverLoadingModeLUNARG = DirectDriverLoadingModeLUNARG Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG' specifies that the
--- provided drivers are used instead of the system-loaded drivers.
+-- No documentation found for Nested "VkDirectDriverLoadingModeLUNARG" "VK_DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG"
 pattern DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG = DirectDriverLoadingModeLUNARG 0
 
--- | 'DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG' specifies that the
--- provided drivers are used in addition to the system-loaded drivers.
+-- No documentation found for Nested "VkDirectDriverLoadingModeLUNARG" "VK_DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG"
 pattern DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG = DirectDriverLoadingModeLUNARG 1
 
 {-# COMPLETE
@@ -412,6 +418,7 @@ type FN_vkGetInstanceProcAddrLUNARG = Ptr Instance_T -> ("pName" ::: Ptr CChar) 
 --
 -- = See Also
 --
+-- 'Vulkan.Core10.FuncPointers.PFN_vkVoidFunction',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading VK_LUNARG_direct_driver_loading>,
 -- 'DirectDriverLoadingInfoLUNARG', 'Vulkan.Core10.Handles.Instance'
 type PFN_vkGetInstanceProcAddrLUNARG = FunPtr FN_vkGetInstanceProcAddrLUNARG

@@ -20,62 +20,70 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'POLYGON_MODE_POINT' specifies that polygon vertices are drawn as
+--     points.
+--
+-- -   'POLYGON_MODE_LINE' specifies that polygon edges are drawn as line
+--     segments.
+--
+-- -   'POLYGON_MODE_FILL' specifies that polygons are rendered using the
+--     polygon rasterization rules in this section.
+--
+-- -   'POLYGON_MODE_FILL_RECTANGLE_NV' specifies that polygons are
+--     rendered using polygon rasterization rules, modified to consider a
+--     sample within the primitive if the sample location is inside the
+--     axis-aligned bounding box of the triangle after projection. Note
+--     that the barycentric weights used in attribute interpolation /can/
+--     extend outside the range [0,1] when these primitives are shaded.
+--     Special treatment is given to a sample position on the boundary edge
+--     of the bounding box. In such a case, if two rectangles lie on either
+--     side of a common edge (with identical endpoints) on which a sample
+--     position lies, then exactly one of the triangles /must/ produce a
+--     fragment that covers that sample during rasterization.
+--
+--     Polygons rendered in 'POLYGON_MODE_FILL_RECTANGLE_NV' mode /may/ be
+--     clipped by the frustum or by user clip planes. If clipping is
+--     applied, the triangle is culled rather than clipped.
+--
+--     Area calculation and facingness are determined for
+--     'POLYGON_MODE_FILL_RECTANGLE_NV' mode using the triangle’s vertices.
+--
 -- These modes affect only the final rasterization of polygons: in
 -- particular, a polygon’s vertices are shaded and the polygon is clipped
 -- and possibly culled before these modes are applied.
 --
 -- If
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5PropertiesKHR'::@polygonModePointSize@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PhysicalDeviceMaintenance5Properties'::@polygonModePointSize@
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE', the point size of the final
 -- rasterization of polygons is taken from @PointSize@ when
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-polygonmode polygon mode>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-polygonmode polygon mode>
 -- is 'POLYGON_MODE_POINT'.
 --
 -- Otherwise, if
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5PropertiesKHR'::@polygonModePointSize@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PhysicalDeviceMaintenance5Properties'::@polygonModePointSize@
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE', the point size of the final
 -- rasterization of polygons is 1.0 when
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-polygonmode polygon mode>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-polygonmode polygon mode>
 -- is 'POLYGON_MODE_POINT'.
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
 newtype PolygonMode = PolygonMode Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'POLYGON_MODE_FILL' specifies that polygons are rendered using the
--- polygon rasterization rules in this section.
+-- No documentation found for Nested "VkPolygonMode" "VK_POLYGON_MODE_FILL"
 pattern POLYGON_MODE_FILL = PolygonMode 0
 
--- | 'POLYGON_MODE_LINE' specifies that polygon edges are drawn as line
--- segments.
+-- No documentation found for Nested "VkPolygonMode" "VK_POLYGON_MODE_LINE"
 pattern POLYGON_MODE_LINE = PolygonMode 1
 
--- | 'POLYGON_MODE_POINT' specifies that polygon vertices are drawn as
--- points.
+-- No documentation found for Nested "VkPolygonMode" "VK_POLYGON_MODE_POINT"
 pattern POLYGON_MODE_POINT = PolygonMode 2
 
--- | 'POLYGON_MODE_FILL_RECTANGLE_NV' specifies that polygons are rendered
--- using polygon rasterization rules, modified to consider a sample within
--- the primitive if the sample location is inside the axis-aligned bounding
--- box of the triangle after projection. Note that the barycentric weights
--- used in attribute interpolation /can/ extend outside the range [0,1]
--- when these primitives are shaded. Special treatment is given to a sample
--- position on the boundary edge of the bounding box. In such a case, if
--- two rectangles lie on either side of a common edge (with identical
--- endpoints) on which a sample position lies, then exactly one of the
--- triangles /must/ produce a fragment that covers that sample during
--- rasterization.
---
--- Polygons rendered in 'POLYGON_MODE_FILL_RECTANGLE_NV' mode /may/ be
--- clipped by the frustum or by user clip planes. If clipping is applied,
--- the triangle is culled rather than clipped.
---
--- Area calculation and facingness are determined for
--- 'POLYGON_MODE_FILL_RECTANGLE_NV' mode using the triangle’s vertices.
+-- No documentation found for Nested "VkPolygonMode" "VK_POLYGON_MODE_FILL_RECTANGLE_NV"
 pattern POLYGON_MODE_FILL_RECTANGLE_NV = PolygonMode 1000153000
 
 {-# COMPLETE

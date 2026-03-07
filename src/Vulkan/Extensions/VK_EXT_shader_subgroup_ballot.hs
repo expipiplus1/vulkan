@@ -136,7 +136,7 @@
 -- Vulkan 1.1 required the @OpGroupNonUniformBroadcast@ “Id” to be
 -- constant. This restriction was removed in Vulkan 1.2 with the addition
 -- of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroupBroadcastDynamicId subgroupBroadcastDynamicId>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroupBroadcastDynamicId subgroupBroadcastDynamicId>
 -- feature.
 --
 -- == New Enum Constants
@@ -147,23 +147,23 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sgeq SubgroupEqMaskKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sgeq SubgroupEqMaskKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sgge SubgroupGeMaskKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sgge SubgroupGeMaskKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sggt SubgroupGtMaskKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sggt SubgroupGtMaskKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sgle SubgroupLeMaskKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sgle SubgroupLeMaskKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sglt SubgroupLtMaskKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sglt SubgroupLtMaskKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sgli SubgroupLocalInvocationId>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sgli SubgroupLocalInvocationId>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SubgroupBallotKHR SubgroupBallotKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-SubgroupBallotKHR SubgroupBallotKHR>
 --
 -- == Version History
 --
@@ -178,7 +178,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_subgroup_ballot Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_subgroup_ballot Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

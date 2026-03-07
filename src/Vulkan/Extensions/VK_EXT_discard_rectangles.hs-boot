@@ -51,7 +51,7 @@
 --
 -- This extension provides additional orthogonally aligned “discard
 -- rectangles” specified in framebuffer-space coordinates that restrict
--- rasterization of all points, lines and triangles.
+-- rasterization of all points, lines, and triangles.
 --
 -- From zero to an implementation-dependent limit (specified by
 -- @maxDiscardRectangles@) number of discard rectangles can be operational
@@ -85,7 +85,8 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'PipelineDiscardRectangleStateCreateInfoEXT'
 --
@@ -140,7 +141,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -163,7 +163,7 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2'
 -- includes a 'SubpassDescriptionDepthStencilResolve' structure, then that
 -- structure describes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations multisample resolve operations>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-resolve-operations multisample resolve operations>
 -- for the depth\/stencil attachment in a subpass. If this structure is not
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
@@ -196,7 +196,7 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
 --     the value 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it
 --     /must/ have an image format whose
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
@@ -207,7 +207,7 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     @pDepthStencilResolveAttachment@ has a depth component, then the
 --     'Vulkan.Core10.Enums.Format.Format' of @pDepthStencilAttachment@
 --     /must/ have a depth component with the same number of bits and
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-numericformat numeric format>
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03182#
 --     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
@@ -216,7 +216,7 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     @pDepthStencilResolveAttachment@ has a stencil component, then the
 --     'Vulkan.Core10.Enums.Format.Format' of @pDepthStencilAttachment@
 --     /must/ have a stencil component with the same number of bits and
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat numeric format>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-numericformat numeric format>
 --
 -- -   #VUID-VkSubpassDescriptionDepthStencilResolve-pDepthStencilResolveAttachment-03178#
 --     If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have

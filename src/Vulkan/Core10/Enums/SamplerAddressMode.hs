@@ -20,6 +20,27 @@ import GHC.Show (Show(showsPrec))
 -- | VkSamplerAddressMode - Specify behavior of sampling with texture
 -- coordinates outside an image
 --
+-- = Description
+--
+-- -   'SAMPLER_ADDRESS_MODE_REPEAT' specifies that the repeat wrap mode
+--     will be used.
+--
+-- -   'SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT' specifies that the mirrored
+--     repeat wrap mode will be used.
+--
+-- -   'SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE' specifies that the clamp to
+--     edge wrap mode will be used.
+--
+-- -   'SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER' specifies that the clamp to
+--     border wrap mode will be used.
+--
+-- -   'SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE' specifies that the
+--     mirror clamp to edge wrap mode will be used. This is only valid if
+--     the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
+--     feature is enabled, or if the @VK_KHR_sampler_mirror_clamp_to_edge@
+--     extension is enabled.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -27,27 +48,19 @@ import GHC.Show (Show(showsPrec))
 newtype SamplerAddressMode = SamplerAddressMode Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SAMPLER_ADDRESS_MODE_REPEAT' specifies that the repeat wrap mode will
--- be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_REPEAT"
 pattern SAMPLER_ADDRESS_MODE_REPEAT = SamplerAddressMode 0
 
--- | 'SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT' specifies that the mirrored
--- repeat wrap mode will be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT"
 pattern SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = SamplerAddressMode 1
 
--- | 'SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE' specifies that the clamp to edge
--- wrap mode will be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE"
 pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = SamplerAddressMode 2
 
--- | 'SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER' specifies that the clamp to
--- border wrap mode will be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER"
 pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = SamplerAddressMode 3
 
--- | 'SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE' specifies that the mirror
--- clamp to edge wrap mode will be used. This is only valid if the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
--- feature is enabled, or if the @VK_KHR_sampler_mirror_clamp_to_edge@
--- extension is enabled.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE"
 pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = SamplerAddressMode 4
 
 {-# COMPLETE

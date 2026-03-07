@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance6 VK_KHR_maintenance6>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
 --
 -- [__Contact__]
 --
@@ -104,7 +106,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_per_stage_descriptor_set Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_per_stage_descriptor_set Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -152,9 +154,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePerStageDescriptorSetFeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePerStageDescriptorSetFeaturesNV', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -172,10 +178,10 @@ data PhysicalDevicePerStageDescriptorSetFeaturesNV = PhysicalDevicePerStageDescr
     perStageDescriptorSet :: Bool
   , -- | #features-dynamicPipelineLayout# @dynamicPipelineLayout@ indicates the
     -- implementation allows the @layout@ member of
-    -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorSetsInfoKHR',
-    -- 'Vulkan.Extensions.VK_KHR_maintenance6.PushConstantsInfoKHR',
-    -- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetInfoKHR',
-    -- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetWithTemplateInfoKHR',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindDescriptorSetsInfo',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetInfo',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetWithTemplateInfo',
     -- 'Vulkan.Extensions.VK_KHR_maintenance6.SetDescriptorBufferOffsetsInfoEXT'
     -- and
     -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorBufferEmbeddedSamplersInfoEXT'

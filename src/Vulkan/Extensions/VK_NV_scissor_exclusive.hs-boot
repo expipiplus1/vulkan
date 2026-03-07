@@ -80,7 +80,8 @@
 --
 --     -   'PhysicalDeviceExclusiveScissorFeaturesNV'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo':
 --
 --     -   'PipelineViewportExclusiveScissorStateCreateInfoNV'
 --
@@ -131,7 +132,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -82,7 +82,7 @@
 -- __RESOLVED__: No. It is currently always assumed that the device and
 -- display will always be compatible.
 --
--- 2) 'ViSurfaceCreateInfoNN'::@pWindow@ is intended to store an
+-- 2) 'ViSurfaceCreateInfoNN'::@window@ is intended to store an
 -- @nn@::@vi@::@NativeWindowHandle@, but its declared type is a bare
 -- @void*@ to store the window handle. Why the discrepancy?
 --
@@ -105,7 +105,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NN_vi_surface Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NN_vi_surface Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -228,11 +228,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -249,7 +253,7 @@ createViSurfaceNN :: forall io
                      ViSurfaceCreateInfoNN
                   -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                      -- surface object when there is no more specific allocator available (see
-                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (SurfaceKHR)
 createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do

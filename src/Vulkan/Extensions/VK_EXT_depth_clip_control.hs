@@ -66,7 +66,8 @@
 --
 --     -   'PhysicalDeviceDepthClipControlFeaturesEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo':
 --
 --     -   'PipelineViewportDepthClipControlCreateInfoEXT'
 --
@@ -105,8 +106,8 @@
 -- __RESOLVED__: No. It is highly unlikely that the depth range is changed
 -- to anything other than [0, 1] in the future. Should that happen a new
 -- extension will be required to extend such an enum, and that extension
--- might as well add a new struct to chain to
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pNext@
+-- might as well add a new structure to chain to
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo'::@pNext@
 -- instead.
 --
 -- == Version History
@@ -126,7 +127,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clip_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_clip_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -176,9 +177,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDepthClipControlFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDepthClipControlFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -238,7 +243,7 @@ instance Zero PhysicalDeviceDepthClipControlFeaturesEXT where
 --
 -- -   #VUID-VkPipelineViewportDepthClipControlCreateInfoEXT-negativeOneToOne-06470#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthClipControl depthClipControl>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-depthClipControl depthClipControl>
 --     feature is not enabled, @negativeOneToOne@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --

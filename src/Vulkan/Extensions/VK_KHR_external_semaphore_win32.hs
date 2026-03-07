@@ -141,7 +141,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_external_semaphore_win32 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -247,7 +247,7 @@ foreign import ccall
 -- Exporting a Windows handle from a semaphore /may/ have side effects
 -- depending on the transference of the specified handle type, as described
 -- in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>.
 --
 -- == Return Codes
 --
@@ -257,9 +257,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -326,9 +330,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -387,7 +395,7 @@ importSemaphoreWin32HandleKHR device
 --
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01140#
 --     @handleType@ /must/ be a value included in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphore-handletypes-win32 Handle Types Supported by >
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphore-handletypes-win32 Handle Types Supported by >
 --     table
 --
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01466# If
@@ -411,12 +419,12 @@ importSemaphoreWin32HandleKHR device
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handle-01542# If @handle@
 --     is not @NULL@, it /must/ obey any requirements listed for
 --     @handleType@ in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-name-01543# If @name@ is
 --     not @NULL@, it /must/ obey any requirements listed for @handleType@
 --     in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-03261# If
 --     @handleType@ is
@@ -678,7 +686,7 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 -- or 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ corresponding
 -- to an entry in @pWaitSemaphoreValues@ or @pSignalSemaphoreValues@
 -- respectively does not currently have a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-payloads payload>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-payloads payload>
 -- referring to a Direct3D 12 fence, the implementation /must/ ignore the
 -- value in the @pWaitSemaphoreValues@ or @pSignalSemaphoreValues@ entry.
 --
@@ -847,7 +855,7 @@ instance Zero D3D12FenceSubmitInfoKHR where
 -- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-semaphore-01128# @semaphore@
 --     /must/ not currently have its payload replaced by an imported
 --     payload as described below in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@
@@ -855,13 +863,13 @@ instance Zero D3D12FenceSubmitInfoKHR where
 -- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01129# If
 --     @handleType@ refers to a handle type with copy payload transference
 --     semantics, as defined below in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 --     there /must/ be no queue waiting on @semaphore@
 --
 -- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01130# If
 --     @handleType@ refers to a handle type with copy payload transference
 --     semantics, @semaphore@ /must/ be signaled, or have an associated
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     pending execution
 --
 -- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01131#

@@ -1,13 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "APIConstants"
 module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
-                                   , LUID_SIZE_KHR
-                                   , QUEUE_FAMILY_EXTERNAL_KHR
-                                   , MAX_DEVICE_GROUP_SIZE_KHR
-                                   , MAX_DRIVER_NAME_SIZE_KHR
-                                   , MAX_DRIVER_INFO_SIZE_KHR
-                                   , SHADER_UNUSED_NV
-                                   , MAX_GLOBAL_PRIORITY_SIZE_EXT
+                                   , pattern COMPUTE_OCCUPANCY_PRIORITY_LOW_NV
+                                   , pattern COMPUTE_OCCUPANCY_PRIORITY_NORMAL_NV
+                                   , pattern COMPUTE_OCCUPANCY_PRIORITY_HIGH_NV
                                    , MAX_PHYSICAL_DEVICE_NAME_SIZE
                                    , pattern MAX_PHYSICAL_DEVICE_NAME_SIZE
                                    , UUID_SIZE
@@ -48,21 +44,32 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern MAX_DRIVER_INFO_SIZE
                                    , SHADER_UNUSED_KHR
                                    , pattern SHADER_UNUSED_KHR
-                                   , MAX_GLOBAL_PRIORITY_SIZE_KHR
-                                   , pattern MAX_GLOBAL_PRIORITY_SIZE_KHR
+                                   , MAX_GLOBAL_PRIORITY_SIZE
+                                   , pattern MAX_GLOBAL_PRIORITY_SIZE
                                    , MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
                                    , pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
                                    , MAX_PIPELINE_BINARY_KEY_SIZE_KHR
                                    , pattern MAX_PIPELINE_BINARY_KEY_SIZE_KHR
                                    , MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR
                                    , pattern MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR
+                                   , MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR
+                                   , pattern MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR
                                    , SHADER_INDEX_UNUSED_AMDX
                                    , pattern SHADER_INDEX_UNUSED_AMDX
+                                   , PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV
+                                   , pattern PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV
+                                   , COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_ALIGNMENT_AMDX
+                                   , pattern COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_ALIGNMENT_AMDX
+                                   , COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_STRIDE_AMDX
+                                   , pattern COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_STRIDE_AMDX
+                                   , MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM
+                                   , pattern MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM
+                                   , DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM
+                                   , pattern DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM
                                    , pattern NULL_HANDLE
                                    , IsHandle
                                    , HasObjectType(..)
                                    , Bool32(..)
-                                   , PipelineCacheHeaderVersion(..)
                                    ) where
 
 import Vulkan.Zero (Zero(..))
@@ -70,7 +77,6 @@ import Data.Word (Word32)
 import Data.Word (Word64)
 import Vulkan.Core10.Enums.ObjectType (ObjectType)
 import Vulkan.Core10.FundamentalTypes (Bool32(..))
-import Vulkan.Core10.Enums.PipelineCacheHeaderVersion (PipelineCacheHeaderVersion(..))
 -- | VK_LOD_CLAMP_NONE - Maximum LOD unclamped access sentinel
 --
 -- = See Also
@@ -80,32 +86,32 @@ pattern LOD_CLAMP_NONE :: Float
 pattern LOD_CLAMP_NONE = 1000.0
 
 
--- No documentation found for TopLevel "VK_LUID_SIZE_KHR"
-type LUID_SIZE_KHR = LUID_SIZE
+-- | VK_COMPUTE_OCCUPANCY_PRIORITY_LOW_NV - Low occupancy priority constant
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_compute_occupancy_priority VK_NV_compute_occupancy_priority>
+pattern COMPUTE_OCCUPANCY_PRIORITY_LOW_NV :: Float
+pattern COMPUTE_OCCUPANCY_PRIORITY_LOW_NV = 0.25
 
 
--- No documentation found for TopLevel "VK_QUEUE_FAMILY_EXTERNAL_KHR"
-type QUEUE_FAMILY_EXTERNAL_KHR = QUEUE_FAMILY_EXTERNAL
+-- | VK_COMPUTE_OCCUPANCY_PRIORITY_NORMAL_NV - Normal occupancy priority
+-- constant
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_compute_occupancy_priority VK_NV_compute_occupancy_priority>
+pattern COMPUTE_OCCUPANCY_PRIORITY_NORMAL_NV :: Float
+pattern COMPUTE_OCCUPANCY_PRIORITY_NORMAL_NV = 0.5
 
 
--- No documentation found for TopLevel "VK_MAX_DEVICE_GROUP_SIZE_KHR"
-type MAX_DEVICE_GROUP_SIZE_KHR = MAX_DEVICE_GROUP_SIZE
-
-
--- No documentation found for TopLevel "VK_MAX_DRIVER_NAME_SIZE_KHR"
-type MAX_DRIVER_NAME_SIZE_KHR = MAX_DRIVER_NAME_SIZE
-
-
--- No documentation found for TopLevel "VK_MAX_DRIVER_INFO_SIZE_KHR"
-type MAX_DRIVER_INFO_SIZE_KHR = MAX_DRIVER_INFO_SIZE
-
-
--- No documentation found for TopLevel "VK_SHADER_UNUSED_NV"
-type SHADER_UNUSED_NV = SHADER_UNUSED_KHR
-
-
--- No documentation found for TopLevel "VK_MAX_GLOBAL_PRIORITY_SIZE_EXT"
-type MAX_GLOBAL_PRIORITY_SIZE_EXT = MAX_GLOBAL_PRIORITY_SIZE_KHR
+-- | VK_COMPUTE_OCCUPANCY_PRIORITY_HIGH_NV - High occupancy priority constant
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_compute_occupancy_priority VK_NV_compute_occupancy_priority>
+pattern COMPUTE_OCCUPANCY_PRIORITY_HIGH_NV :: Float
+pattern COMPUTE_OCCUPANCY_PRIORITY_HIGH_NV = 0.75
 
 
 type MAX_PHYSICAL_DEVICE_NAME_SIZE = 256
@@ -342,16 +348,18 @@ pattern SHADER_UNUSED_KHR :: Word32
 pattern SHADER_UNUSED_KHR = 0xffffffff
 
 
-type MAX_GLOBAL_PRIORITY_SIZE_KHR = 16
+type MAX_GLOBAL_PRIORITY_SIZE = 16
 
--- | VK_MAX_GLOBAL_PRIORITY_SIZE_KHR - Length of an array of global queue
+-- | VK_MAX_GLOBAL_PRIORITY_SIZE - Length of an array of global queue
 -- priorities
 --
 -- = See Also
 --
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>
-pattern MAX_GLOBAL_PRIORITY_SIZE_KHR :: forall a . Integral a => a
-pattern MAX_GLOBAL_PRIORITY_SIZE_KHR = 16
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority_query VK_EXT_global_priority_query>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_4 VK_VERSION_1_4>
+pattern MAX_GLOBAL_PRIORITY_SIZE :: forall a . Integral a => a
+pattern MAX_GLOBAL_PRIORITY_SIZE = 16
 
 
 type MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
@@ -379,9 +387,27 @@ pattern MAX_PIPELINE_BINARY_KEY_SIZE_KHR = 32
 
 type MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR = 7
 
--- No documentation found for TopLevel "VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR"
+-- | VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR - Length of an array of
+-- supported queue priorities
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_video_decode_av1 VK_KHR_video_decode_av1>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_video_encode_av1 VK_KHR_video_encode_av1>
 pattern MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR :: forall a . Integral a => a
 pattern MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR = 7
+
+
+type MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR = 3
+
+-- | VK_MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR - Length of an array of
+-- supported queue priorities
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_video_decode_vp9 VK_KHR_video_decode_vp9>
+pattern MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR :: forall a . Integral a => a
+pattern MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR = 3
 
 
 type SHADER_INDEX_UNUSED_AMDX = 0xffffffff
@@ -393,6 +419,66 @@ type SHADER_INDEX_UNUSED_AMDX = 0xffffffff
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_shader_enqueue VK_AMDX_shader_enqueue>
 pattern SHADER_INDEX_UNUSED_AMDX :: Word32
 pattern SHADER_INDEX_UNUSED_AMDX = 0xffffffff
+
+
+type PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV = 0xffffffff
+
+-- | VK_PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV -
+-- Sentinel for global acceleration structure partitions
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_partitioned_acceleration_structure VK_NV_partitioned_acceleration_structure>
+pattern PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV :: Word32
+pattern PARTITIONED_ACCELERATION_STRUCTURE_PARTITION_INDEX_GLOBAL_NV = 0xffffffff
+
+
+type COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_ALIGNMENT_AMDX = 128
+
+-- | VK_COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_ALIGNMENT_AMDX - Alignment
+-- requirement for DGF1 compressed data
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_dense_geometry_format VK_AMDX_dense_geometry_format>
+pattern COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_ALIGNMENT_AMDX :: forall a . Integral a => a
+pattern COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_ALIGNMENT_AMDX = 128
+
+
+type COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_STRIDE_AMDX = 128
+
+-- | VK_COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_STRIDE_AMDX - Alignment
+-- requirement for DGF1 compressed data
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_dense_geometry_format VK_AMDX_dense_geometry_format>
+pattern COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_STRIDE_AMDX :: forall a . Integral a => a
+pattern COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_STRIDE_AMDX = 128
+
+
+type MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM = 128
+
+-- | VK_MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM - Length
+-- of a data graph operation name string
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>
+pattern MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM :: forall a . Integral a => a
+pattern MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM = 128
+
+
+type DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM = 3
+
+-- | VK_DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM - Length of a data
+-- graph toolchain version string
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_data_graph_model VK_QCOM_data_graph_model>
+pattern DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM :: forall a . Integral a => a
+pattern DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM = 3
 
 
 -- | VK_NULL_HANDLE - Reserved non-valid object handle

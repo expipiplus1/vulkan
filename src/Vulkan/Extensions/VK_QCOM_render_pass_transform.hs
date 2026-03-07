@@ -15,7 +15,7 @@
 --     283
 --
 -- [__Revision__]
---     4
+--     5
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2023-12-13
+--     2025-06-30
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -55,11 +55,13 @@
 --
 --     -   Arpit Agarwal, Qualcomm Technologies, Inc.
 --
+--     -   Žiga Markuš, LunarG, Inc.
+--
 -- == Description
 --
 -- This extension provides a mechanism for applications to enable driver
 -- support for
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
 --
 -- Mobile devices can be rotated and mobile applications need to render
 -- properly when a device is held in a landscape or portrait orientation.
@@ -81,7 +83,7 @@
 -- and “pre-rotate” the rendering content to match the device’s current
 -- orientation. The burden is more than adjusting the Model View Projection
 -- (MVP) matrix in the vertex shader to account for rotation and aspect
--- ratio. The coordinate systems of scissors, viewports, derivatives and
+-- ratio. The coordinate systems of scissors, viewports, derivatives, and
 -- several shader built-ins may need to be adapted to produce the correct
 -- result.
 --
@@ -162,7 +164,7 @@
 --
 -- 1) Some early Adreno drivers (October 2019 through March 2020)
 -- advertised support for this extension but expected VK_STRUCTURE_TYPE
--- values different from those in the vukan headers. To cover all Adreno
+-- values different from those in the vulkan headers. To cover all Adreno
 -- devices on the market, applications need to detect the driver version
 -- and use the appropriate VK_STRUCTURE_TYPE values from the table below.
 --
@@ -235,7 +237,7 @@
 -- coordinate system.
 --
 -- The
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate set of supported shading rates>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-fragment-shading-rate set of supported shading rates>
 -- /may/ be different per transform. Supported rates queried from
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.getPhysicalDeviceFragmentShadingRatesKHR'
 -- are in the native (rotated) coordinate system. This means that the
@@ -258,6 +260,10 @@
 --
 --     -   Relax dependencies on VK_KHR_surface and VK_KHR_swapchain
 --
+-- -   Revision 5, 2025-06-30 (Matthew Netsch)
+--
+--     -   Fix pNext const on info structs
+--
 -- == See Also
 --
 -- No cross-references are available
@@ -265,7 +271,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_render_pass_transform Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_render_pass_transform Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -454,11 +460,11 @@ instance Zero CommandBufferInheritanceRenderPassTransformInfoQCOM where
            zero
 
 
-type QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 4
+type QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 5
 
 -- No documentation found for TopLevel "VK_QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"
 pattern QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 4
+pattern QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 5
 
 
 type QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME = "VK_QCOM_render_pass_transform"

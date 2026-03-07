@@ -56,7 +56,7 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo':
 --
 --     -   'PipelineCoverageToColorStateCreateInfoNV'
 --
@@ -87,7 +87,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_fragment_coverage_to_color Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -138,13 +138,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- = Description
 --
 -- If the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' includes a
--- 'PipelineCoverageToColorStateCreateInfoNV' structure, then that
--- structure controls whether the fragment coverage is substituted for a
--- fragment color output and, if so, which output is replaced.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo'
+-- includes a 'PipelineCoverageToColorStateCreateInfoNV' structure, then
+-- that structure controls whether the fragment coverage is substituted for
+-- a fragment color output and, if so, which output is replaced.
 --
 -- If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage mask>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask coverage mask>
 -- replaces the first component of the color value corresponding to the
 -- fragment shader output location with @Location@ equal to
 -- @coverageToColorLocation@ and @Index@ equal to zero. If the color
@@ -163,8 +163,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- -   #VUID-VkPipelineCoverageToColorStateCreateInfoNV-coverageToColorEnable-01404#
 --     If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     then the render pass subpass indicated by
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
---     and 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@subpass@
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@renderPass@
+--     and
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@subpass@
 --     /must/ have a color attachment at the location selected by
 --     @coverageToColorLocation@, with a
 --     'Vulkan.Core10.Enums.Format.Format' of

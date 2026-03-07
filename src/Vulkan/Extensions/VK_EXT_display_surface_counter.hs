@@ -95,7 +95,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_display_surface_counter Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_display_surface_counter Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -200,10 +200,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-surface-06523#
---     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
---
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2EXT-surface-06211#
 --     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
@@ -236,11 +232,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -352,7 +352,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' representing
     -- the ways the application /can/ use the presentable images of a swapchain
     -- created with 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' set to
-    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT',
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
@@ -368,7 +368,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     -- #VUID-VkSurfaceCapabilities2EXT-supportedSurfaceCounters-01246#
     -- @supportedSurfaceCounters@ /must/ not include
     -- 'SURFACE_COUNTER_VBLANK_BIT_EXT' unless the surface queried is a
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#wsi-display-surfaces display surface>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#wsi-display-surfaces display surface>
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT
   }
   deriving (Typeable)
@@ -462,6 +462,12 @@ type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 
 -- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
 --
+-- = Description
+--
+-- -   'SURFACE_COUNTER_VBLANK_BIT_EXT' specifies a counter incrementing
+--     once every time a vertical blanking period occurs on the display
+--     associated with the surface.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>,
@@ -470,9 +476,7 @@ type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SURFACE_COUNTER_VBLANK_BIT_EXT' specifies a counter incrementing once
--- every time a vertical blanking period occurs on the display associated
--- with the surface.
+-- No documentation found for Nested "VkSurfaceCounterFlagBitsEXT" "VK_SURFACE_COUNTER_VBLANK_BIT_EXT"
 pattern SURFACE_COUNTER_VBLANK_BIT_EXT = SurfaceCounterFlagBitsEXT 0x00000001
 
 conNameSurfaceCounterFlagBitsEXT :: String

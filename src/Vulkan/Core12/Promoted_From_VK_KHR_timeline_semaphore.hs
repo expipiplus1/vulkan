@@ -99,7 +99,7 @@ foreign import ccall
 -- = Description
 --
 -- If a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-submission queue submission>
 -- command is pending execution, then the value returned by this command
 -- /may/ immediately be out of date.
 --
@@ -111,11 +111,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -227,7 +231,7 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device
 -- after the @timeout@ has expired.
 --
 -- If device loss occurs (see
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-lost-device Lost Device>)
 -- before the timeout has expired, 'waitSemaphores' /must/ return in finite
 -- time with either 'Vulkan.Core10.Enums.Result.SUCCESS' or
 -- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
@@ -242,11 +246,15 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -310,7 +318,7 @@ foreign import ccall
 --
 -- When 'signalSemaphore' is executed on the host, it defines and
 -- immediately executes a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 -- which sets the timeline semaphore to the given value.
 --
 -- The first synchronization scope is defined by the host execution model,
@@ -327,9 +335,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -377,9 +389,13 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceTimelineSemaphoreFeatures' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceTimelineSemaphoreFeatures', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -516,7 +532,7 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 -- == Valid Usage
 --
 -- -   #VUID-VkSemaphoreTypeCreateInfo-timelineSemaphore-03252# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-timelineSemaphore timelineSemaphore>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-timelineSemaphore timelineSemaphore>
 --     feature is not enabled, @semaphoreType@ /must/ not equal
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
 --
@@ -754,7 +770,7 @@ instance Zero TimelineSemaphoreSubmitInfo where
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'waitSemaphores',
--- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.waitSemaphoresKHR'
+-- 'waitSemaphores'
 data SemaphoreWaitInfo = SemaphoreWaitInfo
   { -- | @flags@ is a bitmask of
     -- 'Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlagBits'
@@ -826,7 +842,7 @@ instance Zero SemaphoreWaitInfo where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'signalSemaphore',
--- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.signalSemaphoreKHR'
+-- 'signalSemaphore'
 data SemaphoreSignalInfo = SemaphoreSignalInfo
   { -- | @semaphore@ is the handle of the semaphore to signal.
     --
@@ -849,7 +865,7 @@ data SemaphoreSignalInfo = SemaphoreSignalInfo
     -- which does not differ from the current value of the semaphore or the
     -- value of any outstanding semaphore wait or signal operation on
     -- @semaphore@ by more than
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
     value :: Word64
   }
   deriving (Typeable, Eq)

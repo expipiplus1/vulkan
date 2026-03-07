@@ -23,6 +23,31 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'COMPONENT_SWIZZLE_IDENTITY' specifies that the component is set to
+--     the identity swizzle.
+--
+-- -   'COMPONENT_SWIZZLE_ZERO' specifies that the component is set to
+--     zero.
+--
+-- -   'COMPONENT_SWIZZLE_ONE' specifies that the component is set to
+--     either 1 or 1.0, depending on whether the type of the image view
+--     format is integer or floating-point respectively, as determined by
+--     the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-definition Format Definition>
+--     section for each 'Vulkan.Core10.Enums.Format.Format'.
+--
+-- -   'COMPONENT_SWIZZLE_R' specifies that the component is set to the
+--     value of the R component of the image.
+--
+-- -   'COMPONENT_SWIZZLE_G' specifies that the component is set to the
+--     value of the G component of the image.
+--
+-- -   'COMPONENT_SWIZZLE_B' specifies that the component is set to the
+--     value of the B component of the image.
+--
+-- -   'COMPONENT_SWIZZLE_A' specifies that the component is set to the
+--     value of the A component of the image.
+--
 -- Setting the identity swizzle on a component is equivalent to setting the
 -- identity mapping on that component. That is:
 --
@@ -47,34 +72,25 @@ import GHC.Show (Show(showsPrec))
 newtype ComponentSwizzle = ComponentSwizzle Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COMPONENT_SWIZZLE_IDENTITY' specifies that the component is set to the
--- identity swizzle.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_IDENTITY"
 pattern COMPONENT_SWIZZLE_IDENTITY = ComponentSwizzle 0
 
--- | 'COMPONENT_SWIZZLE_ZERO' specifies that the component is set to zero.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_ZERO"
 pattern COMPONENT_SWIZZLE_ZERO = ComponentSwizzle 1
 
--- | 'COMPONENT_SWIZZLE_ONE' specifies that the component is set to either 1
--- or 1.0, depending on whether the type of the image view format is
--- integer or floating-point respectively, as determined by the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-definition Format Definition>
--- section for each 'Vulkan.Core10.Enums.Format.Format'.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_ONE"
 pattern COMPONENT_SWIZZLE_ONE = ComponentSwizzle 2
 
--- | 'COMPONENT_SWIZZLE_R' specifies that the component is set to the value
--- of the R component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_R"
 pattern COMPONENT_SWIZZLE_R = ComponentSwizzle 3
 
--- | 'COMPONENT_SWIZZLE_G' specifies that the component is set to the value
--- of the G component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_G"
 pattern COMPONENT_SWIZZLE_G = ComponentSwizzle 4
 
--- | 'COMPONENT_SWIZZLE_B' specifies that the component is set to the value
--- of the B component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_B"
 pattern COMPONENT_SWIZZLE_B = ComponentSwizzle 5
 
--- | 'COMPONENT_SWIZZLE_A' specifies that the component is set to the value
--- of the A component of the image.
+-- No documentation found for Nested "VkComponentSwizzle" "VK_COMPONENT_SWIZZLE_A"
 pattern COMPONENT_SWIZZLE_A = ComponentSwizzle 6
 
 {-# COMPLETE

@@ -85,6 +85,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardw
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (ImportMemoryBufferCollectionFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (ImportMemoryFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (ImportMemoryHostPointerInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_metal (ImportMemoryMetalHandleInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (ImportMemoryZirconHandleInfoFUCHSIA)
@@ -92,6 +93,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalBufferI
 import {-# SOURCE #-} Vulkan.Extensions.VK_QNX_external_memory_screen_buffer (ImportScreenBufferInfoQNX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedAllocateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_tensors (MemoryDedicatedAllocateInfoTensorARM)
 import Vulkan.Core10.Enums.MemoryMapFlagBits (MemoryMapFlagBits(..))
 import Vulkan.Core10.Enums.MemoryMapFlagBits (MemoryMapFlags)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (MemoryOpaqueCaptureAddressAllocateInfo)
@@ -143,7 +145,7 @@ foreign import ccall
 -- The maximum number of valid memory allocations that /can/ exist
 -- simultaneously within a 'Vulkan.Core10.Handles.Device' /may/ be
 -- restricted by implementation- or platform-dependent limits. The
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMemoryAllocationCount maxMemoryAllocationCount>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxMemoryAllocationCount maxMemoryAllocationCount>
 -- feature describes the number of allocations that /can/ exist
 -- simultaneously before encountering these internal limits.
 --
@@ -182,6 +184,16 @@ foreign import ccall
 -- on a per-device and per-heap basis. Some platforms allow overallocation
 -- into other heaps. The overallocation behavior /can/ be specified through
 -- the @VK_AMD_memory_overallocation_behavior@ extension.
+--
+-- If the @memoryTypeIndex@ belongs to a heap with the
+-- 'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+-- bit included in its properties, this allocation is backed by tile
+-- memory, which is an on device cache. Unlike other heaps, allocations out
+-- of the tile memory will always have a starting address at the start of
+-- the heap and its contents are aliased with all other
+-- 'Vulkan.Core10.Handles.DeviceMemory' objects bound to the same range
+-- while executing within the same
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-tile-heaps tile memory scope>.
 --
 -- If the
 -- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT'::@pageableDeviceLocalMemory@
@@ -227,7 +239,7 @@ foreign import ccall
 --     created from
 --
 -- -   #VUID-vkAllocateMemory-deviceCoherentMemory-02790# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
 --     feature is not enabled, @pAllocateInfo->memoryTypeIndex@ /must/ not
 --     identify a memory type supporting
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
@@ -236,6 +248,14 @@ foreign import ccall
 --     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxMemoryAllocationCount@
 --     device memory allocations currently allocated on the device
+--
+-- -   #VUID-vkAllocateMemory-tileMemoryHeap-10976# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-tileMemoryHeap tileMemoryHeap>
+--     feature is not enabled, @pAllocateInfo->memoryTypeIndex@ /must/ not
+--     identify a memory type that corresponds to a
+--     'Vulkan.Core10.DeviceInitialization.MemoryHeap' with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property
 --
 -- == Valid Usage (Implicit)
 --
@@ -252,6 +272,9 @@ foreign import ccall
 -- -   #VUID-vkAllocateMemory-pMemory-parameter# @pMemory@ /must/ be a
 --     valid pointer to a 'Vulkan.Core10.Handles.DeviceMemory' handle
 --
+-- -   #VUID-vkAllocateMemory-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -260,13 +283,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
 --
 --     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -284,7 +311,7 @@ allocateMemory :: forall a io
                   -- permitted by the implementation.
                   (MemoryAllocateInfo a)
                -> -- | @pAllocator@ controls host memory allocation as described in the
-                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                  -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                   -- chapter.
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io (DeviceMemory)
@@ -345,14 +372,14 @@ foreign import ccall
 --
 -- How memory objects are bound to Images and Buffers is described in
 -- detail in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association Resource Memory Association>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-association Resource Memory Association>
 -- section.
 --
 -- If a memory object is mapped at the time it is freed, it is implicitly
 -- unmapped.
 --
 -- As described
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-unmap-does-not-flush below>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-device-unmap-does-not-flush below>,
 -- host writes are not implicitly flushed when the memory object is
 -- unmapped, but the implementation /must/ guarantee that writes that have
 -- not been flushed do not affect any other memory.
@@ -394,7 +421,7 @@ freeMemory :: forall io
            -> -- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object to be freed.
               DeviceMemory
            -> -- | @pAllocator@ controls host memory allocation as described in the
-              -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+              -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
               -- chapter.
               ("allocator" ::: Maybe AllocationCallbacks)
            -> io ()
@@ -444,7 +471,7 @@ foreign import ccall
 -- range has completed before the host reads from or writes to that range,
 -- and that any previously submitted command that reads from that range has
 -- completed before the host writes to that region (see
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-submission-host-writes here>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-host-writes here>
 -- for details on fulfilling such a guarantee). If the device memory was
 -- allocated without the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_COHERENT_BIT'
@@ -461,12 +488,12 @@ foreign import ccall
 --
 -- It is important for the application developer to become meticulously
 -- familiar with all of the mechanisms described in the chapter on
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization Synchronization and Cache Control>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization Synchronization and Cache Control>
 -- as they are crucial to maintaining memory access ordering.
 --
 -- Calling 'mapMemory' is equivalent to calling
--- 'Vulkan.Extensions.VK_KHR_map_memory2.mapMemory2KHR' with an empty
--- @pNext@ chain.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.mapMemory2' with
+-- an empty @pNext@ chain.
 --
 -- == Valid Usage
 --
@@ -525,11 +552,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_MEMORY_MAP_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_MEMORY_MAP_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -599,8 +630,8 @@ foreign import ccall
 -- = Description
 --
 -- Calling 'unmapMemory' is equivalent to calling
--- 'Vulkan.Extensions.VK_KHR_map_memory2.unmapMemory2KHR' with an empty
--- @pNext@ chain and @flags@ set to zero.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.unmapMemory2'
+-- with an empty @pNext@ chain and @flags@ set to zero.
 --
 -- == Valid Usage
 --
@@ -659,16 +690,14 @@ foreign import ccall
 -- ranges described by @pMemoryRanges@ are made available to the host
 -- memory domain, such that they /can/ be made available to the device
 -- memory domain via
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
 -- using the 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>.
 --
 -- The first
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all host operations that happened-before it, as defined by the
 -- host memory model.
---
--- Note
 --
 -- Some systems allow writes that do not directly integrate with the host
 -- memory model; these have to be synchronized by the application manually.
@@ -676,18 +705,16 @@ foreign import ccall
 -- these happen-before submission, applications should call @_mm_sfence()@.
 --
 -- The second
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- is empty.
 --
 -- The first
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- includes host writes to the specified memory ranges.
---
--- Note
 --
 -- When a host write to a memory location is made available in this way,
 -- each whole aligned set of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nonCoherentAtomSize nonCoherentAtomSize>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-nonCoherentAtomSize nonCoherentAtomSize>
 -- bytes that the memory location exists in will also be made available as
 -- if they were written by the host. For example, with a
 -- @nonCoherentAtomSize@ of 128, if an application writes to the first byte
@@ -698,7 +725,7 @@ foreign import ccall
 -- races.
 --
 -- The second
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is empty.
 --
 -- Unmapping non-coherent memory does not implicitly flush the host mapped
@@ -720,9 +747,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -774,21 +805,19 @@ foreign import ccall
 -- available to the host memory domain using the
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT' and
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_READ_BIT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access types>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access types>,
 -- are made visible to the host. If a range of non-coherent memory is
 -- written by the host and then invalidated without first being flushed,
 -- its contents are undefined.
 --
 -- The first
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all host operations that happened-before it, as defined by the
 -- host memory model.
 --
--- Note
---
 -- This function does not synchronize with device operations directly -
 -- other host
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization synchronization operations>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization synchronization operations>
 -- that depend on device operations such as
 -- 'Vulkan.Core10.Fence.waitForFences' must be executed beforehand. So for
 -- any non-coherent device write to be made visible to the host, there has
@@ -799,30 +828,28 @@ foreign import ccall
 -- 2.  Device memory barrier including host reads in its second scope
 --
 -- 3.  Signal on the device (e.g. a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>)
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences-signaling fence signal operation>)
 --
 -- 4.  Wait on the host (e.g. 'Vulkan.Core10.Fence.waitForFences')
 --
 -- 5.  'invalidateMappedMemoryRanges'
 --
 -- The second
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all host operations that happen-after it, as defined by the
 -- host memory model.
 --
 -- The first
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is empty.
 --
 -- The second
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- includes host reads to the specified memory ranges.
---
--- Note
 --
 -- When a device write to a memory location is made visible to the host in
 -- this way, each whole aligned set of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nonCoherentAtomSize nonCoherentAtomSize>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-nonCoherentAtomSize nonCoherentAtomSize>
 -- bytes that the memory location exists in will also be made visible as if
 -- they were written by the device. For example, with a
 -- @nonCoherentAtomSize@ of 128, if an application writes to the first byte
@@ -842,9 +869,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -972,12 +1003,21 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- -   'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ImportScreenBufferInfoQNX'
 --     with a non-@NULL@ @buffer@ value
 --
+-- -   'Vulkan.Extensions.VK_EXT_external_memory_metal.ImportMemoryMetalHandleInfoEXT'
+--     with a non-zero @handleType@ value
+--
 -- If the parameters define an import operation and the external handle
 -- type is
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT',
 -- or
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
+-- @allocationSize@ is ignored. The implementation /must/ query the size of
+-- these allocations from the OS.
+--
+-- If the parameters define an import operation and the external handle
+-- type is
+-- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT',
 -- @allocationSize@ is ignored. The implementation /must/ query the size of
 -- these allocations from the OS.
 --
@@ -1030,12 +1070,12 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-07897# If the parameters
 --     do not define an
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import or export operation>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-import-operation import or export operation>,
 --     @allocationSize@ /must/ be greater than @0@
 --
 -- -   #VUID-VkMemoryAllocateInfo-None-06657# The parameters /must/ not
 --     define more than one
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import operation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-import-operation import operation>
 --
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-07899# If the parameters
 --     define an export operation and the handle type is not
@@ -1142,6 +1182,20 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     structure with either its @image@ or @buffer@ member set to a value
 --     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
+-- -   #VUID-VkMemoryAllocateInfo-pNext-09858# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
+--     structure, and any of the handle types specified in
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
+--     require a dedicated allocation, as reported by
+--     'Vulkan.Extensions.VK_ARM_tensors.getPhysicalDeviceExternalTensorPropertiesARM'
+--     in
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM'::@externalMemoryProperties.externalMemoryFeatures@,
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Extensions.VK_ARM_tensors.MemoryDedicatedAllocateInfoTensorARM'
+--     structure with its @tensor@ member set to a value other than
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-VkMemoryAllocateInfo-pNext-00640# If the @pNext@ chain
 --     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
@@ -1207,7 +1261,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR'
 --
 -- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-01872# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-protectedMemory protectedMemory>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-protectedMemory protectedMemory>
 --     feature is not enabled, the 'MemoryAllocateInfo'::@memoryTypeIndex@
 --     /must/ not indicate a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
@@ -1354,7 +1408,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', each bit set in the usage
 --     of @image@ /must/ be listed in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
 --     and if there is a corresponding @AHARDWAREBUFFER_USAGE@ bit listed
 --     that bit /must/ be included in the Android hardware buffer’s
 --     @AHardwareBuffer_Desc@::@usage@
@@ -1386,7 +1440,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     the QNX Screen’s buffer /must/ be a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-08945# If the parameters define an
 --     import operation, the external handle is an QNX Screen buffer, and
@@ -1411,6 +1465,30 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.Screen_buffer'
 --     /must/ be identical
 --
+-- -   #VUID-VkMemoryAllocateInfo-pNext-10395# If the parameters define an
+--     import operation and the external handle is a
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT',
+--     then @pNext@ /must/ include a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-10396# If the parameters define an
+--     import operation, the external handle is a Metal MTLTexture, and the
+--     @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with @image@ that is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', the width, height, array
+--     layer dimensions, and mipmap levels of @image@ and the Metal
+--     MTLTexture’s /must/ be identical
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-10397# If the parameters define an
+--     import operation, the external handle is a Metal MTLTexture, and the
+--     @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with @image@ that is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @allocationSize@ /must/ be
+--     @0@
+--
 -- -   #VUID-VkMemoryAllocateInfo-opaqueCaptureAddress-03329# If
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     is not zero,
@@ -1423,7 +1501,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     includes
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkMemoryAllocateInfo-flags-03331# If
@@ -1431,7 +1509,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     includes
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-03332# If the @pNext@ chain
@@ -1491,20 +1569,23 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA',
 --     'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_external_memory_metal.ImportMemoryMetalHandleInfoEXT',
 --     'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
 --     'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalBufferInfoEXT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImportNativeBufferInfoOHOS VkImportNativeBufferInfoOHOS>,
 --     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ImportScreenBufferInfoQNX',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo',
+--     'Vulkan.Extensions.VK_ARM_tensors.MemoryDedicatedAllocateInfoTensorARM',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo',
 --     or
 --     'Vulkan.Extensions.VK_EXT_memory_priority.MemoryPriorityAllocateInfoEXT'
 --
 -- -   #VUID-VkMemoryAllocateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique, with the exception of
---     structures of type
+--     structure in the @pNext@ chain /must/ be unique, with the exception
+--     of structures of type
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- = See Also
@@ -1535,6 +1616,7 @@ instance Extensible MemoryAllocateInfo where
   getNext MemoryAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryAllocateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @MemoryDedicatedAllocateInfoTensorARM = Just f
     | Just Refl <- eqT @e @ImportScreenBufferInfoQNX = Just f
     | Just Refl <- eqT @e @ImportMetalBufferInfoEXT = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
@@ -1545,6 +1627,7 @@ instance Extensible MemoryAllocateInfo where
     | Just Refl <- eqT @e @ImportMemoryHostPointerInfoEXT = Just f
     | Just Refl <- eqT @e @MemoryDedicatedAllocateInfo = Just f
     | Just Refl <- eqT @e @MemoryAllocateFlagsInfo = Just f
+    | Just Refl <- eqT @e @ImportMemoryMetalHandleInfoEXT = Just f
     | Just Refl <- eqT @e @ImportMemoryFdInfoKHR = Just f
     | Just Refl <- eqT @e @ImportMemoryZirconHandleInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoKHR = Just f

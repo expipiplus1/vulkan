@@ -74,7 +74,7 @@ foreign import ccall
 --     in @queryPool@
 --
 -- -   #VUID-vkResetQueryPool-None-02665# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-hostQueryReset hostQueryReset>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkResetQueryPool-firstQuery-02741# Submitted commands that
@@ -142,9 +142,13 @@ resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceHostQueryResetFeatures' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceHostQueryResetFeatures', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

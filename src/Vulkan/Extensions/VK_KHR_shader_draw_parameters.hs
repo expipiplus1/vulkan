@@ -97,7 +97,7 @@
 --
 -- All functionality in this extension is included in core Vulkan 1.1.
 -- However, the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderDrawParameters shaderDrawParameters>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderDrawParameters shaderDrawParameters>
 -- feature bit was added to distinguish whether it is actually available or
 -- not.
 --
@@ -109,15 +109,15 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-baseinstance BaseInstance>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-baseinstance BaseInstance>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-basevertex BaseVertex>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-basevertex BaseVertex>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-drawindex DrawIndex>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-drawindex DrawIndex>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DrawParameters DrawParameters>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-DrawParameters DrawParameters>
 --
 -- == Issues
 --
@@ -151,7 +151,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_draw_parameters Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_shader_draw_parameters Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

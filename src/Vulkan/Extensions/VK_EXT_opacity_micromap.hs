@@ -83,7 +83,7 @@
 -- values. These opacity values can control if a ray hitting that
 -- subtriangle is treated as an opaque hit, complete miss, or possible hit,
 -- depending on the controls described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
 --
 -- This extension provides:
 --
@@ -152,7 +152,8 @@
 -- -   'MicromapVersionInfoEXT'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR':
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
+--     'Vulkan.Extensions.VK_AMDX_dense_geometry_format.AccelerationStructureDenseGeometryFormatTrianglesDataAMDX':
 --
 --     -   'AccelerationStructureTrianglesOpacityMicromapEXT'
 --
@@ -211,18 +212,28 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT'
 --
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryInstanceFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT'
+--     -   'GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT'
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT'
+--
+--     -   'GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
@@ -380,7 +391,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_opacity_micromap Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_opacity_micromap Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -399,6 +410,11 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
                                                   , writeMicromapsPropertiesEXT
                                                   , getDeviceMicromapCompatibilityEXT
                                                   , getMicromapBuildSizesEXT
+                                                  , pattern GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT
+                                                  , pattern GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT
+                                                  , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT
+                                                  , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT
+                                                  , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT
                                                   , MicromapBuildInfoEXT(..)
                                                   , MicromapCreateInfoEXT(..)
                                                   , MicromapVersionInfoEXT(..)
@@ -570,6 +586,16 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_MEMORY_TO_MICROMAP_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_MICROMAP_INFO_EXT))
@@ -632,17 +658,17 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateMicromapEXT-micromap-07430# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromap micromap>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCreateMicromapEXT-deviceAddress-07431# If
 --     'MicromapCreateInfoEXT'::@deviceAddress@ is not zero, the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromapCaptureReplay micromapCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapCaptureReplay micromapCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCreateMicromapEXT-device-07432# If @device@ was created with
 --     multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -661,6 +687,9 @@ foreign import ccall
 -- -   #VUID-vkCreateMicromapEXT-pMicromap-parameter# @pMicromap@ /must/ be
 --     a valid pointer to a 'Vulkan.Extensions.Handles.MicromapEXT' handle
 --
+-- -   #VUID-vkCreateMicromapEXT-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -669,9 +698,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -681,14 +714,13 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.MicromapEXT'
 createMicromapEXT :: forall io
                    . (MonadIO io)
-                  => -- | @device@ is the logical device that creates the acceleration structure
-                     -- object.
+                  => -- | @device@ is the logical device that creates the micromap object.
                      Device
                   -> -- | @pCreateInfo@ is a pointer to a 'MicromapCreateInfoEXT' structure
                      -- containing parameters affecting creation of the micromap.
                      MicromapCreateInfoEXT
                   -> -- | @pAllocator@ controls host memory allocation as described in the
-                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (MicromapEXT)
@@ -745,32 +777,32 @@ foreign import ccall
 --
 -- Accesses to the micromap scratch buffers as identified by the
 -- 'MicromapBuildInfoEXT'::@scratchData@ buffer device addresses /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of ('Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT' |
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT').
 -- Accesses to 'MicromapBuildInfoEXT'::@dstMicromap@ /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT'.
 --
 -- Accesses to other input buffers as identified by any used values of
 -- 'MicromapBuildInfoEXT'::@data@ or
 -- 'MicromapBuildInfoEXT'::@triangleArray@ /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_SHADER_READ_BIT'.
 --
 -- == Valid Usage
@@ -828,26 +860,30 @@ foreign import ccall
 --     members of all @pInfos@[i] are queried /must/ have been created with
 --     the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-07511# For each element of
 --     @pInfos@[i] the buffer from which the buffer device address
 --     @pInfos@[i].@scratchData.deviceAddress@ is queried /must/ have been
---     created with
+--     created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-07512# For each element of
---     @pInfos@, its @scratchData.deviceAddress@, @data.deviceAddress@, and
---     @triangleArray.deviceAddress@ members /must/ be valid device
---     addresses obtained from
---     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress'
+--     @pInfos@, if the value of
+--     'MicromapBuildSizesInfoEXT'::@buildScratchSize@, returned from a
+--     call to 'getMicromapBuildSizesEXT' with an identical
+--     'MicromapBuildInfoEXT' structure, is not @0@,
+--     @scratchData.deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress'
 --
--- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-07513# For each element of
---     @pInfos@, if @scratchData.deviceAddress@, @data.deviceAddress@, or
---     @triangleArray.deviceAddress@ is the address of a non-sparse buffer
---     then it /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-10896# For each element of
+--     @pInfos@, @data.deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress'
+--
+-- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-10897# For each element of
+--     @pInfos@, @triangleArray.deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress'
 --
 -- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-07514# For each element of
 --     @pInfos@, its @scratchData.deviceAddress@ member /must/ be a
@@ -874,10 +910,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBuildMicromapsEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
 --
 -- -   #VUID-vkCmdBuildMicromapsEXT-renderpass# This command /must/ only be
 --     called outside of a render pass instance
+--
+-- -   #VUID-vkCmdBuildMicromapsEXT-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdBuildMicromapsEXT-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -899,9 +939,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBuildMicromapsEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1001,17 +1046,17 @@ foreign import ccall
 --     @pInfos@[i].@triangleArray.hostAddress@ /must/ be valid host memory
 --
 -- -   #VUID-vkBuildMicromapsEXT-micromapHostCommands-07555# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkBuildMicromapsEXT-pInfos-07556# If @pInfos@[i].@mode@ is
---     'BUILD_MICROMAP_MODE_BUILD_EXT', all addresses between
---     @pInfos@[i].@scratchData.hostAddress@ and
+--     'BUILD_MICROMAP_MODE_BUILD_EXT', and N is not @0@, then all
+--     addresses between @pInfos@[i].@scratchData.hostAddress@ and
 --     @pInfos@[i].@scratchData.hostAddress@ + N - 1 /must/ be valid host
---     memory, where N is given by the @buildScratchSize@ member of the
---     'MicromapBuildSizesInfoEXT' structure returned from a call to
---     'getMicromapBuildSizesEXT' with an identical 'MicromapBuildInfoEXT'
---     structure and primitive count
+--     memory, where N is given by the value of
+--     'MicromapBuildSizesInfoEXT'::@buildScratchSize@ returned from a call
+--     to 'getMicromapBuildSizesEXT' with an identical
+--     'MicromapBuildInfoEXT' structure
 --
 -- -   #VUID-vkBuildMicromapsEXT-pInfos-07557# For each element of
 --     @pInfos@, the @buffer@ used to create its @dstMicromap@ member
@@ -1043,17 +1088,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_DEFERRED_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1067,7 +1116,7 @@ buildMicromapsEXT :: forall io
                      Device
                   -> -- | @deferredOperation@ is an optional
                      -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#deferred-host-operations-requesting request deferral>
                      -- for this command.
                      DeferredOperationKHR
                   -> -- | @pInfos@ is a pointer to an array of @infoCount@ 'MicromapBuildInfoEXT'
@@ -1100,6 +1149,10 @@ foreign import ccall
 -- | vkDestroyMicromapEXT - Destroy a micromap object
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkDestroyMicromapEXT-micromap-10382# The
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
+--     feature /must/ be enabled
 --
 -- -   #VUID-vkDestroyMicromapEXT-micromap-07441# All submitted commands
 --     that refer to @micromap@ /must/ have completed execution
@@ -1146,7 +1199,7 @@ destroyMicromapEXT :: forall io
                    -> -- | @micromap@ is the micromap to destroy.
                       MicromapEXT
                    -> -- | @pAllocator@ controls host memory allocation as described in the
-                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                       -- chapter.
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
@@ -1180,12 +1233,12 @@ foreign import ccall
 -- micromap in the manner specified by @pInfo->mode@.
 --
 -- Accesses to @pInfo->src@ and @pInfo->dst@ /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT' or
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT' as
 -- appropriate.
@@ -1212,10 +1265,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMicromapEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
 --
 -- -   #VUID-vkCmdCopyMicromapEXT-renderpass# This command /must/ only be
 --     called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyMicromapEXT-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyMicromapEXT-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -1234,9 +1291,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyMicromapEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1290,7 +1352,7 @@ foreign import ccall
 --     @pInfo->dst@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyMicromapEXT-micromapHostCommands-07560# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMicromapEXT-buffer-07561# The @buffer@ used to create
@@ -1322,17 +1384,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_DEFERRED_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1345,7 +1411,7 @@ copyMicromapEXT :: forall io
                    Device
                 -> -- | @deferredOperation@ is an optional
                    -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#deferred-host-operations-requesting request deferral>
                    -- for this command.
                    DeferredOperationKHR
                 -> -- | @pInfo@ is a pointer to a 'CopyMicromapInfoEXT' structure defining the
@@ -1378,12 +1444,12 @@ foreign import ccall
 -- = Description
 --
 -- Accesses to @pInfo->src@ /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT'.
 -- Accesses to the buffer indicated by @pInfo->dst.deviceAddress@ /must/ be
 -- synchronized with the
@@ -1411,8 +1477,8 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMicromapToMemoryEXT-pInfo-07536#
---     @pInfo->dst.deviceAddress@ /must/ be a valid device address for a
---     buffer bound to device memory
+--     @pInfo->dst.deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress'
 --
 -- -   #VUID-vkCmdCopyMicromapToMemoryEXT-pInfo-07537#
 --     @pInfo->dst.deviceAddress@ /must/ be aligned to @256@ bytes
@@ -1441,10 +1507,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMicromapToMemoryEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
 --
 -- -   #VUID-vkCmdCopyMicromapToMemoryEXT-renderpass# This command /must/
 --     only be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyMicromapToMemoryEXT-suspended# This command /must/
+--     not be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyMicromapToMemoryEXT-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -1463,9 +1533,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyMicromapToMemoryEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1528,7 +1603,7 @@ foreign import ccall
 --     @pInfo->dst.hostAddress@ /must/ be aligned to 16 bytes
 --
 -- -   #VUID-vkCopyMicromapToMemoryEXT-micromapHostCommands-07571# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMicromapToMemoryEXT-buffer-07572# The @buffer@ used to
@@ -1556,17 +1631,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_DEFERRED_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1580,7 +1659,7 @@ copyMicromapToMemoryEXT :: forall io
                            Device
                         -> -- | @deferredOperation@ is an optional
                            -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                           -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                           -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#deferred-host-operations-requesting request deferral>
                            -- for this command.
                            DeferredOperationKHR
                         -> -- | @pInfo@ is a pointer to a 'CopyMicromapToMemoryInfoEXT' structure
@@ -1613,12 +1692,12 @@ foreign import ccall
 -- = Description
 --
 -- Accesses to @pInfo->dst@ /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT'.
 -- Accesses to the buffer indicated by @pInfo->src.deviceAddress@ /must/ be
 -- synchronized with the
@@ -1632,8 +1711,8 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMemoryToMicromapEXT-pInfo-07543#
---     @pInfo->src.deviceAddress@ /must/ be a valid device address for a
---     buffer bound to device memory
+--     @pInfo->src.deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress'
 --
 -- -   #VUID-vkCmdCopyMemoryToMicromapEXT-pInfo-07544#
 --     @pInfo->src.deviceAddress@ /must/ be aligned to @256@ bytes
@@ -1662,10 +1741,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMemoryToMicromapEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
 --
 -- -   #VUID-vkCmdCopyMemoryToMicromapEXT-renderpass# This command /must/
 --     only be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyMemoryToMicromapEXT-suspended# This command /must/
+--     not be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyMemoryToMicromapEXT-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -1684,9 +1767,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyMemoryToMicromapEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1746,7 +1834,7 @@ foreign import ccall
 --     create @pInfo->dst@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyMemoryToMicromapEXT-micromapHostCommands-07566# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMemoryToMicromapEXT-buffer-07567# The @buffer@ used to
@@ -1774,17 +1862,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_DEFERRED_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1798,7 +1890,7 @@ copyMemoryToMicromapEXT :: forall io
                            Device
                         -> -- | @deferredOperation@ is an optional
                            -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                           -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                           -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#deferred-host-operations-requesting request deferral>
                            -- for this command.
                            DeferredOperationKHR
                         -> -- | @pInfo@ is a pointer to a 'CopyMemoryToMicromapInfoEXT' structure
@@ -1832,12 +1924,12 @@ foreign import ccall
 -- = Description
 --
 -- Accesses to any of the micromaps listed in @pMicromaps@ /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT'.
 --
 -- -   If @queryType@ is
@@ -1906,10 +1998,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-renderpass# This command
 --     /must/ only be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-suspended# This command
+--     /must/ not be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -1936,9 +2032,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdWriteMicromapsPropertiesEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -2040,7 +2141,7 @@ foreign import ccall
 --     host-visible device memory
 --
 -- -   #VUID-vkWriteMicromapsPropertiesEXT-micromapHostCommands-07578# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkWriteMicromapsPropertiesEXT-buffer-07579# The @buffer@ used
@@ -2081,9 +2182,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -2145,7 +2250,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetDeviceMicromapCompatibilityEXT-micromap-07551# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromap micromap>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2240,12 +2345,12 @@ foreign import ccall
 --     @device@
 --
 -- -   #VUID-vkGetMicromapBuildSizesEXT-micromap-07439# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromap micromap>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetMicromapBuildSizesEXT-device-07440# If @device@ was
 --     created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2299,6 +2404,26 @@ getMicromapBuildSizesEXT device buildType buildInfo = liftIO . evalContT $ do
   pure $ (pSizeInfo)
 
 
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT"
+pattern GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT = GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT"
+pattern GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT = GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT = BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT = BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT = BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT
+
+
 -- | VkMicromapBuildInfoEXT - Structure specifying the data used to build a
 -- micromap
 --
@@ -2327,11 +2452,11 @@ getMicromapBuildSizesEXT device buildType buildInfo = liftIO . evalContT $ do
 -- element for 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' and is packed from LSB
 -- to MSB in each byte. The data at each index in those bytes is
 -- interpreted as discussed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
 --
 -- For displacement micromaps, the data at @data@ is interpreted as
 -- discussed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
 --
 -- == Valid Usage
 --
@@ -2407,13 +2532,13 @@ data MicromapBuildInfoEXT = MicromapBuildInfoEXT
   , -- | @pUsageCounts@ is a pointer to an array of 'MicromapUsageEXT'
     -- structures.
     usageCounts :: Vector MicromapUsageEXT
-  , -- | @data@ is the device or host address to memory which contains the data
+  , -- | @data@ is the device or host address of memory which contains the data
     -- for the micromap.
     data' :: DeviceOrHostAddressConstKHR
-  , -- | @scratchData@ is the device or host address to memory that will be used
+  , -- | @scratchData@ is the device or host address of memory that will be used
     -- as scratch memory for the build.
     scratchData :: DeviceOrHostAddressKHR
-  , -- | @triangleArray@ is the device or host address to memory containing the
+  , -- | @triangleArray@ is the device or host address of memory containing the
     -- 'MicromapTriangleEXT' data
     triangleArray :: DeviceOrHostAddressConstKHR
   , -- | @triangleArrayStride@ is the stride in bytes between each element of
@@ -2508,8 +2633,8 @@ instance Zero MicromapBuildInfoEXT where
 --
 -- Implementations are expected to separate such buffers in the GPU address
 -- space so normal allocations will avoid using these addresses.
--- Apps\/tools should avoid mixing app-provided and implementation-provided
--- addresses for buffers created with
+-- Applications and tools should avoid mixing application-provided and
+-- implementation-provided addresses for buffers created with
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 -- to avoid address space allocation conflicts.
 --
@@ -2528,15 +2653,16 @@ instance Zero MicromapBuildInfoEXT where
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   #VUID-VkMicromapCreateInfoEXT-buffer-07435# @buffer@ /must/ have
---     been created with a @usage@ value containing
+--     been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT'
+--     usage flag set
 --
 -- -   #VUID-VkMicromapCreateInfoEXT-buffer-07436# @buffer@ /must/ not have
 --     been created with
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkMicromapCreateInfoEXT-offset-07437# The sum of @offset@ and
---     @size@ /must/ be less than the size of @buffer@
+--     @size@ /must/ be less than or equal to the size of @buffer@
 --
 -- -   #VUID-VkMicromapCreateInfoEXT-offset-07438# @offset@ /must/ be a
 --     multiple of @256@ bytes
@@ -2556,6 +2682,10 @@ instance Zero MicromapBuildInfoEXT where
 --
 -- -   #VUID-VkMicromapCreateInfoEXT-type-parameter# @type@ /must/ be a
 --     valid 'MicromapTypeEXT' value
+--
+-- -   #VUID-VkMicromapCreateInfoEXT-deviceAddress-parameter# If
+--     @deviceAddress@ is not @0@, @deviceAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
 --
 -- = See Also
 --
@@ -2580,7 +2710,7 @@ data MicromapCreateInfoEXT = MicromapCreateInfoEXT
     -- will be created.
     type' :: MicromapTypeEXT
   , -- | @deviceAddress@ is the device address requested for the micromap if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-micromapCaptureReplay micromapCaptureReplay>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapCaptureReplay micromapCaptureReplay>
     -- feature is being used.
     deviceAddress :: DeviceAddress
   }
@@ -2847,7 +2977,7 @@ instance Zero CopyMicromapInfoEXT where
 data CopyMicromapToMemoryInfoEXT = CopyMicromapToMemoryInfoEXT
   { -- | @src@ is the source micromap for the copy
     src :: MicromapEXT
-  , -- | @dst@ is the device or host address to memory which is the target for
+  , -- | @dst@ is the device or host address of memory which is the target for
     -- the copy
     dst :: DeviceOrHostAddressKHR
   , -- | @mode@ is a 'CopyMicromapModeEXT' value specifying additional operations
@@ -2928,7 +3058,7 @@ instance Zero CopyMicromapToMemoryInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdCopyMemoryToMicromapEXT', 'copyMemoryToMicromapEXT'
 data CopyMemoryToMicromapInfoEXT = CopyMemoryToMicromapInfoEXT
-  { -- | @src@ is the device or host address to memory containing the source data
+  { -- | @src@ is the device or host address of memory containing the source data
     -- for the copy.
     src :: DeviceOrHostAddressConstKHR
   , -- | @dst@ is the target micromap for the copy.
@@ -3249,9 +3379,13 @@ instance Zero MicromapTriangleEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceOpacityMicromapFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceOpacityMicromapFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -3398,15 +3532,21 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 --
 -- If 'AccelerationStructureTrianglesOpacityMicromapEXT' is included in the
 -- @pNext@ chain of a
+-- 'Vulkan.Extensions.VK_AMDX_dense_geometry_format.AccelerationStructureDenseGeometryFormatTrianglesDataAMDX'
+-- or
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR'
 -- structure, that geometry will reference that micromap.
 --
 -- For each triangle in the geometry, the acceleration structure build
--- fetches an index from @indexBuffer@ using @indexType@ and @indexStride@.
+-- fetches an index from @indexBuffer@ using @indexType@ and @indexStride@
+-- if present. If @indexBuffer@ is @NULL@ then the index used is the index
+-- of the triangle in the geometry.
+--
 -- If that value is the unsigned cast of one of the values from
 -- 'OpacityMicromapSpecialIndexEXT' then that triangle behaves as described
 -- for that special value in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
+--
 -- Otherwise that triangle uses the opacity micromap information from
 -- @micromap@ at that index plus @baseTriangle@.
 --
@@ -3426,6 +3566,23 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 -- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-pUsageCounts-07335#
 --     Only one of @pUsageCounts@ or @ppUsageCounts@ /can/ be a valid
 --     pointer, the other /must/ be @NULL@
+--
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-indexType-10719#
+--     @indexType@ /must/ be
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
+--
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-indexType-10722#
+--     If @indexType@ is not
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then
+--     @indexStride@ /must/ be a multiple of the size in bytes of
+--     @indexType@
+--
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-indexType-10723#
+--     If @indexType@ is not
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then
+--     @indexStride@ /must/ be less than or equal to 232-1
 --
 -- == Valid Usage (Implicit)
 --
@@ -3462,20 +3619,22 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AccelerationStructureTrianglesOpacityMicromapEXT = AccelerationStructureTrianglesOpacityMicromapEXT
   { -- | @indexType@ is the type of triangle indices used when indexing this
-    -- micromap
+    -- micromap.
     indexType :: IndexType
-  , -- | @indexBuffer@ is the address containing the triangle indices
+  , -- | @indexBuffer@ is a device or host address of memory containing the
+    -- triangle indices. When @indexType@ is
+    -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR' it /must/ be @NULL@.
     indexBuffer :: DeviceOrHostAddressConstKHR
-  , -- | @indexStride@ is the byte stride between triangle indices
+  , -- | @indexStride@ is the byte stride between triangle indices.
     indexStride :: DeviceSize
   , -- | @baseTriangle@ is the base value added to the non-negative triangle
-    -- indices
+    -- indices.
     baseTriangle :: Word32
   , -- | @pUsageCounts@ is a pointer to an array of 'MicromapUsageEXT'
     -- structures.
     usageCounts :: Vector MicromapUsageEXT
   , -- | @micromap@ is the handle to the micromap object to include in this
-    -- geometry
+    -- geometry.
     micromap :: MicromapEXT
   }
   deriving (Typeable)
@@ -3524,6 +3683,14 @@ instance Zero AccelerationStructureTrianglesOpacityMicromapEXT where
 
 -- | VkMicromapTypeEXT - Type of micromap
 --
+-- = Description
+--
+-- -   'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' is a micromap containing data
+--     to control the opacity of a triangle.
+--
+-- -   'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' is a micromap containing
+--     data to control the displacement of subtriangles within a triangle.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
@@ -3531,12 +3698,10 @@ instance Zero AccelerationStructureTrianglesOpacityMicromapEXT where
 newtype MicromapTypeEXT = MicromapTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' is a micromap containing data to
--- control the opacity of a triangle.
+-- No documentation found for Nested "VkMicromapTypeEXT" "VK_MICROMAP_TYPE_OPACITY_MICROMAP_EXT"
 pattern MICROMAP_TYPE_OPACITY_MICROMAP_EXT = MicromapTypeEXT 0
 
--- | 'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' is a micromap containing data
--- to control the displacement of subtriangles within a triangle.
+-- No documentation found for Nested "VkMicromapTypeEXT" "VK_MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV"
 pattern MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV = MicromapTypeEXT 1000397000
 
 {-# COMPLETE
@@ -3585,6 +3750,16 @@ type BuildMicromapFlagsEXT = BuildMicromapFlagBitsEXT
 -- | VkBuildMicromapFlagBitsEXT - Bitmask specifying additional parameters
 -- for micromap builds
 --
+-- = Description
+--
+-- -   'BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT' specifies that the given
+--     micromap build /should/ prioritize trace performance over build
+--     time.
+--
+-- -   'BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT' specifies that the given
+--     micromap build /should/ prioritize build time over trace
+--     performance.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
@@ -3592,12 +3767,10 @@ type BuildMicromapFlagsEXT = BuildMicromapFlagBitsEXT
 newtype BuildMicromapFlagBitsEXT = BuildMicromapFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT' specifies that the given
--- micromap build /should/ prioritize trace performance over build time.
+-- No documentation found for Nested "VkBuildMicromapFlagBitsEXT" "VK_BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT"
 pattern BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT = BuildMicromapFlagBitsEXT 0x00000001
 
--- | 'BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT' specifies that the given
--- micromap build /should/ prioritize build time over trace performance.
+-- No documentation found for Nested "VkBuildMicromapFlagBitsEXT" "VK_BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT"
 pattern BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT = BuildMicromapFlagBitsEXT 0x00000002
 
 -- No documentation found for Nested "VkBuildMicromapFlagBitsEXT" "VK_BUILD_MICROMAP_ALLOW_COMPACTION_BIT_EXT"
@@ -3647,6 +3820,12 @@ type MicromapCreateFlagsEXT = MicromapCreateFlagBitsEXT
 -- | VkMicromapCreateFlagBitsEXT - Bitmask specifying additional creation
 -- parameters for micromap
 --
+-- = Description
+--
+-- -   'MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT' specifies
+--     that the micromap’s address /can/ be saved and reused on a
+--     subsequent run.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
@@ -3654,8 +3833,7 @@ type MicromapCreateFlagsEXT = MicromapCreateFlagBitsEXT
 newtype MicromapCreateFlagBitsEXT = MicromapCreateFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT' specifies that
--- the micromap’s address /can/ be saved and reused on a subsequent run.
+-- No documentation found for Nested "VkMicromapCreateFlagBitsEXT" "VK_MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT"
 pattern MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT = MicromapCreateFlagBitsEXT 0x00000001
 
 conNameMicromapCreateFlagBitsEXT :: String
@@ -3691,6 +3869,25 @@ instance Read MicromapCreateFlagBitsEXT where
 
 -- | VkCopyMicromapModeEXT - Micromap copy mode
 --
+-- = Description
+--
+-- -   'COPY_MICROMAP_MODE_CLONE_EXT' creates a direct copy of the micromap
+--     specified in @src@ into the one specified by @dst@. The @dst@
+--     micromap /must/ have been created with the same parameters as @src@.
+--
+-- -   'COPY_MICROMAP_MODE_SERIALIZE_EXT' serializes the micromap to a
+--     semi-opaque format which can be reloaded on a compatible
+--     implementation.
+--
+-- -   'COPY_MICROMAP_MODE_DESERIALIZE_EXT' deserializes the semi-opaque
+--     serialization format in the buffer to the micromap.
+--
+-- -   'COPY_MICROMAP_MODE_COMPACT_EXT' creates a more compact version of a
+--     micromap @src@ into @dst@. The micromap @dst@ /must/ have been
+--     created with a size at least as large as that returned by
+--     'cmdWriteMicromapsPropertiesEXT' after the build of the micromap
+--     specified by @src@.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
@@ -3699,24 +3896,16 @@ instance Read MicromapCreateFlagBitsEXT where
 newtype CopyMicromapModeEXT = CopyMicromapModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COPY_MICROMAP_MODE_CLONE_EXT' creates a direct copy of the micromap
--- specified in @src@ into the one specified by @dst@. The @dst@ micromap
--- /must/ have been created with the same parameters as @src@.
+-- No documentation found for Nested "VkCopyMicromapModeEXT" "VK_COPY_MICROMAP_MODE_CLONE_EXT"
 pattern COPY_MICROMAP_MODE_CLONE_EXT = CopyMicromapModeEXT 0
 
--- | 'COPY_MICROMAP_MODE_SERIALIZE_EXT' serializes the micromap to a
--- semi-opaque format which can be reloaded on a compatible implementation.
+-- No documentation found for Nested "VkCopyMicromapModeEXT" "VK_COPY_MICROMAP_MODE_SERIALIZE_EXT"
 pattern COPY_MICROMAP_MODE_SERIALIZE_EXT = CopyMicromapModeEXT 1
 
--- | 'COPY_MICROMAP_MODE_DESERIALIZE_EXT' deserializes the semi-opaque
--- serialization format in the buffer to the micromap.
+-- No documentation found for Nested "VkCopyMicromapModeEXT" "VK_COPY_MICROMAP_MODE_DESERIALIZE_EXT"
 pattern COPY_MICROMAP_MODE_DESERIALIZE_EXT = CopyMicromapModeEXT 2
 
--- | 'COPY_MICROMAP_MODE_COMPACT_EXT' creates a more compact version of a
--- micromap @src@ into @dst@. The micromap @dst@ /must/ have been created
--- with a size at least as large as that returned by
--- 'cmdWriteMicromapsPropertiesEXT' after the build of the micromap
--- specified by @src@.
+-- No documentation found for Nested "VkCopyMicromapModeEXT" "VK_COPY_MICROMAP_MODE_COMPACT_EXT"
 pattern COPY_MICROMAP_MODE_COMPACT_EXT = CopyMicromapModeEXT 3
 
 {-# COMPLETE
@@ -3770,6 +3959,11 @@ instance Read CopyMicromapModeEXT where
 -- | VkBuildMicromapModeEXT - Enum specifying the type of build operation to
 -- perform
 --
+-- = Description
+--
+-- -   'BUILD_MICROMAP_MODE_BUILD_EXT' specifies that the destination
+--     micromap will be built using the specified data.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
@@ -3777,8 +3971,7 @@ instance Read CopyMicromapModeEXT where
 newtype BuildMicromapModeEXT = BuildMicromapModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'BUILD_MICROMAP_MODE_BUILD_EXT' specifies that the destination micromap
--- will be built using the specified data.
+-- No documentation found for Nested "VkBuildMicromapModeEXT" "VK_BUILD_MICROMAP_MODE_BUILD_EXT"
 pattern BUILD_MICROMAP_MODE_BUILD_EXT = BuildMicromapModeEXT 0
 
 {-# COMPLETE BUILD_MICROMAP_MODE_BUILD_EXT :: BuildMicromapModeEXT #-}
@@ -3813,6 +4006,15 @@ instance Read BuildMicromapModeEXT where
 --
 -- = Description
 --
+-- -   'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' specifies that the given
+--     micromap format has one bit per subtriangle encoding either fully
+--     opaque or fully transparent.
+--
+-- -   'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' specifies that the given
+--     micromap format has two bits per subtriangle encoding four modes
+--     which can be interpreted as described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap ray traversal>.
+--
 -- For compactness, these values are stored as 16-bit in some structures.
 --
 -- = See Also
@@ -3823,15 +4025,10 @@ newtype OpacityMicromapFormatEXT = OpacityMicromapFormatEXT Int32
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' specifies that the given micromap
--- format has one bit per subtriangle encoding either fully opaque or fully
--- transparent.
+-- No documentation found for Nested "VkOpacityMicromapFormatEXT" "VK_OPACITY_MICROMAP_FORMAT_2_STATE_EXT"
 pattern OPACITY_MICROMAP_FORMAT_2_STATE_EXT = OpacityMicromapFormatEXT 1
 
--- | 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' specifies that the given micromap
--- format has two bits per subtriangle encoding four modes which can be
--- interpreted as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-opacity-micromap ray traversal>.
+-- No documentation found for Nested "VkOpacityMicromapFormatEXT" "VK_OPACITY_MICROMAP_FORMAT_4_STATE_EXT"
 pattern OPACITY_MICROMAP_FORMAT_4_STATE_EXT = OpacityMicromapFormatEXT 2
 
 {-# COMPLETE
@@ -3878,6 +4075,29 @@ instance Read OpacityMicromapFormatEXT where
 -- | VkOpacityMicromapSpecialIndexEXT - Enum for special indices in the
 -- opacity micromap
 --
+-- = Description
+--
+-- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT' specifies
+--     that the entire triangle is fully transparent.
+--
+-- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT' specifies that the
+--     entire triangle is fully opaque.
+--
+-- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT'
+--     specifies that the entire triangle is unknown-transparent.
+--
+-- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT' specifies
+--     that the entire triangle is unknown-opaque.
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkOpacityMicromapSpecialIndexEXT VK_OPACITY_MICROMAP_SPECIAL_INDEX_CLUSTER_GEOMETRY_DISABLE_OPACITY_MICROMAP_NV>
+--     specifies that
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap Opacity Micromap>
+--     will be disabled for this triangle and opacity value will be picked
+--     from
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureBuildTriangleClusterInfoNV VkClusterAccelerationStructureBuildTriangleClusterInfoNV>::@baseGeometryIndexAndGeometryFlags@
+--     instead. Note that this special index is only valid for
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#cluster-geometry Cluster Geometry>.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
@@ -3886,20 +4106,16 @@ newtype OpacityMicromapSpecialIndexEXT = OpacityMicromapSpecialIndexEXT Int32
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT' specifies that
--- the entire triangle is fully transparent.
+-- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT"
 pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT = OpacityMicromapSpecialIndexEXT (-1)
 
--- | 'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT' specifies that the
--- entire triangle is fully opaque.
+-- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT"
 pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT = OpacityMicromapSpecialIndexEXT (-2)
 
--- | 'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT' specifies
--- that the entire triangle is unknown-transparent.
+-- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT"
 pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT = OpacityMicromapSpecialIndexEXT (-3)
 
--- | 'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT' specifies that
--- the entire triangle is unknown-opaque.
+-- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT"
 pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT = OpacityMicromapSpecialIndexEXT (-4)
 
 {-# COMPLETE

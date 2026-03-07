@@ -110,7 +110,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_filter_cubic_weights Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_filter_cubic_weights Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -175,9 +175,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCubicWeightsFeaturesQCOM' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCubicWeightsFeaturesQCOM', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -299,9 +303,9 @@ instance Zero SamplerCubicWeightsCreateInfoQCOM where
 --
 -- = See Also
 --
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_filter_cubic_weights VK_QCOM_filter_cubic_weights>,
 -- 'CubicFilterWeightsQCOM',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BlitImageCubicWeightsInfoQCOM = BlitImageCubicWeightsInfoQCOM
   { -- | @cubicWeights@ is a 'CubicFilterWeightsQCOM' value controlling cubic
@@ -350,6 +354,19 @@ instance Zero BlitImageCubicWeightsInfoQCOM where
 
 -- | VkCubicFilterWeightsQCOM - Specify cubic weights for texture filtering
 --
+-- = Description
+--
+-- -   'CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM' specifies Catmull-Rom
+--     weights.
+--
+-- -   'CUBIC_FILTER_WEIGHTS_ZERO_TANGENT_CARDINAL_QCOM' specifies Zero
+--     Tangent Cardinal weights.
+--
+-- -   'CUBIC_FILTER_WEIGHTS_B_SPLINE_QCOM' specifies B-Spline weights.
+--
+-- -   'CUBIC_FILTER_WEIGHTS_MITCHELL_NETRAVALI_QCOM' specifies
+--     Mitchell-Netravali weights.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_filter_cubic_weights VK_QCOM_filter_cubic_weights>,
@@ -357,18 +374,16 @@ instance Zero BlitImageCubicWeightsInfoQCOM where
 newtype CubicFilterWeightsQCOM = CubicFilterWeightsQCOM Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM' specifies Catmull-Rom weights.
+-- No documentation found for Nested "VkCubicFilterWeightsQCOM" "VK_CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM"
 pattern CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM = CubicFilterWeightsQCOM 0
 
--- | 'CUBIC_FILTER_WEIGHTS_ZERO_TANGENT_CARDINAL_QCOM' specifies Zero Tangent
--- Cardinal weights.
+-- No documentation found for Nested "VkCubicFilterWeightsQCOM" "VK_CUBIC_FILTER_WEIGHTS_ZERO_TANGENT_CARDINAL_QCOM"
 pattern CUBIC_FILTER_WEIGHTS_ZERO_TANGENT_CARDINAL_QCOM = CubicFilterWeightsQCOM 1
 
--- | 'CUBIC_FILTER_WEIGHTS_B_SPLINE_QCOM' specifies B-Spline weights.
+-- No documentation found for Nested "VkCubicFilterWeightsQCOM" "VK_CUBIC_FILTER_WEIGHTS_B_SPLINE_QCOM"
 pattern CUBIC_FILTER_WEIGHTS_B_SPLINE_QCOM = CubicFilterWeightsQCOM 2
 
--- | 'CUBIC_FILTER_WEIGHTS_MITCHELL_NETRAVALI_QCOM' specifies
--- Mitchell-Netravali weights.
+-- No documentation found for Nested "VkCubicFilterWeightsQCOM" "VK_CUBIC_FILTER_WEIGHTS_MITCHELL_NETRAVALI_QCOM"
 pattern CUBIC_FILTER_WEIGHTS_MITCHELL_NETRAVALI_QCOM = CubicFilterWeightsQCOM 3
 
 {-# COMPLETE

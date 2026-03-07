@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineCacheCreateFlagBits"
 module Vulkan.Core10.Enums.PipelineCacheCreateFlagBits  ( PipelineCacheCreateFlags
-                                                        , PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT
+                                                        , PipelineCacheCreateFlagBits( PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR
+                                                                                     , PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT
                                                                                      , PIPELINE_CACHE_CREATE_READ_ONLY_BIT
                                                                                      , PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
                                                                                      , ..
@@ -24,12 +25,36 @@ type PipelineCacheCreateFlags = PipelineCacheCreateFlagBits
 -- | VkPipelineCacheCreateFlagBits - Bitmask specifying the behavior of the
 -- pipeline cache
 --
+-- = Description
+--
+-- -   'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT' specifies that
+--     all commands that modify the created
+--     'Vulkan.Core10.Handles.PipelineCache' will be
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--     When set, the implementation /may/ skip any unnecessary processing
+--     needed to support simultaneous modification from multiple threads
+--     where allowed.
+--
+-- -   'PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR'
+--     specifies that when the created
+--     'Vulkan.Core10.Handles.PipelineCache' is used as the @dstCache@
+--     parameter of 'Vulkan.Core10.PipelineCache.mergePipelineCaches', it
+--     does not need to be
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--     This flag is mutually exclusive with
+--     'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control VK_EXT_pipeline_creation_cache_control>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance8 VK_KHR_maintenance8>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'PipelineCacheCreateFlags'
 newtype PipelineCacheCreateFlagBits = PipelineCacheCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- No documentation found for Nested "VkPipelineCacheCreateFlagBits" "VK_PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR"
+pattern PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR = PipelineCacheCreateFlagBits 0x00000008
 
 -- No documentation found for Nested "VkPipelineCacheCreateFlagBits" "VK_PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT"
 pattern PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT = PipelineCacheCreateFlagBits 0x00000004
@@ -37,13 +62,7 @@ pattern PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT = PipelineCacheCreateF
 -- No documentation found for Nested "VkPipelineCacheCreateFlagBits" "VK_PIPELINE_CACHE_CREATE_READ_ONLY_BIT"
 pattern PIPELINE_CACHE_CREATE_READ_ONLY_BIT = PipelineCacheCreateFlagBits 0x00000002
 
--- | 'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT' specifies that all
--- commands that modify the created 'Vulkan.Core10.Handles.PipelineCache'
--- will be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
--- When set, the implementation /may/ skip any unnecessary processing
--- needed to support simultaneous modification from multiple threads where
--- allowed.
+-- No documentation found for Nested "VkPipelineCacheCreateFlagBits" "VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT"
 pattern PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT = PipelineCacheCreateFlagBits 0x00000001
 
 conNamePipelineCacheCreateFlagBits :: String
@@ -55,6 +74,10 @@ enumPrefixPipelineCacheCreateFlagBits = "PIPELINE_CACHE_CREATE_"
 showTablePipelineCacheCreateFlagBits :: [(PipelineCacheCreateFlagBits, String)]
 showTablePipelineCacheCreateFlagBits =
   [
+    ( PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR
+    , "INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR"
+    )
+  ,
     ( PIPELINE_CACHE_CREATE_USE_APPLICATION_STORAGE_BIT
     , "USE_APPLICATION_STORAGE_BIT"
     )

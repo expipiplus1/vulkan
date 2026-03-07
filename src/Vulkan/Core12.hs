@@ -120,9 +120,13 @@ pattern API_VERSION_1_2 = MAKE_API_VERSION 1 2 0
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceVulkan11Features' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
--- enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceVulkan11Features', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -137,23 +141,37 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     -- @PhysicalStorageBuffer@ storage class with the @Block@ decoration /can/
     -- have 16-bit integer and 16-bit floating-point members. If this feature
     -- is not enabled, 16-bit integer or 16-bit floating-point members /must/
-    -- not be used in such objects. This also specifies whether shader modules
-    -- /can/ declare the @StorageBuffer16BitAccess@ capability.
+    -- not be used in such objects unless
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-storageBuffer8BitAccess storageBuffer8BitAccess>
+    -- or
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-uniformAndStorageBuffer8BitAccess uniformAndStorageBuffer8BitAccess>
+    -- are enabled or they are accessed in 32-bit multiples if
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointers>
+    -- is enabled. This also specifies whether shader modules /can/ declare the
+    -- @StorageBuffer16BitAccess@ capability.
     storageBuffer16BitAccess :: Bool
   , -- | #features-uniformAndStorageBuffer16BitAccess#
     -- @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
     -- @Uniform@ storage class with the @Block@ decoration /can/ have 16-bit
     -- integer and 16-bit floating-point members. If this feature is not
     -- enabled, 16-bit integer or 16-bit floating-point members /must/ not be
-    -- used in such objects. This also specifies whether shader modules /can/
-    -- declare the @UniformAndStorageBuffer16BitAccess@ capability.
+    -- used in such objects unless
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-uniformAndStorageBuffer8BitAccess uniformAndStorageBuffer8BitAccess>
+    -- are enabled or they are accessed in 32-bit multiples if
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointers>
+    -- is enabled. This also specifies whether shader modules /can/ declare the
+    -- @UniformAndStorageBuffer16BitAccess@ capability.
     uniformAndStorageBuffer16BitAccess :: Bool
   , -- | #features-storagePushConstant16# @storagePushConstant16@ specifies
     -- whether objects in the @PushConstant@ storage class /can/ have 16-bit
     -- integer and 16-bit floating-point members. If this feature is not
     -- enabled, 16-bit integer or floating-point members /must/ not be used in
-    -- such objects. This also specifies whether shader modules /can/ declare
-    -- the @StoragePushConstant16@ capability.
+    -- such objects unless
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-storagePushConstant8 storagePushConstant8>
+    -- are enabled or they are accessed in 32-bit multiples if
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointers>
+    -- is enabled. This also specifies whether shader modules /can/ declare the
+    -- @StoragePushConstant16@ capability.
     storagePushConstant16 :: Bool
   , -- | #features-storageInputOutput16# @storageInputOutput16@ specifies whether
     -- objects in the @Input@ and @Output@ storage classes /can/ have 16-bit
@@ -424,7 +442,7 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- memory in an unprotected queue operation, or perform a query in a
     -- protected queue operation. If this limit is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
-    -- have undefined values written, reads and queries will return undefined
+    -- have undefined values written; reads and queries will return undefined
     -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
     -- applications /must/ not perform these operations. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules ???>
@@ -440,7 +458,10 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     maxPerSetDescriptors :: Word32
   , -- | #limits-maxMemoryAllocationSize# @maxMemoryAllocationSize@ is the
     -- maximum size of a memory allocation that /can/ be created, even if there
-    -- is more space available in the heap.
+    -- is more space available in the heap. If
+    -- 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ is larger
+    -- the error 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY' /may/
+    -- be returned.
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable)
@@ -580,23 +601,36 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@ storage class
 --     with the @Block@ decoration /can/ have 8-bit integer members. If
 --     this feature is not enabled, 8-bit integer members /must/ not be
---     used in such objects. This also indicates whether shader modules
---     /can/ declare the @StorageBuffer8BitAccess@ capability.
+--     used in such objects unless
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointer>
+--     is enabled and they are accessed in 32-bit multiples or 16-bit
+--     multiples if
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-storageBuffer16BitAccess storageBuffer16BitAccess>
+--     is enabled. This also indicates whether shader modules /can/ declare
+--     the @StorageBuffer8BitAccess@ capability.
 --
 -- -   #features-uniformAndStorageBuffer8BitAccess#
 --     @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
 --     @Uniform@ storage class with the @Block@ decoration /can/ have 8-bit
 --     integer members. If this feature is not enabled, 8-bit integer
---     members /must/ not be used in such objects. This also indicates
---     whether shader modules /can/ declare the
---     @UniformAndStorageBuffer8BitAccess@ capability.
+--     members /must/ not be used in such objects unless
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointers>
+--     is enabled and they are accessed in 32-bit multiples or 16-bit
+--     multiples if
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-uniformAndStorageBuffer16BitAccess uniformAndStorageBuffer16BitAccess>
+--     is enabled. This also indicates whether shader modules /can/ declare
+--     the @UniformAndStorageBuffer8BitAccess@ capability.
 --
 -- -   #features-storagePushConstant8# @storagePushConstant8@ indicates
 --     whether objects in the @PushConstant@ storage class /can/ have 8-bit
 --     integer members. If this feature is not enabled, 8-bit integer
---     members /must/ not be used in such objects. This also indicates
---     whether shader modules /can/ declare the @StoragePushConstant8@
---     capability.
+--     members /must/ not be used in such objects unless
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointers>
+--     is enabled and they are accessed in 32-bit multiples or 16-bit
+--     multiples if
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-storagePushConstant16 storagePushConstant16>
+--     is enabled. This also indicates whether shader modules /can/ declare
+--     the @StoragePushConstant8@ capability.
 --
 -- -   #features-shaderBufferInt64Atomics# @shaderBufferInt64Atomics@
 --     indicates whether shaders /can/ perform 64-bit unsigned and signed
@@ -631,7 +665,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 -- -   #features-descriptorIndexing# @descriptorIndexing@ indicates whether
 --     the implementation supports the minimum set of descriptor indexing
 --     features as described in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements Feature Requirements>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-requirements Feature Requirements>
 --     section. Enabling this feature when
 --     'Vulkan.Core10.Device.createDevice' is called does not imply the
 --     other minimum descriptor indexing features are also enabled. Those
@@ -839,7 +873,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 -- -   #features-samplerFilterMinmax# @samplerFilterMinmax@ indicates
 --     whether the implementation supports a minimum set of required
 --     formats supporting min\/max filtering as defined by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-filterMinmaxSingleComponentFormats-minimum-requirements filterMinmaxSingleComponentFormats>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-filterMinmaxSingleComponentFormats-minimum-requirements filterMinmaxSingleComponentFormats>
 --     property minimum requirements. If this feature is not enabled, then
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     /must/ only use
@@ -958,9 +992,13 @@ instance Zero PhysicalDeviceVulkan11Properties where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceVulkan12Features' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
--- enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceVulkan12Features', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1560,7 +1598,11 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', then either @robustBufferAccess@
     -- /must/ be disabled or all of these update-after-bind features /must/ be
-    -- disabled.
+    -- disabled. Similarly, if this property is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', robustness /must/ not be enabled
+    -- through the
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo'
+    -- mechanism.
     robustBufferAccessUpdateAfterBind :: Bool
   , -- | #limits-quadDivergentImplicitLod# @quadDivergentImplicitLod@ is a
     -- boolean value indicating whether implicit LOD calculations for image

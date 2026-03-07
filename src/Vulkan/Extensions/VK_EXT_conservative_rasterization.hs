@@ -109,7 +109,7 @@
 --     -   'PhysicalDeviceConservativeRasterizationPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationConservativeStateCreateInfoEXT'
 --
@@ -135,11 +135,11 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fullycoveredext FullyCoveredEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-fullycoveredext FullyCoveredEXT>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentFullyCoveredEXT FragmentFullyCoveredEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentFullyCoveredEXT FragmentFullyCoveredEXT>
 --
 -- == Version History
 --
@@ -158,7 +158,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_conservative_rasterization Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_conservative_rasterization Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -406,7 +406,7 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'.
 --
 -- If
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
 -- is supported, conservative rasterization can be applied to line and
 -- point primitives, otherwise it must be disabled.
 --
@@ -538,6 +538,18 @@ instance Read PipelineRasterizationConservativeStateCreateFlagsEXT where
 -- | VkConservativeRasterizationModeEXT - Specify the conservative
 -- rasterization mode
 --
+-- = Description
+--
+-- -   'CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT' specifies that
+--     conservative rasterization is disabled and rasterization proceeds as
+--     normal.
+--
+-- -   'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT' specifies that
+--     conservative rasterization is enabled in overestimation mode.
+--
+-- -   'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' specifies that
+--     conservative rasterization is enabled in underestimation mode.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
@@ -546,17 +558,13 @@ instance Read PipelineRasterizationConservativeStateCreateFlagsEXT where
 newtype ConservativeRasterizationModeEXT = ConservativeRasterizationModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT' specifies that
--- conservative rasterization is disabled and rasterization proceeds as
--- normal.
+-- No documentation found for Nested "VkConservativeRasterizationModeEXT" "VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT"
 pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = ConservativeRasterizationModeEXT 0
 
--- | 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT' specifies that
--- conservative rasterization is enabled in overestimation mode.
+-- No documentation found for Nested "VkConservativeRasterizationModeEXT" "VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT"
 pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = ConservativeRasterizationModeEXT 1
 
--- | 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' specifies that
--- conservative rasterization is enabled in underestimation mode.
+-- No documentation found for Nested "VkConservativeRasterizationModeEXT" "VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT"
 pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = ConservativeRasterizationModeEXT 2
 
 {-# COMPLETE

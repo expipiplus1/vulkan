@@ -24,6 +24,24 @@ type ImageViewCreateFlags = ImageViewCreateFlagBits
 -- | VkImageViewCreateFlagBits - Bitmask specifying additional parameters of
 -- an image view
 --
+-- = Description
+--
+-- -   'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT' specifies
+--     that the fragment density map will be read by device during
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT' specifies
+--     that the fragment density map will be read by the host during
+--     'Vulkan.Core10.CommandBuffer.endCommandBuffer' for the primary
+--     command buffer that the render pass is recorded into
+--
+-- -   'IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     specifies that the image view /can/ be used with descriptor buffers
+--     when capturing and replaying (e.g. for trace capture and replay),
+--     see
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     for more detail.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -31,22 +49,13 @@ type ImageViewCreateFlags = ImageViewCreateFlagBits
 newtype ImageViewCreateFlagBits = ImageViewCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT' specifies that
--- the fragment density map will be read by the host during
--- 'Vulkan.Core10.CommandBuffer.endCommandBuffer' for the primary command
--- buffer that the render pass is recorded into
+-- No documentation found for Nested "VkImageViewCreateFlagBits" "VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT"
 pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT = ImageViewCreateFlagBits 0x00000002
 
--- | 'IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies
--- that the image view /can/ be used with descriptor buffers when capturing
--- and replaying (e.g. for trace capture and replay), see
--- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
--- for more detail.
+-- No documentation found for Nested "VkImageViewCreateFlagBits" "VK_IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
 pattern IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = ImageViewCreateFlagBits 0x00000004
 
--- | 'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT' specifies that
--- the fragment density map will be read by device during
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+-- No documentation found for Nested "VkImageViewCreateFlagBits" "VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT"
 pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT = ImageViewCreateFlagBits 0x00000001
 
 conNameImageViewCreateFlagBits :: String

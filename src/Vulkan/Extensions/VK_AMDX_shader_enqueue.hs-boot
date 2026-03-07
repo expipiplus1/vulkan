@@ -45,13 +45,11 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_VERSION_1_4
+--
 --     -   Interacts with VK_EXT_mesh_shader
 --
 --     -   Interacts with VK_KHR_maintenance5
---
--- [__SPIR-V Dependencies__]
---
---     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMDX/SPV_AMDX_shader_enqueue.html SPV_AMDX_shader_enqueue>
 --
 -- [__Contact__]
 --
@@ -136,7 +134,8 @@
 --
 --     -   'PhysicalDeviceShaderEnqueuePropertiesAMDX'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo':
 --
 --     -   'PipelineShaderStageNodeCreateInfoAMDX'
 --
@@ -175,17 +174,19 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
 -- is supported:
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlagBits2KHR':
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BufferUsageFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX'
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX'
 --
 -- == Version History
 --
@@ -204,7 +205,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMDX_shader_enqueue Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMDX_shader_enqueue Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

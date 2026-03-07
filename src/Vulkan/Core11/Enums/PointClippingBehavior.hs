@@ -16,22 +16,29 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkPointClippingBehavior - Enum specifying the point clipping behavior
 --
+-- = Description
+--
+-- -   'POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES' specifies that the
+--     primitive is discarded if the vertex lies outside any clip plane,
+--     including the planes bounding the view volume.
+--
+-- -   'POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY' specifies that the
+--     primitive is discarded only if the vertex lies outside any user clip
+--     plane.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan11Properties'
 newtype PointClippingBehavior = PointClippingBehavior Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES' specifies that the primitive
--- is discarded if the vertex lies outside any clip plane, including the
--- planes bounding the view volume.
+-- No documentation found for Nested "VkPointClippingBehavior" "VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES"
 pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = PointClippingBehavior 0
 
--- | 'POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY' specifies that the
--- primitive is discarded only if the vertex lies outside any user clip
--- plane.
+-- No documentation found for Nested "VkPointClippingBehavior" "VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY"
 pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = PointClippingBehavior 1
 
 {-# COMPLETE

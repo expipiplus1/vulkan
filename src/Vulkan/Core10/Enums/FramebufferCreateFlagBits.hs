@@ -21,6 +21,14 @@ type FramebufferCreateFlags = FramebufferCreateFlagBits
 
 -- | VkFramebufferCreateFlagBits - Bitmask specifying framebuffer properties
 --
+-- = Description
+--
+-- -   'FRAMEBUFFER_CREATE_IMAGELESS_BIT' specifies that image views are
+--     not specified, and only attachment compatibility information will be
+--     provided via a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo'
+--     structure.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -28,11 +36,7 @@ type FramebufferCreateFlags = FramebufferCreateFlagBits
 newtype FramebufferCreateFlagBits = FramebufferCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'FRAMEBUFFER_CREATE_IMAGELESS_BIT' specifies that image views are not
--- specified, and only attachment compatibility information will be
--- provided via a
--- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo'
--- structure.
+-- No documentation found for Nested "VkFramebufferCreateFlagBits" "VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT"
 pattern FRAMEBUFFER_CREATE_IMAGELESS_BIT = FramebufferCreateFlagBits 0x00000001
 
 conNameFramebufferCreateFlagBits :: String
