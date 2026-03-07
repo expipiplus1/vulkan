@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.26.5
+version:        3.26.6
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -291,6 +291,7 @@ library
       Vulkan.Extensions
       Vulkan.Extensions.Dependencies
       Vulkan.Extensions.Handles
+      Vulkan.Extensions.VK_AMD_anti_lag
       Vulkan.Extensions.VK_AMD_buffer_marker
       Vulkan.Extensions.VK_AMD_device_coherent_memory
       Vulkan.Extensions.VK_AMD_display_native_hdr
@@ -339,6 +340,7 @@ library
       Vulkan.Extensions.VK_EXT_debug_report
       Vulkan.Extensions.VK_EXT_debug_utils
       Vulkan.Extensions.VK_EXT_depth_bias_control
+      Vulkan.Extensions.VK_EXT_depth_clamp_control
       Vulkan.Extensions.VK_EXT_depth_clamp_zero_one
       Vulkan.Extensions.VK_EXT_depth_clip_control
       Vulkan.Extensions.VK_EXT_depth_clip_enable
@@ -347,6 +349,7 @@ library
       Vulkan.Extensions.VK_EXT_descriptor_indexing
       Vulkan.Extensions.VK_EXT_device_address_binding_report
       Vulkan.Extensions.VK_EXT_device_fault
+      Vulkan.Extensions.VK_EXT_device_generated_commands
       Vulkan.Extensions.VK_EXT_device_memory_report
       Vulkan.Extensions.VK_EXT_direct_mode_display
       Vulkan.Extensions.VK_EXT_directfb_surface
@@ -384,6 +387,7 @@ library
       Vulkan.Extensions.VK_EXT_inline_uniform_block
       Vulkan.Extensions.VK_EXT_layer_settings
       Vulkan.Extensions.VK_EXT_legacy_dithering
+      Vulkan.Extensions.VK_EXT_legacy_vertex_attributes
       Vulkan.Extensions.VK_EXT_line_rasterization
       Vulkan.Extensions.VK_EXT_load_store_op_none
       Vulkan.Extensions.VK_EXT_map_memory_placed
@@ -408,6 +412,7 @@ library
       Vulkan.Extensions.VK_EXT_pipeline_protected_access
       Vulkan.Extensions.VK_EXT_pipeline_robustness
       Vulkan.Extensions.VK_EXT_post_depth_coverage
+      Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready
       Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
       Vulkan.Extensions.VK_EXT_primitives_generated_query
       Vulkan.Extensions.VK_EXT_private_data
@@ -426,6 +431,7 @@ library
       Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
       Vulkan.Extensions.VK_EXT_shader_module_identifier
       Vulkan.Extensions.VK_EXT_shader_object
+      Vulkan.Extensions.VK_EXT_shader_replicated_composites
       Vulkan.Extensions.VK_EXT_shader_stencil_export
       Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
       Vulkan.Extensions.VK_EXT_shader_subgroup_vote
@@ -444,6 +450,7 @@ library
       Vulkan.Extensions.VK_EXT_validation_features
       Vulkan.Extensions.VK_EXT_validation_flags
       Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+      Vulkan.Extensions.VK_EXT_vertex_attribute_robustness
       Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
       Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
       Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
@@ -459,6 +466,7 @@ library
       Vulkan.Extensions.VK_GOOGLE_surfaceless_query
       Vulkan.Extensions.VK_GOOGLE_user_type
       Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader
+      Vulkan.Extensions.VK_HUAWEI_hdr_vivid
       Vulkan.Extensions.VK_HUAWEI_invocation_mask
       Vulkan.Extensions.VK_HUAWEI_subpass_shading
       Vulkan.Extensions.VK_IMG_filter_cubic
@@ -473,6 +481,7 @@ library
       Vulkan.Extensions.VK_KHR_bind_memory2
       Vulkan.Extensions.VK_KHR_buffer_device_address
       Vulkan.Extensions.VK_KHR_calibrated_timestamps
+      Vulkan.Extensions.VK_KHR_compute_shader_derivatives
       Vulkan.Extensions.VK_KHR_cooperative_matrix
       Vulkan.Extensions.VK_KHR_copy_commands2
       Vulkan.Extensions.VK_KHR_create_renderpass2
@@ -520,9 +529,11 @@ library
       Vulkan.Extensions.VK_KHR_maintenance4
       Vulkan.Extensions.VK_KHR_maintenance5
       Vulkan.Extensions.VK_KHR_maintenance6
+      Vulkan.Extensions.VK_KHR_maintenance7
       Vulkan.Extensions.VK_KHR_map_memory2
       Vulkan.Extensions.VK_KHR_multiview
       Vulkan.Extensions.VK_KHR_performance_query
+      Vulkan.Extensions.VK_KHR_pipeline_binary
       Vulkan.Extensions.VK_KHR_pipeline_executable_properties
       Vulkan.Extensions.VK_KHR_pipeline_library
       Vulkan.Extensions.VK_KHR_portability_enumeration
@@ -549,6 +560,7 @@ library
       Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence
       Vulkan.Extensions.VK_KHR_shader_non_semantic_info
       Vulkan.Extensions.VK_KHR_shader_quad_control
+      Vulkan.Extensions.VK_KHR_shader_relaxed_extended_instruction
       Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
       Vulkan.Extensions.VK_KHR_shader_subgroup_rotate
       Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
@@ -574,14 +586,17 @@ library
       Vulkan.Extensions.VK_KHR_xlib_surface
       Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
       Vulkan.Extensions.VK_LUNARG_direct_driver_loading
+      Vulkan.Extensions.VK_MESA_image_alignment_control
       Vulkan.Extensions.VK_MSFT_layered_driver
       Vulkan.Extensions.VK_MVK_ios_surface
       Vulkan.Extensions.VK_MVK_macos_surface
       Vulkan.Extensions.VK_NN_vi_surface
       Vulkan.Extensions.VK_NV_acquire_winrt_display
       Vulkan.Extensions.VK_NV_clip_space_w_scaling
+      Vulkan.Extensions.VK_NV_command_buffer_inheritance
       Vulkan.Extensions.VK_NV_compute_shader_derivatives
       Vulkan.Extensions.VK_NV_cooperative_matrix
+      Vulkan.Extensions.VK_NV_cooperative_matrix2
       Vulkan.Extensions.VK_NV_copy_memory_indirect
       Vulkan.Extensions.VK_NV_corner_sampled_image
       Vulkan.Extensions.VK_NV_coverage_reduction_mode
@@ -594,6 +609,7 @@ library
       Vulkan.Extensions.VK_NV_device_generated_commands
       Vulkan.Extensions.VK_NV_device_generated_commands_compute
       Vulkan.Extensions.VK_NV_displacement_micromap
+      Vulkan.Extensions.VK_NV_display_stereo
       Vulkan.Extensions.VK_NV_extended_sparse_address_space
       Vulkan.Extensions.VK_NV_external_memory
       Vulkan.Extensions.VK_NV_external_memory_capabilities
@@ -615,9 +631,11 @@ library
       Vulkan.Extensions.VK_NV_optical_flow
       Vulkan.Extensions.VK_NV_per_stage_descriptor_set
       Vulkan.Extensions.VK_NV_present_barrier
+      Vulkan.Extensions.VK_NV_raw_access_chains
       Vulkan.Extensions.VK_NV_ray_tracing
       Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
       Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
+      Vulkan.Extensions.VK_NV_ray_tracing_validation
       Vulkan.Extensions.VK_NV_representative_fragment_test
       Vulkan.Extensions.VK_NV_sample_mask_override_coverage
       Vulkan.Extensions.VK_NV_scissor_exclusive

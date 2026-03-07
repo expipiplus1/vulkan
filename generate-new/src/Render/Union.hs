@@ -235,17 +235,9 @@ zeroInstance MarshaledStruct {..} = do
           Nothing -> empty
           Just z  -> pure z
         let con = pretty (mkConName msName (smName msmStructMember))
-        size <- case msmScheme of
-          Normal        t     -> fst <$> getTypeSize t
-          Preserve      t     -> fst <$> getTypeSize t
-          WrappedStruct t     -> fst <$> getTypeSize (TypeName t)
-          Tupled n (Normal e) -> do
-            (tSize, _) <- getTypeSize e
-            pure $ tSize * fromIntegral n
-          Tupled n (Preserve e) -> do
-            (tSize, _) <- getTypeSize e
-            pure $ tSize * fromIntegral n
-          _ -> empty
+        -- Use the original C type for size computation, as the marshaled
+        -- scheme may have unwrapped pointers via dropPtrToStruct
+        (size, _) <- getTypeSize (smType msmStructMember)
         guard (size == unionSize)
         pure (con <+> align (hsep (replicate (fromIntegral numElems) zero)))
   zeroMember <- case zeroableMembers of

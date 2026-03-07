@@ -49,7 +49,7 @@ echo "Generating Vulkan-Docs headers"
 (cd generate-new/Vulkan-Docs/xml &&
   nix-shell -p \
     python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp \
-    --run "make clean install")
+    --run "make clean install codec_headers")
 
 echo "Generating VulkanMemoryAllocator"
 nix-shell -p vulkan-headers --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"

@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
+{-# LANGUAGE NamedFieldPuns #-}
 module Khronos.AssignModules
   ( assignModules
   ) where
@@ -171,12 +172,34 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
 
     extensionModulePrefix = modulePrefix <> "." <> "Extensions"
     forExtensionRequires
-      :: (Text -> ModName -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
+      :: (Text -> ModName -> Int -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
     forExtensionRequires f = forV_ specExtensions $ \Extension {..} ->
       forRequires_
           exRequires
           (const $ extensionNameToModuleName extensionModulePrefix exName)
-        $ \modname -> f extensionModulePrefix modname
+        $ \modname -> f extensionModulePrefix modname exNumber
+
+    -- | Map from extension name to its number, used to check if a
+    -- conditional require references a later extension.
+    extensionNumberMap :: Map Text Int
+    extensionNumberMap = Map.fromList
+      [ (exName, exNumber) | Extension{exName, exNumber} <- toList specExtensions ]
+
+    -- | Check if a @depends@ string references any extension with a
+    -- higher number than the current one.  The depends string uses
+    -- @+@ for AND, @,@ for OR, and may contain version identifiers
+    -- like @VK_VERSION_1_1@.  We extract all VK_ tokens and check
+    -- their extension numbers.
+    dependsRefsLaterExtension :: Int -> Text -> Bool
+    dependsRefsLaterExtension curNum dep =
+      let tokens = concatMap (T.splitOn "+") (T.splitOn "," dep)
+      in  any isLater tokens
+     where
+      isLater tok =
+        let t = T.strip (T.filter (/= '(') (T.filter (/= ')') tok))
+        in  case Map.lookup t extensionNumberMap of
+              Just n  -> n > curNum
+              Nothing -> False
 
     forRequires
       :: Traversable f
@@ -201,12 +224,12 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
     -- Perform an action over all 'Require's of all features and elements
     --
     forFeaturesAndExtensions
-      :: (Text -> ModName -> Bool -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
+      :: (Text -> ModName -> Maybe Int -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
     forFeaturesAndExtensions f = do
       forFeatures_ $ \feat prefix commentToModName ->
         forRequires_ (fRequires feat) commentToModName
-          $ \modname -> f prefix modname True
-      forExtensionRequires $ \prefix modname -> f prefix modname False
+          $ \modname -> f prefix modname Nothing
+      forExtensionRequires $ \prefix modname extNum -> f prefix modname (Just extNum)
 
     --
     -- Export all elements both in world and reachable, optionally from a
@@ -247,8 +270,9 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   -- Explicit Enums, Handles and FuncPointers for each feature
   ----------------------------------------------------------------
 
-  forFeaturesAndExtensions $ \prefix _ isFeature ReqDeps {..} _ -> do
-    let reachable =
+  forFeaturesAndExtensions $ \prefix _ _mExtNum ReqDeps {..} _ -> do
+    let isFeature = isNothing _mExtNum
+        reachable =
           Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
     ----------------------------------------------------------------
     -- Reachable Enums
@@ -272,14 +296,24 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   -- Explicit exports of all features and extensions
   ----------------------------------------------------------------
-  forFeaturesAndExtensions $ \_ modname isFeature ReqDeps {..} _ -> if isFeature
-    then forV_ directExporters $ export modname
-    else
-      let noCore = Set.toList
-            (                Set.fromList (toList directExporters)
-            `Set.difference` allCoreExports
-            )
-      in  forV_ noCore $ export modname
+  -- Single pass: for conditional requires that reference a later extension
+  -- (higher ext number), use reexport to avoid claiming commands that
+  -- belong to that later extension. This prevents cycles like:
+  --   VK_EXT_shader_object (483) claiming vkCmdSetDepthClampRangeEXT
+  --   before VK_EXT_depth_clamp_control (583) can.
+  forFeaturesAndExtensions $ \_ modname mExtNum ReqDeps {..} Require{rDepends} ->
+    case mExtNum of
+      Nothing -> -- Feature: export everything
+        forV_ directExporters $ export modname
+      Just extNum ->
+        let noCore = Set.toList
+              (                Set.fromList (toList directExporters)
+              `Set.difference` allCoreExports
+              )
+            refsLaterExt = case rDepends of
+              Nothing  -> False
+              Just dep -> dependsRefsLaterExtension extNum dep
+        in  forV_ noCore $ if refsLaterExt then reexport modname else export modname
 
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if they're not already assigned
@@ -315,12 +349,12 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   -- Close the extensions
   ----------------------------------------------------------------
-  forExtensionRequires $ \_ modname ReqDeps {..} _ ->
+  forExtensionRequires $ \_ modname _ ReqDeps {..} _ ->
     forV_ directExporters $ \i -> do
       exportManyNoReexport modname (i `postIntSet` rel)
       exportMany modname ((i `postIntSet` rel) `Set.difference` allCoreExports)
 
-  forExtensionRequires $ \_ modname ReqDeps {..} _ ->
+  forExtensionRequires $ \_ modname _ ReqDeps {..} _ ->
     forV_ directExporters $ \i -> exportMany
       modname
       ((i `postIntSet` closedRel) `Set.difference` allCoreExports)
@@ -359,6 +393,15 @@ exportManyNoReexport m is =
   let newMap = IntMap.fromSet (const (ExportLocation m [])) is
   in  modify' (\s -> IntMap.unionWith ins s newMap)
   where ins (ExportLocation r rs) (ExportLocation _ _) = ExportLocation r rs
+
+-- | Only add to the re-exporting list, never claim as declaring module.
+-- Used for commands from conditional @\<require depends="..."\>@ blocks.
+reexport :: Member (State S) r => ModName -> Int -> Sem r ()
+reexport m i = modify' (IntMap.alter ins i)
+ where
+  ins = \case
+    Nothing                    -> Nothing
+    Just (ExportLocation t rs) -> Just (ExportLocation t (m : rs))
 
 ----------------------------------------------------------------
 -- Making module names

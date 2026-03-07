@@ -568,6 +568,7 @@ parseRequires parseDisabled n = V.fromList <$> traverseV
   parseRequire :: Node -> P Require
   parseRequire r = do
     rComment  <- traverse decode (getAttr "comment" r)
+    rDepends  <- traverse decode (getAttr "depends" r)
     enums <- sequenceV
       [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t
       ]
@@ -902,7 +903,7 @@ parseEnums types es = do
     -> P (Maybe Enum')
   parseEnum getBitmaskWidth getFlagsName evIsExtension isBitmask n = do
     eName <- nameAttr "enum" n
-    if isForbidden eName
+    if isForbidden eName || (isBitmask && isNothing (getBitmaskWidth eName))
       then pure Nothing
       else Just <$> do
         eValues <- fromList <$> traverseV
