@@ -166,11 +166,13 @@ cToHsType' structStyle preserve t = do
           UnwrappedHole -> pure WildCardT
           Wrapped       -> pure $ ConT (mkName "SomeChild") :@ con
         Just s | not (V.null (sExtendedBy s)) -> case structStyle of
-          Unwrapped -> do
-            var <- VarT <$> getVar (Extends con)
-            pure $ con :@ var
-          UnwrappedHole -> pure $ con :@ WildCardT
-          Wrapped       -> pure $ ConT (mkName "SomeStruct") :@ con
+            Unwrapped -> case preserve of
+              DoPreserve -> pure $ con :@ PromotedNilT
+              _ -> do
+                var <- VarT <$> getVar (Extends con)
+                pure $ con :@ var
+            UnwrappedHole -> pure $ con :@ WildCardT
+            Wrapped       -> pure $ ConT (mkName "SomeStruct") :@ con
         _ -> pure con
     Proto ret ps -> do
       retTy <- cToHsType' structStyle preserve ret

@@ -77,6 +77,7 @@ data ExtensionType = DeviceExtension | InstanceExtension | UnknownExtensionType
 
 data Require = Require
   { rComment        :: Maybe Text
+  , rDepends        :: Maybe Text
   , rCommandNames   :: Vector CName
   , rTypeNames      :: Vector CName
   , rEnumValueNames :: Vector CName

@@ -97,6 +97,8 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "BufferCollectionFUCHSIA"
     , cdBracket "OpticalFlowSessionNV"
     , cdBracket "MicromapEXT"
+    , cdBracket "IndirectCommandsLayoutEXT"
+    , cdBracket "IndirectExecutionSetEXT"
     , pure withCommmandBuffers
     , afBracket "Memory"
     , pure withDescriptorSets
@@ -152,6 +154,7 @@ brackets marshaledCommands handles = context "brackets" $ do
         , "VkDisplayModeKHR"
         , "VkSurfaceKHR"
         , "VkPerformanceConfigurationINTEL"
+        , "VkPipelineBinaryKHR"
         ]
       handleNames = hName <$> handles
       -- A crude way of getting all the type names we generate

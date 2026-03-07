@@ -83,6 +83,8 @@ forceDisabledExtensions =
     -- Video extensions will make it into the xml registry it seems, disable
     -- them until then.
   , "VK_KHR_video_decode_av1"
+  , "VK_KHR_video_encode_av1"
+  , "VK_KHR_video_encode_quantization_map"
   , "VK_EXT_video_decode_h264"
   , "VK_EXT_video_encode_h264"
   , "VK_EXT_video_decode_h265"
@@ -273,6 +275,10 @@ dualPurposeBytestrings = BespokeScheme $ \case
   c
     | c `elem` ["vkGetPipelineCacheData", "vkGetValidationCacheDataEXT"] -> \case
       a | (Ptr NonConst Void) <- type' a, "pData" <- name a ->
+        Just (Returned ByteString)
+      _ -> Nothing
+    | c == "vkGetPipelineBinaryDataKHR" -> \case
+      a | (Ptr NonConst Void) <- type' a, "pPipelineBinaryData" <- name a ->
         Just (Returned ByteString)
       _ -> Nothing
     | c == "vkGetShaderInfoAMD" -> \case

@@ -531,7 +531,7 @@ normalCheck t p = do
   guard . V.null . lengths $ p
   guard
     ( (V.null . isOptional $ p)
-        || ((== Singleton False) . isOptional $ p)
+        || (isOptional p V.!? 0 == Just False)
         || isPassAsPointerType (unPtrType t)
     )
   guard . (/= Void) $ t
