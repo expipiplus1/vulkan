@@ -103,8 +103,8 @@
 -- and require specifying the image when allocating or importing the memory
 -- object.
 --
--- 2) Does the 'ExternalImageFormatPropertiesNV' struct need to include a
--- list of memory type bits that support the given handle type?
+-- 2) Does the 'ExternalImageFormatPropertiesNV' structure need to include
+-- a list of memory type bits that support the given handle type?
 --
 -- __RESOLVED__: No. The memory types that do not support the handle types
 -- will simply be filtered out of the results returned by
@@ -133,7 +133,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_external_memory_capabilities Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_external_memory_capabilities Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

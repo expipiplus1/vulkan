@@ -202,7 +202,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_FUCHSIA_buffer_collection Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -361,6 +361,9 @@ foreign import ccall
 --     @pCollection@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA' handle
 --
+-- -   #VUID-vkCreateBufferCollectionFUCHSIA-device-queuecount# The device
+--     /must/ have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -369,11 +372,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- == Host Access
 --
@@ -400,7 +407,7 @@ createBufferCollectionFUCHSIA :: forall io
                               -> -- | @pAllocator@ is a pointer to a
                                  -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
                                  -- controlling host memory allocation as described in the
-                                 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (BufferCollectionFUCHSIA)
@@ -465,11 +472,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -549,11 +560,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -656,7 +671,7 @@ destroyBufferCollectionFUCHSIA :: forall io
                                -> -- | @pAllocator@ is a pointer to a
                                   -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
                                   -- controlling host memory allocation as described in the
-                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io ()
@@ -740,9 +755,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -790,11 +809,11 @@ data ImportMemoryBufferCollectionFUCHSIA = ImportMemoryBufferCollectionFUCHSIA
     -- @collection@ /must/ be a valid
     -- 'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA' handle
     collection :: BufferCollectionFUCHSIA
-  , -- | @index@ the index of the buffer to import from @collection@
+  , -- | @index@ is the index of the buffer to import from @collection@
     --
     -- #VUID-VkImportMemoryBufferCollectionFUCHSIA-index-06406# @index@ /must/
     -- be less than the value retrieved as
-    -- 'BufferCollectionPropertiesFUCHSIA':bufferCount
+    -- 'BufferCollectionPropertiesFUCHSIA'::@bufferCount@
     index :: Word32
   }
   deriving (Typeable, Eq)
@@ -1073,7 +1092,7 @@ data BufferCollectionPropertiesFUCHSIA = BufferCollectionPropertiesFUCHSIA
   , -- | @bufferCount@ is the number of buffers in the collection
     bufferCount :: Word32
   , -- | @createInfoIndex@ as described in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sysmem-chosen-create-infos Sysmem chosen create infos>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#sysmem-chosen-create-infos Sysmem chosen create infos>
     createInfoIndex :: Word32
   , -- | @sysmemPixelFormat@ is the Sysmem @PixelFormatType@ as defined in
     -- @fuchsia.sysmem\/image_formats.fidl@
@@ -1086,7 +1105,7 @@ data BufferCollectionPropertiesFUCHSIA = BufferCollectionPropertiesFUCHSIA
     -- the color space
     sysmemColorSpaceIndex :: SysmemColorSpaceFUCHSIA
   , -- | @samplerYcbcrConversionComponents@ is a
-    -- 'Vulkan.Core10.ImageView.ComponentMapping' struct specifying the
+    -- 'Vulkan.Core10.ImageView.ComponentMapping' structure specifying the
     -- component mapping
     samplerYcbcrConversionComponents :: ComponentMapping
   , -- | @suggestedYcbcrModel@ is a
@@ -1204,7 +1223,7 @@ instance Zero BufferCollectionPropertiesFUCHSIA where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits'
 --     /must/ be chosen from among the buffer compatible format features
 --     listed in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-compatible-format-features buffer compatible format features>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#buffer-compatible-format-features buffer compatible format features>
 --
 -- == Valid Usage (Implicit)
 --
@@ -1236,9 +1255,10 @@ instance Zero BufferCollectionPropertiesFUCHSIA where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setBufferCollectionBufferConstraintsFUCHSIA'
 data BufferConstraintsInfoFUCHSIA = BufferConstraintsInfoFUCHSIA
-  { -- No documentation found for Nested "VkBufferConstraintsInfoFUCHSIA" "createInfo"
+  { -- | @createInfo@ is a pointer to a 'Vulkan.Core10.Buffer.BufferCreateInfo'
+    -- struct describing the buffer attributes for the buffer collection
     createInfo :: SomeStruct BufferCreateInfo
-  , -- | @requiredFormatFeatures@ bitmask of
+  , -- | @requiredFormatFeatures@ is a bitmask of
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits'
     -- required features of the buffers in the buffer collection
     requiredFormatFeatures :: FormatFeatureFlags
@@ -1487,7 +1507,7 @@ instance Zero ImageFormatConstraintsInfoFUCHSIA where
 --
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-attachmentFragmentShadingRate-06401#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
 --     feature is enabled, and @pFormatConstraints->imageCreateInfo->usage@
 --     contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
@@ -1739,7 +1759,18 @@ type ImageConstraintsInfoFlagsFUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA
 -- Sysmem based on the expected usage of the images in the buffer
 -- collection include:
 --
+-- -   'IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA'
+--
+-- -   'IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA'
+--
+-- -   'IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA'
+--
+-- -   'IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA'
+--
 -- For protected memory:
+--
+-- -   'IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA' specifies that
+--     protected memory is optional for the buffer collection.
 --
 -- Note that if all participants in the buffer collection (Vulkan or
 -- otherwise) specify that protected memory is optional, Sysmem will not
@@ -1752,20 +1783,19 @@ type ImageConstraintsInfoFlagsFUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA
 newtype ImageConstraintsInfoFlagBitsFUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA'
+-- No documentation found for Nested "VkImageConstraintsInfoFlagBitsFUCHSIA" "VK_IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA"
 pattern IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000001
 
--- | 'IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA'
+-- No documentation found for Nested "VkImageConstraintsInfoFlagBitsFUCHSIA" "VK_IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA"
 pattern IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000002
 
--- | 'IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA'
+-- No documentation found for Nested "VkImageConstraintsInfoFlagBitsFUCHSIA" "VK_IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA"
 pattern IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000004
 
--- | 'IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA'
+-- No documentation found for Nested "VkImageConstraintsInfoFlagBitsFUCHSIA" "VK_IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA"
 pattern IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000008
 
--- | 'IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA' specifies that
--- protected memory is optional for the buffer collection.
+-- No documentation found for Nested "VkImageConstraintsInfoFlagBitsFUCHSIA" "VK_IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA"
 pattern IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000010
 
 conNameImageConstraintsInfoFlagBitsFUCHSIA :: String

@@ -18,7 +18,7 @@
 --     6
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -62,8 +62,8 @@
 --
 -- == Description
 --
--- This extension provides the 'ValidationFeaturesEXT' struct that can be
--- included in the @pNext@ chain of the
+-- This extension provides the 'ValidationFeaturesEXT' structure that can
+-- be included in the @pNext@ chain of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- as the @pCreateInfo@ parameter of
 -- 'Vulkan.Core10.DeviceInitialization.createInstance'. The structure
@@ -135,7 +135,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_validation_features Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_validation_features Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -287,6 +287,40 @@ instance Zero ValidationFeaturesEXT where
 
 -- | VkValidationFeatureEnableEXT - Specify validation features to enable
 --
+-- = Description
+--
+-- -   'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT' specifies that
+--     GPU-assisted validation is enabled. Activating this feature
+--     instruments shader programs to generate additional diagnostic data.
+--     This feature is disabled by default.
+--
+-- -   'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
+--     specifies that the validation layers reserve a descriptor set
+--     binding slot for their own use. The layer reports a value for
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxBoundDescriptorSets@
+--     that is one less than the value reported by the device. If the
+--     device supports the binding of only one descriptor set, the
+--     validation layer does not perform GPU-assisted validation. This
+--     feature is disabled by default.
+--
+-- -   'VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT' specifies that Vulkan
+--     best-practices validation is enabled. Activating this feature
+--     enables the output of warnings related to common misuse of the API,
+--     but which are not explicitly prohibited by the specification. This
+--     feature is disabled by default.
+--
+-- -   'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT' specifies that the
+--     layers will process @debugPrintfEXT@ operations in shaders and send
+--     the resulting output to the debug callback. This feature is disabled
+--     by default.
+--
+-- -   'VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT' specifies
+--     that Vulkan synchronization validation is enabled. This feature
+--     reports resource access conflicts due to missing or incorrect
+--     synchronization operations between actions (Draw, Copy, Dispatch,
+--     Blit) reading or writing the same regions of memory. This feature is
+--     disabled by default.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>,
@@ -294,40 +328,19 @@ instance Zero ValidationFeaturesEXT where
 newtype ValidationFeatureEnableEXT = ValidationFeatureEnableEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT' specifies that GPU-assisted
--- validation is enabled. Activating this feature instruments shader
--- programs to generate additional diagnostic data. This feature is
--- disabled by default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT"
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = ValidationFeatureEnableEXT 0
 
--- | 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
--- specifies that the validation layers reserve a descriptor set binding
--- slot for their own use. The layer reports a value for
--- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxBoundDescriptorSets@
--- that is one less than the value reported by the device. If the device
--- supports the binding of only one descriptor set, the validation layer
--- does not perform GPU-assisted validation. This feature is disabled by
--- default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT"
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = ValidationFeatureEnableEXT 1
 
--- | 'VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT' specifies that Vulkan
--- best-practices validation is enabled. Activating this feature enables
--- the output of warnings related to common misuse of the API, but which
--- are not explicitly prohibited by the specification. This feature is
--- disabled by default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT"
 pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT = ValidationFeatureEnableEXT 2
 
--- | 'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT' specifies that the layers
--- will process @debugPrintfEXT@ operations in shaders and send the
--- resulting output to the debug callback. This feature is disabled by
--- default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT"
 pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT = ValidationFeatureEnableEXT 3
 
--- | 'VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT' specifies
--- that Vulkan synchronization validation is enabled. This feature reports
--- resource access conflicts due to missing or incorrect synchronization
--- operations between actions (Draw, Copy, Dispatch, Blit) reading or
--- writing the same regions of memory. This feature is disabled by default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT"
 pattern VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT = ValidationFeatureEnableEXT 4
 
 {-# COMPLETE
@@ -388,6 +401,43 @@ instance Read ValidationFeatureEnableEXT where
 
 -- | VkValidationFeatureDisableEXT - Specify validation features to disable
 --
+-- = Description
+--
+-- -   'VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
+--     checks are disabled.
+--
+-- -   'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
+--     validation, both runtime and standalone, is disabled. This
+--     validation occurs inside
+--     'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT' and
+--     'Vulkan.Core10.Shader.ShaderModuleCreateInfo'. This feature is
+--     enabled by default.
+--
+-- -   'VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
+--     safety validation is disabled. This feature is enabled by default.
+--
+-- -   'VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that
+--     stateless parameter validation is disabled. This feature is enabled
+--     by default.
+--
+-- -   'VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that
+--     object lifetime validation is disabled. This feature is enabled by
+--     default.
+--
+-- -   'VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
+--     validation checks are disabled. This feature is enabled by default.
+--     If this feature is disabled,
+--     'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' is implied.
+--
+-- -   'VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
+--     protection against duplicate non-dispatchable object handles is
+--     disabled. This feature is enabled by default.
+--
+-- -   'VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT' specifies
+--     that there will be no caching of shader validation results and every
+--     shader will be validated on every application execution. Shader
+--     validation caching is enabled by default.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>,
@@ -395,45 +445,28 @@ instance Read ValidationFeatureEnableEXT where
 newtype ValidationFeatureDisableEXT = ValidationFeatureDisableEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
--- checks are disabled.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_ALL_EXT"
 pattern VALIDATION_FEATURE_DISABLE_ALL_EXT = ValidationFeatureDisableEXT 0
 
--- | 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
--- validation, both runtime and standalone, is disabled. This validation
--- occurs inside
--- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT' and
--- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo'. This feature is enabled
--- by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT = ValidationFeatureDisableEXT 1
 
--- | 'VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
--- safety validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT"
 pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT = ValidationFeatureDisableEXT 2
 
--- | 'VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that stateless
--- parameter validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT = ValidationFeatureDisableEXT 3
 
--- | 'VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that object
--- lifetime validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT"
 pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = ValidationFeatureDisableEXT 4
 
--- | 'VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
--- validation checks are disabled. This feature is enabled by default. If
--- this feature is disabled, 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' is
--- implied.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = ValidationFeatureDisableEXT 5
 
--- | 'VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
--- protection against duplicate non-dispatchable object handles is
--- disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT"
 pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = ValidationFeatureDisableEXT 6
 
--- | 'VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT' specifies that
--- there will be no caching of shader validation results and every shader
--- will be validated on every application execution. Shader validation
--- caching is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT"
 pattern VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT = ValidationFeatureDisableEXT 7
 
 {-# COMPLETE

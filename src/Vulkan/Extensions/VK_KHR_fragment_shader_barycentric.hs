@@ -130,17 +130,17 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordkhr BaryCoordKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-barycoordkhr BaryCoordKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordnoperspkhr BaryCoordNoPerspKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-barycoordnoperspkhr BaryCoordNoPerspKHR>
 --
 -- == New SPIR-V Decorations
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-interpolation-decorations-pervertexkhr PerVertexKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-interpolation-decorations-pervertexkhr PerVertexKHR>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentBarycentricKHR FragmentBarycentricKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentBarycentricKHR FragmentBarycentricKHR>
 --
 -- == Issues
 --
@@ -151,7 +151,7 @@
 -- @BaryCoordNoPerspKHR@ /may/ also be decorated with the @Centroid@ or
 -- @Sample@ qualifiers to specify interpolation, like any other fragment
 -- shader input. If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSampleRateInterpolationFunctions shaderSampleRateInterpolationFunctions>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSampleRateInterpolationFunctions shaderSampleRateInterpolationFunctions>
 -- feature is enabled, the extended instructions InterpolateAtCentroid,
 -- InterpolateAtOffset, and InterpolateAtSample from the GLSL.std.450 /may/
 -- also be used with inputs decorated with @BaryCoordKHR@ or
@@ -170,7 +170,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_fragment_shader_barycentric Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_fragment_shader_barycentric Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -216,7 +216,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- = Description
 --
 -- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-barycentric Barycentric Interpolation>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-barycentric Barycentric Interpolation>
 -- for more information.
 --
 -- If the 'PhysicalDeviceFragmentShaderBarycentricFeaturesKHR' structure is
@@ -225,16 +225,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceFragmentShaderBarycentricFeaturesKHR' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceFragmentShaderBarycentricFeaturesKHR', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shader_barycentric VK_KHR_fragment_shader_barycentric>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_shader_barycentric VK_NV_fragment_shader_barycentric>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderBarycentricFeaturesKHR = PhysicalDeviceFragmentShaderBarycentricFeaturesKHR
@@ -287,12 +291,12 @@ instance Zero PhysicalDeviceFragmentShaderBarycentricFeaturesKHR where
 -- = Members
 --
 -- -   #limits-triStripVertexOrderIndependentOfProvokingVertex# When the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-flatshading provoking vertex mode>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc-flatshading provoking vertex mode>
 --     is
 --     'Vulkan.Extensions.VK_EXT_provoking_vertex.PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT',
 --     and the primitive order is odd in a triangle strip, the ordering of
 --     vertices is defined in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-barycentric-order-table-last-vertex last vertex table>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-barycentric-order-table-last-vertex last vertex table>.
 --     @triStripVertexOrderIndependentOfProvokingVertex@ equal to
 --     'Vulkan.Core10.FundamentalTypes.TRUE' indicates that the
 --     implementation ignores this and uses the vertex order defined by

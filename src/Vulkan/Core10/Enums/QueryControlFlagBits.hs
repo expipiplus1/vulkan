@@ -21,6 +21,11 @@ type QueryControlFlags = QueryControlFlagBits
 
 -- | VkQueryControlFlagBits - Bitmask specifying constraints on a query
 --
+-- = Description
+--
+-- -   'QUERY_CONTROL_PRECISE_BIT' specifies the precision of
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-occlusion occlusion queries>.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -28,8 +33,7 @@ type QueryControlFlags = QueryControlFlagBits
 newtype QueryControlFlagBits = QueryControlFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'QUERY_CONTROL_PRECISE_BIT' specifies the precision of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-occlusion occlusion queries>.
+-- No documentation found for Nested "VkQueryControlFlagBits" "VK_QUERY_CONTROL_PRECISE_BIT"
 pattern QUERY_CONTROL_PRECISE_BIT = QueryControlFlagBits 0x00000001
 
 conNameQueryControlFlagBits :: String

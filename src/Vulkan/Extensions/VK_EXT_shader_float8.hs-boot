@@ -1,0 +1,143 @@
+{-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_shader_float8 - device extension
+--
+-- = VK_EXT_shader_float8
+--
+-- [__Name String__]
+--     @VK_EXT_shader_float8@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     568
+--
+-- [__Revision__]
+--     1
+--
+-- [__Ratification Status__]
+--     Ratified
+--
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_cooperative_matrix
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_float8.html SPV_EXT_float8>
+--
+-- [__Contact__]
+--
+--     -   Kevin Petit
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_float8] @kpet%0A*Here describe the issue or question you have about the VK_EXT_shader_float8 extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_shader_float8.adoc VK_EXT_shader_float8>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2025-04-16
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Kévin Petit, Arm Ltd.
+--
+--     -   Stu Smith, AMD
+--
+--     -   Jeff Bolz, NVIDIA
+--
+--     -   Craig Graham, Samsung
+--
+-- == Description
+--
+-- This extension enables support for 8-bit floating-point data types as
+-- defined in SPV_EXT_float8.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceShaderFloat8FeaturesEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_SHADER_FLOAT8_EXTENSION_NAME'
+--
+-- -   'EXT_SHADER_FLOAT8_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_cooperative_matrix VK_KHR_cooperative_matrix>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR':
+--
+--     -   'Vulkan.Extensions.VK_NV_cooperative_vector.COMPONENT_TYPE_FLOAT8_E4M3_EXT'
+--
+--     -   'Vulkan.Extensions.VK_NV_cooperative_vector.COMPONENT_TYPE_FLOAT8_E5M2_EXT'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-Float8EXT Float8EXT>
+--
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-Float8CooperativeMatrixEXT Float8CooperativeMatrixEXT>
+--
+-- == Issues
+--
+-- 1) Resolve interactions with the changes VK_KHR_shader_float16 makes to
+-- rules for denorm flushing (always allowed by default for all FP
+-- formats). How to describe the requirement to preserve subnormals?
+--
+-- + __RESOLVED__: Subnormals are always preserved when converting FP8
+-- values to IEEE 754 binary 16. In all other cases, subnormals may be
+-- flushed to zero.
+--
+-- +
+--
+-- == Version History
+--
+-- -   Revision 1, 2025-04-16 (Kévin Petit)
+--
+--     -   Initial draft
+--
+-- == See Also
+--
+-- No cross-references are available
+--
+-- == Document Notes
+--
+-- For more information, see the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_float8 Vulkan Specification>.
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
+module Vulkan.Extensions.VK_EXT_shader_float8  (PhysicalDeviceShaderFloat8FeaturesEXT) where
+
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
+data PhysicalDeviceShaderFloat8FeaturesEXT
+
+instance ToCStruct PhysicalDeviceShaderFloat8FeaturesEXT
+instance Show PhysicalDeviceShaderFloat8FeaturesEXT
+
+instance FromCStruct PhysicalDeviceShaderFloat8FeaturesEXT
+

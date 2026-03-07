@@ -69,7 +69,7 @@
 -- @VulkanMemoryModelDeviceScope@, and
 -- @VulkanMemoryModelAvailabilityVisibilityChains@ capabilities in shader
 -- modules. The
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model Vulkan Memory Model>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-model Vulkan Memory Model>
 -- formally defines how to synchronize memory accesses to the same memory
 -- locations performed by multiple shader invocations.
 --
@@ -85,6 +85,11 @@
 -- extension is not, the @vulkanMemoryModel@ capability is optional. The
 -- original type, enum, and command names are still available as aliases of
 -- the core functionality.
+--
+-- == Promotion to Vulkan 1.3
+--
+-- If Vulkan 1.3 is supported, support for the @vulkanMemoryModel@ and
+-- @vulkanMemoryModelDeviceScope@ capabilities is required.
 --
 -- == New Structures
 --
@@ -106,7 +111,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-VulkanMemoryModel VulkanMemoryModelKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-VulkanMemoryModel VulkanMemoryModelKHR>
 --
 -- == Version History
 --
@@ -126,7 +131,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_vulkan_memory_model Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

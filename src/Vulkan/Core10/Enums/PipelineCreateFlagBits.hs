@@ -4,8 +4,6 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                    , PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
-                                                                           , PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
-                                                                           , PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT
                                                                            , PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
                                                                            , PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
                                                                            , PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
@@ -28,10 +26,12 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
+                                                                           , PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT
+                                                                           , PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT
                                                                            , PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT
                                                                            , PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT
-                                                                           , PIPELINE_CREATE_DISPATCH_BASE_BIT
                                                                            , PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+                                                                           , PIPELINE_CREATE_DISPATCH_BASE_BIT
                                                                            , ..
                                                                            )
                                                    ) where
@@ -68,8 +68,8 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     any shader input variables decorated as @ViewIndex@ will be assigned
 --     values as if they were decorated as @DeviceIndex@.
 --
--- -   'Vulkan.Core11.Promoted_From_VK_KHR_device_group.PIPELINE_CREATE_DISPATCH_BASE'
---     specifies that a compute pipeline /can/ be used with
+-- -   'PIPELINE_CREATE_DISPATCH_BASE_BIT' specifies that a compute
+--     pipeline /can/ be used with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.cmdDispatchBase'
 --     with a non-zero base workgroup.
 --
@@ -134,13 +134,14 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR' specifies that
---     triangle primitives will be skipped during traversal using
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
+--     sphere, LSS and triangle primitives will be skipped during traversal
+--     using
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
 --     instructions.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR' specifies that AABB
 --     primitives will be skipped during traversal using
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary-pipeline-trace-ray pipeline trace ray>
 --     instructions.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
@@ -149,7 +150,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV' specifies that the
 --     pipeline /can/ be used in combination with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands>.
 --
 -- -   'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT' specifies
 --     that pipeline creation will fail if a compile is required for
@@ -188,19 +189,21 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT' specifies that a
 --     pipeline will be used with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorbuffers descriptor buffers>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorbuffers descriptor buffers>,
 --     rather than
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets descriptor sets>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets descriptor sets>.
 --
 -- -   'PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT' specifies
---     that the pipeline /may/ be used with an attachment feedback loop
+--     that the pipeline /may/ be used with an attachment
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-feedbackloop feedback loop>
 --     including color attachments. It is ignored if
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
 --     is set in @pDynamicStates@.
 --
 -- -   'PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
 --     specifies that the pipeline /may/ be used with an attachment
---     feedback loop including depth-stencil attachments. It is ignored if
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-feedbackloop feedback loop>
+--     including depth-stencil attachments. It is ignored if
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
 --     is set in @pDynamicStates@.
 --
@@ -212,20 +215,20 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     that the ray tracing pipeline /can/ be used with acceleration
 --     structures which reference a displacement micromap array.
 --
--- -   'PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT' specifies that the
+-- -   'PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT' specifies that the
 --     pipeline /must/ not be bound to a protected command buffer.
 --
--- -   'PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT' specifies that the
+-- -   'PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT' specifies that the
 --     pipeline /must/ not be bound to an unprotected command buffer.
 --
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a
 -- parent and possibly a child in a pipeline hierarchy. See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>
 -- for more information.
 --
 -- When an implementation is looking up a pipeline in a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache pipeline cache>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-cache pipeline cache>,
 -- if that pipeline is being created using linked libraries,
 -- implementations /should/ always return an equivalent pipeline created
 -- with 'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' if available,
@@ -258,12 +261,6 @@ pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = PipelineCreateFlagBits 0x0000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
 pattern PIPELINE_CREATE_DERIVATIVE_BIT = PipelineCreateFlagBits 0x00000004
-
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT"
-pattern PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT = PipelineCreateFlagBits 0x40000000
-
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT"
-pattern PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT = PipelineCreateFlagBits 0x08000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"
 pattern PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = PipelineCreateFlagBits 0x10000000
@@ -331,17 +328,23 @@ pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = Pipeli
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00004000
 
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT"
+pattern PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT = PipelineCreateFlagBits 0x40000000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT"
+pattern PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT = PipelineCreateFlagBits 0x08000000
+
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT"
 pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT = PipelineCreateFlagBits 0x00000200
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"
 pattern PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = PipelineCreateFlagBits 0x00000100
 
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DISPATCH_BASE_BIT"
-pattern PIPELINE_CREATE_DISPATCH_BASE_BIT = PipelineCreateFlagBits 0x00000010
-
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
 pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = PipelineCreateFlagBits 0x00000008
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DISPATCH_BASE_BIT"
+pattern PIPELINE_CREATE_DISPATCH_BASE_BIT = PipelineCreateFlagBits 0x00000010
 
 conNamePipelineCreateFlagBits :: String
 conNamePipelineCreateFlagBits = "PipelineCreateFlagBits"
@@ -362,14 +365,6 @@ showTablePipelineCreateFlagBits =
   ,
     ( PIPELINE_CREATE_DERIVATIVE_BIT
     , "DERIVATIVE_BIT"
-    )
-  ,
-    ( PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
-    , "PROTECTED_ACCESS_ONLY_BIT_EXT"
-    )
-  ,
-    ( PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT
-    , "NO_PROTECTED_ACCESS_BIT_EXT"
     )
   ,
     ( PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
@@ -460,6 +455,14 @@ showTablePipelineCreateFlagBits =
     , "RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"
     )
   ,
+    ( PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT
+    , "PROTECTED_ACCESS_ONLY_BIT"
+    )
+  ,
+    ( PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT
+    , "NO_PROTECTED_ACCESS_BIT"
+    )
+  ,
     ( PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT
     , "EARLY_RETURN_ON_FAILURE_BIT"
     )
@@ -468,12 +471,12 @@ showTablePipelineCreateFlagBits =
     , "FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"
     )
   ,
-    ( PIPELINE_CREATE_DISPATCH_BASE_BIT
-    , "DISPATCH_BASE_BIT"
-    )
-  ,
     ( PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
     , "VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
+    )
+  ,
+    ( PIPELINE_CREATE_DISPATCH_BASE_BIT
+    , "DISPATCH_BASE_BIT"
     )
   ]
 

@@ -23,19 +23,26 @@ type ExternalFenceFeatureFlags = ExternalFenceFeatureFlagBits
 -- | VkExternalFenceFeatureFlagBits - Bitfield describing features of an
 -- external fence handle type
 --
+-- = Description
+--
+-- -   'EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT' specifies handles of this
+--     type /can/ be exported from Vulkan fence objects.
+--
+-- -   'EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT' specifies handles of this
+--     type /can/ be imported to Vulkan fence objects.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_capabilities VK_KHR_external_fence_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalFenceFeatureFlags'
 newtype ExternalFenceFeatureFlagBits = ExternalFenceFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT' specifies handles of this type
--- /can/ be exported from Vulkan fence objects.
+-- No documentation found for Nested "VkExternalFenceFeatureFlagBits" "VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"
 pattern EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000001
 
--- | 'EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT' specifies handles of this type
--- /can/ be imported to Vulkan fence objects.
+-- No documentation found for Nested "VkExternalFenceFeatureFlagBits" "VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"
 pattern EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000002
 
 conNameExternalFenceFeatureFlagBits :: String

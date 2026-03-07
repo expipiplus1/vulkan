@@ -71,7 +71,7 @@
 --
 -- == Promotion to Vulkan 1.1
 --
--- The following enums, types and commands are included as interactions
+-- The following enums, types, and commands are included as interactions
 -- with @VK_KHR_swapchain@:
 --
 -- -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR'
@@ -263,6 +263,8 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
+--     -   'PIPELINE_CREATE_DISPATCH_BASE_BIT_KHR'
+--
 --     -   'PIPELINE_CREATE_DISPATCH_BASE_KHR'
 --
 --     -   'PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR'
@@ -325,11 +327,11 @@
 --
 -- == New Built-in Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-deviceindex DeviceIndex>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-deviceindex DeviceIndex>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DeviceGroup DeviceGroup>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-DeviceGroup DeviceGroup>
 --
 -- == Version History
 --
@@ -361,7 +363,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_device_group Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_device_group Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -376,6 +378,7 @@ module Vulkan.Extensions.VK_KHR_device_group  ( pattern STRUCTURE_TYPE_MEMORY_AL
                                               , pattern PEER_MEMORY_FEATURE_GENERIC_DST_BIT_KHR
                                               , pattern MEMORY_ALLOCATE_DEVICE_MASK_BIT_KHR
                                               , pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR
+                                              , pattern PIPELINE_CREATE_DISPATCH_BASE_BIT_KHR
                                               , pattern PIPELINE_CREATE_DISPATCH_BASE_KHR
                                               , pattern DEPENDENCY_DEVICE_GROUP_BIT_KHR
                                               , getDeviceGroupPeerMemoryFeaturesKHR
@@ -443,7 +446,8 @@ import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
 import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlagBits(PEER_MEMORY_FEATURE_GENERIC_DST_BIT))
 import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
 import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlagBits(PEER_MEMORY_FEATURE_GENERIC_SRC_BIT))
-import Vulkan.Core11.Promoted_From_VK_KHR_device_group (pattern PIPELINE_CREATE_DISPATCH_BASE)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_DISPATCH_BASE_BIT))
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO))
@@ -517,8 +521,12 @@ pattern MEMORY_ALLOCATE_DEVICE_MASK_BIT_KHR = MEMORY_ALLOCATE_DEVICE_MASK_BIT
 pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR = PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
 
 
+-- No documentation found for TopLevel "VK_PIPELINE_CREATE_DISPATCH_BASE_BIT_KHR"
+pattern PIPELINE_CREATE_DISPATCH_BASE_BIT_KHR = PIPELINE_CREATE_DISPATCH_BASE_BIT
+
+
 -- No documentation found for TopLevel "VK_PIPELINE_CREATE_DISPATCH_BASE_KHR"
-pattern PIPELINE_CREATE_DISPATCH_BASE_KHR = PIPELINE_CREATE_DISPATCH_BASE
+pattern PIPELINE_CREATE_DISPATCH_BASE_KHR = PIPELINE_CREATE_DISPATCH_BASE_BIT
 
 
 -- No documentation found for TopLevel "VK_DEPENDENCY_DEVICE_GROUP_BIT_KHR"

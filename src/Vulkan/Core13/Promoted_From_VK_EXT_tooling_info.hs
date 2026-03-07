@@ -110,13 +110,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -165,8 +169,7 @@ getPhysicalDeviceToolProperties physicalDevice = liftIO . evalContT $ do
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core13.Enums.ToolPurposeFlagBits.ToolPurposeFlags',
--- 'getPhysicalDeviceToolProperties',
--- 'Vulkan.Extensions.VK_EXT_tooling_info.getPhysicalDeviceToolPropertiesEXT'
+-- 'getPhysicalDeviceToolProperties', 'getPhysicalDeviceToolProperties'
 data PhysicalDeviceToolProperties = PhysicalDeviceToolProperties
   { -- | @name@ is a null-terminated UTF-8 string containing the name of the
     -- tool.

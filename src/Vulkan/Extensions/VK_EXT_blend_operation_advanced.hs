@@ -137,7 +137,7 @@
 --     -   'PhysicalDeviceBlendOperationAdvancedPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendStateCreateInfo':
 --
 --     -   'PipelineColorBlendAdvancedStateCreateInfoEXT'
 --
@@ -278,7 +278,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_blend_operation_advanced Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -343,9 +343,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceBlendOperationAdvancedFeaturesEXT' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceBlendOperationAdvancedFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -357,9 +361,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 data PhysicalDeviceBlendOperationAdvancedFeaturesEXT = PhysicalDeviceBlendOperationAdvancedFeaturesEXT
   { -- | #features-advancedBlendCoherentOperations#
     -- @advancedBlendCoherentOperations@ specifies whether blending using
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>
     -- is guaranteed to execute atomically and in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#drawing-primitive-order primitive order>.
     -- If this is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT'
     -- is treated the same as
@@ -431,9 +435,9 @@ instance Zero PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
 data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOperationAdvancedPropertiesEXT
   { -- | #limits-advancedBlendMaxColorAttachments#
     -- @advancedBlendMaxColorAttachments@ is one greater than the highest color
-    -- attachment index that /can/ be used in a subpass, for a pipeline that
-    -- uses an
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>.
+    -- attachment index that /can/ be used in a render pass instance, for a
+    -- pipeline that uses an
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>.
     advancedBlendMaxColorAttachments :: Word32
   , -- | #limits-advancedBlendIndependentBlend# @advancedBlendIndependentBlend@
     -- specifies whether advanced blend operations /can/ vary per-attachment.
@@ -461,7 +465,7 @@ data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOper
   , -- | #limits-advancedBlendAllOperations# @advancedBlendAllOperations@
     -- specifies whether all advanced blend operation enums are supported. See
     -- the valid usage of
-    -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'.
+    -- 'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendAttachmentState'.
     advancedBlendAllOperations :: Bool
   }
   deriving (Typeable, Eq)
@@ -541,19 +545,19 @@ instance Zero PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
 --
 -- -   #VUID-VkPipelineColorBlendAdvancedStateCreateInfoEXT-srcPremultiplied-01424#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedSrcColor non-premultiplied source color>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-advancedBlendNonPremultipliedSrcColor non-premultiplied source color>
 --     property is not supported, @srcPremultiplied@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   #VUID-VkPipelineColorBlendAdvancedStateCreateInfoEXT-dstPremultiplied-01425#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedDstColor non-premultiplied destination color>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-advancedBlendNonPremultipliedDstColor non-premultiplied destination color>
 --     property is not supported, @dstPremultiplied@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   #VUID-VkPipelineColorBlendAdvancedStateCreateInfoEXT-blendOverlap-01426#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-advancedBlendCorrelatedOverlap correlated overlap>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-advancedBlendCorrelatedOverlap correlated overlap>
 --     property is not supported, @blendOverlap@ /must/ be
 --     'BLEND_OVERLAP_UNCORRELATED_EXT'
 --
@@ -634,7 +638,14 @@ instance Zero PipelineColorBlendAdvancedStateCreateInfoEXT where
 --
 -- = Description
 --
--- \'
+-- -   'BLEND_OVERLAP_UNCORRELATED_EXT' specifies that there is no
+--     correlation between the source and destination coverage.
+--
+-- -   'BLEND_OVERLAP_CONJOINT_EXT' specifies that the source and
+--     destination coverage are considered to have maximal overlap.
+--
+-- -   'BLEND_OVERLAP_DISJOINT_EXT' specifies that the source and
+--     destination coverage are considered to have minimal overlap.
 --
 -- +----------------------------------+--------------------------------------------------------------------------------------+
 -- | Overlap Mode                     | Weighting Equations                                                                  |
@@ -668,16 +679,13 @@ instance Zero PipelineColorBlendAdvancedStateCreateInfoEXT where
 newtype BlendOverlapEXT = BlendOverlapEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'BLEND_OVERLAP_UNCORRELATED_EXT' specifies that there is no correlation
--- between the source and destination coverage.
+-- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_UNCORRELATED_EXT"
 pattern BLEND_OVERLAP_UNCORRELATED_EXT = BlendOverlapEXT 0
 
--- | 'BLEND_OVERLAP_DISJOINT_EXT' specifies that the source and destination
--- coverage are considered to have minimal overlap.
+-- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_DISJOINT_EXT"
 pattern BLEND_OVERLAP_DISJOINT_EXT = BlendOverlapEXT 1
 
--- | 'BLEND_OVERLAP_CONJOINT_EXT' specifies that the source and destination
--- coverage are considered to have maximal overlap.
+-- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_CONJOINT_EXT"
 pattern BLEND_OVERLAP_CONJOINT_EXT = BlendOverlapEXT 2
 
 {-# COMPLETE

@@ -32,6 +32,12 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_memory_decompression VK_EXT_memory_decompression>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
@@ -94,9 +100,9 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV'
 --
 -- == Version History
 --
@@ -111,14 +117,11 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_memory_decompression Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_memory_decompression Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_memory_decompression  ( DecompressMemoryRegionNV
-                                                     , PhysicalDeviceMemoryDecompressionFeaturesNV
-                                                     , PhysicalDeviceMemoryDecompressionPropertiesNV
-                                                     ) where
+module Vulkan.Extensions.VK_NV_memory_decompression  (DecompressMemoryRegionNV) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
@@ -130,20 +133,4 @@ instance ToCStruct DecompressMemoryRegionNV
 instance Show DecompressMemoryRegionNV
 
 instance FromCStruct DecompressMemoryRegionNV
-
-
-data PhysicalDeviceMemoryDecompressionFeaturesNV
-
-instance ToCStruct PhysicalDeviceMemoryDecompressionFeaturesNV
-instance Show PhysicalDeviceMemoryDecompressionFeaturesNV
-
-instance FromCStruct PhysicalDeviceMemoryDecompressionFeaturesNV
-
-
-data PhysicalDeviceMemoryDecompressionPropertiesNV
-
-instance ToCStruct PhysicalDeviceMemoryDecompressionPropertiesNV
-instance Show PhysicalDeviceMemoryDecompressionPropertiesNV
-
-instance FromCStruct PhysicalDeviceMemoryDecompressionPropertiesNV
 

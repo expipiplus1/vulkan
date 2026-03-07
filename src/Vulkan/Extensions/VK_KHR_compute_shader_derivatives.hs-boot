@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -75,7 +77,7 @@
 --
 --     -   Hans-Kristian Arntzen, Valve
 --
---     -   Matthew Netsh, Qualcomm
+--     -   Matthew Netsch, Qualcomm
 --
 -- == Description
 --
@@ -96,7 +98,7 @@
 --
 -- The new execution modes are supported in compute shaders and optionally
 -- (see
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-meshAndTaskShaderDerivatives meshAndTaskShaderDerivatives>)
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-meshAndTaskShaderDerivatives meshAndTaskShaderDerivatives>)
 -- in mesh and task shaders.
 --
 -- == New Structures
@@ -126,9 +128,9 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupQuadsKHR ComputeDerivativeGroupQuadsKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupQuadsKHR ComputeDerivativeGroupQuadsKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupLinearKHR ComputeDerivativeGroupLinearKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupLinearKHR ComputeDerivativeGroupLinearKHR>
 --
 -- == Examples
 --
@@ -149,7 +151,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_compute_shader_derivatives Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_compute_shader_derivatives Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

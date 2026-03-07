@@ -89,13 +89,12 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- This extension has been partially promoted. The format enumerants
--- introduced by the extension are included in core Vulkan 1.3, with the
--- EXT suffix omitted. However, runtime support for these formats is
--- optional in core Vulkan 1.3, while if this extension is supported,
--- runtime support is mandatory. The feature structure is not promoted. The
--- original enum names are still available as aliases of the core
--- functionality.
+-- The format enumerants introduced by the extension are included in core
+-- Vulkan 1.3, with the EXT suffix omitted. However, runtime support for
+-- these formats is optional in core Vulkan 1.3, while if this extension is
+-- supported, runtime support is mandatory. The feature structure is not
+-- promoted. The original enum names are still available as aliases of the
+-- core functionality.
 --
 -- == Version History
 --
@@ -110,7 +109,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_4444_formats Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_4444_formats Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

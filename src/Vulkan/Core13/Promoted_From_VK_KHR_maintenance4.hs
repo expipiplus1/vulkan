@@ -263,8 +263,7 @@ getDeviceImageSparseMemoryRequirements device info = liftIO . evalContT $ do
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core10.Buffer.BufferCreateInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getDeviceBufferMemoryRequirements',
--- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceBufferMemoryRequirementsKHR'
+-- 'getDeviceBufferMemoryRequirements', 'getDeviceBufferMemoryRequirements'
 data DeviceBufferMemoryRequirements = DeviceBufferMemoryRequirements
   { -- | @pCreateInfo@ is a pointer to a 'Vulkan.Core10.Buffer.BufferCreateInfo'
     -- structure containing parameters affecting creation of the buffer to
@@ -348,7 +347,7 @@ instance Zero DeviceBufferMemoryRequirements where
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 --     @planeAspect@ /must/ be a single valid
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar-image-aspect multi-planar aspect mask>
 --     bit
 --
 -- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-06420# If
@@ -384,10 +383,9 @@ instance Zero DeviceBufferMemoryRequirements where
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getDeviceImageMemoryRequirements',
--- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageMemoryRequirementsKHR',
+-- 'getDeviceImageMemoryRequirements', 'getDeviceImageMemoryRequirements',
 -- 'getDeviceImageSparseMemoryRequirements',
--- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageSparseMemoryRequirementsKHR'
+-- 'getDeviceImageSparseMemoryRequirements'
 data DeviceImageMemoryRequirements = DeviceImageMemoryRequirements
   { -- | @pCreateInfo@ is a pointer to a 'Vulkan.Core10.Image.ImageCreateInfo'
     -- structure containing parameters affecting creation of the image to
@@ -454,9 +452,13 @@ instance Zero DeviceImageMemoryRequirements where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceMaintenance4Features' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceMaintenance4Features', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

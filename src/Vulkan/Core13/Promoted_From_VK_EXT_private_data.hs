@@ -90,7 +90,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCreatePrivateDataSlot-privateData-04564# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-privateData privateData>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-privateData privateData>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -110,6 +110,9 @@ foreign import ccall
 --     @pPrivateDataSlot@ /must/ be a valid pointer to a
 --     'Vulkan.Core13.Handles.PrivateDataSlot' handle
 --
+-- -   #VUID-vkCreatePrivateDataSlot-device-queuecount# The device /must/
+--     have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -119,6 +122,10 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -135,7 +142,7 @@ createPrivateDataSlot :: forall io
                       -> -- | @pCreateInfo@ is a pointer to a 'PrivateDataSlotCreateInfo'
                          PrivateDataSlotCreateInfo
                       -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (PrivateDataSlot)
@@ -229,7 +236,7 @@ destroyPrivateDataSlot :: forall io
                        -> -- | @privateDataSlot@ is the private data slot to destroy.
                           PrivateDataSlot
                        -> -- | @pAllocator@ controls host memory allocation as described in the
-                          -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                          -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                           -- chapter.
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io ()
@@ -268,6 +275,10 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -468,8 +479,7 @@ instance Zero DevicePrivateDataCreateInfo where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core13.Enums.PrivateDataSlotCreateFlags.PrivateDataSlotCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'createPrivateDataSlot',
--- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT'
+-- 'createPrivateDataSlot', 'createPrivateDataSlot'
 data PrivateDataSlotCreateInfo = PrivateDataSlotCreateInfo
   { -- | @flags@ is reserved for future use.
     --
@@ -529,9 +539,13 @@ instance Zero PrivateDataSlotCreateInfo where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePrivateDataFeatures' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
--- enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePrivateDataFeatures', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -544,7 +558,7 @@ instance Zero PrivateDataSlotCreateInfo where
 data PhysicalDevicePrivateDataFeatures = PhysicalDevicePrivateDataFeatures
   { -- | #extension-features-privateData# @privateData@ indicates whether the
     -- implementation supports private data. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#private-data Private Data>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#private-data Private Data>.
     privateData :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

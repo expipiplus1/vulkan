@@ -55,6 +55,7 @@ library
       Vulkan.Core10.CommandBuffer
       Vulkan.Core10.CommandBufferBuilding
       Vulkan.Core10.CommandPool
+      Vulkan.Core10.ComputePipeline
       Vulkan.Core10.DescriptorSet
       Vulkan.Core10.Device
       Vulkan.Core10.DeviceInitialization
@@ -130,7 +131,7 @@ library
       Vulkan.Core10.Enums.PrimitiveTopology
       Vulkan.Core10.Enums.QueryControlFlagBits
       Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits
-      Vulkan.Core10.Enums.QueryPoolCreateFlags
+      Vulkan.Core10.Enums.QueryPoolCreateFlagBits
       Vulkan.Core10.Enums.QueryResultFlagBits
       Vulkan.Core10.Enums.QueryType
       Vulkan.Core10.Enums.QueueFlagBits
@@ -159,6 +160,7 @@ library
       Vulkan.Core10.Fence
       Vulkan.Core10.FuncPointers
       Vulkan.Core10.FundamentalTypes
+      Vulkan.Core10.GraphicsPipeline
       Vulkan.Core10.Handles
       Vulkan.Core10.Image
       Vulkan.Core10.ImageView
@@ -167,7 +169,6 @@ library
       Vulkan.Core10.MemoryManagement
       Vulkan.Core10.OtherTypes
       Vulkan.Core10.Pass
-      Vulkan.Core10.Pipeline
       Vulkan.Core10.PipelineCache
       Vulkan.Core10.PipelineLayout
       Vulkan.Core10.Query
@@ -284,6 +285,31 @@ library
       Vulkan.Core13.Promoted_From_VK_KHR_shader_terminate_invocation
       Vulkan.Core13.Promoted_From_VK_KHR_synchronization2
       Vulkan.Core13.Promoted_From_VK_KHR_zero_initialize_workgroup_memory
+      Vulkan.Core14
+      Vulkan.Core14.Enums
+      Vulkan.Core14.Enums.BufferUsageFlags2
+      Vulkan.Core14.Enums.HostImageCopyFlagBits
+      Vulkan.Core14.Enums.LineRasterizationMode
+      Vulkan.Core14.Enums.MemoryUnmapFlagBits
+      Vulkan.Core14.Enums.PipelineCreateFlags2
+      Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior
+      Vulkan.Core14.Enums.PipelineRobustnessImageBehavior
+      Vulkan.Core14.Enums.QueueGlobalPriority
+      Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality'
+      Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'
+      Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_global_priority
+      Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'
+      Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap
+      Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap
+      Vulkan.Core14.PromotedStreamingTransfers'
       Vulkan.CStruct.Extends
       Vulkan.CStruct.Utils
       Vulkan.Dynamic
@@ -314,14 +340,19 @@ library
       Vulkan.Extensions.VK_AMD_shader_info
       Vulkan.Extensions.VK_AMD_shader_trinary_minmax
       Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
+      Vulkan.Extensions.VK_AMDX_dense_geometry_format
       Vulkan.Extensions.VK_AMDX_shader_enqueue
       Vulkan.Extensions.VK_ANDROID_external_format_resolve
       Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+      Vulkan.Extensions.VK_ARM_data_graph
+      Vulkan.Extensions.VK_ARM_format_pack
+      Vulkan.Extensions.VK_ARM_pipeline_opacity_micromap
       Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
       Vulkan.Extensions.VK_ARM_render_pass_striped
       Vulkan.Extensions.VK_ARM_scheduling_controls
       Vulkan.Extensions.VK_ARM_shader_core_builtins
       Vulkan.Extensions.VK_ARM_shader_core_properties
+      Vulkan.Extensions.VK_ARM_tensors
       Vulkan.Extensions.VK_EXT_4444_formats
       Vulkan.Extensions.VK_EXT_acquire_drm_display
       Vulkan.Extensions.VK_EXT_acquire_xlib_display
@@ -336,6 +367,7 @@ library
       Vulkan.Extensions.VK_EXT_conditional_rendering
       Vulkan.Extensions.VK_EXT_conservative_rasterization
       Vulkan.Extensions.VK_EXT_custom_border_color
+      Vulkan.Extensions.VK_EXT_custom_resolve
       Vulkan.Extensions.VK_EXT_debug_marker
       Vulkan.Extensions.VK_EXT_debug_report
       Vulkan.Extensions.VK_EXT_debug_utils
@@ -346,6 +378,7 @@ library
       Vulkan.Extensions.VK_EXT_depth_clip_enable
       Vulkan.Extensions.VK_EXT_depth_range_unrestricted
       Vulkan.Extensions.VK_EXT_descriptor_buffer
+      Vulkan.Extensions.VK_EXT_descriptor_heap
       Vulkan.Extensions.VK_EXT_descriptor_indexing
       Vulkan.Extensions.VK_EXT_device_address_binding_report
       Vulkan.Extensions.VK_EXT_device_fault
@@ -363,9 +396,11 @@ library
       Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified
       Vulkan.Extensions.VK_EXT_external_memory_dma_buf
       Vulkan.Extensions.VK_EXT_external_memory_host
+      Vulkan.Extensions.VK_EXT_external_memory_metal
       Vulkan.Extensions.VK_EXT_filter_cubic
       Vulkan.Extensions.VK_EXT_fragment_density_map
       Vulkan.Extensions.VK_EXT_fragment_density_map2
+      Vulkan.Extensions.VK_EXT_fragment_density_map_offset
       Vulkan.Extensions.VK_EXT_fragment_shader_interlock
       Vulkan.Extensions.VK_EXT_frame_boundary
       Vulkan.Extensions.VK_EXT_full_screen_exclusive
@@ -392,6 +427,7 @@ library
       Vulkan.Extensions.VK_EXT_load_store_op_none
       Vulkan.Extensions.VK_EXT_map_memory_placed
       Vulkan.Extensions.VK_EXT_memory_budget
+      Vulkan.Extensions.VK_EXT_memory_decompression
       Vulkan.Extensions.VK_EXT_memory_priority
       Vulkan.Extensions.VK_EXT_mesh_shader
       Vulkan.Extensions.VK_EXT_metal_objects
@@ -413,29 +449,36 @@ library
       Vulkan.Extensions.VK_EXT_pipeline_robustness
       Vulkan.Extensions.VK_EXT_post_depth_coverage
       Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready
+      Vulkan.Extensions.VK_EXT_present_timing
       Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
       Vulkan.Extensions.VK_EXT_primitives_generated_query
       Vulkan.Extensions.VK_EXT_private_data
       Vulkan.Extensions.VK_EXT_provoking_vertex
       Vulkan.Extensions.VK_EXT_queue_family_foreign
       Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access
+      Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder
       Vulkan.Extensions.VK_EXT_rgba10x6_formats
       Vulkan.Extensions.VK_EXT_robustness2
       Vulkan.Extensions.VK_EXT_sample_locations
       Vulkan.Extensions.VK_EXT_sampler_filter_minmax
       Vulkan.Extensions.VK_EXT_scalar_block_layout
       Vulkan.Extensions.VK_EXT_separate_stencil_usage
+      Vulkan.Extensions.VK_EXT_shader_64bit_indexing
       Vulkan.Extensions.VK_EXT_shader_atomic_float
       Vulkan.Extensions.VK_EXT_shader_atomic_float2
       Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
+      Vulkan.Extensions.VK_EXT_shader_float8
       Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
+      Vulkan.Extensions.VK_EXT_shader_long_vector
       Vulkan.Extensions.VK_EXT_shader_module_identifier
       Vulkan.Extensions.VK_EXT_shader_object
       Vulkan.Extensions.VK_EXT_shader_replicated_composites
       Vulkan.Extensions.VK_EXT_shader_stencil_export
       Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
+      Vulkan.Extensions.VK_EXT_shader_subgroup_partitioned
       Vulkan.Extensions.VK_EXT_shader_subgroup_vote
       Vulkan.Extensions.VK_EXT_shader_tile_image
+      Vulkan.Extensions.VK_EXT_shader_uniform_buffer_unsized_array
       Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
       Vulkan.Extensions.VK_EXT_subgroup_size_control
       Vulkan.Extensions.VK_EXT_subpass_merge_feedback
@@ -443,6 +486,7 @@ library
       Vulkan.Extensions.VK_EXT_swapchain_colorspace
       Vulkan.Extensions.VK_EXT_swapchain_maintenance1
       Vulkan.Extensions.VK_EXT_texel_buffer_alignment
+      Vulkan.Extensions.VK_EXT_texture_compression_astc_3d
       Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr
       Vulkan.Extensions.VK_EXT_tooling_info
       Vulkan.Extensions.VK_EXT_transform_feedback
@@ -454,6 +498,7 @@ library
       Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
       Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
       Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+      Vulkan.Extensions.VK_EXT_zero_initialize_device_memory
       Vulkan.Extensions.VK_FUCHSIA_buffer_collection
       Vulkan.Extensions.VK_FUCHSIA_external_memory
       Vulkan.Extensions.VK_FUCHSIA_external_semaphore
@@ -484,9 +529,11 @@ library
       Vulkan.Extensions.VK_KHR_compute_shader_derivatives
       Vulkan.Extensions.VK_KHR_cooperative_matrix
       Vulkan.Extensions.VK_KHR_copy_commands2
+      Vulkan.Extensions.VK_KHR_copy_memory_indirect
       Vulkan.Extensions.VK_KHR_create_renderpass2
       Vulkan.Extensions.VK_KHR_dedicated_allocation
       Vulkan.Extensions.VK_KHR_deferred_host_operations
+      Vulkan.Extensions.VK_KHR_depth_clamp_zero_one
       Vulkan.Extensions.VK_KHR_depth_stencil_resolve
       Vulkan.Extensions.VK_KHR_descriptor_update_template
       Vulkan.Extensions.VK_KHR_device_group
@@ -521,15 +568,19 @@ library
       Vulkan.Extensions.VK_KHR_imageless_framebuffer
       Vulkan.Extensions.VK_KHR_incremental_present
       Vulkan.Extensions.VK_KHR_index_type_uint8
+      Vulkan.Extensions.VK_KHR_internally_synchronized_queues
       Vulkan.Extensions.VK_KHR_line_rasterization
       Vulkan.Extensions.VK_KHR_load_store_op_none
       Vulkan.Extensions.VK_KHR_maintenance1
+      Vulkan.Extensions.VK_KHR_maintenance10
       Vulkan.Extensions.VK_KHR_maintenance2
       Vulkan.Extensions.VK_KHR_maintenance3
       Vulkan.Extensions.VK_KHR_maintenance4
       Vulkan.Extensions.VK_KHR_maintenance5
       Vulkan.Extensions.VK_KHR_maintenance6
       Vulkan.Extensions.VK_KHR_maintenance7
+      Vulkan.Extensions.VK_KHR_maintenance8
+      Vulkan.Extensions.VK_KHR_maintenance9
       Vulkan.Extensions.VK_KHR_map_memory2
       Vulkan.Extensions.VK_KHR_multiview
       Vulkan.Extensions.VK_KHR_performance_query
@@ -539,23 +590,29 @@ library
       Vulkan.Extensions.VK_KHR_portability_enumeration
       Vulkan.Extensions.VK_KHR_portability_subset
       Vulkan.Extensions.VK_KHR_present_id
+      Vulkan.Extensions.VK_KHR_present_id2
+      Vulkan.Extensions.VK_KHR_present_mode_fifo_latest_ready
       Vulkan.Extensions.VK_KHR_present_wait
+      Vulkan.Extensions.VK_KHR_present_wait2
       Vulkan.Extensions.VK_KHR_push_descriptor
       Vulkan.Extensions.VK_KHR_ray_query
       Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1
       Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
       Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch
       Vulkan.Extensions.VK_KHR_relaxed_block_layout
+      Vulkan.Extensions.VK_KHR_robustness2
       Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
       Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
       Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts
       Vulkan.Extensions.VK_KHR_shader_atomic_int64
+      Vulkan.Extensions.VK_KHR_shader_bfloat16
       Vulkan.Extensions.VK_KHR_shader_clock
       Vulkan.Extensions.VK_KHR_shader_draw_parameters
       Vulkan.Extensions.VK_KHR_shader_expect_assume
       Vulkan.Extensions.VK_KHR_shader_float16_int8
       Vulkan.Extensions.VK_KHR_shader_float_controls
       Vulkan.Extensions.VK_KHR_shader_float_controls2
+      Vulkan.Extensions.VK_KHR_shader_fma
       Vulkan.Extensions.VK_KHR_shader_integer_dot_product
       Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence
       Vulkan.Extensions.VK_KHR_shader_non_semantic_info
@@ -565,15 +622,19 @@ library
       Vulkan.Extensions.VK_KHR_shader_subgroup_rotate
       Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
       Vulkan.Extensions.VK_KHR_shader_terminate_invocation
+      Vulkan.Extensions.VK_KHR_shader_untyped_pointers
       Vulkan.Extensions.VK_KHR_shared_presentable_image
       Vulkan.Extensions.VK_KHR_spirv_1_4
       Vulkan.Extensions.VK_KHR_storage_buffer_storage_class
       Vulkan.Extensions.VK_KHR_surface
+      Vulkan.Extensions.VK_KHR_surface_maintenance1
       Vulkan.Extensions.VK_KHR_surface_protected_capabilities
       Vulkan.Extensions.VK_KHR_swapchain
+      Vulkan.Extensions.VK_KHR_swapchain_maintenance1
       Vulkan.Extensions.VK_KHR_swapchain_mutable_format
       Vulkan.Extensions.VK_KHR_synchronization2
       Vulkan.Extensions.VK_KHR_timeline_semaphore
+      Vulkan.Extensions.VK_KHR_unified_image_layouts
       Vulkan.Extensions.VK_KHR_uniform_buffer_standard_layout
       Vulkan.Extensions.VK_KHR_variable_pointers
       Vulkan.Extensions.VK_KHR_vertex_attribute_divisor
@@ -594,9 +655,11 @@ library
       Vulkan.Extensions.VK_NV_acquire_winrt_display
       Vulkan.Extensions.VK_NV_clip_space_w_scaling
       Vulkan.Extensions.VK_NV_command_buffer_inheritance
+      Vulkan.Extensions.VK_NV_compute_occupancy_priority
       Vulkan.Extensions.VK_NV_compute_shader_derivatives
       Vulkan.Extensions.VK_NV_cooperative_matrix
       Vulkan.Extensions.VK_NV_cooperative_matrix2
+      Vulkan.Extensions.VK_NV_cooperative_vector
       Vulkan.Extensions.VK_NV_copy_memory_indirect
       Vulkan.Extensions.VK_NV_corner_sampled_image
       Vulkan.Extensions.VK_NV_coverage_reduction_mode
@@ -611,6 +674,7 @@ library
       Vulkan.Extensions.VK_NV_displacement_micromap
       Vulkan.Extensions.VK_NV_display_stereo
       Vulkan.Extensions.VK_NV_extended_sparse_address_space
+      Vulkan.Extensions.VK_NV_external_compute_queue
       Vulkan.Extensions.VK_NV_external_memory
       Vulkan.Extensions.VK_NV_external_memory_capabilities
       Vulkan.Extensions.VK_NV_external_memory_rdma
@@ -631,9 +695,12 @@ library
       Vulkan.Extensions.VK_NV_optical_flow
       Vulkan.Extensions.VK_NV_per_stage_descriptor_set
       Vulkan.Extensions.VK_NV_present_barrier
+      Vulkan.Extensions.VK_NV_present_metering
+      Vulkan.Extensions.VK_NV_push_constant_bank
       Vulkan.Extensions.VK_NV_raw_access_chains
       Vulkan.Extensions.VK_NV_ray_tracing
       Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
+      Vulkan.Extensions.VK_NV_ray_tracing_linear_swept_spheres
       Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
       Vulkan.Extensions.VK_NV_ray_tracing_validation
       Vulkan.Extensions.VK_NV_representative_fragment_test
@@ -650,6 +717,8 @@ library
       Vulkan.Extensions.VK_NVX_binary_import
       Vulkan.Extensions.VK_NVX_image_view_handle
       Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
+      Vulkan.Extensions.VK_QCOM_cooperative_matrix_conversion
+      Vulkan.Extensions.VK_QCOM_data_graph_model
       Vulkan.Extensions.VK_QCOM_filter_cubic_clamp
       Vulkan.Extensions.VK_QCOM_filter_cubic_weights
       Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
@@ -661,12 +730,16 @@ library
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
       Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+      Vulkan.Extensions.VK_QCOM_tile_memory_heap
       Vulkan.Extensions.VK_QCOM_tile_properties
+      Vulkan.Extensions.VK_QCOM_tile_shading
       Vulkan.Extensions.VK_QCOM_ycbcr_degamma
       Vulkan.Extensions.VK_QNX_external_memory_screen_buffer
       Vulkan.Extensions.VK_QNX_screen_surface
       Vulkan.Extensions.VK_SEC_amigo_profiling
+      Vulkan.Extensions.VK_SEC_pipeline_cache_incremental_mode
       Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping
+      Vulkan.Extensions.VK_VALVE_fragment_density_map_layered
       Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
       Vulkan.NamedType
       Vulkan.SPIRVRequirements

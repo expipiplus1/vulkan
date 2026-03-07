@@ -97,7 +97,7 @@
 --
 -- == New Enums
 --
--- -   'ComponentTypeKHR'
+-- -   'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'
 --
 -- -   'ScopeKHR'
 --
@@ -117,7 +117,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixKHR CooperativeMatrixKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixKHR CooperativeMatrixKHR>
 --
 -- == Version History
 --
@@ -136,7 +136,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_cooperative_matrix Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_cooperative_matrix Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -150,23 +150,11 @@ module Vulkan.Extensions.VK_KHR_cooperative_matrix  ( getPhysicalDeviceCooperati
                                                               , SCOPE_QUEUE_FAMILY_KHR
                                                               , ..
                                                               )
-                                                    , ComponentTypeKHR( COMPONENT_TYPE_FLOAT16_KHR
-                                                                      , COMPONENT_TYPE_FLOAT32_KHR
-                                                                      , COMPONENT_TYPE_FLOAT64_KHR
-                                                                      , COMPONENT_TYPE_SINT8_KHR
-                                                                      , COMPONENT_TYPE_SINT16_KHR
-                                                                      , COMPONENT_TYPE_SINT32_KHR
-                                                                      , COMPONENT_TYPE_SINT64_KHR
-                                                                      , COMPONENT_TYPE_UINT8_KHR
-                                                                      , COMPONENT_TYPE_UINT16_KHR
-                                                                      , COMPONENT_TYPE_UINT32_KHR
-                                                                      , COMPONENT_TYPE_UINT64_KHR
-                                                                      , ..
-                                                                      )
                                                     , KHR_COOPERATIVE_MATRIX_SPEC_VERSION
                                                     , pattern KHR_COOPERATIVE_MATRIX_SPEC_VERSION
                                                     , KHR_COOPERATIVE_MATRIX_EXTENSION_NAME
                                                     , pattern KHR_COOPERATIVE_MATRIX_EXTENSION_NAME
+                                                    , ComponentTypeKHR(..)
                                                     ) where
 
 import Vulkan.Internal.Utils (enumReadPrec)
@@ -217,6 +205,7 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceCooperativeMatrixPropertiesKHR))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -231,6 +220,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COOPERATI
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -274,15 +264,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -333,9 +327,13 @@ getPhysicalDeviceCooperativeMatrixPropertiesKHR physicalDevice = liftIO . evalCo
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCooperativeMatrixFeaturesKHR' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCooperativeMatrixFeaturesKHR', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -410,7 +408,7 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesKHR where
 -- of @MSize@, @KSize@, and @NSize@.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixWorkgroupScope cooperativeMatrixWorkgroupScope>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-cooperativeMatrixWorkgroupScope cooperativeMatrixWorkgroupScope>
 -- feature is not supported, @scope@ /must/ be 'SCOPE_SUBGROUP_KHR'.
 --
 -- == Valid Usage (Implicit)
@@ -418,8 +416,9 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_cooperative_matrix VK_KHR_cooperative_matrix>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32', 'ComponentTypeKHR', 'ScopeKHR',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR',
+-- 'ScopeKHR', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceCooperativeMatrixPropertiesKHR'
 data CooperativeMatrixPropertiesKHR = CooperativeMatrixPropertiesKHR
   { -- | @MSize@ is the number of rows in matrices @A@, @C@, and
@@ -430,14 +429,18 @@ data CooperativeMatrixPropertiesKHR = CooperativeMatrixPropertiesKHR
     nSize :: Word32
   , -- | @KSize@ is the number of columns in matrix @A@ and rows in matrix @B@.
     kSize :: Word32
-  , -- | @AType@ is the component type of matrix @A@, of type 'ComponentTypeKHR'.
+  , -- | @AType@ is the component type of matrix @A@, of type
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     aType :: ComponentTypeKHR
-  , -- | @BType@ is the component type of matrix @B@, of type 'ComponentTypeKHR'.
+  , -- | @BType@ is the component type of matrix @B@, of type
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     bType :: ComponentTypeKHR
-  , -- | @CType@ is the component type of matrix @C@, of type 'ComponentTypeKHR'.
+  , -- | @CType@ is the component type of matrix @C@, of type
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     cType :: ComponentTypeKHR
   , -- | @ResultType@ is the component type of matrix
-    -- 'Vulkan.Core10.Enums.Result.Result', of type 'ComponentTypeKHR'.
+    -- 'Vulkan.Core10.Enums.Result.Result', of type
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     resultType :: ComponentTypeKHR
   , -- | @saturatingAccumulation@ indicates whether the @SaturatingAccumulation@
     -- operand to @OpCooperativeMatrixMulAddKHR@ /must/ be present or not. If
@@ -602,29 +605,39 @@ instance Zero PhysicalDeviceCooperativeMatrixPropertiesKHR where
 --
 -- = Description
 --
+-- -   'SCOPE_DEVICE_KHR' corresponds to SPIR-V
+--     'Vulkan.Core10.Handles.Device' scope.
+--
+-- -   'SCOPE_WORKGROUP_KHR' corresponds to SPIR-V @Workgroup@ scope.
+--
+-- -   'SCOPE_SUBGROUP_KHR' corresponds to SPIR-V @Subgroup@ scope.
+--
+-- -   'SCOPE_QUEUE_FAMILY_KHR' corresponds to SPIR-V @QueueFamily@ scope.
+--
 -- All enum values match the corresponding SPIR-V value.
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_cooperative_matrix VK_KHR_cooperative_matrix>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.CooperativeMatrixFlexibleDimensionsPropertiesNV',
--- 'CooperativeMatrixPropertiesKHR'
+-- 'CooperativeMatrixPropertiesKHR',
+-- 'Vulkan.Extensions.VK_NV_cooperative_matrix.CooperativeMatrixPropertiesNV'
 newtype ScopeKHR = ScopeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'SCOPE_DEVICE_KHR' corresponds to SPIR-V 'Vulkan.Core10.Handles.Device'
--- scope.
+-- No documentation found for Nested "VkScopeKHR" "VK_SCOPE_DEVICE_KHR"
 pattern SCOPE_DEVICE_KHR = ScopeKHR 1
 
--- | 'SCOPE_WORKGROUP_KHR' corresponds to SPIR-V @Workgroup@ scope.
+-- No documentation found for Nested "VkScopeKHR" "VK_SCOPE_WORKGROUP_KHR"
 pattern SCOPE_WORKGROUP_KHR = ScopeKHR 2
 
--- | 'SCOPE_SUBGROUP_KHR' corresponds to SPIR-V @Subgroup@ scope.
+-- No documentation found for Nested "VkScopeKHR" "VK_SCOPE_SUBGROUP_KHR"
 pattern SCOPE_SUBGROUP_KHR = ScopeKHR 3
 
--- | 'SCOPE_QUEUE_FAMILY_KHR' corresponds to SPIR-V @QueueFamily@ scope.
+-- No documentation found for Nested "VkScopeKHR" "VK_SCOPE_QUEUE_FAMILY_KHR"
 pattern SCOPE_QUEUE_FAMILY_KHR = ScopeKHR 5
 
 {-# COMPLETE
@@ -665,102 +678,6 @@ instance Read ScopeKHR where
       showTableScopeKHR
       conNameScopeKHR
       ScopeKHR
-
--- | VkComponentTypeKHR - Specify SPIR-V cooperative matrix component type
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_cooperative_matrix VK_KHR_cooperative_matrix>,
--- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.CooperativeMatrixFlexibleDimensionsPropertiesNV',
--- 'CooperativeMatrixPropertiesKHR'
-newtype ComponentTypeKHR = ComponentTypeKHR Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | 'COMPONENT_TYPE_FLOAT16_KHR' corresponds to SPIR-V @OpTypeFloat@ 16.
-pattern COMPONENT_TYPE_FLOAT16_KHR = ComponentTypeKHR 0
-
--- | 'COMPONENT_TYPE_FLOAT32_KHR' corresponds to SPIR-V @OpTypeFloat@ 32.
-pattern COMPONENT_TYPE_FLOAT32_KHR = ComponentTypeKHR 1
-
--- | 'COMPONENT_TYPE_FLOAT64_KHR' corresponds to SPIR-V @OpTypeFloat@ 64.
-pattern COMPONENT_TYPE_FLOAT64_KHR = ComponentTypeKHR 2
-
--- | 'COMPONENT_TYPE_SINT8_KHR' corresponds to SPIR-V @OpTypeInt@ 8 0\/1.
-pattern COMPONENT_TYPE_SINT8_KHR = ComponentTypeKHR 3
-
--- | 'COMPONENT_TYPE_SINT16_KHR' corresponds to SPIR-V @OpTypeInt@ 16 0\/1.
-pattern COMPONENT_TYPE_SINT16_KHR = ComponentTypeKHR 4
-
--- | 'COMPONENT_TYPE_SINT32_KHR' corresponds to SPIR-V @OpTypeInt@ 32 0\/1.
-pattern COMPONENT_TYPE_SINT32_KHR = ComponentTypeKHR 5
-
--- | 'COMPONENT_TYPE_SINT64_KHR' corresponds to SPIR-V @OpTypeInt@ 64 0\/1.
-pattern COMPONENT_TYPE_SINT64_KHR = ComponentTypeKHR 6
-
--- | 'COMPONENT_TYPE_UINT8_KHR' corresponds to SPIR-V @OpTypeInt@ 8 0\/1.
-pattern COMPONENT_TYPE_UINT8_KHR = ComponentTypeKHR 7
-
--- | 'COMPONENT_TYPE_UINT16_KHR' corresponds to SPIR-V @OpTypeInt@ 16 0\/1.
-pattern COMPONENT_TYPE_UINT16_KHR = ComponentTypeKHR 8
-
--- | 'COMPONENT_TYPE_UINT32_KHR' corresponds to SPIR-V @OpTypeInt@ 32 0\/1.
-pattern COMPONENT_TYPE_UINT32_KHR = ComponentTypeKHR 9
-
--- | 'COMPONENT_TYPE_UINT64_KHR' corresponds to SPIR-V @OpTypeInt@ 64 0\/1.
-pattern COMPONENT_TYPE_UINT64_KHR = ComponentTypeKHR 10
-
-{-# COMPLETE
-  COMPONENT_TYPE_FLOAT16_KHR
-  , COMPONENT_TYPE_FLOAT32_KHR
-  , COMPONENT_TYPE_FLOAT64_KHR
-  , COMPONENT_TYPE_SINT8_KHR
-  , COMPONENT_TYPE_SINT16_KHR
-  , COMPONENT_TYPE_SINT32_KHR
-  , COMPONENT_TYPE_SINT64_KHR
-  , COMPONENT_TYPE_UINT8_KHR
-  , COMPONENT_TYPE_UINT16_KHR
-  , COMPONENT_TYPE_UINT32_KHR
-  , COMPONENT_TYPE_UINT64_KHR ::
-    ComponentTypeKHR
-  #-}
-
-conNameComponentTypeKHR :: String
-conNameComponentTypeKHR = "ComponentTypeKHR"
-
-enumPrefixComponentTypeKHR :: String
-enumPrefixComponentTypeKHR = "COMPONENT_TYPE_"
-
-showTableComponentTypeKHR :: [(ComponentTypeKHR, String)]
-showTableComponentTypeKHR =
-  [ (COMPONENT_TYPE_FLOAT16_KHR, "FLOAT16_KHR")
-  , (COMPONENT_TYPE_FLOAT32_KHR, "FLOAT32_KHR")
-  , (COMPONENT_TYPE_FLOAT64_KHR, "FLOAT64_KHR")
-  , (COMPONENT_TYPE_SINT8_KHR, "SINT8_KHR")
-  , (COMPONENT_TYPE_SINT16_KHR, "SINT16_KHR")
-  , (COMPONENT_TYPE_SINT32_KHR, "SINT32_KHR")
-  , (COMPONENT_TYPE_SINT64_KHR, "SINT64_KHR")
-  , (COMPONENT_TYPE_UINT8_KHR, "UINT8_KHR")
-  , (COMPONENT_TYPE_UINT16_KHR, "UINT16_KHR")
-  , (COMPONENT_TYPE_UINT32_KHR, "UINT32_KHR")
-  , (COMPONENT_TYPE_UINT64_KHR, "UINT64_KHR")
-  ]
-
-instance Show ComponentTypeKHR where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixComponentTypeKHR
-      showTableComponentTypeKHR
-      conNameComponentTypeKHR
-      (\(ComponentTypeKHR x) -> x)
-      (showsPrec 11)
-
-instance Read ComponentTypeKHR where
-  readPrec =
-    enumReadPrec
-      enumPrefixComponentTypeKHR
-      showTableComponentTypeKHR
-      conNameComponentTypeKHR
-      ComponentTypeKHR
 
 type KHR_COOPERATIVE_MATRIX_SPEC_VERSION = 2
 

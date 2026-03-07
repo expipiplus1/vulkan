@@ -18,10 +18,19 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'SAMPLER_YCBCR_RANGE_ITU_FULL' specifies that the full range of the
+--     encoded values are valid and interpreted according to the ITU “full
+--     range” quantization rules.
+--
+-- -   'SAMPLER_YCBCR_RANGE_ITU_NARROW' specifies that headroom and foot
+--     room are reserved in the numerical range of encoded values, and the
+--     remaining values are expanded according to the ITU “narrow range”
+--     quantization rules.
+--
 -- The formulae for these conversions is described in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand Sampler Y′CBCR Range Expansion>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand Sampler Y′CBCR Range Expansion>
 -- section of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures Image Operations>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures Image Operations>
 -- chapter.
 --
 -- No range modification takes place if @ycbcrModel@ is
@@ -32,24 +41,21 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatProperties2ANDROID',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionPropertiesFUCHSIA',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkNativeBufferFormatPropertiesOHOS VkNativeBufferFormatPropertiesOHOS>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 -- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ScreenBufferFormatPropertiesQNX'
 newtype SamplerYcbcrRange = SamplerYcbcrRange Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SAMPLER_YCBCR_RANGE_ITU_FULL' specifies that the full range of the
--- encoded values are valid and interpreted according to the ITU “full
--- range” quantization rules.
+-- No documentation found for Nested "VkSamplerYcbcrRange" "VK_SAMPLER_YCBCR_RANGE_ITU_FULL"
 pattern SAMPLER_YCBCR_RANGE_ITU_FULL = SamplerYcbcrRange 0
 
--- | 'SAMPLER_YCBCR_RANGE_ITU_NARROW' specifies that headroom and foot room
--- are reserved in the numerical range of encoded values, and the remaining
--- values are expanded according to the ITU “narrow range” quantization
--- rules.
+-- No documentation found for Nested "VkSamplerYcbcrRange" "VK_SAMPLER_YCBCR_RANGE_ITU_NARROW"
 pattern SAMPLER_YCBCR_RANGE_ITU_NARROW = SamplerYcbcrRange 1
 
 {-# COMPLETE

@@ -26,6 +26,17 @@ type CullModeFlags = CullModeFlagBits
 --
 -- = Description
 --
+-- -   'CULL_MODE_NONE' specifies that no triangles are discarded
+--
+-- -   'CULL_MODE_FRONT_BIT' specifies that front-facing triangles are
+--     discarded
+--
+-- -   'CULL_MODE_BACK_BIT' specifies that back-facing triangles are
+--     discarded
+--
+-- -   'CULL_MODE_FRONT_AND_BACK' specifies that all triangles are
+--     discarded.
+--
 -- Following culling, fragments are produced for any triangles which have
 -- not been discarded.
 --
@@ -36,17 +47,16 @@ type CullModeFlags = CullModeFlagBits
 newtype CullModeFlagBits = CullModeFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'CULL_MODE_NONE' specifies that no triangles are discarded
+-- No documentation found for Nested "VkCullModeFlagBits" "VK_CULL_MODE_NONE"
 pattern CULL_MODE_NONE = CullModeFlagBits 0x00000000
 
--- | 'CULL_MODE_FRONT_BIT' specifies that front-facing triangles are
--- discarded
+-- No documentation found for Nested "VkCullModeFlagBits" "VK_CULL_MODE_FRONT_BIT"
 pattern CULL_MODE_FRONT_BIT = CullModeFlagBits 0x00000001
 
--- | 'CULL_MODE_BACK_BIT' specifies that back-facing triangles are discarded
+-- No documentation found for Nested "VkCullModeFlagBits" "VK_CULL_MODE_BACK_BIT"
 pattern CULL_MODE_BACK_BIT = CullModeFlagBits 0x00000002
 
--- | 'CULL_MODE_FRONT_AND_BACK' specifies that all triangles are discarded.
+-- No documentation found for Nested "VkCullModeFlagBits" "VK_CULL_MODE_FRONT_AND_BACK"
 pattern CULL_MODE_FRONT_AND_BACK = CullModeFlagBits 0x00000003
 
 conNameCullModeFlagBits :: String

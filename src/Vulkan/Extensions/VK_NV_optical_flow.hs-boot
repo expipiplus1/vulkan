@@ -234,7 +234,7 @@
 -- > imageCreateInfo.mipLevels = 1;
 -- > imageCreateInfo.arrayLayers = 1;
 -- > imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
--- > imageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;;
+-- > imageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 -- > imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 -- >
 -- > vkCreateImage(device, &imageCreateInfo, NULL, &input);
@@ -280,7 +280,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_optical_flow Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_optical_flow Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

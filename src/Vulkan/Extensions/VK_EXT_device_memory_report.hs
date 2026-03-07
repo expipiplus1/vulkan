@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Yiwei Zhang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_device_memory_report] @zhangyiwei%0A*Here describe the issue or question you have about the VK_EXT_device_memory_report extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_device_memory_report] @zzyiwei%0A*Here describe the issue or question you have about the VK_EXT_device_memory_report extension* >
 --
 -- == Other Extension Metadata
 --
@@ -56,7 +56,7 @@
 -- associated with Vulkan objects. This extension exposes the actual
 -- underlying device memory usage, including allocations that are not
 -- normally visible to the application, such as memory consumed by
--- 'Vulkan.Core10.Pipeline.createGraphicsPipelines'. It is intended
+-- 'Vulkan.Core10.GraphicsPipeline.createGraphicsPipelines'. It is intended
 -- primarily for use by debug tooling rather than for production
 -- applications.
 --
@@ -232,7 +232,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_device_memory_report Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_device_memory_report Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -313,9 +313,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDeviceMemoryReportFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDeviceMemoryReportFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -400,10 +404,8 @@ data DeviceDeviceMemoryReportCreateInfoEXT = DeviceDeviceMemoryReportCreateInfoE
     -- @pfnUserCallback@ /must/ be a valid
     -- 'PFN_vkDeviceMemoryReportCallbackEXT' value
     pfnUserCallback :: PFN_vkDeviceMemoryReportCallbackEXT
-  , -- | @pUserData@ is user data to be passed to the callback.
-    --
-    -- #VUID-VkDeviceDeviceMemoryReportCreateInfoEXT-pUserData-parameter#
-    -- @pUserData@ /must/ be a pointer value
+  , -- | @pUserData@ is NULL or an application-defined user data pointer to be
+    -- passed to the callback.
     userData :: Ptr ()
   }
   deriving (Typeable)
@@ -428,7 +430,6 @@ instance ToCStruct DeviceDeviceMemoryReportCreateInfoEXT where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr DeviceMemoryReportFlagsEXT)) (zero)
     poke ((p `plusPtr` 24 :: Ptr PFN_vkDeviceMemoryReportCallbackEXT)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr (Ptr ()))) (zero)
     f
 
 instance FromCStruct DeviceDeviceMemoryReportCreateInfoEXT where
@@ -527,7 +528,7 @@ data DeviceMemoryReportCallbackDataEXT = DeviceMemoryReportCallbackDataEXT
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT', @objectHandle@ is a
     -- valid Vulkan handle of the type associated with @objectType@ as defined
     -- in the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
     -- table. Otherwise, @objectHandle@ is undefined.
     objectHandle :: Word64
   , -- | @heapIndex@ describes which memory heap this device memory allocation is
@@ -645,6 +646,26 @@ instance Read DeviceMemoryReportFlagsEXT where
 -- | VkDeviceMemoryReportEventTypeEXT - Events that can occur on a device
 -- memory object
 --
+-- = Description
+--
+-- -   'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT' specifies this event
+--     corresponds to the allocation of an internal device memory object or
+--     a 'Vulkan.Core10.Handles.DeviceMemory'.
+--
+-- -   'DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT' specifies this event
+--     corresponds to the deallocation of an internally-allocated device
+--     memory object or a 'Vulkan.Core10.Handles.DeviceMemory'.
+--
+-- -   'DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT' specifies this event
+--     corresponds to the import of an external memory object.
+--
+-- -   'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT' specifies this event
+--     is the release of an imported external memory object.
+--
+-- -   'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT' specifies
+--     this event corresponds to the failed allocation of an internal
+--     device memory object or a 'Vulkan.Core10.Handles.DeviceMemory'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
@@ -652,27 +673,19 @@ instance Read DeviceMemoryReportFlagsEXT where
 newtype DeviceMemoryReportEventTypeEXT = DeviceMemoryReportEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT' specifies this event
--- corresponds to the allocation of an internal device memory object or a
--- 'Vulkan.Core10.Handles.DeviceMemory'.
+-- No documentation found for Nested "VkDeviceMemoryReportEventTypeEXT" "VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT"
 pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT = DeviceMemoryReportEventTypeEXT 0
 
--- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT' specifies this event
--- corresponds to the deallocation of an internally-allocated device memory
--- object or a 'Vulkan.Core10.Handles.DeviceMemory'.
+-- No documentation found for Nested "VkDeviceMemoryReportEventTypeEXT" "VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT"
 pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT = DeviceMemoryReportEventTypeEXT 1
 
--- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT' specifies this event
--- corresponds to the import of an external memory object.
+-- No documentation found for Nested "VkDeviceMemoryReportEventTypeEXT" "VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT"
 pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT = DeviceMemoryReportEventTypeEXT 2
 
--- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT' specifies this event is
--- the release of an imported external memory object.
+-- No documentation found for Nested "VkDeviceMemoryReportEventTypeEXT" "VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT"
 pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT = DeviceMemoryReportEventTypeEXT 3
 
--- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT' specifies this
--- event corresponds to the failed allocation of an internal device memory
--- object or a 'Vulkan.Core10.Handles.DeviceMemory'.
+-- No documentation found for Nested "VkDeviceMemoryReportEventTypeEXT" "VK_DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT"
 pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT = DeviceMemoryReportEventTypeEXT 4
 
 {-# COMPLETE

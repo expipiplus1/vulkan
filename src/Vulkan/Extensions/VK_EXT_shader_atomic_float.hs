@@ -90,9 +90,9 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32AddEXT AtomicFloat32AddEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32AddEXT AtomicFloat32AddEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64AddEXT AtomicFloat64AddEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64AddEXT AtomicFloat64AddEXT>
 --
 -- == Version History
 --
@@ -107,7 +107,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_atomic_float Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_atomic_float Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -155,9 +155,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderAtomicFloatFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceShaderAtomicFloatFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -169,7 +173,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloatFeaturesEXT
   { -- | #features-shaderBufferFloat32Atomics# @shaderBufferFloat32Atomics@
     -- indicates whether shaders /can/ perform 32-bit floating-point load,
-    -- store and exchange atomic operations on storage buffers.
+    -- store, and exchange atomic operations on storage buffers.
     shaderBufferFloat32Atomics :: Bool
   , -- | #features-shaderBufferFloat32AtomicAdd# @shaderBufferFloat32AtomicAdd@
     -- indicates whether shaders /can/ perform 32-bit floating-point add atomic
@@ -177,7 +181,7 @@ data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloa
     shaderBufferFloat32AtomicAdd :: Bool
   , -- | #features-shaderBufferFloat64Atomics# @shaderBufferFloat64Atomics@
     -- indicates whether shaders /can/ perform 64-bit floating-point load,
-    -- store and exchange atomic operations on storage buffers.
+    -- store, and exchange atomic operations on storage buffers.
     shaderBufferFloat64Atomics :: Bool
   , -- | #features-shaderBufferFloat64AtomicAdd# @shaderBufferFloat64AtomicAdd@
     -- indicates whether shaders /can/ perform 64-bit floating-point add atomic
@@ -185,7 +189,7 @@ data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloa
     shaderBufferFloat64AtomicAdd :: Bool
   , -- | #features-shaderSharedFloat32Atomics# @shaderSharedFloat32Atomics@
     -- indicates whether shaders /can/ perform 32-bit floating-point load,
-    -- store and exchange atomic operations on shared and payload memory.
+    -- store, and exchange atomic operations on shared and payload memory.
     shaderSharedFloat32Atomics :: Bool
   , -- | #features-shaderSharedFloat32AtomicAdd# @shaderSharedFloat32AtomicAdd@
     -- indicates whether shaders /can/ perform 32-bit floating-point add atomic
@@ -193,7 +197,7 @@ data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloa
     shaderSharedFloat32AtomicAdd :: Bool
   , -- | #features-shaderSharedFloat64Atomics# @shaderSharedFloat64Atomics@
     -- indicates whether shaders /can/ perform 64-bit floating-point load,
-    -- store and exchange atomic operations on shared and payload memory.
+    -- store, and exchange atomic operations on shared and payload memory.
     shaderSharedFloat64Atomics :: Bool
   , -- | #features-shaderSharedFloat64AtomicAdd# @shaderSharedFloat64AtomicAdd@
     -- indicates whether shaders /can/ perform 64-bit floating-point add atomic
@@ -201,14 +205,14 @@ data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloa
     shaderSharedFloat64AtomicAdd :: Bool
   , -- | #features-shaderImageFloat32Atomics# @shaderImageFloat32Atomics@
     -- indicates whether shaders /can/ perform 32-bit floating-point load,
-    -- store and exchange atomic image operations.
+    -- store, and exchange atomic image operations.
     shaderImageFloat32Atomics :: Bool
   , -- | #features-shaderImageFloat32AtomicAdd# @shaderImageFloat32AtomicAdd@
     -- indicates whether shaders /can/ perform 32-bit floating-point add atomic
     -- image operations.
     shaderImageFloat32AtomicAdd :: Bool
   , -- | #features-sparseImageFloat32Atomics# @sparseImageFloat32Atomics@
-    -- indicates whether 32-bit floating-point load, store and exchange atomic
+    -- indicates whether 32-bit floating-point load, store, and exchange atomic
     -- operations /can/ be used on sparse images.
     sparseImageFloat32Atomics :: Bool
   , -- | #features-sparseImageFloat32AtomicAdd# @sparseImageFloat32AtomicAdd@

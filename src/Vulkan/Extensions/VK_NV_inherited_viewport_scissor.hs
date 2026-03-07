@@ -121,7 +121,7 @@
 -- 'Vulkan.Core10.Handles.CommandBuffer' that must be re-initialized.
 --
 -- (2) Why are viewport depth values specified as a partial
--- 'Vulkan.Core10.Pipeline.Viewport' struct, rather than a leaner
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport' struct, rather than a leaner
 -- depth-only struct?
 --
 -- __DISCUSSION__:
@@ -130,11 +130,11 @@
 -- @minDepth@ and @maxDepth@. However, as application developers would need
 -- to maintain both a @VK_NV_inherited_viewport_scissor@ code path and a
 -- fallback code path (at least in the short term), we ultimately chose to
--- continue using the existing 'Vulkan.Core10.Pipeline.Viewport' structure.
--- Doing so would allow application developers to reuse the same
--- 'Vulkan.Core10.Pipeline.Viewport' array for both code paths, rather than
--- constructing separate @VkViewportDepthNV@ and
--- 'Vulkan.Core10.Pipeline.Viewport' arrays for each code path.
+-- continue using the existing 'Vulkan.Core10.GraphicsPipeline.Viewport'
+-- structure. Doing so would allow application developers to reuse the same
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport' array for both code paths,
+-- rather than constructing separate @VkViewportDepthNV@ and
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport' arrays for each code path.
 --
 -- == Version History
 --
@@ -149,7 +149,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -186,7 +186,7 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Pipeline (Viewport)
+import Vulkan.Core10.GraphicsPipeline (Viewport)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_VIEWPORT_SCISSOR_INFO_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INHERITED_VIEWPORT_SCISSOR_FEATURES_NV))
 -- | VkPhysicalDeviceInheritedViewportScissorFeaturesNV - Structure
@@ -205,9 +205,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceInheritedViewportScissorFeaturesNV' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceInheritedViewportScissorFeaturesNV', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -338,10 +342,10 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --
 -- -   If the provisional inherited state is a viewport, with n being its
 --     viewport index, then if n ≥ @viewportDepthCount@, or if either
---     'Vulkan.Core10.Pipeline.Viewport'::@minDepth@ or
---     'Vulkan.Core10.Pipeline.Viewport'::@maxDepth@ are not equal to the
---     respective values of the nth element of @pViewportDepths@, then the
---     state is not inherited.
+--     'Vulkan.Core10.GraphicsPipeline.Viewport'::@minDepth@ or
+--     'Vulkan.Core10.GraphicsPipeline.Viewport'::@maxDepth@ are not equal
+--     to the respective values of the nth element of @pViewportDepths@,
+--     then the state is not inherited.
 --
 -- -   If the provisional inherited state passes both checks, then it
 --     becomes the actual inherited state.
@@ -354,13 +358,13 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04782#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedViewportScissor2D inheritedViewportScissor2D>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-inheritedViewportScissor2D inheritedViewportScissor2D>
 --     feature is not enabled, @viewportScissor2D@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04783#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled and @viewportScissor2D@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then @viewportDepthCount@
 --     /must/ be @1@
@@ -372,7 +376,7 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04785#
 --     If @viewportScissor2D@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     then @pViewportDepths@ /must/ be a valid pointer to an array of
---     @viewportDepthCount@ valid 'Vulkan.Core10.Pipeline.Viewport'
+--     @viewportDepthCount@ valid 'Vulkan.Core10.GraphicsPipeline.Viewport'
 --     structures, except any requirements on @x@, @y@, @width@, and
 --     @height@ do not apply
 --
@@ -392,7 +396,7 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_inherited_viewport_scissor VK_NV_inherited_viewport_scissor>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core10.Pipeline.Viewport'
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport'
 data CommandBufferInheritanceViewportScissorInfoNV = CommandBufferInheritanceViewportScissorInfoNV
   { -- | @viewportScissor2D@ specifies whether the listed dynamic state is
     -- inherited.
@@ -402,9 +406,9 @@ data CommandBufferInheritanceViewportScissorInfoNV = CommandBufferInheritanceVie
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', the behavior is as if this value
     -- is zero.
     viewportDepthCount :: Word32
-  , -- | @pViewportDepths@ is a pointer to a 'Vulkan.Core10.Pipeline.Viewport'
-    -- structure specifying the expected depth range for each inherited
-    -- viewport.
+  , -- | @pViewportDepths@ is a pointer to a
+    -- 'Vulkan.Core10.GraphicsPipeline.Viewport' structure specifying the
+    -- expected depth range for each inherited viewport.
     viewportDepths :: Viewport
   }
   deriving (Typeable)

@@ -20,6 +20,29 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'ATTACHMENT_STORE_OP_STORE' specifies the contents generated during
+--     the render pass and within the render area are written to memory.
+--     For attachments with a depth\/stencil format, this uses the access
+--     type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
+--     For attachments with a color format, this uses the access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+--
+-- -   'ATTACHMENT_STORE_OP_DONT_CARE' specifies the contents within the
+--     render area are not needed after rendering, and /may/ be discarded;
+--     the contents of the attachment will be undefined inside the render
+--     area. For attachments with a depth\/stencil format, this uses the
+--     access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
+--     For attachments with a color format, this uses the access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+--
+-- -   'ATTACHMENT_STORE_OP_NONE' specifies the contents within the render
+--     area are not accessed by the store operation as long as no values
+--     are written to the attachment during the render pass. If values are
+--     written during the render pass, this behaves identically to
+--     'ATTACHMENT_STORE_OP_DONT_CARE' and with matching access semantics.
+--
 -- 'ATTACHMENT_STORE_OP_DONT_CARE' /can/ cause contents generated during
 -- previous render passes to be discarded before reaching memory, even if
 -- no write to the attachment occurs during the current render pass.
@@ -33,28 +56,13 @@ import GHC.Show (Show(showsPrec))
 newtype AttachmentStoreOp = AttachmentStoreOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'ATTACHMENT_STORE_OP_STORE' specifies the contents generated during the
--- render pass and within the render area are written to memory. For
--- attachments with a depth\/stencil format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
--- For attachments with a color format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+-- No documentation found for Nested "VkAttachmentStoreOp" "VK_ATTACHMENT_STORE_OP_STORE"
 pattern ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
 
--- | 'ATTACHMENT_STORE_OP_DONT_CARE' specifies the contents within the render
--- area are not needed after rendering, and /may/ be discarded; the
--- contents of the attachment will be undefined inside the render area. For
--- attachments with a depth\/stencil format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
--- For attachments with a color format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+-- No documentation found for Nested "VkAttachmentStoreOp" "VK_ATTACHMENT_STORE_OP_DONT_CARE"
 pattern ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
 
--- | 'ATTACHMENT_STORE_OP_NONE' specifies the contents within the render area
--- are not accessed by the store operation as long as no values are written
--- to the attachment during the render pass. If values are written during
--- the render pass, this behaves identically to
--- 'ATTACHMENT_STORE_OP_DONT_CARE' and with matching access semantics.
+-- No documentation found for Nested "VkAttachmentStoreOp" "VK_ATTACHMENT_STORE_OP_NONE"
 pattern ATTACHMENT_STORE_OP_NONE = AttachmentStoreOp 1000301000
 
 {-# COMPLETE

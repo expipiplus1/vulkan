@@ -22,6 +22,12 @@ type CommandPoolResetFlags = CommandPoolResetFlagBits
 -- | VkCommandPoolResetFlagBits - Bitmask controlling behavior of a command
 -- pool reset
 --
+-- = Description
+--
+-- -   'COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT' specifies that resetting
+--     a command pool recycles all of the resources from the command pool
+--     back to the system.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -29,9 +35,7 @@ type CommandPoolResetFlags = CommandPoolResetFlagBits
 newtype CommandPoolResetFlagBits = CommandPoolResetFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT' specifies that resetting a
--- command pool recycles all of the resources from the command pool back to
--- the system.
+-- No documentation found for Nested "VkCommandPoolResetFlagBits" "VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"
 pattern COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = CommandPoolResetFlagBits 0x00000001
 
 conNameCommandPoolResetFlagBits :: String

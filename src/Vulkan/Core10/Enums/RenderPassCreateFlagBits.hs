@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "RenderPassCreateFlagBits"
 module Vulkan.Core10.Enums.RenderPassCreateFlagBits  ( RenderPassCreateFlags
-                                                     , RenderPassCreateFlagBits( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
+                                                     , RenderPassCreateFlagBits( RENDER_PASS_CREATE_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE
+                                                                               , RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
                                                                                , ..
                                                                                )
                                                      ) where
@@ -22,6 +23,16 @@ type RenderPassCreateFlags = RenderPassCreateFlagBits
 -- | VkRenderPassCreateFlagBits - Bitmask specifying additional properties of
 -- a render pass
 --
+-- = Description
+--
+-- -   'RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM' specifies that the created
+--     render pass is compatible with
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
+--
+-- -   'RENDER_PASS_CREATE_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE' specifies
+--     that the created render pass is usable with layered fragment density
+--     maps.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -29,22 +40,27 @@ type RenderPassCreateFlags = RenderPassCreateFlagBits
 newtype RenderPassCreateFlagBits = RenderPassCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM' specifies that the created
--- render pass is compatible with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
+-- No documentation found for Nested "VkRenderPassCreateFlagBits" "VK_RENDER_PASS_CREATE_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"
+pattern RENDER_PASS_CREATE_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE = RenderPassCreateFlagBits 0x00000004
+
+-- No documentation found for Nested "VkRenderPassCreateFlagBits" "VK_RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM"
 pattern RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM = RenderPassCreateFlagBits 0x00000002
 
 conNameRenderPassCreateFlagBits :: String
 conNameRenderPassCreateFlagBits = "RenderPassCreateFlagBits"
 
 enumPrefixRenderPassCreateFlagBits :: String
-enumPrefixRenderPassCreateFlagBits = "RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM"
+enumPrefixRenderPassCreateFlagBits = "RENDER_PASS_CREATE_"
 
 showTableRenderPassCreateFlagBits :: [(RenderPassCreateFlagBits, String)]
 showTableRenderPassCreateFlagBits =
   [
+    ( RENDER_PASS_CREATE_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE
+    , "PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"
+    )
+  ,
     ( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
-    , ""
+    , "TRANSFORM_BIT_QCOM"
     )
   ]
 

@@ -68,8 +68,8 @@
 -- This extension provides a mechanism for configuring programmatically
 -- through the Vulkan API the behavior of layers.
 --
--- This extension provides the 'LayerSettingsCreateInfoEXT' struct that can
--- be included in the @pNext@ chain of the
+-- This extension provides the 'LayerSettingsCreateInfoEXT' structure that
+-- can be included in the @pNext@ chain of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- as the @pCreateInfo@ parameter of
 -- 'Vulkan.Core10.DeviceInitialization.createInstance'.
@@ -175,7 +175,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_layer_settings Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_layer_settings Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

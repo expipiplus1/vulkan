@@ -113,6 +113,9 @@ foreign import ccall
 -- -   #VUID-vkCreateFence-pFence-parameter# @pFence@ /must/ be a valid
 --     pointer to a 'Vulkan.Core10.Handles.Fence' handle
 --
+-- -   #VUID-vkCreateFence-device-queuecount# The device /must/ have been
+--     created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -121,9 +124,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -139,7 +146,7 @@ createFence :: forall a io
                -- information about how the fence is to be created.
                (FenceCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
-               -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Fence)
@@ -188,7 +195,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkDestroyFence-fence-01120# All
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-submission queue submission>
 --     commands that refer to @fence@ /must/ have completed execution
 --
 -- -   #VUID-vkDestroyFence-fence-01121# If
@@ -232,7 +239,7 @@ destroyFence :: forall io
              -> -- | @fence@ is the handle of the fence to destroy.
                 Fence
              -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
@@ -263,7 +270,7 @@ foreign import ccall
 -- = Description
 --
 -- If any member of @pFences@ currently has its
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing payload imported>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences-importing payload imported>
 -- with temporary permanence, that fence’s prior permanent payload is first
 -- restored. The remaining operations described therefore operate on the
 -- restored payload.
@@ -312,6 +319,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -351,26 +362,26 @@ foreign import ccall
 -- Upon success, 'getFenceStatus' returns the status of the fence object,
 -- with the following return codes:
 --
--- +------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
--- | Status                                         | Meaning                                                                                                            |
--- +================================================+====================================================================================================================+
--- | 'Vulkan.Core10.Enums.Result.SUCCESS'           | The fence specified by @fence@ is signaled.                                                                        |
--- +------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
--- | 'Vulkan.Core10.Enums.Result.NOT_READY'         | The fence specified by @fence@ is unsignaled.                                                                      |
--- +------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
--- | 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' | The device has been lost. See                                                                                      |
--- |                                                | <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>. |
--- +------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
+-- +------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | Status                                         | Meaning                                                                                                    |
+-- +================================================+============================================================================================================+
+-- | 'Vulkan.Core10.Enums.Result.SUCCESS'           | The fence specified by @fence@ is signaled.                                                                |
+-- +------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'Vulkan.Core10.Enums.Result.NOT_READY'         | The fence specified by @fence@ is unsignaled.                                                              |
+-- +------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' | The device has been lost. See                                                                              |
+-- |                                                | <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-lost-device Lost Device>. |
+-- +------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 --
 -- Fence Object Status Codes
 --
 -- If a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-submission queue submission>
 -- command is pending execution, then the value returned by this command
 -- /may/ immediately be out of date.
 --
 -- If the device has been lost (see
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>),
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-lost-device Lost Device>),
 -- 'getFenceStatus' /may/ return any of the above status codes. If the
 -- device has been lost and 'getFenceStatus' is called repeatedly, it will
 -- eventually return either 'Vulkan.Core10.Enums.Result.SUCCESS' or
@@ -380,17 +391,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.NOT_READY'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -496,7 +511,7 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device
 -- @timeout@ has expired.
 --
 -- If device loss occurs (see
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-lost-device Lost Device>)
 -- before the timeout has expired, 'waitForFences' /must/ return in finite
 -- time with either 'Vulkan.Core10.Enums.Result.SUCCESS' or
 -- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
@@ -532,11 +547,15 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -601,7 +620,7 @@ waitForFencesSafe = waitForFencesSafeOrUnsafe mkVkWaitForFencesSafe
 --     'Vulkan.Extensions.VK_KHR_external_fence_win32.ExportFenceWin32HandleInfoKHR'
 --
 -- -   #VUID-VkFenceCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkFenceCreateInfo-flags-parameter# @flags@ /must/ be a valid
 --     combination of

@@ -64,7 +64,7 @@
 -- out of bounds reads return R, G, and B values of zero and alpha values
 -- of either zero or one. Components not present in the image format may be
 -- set to zero or to values based on the format as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#images-component-substitution>.
 --
 -- == New Structures
 --
@@ -120,7 +120,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_robustness Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_image_robustness Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

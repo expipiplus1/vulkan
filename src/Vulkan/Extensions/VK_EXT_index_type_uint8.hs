@@ -31,6 +31,9 @@
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_index_type_uint8 VK_KHR_index_type_uint8>
 --         extension
 --
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Contact__]
 --
 --     -   Piers Daniell
@@ -94,7 +97,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_index_type_uint8 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_index_type_uint8 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -105,24 +108,22 @@ module Vulkan.Extensions.VK_EXT_index_type_uint8  ( pattern STRUCTURE_TYPE_PHYSI
                                                   , pattern EXT_INDEX_TYPE_UINT8_SPEC_VERSION
                                                   , EXT_INDEX_TYPE_UINT8_EXTENSION_NAME
                                                   , pattern EXT_INDEX_TYPE_UINT8_EXTENSION_NAME
-                                                  , PhysicalDeviceIndexTypeUint8FeaturesKHR(..)
                                                   ) where
 
 import Data.String (IsString)
-import Vulkan.Extensions.VK_KHR_index_type_uint8 (PhysicalDeviceIndexTypeUint8FeaturesKHR)
-import Vulkan.Core10.Enums.IndexType (IndexType(INDEX_TYPE_UINT8_KHR))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR))
-import Vulkan.Extensions.VK_KHR_index_type_uint8 (PhysicalDeviceIndexTypeUint8FeaturesKHR(..))
+import Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap (PhysicalDeviceIndexTypeUint8Features)
+import Vulkan.Core10.Enums.IndexType (IndexType(INDEX_TYPE_UINT8))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES
 
 
 -- No documentation found for TopLevel "VK_INDEX_TYPE_UINT8_EXT"
-pattern INDEX_TYPE_UINT8_EXT = INDEX_TYPE_UINT8_KHR
+pattern INDEX_TYPE_UINT8_EXT = INDEX_TYPE_UINT8
 
 
 -- No documentation found for TopLevel "VkPhysicalDeviceIndexTypeUint8FeaturesEXT"
-type PhysicalDeviceIndexTypeUint8FeaturesEXT = PhysicalDeviceIndexTypeUint8FeaturesKHR
+type PhysicalDeviceIndexTypeUint8FeaturesEXT = PhysicalDeviceIndexTypeUint8Features
 
 
 type EXT_INDEX_TYPE_UINT8_SPEC_VERSION = 1

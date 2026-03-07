@@ -1,0 +1,145 @@
+{-# language CPP #-}
+-- | = Name
+--
+-- VK_EXT_zero_initialize_device_memory - device extension
+--
+-- = VK_EXT_zero_initialize_device_memory
+--
+-- [__Name String__]
+--     @VK_EXT_zero_initialize_device_memory@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     621
+--
+-- [__Revision__]
+--     1
+--
+-- [__Ratification Status__]
+--     Ratified
+--
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__Contact__]
+--
+--     -   Mike Blumenkrantz
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_zero_initialize_device_memory] @zmike%0A*Here describe the issue or question you have about the VK_EXT_zero_initialize_device_memory extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_zero_initialize_device_memory.adoc VK_EXT_zero_initialize_device_memory>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2025-04-09
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Interacts with Vulkan 1.1.
+--
+--     -   Interacts with @VK_KHR_get_physical_device_properties2@.
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Hans-Kristian Arntzen, VALVE
+--
+--     -   Mike Blumenkrantz, VALVE
+--
+--     -   Tobias Hector, AMD
+--
+--     -   Faith Ekstrand, Collabora
+--
+--     -   Ricardo Garcia, Igalia
+--
+--     -   Jan-Harald Fredriksen, ARM
+--
+--     -   Spencer Fricke, LunarG
+--
+-- == Description
+--
+-- By default, Vulkan provides no guarantees that device memory allocated
+-- through vkAllocateMemory is cleared to zero. This means that
+-- applications wanting resources to be zero-initialized must execute a
+-- command such as vkCmdFillBuffer or vkCmdClearColorImage on the device to
+-- ensure a deterministic result. This can be wasteful if the underlying
+-- platform either:
+--
+-- -   Already performs that zero clear anyway, due to e.g. security
+--     concerns.
+--
+-- -   Can be performed more efficiently in implementation, by e.g.
+--     clearing pages to zero in the background after device memory is
+--     freed.
+--
+-- This extension also has uses in API layering and porting efforts, where
+-- zero memory behavior may be more strict than Vulkan. Different OS
+-- platforms also have wildly different behaviors here, which leads to
+-- implementations needing to apply workarounds to paper over these issues
+-- in the wild. If an extension exists to make allocation behavior
+-- explicit, we hopefully achieve a more robust ecosystem for Vulkan.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_ZERO_INITIALIZE_DEVICE_MEMORY_EXTENSION_NAME'
+--
+-- -   'EXT_ZERO_INITIALIZE_DEVICE_MEMORY_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
+--
+--     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ZERO_INITIALIZED_EXT'
+--
+-- -   Extending
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MemoryAllocateFlagBits':
+--
+--     -   'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_ZERO_INITIALIZE_BIT_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT'
+--
+-- == Version History
+--
+-- -   Revision 1, 2025-03-10 (Mike Blumenkrantz)
+--
+--     -   Initial version
+--
+-- == See Also
+--
+-- No cross-references are available
+--
+-- == Document Notes
+--
+-- For more information, see the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_zero_initialize_device_memory Vulkan Specification>.
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
+module Vulkan.Extensions.VK_EXT_zero_initialize_device_memory  (PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT) where
+
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
+data PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT
+
+instance ToCStruct PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT
+instance Show PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT
+
+instance FromCStruct PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT
+

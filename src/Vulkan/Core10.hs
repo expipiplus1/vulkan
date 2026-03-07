@@ -8,6 +8,7 @@ module Vulkan.Core10  ( pattern API_VERSION_1_0
                       , module Vulkan.Core10.CommandBuffer
                       , module Vulkan.Core10.CommandBufferBuilding
                       , module Vulkan.Core10.CommandPool
+                      , module Vulkan.Core10.ComputePipeline
                       , module Vulkan.Core10.DescriptorSet
                       , module Vulkan.Core10.Device
                       , module Vulkan.Core10.DeviceInitialization
@@ -17,6 +18,7 @@ module Vulkan.Core10  ( pattern API_VERSION_1_0
                       , module Vulkan.Core10.Fence
                       , module Vulkan.Core10.FuncPointers
                       , module Vulkan.Core10.FundamentalTypes
+                      , module Vulkan.Core10.GraphicsPipeline
                       , module Vulkan.Core10.Handles
                       , module Vulkan.Core10.Image
                       , module Vulkan.Core10.ImageView
@@ -25,7 +27,6 @@ module Vulkan.Core10  ( pattern API_VERSION_1_0
                       , module Vulkan.Core10.MemoryManagement
                       , module Vulkan.Core10.OtherTypes
                       , module Vulkan.Core10.Pass
-                      , module Vulkan.Core10.Pipeline
                       , module Vulkan.Core10.PipelineCache
                       , module Vulkan.Core10.PipelineLayout
                       , module Vulkan.Core10.Query
@@ -42,6 +43,7 @@ import Vulkan.Core10.BufferView
 import Vulkan.Core10.CommandBuffer
 import Vulkan.Core10.CommandBufferBuilding
 import Vulkan.Core10.CommandPool
+import Vulkan.Core10.ComputePipeline
 import Vulkan.Core10.DescriptorSet
 import Vulkan.Core10.Device
 import Vulkan.Core10.DeviceInitialization
@@ -51,6 +53,7 @@ import Vulkan.Core10.ExtensionDiscovery
 import Vulkan.Core10.Fence
 import Vulkan.Core10.FuncPointers
 import Vulkan.Core10.FundamentalTypes
+import Vulkan.Core10.GraphicsPipeline
 import Vulkan.Core10.Handles
 import Vulkan.Core10.Image
 import Vulkan.Core10.ImageView
@@ -59,7 +62,6 @@ import Vulkan.Core10.Memory
 import Vulkan.Core10.MemoryManagement
 import Vulkan.Core10.OtherTypes
 import Vulkan.Core10.Pass
-import Vulkan.Core10.Pipeline
 import Vulkan.Core10.PipelineCache
 import Vulkan.Core10.PipelineLayout
 import Vulkan.Core10.Query

@@ -101,7 +101,7 @@
 -- -   'NV_COOPERATIVE_MATRIX_SPEC_VERSION'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR':
+--     'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR':
 --
 --     -   'COMPONENT_TYPE_FLOAT16_NV'
 --
@@ -145,7 +145,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixNV CooperativeMatrixNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixNV CooperativeMatrixNV>
 --
 -- == Issues
 --
@@ -178,7 +178,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_cooperative_matrix Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_cooperative_matrix Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -252,7 +252,7 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR)
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -264,17 +264,17 @@ import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR)
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_FLOAT16_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_FLOAT32_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_FLOAT64_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT16_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT32_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT64_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_SINT8_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT16_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT32_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT64_KHR))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(COMPONENT_TYPE_UINT8_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_FLOAT16_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_FLOAT32_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_FLOAT64_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_SINT16_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_SINT32_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_SINT64_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_SINT8_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_UINT16_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_UINT32_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_UINT64_KHR))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(COMPONENT_TYPE_UINT8_KHR))
 import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(SCOPE_DEVICE_KHR))
 import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(SCOPE_QUEUE_FAMILY_KHR))
 import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(SCOPE_SUBGROUP_KHR))
@@ -283,7 +283,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COOPERATI
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(..))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(..))
 import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -328,15 +328,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -447,9 +451,13 @@ pattern COMPONENT_TYPE_UINT64_NV = COMPONENT_TYPE_UINT64_KHR
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCooperativeMatrixFeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCooperativeMatrixFeaturesNV', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -596,7 +604,8 @@ instance Zero PhysicalDeviceCooperativeMatrixPropertiesNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
--- 'ComponentTypeNV', 'ScopeNV',
+-- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR',
+-- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ScopeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceCooperativeMatrixPropertiesNV'
 data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV

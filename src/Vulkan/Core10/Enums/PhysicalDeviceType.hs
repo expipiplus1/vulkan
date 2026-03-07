@@ -21,6 +21,21 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'PHYSICAL_DEVICE_TYPE_OTHER' - the device does not match any other
+--     available types.
+--
+-- -   'PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU' - the device is typically one
+--     embedded in or tightly coupled with the host.
+--
+-- -   'PHYSICAL_DEVICE_TYPE_DISCRETE_GPU' - the device is typically a
+--     separate processor connected to the host via an interlink.
+--
+-- -   'PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU' - the device is typically a
+--     virtual node in a virtualization environment.
+--
+-- -   'PHYSICAL_DEVICE_TYPE_CPU' - the device is typically running on the
+--     same processors as the host.
+--
 -- The physical device type is advertised for informational purposes only,
 -- and does not directly affect the operation of the system. However, the
 -- device type /may/ correlate with other advertised properties or
@@ -33,24 +48,19 @@ import GHC.Show (Show(showsPrec))
 newtype PhysicalDeviceType = PhysicalDeviceType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PHYSICAL_DEVICE_TYPE_OTHER' - the device does not match any other
--- available types.
+-- No documentation found for Nested "VkPhysicalDeviceType" "VK_PHYSICAL_DEVICE_TYPE_OTHER"
 pattern PHYSICAL_DEVICE_TYPE_OTHER = PhysicalDeviceType 0
 
--- | 'PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU' - the device is typically one
--- embedded in or tightly coupled with the host.
+-- No documentation found for Nested "VkPhysicalDeviceType" "VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU"
 pattern PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = PhysicalDeviceType 1
 
--- | 'PHYSICAL_DEVICE_TYPE_DISCRETE_GPU' - the device is typically a separate
--- processor connected to the host via an interlink.
+-- No documentation found for Nested "VkPhysicalDeviceType" "VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU"
 pattern PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = PhysicalDeviceType 2
 
--- | 'PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU' - the device is typically a virtual
--- node in a virtualization environment.
+-- No documentation found for Nested "VkPhysicalDeviceType" "VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU"
 pattern PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = PhysicalDeviceType 3
 
--- | 'PHYSICAL_DEVICE_TYPE_CPU' - the device is typically running on the same
--- processors as the host.
+-- No documentation found for Nested "VkPhysicalDeviceType" "VK_PHYSICAL_DEVICE_TYPE_CPU"
 pattern PHYSICAL_DEVICE_TYPE_CPU = PhysicalDeviceType 4
 
 {-# COMPLETE

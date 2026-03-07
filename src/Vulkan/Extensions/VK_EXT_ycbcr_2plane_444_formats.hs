@@ -85,13 +85,12 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- This extension has been partially promoted. The format enumerants
--- introduced by the extension are included in core Vulkan 1.3, with the
--- EXT suffix omitted. However, runtime support for these formats is
--- optional in core Vulkan 1.3, while if this extension is supported,
--- runtime support is mandatory. The feature structure is not promoted. The
--- original enum names are still available as aliases of the core
--- functionality.
+-- The format enumerants introduced by the extension are included in core
+-- Vulkan 1.3, with the EXT suffix omitted. However, runtime support for
+-- these formats is optional in core Vulkan 1.3, while if this extension is
+-- supported, runtime support is mandatory. The feature structure is not
+-- promoted. The original enum names are still available as aliases of the
+-- core functionality.
 --
 -- == Version History
 --
@@ -106,7 +105,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_ycbcr_2plane_444_formats Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_ycbcr_2plane_444_formats Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -179,9 +178,13 @@ pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT = FORMAT_G16_B16R16_2PLANE_444_UN
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -197,7 +200,8 @@ pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT = FORMAT_G16_B16R16_2PLANE_444_UN
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT
   { -- | #features-ycbcr2plane444Formats# @ycbcr2plane444Formats@ indicates that
-    -- the implementation supports the following 2-plane 444 Y′CBCR formats:
+    -- the implementation supports querying format features for, and using, the
+    -- following 2-plane 444 Y′CBCR formats:
     --
     -- -   'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_444_UNORM'
     --

@@ -58,16 +58,16 @@
 -- which allows the fragment shader to control whether values in the
 -- 'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable
 -- reflect the coverage after early
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-depth depth>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-stencil stencil>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-stencil stencil>
 -- tests are applied.
 --
 -- This extension adds a new @PostDepthCoverage@ execution mode under the
 -- @SampleMaskPostDepthCoverage@ capability. When this mode is specified
 -- along with @EarlyFragmentTests@, the value of an input variable
 -- decorated with the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-samplemask >
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-samplemask >
 -- built-in reflects the coverage after the early fragment tests are
 -- applied. Otherwise, it reflects the coverage before the depth and
 -- stencil tests.
@@ -85,7 +85,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SampleMaskPostDepthCoverage SampleMaskPostDepthCoverage>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-SampleMaskPostDepthCoverage SampleMaskPostDepthCoverage>
 --
 -- == Version History
 --
@@ -100,7 +100,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_post_depth_coverage Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_post_depth_coverage Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -101,8 +101,7 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- This extension has been partially promoted. The dynamic state enumerants
--- 'DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT',
+-- The dynamic state enumerants 'DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT',
 -- 'DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT', and
 -- 'DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'; and the corresponding
 -- commands in this extension are included in core Vulkan 1.3, with the EXT
@@ -124,7 +123,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_extended_dynamic_state2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

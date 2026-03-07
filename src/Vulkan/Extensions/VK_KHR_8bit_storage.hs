@@ -81,6 +81,11 @@
 -- names, retain their original names. The original Vulkan API names are
 -- still available as aliases of the core functionality.
 --
+-- == Promotion to Vulkan 1.4
+--
+-- If Vulkan 1.4 is supported, support for the @storageBuffer8BitAccess@
+-- capability is required.
+--
 -- == New Structures
 --
 -- -   Extending
@@ -101,11 +106,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-StorageBuffer8BitAccess StorageBuffer8BitAccess>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-StorageBuffer8BitAccess StorageBuffer8BitAccess>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-UniformAndStorageBuffer8BitAccess UniformAndStorageBuffer8BitAccess>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-UniformAndStorageBuffer8BitAccess UniformAndStorageBuffer8BitAccess>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-StoragePushConstant8 StoragePushConstant8>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-StoragePushConstant8 StoragePushConstant8>
 --
 -- == Version History
 --
@@ -120,7 +125,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_8bit_storage Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_8bit_storage Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

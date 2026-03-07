@@ -97,9 +97,13 @@ pattern API_VERSION_1_3 = MAKE_API_VERSION 1 3 0
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceVulkan13Features' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
--- enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceVulkan13Features', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -109,15 +113,9 @@ pattern API_VERSION_1_3 = MAKE_API_VERSION 1 3 0
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan13Features = PhysicalDeviceVulkan13Features
-  { -- | #features-robustImageAccess# @robustImageAccess@ indicates whether image
-    -- accesses are tightly bounds-checked against the dimensions of the image
-    -- view.
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-input-validation Invalid texels>
-    -- resulting from out of bounds image loads will be replaced as described
-    -- in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement>,
-    -- with either (0,0,1) or (0,0,0) values inserted for missing G, B, or A
-    -- components based on the format.
+  { -- | #features-robustImageAccess# @robustImageAccess@ enables
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-robust-image-access ???>
+    -- guarantees for shader image accesses.
     robustImageAccess :: Bool
   , -- | #features-inlineUniformBlock# @inlineUniformBlock@ indicates whether the
     -- implementation supports inline uniform block descriptors. If this

@@ -101,7 +101,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -169,9 +169,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDiagnosticsConfigFeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDiagnosticsConfigFeaturesNV', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -282,6 +286,25 @@ type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
 -- | VkDeviceDiagnosticsConfigFlagBitsNV - Bitmask specifying diagnostics
 -- flags
 --
+-- = Description
+--
+-- -   'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV' enables
+--     the generation of debug information for shaders.
+--
+-- -   'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV' enables
+--     driver side tracking of resources (images, buffers, etc.) used to
+--     augment the device fault information.
+--
+-- -   'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV'
+--     enables automatic insertion of
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
+--     for draw calls, dispatches, trace rays, and copies. The CPU call
+--     stack at the time of the command will be associated as the marker
+--     data for the automatically inserted checkpoints.
+--
+-- -   'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV'
+--     enables shader error reporting.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostics_config VK_NV_device_diagnostics_config>,
@@ -289,25 +312,16 @@ type DeviceDiagnosticsConfigFlagsNV = DeviceDiagnosticsConfigFlagBitsNV
 newtype DeviceDiagnosticsConfigFlagBitsNV = DeviceDiagnosticsConfigFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV' enables the
--- generation of debug information for shaders.
+-- No documentation found for Nested "VkDeviceDiagnosticsConfigFlagBitsNV" "VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV"
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
 
--- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV' enables
--- driver side tracking of resources (images, buffers, etc.) used to
--- augment the device fault information.
+-- No documentation found for Nested "VkDeviceDiagnosticsConfigFlagBitsNV" "VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV"
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
 
--- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
--- automatic insertion of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
--- for draw calls, dispatches, trace rays, and copies. The CPU call stack
--- at the time of the command will be associated as the marker data for the
--- automatically inserted checkpoints.
+-- No documentation found for Nested "VkDeviceDiagnosticsConfigFlagBitsNV" "VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV"
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
 
--- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV' enables
--- shader error reporting.
+-- No documentation found for Nested "VkDeviceDiagnosticsConfigFlagBitsNV" "VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV"
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000008
 
 conNameDeviceDiagnosticsConfigFlagBitsNV :: String

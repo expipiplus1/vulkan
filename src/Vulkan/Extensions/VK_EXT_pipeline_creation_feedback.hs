@@ -78,11 +78,13 @@
 --
 -- -   'PipelineCreationFeedbackEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo',
 --     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX':
+--     'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX',
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineCreateInfoARM':
 --
 --     -   'PipelineCreationFeedbackCreateInfoEXT'
 --
@@ -99,6 +101,15 @@
 -- -   'EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME'
 --
 -- -   'EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION'
+--
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits.PipelineCreationFeedbackFlagBits':
+--
+--     -   'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT'
+--
+--     -   'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT'
+--
+--     -   'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -125,11 +136,14 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_pipeline_creation_feedback Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( pattern STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT
+                                                            , pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT
+                                                            , pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT
+                                                            , pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT
                                                             , PipelineCreationFeedbackFlagsEXT
                                                             , PipelineCreationFeedbackFlagBitsEXT
                                                             , PipelineCreationFeedbackEXT
@@ -145,9 +159,27 @@ import Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCr
 import Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlagBits)
 import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlags)
+import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlags)
+import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlagBits(PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT))
+import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlags)
+import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlagBits(PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT))
+import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlags)
+import Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits (PipelineCreationFeedbackFlagBits(PIPELINE_CREATION_FEEDBACK_VALID_BIT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT = STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT"
+pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PIPELINE_CREATION_FEEDBACK_VALID_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT"
+pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT"
+pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT
 
 
 -- No documentation found for TopLevel "VkPipelineCreationFeedbackFlagsEXT"

@@ -18,7 +18,7 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --         
@@ -108,6 +108,21 @@
 -- non-updateAfterBind descriptor set layouts, and the new limits count
 -- descriptors in all descriptor set layouts in the pipeline layout.
 --
+-- == Promotion to Vulkan 1.2
+--
+-- Vulkan APIs in this extension are included in core Vulkan 1.2, with the
+-- EXT suffix omitted. However, if Vulkan 1.2 is supported and this
+-- extension is not, the @descriptorIndexing@ capability is optional.
+-- External interactions defined by this extension, such as SPIR-V token
+-- names, retain their original names. The original Vulkan API names are
+-- still available as aliases of the core functionality.
+--
+-- == Promotion to Vulkan 1.4
+--
+-- If Vulkan 1.4 is supported, support for the
+-- @shaderUniformTexelBufferArrayDynamicIndexing@ and
+-- @shaderStorageTexelBufferArrayDynamicIndexing@ capabilities is required.
+--
 -- == New Structures
 --
 -- -   Extending 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo':
@@ -186,15 +201,6 @@
 --
 --     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT'
 --
--- == Promotion to Vulkan 1.2
---
--- Vulkan APIs in this extension are included in core Vulkan 1.2, with the
--- EXT suffix omitted. However, if Vulkan 1.2 is supported and this
--- extension is not, the @descriptorIndexing@ capability is optional.
--- External interactions defined by this extension, such as SPIR-V token
--- names, retain their original names. The original Vulkan API names are
--- still available as aliases of the core functionality.
---
 -- == Version History
 --
 -- -   Revision 1, 2017-07-26 (Jeff Bolz)
@@ -212,7 +218,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_descriptor_indexing Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_descriptor_indexing Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -22,6 +22,12 @@ type FenceCreateFlags = FenceCreateFlagBits
 -- | VkFenceCreateFlagBits - Bitmask specifying initial state and behavior of
 -- a fence
 --
+-- = Description
+--
+-- -   'FENCE_CREATE_SIGNALED_BIT' specifies that the fence object is
+--     created in the signaled state. Otherwise, it is created in the
+--     unsignaled state.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -29,8 +35,7 @@ type FenceCreateFlags = FenceCreateFlagBits
 newtype FenceCreateFlagBits = FenceCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'FENCE_CREATE_SIGNALED_BIT' specifies that the fence object is created
--- in the signaled state. Otherwise, it is created in the unsignaled state.
+-- No documentation found for Nested "VkFenceCreateFlagBits" "VK_FENCE_CREATE_SIGNALED_BIT"
 pattern FENCE_CREATE_SIGNALED_BIT = FenceCreateFlagBits 0x00000001
 
 conNameFenceCreateFlagBits :: String

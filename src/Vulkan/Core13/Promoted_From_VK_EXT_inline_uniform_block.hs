@@ -50,9 +50,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceInlineUniformBlockFeatures' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceInlineUniformBlockFeatures', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -145,7 +149,7 @@ instance Zero PhysicalDeviceInlineUniformBlockFeatures where
 data PhysicalDeviceInlineUniformBlockProperties = PhysicalDeviceInlineUniformBlockProperties
   { -- | #extension-limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@
     -- is the maximum size in bytes of an
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
     -- binding.
     maxInlineUniformBlockSize :: Word32
   , -- | #extension-limits-maxPerStageDescriptorInlineUniformBlocks#

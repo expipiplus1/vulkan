@@ -79,7 +79,7 @@
 -- acceleration structure.
 --
 -- An application adds
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR'
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR'
 -- to the acceleration structure at build time. Then, if the hit is a
 -- triangle geometry, the shader (any-hit or closest hit for ray pipelines
 -- or using ray query) /can/ fetch the three, three-component vertex
@@ -102,7 +102,9 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -110,13 +112,13 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-hittrianglevertexpositions HitTriangleVertexPositionsKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-hittrianglevertexpositions HitTriangleVertexPositionsKHR>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTracingPositionFetchKHR RayTracingPositionFetchKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-RayTracingPositionFetchKHR RayTracingPositionFetchKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryPositionFetchKHR RayQueryPositionFetchKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-RayQueryPositionFetchKHR RayQueryPositionFetchKHR>
 --
 -- == Issues
 --
@@ -135,7 +137,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_position_fetch Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_tracing_position_fetch Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

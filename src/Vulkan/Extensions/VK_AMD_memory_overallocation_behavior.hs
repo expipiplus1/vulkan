@@ -87,7 +87,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_memory_overallocation_behavior Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_memory_overallocation_behavior Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -187,6 +187,21 @@ instance Zero DeviceMemoryOverallocationCreateInfoAMD where
 -- | VkMemoryOverallocationBehaviorAMD - Specify memory overallocation
 -- behavior
 --
+-- = Description
+--
+-- -   'MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD' lets the implementation
+--     decide if overallocation is allowed.
+--
+-- -   'MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD' specifies
+--     overallocation is allowed if platform permits.
+--
+-- -   'MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD' specifies the
+--     application is not allowed to allocate device memory beyond the heap
+--     sizes reported by
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'.
+--     Allocations that are not explicitly made by the application within
+--     the scope of the Vulkan instance are not accounted for.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_memory_overallocation_behavior VK_AMD_memory_overallocation_behavior>,
@@ -194,20 +209,13 @@ instance Zero DeviceMemoryOverallocationCreateInfoAMD where
 newtype MemoryOverallocationBehaviorAMD = MemoryOverallocationBehaviorAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD' lets the implementation
--- decide if overallocation is allowed.
+-- No documentation found for Nested "VkMemoryOverallocationBehaviorAMD" "VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD"
 pattern MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = MemoryOverallocationBehaviorAMD 0
 
--- | 'MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD' specifies overallocation is
--- allowed if platform permits.
+-- No documentation found for Nested "VkMemoryOverallocationBehaviorAMD" "VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD"
 pattern MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = MemoryOverallocationBehaviorAMD 1
 
--- | 'MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD' specifies the
--- application is not allowed to allocate device memory beyond the heap
--- sizes reported by
--- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'.
--- Allocations that are not explicitly made by the application within the
--- scope of the Vulkan instance are not accounted for.
+-- No documentation found for Nested "VkMemoryOverallocationBehaviorAMD" "VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD"
 pattern MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = MemoryOverallocationBehaviorAMD 2
 
 {-# COMPLETE

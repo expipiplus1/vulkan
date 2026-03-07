@@ -23,6 +23,12 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_present_mode_fifo_latest_ready VK_KHR_present_mode_fifo_latest_ready>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Lionel Duc
@@ -48,7 +54,7 @@
 -- == Description
 --
 -- This device extension adds a new present mode,
--- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'.
+-- 'PRESENT_MODE_FIFO_LATEST_READY_EXT'.
 --
 -- This tear-free present mode behaves much like
 -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR', except that
@@ -67,6 +73,13 @@
 -- This additional present mode is useful when using a time-based present
 -- API.
 --
+-- == Promotion to @VK_KHR_present_mode_fifo_latest_ready@
+--
+-- All functionality in this extension is included in
+-- @VK_KHR_present_mode_fifo_latest_ready@, with the suffix changed to KHR.
+-- The original type and enum names are still available as aliases of the
+-- KHR names.
+--
 -- == New Structures
 --
 -- -   Extending
@@ -83,11 +96,11 @@
 --
 -- -   Extending 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
+--     -   'PRESENT_MODE_FIFO_LATEST_READY_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT'
 --
 -- == Version History
 --
@@ -102,106 +115,37 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_present_mode_fifo_latest_ready Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_present_mode_fifo_latest_ready Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready  ( PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT
+                                                                , pattern PRESENT_MODE_FIFO_LATEST_READY_EXT
+                                                                , PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT
                                                                 , EXT_PRESENT_MODE_FIFO_LATEST_READY_SPEC_VERSION
                                                                 , pattern EXT_PRESENT_MODE_FIFO_LATEST_READY_SPEC_VERSION
                                                                 , EXT_PRESENT_MODE_FIFO_LATEST_READY_EXTENSION_NAME
                                                                 , pattern EXT_PRESENT_MODE_FIFO_LATEST_READY_EXTENSION_NAME
+                                                                , PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(..)
                                                                 , PresentModeKHR(..)
                                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT))
+import Vulkan.Extensions.VK_KHR_present_mode_fifo_latest_ready (PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR)
+import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(PRESENT_MODE_FIFO_LATEST_READY_KHR))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR))
+import Vulkan.Extensions.VK_KHR_present_mode_fifo_latest_ready (PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
--- | VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT - Structure
--- describing support for VK_PRESENT_MODE_FIFO_LATEST_READY_EXT
---
--- = Description
---
--- If the 'PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT' structure
--- is included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_present_mode_fifo_latest_ready VK_EXT_present_mode_fifo_latest_ready>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT
-  { -- | #features-presentModeFifoLatestReady# @presentModeFifoLatestReady@
-    -- specifies whether the implementation supports the
-    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
-    -- present mode.
-    presentModeFifoLatestReady :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT)
-#endif
-deriving instance Show PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR
 
-instance ToCStruct PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (presentModeFifoLatestReady))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT where
-  peekCStruct p = do
-    presentModeFifoLatestReady <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT
-             (bool32ToBool presentModeFifoLatestReady)
+-- No documentation found for TopLevel "VK_PRESENT_MODE_FIFO_LATEST_READY_EXT"
+pattern PRESENT_MODE_FIFO_LATEST_READY_EXT = PRESENT_MODE_FIFO_LATEST_READY_KHR
 
-instance Storable PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT where
-  zero = PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT
-           zero
+-- No documentation found for TopLevel "VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT"
+type PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR
 
 
 type EXT_PRESENT_MODE_FIFO_LATEST_READY_SPEC_VERSION = 1

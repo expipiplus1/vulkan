@@ -123,7 +123,7 @@
 --
 -- -   optionally preprocess the generated content using
 --     'cmdPreprocessGeneratedCommandsNV', for example on an asynchronous
---     compute queue, or for the purpose of re-using the data in multiple
+--     compute queue, or for the purpose of reusing the data in multiple
 --     executions.
 --
 -- -   call 'cmdExecuteGeneratedCommandsNV' to create and execute the
@@ -188,7 +188,8 @@
 --
 -- -   'SetStateFlagsIndirectCommandNV'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'GraphicsPipelineShaderGroupsCreateInfoNV'
 --
@@ -225,9 +226,9 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
 --
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'
+--     -   'ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'
 --
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV'
+--     -   'ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
@@ -241,7 +242,7 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
+--     -   'PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -320,9 +321,9 @@
 -- not always required.
 --
 -- When making use of Graphics Shader Groups, the programs should behave
--- similar with regards to vertex inputs, clipping and culling outputs of
--- the geometry stage, as well as sample shading behavior in fragment
--- shaders, to reduce the amount of the worst-case memory approximation.
+-- similarly with regards to vertex inputs, clipping and culling outputs of
+-- the geometry stage, and sample shading behavior in fragment shaders, to
+-- reduce the amount of the worst-case memory approximation.
 --
 -- 7) Should we allow additional per-sequence dynamic state changes?
 --
@@ -340,7 +341,7 @@
 -- add the ability to change any
 -- 'Vulkan.Core10.Enums.DynamicState.DynamicState'.
 --
--- 8) How do we allow re-using already “generated” @indirectCommands@?
+-- 8) How do we allow reusing already “generated” @indirectCommands@?
 --
 -- Expose a @preprocessBuffer@ to reuse implementation-dependencyFlags
 -- data. Set @isPreprocessed@ to 'Vulkan.Core10.FundamentalTypes.TRUE' in
@@ -389,16 +390,12 @@
 -- separate logical pipeline from either graphics or compute, and that
 -- pipeline only includes
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TOP_OF_PIPE_BIT',
--- a new stage
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV',
--- and
+-- a new stage 'PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV', and
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT'.
 -- This new stage has two corresponding new access types,
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'
--- and
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV',
--- used to synchronize reading the buffer inputs and writing the preprocess
--- memory output.
+-- 'ACCESS_COMMAND_PREPROCESS_READ_BIT_NV' and
+-- 'ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV', used to synchronize reading
+-- the buffer inputs and writing the preprocess memory output.
 --
 -- The generated output written in the preprocess buffer memory by
 -- 'cmdExecuteGeneratedCommandsNV' is considered to be consumed by the
@@ -408,20 +405,16 @@
 -- Thus, to synchronize from writing the input buffers to preprocessing via
 -- 'cmdPreprocessGeneratedCommandsNV', use:
 --
--- -   @dstStageMask@ =
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
+-- -   @dstStageMask@ = 'PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
 --
--- -   @dstAccessMask@ =
---     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'
+-- -   @dstAccessMask@ = 'ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'
 --
 -- To synchronize from 'cmdPreprocessGeneratedCommandsNV' to executing the
 -- generated commands by 'cmdExecuteGeneratedCommandsNV', use:
 --
--- -   @srcStageMask@ =
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
+-- -   @srcStageMask@ = 'PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'
 --
--- -   @srcAccessMask@ =
---     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV'
+-- -   @srcAccessMask@ = 'ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV'
 --
 -- -   @dstStageMask@ =
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'
@@ -530,7 +523,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_generated_commands Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_device_generated_commands Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -552,7 +545,10 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( BindIndexBufferIndir
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data BindIndexBufferIndirectCommandNV
 
 instance ToCStruct BindIndexBufferIndirectCommandNV
@@ -617,12 +613,15 @@ instance Show IndirectCommandsLayoutCreateInfoNV
 instance FromCStruct IndirectCommandsLayoutCreateInfoNV
 
 
-data IndirectCommandsLayoutTokenNV
+type role IndirectCommandsLayoutTokenNV nominal
+data IndirectCommandsLayoutTokenNV (es :: [Type])
 
-instance ToCStruct IndirectCommandsLayoutTokenNV
-instance Show IndirectCommandsLayoutTokenNV
+instance ( Extendss IndirectCommandsLayoutTokenNV es
+         , PokeChain es ) => ToCStruct (IndirectCommandsLayoutTokenNV es)
+instance Show (Chain es) => Show (IndirectCommandsLayoutTokenNV es)
 
-instance FromCStruct IndirectCommandsLayoutTokenNV
+instance ( Extendss IndirectCommandsLayoutTokenNV es
+         , PeekChain es ) => FromCStruct (IndirectCommandsLayoutTokenNV es)
 
 
 data IndirectCommandsStreamNV

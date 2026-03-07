@@ -199,9 +199,13 @@ instance Zero ProtectedSubmitInfo where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceProtectedMemoryFeatures' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceProtectedMemoryFeatures', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -212,7 +216,7 @@ instance Zero ProtectedSubmitInfo where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
   { -- | #extension-features-protectedMemory# @protectedMemory@ specifies whether
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory protected memory>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-protected-memory protected memory>
     -- is supported.
     protectedMemory :: Bool }
   deriving (Typeable, Eq)
@@ -280,10 +284,10 @@ data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProp
     -- memory in an unprotected queue operation, or perform a query in a
     -- protected queue operation. If this limit is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
-    -- have undefined values written, reads and queries will return undefined
+    -- have undefined values written; reads and queries will return undefined
     -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
     -- applications /must/ not perform these operations. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-access-rules>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-protected-access-rules>
     -- for more information.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)

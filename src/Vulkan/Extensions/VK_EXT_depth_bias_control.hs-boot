@@ -73,8 +73,9 @@
 --
 -- This extension adds a new structure, 'DepthBiasRepresentationInfoEXT',
 -- that can be added to a @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' and allows
--- setting the scaling and representation of depth bias for a pipeline.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'
+-- and allows setting the scaling and representation of depth bias for a
+-- pipeline.
 --
 -- This state can also be set dynamically by using the new structure
 -- mentioned above in combination with the new 'cmdSetDepthBias2EXT'
@@ -89,7 +90,7 @@
 -- -   'DepthBiasInfoEXT'
 --
 -- -   Extending 'DepthBiasInfoEXT',
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'DepthBiasRepresentationInfoEXT'
 --
@@ -130,7 +131,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_bias_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_bias_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

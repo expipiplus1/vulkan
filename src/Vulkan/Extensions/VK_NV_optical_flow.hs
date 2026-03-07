@@ -234,7 +234,7 @@
 -- > imageCreateInfo.mipLevels = 1;
 -- > imageCreateInfo.arrayLayers = 1;
 -- > imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
--- > imageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;;
+-- > imageCreateInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 -- > imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 -- >
 -- > vkCreateImage(device, &imageCreateInfo, NULL, &input);
@@ -280,7 +280,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_optical_flow Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_optical_flow Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -522,35 +522,39 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_EXTENSION_NOT_PRESENT'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- 'Vulkan.Core10.Enums.Format.FORMAT_B8G8R8A8_UNORM',
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R8_UNORM' and
 -- 'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_420_UNORM' are
 -- initially supported for images with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical usage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#opticalflow-usage optical usage>
 -- 'OPTICAL_FLOW_USAGE_INPUT_BIT_NV'.
 --
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R16G16_SFIXED5_NV' is initially
 -- supported for images with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical flow usage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#opticalflow-usage optical flow usage>
 -- 'OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV', 'OPTICAL_FLOW_USAGE_HINT_BIT_NV' and
 -- 'OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV'.
 --
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT' and
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R32_UINT' are initially supported for
 -- images with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical flow usage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#opticalflow-usage optical flow usage>
 -- 'OPTICAL_FLOW_USAGE_COST_BIT_NV'. It is recommended to use
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT' because of the lower
 -- bandwidth.
@@ -626,6 +630,9 @@ foreign import ccall
 --     /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.OpticalFlowSessionNV' handle
 --
+-- -   #VUID-vkCreateOpticalFlowSessionNV-device-queuecount# The device
+--     /must/ have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -634,9 +641,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -656,7 +667,7 @@ createOpticalFlowSessionNV :: forall a io
                               -- flow session.
                               (OpticalFlowSessionCreateInfoNV a)
                            -> -- | @pAllocator@ controls host memory allocation as described in the
-                              -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                              -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                               -- chapter.
                               ("allocator" ::: Maybe AllocationCallbacks)
                            -> io (OpticalFlowSessionNV)
@@ -733,7 +744,7 @@ destroyOpticalFlowSessionNV :: forall io
                             -> -- | @session@ is the optical flow session to be destroyed.
                                OpticalFlowSessionNV
                             -> -- | @pAllocator@ controls host memory allocation as described in the
-                               -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                               -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                -- chapter.
                                ("allocator" ::: Maybe AllocationCallbacks)
                             -> io ()
@@ -760,24 +771,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> OpticalFlowSessionNV -> OpticalFlowSessionBindingPointNV -> ImageView -> ImageLayout -> IO Result) -> Ptr Device_T -> OpticalFlowSessionNV -> OpticalFlowSessionBindingPointNV -> ImageView -> ImageLayout -> IO Result
 
 -- | vkBindOpticalFlowSessionImageNV - Bind image to an optical flow session
---
--- = Parameters
---
--- -   @device@ is the device which owns the optical flow session object
---     @session@.
---
--- -   @session@ is the optical flow session object to which the image view
---     is to be bound.
---
--- -   @bindingPoint@ specifies the binding point
---     'OpticalFlowSessionBindingPointNV' to which the image view is bound.
---
--- -   @view@ is a 'Vulkan.Core10.Handles.ImageView' to be bound.
---
--- -   layout /must/ specify the layout that the image subresources
---     accessible from @view@ will be in at the time the optical flow
---     vectors are calculated with 'cmdOpticalFlowExecuteNV' on a
---     'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -815,9 +808,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -828,15 +825,21 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.OpticalFlowSessionNV'
 bindOpticalFlowSessionImageNV :: forall io
                                . (MonadIO io)
-                              => -- No documentation found for Nested "vkBindOpticalFlowSessionImageNV" "device"
+                              => -- | @device@ is the device which owns the optical flow session object
+                                 -- @session@.
                                  Device
-                              -> -- No documentation found for Nested "vkBindOpticalFlowSessionImageNV" "session"
+                              -> -- | @session@ is the optical flow session object to which the image view is
+                                 -- to be bound.
                                  OpticalFlowSessionNV
-                              -> -- No documentation found for Nested "vkBindOpticalFlowSessionImageNV" "bindingPoint"
+                              -> -- | @bindingPoint@ specifies the binding point
+                                 -- 'OpticalFlowSessionBindingPointNV' to which the image view is bound.
                                  OpticalFlowSessionBindingPointNV
-                              -> -- No documentation found for Nested "vkBindOpticalFlowSessionImageNV" "view"
+                              -> -- | @view@ is a 'Vulkan.Core10.Handles.ImageView' to be bound.
                                  ImageView
-                              -> -- No documentation found for Nested "vkBindOpticalFlowSessionImageNV" "layout"
+                              -> -- | @layout@ /must/ specify the layout that the image subresources
+                                 -- accessible from @view@ will be in at the time the optical flow vectors
+                                 -- are calculated with 'cmdOpticalFlowExecuteNV' on a
+                                 -- 'Vulkan.Core10.Handles.Device'.
                                  ImageLayout
                               -> io ()
 bindOpticalFlowSessionImageNV device
@@ -885,10 +888,15 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdOpticalFlowExecuteNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support optical flow operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_OPTICAL_FLOW_BIT_NV'
+--     operations
 --
 -- -   #VUID-vkCmdOpticalFlowExecuteNV-renderpass# This command /must/ only
 --     be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdOpticalFlowExecuteNV-suspended# This command /must/ not
+--     be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdOpticalFlowExecuteNV-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -909,9 +917,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Opticalflow                                                                                                           | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_OPTICAL_FLOW_BIT_NV                                                                                          | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdOpticalFlowExecuteNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -963,9 +976,13 @@ pattern FORMAT_R16G16_S10_5_NV = FORMAT_R16G16_SFIXED5_NV
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceOpticalFlowFeaturesNV' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceOpticalFlowFeaturesNV', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1359,7 +1376,7 @@ instance Zero OpticalFlowImageFormatPropertiesNV where
 --     'OpticalFlowSessionCreatePrivateDataInfoNV'
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
+--     value of each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-imageFormat-parameter#
 --     @imageFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
@@ -1677,6 +1694,20 @@ type OpticalFlowGridSizeFlagsNV = OpticalFlowGridSizeFlagBitsNV
 -- | VkOpticalFlowGridSizeFlagBitsNV - Bits specifying grid sizes for optical
 -- flow operations
 --
+-- = Description
+--
+-- -   'OPTICAL_FLOW_GRID_SIZE_1X1_BIT_NV' specifies that grid is 1x1
+--     pixel.
+--
+-- -   'OPTICAL_FLOW_GRID_SIZE_2X2_BIT_NV' specifies that grid is 2x2
+--     pixel.
+--
+-- -   'OPTICAL_FLOW_GRID_SIZE_4X4_BIT_NV' specifies that grid is 4x4
+--     pixel.
+--
+-- -   'OPTICAL_FLOW_GRID_SIZE_8X8_BIT_NV' specifies that grid is 8x8
+--     pixel.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
@@ -1687,16 +1718,16 @@ newtype OpticalFlowGridSizeFlagBitsNV = OpticalFlowGridSizeFlagBitsNV Flags
 -- No documentation found for Nested "VkOpticalFlowGridSizeFlagBitsNV" "VK_OPTICAL_FLOW_GRID_SIZE_UNKNOWN_NV"
 pattern OPTICAL_FLOW_GRID_SIZE_UNKNOWN_NV = OpticalFlowGridSizeFlagBitsNV 0x00000000
 
--- | 'OPTICAL_FLOW_GRID_SIZE_1X1_BIT_NV' specifies that grid is 1x1 pixel.
+-- No documentation found for Nested "VkOpticalFlowGridSizeFlagBitsNV" "VK_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_NV"
 pattern OPTICAL_FLOW_GRID_SIZE_1X1_BIT_NV = OpticalFlowGridSizeFlagBitsNV 0x00000001
 
--- | 'OPTICAL_FLOW_GRID_SIZE_2X2_BIT_NV' specifies that grid is 2x2 pixel.
+-- No documentation found for Nested "VkOpticalFlowGridSizeFlagBitsNV" "VK_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_NV"
 pattern OPTICAL_FLOW_GRID_SIZE_2X2_BIT_NV = OpticalFlowGridSizeFlagBitsNV 0x00000002
 
--- | 'OPTICAL_FLOW_GRID_SIZE_4X4_BIT_NV' specifies that grid is 4x4 pixel.
+-- No documentation found for Nested "VkOpticalFlowGridSizeFlagBitsNV" "VK_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_NV"
 pattern OPTICAL_FLOW_GRID_SIZE_4X4_BIT_NV = OpticalFlowGridSizeFlagBitsNV 0x00000004
 
--- | 'OPTICAL_FLOW_GRID_SIZE_8X8_BIT_NV' specifies that grid is 8x8 pixel.
+-- No documentation found for Nested "VkOpticalFlowGridSizeFlagBitsNV" "VK_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_NV"
 pattern OPTICAL_FLOW_GRID_SIZE_8X8_BIT_NV = OpticalFlowGridSizeFlagBitsNV 0x00000008
 
 conNameOpticalFlowGridSizeFlagBitsNV :: String
@@ -1751,6 +1782,23 @@ type OpticalFlowUsageFlagsNV = OpticalFlowUsageFlagBitsNV
 -- | VkOpticalFlowUsageFlagBitsNV - Bits specifying usage for optical flow
 -- operations
 --
+-- = Description
+--
+-- -   'OPTICAL_FLOW_USAGE_INPUT_BIT_NV' specifies that the image /can/ be
+--     used as input or reference frame for an optical flow operation.
+--
+-- -   'OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV' specifies that the image /can/ be
+--     used as output flow vector map for an optical flow operation.
+--
+-- -   'OPTICAL_FLOW_USAGE_HINT_BIT_NV' specifies that the image /can/ be
+--     used as hint flow vector map for an optical flow operation.
+--
+-- -   'OPTICAL_FLOW_USAGE_COST_BIT_NV' specifies that the image /can/ be
+--     used as output cost map for an optical flow operation.
+--
+-- -   'OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV' specifies that the image
+--     /can/ be used as global flow vector for an optical flow operation.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
@@ -1761,24 +1809,19 @@ newtype OpticalFlowUsageFlagBitsNV = OpticalFlowUsageFlagBitsNV Flags
 -- No documentation found for Nested "VkOpticalFlowUsageFlagBitsNV" "VK_OPTICAL_FLOW_USAGE_UNKNOWN_NV"
 pattern OPTICAL_FLOW_USAGE_UNKNOWN_NV = OpticalFlowUsageFlagBitsNV 0x00000000
 
--- | 'OPTICAL_FLOW_USAGE_INPUT_BIT_NV' specifies that the image /can/ be used
--- as input or reference frame for an optical flow operation.
+-- No documentation found for Nested "VkOpticalFlowUsageFlagBitsNV" "VK_OPTICAL_FLOW_USAGE_INPUT_BIT_NV"
 pattern OPTICAL_FLOW_USAGE_INPUT_BIT_NV = OpticalFlowUsageFlagBitsNV 0x00000001
 
--- | 'OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV' specifies that the image /can/ be
--- used as output flow vector map for an optical flow operation.
+-- No documentation found for Nested "VkOpticalFlowUsageFlagBitsNV" "VK_OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV"
 pattern OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV = OpticalFlowUsageFlagBitsNV 0x00000002
 
--- | 'OPTICAL_FLOW_USAGE_HINT_BIT_NV' specifies that the image /can/ be used
--- as hint flow vector map for an optical flow operation.
+-- No documentation found for Nested "VkOpticalFlowUsageFlagBitsNV" "VK_OPTICAL_FLOW_USAGE_HINT_BIT_NV"
 pattern OPTICAL_FLOW_USAGE_HINT_BIT_NV = OpticalFlowUsageFlagBitsNV 0x00000004
 
--- | 'OPTICAL_FLOW_USAGE_COST_BIT_NV' specifies that the image /can/ be used
--- as output cost map for an optical flow operation.
+-- No documentation found for Nested "VkOpticalFlowUsageFlagBitsNV" "VK_OPTICAL_FLOW_USAGE_COST_BIT_NV"
 pattern OPTICAL_FLOW_USAGE_COST_BIT_NV = OpticalFlowUsageFlagBitsNV 0x00000008
 
--- | 'OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV' specifies that the image /can/
--- be used as global flow vector for an optical flow operation.
+-- No documentation found for Nested "VkOpticalFlowUsageFlagBitsNV" "VK_OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV"
 pattern OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV = OpticalFlowUsageFlagBitsNV 0x00000010
 
 conNameOpticalFlowUsageFlagBitsNV :: String
@@ -1834,6 +1877,17 @@ instance Read OpticalFlowUsageFlagBitsNV where
 
 -- | VkOpticalFlowPerformanceLevelNV - Optical flow performance level types
 --
+-- = Description
+--
+-- -   'OPTICAL_FLOW_PERFORMANCE_LEVEL_SLOW_NV' is a level with slower
+--     performance but higher quality.
+--
+-- -   'OPTICAL_FLOW_PERFORMANCE_LEVEL_MEDIUM_NV' is a level with medium
+--     performance and medium quality.
+--
+-- -   'OPTICAL_FLOW_PERFORMANCE_LEVEL_FAST_NV' is a preset with higher
+--     performance but lower quality.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
@@ -1844,16 +1898,13 @@ newtype OpticalFlowPerformanceLevelNV = OpticalFlowPerformanceLevelNV Int32
 -- No documentation found for Nested "VkOpticalFlowPerformanceLevelNV" "VK_OPTICAL_FLOW_PERFORMANCE_LEVEL_UNKNOWN_NV"
 pattern OPTICAL_FLOW_PERFORMANCE_LEVEL_UNKNOWN_NV = OpticalFlowPerformanceLevelNV 0
 
--- | 'OPTICAL_FLOW_PERFORMANCE_LEVEL_SLOW_NV' is a level with slower
--- performance but higher quality.
+-- No documentation found for Nested "VkOpticalFlowPerformanceLevelNV" "VK_OPTICAL_FLOW_PERFORMANCE_LEVEL_SLOW_NV"
 pattern OPTICAL_FLOW_PERFORMANCE_LEVEL_SLOW_NV = OpticalFlowPerformanceLevelNV 1
 
--- | 'OPTICAL_FLOW_PERFORMANCE_LEVEL_MEDIUM_NV' is a level with medium
--- performance and medium quality.
+-- No documentation found for Nested "VkOpticalFlowPerformanceLevelNV" "VK_OPTICAL_FLOW_PERFORMANCE_LEVEL_MEDIUM_NV"
 pattern OPTICAL_FLOW_PERFORMANCE_LEVEL_MEDIUM_NV = OpticalFlowPerformanceLevelNV 2
 
--- | 'OPTICAL_FLOW_PERFORMANCE_LEVEL_FAST_NV' is a preset with higher
--- performance but lower quality.
+-- No documentation found for Nested "VkOpticalFlowPerformanceLevelNV" "VK_OPTICAL_FLOW_PERFORMANCE_LEVEL_FAST_NV"
 pattern OPTICAL_FLOW_PERFORMANCE_LEVEL_FAST_NV = OpticalFlowPerformanceLevelNV 3
 
 {-# COMPLETE
@@ -1910,6 +1961,37 @@ instance Read OpticalFlowPerformanceLevelNV where
 -- | VkOpticalFlowSessionBindingPointNV - Binding points of an optical flow
 -- session
 --
+-- = Description
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_INPUT_NV' specifies the binding
+--     point for the input frame.
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV' specifies the
+--     binding point for the input reference frame.
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV' specifies the binding
+--     point for the optional external hint flow vectors.
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV' specifies the
+--     binding point for output flow vectors of default forward flow
+--     calculation.
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV'
+--     specifies the binding point for the optional output flow vector map
+--     of optional backward flow calculation.
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV' specifies the binding
+--     point for the optional output cost map of default forward flow
+--     calculation.
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV' specifies the
+--     binding point for the optional output cost map of optional backward
+--     flow calculation.
+--
+-- -   'OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV' specifies the
+--     binding point for the optional global flow value of default forward
+--     flow calculation.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
@@ -1920,40 +2002,28 @@ newtype OpticalFlowSessionBindingPointNV = OpticalFlowSessionBindingPointNV Int3
 -- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_UNKNOWN_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_UNKNOWN_NV = OpticalFlowSessionBindingPointNV 0
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_INPUT_NV' specifies the binding
--- point for the input frame.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_INPUT_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_INPUT_NV = OpticalFlowSessionBindingPointNV 1
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV' specifies the binding
--- point for the input reference frame.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_REFERENCE_NV = OpticalFlowSessionBindingPointNV 2
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV' specifies the binding point
--- for the optional external hint flow vectors.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV = OpticalFlowSessionBindingPointNV 3
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV' specifies the
--- binding point for output flow vectors of default forward flow
--- calculation.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_FLOW_VECTOR_NV = OpticalFlowSessionBindingPointNV 4
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV' specifies
--- the binding point for the optional output flow vector map of optional
--- backward flow calculation.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_FLOW_VECTOR_NV = OpticalFlowSessionBindingPointNV 5
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV' specifies the binding point
--- for the optional output cost map of default forward flow calculation.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV = OpticalFlowSessionBindingPointNV 6
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV' specifies the
--- binding point for the optional output cost map of optional backward flow
--- calculation.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV = OpticalFlowSessionBindingPointNV 7
 
--- | 'OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV' specifies the
--- binding point for the optional global flow value of default forward flow
--- calculation.
+-- No documentation found for Nested "VkOpticalFlowSessionBindingPointNV" "VK_OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV"
 pattern OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV = OpticalFlowSessionBindingPointNV 8
 
 {-# COMPLETE
@@ -2037,6 +2107,38 @@ type OpticalFlowSessionCreateFlagsNV = OpticalFlowSessionCreateFlagBitsNV
 -- | VkOpticalFlowSessionCreateFlagBitsNV - Bits specifying flags for optical
 -- flow session
 --
+-- = Description
+--
+-- -   'OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV' specifies that a
+--     'Vulkan.Core10.Handles.ImageView' with external flow vectors will be
+--     used as hints in performing the motion search and /must/ be bound to
+--     'OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV'.
+--
+-- -   'OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV' specifies that the
+--     cost for the forward flow is generated in a
+--     'Vulkan.Core10.Handles.ImageView' which /must/ be bound to
+--     'OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV'. Additionally, if
+--     'OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV' is also set,
+--     the cost for backward flow is generated in a
+--     'Vulkan.Core10.Handles.ImageView' which /must/ be bound to
+--     'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV'. The cost is
+--     the confidence level of the flow vector for each grid in the frame.
+--     The Cost implies how (in)accurate the flow vector is. Higher cost
+--     value implies the flow vector to be less accurate and vice-versa.
+--
+-- -   'OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV' specifies
+--     that a global flow vector is estimated from forward flow in a single
+--     pixel 'Vulkan.Core10.Handles.ImageView' which /must/ be bound to
+--     'OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV'.
+--
+-- -   'OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV' specifies that
+--     regions of interest /can/ be specified in
+--     'OpticalFlowExecuteInfoNV'.
+--
+-- -   'OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV' specifies that
+--     backward flow is generated in addition to forward flow which is
+--     always generated.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
@@ -2044,37 +2146,19 @@ type OpticalFlowSessionCreateFlagsNV = OpticalFlowSessionCreateFlagBitsNV
 newtype OpticalFlowSessionCreateFlagBitsNV = OpticalFlowSessionCreateFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV' specifies that a
--- 'Vulkan.Core10.Handles.ImageView' with external flow vectors will be
--- used as hints in performing the motion search and /must/ be bound to
--- 'OPTICAL_FLOW_SESSION_BINDING_POINT_HINT_NV'.
+-- No documentation found for Nested "VkOpticalFlowSessionCreateFlagBitsNV" "VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV"
 pattern OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV = OpticalFlowSessionCreateFlagBitsNV 0x00000001
 
--- | 'OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV' specifies that the cost
--- for the forward flow is generated in a 'Vulkan.Core10.Handles.ImageView'
--- which /must/ be bound to 'OPTICAL_FLOW_SESSION_BINDING_POINT_COST_NV'.
--- Additionally, if 'OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV' is
--- also set, the cost for backward flow is generated in a
--- 'Vulkan.Core10.Handles.ImageView' which /must/ be bound to
--- 'OPTICAL_FLOW_SESSION_BINDING_POINT_BACKWARD_COST_NV'. The cost is the
--- confidence level of the flow vector for each grid in the frame. The Cost
--- implies how (in)accurate the flow vector is. Higher cost value implies
--- the flow vector to be less accurate and vice-versa.
+-- No documentation found for Nested "VkOpticalFlowSessionCreateFlagBitsNV" "VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV"
 pattern OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV = OpticalFlowSessionCreateFlagBitsNV 0x00000002
 
--- | 'OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV' specifies that a
--- global flow vector is estimated from forward flow in a single pixel
--- 'Vulkan.Core10.Handles.ImageView' which /must/ be bound to
--- 'OPTICAL_FLOW_SESSION_BINDING_POINT_GLOBAL_FLOW_NV'.
+-- No documentation found for Nested "VkOpticalFlowSessionCreateFlagBitsNV" "VK_OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV"
 pattern OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV = OpticalFlowSessionCreateFlagBitsNV 0x00000004
 
--- | 'OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV' specifies that
--- regions of interest /can/ be specified in 'OpticalFlowExecuteInfoNV'.
+-- No documentation found for Nested "VkOpticalFlowSessionCreateFlagBitsNV" "VK_OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV"
 pattern OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV = OpticalFlowSessionCreateFlagBitsNV 0x00000008
 
--- | 'OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV' specifies that
--- backward flow is generated in addition to forward flow which is always
--- generated.
+-- No documentation found for Nested "VkOpticalFlowSessionCreateFlagBitsNV" "VK_OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV"
 pattern OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV = OpticalFlowSessionCreateFlagBitsNV 0x00000010
 
 conNameOpticalFlowSessionCreateFlagBitsNV :: String
@@ -2129,6 +2213,17 @@ type OpticalFlowExecuteFlagsNV = OpticalFlowExecuteFlagBitsNV
 -- | VkOpticalFlowExecuteFlagBitsNV - Bits specifying flags for an optical
 -- flow vector calculation
 --
+-- = Description
+--
+-- -   'OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV' specifies that
+--     temporal hints from previously generated flow vectors are not used.
+--     If temporal hints are enabled, optical flow vectors from previous
+--     'cmdOpticalFlowExecuteNV' call are automatically used as hints for
+--     the current 'cmdOpticalFlowExecuteNV' call, to take advantage of
+--     temporal correlation in a video sequence. Temporal hints should be
+--     disabled if there is a-priori knowledge of no temporal correlation
+--     (e.g. a scene change, independent successive frame pairs).
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
@@ -2136,14 +2231,7 @@ type OpticalFlowExecuteFlagsNV = OpticalFlowExecuteFlagBitsNV
 newtype OpticalFlowExecuteFlagBitsNV = OpticalFlowExecuteFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV' specifies that
--- temporal hints from previously generated flow vectors are not used. If
--- temporal hints are enabled, optical flow vectors from previous
--- 'cmdOpticalFlowExecuteNV' call are automatically used as hints for the
--- current 'cmdOpticalFlowExecuteNV' call, to take advantage of temporal
--- correlation in a video sequence. Temporal hints should be disabled if
--- there is a-priori knowledge of no temporal correlation (e.g. a scene
--- change, independent successive frame pairs).
+-- No documentation found for Nested "VkOpticalFlowExecuteFlagBitsNV" "VK_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV"
 pattern OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_NV = OpticalFlowExecuteFlagBitsNV 0x00000001
 
 conNameOpticalFlowExecuteFlagBitsNV :: String

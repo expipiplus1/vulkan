@@ -18,14 +18,22 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 VK_KHR_spirv_1_4>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_VERSION_1_2
+--
+--     -   Interacts with VK_AMD_draw_indirect_count
+--
 --     -   Interacts with VK_EXT_device_generated_commands
+--
+--     -   Interacts with VK_KHR_draw_indirect_count
 --
 --     -   Interacts with VK_KHR_fragment_shading_rate
 --
@@ -127,9 +135,17 @@
 --
 -- -   'cmdDrawMeshTasksEXT'
 --
--- -   'cmdDrawMeshTasksIndirectCountEXT'
---
 -- -   'cmdDrawMeshTasksIndirectEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_draw_indirect_count VK_KHR_draw_indirect_count>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_draw_indirect_count VK_AMD_draw_indirect_count>
+-- is supported:
+--
+-- -   'cmdDrawMeshTasksIndirectCountEXT'
 --
 -- == New Structures
 --
@@ -205,13 +221,13 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-cullprimitive CullPrimitiveEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-cullprimitive CullPrimitiveEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitivepointindices PrimitivePointIndicesEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-primitivepointindices PrimitivePointIndicesEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitivelineindices PrimitiveLineIndicesEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-primitivelineindices PrimitiveLineIndicesEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitivetriangleindices PrimitiveTriangleIndicesEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-primitivetriangleindices PrimitiveTriangleIndicesEXT>
 --
 -- -   (modified)@Position@
 --
@@ -251,7 +267,7 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-MeshShadingEXT MeshShadingEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-MeshShadingEXT MeshShadingEXT>
 --
 -- == Version History
 --
@@ -267,7 +283,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_mesh_shader Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_mesh_shader Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

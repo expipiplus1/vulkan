@@ -60,7 +60,7 @@
 --
 -- This extension adds a new way to control ViewportIndex with multiview.
 -- When the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiviewPerViewViewports multiviewPerViewViewports>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiviewPerViewViewports multiviewPerViewViewports>
 -- feature is enabled and if the last pre-rasterization shader entry
 -- point’s interface does not use the @ViewportIndex@ built-in decoration,
 -- then each view of a multiview render pass instance will use a viewport
@@ -87,7 +87,7 @@
 -- == Issues
 --
 -- 1) Is it possible to enable\/disable the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiviewPerViewViewports multiviewPerViewViewports>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiviewPerViewViewports multiviewPerViewViewports>
 -- feature for individual render pass instances?
 --
 -- __RESOLVED__: No, when the multiviewPerViewViewports feature is enabled
@@ -116,7 +116,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_multiview_per_view_viewports Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_multiview_per_view_viewports Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

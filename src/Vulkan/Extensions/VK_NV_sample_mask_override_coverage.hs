@@ -80,11 +80,11 @@
 --
 -- == New Variable Decoration
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-samplemask OverrideCoverageNV in SampleMask>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-samplemask OverrideCoverageNV in SampleMask>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SampleMaskOverrideCoverageNV SampleMaskOverrideCoverageNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-SampleMaskOverrideCoverageNV SampleMaskOverrideCoverageNV>
 --
 -- == Version History
 --
@@ -99,7 +99,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_sample_mask_override_coverage Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_sample_mask_override_coverage Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

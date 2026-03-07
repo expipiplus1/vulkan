@@ -1,7 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DescriptorUpdateTemplateType"
 module Vulkan.Core11.Enums.DescriptorUpdateTemplateType  (DescriptorUpdateTemplateType( DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-                                                                                      , DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
+                                                                                      , DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS
                                                                                       , ..
                                                                                       )) where
 
@@ -17,25 +17,33 @@ import GHC.Show (Show(showsPrec))
 -- | VkDescriptorUpdateTemplateType - Indicates the valid usage of the
 -- descriptor update template
 --
+-- = Description
+--
+-- -   'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET' specifies that the
+--     descriptor update template will be used for descriptor set updates
+--     only.
+--
+-- -   'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS' specifies that
+--     the descriptor update template will be used for push descriptor
+--     updates only.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo'
 newtype DescriptorUpdateTemplateType = DescriptorUpdateTemplateType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET' specifies that the
--- descriptor update template will be used for descriptor set updates only.
+-- No documentation found for Nested "VkDescriptorUpdateTemplateType" "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET"
 pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = DescriptorUpdateTemplateType 0
 
--- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR' specifies that
--- the descriptor update template will be used for push descriptor updates
--- only.
-pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = DescriptorUpdateTemplateType 1
+-- No documentation found for Nested "VkDescriptorUpdateTemplateType" "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS"
+pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS = DescriptorUpdateTemplateType 1
 
 {-# COMPLETE
   DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-  , DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR ::
+  , DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS ::
     DescriptorUpdateTemplateType
   #-}
 
@@ -52,8 +60,8 @@ showTableDescriptorUpdateTemplateType =
     , "DESCRIPTOR_SET"
     )
   ,
-    ( DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
-    , "PUSH_DESCRIPTORS_KHR"
+    ( DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS
+    , "PUSH_DESCRIPTORS"
     )
   ]
 

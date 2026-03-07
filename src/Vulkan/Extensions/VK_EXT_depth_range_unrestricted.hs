@@ -41,10 +41,10 @@
 --
 -- == Description
 --
--- This extension removes the 'Vulkan.Core10.Pipeline.Viewport' @minDepth@
--- and @maxDepth@ restrictions that the values must be between @0.0@ and
--- @1.0@, inclusive. It also removes the same restriction on
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'
+-- This extension removes the 'Vulkan.Core10.GraphicsPipeline.Viewport'
+-- @minDepth@ and @maxDepth@ restrictions that the values must be between
+-- @0.0@ and @1.0@, inclusive. It also removes the same restriction on
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'
 -- @minDepthBounds@ and @maxDepthBounds@. Finally it removes the
 -- restriction on the @depth@ value in
 -- 'Vulkan.Core10.CommandBufferBuilding.ClearDepthStencilValue'.
@@ -57,18 +57,18 @@
 --
 -- == Issues
 --
--- 1) How do 'Vulkan.Core10.Pipeline.Viewport' @minDepth@ and @maxDepth@
--- values outside of the @0.0@ to @1.0@ range interact with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>?
+-- 1) How do 'Vulkan.Core10.GraphicsPipeline.Viewport' @minDepth@ and
+-- @maxDepth@ values outside of the @0.0@ to @1.0@ range interact with
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>?
 --
 -- __RESOLVED__: The behavior described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
 -- still applies. If depth clamping is disabled the depth values are still
 -- clipped to 0 ≤ zc ≤ wc before the viewport transform. If depth clamping
 -- is enabled the above equation is ignored and the depth values are
--- instead clamped to the 'Vulkan.Core10.Pipeline.Viewport' @minDepth@ and
--- @maxDepth@ values, which in the case of this extension can be outside of
--- the @0.0@ to @1.0@ range.
+-- instead clamped to the 'Vulkan.Core10.GraphicsPipeline.Viewport'
+-- @minDepth@ and @maxDepth@ values, which in the case of this extension
+-- can be outside of the @0.0@ to @1.0@ range.
 --
 -- 2) What happens if a resulting depth fragment is outside of the @0.0@ to
 -- @1.0@ range and the depth buffer is fixed-point rather than
@@ -77,7 +77,7 @@
 -- __RESOLVED__: This situation can also arise without this extension (when
 -- fragment shaders replace depth values, for example), and this extension
 -- does not change the behavior, which is defined in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth Depth Test>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-depth Depth Test>
 -- section of the Fragment Operations chapter.
 --
 -- == Version History
@@ -93,7 +93,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_range_unrestricted Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_range_unrestricted Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

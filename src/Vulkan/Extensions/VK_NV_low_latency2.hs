@@ -21,9 +21,17 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
---     or
+--          or
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>
+--     and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_present_id VK_KHR_present_id>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_present_id2 VK_KHR_present_id2>
 --
 -- [__Contact__]
 --
@@ -161,7 +169,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_low_latency2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_low_latency2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -312,6 +320,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
@@ -379,7 +391,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     None
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -415,11 +430,11 @@ latencySleepNV device swapchain sleepInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkLatencySleepNV is null" Nothing Nothing
   let vkLatencySleepNV' = mkVkLatencySleepNV vkLatencySleepNVPtr
   pSleepInfo <- ContT $ withCStruct (sleepInfo)
-  _ <- lift $ traceAroundEvent "vkLatencySleepNV" (vkLatencySleepNV'
+  r <- lift $ traceAroundEvent "vkLatencySleepNV" (vkLatencySleepNV'
                                                      (deviceHandle (device))
                                                      (swapchain)
                                                      pSleepInfo)
-  pure $ ()
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
@@ -750,8 +765,9 @@ data SetLatencyMarkerInfoNV = SetLatencyMarkerInfoNV
   { -- | @presentID@ is an application provided value that is used to associate
     -- the timestamp with a
     -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' command using
-    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@ for a
-    -- given present.
+    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@ or
+    -- 'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR'::@pPresentIds@ for
+    -- a given present.
     presentID :: Word64
   , -- | @marker@ is the type of timestamp to be recorded.
     --
@@ -809,9 +825,9 @@ instance Zero SetLatencyMarkerInfoNV where
 -- If @pTimings@ is @NULL@ then the maximum number of queryable frame data
 -- is returned in @timingCount@. Otherwise, @timingCount@ /must/ be set by
 -- the application to the number of elements in the @pTimings@ array, and
--- on return the variable is overwritten with the number of values actually
--- written to @pTimings@. The elements of @pTimings@ are arranged in the
--- order they were requested in, with the oldest data in the first entry.
+-- on return is overwritten with the number of values actually written to
+-- @pTimings@. The elements of @pTimings@ are arranged in the order they
+-- were requested in, with the oldest data in the first entry.
 --
 -- == Valid Usage (Implicit)
 --
@@ -894,8 +910,9 @@ data LatencyTimingsFrameReportNV = LatencyTimingsFrameReportNV
   { -- | @presentID@ is the application provided value that is used to associate
     -- the timestamp with a
     -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' command using
-    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@ for a
-    -- given present.
+    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@ or
+    -- 'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR'::@pPresentIds@ for
+    -- a given present.
     presentID :: Word64
   , -- No documentation found for Nested "VkLatencyTimingsFrameReportNV" "inputSampleTimeUs"
     inputSampleTimeUs :: Word64
@@ -1117,7 +1134,8 @@ data LatencySubmissionPresentIdNV = LatencySubmissionPresentIdNV
   { -- | @presentID@ is used to associate the 'Vulkan.Core10.Queue.queueSubmit'
     -- with the presentId used for a given
     -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' via
-    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@.
+    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@ or
+    -- 'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR'::@pPresentIds@.
     presentID :: Word64 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1217,8 +1235,8 @@ instance Zero SwapchainLatencyCreateInfoNV where
 -- If @pPresentModes@ is @NULL@, then the number of present modes that are
 -- optimized for use with low latency mode returned in @presentModeCount@.
 -- Otherwise, @presentModeCount@ /must/ be set by the application to the
--- number of elements in the @pPresentModes@ array, and on return the
--- variable is overwritten with the number of values actually written to
+-- number of elements in the @pPresentModes@ array, and on return is
+-- overwritten with the number of values actually written to
 -- @pPresentModes@. If the value of @presentModeCount@ is less than the
 -- number of optimized present modes, at most @presentModeCount@ values
 -- will be written to @pPresentModes@.
@@ -1293,6 +1311,35 @@ instance Zero LatencySurfaceCapabilitiesNV where
 -- The members of the 'LatencyMarkerNV' are used as arguments for
 -- 'setLatencyMarkerNV' in the use cases described below:
 --
+-- -   'LATENCY_MARKER_SIMULATION_START_NV' /should/ be called at the start
+--     of the simulation execution each frame, but after the call to
+--     'latencySleepNV'.
+--
+-- -   'LATENCY_MARKER_SIMULATION_END_NV' /should/ be called at the end of
+--     the simulation execution each frame.
+--
+-- -   'LATENCY_MARKER_RENDERSUBMIT_START_NV' /should/ be called at the
+--     beginning of the render submission execution each frame. This
+--     /should/ be wherever Vulkan API calls are made and /must/ not span
+--     into asynchronous rendering.
+--
+-- -   'LATENCY_MARKER_RENDERSUBMIT_END_NV' /should/ be called at the end
+--     of the render submission execution each frame.
+--
+-- -   'LATENCY_MARKER_PRESENT_START_NV' /should/ be called just before
+--     'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
+--
+-- -   'LATENCY_MARKER_PRESENT_END_NV' /should/ be called when
+--     'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' returns.
+--
+-- -   'LATENCY_MARKER_INPUT_SAMPLE_NV' /should/ be called just before the
+--     application gathers input data.
+--
+-- -   'LATENCY_MARKER_TRIGGER_FLASH_NV' /should/ be called anywhere
+--     between 'LATENCY_MARKER_SIMULATION_START_NV' and
+--     'LATENCY_MARKER_SIMULATION_END_NV' whenever a left mouse click
+--     occurs.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
@@ -1300,40 +1347,28 @@ instance Zero LatencySurfaceCapabilitiesNV where
 newtype LatencyMarkerNV = LatencyMarkerNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'LATENCY_MARKER_SIMULATION_START_NV' /should/ be called at the start of
--- the simulation execution each frame, but after the call to
--- 'latencySleepNV'.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_SIMULATION_START_NV"
 pattern LATENCY_MARKER_SIMULATION_START_NV = LatencyMarkerNV 0
 
--- | 'LATENCY_MARKER_SIMULATION_END_NV' /should/ be called at the end of the
--- simulation execution each frame.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_SIMULATION_END_NV"
 pattern LATENCY_MARKER_SIMULATION_END_NV = LatencyMarkerNV 1
 
--- | 'LATENCY_MARKER_RENDERSUBMIT_START_NV' /should/ be called at the
--- beginning of the render submission execution each frame. This /should/
--- be wherever Vulkan API calls are made and /must/ not span into
--- asynchronous rendering.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_RENDERSUBMIT_START_NV"
 pattern LATENCY_MARKER_RENDERSUBMIT_START_NV = LatencyMarkerNV 2
 
--- | 'LATENCY_MARKER_RENDERSUBMIT_END_NV' /should/ be called at the end of
--- the render submission execution each frame.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_RENDERSUBMIT_END_NV"
 pattern LATENCY_MARKER_RENDERSUBMIT_END_NV = LatencyMarkerNV 3
 
--- | 'LATENCY_MARKER_PRESENT_START_NV' /should/ be called just before
--- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_PRESENT_START_NV"
 pattern LATENCY_MARKER_PRESENT_START_NV = LatencyMarkerNV 4
 
--- | 'LATENCY_MARKER_PRESENT_END_NV' /should/ be called when
--- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' returns.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_PRESENT_END_NV"
 pattern LATENCY_MARKER_PRESENT_END_NV = LatencyMarkerNV 5
 
--- | 'LATENCY_MARKER_INPUT_SAMPLE_NV' /should/ be called just before the
--- application gathers input data.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_INPUT_SAMPLE_NV"
 pattern LATENCY_MARKER_INPUT_SAMPLE_NV = LatencyMarkerNV 6
 
--- | 'LATENCY_MARKER_TRIGGER_FLASH_NV' /should/ be called anywhere between
--- 'LATENCY_MARKER_SIMULATION_START_NV' and
--- 'LATENCY_MARKER_SIMULATION_END_NV' whenever a left mouse click occurs.
+-- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_TRIGGER_FLASH_NV"
 pattern LATENCY_MARKER_TRIGGER_FLASH_NV = LatencyMarkerNV 7
 
 -- No documentation found for Nested "VkLatencyMarkerNV" "VK_LATENCY_MARKER_OUT_OF_BAND_RENDERSUBMIT_START_NV"
@@ -1440,6 +1475,12 @@ instance Read LatencyMarkerNV where
 -- The members of the 'OutOfBandQueueTypeNV' are used to describe the queue
 -- type in 'OutOfBandQueueTypeInfoNV' as described below:
 --
+-- -   'OUT_OF_BAND_QUEUE_TYPE_RENDER_NV' specifies that work will be
+--     submitted to this queue.
+--
+-- -   'OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV' specifies that this queue will
+--     be presented from.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
@@ -1447,12 +1488,10 @@ instance Read LatencyMarkerNV where
 newtype OutOfBandQueueTypeNV = OutOfBandQueueTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'OUT_OF_BAND_QUEUE_TYPE_RENDER_NV' specifies that work will be submitted
--- to this queue.
+-- No documentation found for Nested "VkOutOfBandQueueTypeNV" "VK_OUT_OF_BAND_QUEUE_TYPE_RENDER_NV"
 pattern OUT_OF_BAND_QUEUE_TYPE_RENDER_NV = OutOfBandQueueTypeNV 0
 
--- | 'OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV' specifies that this queue will be
--- presented from.
+-- No documentation found for Nested "VkOutOfBandQueueTypeNV" "VK_OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV"
 pattern OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV = OutOfBandQueueTypeNV 1
 
 {-# COMPLETE

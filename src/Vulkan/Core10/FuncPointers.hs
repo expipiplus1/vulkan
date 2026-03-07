@@ -43,7 +43,7 @@ type FN_vkInternalFreeNotification = ("pUserData" ::: Ptr ()) -> CSize -> Intern
 --
 -- = Description
 --
--- > described link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-host-allocation-scope[here^].
+-- > described link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-host-allocation-scope[here^].
 --
 -- = See Also
 --
@@ -123,7 +123,7 @@ type FN_vkAllocationFunction = ("pUserData" ::: Ptr ()) -> CSize -> ("alignment"
 -- generate 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' at the
 -- appropriate time for the command in which the condition was detected, as
 -- described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-errorcodes Return Codes>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-errorcodes Return Codes>.
 --
 -- If the implementation is able to continue correct processing of the
 -- current command without the requested allocation, then it /may/ do so,
@@ -156,7 +156,7 @@ type FN_vkFreeFunction = ("pUserData" ::: Ptr ()) -> ("pMemory" ::: Ptr ()) -> I
 type PFN_vkFreeFunction = FunPtr FN_vkFreeFunction
 
 
-type FN_vkVoidFunction = () -> IO ()
+type FN_vkVoidFunction = IO ()
 -- | PFN_vkVoidFunction - Placeholder function pointer type returned by
 -- queries
 --
@@ -167,6 +167,7 @@ type FN_vkVoidFunction = () -> IO ()
 --
 -- = See Also
 --
+-- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.PFN_vkGetInstanceProcAddrLUNARG',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr',
 -- 'Vulkan.Core10.DeviceInitialization.getInstanceProcAddr'

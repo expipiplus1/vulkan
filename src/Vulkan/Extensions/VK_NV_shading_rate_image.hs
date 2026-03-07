@@ -125,7 +125,8 @@
 --
 --     -   'PhysicalDeviceShadingRateImagePropertiesNV'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo':
 --
 --     -   'PipelineViewportCoarseSampleOrderStateCreateInfoNV'
 --
@@ -212,7 +213,7 @@
 --
 -- __RESOLVED__ We are specifying the pipeline stage to be between the
 -- final
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT')
 -- and before the first stage used for fragment processing
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'),
@@ -266,7 +267,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -393,7 +394,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-None-02058# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02059# If @imageView@ is
@@ -408,8 +409,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02061# If @imageView@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
---     created with a @usage@ value including
---     'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     created with the 'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV' usage flag
+--     set
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02062# If @imageView@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@ /must/
@@ -443,7 +444,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -467,9 +469,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBindShadingRateImageNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -516,11 +523,11 @@ foreign import ccall
 --
 -- This command sets the per-viewport shading rate image palettes for
 -- subsequent drawing commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineViewportShadingRateImageStateCreateInfoNV'::@pShadingRatePalettes@
 -- values used to create the currently active pipeline.
@@ -528,7 +535,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-None-02064# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-firstViewport-02067# The
@@ -538,12 +545,12 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-firstViewport-02068# If
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @firstViewport@ /must/ be @0@
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-viewportCount-02069# If
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
 -- == Valid Usage (Implicit)
@@ -562,7 +569,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-commandBuffer-cmdpool#
 --     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -584,9 +592,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetViewportShadingRatePaletteNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -641,11 +654,11 @@ foreign import ccall
 --
 -- This command sets the order of coverage samples for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV' values used to
 -- create the currently active pipeline.
@@ -680,7 +693,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetCoarseSampleOrderNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetCoarseSampleOrderNV-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -699,9 +713,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetCoarseSampleOrderNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -818,7 +837,7 @@ instance Zero ShadingRatePaletteNV where
 --
 -- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-02054#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @viewportCount@ /must/ be @0@ or @1@
 --
 -- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-02055#
@@ -829,7 +848,7 @@ instance Zero ShadingRatePaletteNV where
 --     If @shadingRateImageEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', @viewportCount@ /must/ be
 --     greater or equal to the @viewportCount@ member of
---     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -902,7 +921,7 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 -- = Description
 --
 -- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image Shading Rate Image>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-shading-rate-image Shading Rate Image>
 -- for more information.
 --
 -- If the 'PhysicalDeviceShadingRateImageFeaturesNV' structure is included
@@ -911,9 +930,13 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShadingRateImageFeaturesNV' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceShadingRateImageFeaturesNV', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -990,7 +1013,7 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 -- property.
 --
 -- These properties are related to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-shading-rate-image shading rate image>
 -- feature.
 --
 -- == Valid Usage (Implicit)
@@ -1148,9 +1171,9 @@ instance Zero CoarseSampleLocationNV where
 --
 -- When using a custom sample ordering, element /j/ in @pSampleLocations@
 -- specifies a specific pixel location and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
 -- that corresponds to
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage index>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask coverage index>
 -- /j/ in the multi-pixel fragment.
 --
 -- == Valid Usage
@@ -1524,6 +1547,27 @@ instance Read ShadingRatePaletteEntryNV where
 
 -- | VkCoarseSampleOrderTypeNV - Shading rate image sample ordering types
 --
+-- = Description
+--
+-- -   'COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV' specifies that coverage
+--     samples will be ordered in an implementation-dependent manner.
+--
+-- -   'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV' specifies that coverage samples
+--     will be ordered according to the array of custom orderings provided
+--     in either the @pCustomSampleOrders@ member of
+--     'PipelineViewportCoarseSampleOrderStateCreateInfoNV' or the
+--     @pCustomSampleOrders@ member of 'cmdSetCoarseSampleOrderNV'.
+--
+-- -   'COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV' specifies that coverage
+--     samples will be ordered sequentially, sorted first by pixel
+--     coordinate (in row-major order) and then by
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>.
+--
+-- -   'COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV' specifies that coverage
+--     samples will be ordered sequentially, sorted first by
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+--     and then by pixel coordinate (in row-major order).
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
@@ -1532,27 +1576,16 @@ instance Read ShadingRatePaletteEntryNV where
 newtype CoarseSampleOrderTypeNV = CoarseSampleOrderTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV' specifies that coverage samples
--- will be ordered in an implementation-dependent manner.
+-- No documentation found for Nested "VkCoarseSampleOrderTypeNV" "VK_COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV"
 pattern COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = CoarseSampleOrderTypeNV 0
 
--- | 'COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV' specifies that coverage samples
--- will be ordered according to the array of custom orderings provided in
--- either the @pCustomSampleOrders@ member of
--- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV' or the
--- @pCustomSampleOrders@ member of 'cmdSetCoarseSampleOrderNV'.
+-- No documentation found for Nested "VkCoarseSampleOrderTypeNV" "VK_COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV"
 pattern COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV = CoarseSampleOrderTypeNV 1
 
--- | 'COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV' specifies that coverage
--- samples will be ordered sequentially, sorted first by pixel coordinate
--- (in row-major order) and then by
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>.
+-- No documentation found for Nested "VkCoarseSampleOrderTypeNV" "VK_COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV"
 pattern COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV = CoarseSampleOrderTypeNV 2
 
--- | 'COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV' specifies that coverage
--- samples will be ordered sequentially, sorted first by
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
--- and then by pixel coordinate (in row-major order).
+-- No documentation found for Nested "VkCoarseSampleOrderTypeNV" "VK_COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV"
 pattern COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = CoarseSampleOrderTypeNV 3
 
 {-# COMPLETE

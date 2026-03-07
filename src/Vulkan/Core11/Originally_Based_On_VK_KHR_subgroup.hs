@@ -47,46 +47,63 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 -- property.
 --
 -- If @supportedOperations@ includes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroup-quad >,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroup-quad >,
 -- or the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupUniformControlFlow shaderSubgroupUniformControlFlow>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSubgroupUniformControlFlow shaderSubgroupUniformControlFlow>
 -- feature is enabled, @subgroupSize@ /must/ be greater than or equal to 4.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderQuadControl shaderQuadControl>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderQuadControl shaderQuadControl>
 -- feature is supported, @supportedOperations@ /must/ include
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroup-quad >.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroup-quad >.
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>
 -- is supported, and the implementation advertises support with a
 -- 'Vulkan.Core10.ExtensionDiscovery.ExtensionProperties'::@specVersion@
 -- greater than or equal to 2, and the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotate shaderSubgroupRotate>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSubgroupRotate shaderSubgroupRotate>
 -- feature is supported,
--- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
--- /must/ be returned in @supportedOperations@. If
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT'
+-- /must/ be returned in
+-- 'Vulkan.Core12.PhysicalDeviceVulkan11Properties'::@subgroupSupportedOperations@
+-- and 'PhysicalDeviceSubgroupProperties'::@supportedOperations@. If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>
 -- is supported, and the implementation advertises support with a
 -- 'Vulkan.Core10.ExtensionDiscovery.ExtensionProperties'::@specVersion@
 -- greater than or equal to 2, and the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotateClustered shaderSubgroupRotateClustered>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSubgroupRotateClustered shaderSubgroupRotateClustered>
 -- feature is supported,
--- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
--- /must/ be returned in @supportedOperations@.
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT'
+-- /must/ be returned in
+-- 'Vulkan.Core12.PhysicalDeviceVulkan11Properties'::@subgroupSupportedOperations@
+-- and 'PhysicalDeviceSubgroupProperties'::@supportedOperations@.
 --
--- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
+-- If Vulkan 1.4 is supported,
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT'
 -- and
--- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT'
+-- /must/ be returned in
+-- 'PhysicalDeviceSubgroupProperties'::@supportedOperations@ and
+-- 'Vulkan.Core12.PhysicalDeviceVulkan11Properties'::@subgroupSupportedOperations@
+--
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT'
+-- and
+-- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT'
 -- were added in version 2 of the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>
 -- extension, after the initial release, so there are implementations that
 -- do not advertise these bits. Applications should use the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotate shaderSubgroupRotate>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSubgroupRotate shaderSubgroupRotate>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSubgroupRotateClustered shaderSubgroupRotateClustered>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSubgroupRotateClustered shaderSubgroupRotateClustered>
 -- features to determine and enable support. These bits are advertised here
 -- for consistency and for future dependencies.
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSubgroupPartitioned shaderSubgroupPartitioned>
+-- feature is supported, @supportedOperations@ /must/ include
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroup-partitioned >.
 --
 -- == Valid Usage (Implicit)
 --
@@ -109,9 +126,9 @@ data PhysicalDeviceSubgroupProperties = PhysicalDeviceSubgroupProperties
     -- bitfield of
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' describing
     -- the shader stages that
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-scope-subgroup subgroup scope>
     -- are supported in. @supportedStages@ will have the
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
     -- set if any of the physical device’s queues support
@@ -121,9 +138,9 @@ data PhysicalDeviceSubgroupProperties = PhysicalDeviceSubgroupProperties
     -- a bitmask of
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
     -- specifying the sets of
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-scope-subgroup subgroup scope>
     -- supported on this device. @supportedOperations@ will have the
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
     -- bit set if any of the physical device’s queues support
@@ -132,7 +149,7 @@ data PhysicalDeviceSubgroupProperties = PhysicalDeviceSubgroupProperties
     supportedOperations :: SubgroupFeatureFlags
   , -- | #extension-limits-subgroupQuadOperationsInAllStages#
     -- @quadOperationsInAllStages@ is a boolean specifying whether
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-quad-operations quad group operations>
     -- are available in all stages, or are restricted to fragment and compute
     -- stages.
     quadOperationsInAllStages :: Bool

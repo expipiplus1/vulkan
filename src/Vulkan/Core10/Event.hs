@@ -96,8 +96,9 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateEvent-device-09672# @device@ /must/ support at least
---     one queue family with one of the @VK_QUEUE_VIDEO_ENCODE_BIT_KHR@,
---     @VK_QUEUE_VIDEO_DECODE_BIT_KHR@,
+--     one queue family with one of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_ENCODE_BIT_KHR>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_DECODE_BIT_KHR>,
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
 --
@@ -106,7 +107,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@events@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
 --     does not support
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-events events>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-events events>,
 --     and 'createEvent' /must/ not be used
 --
 -- == Valid Usage (Implicit)
@@ -124,6 +125,9 @@ foreign import ccall
 -- -   #VUID-vkCreateEvent-pEvent-parameter# @pEvent@ /must/ be a valid
 --     pointer to a 'Vulkan.Core10.Handles.Event' handle
 --
+-- -   #VUID-vkCreateEvent-device-queuecount# The device /must/ have been
+--     created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -132,9 +136,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -150,7 +158,7 @@ createEvent :: forall a io
                -- information about how the event is to be created.
                (EventCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
-               -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Event)
@@ -242,7 +250,7 @@ destroyEvent :: forall io
              -> -- | @event@ is the handle of the event to destroy.
                 Event
              -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
@@ -290,7 +298,7 @@ foreign import ccall
 -- If a 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent' or
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' command is in a
 -- command buffer that is in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>,
 -- then the value returned by this command /may/ immediately be out of
 -- date.
 --
@@ -303,17 +311,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.EVENT_SET'
---
 --     -   'Vulkan.Core10.Enums.Result.EVENT_RESET'
+--
+--     -   'Vulkan.Core10.Enums.Result.EVENT_SET'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -371,7 +383,7 @@ foreign import ccall
 -- If a command buffer is waiting for an event to be signaled from the
 -- host, the application must signal the event before submitting the
 -- command buffer, as described in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-submission-progress queue forward progress>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-submission-progress queue forward progress>
 -- section.
 --
 -- == Valid Usage
@@ -382,7 +394,7 @@ foreign import ccall
 --
 -- -   #VUID-vkSetEvent-event-09543# @event@ /must/ not be waited on by a
 --     command buffer in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
@@ -407,9 +419,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -492,6 +508,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -537,8 +557,8 @@ resetEvent device event = liftIO $ do
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalSharedEventInfoEXT'
 --
 -- -   #VUID-VkEventCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique, with the exception of
---     structures of type
+--     structure in the @pNext@ chain /must/ be unique, with the exception
+--     of structures of type
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkEventCreateInfo-flags-parameter# @flags@ /must/ be a valid

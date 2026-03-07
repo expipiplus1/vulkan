@@ -87,7 +87,7 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo':
 --
 --     -   'PipelineCoverageModulationStateCreateInfoNV'
 --
@@ -99,7 +99,7 @@
 --
 -- -   Extending
 --     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'AttachmentSampleCountInfoNV'
 --
@@ -144,7 +144,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -142,8 +142,7 @@
 --     future changes.
 --
 -- -   Relevant pipeline stage masks can now be specified as empty with the
---     new 'PIPELINE_STAGE_NONE_KHR' and
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_NONE_KHR'
+--     new 'PIPELINE_STAGE_NONE_KHR' and 'PIPELINE_STAGE_2_NONE_KHR'
 --     values.
 --
 -- -   'MemoryBarrier2KHR' can be chained to
@@ -219,6 +218,50 @@
 --
 --     -   'ACCESS_NONE_KHR'
 --
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
+--
+--     -   'ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR'
+--
+--     -   'ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR'
+--
+--     -   'ACCESS_2_HOST_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_HOST_WRITE_BIT_KHR'
+--
+--     -   'ACCESS_2_INDEX_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_MEMORY_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_MEMORY_WRITE_BIT_KHR'
+--
+--     -   'ACCESS_2_NONE_KHR'
+--
+--     -   'ACCESS_2_SHADER_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_SHADER_STORAGE_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR'
+--
+--     -   'ACCESS_2_SHADER_WRITE_BIT_KHR'
+--
+--     -   'ACCESS_2_TRANSFER_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_TRANSFER_WRITE_BIT_KHR'
+--
+--     -   'ACCESS_2_UNIFORM_READ_BIT_KHR'
+--
+--     -   'ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR'
+--
 -- -   Extending
 --     'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlagBits':
 --
@@ -234,6 +277,61 @@
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
 --     -   'PIPELINE_STAGE_NONE_KHR'
+--
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
+--
+--     -   'PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_BLIT_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_CLEAR_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_COPY_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_HOST_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_NONE_KHR'
+--
+--     -   'PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_RESOLVE_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_TRANSFER_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR'
+--
+--     -   'PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -252,6 +350,10 @@
 --     -   'STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR'
 --
 --     -   'STRUCTURE_TYPE_SUBMIT_INFO_2_KHR'
+--
+-- -   Extending 'Vulkan.Core13.Enums.SubmitFlagBits.SubmitFlagBits':
+--
+--     -   'SUBMIT_PROTECTED_BIT_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced VK_EXT_blend_operation_advanced>
@@ -373,14 +475,14 @@
 --
 -- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV'
+--     -   'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV'
 --
---     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV'
+--     -   'ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV'
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV'
+--     -   'PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_mesh_shader VK_NV_mesh_shader>
@@ -449,7 +551,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -466,6 +568,57 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( pattern STRUCTURE_TYPE_MEMOR
                                                   , pattern IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR
                                                   , pattern PIPELINE_STAGE_NONE_KHR
                                                   , pattern ACCESS_NONE_KHR
+                                                  , pattern ACCESS_2_NONE_KHR
+                                                  , pattern ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR
+                                                  , pattern ACCESS_2_INDEX_READ_BIT_KHR
+                                                  , pattern ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR
+                                                  , pattern ACCESS_2_UNIFORM_READ_BIT_KHR
+                                                  , pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR
+                                                  , pattern ACCESS_2_SHADER_READ_BIT_KHR
+                                                  , pattern ACCESS_2_SHADER_WRITE_BIT_KHR
+                                                  , pattern ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR
+                                                  , pattern ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR
+                                                  , pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR
+                                                  , pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR
+                                                  , pattern ACCESS_2_TRANSFER_READ_BIT_KHR
+                                                  , pattern ACCESS_2_TRANSFER_WRITE_BIT_KHR
+                                                  , pattern ACCESS_2_HOST_READ_BIT_KHR
+                                                  , pattern ACCESS_2_HOST_WRITE_BIT_KHR
+                                                  , pattern ACCESS_2_MEMORY_READ_BIT_KHR
+                                                  , pattern ACCESS_2_MEMORY_WRITE_BIT_KHR
+                                                  , pattern ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR
+                                                  , pattern ACCESS_2_SHADER_STORAGE_READ_BIT_KHR
+                                                  , pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_NONE_KHR
+                                                  , pattern PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_HOST_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_COPY_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_RESOLVE_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_BLIT_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_CLEAR_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR
+                                                  , pattern SUBMIT_PROTECTED_BIT_KHR
+                                                  , pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV
+                                                  , pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV
+                                                  , pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV
                                                   , pattern PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV
                                                   , pattern ACCESS_2_SHADING_RATE_IMAGE_READ_BIT_NV
                                                   , pattern PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_NV
@@ -498,9 +651,6 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( pattern STRUCTURE_TYPE_MEMOR
                                                   , pattern KHR_SYNCHRONIZATION_2_SPEC_VERSION
                                                   , KHR_SYNCHRONIZATION_2_EXTENSION_NAME
                                                   , pattern KHR_SYNCHRONIZATION_2_EXTENSION_NAME
-                                                  , pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT
-                                                  , pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT
-                                                  , pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT
                                                   ) where
 
 import Data.String (IsString)
@@ -529,7 +679,53 @@ import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_ACCELERATION_S
 import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
 import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR))
 import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_COLOR_ATTACHMENT_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
 import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_HOST_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_HOST_WRITE_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_INDEX_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_INDIRECT_COMMAND_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_INPUT_ATTACHMENT_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_MEMORY_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_MEMORY_WRITE_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_NONE))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_SHADER_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_SHADER_SAMPLED_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_SHADER_STORAGE_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_SHADER_STORAGE_WRITE_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_SHADER_WRITE_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_TRANSFER_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_TRANSFER_WRITE_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_UNIFORM_READ_BIT))
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
+import Vulkan.Core13.Enums.AccessFlags2 (AccessFlagBits2(ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT))
 import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
 import Vulkan.Core10.Enums.AccessFlagBits (AccessFlagBits(ACCESS_NONE))
 import Vulkan.Core10.Enums.EventCreateFlagBits (EventCreateFlags)
@@ -539,13 +735,65 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout(IMAGE_LAYOUT_READ_ONLY_OPTIM
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR))
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_ALL_COMMANDS_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_ALL_GRAPHICS_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_ALL_TRANSFER_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_BLIT_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_CLEAR_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_COMPUTE_SHADER_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_COPY_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_DRAW_INDIRECT_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_HOST_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_INDEX_INPUT_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT))
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT))
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_NONE))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR))
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_RESOLVE_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_TOP_OF_PIPE_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_VERTEX_INPUT_BIT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_VERTEX_SHADER_BIT))
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(PIPELINE_STAGE_NONE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2))
@@ -556,9 +804,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_BA
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBMIT_INFO_2))
-import Vulkan.Core13.Enums.AccessFlags2 (pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT)
-import Vulkan.Core13.Enums.AccessFlags2 (pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT)
-import Vulkan.Core13.Enums.PipelineStageFlags2 (pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT)
+import Vulkan.Core13.Enums.SubmitFlagBits (SubmitFlags)
+import Vulkan.Core13.Enums.SubmitFlagBits (SubmitFlagBits(SUBMIT_PROTECTED_BIT))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR"
 pattern STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR = STRUCTURE_TYPE_MEMORY_BARRIER_2
 
@@ -609,6 +856,210 @@ pattern PIPELINE_STAGE_NONE_KHR = PIPELINE_STAGE_NONE
 
 -- No documentation found for TopLevel "VK_ACCESS_NONE_KHR"
 pattern ACCESS_NONE_KHR = ACCESS_NONE
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_NONE_KHR"
+pattern ACCESS_2_NONE_KHR = ACCESS_2_NONE
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR"
+pattern ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR = ACCESS_2_INDIRECT_COMMAND_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_INDEX_READ_BIT_KHR"
+pattern ACCESS_2_INDEX_READ_BIT_KHR = ACCESS_2_INDEX_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR"
+pattern ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR = ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_UNIFORM_READ_BIT_KHR"
+pattern ACCESS_2_UNIFORM_READ_BIT_KHR = ACCESS_2_UNIFORM_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR"
+pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR = ACCESS_2_INPUT_ATTACHMENT_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_SHADER_READ_BIT_KHR"
+pattern ACCESS_2_SHADER_READ_BIT_KHR = ACCESS_2_SHADER_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_SHADER_WRITE_BIT_KHR"
+pattern ACCESS_2_SHADER_WRITE_BIT_KHR = ACCESS_2_SHADER_WRITE_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR"
+pattern ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR = ACCESS_2_COLOR_ATTACHMENT_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR"
+pattern ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR = ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR"
+pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR = ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR"
+pattern ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR = ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_TRANSFER_READ_BIT_KHR"
+pattern ACCESS_2_TRANSFER_READ_BIT_KHR = ACCESS_2_TRANSFER_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_TRANSFER_WRITE_BIT_KHR"
+pattern ACCESS_2_TRANSFER_WRITE_BIT_KHR = ACCESS_2_TRANSFER_WRITE_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_HOST_READ_BIT_KHR"
+pattern ACCESS_2_HOST_READ_BIT_KHR = ACCESS_2_HOST_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_HOST_WRITE_BIT_KHR"
+pattern ACCESS_2_HOST_WRITE_BIT_KHR = ACCESS_2_HOST_WRITE_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_MEMORY_READ_BIT_KHR"
+pattern ACCESS_2_MEMORY_READ_BIT_KHR = ACCESS_2_MEMORY_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_MEMORY_WRITE_BIT_KHR"
+pattern ACCESS_2_MEMORY_WRITE_BIT_KHR = ACCESS_2_MEMORY_WRITE_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR"
+pattern ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR = ACCESS_2_SHADER_SAMPLED_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR"
+pattern ACCESS_2_SHADER_STORAGE_READ_BIT_KHR = ACCESS_2_SHADER_STORAGE_READ_BIT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR"
+pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR = ACCESS_2_SHADER_STORAGE_WRITE_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_NONE_KHR"
+pattern PIPELINE_STAGE_2_NONE_KHR = PIPELINE_STAGE_2_NONE
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR"
+pattern PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR = PIPELINE_STAGE_2_TOP_OF_PIPE_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR"
+pattern PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR = PIPELINE_STAGE_2_DRAW_INDIRECT_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR"
+pattern PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR = PIPELINE_STAGE_2_VERTEX_INPUT_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR"
+pattern PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR = PIPELINE_STAGE_2_VERTEX_SHADER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT_KHR"
+pattern PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT_KHR = PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT_KHR"
+pattern PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT_KHR = PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT_KHR"
+pattern PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT_KHR = PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR"
+pattern PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR = PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR"
+pattern PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR = PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR"
+pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR = PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR"
+pattern PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR = PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR"
+pattern PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR = PIPELINE_STAGE_2_COMPUTE_SHADER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR"
+pattern PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR"
+pattern PIPELINE_STAGE_2_TRANSFER_BIT_KHR = PIPELINE_STAGE_2_ALL_TRANSFER_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT_KHR"
+pattern PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT_KHR = PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_HOST_BIT_KHR"
+pattern PIPELINE_STAGE_2_HOST_BIT_KHR = PIPELINE_STAGE_2_HOST_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR"
+pattern PIPELINE_STAGE_2_ALL_GRAPHICS_BIT_KHR = PIPELINE_STAGE_2_ALL_GRAPHICS_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR"
+pattern PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR = PIPELINE_STAGE_2_ALL_COMMANDS_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_COPY_BIT_KHR"
+pattern PIPELINE_STAGE_2_COPY_BIT_KHR = PIPELINE_STAGE_2_COPY_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR"
+pattern PIPELINE_STAGE_2_RESOLVE_BIT_KHR = PIPELINE_STAGE_2_RESOLVE_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_BLIT_BIT_KHR"
+pattern PIPELINE_STAGE_2_BLIT_BIT_KHR = PIPELINE_STAGE_2_BLIT_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR"
+pattern PIPELINE_STAGE_2_CLEAR_BIT_KHR = PIPELINE_STAGE_2_CLEAR_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR"
+pattern PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR = PIPELINE_STAGE_2_INDEX_INPUT_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR"
+pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR = PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR"
+pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR = PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT
+
+
+-- No documentation found for TopLevel "VK_SUBMIT_PROTECTED_BIT_KHR"
+pattern SUBMIT_PROTECTED_BIT_KHR = SUBMIT_PROTECTED_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV"
+pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV = PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV"
+pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV = ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV"
+pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV = ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT
 
 
 -- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV"

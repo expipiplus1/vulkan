@@ -71,7 +71,7 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.PrimitiveTopology
                             , module Vulkan.Core10.Enums.QueryControlFlagBits
                             , module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits
-                            , module Vulkan.Core10.Enums.QueryPoolCreateFlags
+                            , module Vulkan.Core10.Enums.QueryPoolCreateFlagBits
                             , module Vulkan.Core10.Enums.QueryResultFlagBits
                             , module Vulkan.Core10.Enums.QueryType
                             , module Vulkan.Core10.Enums.QueueFlagBits
@@ -167,7 +167,7 @@ import Vulkan.Core10.Enums.PolygonMode
 import Vulkan.Core10.Enums.PrimitiveTopology
 import Vulkan.Core10.Enums.QueryControlFlagBits
 import Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits
-import Vulkan.Core10.Enums.QueryPoolCreateFlags
+import Vulkan.Core10.Enums.QueryPoolCreateFlagBits
 import Vulkan.Core10.Enums.QueryResultFlagBits
 import Vulkan.Core10.Enums.QueryType
 import Vulkan.Core10.Enums.QueueFlagBits

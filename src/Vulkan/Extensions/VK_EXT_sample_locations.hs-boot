@@ -112,7 +112,7 @@
 --     -   'PhysicalDeviceSampleLocationsPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo':
 --
 --     -   'PipelineSampleLocationsStateCreateInfoEXT'
 --
@@ -147,6 +147,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT'
 --
+-- == Issues
+--
+-- 1) When using with Dynamic Rendering, is there a
+-- VkRenderPassSampleLocationsBeginInfoEXT equivalent struct
+--
+-- __RESOLVED__: No, there are no subpasses that need to have a sample
+-- location set.
+--
 -- == Version History
 --
 -- -   Revision 1, 2017-08-02 (Daniel Rakos)
@@ -160,7 +168,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_sample_locations Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_sample_locations Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

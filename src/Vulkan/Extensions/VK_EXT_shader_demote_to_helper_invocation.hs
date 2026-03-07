@@ -66,7 +66,7 @@
 -- The demoted invocation will have no further side effects and will not
 -- output to the framebuffer, but remains active and can participate in
 -- computing derivatives and in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-group-operations group operations>.
 -- This is a better match for the “discard” instruction in HLSL.
 --
 -- == New Structures
@@ -89,7 +89,7 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DemoteToHelperInvocation DemoteToHelperInvocationEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-DemoteToHelperInvocation DemoteToHelperInvocationEXT>
 --
 -- == Promotion to Vulkan 1.3
 --
@@ -112,7 +112,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

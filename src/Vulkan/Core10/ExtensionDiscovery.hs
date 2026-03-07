@@ -120,17 +120,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_LAYER_NOT_PRESENT'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_LAYER_NOT_PRESENT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -194,13 +198,17 @@ foreign import ccall
 -- supported by this query, the @VK_KHR_pipeline_library@ extension /must/
 -- also be supported.
 --
+-- If the @VK_EXT_descriptor_heap@ extension is advertised as supported by
+-- this query, the @VK_KHR_shader_untyped_pointers@ extension /must/ also
+-- be supported.
+--
 -- Implementations claiming support for the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2022 Roadmap 2022>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#roadmap-2022 Roadmap 2022>
 -- profile /must/ advertise the @VK_KHR_global_priority@ extension in
 -- @pProperties@.
 --
 -- Implementations claiming support for the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2024 Roadmap 2024>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#roadmap-2024 Roadmap 2024>
 -- profile /must/ advertise the following extensions in @pProperties@:
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering_local_read VK_KHR_dynamic_rendering_local_read>
@@ -258,17 +266,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_LAYER_NOT_PRESENT'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_LAYER_NOT_PRESENT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --

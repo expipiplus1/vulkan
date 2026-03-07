@@ -166,7 +166,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_ray_tracing_motion_blur Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -283,9 +283,13 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceRayTracingMotionBlurFeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceRayTracingMotionBlurFeaturesNV', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -662,8 +666,8 @@ instance Zero SRTDataNV where
 -- = Description
 --
 -- The C language specification does not define the ordering of bit-fields,
--- but in practice, this struct produces the correct layout with existing
--- compilers. The intended bit pattern is for the following:
+-- but in practice, this structure produces the correct layout with
+-- existing compilers. The intended bit pattern is for the following:
 --
 -- If a compiler produces code that diverges from that pattern,
 -- applications /must/ employ another method to set values according to the
@@ -806,8 +810,8 @@ instance Zero AccelerationStructureSRTMotionInstanceNV where
 -- = Description
 --
 -- The C language specification does not define the ordering of bit-fields,
--- but in practice, this struct produces the correct layout with existing
--- compilers. The intended bit pattern is for the following:
+-- but in practice, this structure produces the correct layout with
+-- existing compilers. The intended bit pattern is for the following:
 --
 -- If a compiler produces code that diverges from that pattern,
 -- applications /must/ employ another method to set values according to the
@@ -1136,6 +1140,19 @@ instance Read AccelerationStructureMotionInstanceFlagsNV where
 -- acceleration structure motion instance data for building into an
 -- acceleration structure geometry
 --
+-- = Description
+--
+-- -   'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV' specifies
+--     that the instance is a static instance with no instance motion.
+--
+-- -   'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV'
+--     specifies that the instance is a motion instance with motion
+--     specified by interpolation between two matrices.
+--
+-- -   'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV'
+--     specifies that the instance is a motion instance with motion
+--     specified by interpolation in the SRT decomposition.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
@@ -1143,18 +1160,13 @@ instance Read AccelerationStructureMotionInstanceFlagsNV where
 newtype AccelerationStructureMotionInstanceTypeNV = AccelerationStructureMotionInstanceTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV' specifies that
--- the instance is a static instance with no instance motion.
+-- No documentation found for Nested "VkAccelerationStructureMotionInstanceTypeNV" "VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV"
 pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV = AccelerationStructureMotionInstanceTypeNV 0
 
--- | 'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV' specifies
--- that the instance is a motion instance with motion specified by
--- interpolation between two matrices.
+-- No documentation found for Nested "VkAccelerationStructureMotionInstanceTypeNV" "VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV"
 pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV = AccelerationStructureMotionInstanceTypeNV 1
 
--- | 'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV' specifies
--- that the instance is a motion instance with motion specified by
--- interpolation in the SRT decomposition.
+-- No documentation found for Nested "VkAccelerationStructureMotionInstanceTypeNV" "VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV"
 pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV = AccelerationStructureMotionInstanceTypeNV 2
 
 {-# COMPLETE

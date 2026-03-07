@@ -137,7 +137,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_portability_subset Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_portability_subset Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -189,9 +189,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePortabilitySubsetFeaturesKHR' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePortabilitySubsetFeaturesKHR', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -204,13 +208,13 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
   { -- | #features-constantAlphaColorBlendFactors#
     -- @constantAlphaColorBlendFactors@ indicates whether this implementation
     -- supports constant /alpha/
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blendfactors>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#framebuffer-blendfactors>
     -- used as source or destination /color/
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blending>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#framebuffer-blending>.
     constantAlphaColorBlendFactors :: Bool
   , -- | #features-events# @events@ indicates whether this implementation
     -- supports synchronization using
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-events>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-events>.
     events :: Bool
   , -- | #features-imageViewFormatReinterpretation#
     -- @imageViewFormatReinterpretation@ indicates whether this implementation
@@ -237,56 +241,56 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
   , -- | #features-mutableComparisonSamplers# @mutableComparisonSamplers@
     -- indicates whether this implementation allows descriptors with comparison
     -- samplers to be
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates updated>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates updated>.
     mutableComparisonSamplers :: Bool
   , -- | #features-pointPolygons# @pointPolygons@ indicates whether this
     -- implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast>
     -- using a /point/
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-polygonmode>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-polygonmode>.
     pointPolygons :: Bool
   , -- | #features-samplerMipLodBias# @samplerMipLodBias@ indicates whether this
     -- implementation supports setting a
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-mipLodBias mipmap LOD bias value>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-mipLodBias mipmap LOD bias value>
     -- when
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers creating a sampler>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers creating a sampler>.
     samplerMipLodBias :: Bool
   , -- | #features-separateStencilMaskRef# @separateStencilMaskRef@ indicates
     -- whether this implementation supports separate front and back
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-stencil>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-stencil>
     -- reference values.
     separateStencilMaskRef :: Bool
   , -- | #features-shaderSampleRateInterpolationFunctions#
     -- @shaderSampleRateInterpolationFunctions@ indicates whether this
     -- implementation supports fragment shaders which use the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-InterpolationFunction InterpolationFunction>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-InterpolationFunction InterpolationFunction>
     -- capability and the extended instructions @InterpolateAtCentroid@,
     -- @InterpolateAtOffset@, and @InterpolateAtSample@ from the @GLSL.std.450@
     -- extended instruction set. This member is only meaningful if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sampleRateShading sampleRateShading>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-sampleRateShading sampleRateShading>
     -- feature is supported.
     shaderSampleRateInterpolationFunctions :: Bool
   , -- | #features-tessellationIsolines# @tessellationIsolines@ indicates whether
     -- this implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation-isoline-tessellation isoline output>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#tessellation-isoline-tessellation isoline output>
     -- from the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#tessellation>
     -- stage of a graphics pipeline. This member is only meaningful if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-tessellationShader tessellationShader>
     -- feature is supported.
     tessellationIsolines :: Bool
   , -- | #features-tessellationPointMode# @tessellationPointMode@ indicates
     -- whether this implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation-point-mode point output>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#tessellation-point-mode point output>
     -- from the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#tessellation>
     -- stage of a graphics pipeline. This member is only meaningful if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-tessellationShader tessellationShader>
     -- feature is supported.
     tessellationPointMode :: Bool
   , -- | #features-triangleFans# @triangleFans@ indicates whether this
     -- implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-triangle-fans>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#drawing-triangle-fans>
     -- primitive topology.
     triangleFans :: Bool
   , -- | #features-vertexAttributeAccessBeyondStride#
@@ -426,9 +430,9 @@ data PhysicalDevicePortabilitySubsetPropertiesKHR = PhysicalDevicePortabilitySub
   { -- | #limits-minVertexInputBindingStrideAlignment#
     -- @minVertexInputBindingStrideAlignment@ indicates the minimum alignment
     -- for vertex input strides.
-    -- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ /must/
-    -- be a multiple of, and at least as large as, this value. The value /must/
-    -- be a power of two.
+    -- 'Vulkan.Core10.GraphicsPipeline.VertexInputBindingDescription'::@stride@
+    -- /must/ be a multiple of, and at least as large as, this value. The value
+    -- /must/ be a power of two.
     minVertexInputBindingStrideAlignment :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

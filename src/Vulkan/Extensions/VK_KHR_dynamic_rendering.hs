@@ -107,7 +107,8 @@
 --
 --     -   'CommandBufferInheritanceRenderingInfoKHR'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'PipelineRenderingCreateInfoKHR'
 --
@@ -134,6 +135,14 @@
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
 --     -   'ATTACHMENT_STORE_OP_NONE_KHR'
+--
+-- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
+--
+--     -   'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT_KHR'
+--
+--     -   'RENDERING_RESUMING_BIT_KHR'
+--
+--     -   'RENDERING_SUSPENDING_BIT_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -168,7 +177,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_dynamic_rendering Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_dynamic_rendering Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -178,6 +187,9 @@ module Vulkan.Extensions.VK_KHR_dynamic_rendering  ( pattern STRUCTURE_TYPE_REND
                                                    , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR
                                                    , pattern STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR
                                                    , pattern ATTACHMENT_STORE_OP_NONE_KHR
+                                                   , pattern RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT_KHR
+                                                   , pattern RENDERING_SUSPENDING_BIT_KHR
+                                                   , pattern RENDERING_RESUMING_BIT_KHR
                                                    , cmdBeginRenderingKHR
                                                    , cmdEndRenderingKHR
                                                    , RenderingFlagsKHR
@@ -204,6 +216,12 @@ import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlagBits)
 import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlags)
 import Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (RenderingInfo)
 import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE))
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlags)
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlagBits(RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT))
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlags)
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlagBits(RENDERING_RESUMING_BIT))
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlags)
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlagBits(RENDERING_SUSPENDING_BIT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO))
@@ -231,6 +249,18 @@ pattern STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR = STRUCTURE
 
 -- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_KHR"
 pattern ATTACHMENT_STORE_OP_NONE_KHR = ATTACHMENT_STORE_OP_NONE
+
+
+-- No documentation found for TopLevel "VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT_KHR"
+pattern RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT_KHR = RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT
+
+
+-- No documentation found for TopLevel "VK_RENDERING_SUSPENDING_BIT_KHR"
+pattern RENDERING_SUSPENDING_BIT_KHR = RENDERING_SUSPENDING_BIT
+
+
+-- No documentation found for TopLevel "VK_RENDERING_RESUMING_BIT_KHR"
+pattern RENDERING_RESUMING_BIT_KHR = RENDERING_RESUMING_BIT
 
 
 -- No documentation found for TopLevel "vkCmdBeginRenderingKHR"

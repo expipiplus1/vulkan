@@ -98,10 +98,11 @@ foreign import ccall
 -- total host memory consumed.
 --
 -- Once created, a pipeline cache /can/ be passed to the
--- 'Vulkan.Core10.Pipeline.createGraphicsPipelines'
+-- 'Vulkan.Core10.GraphicsPipeline.createGraphicsPipelines'
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
--- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV', and
--- 'Vulkan.Core10.Pipeline.createComputePipelines' commands. If the
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.createDataGraphPipelinesARM', and
+-- 'Vulkan.Core10.ComputePipeline.createComputePipelines' commands. If the
 -- pipeline cache passed into these commands is not
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', the implementation will query
 -- it for possible reuse opportunities and update it with new content. The
@@ -112,7 +113,7 @@ foreign import ccall
 -- If @flags@ of @pCreateInfo@ includes
 -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT',
 -- all commands that modify the returned pipeline cache object /must/ be
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
 --
 -- Implementations /should/ make every effort to limit any critical
 -- sections to the actual accesses to the cache, which is expected to be
@@ -144,9 +145,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -162,7 +167,7 @@ createPipelineCache :: forall io
                        -- containing initial parameters for the pipeline cache object.
                        PipelineCacheCreateInfo
                     -> -- | @pAllocator@ controls host memory allocation as described in the
-                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                       -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                        -- chapter.
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (PipelineCache)
@@ -254,7 +259,7 @@ destroyPipelineCache :: forall io
                      -> -- | @pipelineCache@ is the handle of the pipeline cache to destroy.
                         PipelineCache
                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io ()
@@ -305,12 +310,29 @@ foreign import ccall
 --
 -- The initial bytes written to @pData@ /must/ be a header as described in
 -- the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache-header Pipeline Cache Header>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-cache-header Pipeline Cache Header>
 -- section.
 --
 -- If @pDataSize@ is less than what is necessary to store this header,
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
+--
+-- This query does not behave consistently with the behavior described in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-binaryresults Opaque Binary Data Results>,
+-- for historical reasons.
+--
+-- If the amount of data available is larger than the passed @pDataSize@,
+-- the query returns up to the size of the passed buffer, and signals
+-- overflow with a 'Vulkan.Core10.Enums.Result.INCOMPLETE' success status
+-- instead of returning a
+-- 'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR' error status.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPipelineCacheData-pipelineCache-11834# @pipelineCache@
+--     /must/ not have been created with the @headerVersion@ member of
+--     'PipelineCacheCreateInfo'::@pInitialData@ equal to
+--     'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PIPELINE_CACHE_HEADER_VERSION_DATA_GRAPH_QCOM'
 --
 -- == Valid Usage (Implicit)
 --
@@ -335,15 +357,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -403,6 +429,21 @@ foreign import ccall
 -- -   #VUID-vkMergePipelineCaches-dstCache-00770# @dstCache@ /must/ not
 --     appear in the list of source caches
 --
+-- -   #VUID-vkMergePipelineCaches-dstCache-10202# Host access to
+--     @dstCache@ /must/ be externally synchronized if it was not created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR'
+--
+-- -   #VUID-vkMergePipelineCaches-dstCache-11832# @dstCache@ /must/ not
+--     have been created with the @headerVersion@ member of
+--     'PipelineCacheCreateInfo'::@pInitialData@ equal to
+--     'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PIPELINE_CACHE_HEADER_VERSION_DATA_GRAPH_QCOM'
+--
+-- -   #VUID-vkMergePipelineCaches-headerVersion-11833# Each member of
+--     pSrcCaches /must/ not have been created with the @headerVersion@
+--     member of 'PipelineCacheCreateInfo'::@pInitialData@ equal to
+--     'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PIPELINE_CACHE_HEADER_VERSION_DATA_GRAPH_QCOM'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkMergePipelineCaches-device-parameter# @device@ /must/ be a
@@ -425,10 +466,6 @@ foreign import ccall
 --     @pSrcCaches@ /must/ have been created, allocated, or retrieved from
 --     @device@
 --
--- == Host Synchronization
---
--- -   Host access to @dstCache@ /must/ be externally synchronized
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -437,9 +474,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -474,6 +515,27 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 -- | VkPipelineCacheCreateInfo - Structure specifying parameters of a newly
 -- created pipeline cache
 --
+-- = Members
+--
+-- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
+--     identifying this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
+--
+-- -   @flags@ is a bitmask of
+--     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
+--     specifying the behavior of the pipeline cache.
+--
+-- -   @initialDataSize@ is the number of bytes in @pInitialData@. If
+--     @initialDataSize@ is zero, the pipeline cache will initially be
+--     empty.
+--
+-- -   @pInitialData@ is a pointer to previously retrieved pipeline cache
+--     data. If the pipeline cache data is incompatible (as defined below)
+--     with the device, the pipeline cache will be initially empty. If
+--     @initialDataSize@ is zero, @pInitialData@ is ignored.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkPipelineCacheCreateInfo-initialDataSize-00768# If
@@ -487,9 +549,19 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- -   #VUID-VkPipelineCacheCreateInfo-pipelineCreationCacheControl-02892#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT'
+--
+-- -   #VUID-VkPipelineCacheCreateInfo-maintenance8-10200# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance8 maintenance8>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR'
+--
+-- -   #VUID-VkPipelineCacheCreateInfo-flags-10201# If @flags@ includes
+--     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT',
+--     it /must/ not include
+--     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_INTERNALLY_SYNCHRONIZED_MERGE_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -514,17 +586,11 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createPipelineCache'
 data PipelineCacheCreateInfo = PipelineCacheCreateInfo
-  { -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
-    -- specifying the behavior of the pipeline cache.
+  { -- No documentation found for Nested "VkPipelineCacheCreateInfo" "flags"
     flags :: PipelineCacheCreateFlags
-  , -- | @initialDataSize@ is the number of bytes in @pInitialData@. If
-    -- @initialDataSize@ is zero, the pipeline cache will initially be empty.
+  , -- No documentation found for Nested "VkPipelineCacheCreateInfo" "initialDataSize"
     initialDataSize :: Word64
-  , -- | @pInitialData@ is a pointer to previously retrieved pipeline cache data.
-    -- If the pipeline cache data is incompatible (as defined below) with the
-    -- device, the pipeline cache will be initially empty. If @initialDataSize@
-    -- is zero, @pInitialData@ is ignored.
+  , -- No documentation found for Nested "VkPipelineCacheCreateInfo" "pInitialData"
     initialData :: Ptr ()
   }
   deriving (Typeable)

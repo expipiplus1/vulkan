@@ -41,9 +41,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevice8BitStorageFeatures' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
--- enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevice8BitStorageFeatures', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -58,23 +62,37 @@ data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
     -- indicates whether objects in the @StorageBuffer@,
     -- @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@ storage class with
     -- the @Block@ decoration /can/ have 8-bit integer members. If this feature
-    -- is not enabled, 8-bit integer members /must/ not be used in such
-    -- objects. This also indicates whether shader modules /can/ declare the
+    -- is not enabled, 8-bit integer members /must/ not be used in such objects
+    -- unless
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointer>
+    -- is enabled and they are accessed in 32-bit multiples or 16-bit multiples
+    -- if
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extension-features-storageBuffer16BitAccess storageBuffer16BitAccess>
+    -- is enabled. This also indicates whether shader modules /can/ declare the
     -- @StorageBuffer8BitAccess@ capability.
     storageBuffer8BitAccess :: Bool
   , -- | #extension-features-uniformAndStorageBuffer8BitAccess#
     -- @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
     -- @Uniform@ storage class with the @Block@ decoration /can/ have 8-bit
     -- integer members. If this feature is not enabled, 8-bit integer members
-    -- /must/ not be used in such objects. This also indicates whether shader
-    -- modules /can/ declare the @UniformAndStorageBuffer8BitAccess@
-    -- capability.
+    -- /must/ not be used in such objects unless
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointers>
+    -- is enabled and they are accessed in 32-bit multiples or 16-bit multiples
+    -- if
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extension-features-uniformAndStorageBuffer16BitAccess uniformAndStorageBuffer16BitAccess>
+    -- is enabled. This also indicates whether shader modules /can/ declare the
+    -- @UniformAndStorageBuffer8BitAccess@ capability.
     uniformAndStorageBuffer8BitAccess :: Bool
   , -- | #extension-features-storagePushConstant8# @storagePushConstant8@
     -- indicates whether objects in the @PushConstant@ storage class /can/ have
     -- 8-bit integer members. If this feature is not enabled, 8-bit integer
-    -- members /must/ not be used in such objects. This also indicates whether
-    -- shader modules /can/ declare the @StoragePushConstant8@ capability.
+    -- members /must/ not be used in such objects unless
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderUntypedPointers shaderUntypedPointers>
+    -- is enabled and they are accessed in 32-bit multiples or 16-bit multiples
+    -- if
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extension-features-storagePushConstant16 storagePushConstant16>
+    -- is enabled. This also indicates whether shader modules /can/ declare the
+    -- @StoragePushConstant8@ capability.
     storagePushConstant8 :: Bool
   }
   deriving (Typeable, Eq)

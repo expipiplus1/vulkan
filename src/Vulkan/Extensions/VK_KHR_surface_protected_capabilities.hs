@@ -105,7 +105,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_surface_protected_capabilities Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_surface_protected_capabilities Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -152,7 +152,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_P
 -- /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. In that case, the
 -- contents of
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'::@surfaceCapabilities@
--- as well as any other struct chained to it will be undefined.
+-- as well as any other structure chained to it will be undefined.
 --
 -- == Valid Usage (Implicit)
 --

@@ -18,26 +18,31 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT' specifies that the origin of
+--     the domain space is in the upper left corner, as shown in figure
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#img-tessellation-topology-ul>.
+--
+-- -   'TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT' specifies that the origin of
+--     the domain space is in the lower left corner, as shown in figure
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#img-tessellation-topology-ll>.
+--
 -- This enum affects how the @VertexOrderCw@ and @VertexOrderCcw@
 -- tessellation execution modes are interpreted, since the winding is
 -- defined relative to the orientation of the domain.
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PipelineTessellationDomainOriginStateCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
 newtype TessellationDomainOrigin = TessellationDomainOrigin Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT' specifies that the origin of the
--- domain space is in the upper left corner, as shown in figure
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#img-tessellation-topology-ul>.
+-- No documentation found for Nested "VkTessellationDomainOrigin" "VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT"
 pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = TessellationDomainOrigin 0
 
--- | 'TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT' specifies that the origin of the
--- domain space is in the lower left corner, as shown in figure
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#img-tessellation-topology-ll>.
+-- No documentation found for Nested "VkTessellationDomainOrigin" "VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT"
 pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = TessellationDomainOrigin 1
 
 {-# COMPLETE

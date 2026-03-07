@@ -39,12 +39,15 @@ instance ( Extendss CommandBufferSubmitInfo es
          , PeekChain es ) => FromCStruct (CommandBufferSubmitInfo es)
 
 
-data DependencyInfo
+type role DependencyInfo nominal
+data DependencyInfo (es :: [Type])
 
-instance ToCStruct DependencyInfo
-instance Show DependencyInfo
+instance ( Extendss DependencyInfo es
+         , PokeChain es ) => ToCStruct (DependencyInfo es)
+instance Show (Chain es) => Show (DependencyInfo es)
 
-instance FromCStruct DependencyInfo
+instance ( Extendss DependencyInfo es
+         , PeekChain es ) => FromCStruct (DependencyInfo es)
 
 
 type role ImageMemoryBarrier2 nominal

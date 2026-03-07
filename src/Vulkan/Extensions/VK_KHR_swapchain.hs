@@ -499,7 +499,7 @@
 -- 'Vulkan.Core10.Enums.Format.Format' when creating a swapchain?
 --
 -- __RESOLVED__: While Vulkan itself is color space agnostic (e.g. even the
--- meaning of R, G, B and A can be freely defined by the rendering
+-- meaning of R, G, B, and A can be freely defined by the rendering
 -- application), the swapchain eventually will have to present the images
 -- on a display device with specific color reproduction characteristics. If
 -- any color space transformations are necessary before an image can be
@@ -913,8 +913,8 @@
 --
 --     -   Made improvements to several descriptions.
 --
---     -   Changed the status of several issues from PROPOSED to RESOLVED,
---         leaving no unresolved issues.
+--     -   Changed the status of several issues, leaving no unresolved
+--         issues.
 --
 --     -   Resolved several TODOs, did miscellaneous cleanup, etc.
 --
@@ -1069,7 +1069,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -1101,7 +1101,10 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                                                               , ..
                                                                               )
                                            , SwapchainCreateFlagsKHR
-                                           , SwapchainCreateFlagBitsKHR( SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT
+                                           , SwapchainCreateFlagBitsKHR( SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR
+                                                                       , SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR
+                                                                       , SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR
+                                                                       , SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT
                                                                        , SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR
                                                                        , SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
                                                                        , SWAPCHAIN_CREATE_PROTECTED_BIT_KHR
@@ -1206,6 +1209,7 @@ import Vulkan.Core10.Handles (Fence(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_frame_boundary (FrameBoundaryEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_tensors (FrameBoundaryTensorsARM)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
@@ -1222,10 +1226,12 @@ import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_GGP_frame_token (PresentFrameTokenGGP)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id2 (PresentId2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PresentIdKHR)
 import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (PresentRegionsKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PresentTimesInfoGOOGLE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_present_timing (PresentTimingsInfoEXT)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
 import Vulkan.Core10.Handles (Queue(Queue))
@@ -1235,6 +1241,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.Core10.Handles (Semaphore(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_metering (SetPresentConfigNV)
 import Vulkan.Core10.Enums.SharingMode (SharingMode)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -1249,10 +1256,10 @@ import Vulkan.Extensions.Handles (SwapchainKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (SwapchainLatencyCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (SwapchainPresentBarrierCreateInfoNV)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentFenceInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentModeInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentModesCreateInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentScalingCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain_maintenance1 (SwapchainPresentFenceInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain_maintenance1 (SwapchainPresentModeInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain_maintenance1 (SwapchainPresentModesCreateInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain_maintenance1 (SwapchainPresentScalingCreateInfoKHR)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.APIConstants (pattern MAX_DEVICE_GROUP_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR))
@@ -1342,6 +1349,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR' /must/ be
 -- returned.
 --
+-- If @oldSwapchain@ is a valid swapchain and there are outstanding calls
+-- to 'Vulkan.Extensions.VK_KHR_present_wait2.waitForPresent2KHR', then
+-- 'createSwapchainKHR' /may/ block until those calls complete.
+--
 -- If the native window referred to by @pCreateInfo->surface@ is already
 -- associated with a non-Vulkan graphics API surface,
 -- 'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR' /must/ be
@@ -1422,13 +1433,8 @@ foreign import ccall
 --     be a valid pointer to a 'Vulkan.Extensions.Handles.SwapchainKHR'
 --     handle
 --
--- == Host Synchronization
---
--- -   Host access to @pCreateInfo->surface@ /must/ be externally
---     synchronized
---
--- -   Host access to @pCreateInfo->oldSwapchain@ /must/ be externally
---     synchronized
+-- -   #VUID-vkCreateSwapchainKHR-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
 --
 -- == Return Codes
 --
@@ -1438,19 +1444,23 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_COMPRESSION_EXHAUSTED_EXT'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_COMPRESSION_EXHAUSTED_EXT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1469,7 +1479,7 @@ createSwapchainKHR :: forall a io
                       (SwapchainCreateInfoKHR a)
                    -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                       -- swapchain object when there is no more specific allocator available (see
-                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                      -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
@@ -1589,7 +1599,7 @@ destroySwapchainKHR :: forall io
                        SwapchainKHR
                     -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                        -- swapchain object when there is no more specific allocator available (see
-                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                       -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
 destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
@@ -1656,15 +1666,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1728,7 +1742,8 @@ acquireNextImageKHRSafeOrUnsafe :: forall io
                                    -- image is available.
                                    ("timeout" ::: Word64)
                                 -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
-                                   -- to signal.
+                                   -- defining a
+                                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
                                    Semaphore
                                 -> -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
                                    -- signal.
@@ -1761,11 +1776,17 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 -- = Description
 --
 -- If the @swapchain@ has been created with the
--- 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT' flag, the image
+-- 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR' flag, the image
 -- whose index is returned in @pImageIndex@ will be fully backed by memory
 -- before this call returns to the application, as if it is bound
 -- completely and contiguously to a single
 -- 'Vulkan.Core10.Handles.DeviceMemory' object.
+--
+-- If @semaphore@ defines a
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>,
+-- its first
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes acquisition of the image.
 --
 -- == Valid Usage
 --
@@ -1792,7 +1813,7 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 --     /must/ not both be equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkAcquireNextImageKHR-surface-07783# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-acquire-forward-progress forward progress>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#swapchain-acquire-forward-progress forward progress>
 --     cannot be guaranteed for the @surface@ used to create the
 --     @swapchain@ member of @pAcquireInfo@, @timeout@ /must/ not be
 --     @UINT64_MAX@
@@ -1843,27 +1864,31 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
---
 --     -   'Vulkan.Core10.Enums.Result.NOT_READY'
 --
 --     -   'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
+--     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1882,7 +1907,8 @@ acquireNextImageKHR :: forall io
                        -- image is available.
                        ("timeout" ::: Word64)
                     -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
-                       -- to signal.
+                       -- defining a
+                       -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
                        Semaphore
                     -> -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
                        -- signal.
@@ -1902,7 +1928,8 @@ acquireNextImageKHRSafe :: forall io
                            -- image is available.
                            ("timeout" ::: Word64)
                         -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
-                           -- to signal.
+                           -- defining a
+                           -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
                            Semaphore
                         -> -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
                            -- signal.
@@ -1959,6 +1986,12 @@ foreign import ccall
 --     is returned.
 --
 -- -   If any of the presents would have a result of
+--     'Vulkan.Core10.Enums.Result.ERROR_PRESENT_TIMING_QUEUE_FULL_EXT' if
+--     issued separately then
+--     'Vulkan.Core10.Enums.Result.ERROR_PRESENT_TIMING_QUEUE_FULL_EXT' is
+--     returned.
+--
+-- -   If any of the presents would have a result of
 --     'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
 --     if issued separately then
 --     'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
@@ -1975,8 +2008,8 @@ foreign import ccall
 -- available before 'queuePresentKHR' is executed, are automatically made
 -- visible to the read access performed by the presentation engine. This
 -- automatic visibility operation for an image happens-after the semaphore
--- signal operation, and happens-before the presentation engine accesses
--- the image.
+-- wait operation, and happens-before the presentation engine accesses the
+-- image.
 --
 -- Presentation is a read-only operation that will not affect the content
 -- of the presentable images. Upon reacquiring the image and transitioning
@@ -2026,15 +2059,16 @@ foreign import ccall
 -- engine with an error 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR',
 -- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT',
 -- or 'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set of queue
--- operations are still considered to be enqueued and thus any semaphore
--- wait operation specified in 'PresentInfoKHR' will execute when the
--- corresponding queue operation is complete.
+-- operations are still considered to be enqueued and thus any
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>
+-- specified in 'PresentInfoKHR' will execute when the corresponding queue
+-- operation is complete.
 --
 -- 'queuePresentKHR' releases the acquisition of the images referenced by
 -- @imageIndices@. The queue family corresponding to the queue
 -- 'queuePresentKHR' is executed on /must/ have ownership of the presented
 -- images as defined in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-sharing Resource Sharing>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-sharing Resource Sharing>.
 -- 'queuePresentKHR' does not alter the queue family ownership, but the
 -- presented images /must/ not be used again before they have been
 -- reacquired using 'acquireNextImageKHR'.
@@ -2061,7 +2095,7 @@ foreign import ccall
 --     of @pSwapchains@ was created from a display surface, all display
 --     surfaces referenced that refer to the same display /must/ use the
 --     same
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#wsi-displaySurfaceStereoType stereoType>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#wsi-displaySurfaceStereoType stereoType>
 --
 -- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-01294# When a semaphore wait
 --     operation referring to a binary semaphore defined by the elements of
@@ -2077,7 +2111,7 @@ foreign import ccall
 --     @pWaitSemaphores@ member of @pPresentInfo@ /must/ reference a
 --     semaphore signal operation that has been submitted for execution and
 --     any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     on which it depends /must/ have also been submitted for execution
 --
 -- == Valid Usage (Implicit)
@@ -2090,13 +2124,9 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @queue@ /must/ be externally synchronized
---
--- -   Host access to @pPresentInfo->pWaitSemaphores@[] /must/ be
---     externally synchronized
---
--- -   Host access to @pPresentInfo->pSwapchains@[] /must/ be externally
---     synchronized
+-- -   Host access to @queue@ /must/ be externally synchronized if it was
+--     not created with
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR'
 --
 -- == Command Properties
 --
@@ -2112,23 +2142,29 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_PRESENT_TIMING_QUEUE_FULL_EXT'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -2174,9 +2210,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -2261,11 +2301,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -2340,14 +2384,14 @@ acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device
 -- = Description
 --
 -- If the @swapchain@ has been created with the
--- 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT' flag, the image
+-- 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR' flag, the image
 -- whose index is returned in @pImageIndex@ will be fully backed by memory
 -- before this call returns to the application.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkAcquireNextImage2KHR-surface-07784# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-acquire-forward-progress forward progress>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#swapchain-acquire-forward-progress forward progress>
 --     cannot be guaranteed for the @surface@ used to create @swapchain@,
 --     the @timeout@ member of @pAcquireInfo@ /must/ not be @UINT64_MAX@
 --
@@ -2367,27 +2411,31 @@ acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
---     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
---
 --     -   'Vulkan.Core10.Enums.Result.NOT_READY'
 --
 --     -   'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
+--     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -2447,10 +2495,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-surface-06523#
---     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
---
 -- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-surface-06211#
 --     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
@@ -2486,15 +2530,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -2590,9 +2638,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     for the surface if the returned @maxImageCount@ is not zero
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-swapchainMaintenance1-10155# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
 --     feature is not enabled, then the @pNext@ chain /must/ not include a
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModesCreateInfoKHR'
 --     structure
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-02839# If @presentMode@
@@ -2622,10 +2670,10 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     for the surface
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-pNext-07781# If a
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR'
 --     structure was not included in the @pNext@ chain, or it is included
 --     and
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'::@scalingBehavior@
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR'::@scalingBehavior@
 --     is zero then @imageExtent@ /must/ be between @minImageExtent@ and
 --     @maxImageExtent@, inclusive, where @minImageExtent@ and
 --     @maxImageExtent@ are members of the
@@ -2635,21 +2683,21 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     for the surface
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-pNext-07782# If a
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR'
 --     structure was included in the @pNext@ chain and
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'::@scalingBehavior@
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR'::@scalingBehavior@
 --     is not zero then @imageExtent@ /must/ be between
 --     @minScaledImageExtent@ and @maxScaledImageExtent@, inclusive, where
 --     @minScaledImageExtent@ and @maxScaledImageExtent@ are members of the
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentScalingCapabilitiesKHR'
 --     structure returned by
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
 --     for the surface and @presentMode@
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-swapchainMaintenance1-10157# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
 --     feature is not enabled, then @flags@ /must/ not include
---     'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT'
+--     'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR'
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-imageExtent-01689# @imageExtent@
 --     members @width@ and @height@ /must/ both be non-zero
@@ -2664,7 +2712,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-01427# If @presentMode@
 --     is
---     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT',
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
@@ -2732,9 +2780,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-presentModeFifoLatestReady-10161# If
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentModeFifoLatestReady presentModeFifoLatestReady>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentModeFifoLatestReady presentModeFifoLatestReady>
 --     feature is not enabled, @presentMode@ /must/ not be
---     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_KHR'
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-physicalDeviceCount-01429# If the
 --     logical device was created with
@@ -2748,7 +2796,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     referred to by @surface@
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-imageFormat-01778# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
 --     of the swapchain /must/ be supported as reported by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
 --
@@ -2766,7 +2814,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     is not zero then all of the formats in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
 --     /must/ be compatible with the @format@ as described in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility compatibility table>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-compatibility compatibility table>
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-flags-04100# If @flags@ does not
 --     contain 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' and the @pNext@
@@ -2796,10 +2844,18 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     structure /must/ be included in the @pNext@ chain
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-pNext-06752# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
 --     feature is not enabled, the @pNext@ chain /must/ not include an
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
 --     structure
+--
+-- -   #VUID-VkSwapchainCreateInfoKHR-presentTiming-12232# If none of the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentTiming presentTiming>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentAtAbsoluteTime presentAtAbsoluteTime>,
+--     or
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentAtRelativeTime presentAtRelativeTime>
+--     features are enabled, @flags@ /must/ not contain
+--     'SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2818,12 +2874,12 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD',
 --     'Vulkan.Extensions.VK_NV_low_latency2.SwapchainLatencyCreateInfoNV',
 --     'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV',
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModesCreateInfoKHR',
 --     or
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR'
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-flags-parameter# @flags@ /must/ be a
 --     valid combination of 'SwapchainCreateFlagBitsKHR' values
@@ -2871,6 +2927,12 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     /must/ have been created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Instance'
 --
+-- == Host Synchronization
+--
+-- -   Host access to @surface@ /must/ be externally synchronized
+--
+-- -   Host access to @oldSwapchain@ /must/ be externally synchronized
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
@@ -2917,7 +2979,7 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     -- @(0, 0)@, for example when the window is minimized. In such a case, it
     -- is not possible to create a swapchain due to the Valid Usage
     -- requirements , unless scaling is selected through
-    -- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT',
+    -- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR',
     -- if supported .
     imageExtent :: Extent2D
   , -- | @imageArrayLayers@ is the number of views in a multiview\/stereo
@@ -2998,8 +3060,8 @@ instance Extensible SwapchainCreateInfoKHR where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @SwapchainLatencyCreateInfoNV = Just f
-    | Just Refl <- eqT @e @SwapchainPresentScalingCreateInfoEXT = Just f
-    | Just Refl <- eqT @e @SwapchainPresentModesCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @SwapchainPresentScalingCreateInfoKHR = Just f
+    | Just Refl <- eqT @e @SwapchainPresentModesCreateInfoKHR = Just f
     | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
     | Just Refl <- eqT @e @SwapchainPresentBarrierCreateInfoNV = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveWin32InfoEXT = Just f
@@ -3128,15 +3190,20 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 -- layout.
 --
--- When transitioning the image to
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR' or
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR', there is
--- no need to delay subsequent processing, or perform any visibility
--- operations (as 'queuePresentKHR' performs automatic visibility
--- operations). To achieve this, the @dstAccessMask@ member of the
+-- When transitioning the image to the appropriate layout, there is no need
+-- to delay subsequent processing, or perform any visibility operations (as
+-- 'queuePresentKHR' performs automatic visibility operations). To achieve
+-- this, the @dstAccessMask@ member of the
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' /should/ be @0@, and the
 -- @dstStageMask@ parameter /should/ be
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT'.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- of each
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>
+-- defined by this structure includes presentation of each image indicated
+-- by @pSwapchains@ and @pImageIndices@.
 --
 -- == Valid Usage
 --
@@ -3156,21 +3223,43 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 -- -   #VUID-VkPresentInfoKHR-pNext-06235# If a
 --     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR' structure is
 --     included in the @pNext@ chain, and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentId presentId>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentId presentId>
 --     feature is not enabled, each @presentIds@ entry in that structure
 --     /must/ be NULL
 --
 -- -   #VUID-VkPresentInfoKHR-swapchainMaintenance1-10158# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
 --     feature is not enabled, then the @pNext@ chain /must/ not include a
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentFenceInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentFenceInfoKHR'
 --     structure
 --
 -- -   #VUID-VkPresentInfoKHR-pSwapchains-09199# If any element of the
 --     @pSwapchains@ array has been created with
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModesCreateInfoKHR',
 --     all of the elements of this array /must/ be created with
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModesCreateInfoKHR'
+--
+-- -   #VUID-VkPresentInfoKHR-pNext-09759# If the @pNext@ chain of this
+--     structure includes a
+--     'Vulkan.Extensions.VK_ARM_tensors.FrameBoundaryTensorsARM' structure
+--     then it /must/ also include a
+--     'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT' structure
+--
+-- -   #VUID-VkPresentInfoKHR-pNext-10821# If a
+--     'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR' structure is
+--     included in the @pNext@ chain, and the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentId2 presentId2>
+--     feature is not enabled, each @presentIds@ entry in that structure
+--     /must/ be zero
+--
+-- -   #VUID-VkPresentInfoKHR-presentId2Supported-10822# If a
+--     'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR' structure is
+--     included and contains non-zero presentIds, @presentId2Supported@
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE' in the
+--     'Vulkan.Extensions.VK_KHR_present_id2.SurfaceCapabilitiesPresentId2KHR'
+--     structure returned by
+--     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
+--     for the @surface@
 --
 -- == Valid Usage (Implicit)
 --
@@ -3183,16 +3272,20 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     'DeviceGroupPresentInfoKHR',
 --     'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT',
+--     'Vulkan.Extensions.VK_ARM_tensors.FrameBoundaryTensorsARM',
 --     'Vulkan.Extensions.VK_GGP_frame_token.PresentFrameTokenGGP',
+--     'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR',
 --     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR',
 --     'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR',
 --     'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE',
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentFenceInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_present_timing.PresentTimingsInfoEXT',
+--     'Vulkan.Extensions.VK_NV_present_metering.SetPresentConfigNV',
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentFenceInfoKHR',
 --     or
---     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModeInfoEXT'
+--     'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModeInfoKHR'
 --
 -- -   #VUID-VkPresentInfoKHR-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkPresentInfoKHR-pWaitSemaphores-parameter# If
 --     @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a valid
@@ -3218,6 +3311,14 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     @pSwapchains@, and the elements of @pWaitSemaphores@ that are valid
 --     handles of non-ignored parameters /must/ have been created,
 --     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+--
+-- == Host Synchronization
+--
+-- -   Host access to each member of @pWaitSemaphores@ /must/ be externally
+--     synchronized
+--
+-- -   Host access to each member of @pSwapchains@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --
@@ -3262,11 +3363,15 @@ instance Extensible PresentInfoKHR where
   getNext PresentInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PresentInfoKHR e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @SwapchainPresentModeInfoEXT = Just f
-    | Just Refl <- eqT @e @SwapchainPresentFenceInfoEXT = Just f
+    | Just Refl <- eqT @e @FrameBoundaryTensorsARM = Just f
+    | Just Refl <- eqT @e @SetPresentConfigNV = Just f
+    | Just Refl <- eqT @e @SwapchainPresentModeInfoKHR = Just f
+    | Just Refl <- eqT @e @SwapchainPresentFenceInfoKHR = Just f
     | Just Refl <- eqT @e @FrameBoundaryEXT = Just f
     | Just Refl <- eqT @e @PresentFrameTokenGGP = Just f
     | Just Refl <- eqT @e @PresentTimesInfoGOOGLE = Just f
+    | Just Refl <- eqT @e @PresentTimingsInfoEXT = Just f
+    | Just Refl <- eqT @e @PresentId2KHR = Just f
     | Just Refl <- eqT @e @PresentIdKHR = Just f
     | Just Refl <- eqT @e @DeviceGroupPresentInfoKHR = Just f
     | Just Refl <- eqT @e @PresentRegionsKHR = Just f
@@ -3417,7 +3522,7 @@ instance Zero DeviceGroupPresentCapabilitiesKHR where
 -- -   #VUID-VkImageSwapchainCreateInfoKHR-swapchain-00995# If @swapchain@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the fields of
 --     'Vulkan.Core10.Image.ImageCreateInfo' /must/ match the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
 --     of the swapchain
 --
 -- == Valid Usage (Implicit)
@@ -3498,7 +3603,7 @@ instance Zero ImageSwapchainCreateInfoKHR where
 --
 -- -   #VUID-VkBindImageMemorySwapchainInfoKHR-swapchain-07756# If the
 --     @swapchain@ has been created with
---     'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT', @imageIndex@
+--     'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR', @imageIndex@
 --     /must/ be one that has previously been returned by
 --     'acquireNextImageKHR' or 'acquireNextImage2KHR'
 --
@@ -3673,7 +3778,8 @@ data AcquireNextImageInfoKHR = AcquireNextImageInfoKHR
     -- image is available.
     timeout :: Word64
   , -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
-    -- to signal.
+    -- that defines a
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
     semaphore :: Semaphore
   , -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
     -- signal.
@@ -3947,6 +4053,24 @@ type DeviceGroupPresentModeFlagsKHR = DeviceGroupPresentModeFlagBitsKHR
 -- | VkDeviceGroupPresentModeFlagBitsKHR - Bitmask specifying supported
 -- device group present modes
 --
+-- = Description
+--
+-- -   'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR' specifies that any
+--     physical device with a presentation engine /can/ present its own
+--     swapchain images.
+--
+-- -   'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR' specifies that any
+--     physical device with a presentation engine /can/ present swapchain
+--     images from any physical device in its @presentMask@.
+--
+-- -   'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR' specifies that any physical
+--     device with a presentation engine /can/ present the sum of swapchain
+--     images from any physical devices in its @presentMask@.
+--
+-- -   'DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR' specifies
+--     that multiple physical devices with a presentation engine /can/ each
+--     present their own swapchain images.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
@@ -3957,24 +4081,16 @@ type DeviceGroupPresentModeFlagsKHR = DeviceGroupPresentModeFlagBitsKHR
 newtype DeviceGroupPresentModeFlagBitsKHR = DeviceGroupPresentModeFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR' specifies that any physical
--- device with a presentation engine /can/ present its own swapchain
--- images.
+-- No documentation found for Nested "VkDeviceGroupPresentModeFlagBitsKHR" "VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR"
 pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000001
 
--- | 'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR' specifies that any physical
--- device with a presentation engine /can/ present swapchain images from
--- any physical device in its @presentMask@.
+-- No documentation found for Nested "VkDeviceGroupPresentModeFlagBitsKHR" "VK_DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR"
 pattern DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000002
 
--- | 'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR' specifies that any physical
--- device with a presentation engine /can/ present the sum of swapchain
--- images from any physical devices in its @presentMask@.
+-- No documentation found for Nested "VkDeviceGroupPresentModeFlagBitsKHR" "VK_DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR"
 pattern DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000004
 
--- | 'DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR' specifies that
--- multiple physical devices with a presentation engine /can/ each present
--- their own swapchain images.
+-- No documentation found for Nested "VkDeviceGroupPresentModeFlagBitsKHR" "VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR"
 pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000008
 
 conNameDeviceGroupPresentModeFlagBitsKHR :: String
@@ -4024,6 +4140,54 @@ type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
 
 -- | VkSwapchainCreateFlagBitsKHR - Bitmask controlling swapchain creation
 --
+-- = Description
+--
+-- -   'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR' specifies
+--     that images created from the swapchain (i.e. with the @swapchain@
+--     member of 'ImageSwapchainCreateInfoKHR' set to this swapchain’s
+--     handle) /must/ use
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'.
+--
+-- -   'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR' specifies that images created
+--     from the swapchain are protected images.
+--
+-- -   'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' specifies that the images
+--     of the swapchain /can/ be used to create a
+--     'Vulkan.Core10.Handles.ImageView' with a different format than what
+--     the swapchain was created with. The list of allowed image view
+--     formats is specified by adding a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--     structure to the @pNext@ chain of 'SwapchainCreateInfoKHR'. In
+--     addition, this flag also specifies that the swapchain /can/ be
+--     created with usage flags that are not supported for the format the
+--     swapchain is created with but are supported for at least one of the
+--     allowed image view formats.
+--
+-- -   'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR' specifies that
+--     the implementation /may/ defer allocation of memory associated with
+--     each swapchain image until its index is to be returned from
+--     'acquireNextImageKHR' or 'acquireNextImage2KHR' for the first time.
+--
+-- -   'SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR' specifies that applications
+--     /can/ include the
+--     'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR' structure in
+--     the @pNext@ chain of the 'PresentInfoKHR' structure to associate an
+--     identifier with each presentation request.
+--
+-- -   'SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR' specifies that
+--     applications /can/ use
+--     'Vulkan.Extensions.VK_KHR_present_wait2.waitForPresent2KHR' to wait
+--     for the presentation engine to have begun presentation of the
+--     presentation request associated with
+--     'Vulkan.Extensions.VK_KHR_present_wait2.PresentWait2InfoKHR'::@presentId@
+--     on @swapchain@.
+--
+-- -   'SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT' specifies that features
+--     supported by the swapchain device in
+--     'Vulkan.Extensions.VK_EXT_present_timing.PhysicalDevicePresentTimingFeaturesEXT'
+--     /can/ be used to collect timing information or schedule presentation
+--     requests at specific times.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
@@ -4031,33 +4195,25 @@ type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
 newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT' specifies that the
--- implementation /may/ defer allocation of memory associated with each
--- swapchain image until its index is to be returned from
--- 'acquireNextImageKHR' or 'acquireNextImage2KHR' for the first time.
-pattern SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT = SwapchainCreateFlagBitsKHR 0x00000008
+-- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR"
+pattern SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000008
 
--- | 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' specifies that the images of
--- the swapchain /can/ be used to create a
--- 'Vulkan.Core10.Handles.ImageView' with a different format than what the
--- swapchain was created with. The list of allowed image view formats is
--- specified by adding a
--- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
--- structure to the @pNext@ chain of 'SwapchainCreateInfoKHR'. In addition,
--- this flag also specifies that the swapchain /can/ be created with usage
--- flags that are not supported for the format the swapchain is created
--- with but are supported for at least one of the allowed image view
--- formats.
+-- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR"
+pattern SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000080
+
+-- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR"
+pattern SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000040
+
+-- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT"
+pattern SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT = SwapchainCreateFlagBitsKHR 0x00000200
+
+-- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR"
 pattern SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000004
 
--- | 'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR' specifies that
--- images created from the swapchain (i.e. with the @swapchain@ member of
--- 'ImageSwapchainCreateInfoKHR' set to this swapchain’s handle) /must/ use
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'.
+-- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"
 pattern SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000001
 
--- | 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR' specifies that images created from
--- the swapchain are protected images.
+-- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR"
 pattern SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000002
 
 conNameSwapchainCreateFlagBitsKHR :: String
@@ -4069,8 +4225,20 @@ enumPrefixSwapchainCreateFlagBitsKHR = "SWAPCHAIN_CREATE_"
 showTableSwapchainCreateFlagBitsKHR :: [(SwapchainCreateFlagBitsKHR, String)]
 showTableSwapchainCreateFlagBitsKHR =
   [
-    ( SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT
-    , "DEFERRED_MEMORY_ALLOCATION_BIT_EXT"
+    ( SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR
+    , "DEFERRED_MEMORY_ALLOCATION_BIT_KHR"
+    )
+  ,
+    ( SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR
+    , "PRESENT_WAIT_2_BIT_KHR"
+    )
+  ,
+    ( SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR
+    , "PRESENT_ID_2_BIT_KHR"
+    )
+  ,
+    ( SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT
+    , "PRESENT_TIMING_BIT_EXT"
     )
   ,
     ( SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR

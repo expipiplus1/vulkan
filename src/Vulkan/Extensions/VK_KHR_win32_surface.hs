@@ -207,7 +207,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_win32_surface Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_win32_surface Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -327,9 +327,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- Some Vulkan functions /may/ call the @SendMessage@ system API when
 -- interacting with a 'Vulkan.Extensions.Handles.SurfaceKHR' through a
@@ -352,7 +356,7 @@ foreign import ccall
 --
 -- -   'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'
 --
--- -   'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.releaseSwapchainImagesEXT'
+-- -   'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.releaseSwapchainImagesKHR'
 --
 -- -   'Vulkan.Extensions.VK_EXT_full_screen_exclusive.acquireFullScreenExclusiveModeEXT'
 --
@@ -375,7 +379,7 @@ createWin32SurfaceKHR :: forall io
                          Win32SurfaceCreateInfoKHR
                       -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                          -- surface object when there is no more specific allocator available (see
-                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                         -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do

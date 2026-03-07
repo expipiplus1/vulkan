@@ -72,6 +72,7 @@ import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_frame_boundary (FrameBoundaryEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_tensors (FrameBoundaryTensorsARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_low_latency2 (LatencySubmissionPresentIdNV)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
@@ -184,48 +185,59 @@ foreign import ccall
 -- = Description
 --
 -- 'queueSubmit' is a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission command>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-submission queue submission command>,
 -- with each batch defined by an element of @pSubmits@. Batches begin
 -- execution in the order they appear in @pSubmits@, but /may/ complete out
 -- of order.
 --
--- Fence and semaphore operations submitted with 'queueSubmit' have
--- additional ordering constraints compared to other submission commands,
--- with dependencies involving previous and subsequent queue operations.
--- Information about these additional constraints can be found in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores semaphore>
--- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences fence>
--- sections of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization the synchronization chapter>.
---
--- Details on the interaction of @pWaitDstStageMask@ with synchronization
--- are described in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>
--- section of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization the synchronization chapter>.
---
 -- The order that batches appear in @pSubmits@ is used to determine
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-submission-order submission order>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>,
 -- and thus all the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-implicit implicit ordering guarantees>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-implicit implicit ordering guarantees>
 -- that respect it. Other than these implicit ordering guarantees and any
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization explicit synchronization primitives>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization explicit synchronization primitives>,
 -- these batches /may/ overlap or otherwise execute out of order.
 --
+-- Fence operations submitted with 'queueSubmit' have additional ordering
+-- constraints compared to other submission commands, with dependencies
+-- involving previous and subsequent queue operations. Information about
+-- these additional constraints can be found in the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences fence>
+-- sections of
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization the synchronization chapter>.
+--
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- of each
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+-- defined by this command includes every command in the same batch that
+-- the signal operation is defined in, and all commands that occur earlier
+-- in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- of each
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>
+-- defined by this command includes every command in the same batch that
+-- the wait operation is defined in, and all commands that occur later in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>.
+-- The scope is limited by the @pWaitDstStageMask@ for each batch, as
+-- described in 'SubmitInfo'.
+--
 -- If any command buffer submitted to this queue is in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle executable state>,
 -- it is moved to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>.
 -- Once execution of all submissions of a command buffer complete, it moves
 -- from the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>,
 -- back to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle executable state>.
 -- If a command buffer was recorded with the
 -- 'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
 -- flag, it instead moves to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid state>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle invalid state>.
 --
 -- If 'queueSubmit' fails, it /may/ return
 -- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' or
@@ -237,7 +249,7 @@ foreign import ccall
 -- way that the implementation is unable to make that guarantee, the
 -- implementation /must/ return
 -- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'. See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-lost-device Lost Device>.
 --
 -- == Valid Usage
 --
@@ -264,7 +276,7 @@ foreign import ccall
 --     in any element of the @pWaitDstStageMask@ member of any element of
 --     @pSubmits@ /must/ be a pipeline stage supported by one of the
 --     capabilities of @queue@, as specified in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   #VUID-vkQueueSubmit-pSignalSemaphores-00067# Each binary semaphore
 --     element of the @pSignalSemaphores@ member of any element of
@@ -283,34 +295,34 @@ foreign import ccall
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY' /must/
 --     reference a semaphore signal operation that has been submitted for
 --     execution and any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     on which it depends /must/ have also been submitted for execution
 --
 -- -   #VUID-vkQueueSubmit-pCommandBuffers-00070# Each element of the
 --     @pCommandBuffers@ member of each element of @pSubmits@ /must/ be in
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending or executable state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending or executable state>
 --
 -- -   #VUID-vkQueueSubmit-pCommandBuffers-00071# If any element of the
 --     @pCommandBuffers@ member of any element of @pSubmits@ was not
 --     recorded with the
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT',
 --     it /must/ not be in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   #VUID-vkQueueSubmit-pCommandBuffers-00072# Any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-secondary secondary command buffers recorded>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-secondary secondary command buffers recorded>
 --     into any element of the @pCommandBuffers@ member of any element of
 --     @pSubmits@ /must/ be in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending or executable state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending or executable state>
 --
 -- -   #VUID-vkQueueSubmit-pCommandBuffers-00073# If any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-secondary secondary command buffers recorded>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-secondary secondary command buffers recorded>
 --     into any element of the @pCommandBuffers@ member of any element of
 --     @pSubmits@ was not recorded with the
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT',
 --     it /must/ not be in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   #VUID-vkQueueSubmit-pCommandBuffers-00074# Each element of the
 --     @pCommandBuffers@ member of each element of @pSubmits@ /must/ have
@@ -319,14 +331,20 @@ foreign import ccall
 --
 -- -   #VUID-vkQueueSubmit-pSubmits-02207# If any element of
 --     @pSubmits->pCommandBuffers@ includes a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire Queue Family Ownership Transfer Acquire Operation>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-queue-transfers-acquire Queue Family Ownership Transfer Acquire Operation>,
 --     there /must/ exist a previously submitted
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release Queue Family Ownership Transfer Release Operation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-queue-transfers-release Queue Family Ownership Transfer Release Operation>
 --     on a queue in the queue family identified by the acquire operation,
 --     with parameters matching the acquire operation as defined in the
 --     definition of such
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire acquire operations>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-queue-transfers-acquire acquire operations>,
 --     and which happens-before the acquire operation
+--
+-- -   #VUID-vkQueueSubmit-pSubmits-10911# If any element of
+--     @pSubmits->pCommandBuffers@ includes a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-queue-transfers-acquire Queue Family Ownership Transfer Acquire Operation>,
+--     the affected resource /must/ not be modified in any way between the
+--     last matching release operation and the acquire operation
 --
 -- -   #VUID-vkQueueSubmit-pCommandBuffers-03220# If a command recorded
 --     into any element of @pCommandBuffers@ was a
@@ -334,7 +352,7 @@ foreign import ccall
 --     @queryPool@ was created with a @queryType@ of
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#profiling-lock profiling lock>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#profiling-lock profiling lock>
 --     /must/ have been held continuously on the
 --     'Vulkan.Core10.Handles.Device' that @queue@ was retrieved from,
 --     throughout recording of those command buffers
@@ -377,7 +395,9 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @queue@ /must/ be externally synchronized
+-- -   Host access to @queue@ /must/ be externally synchronized if it was
+--     not created with
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR'
 --
 -- -   Host access to @fence@ /must/ be externally synchronized
 --
@@ -399,11 +419,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -415,12 +439,18 @@ queueSubmit :: forall io
             => -- | @queue@ is the queue that the command buffers will be submitted to.
                Queue
             -> -- | @pSubmits@ is a pointer to an array of 'SubmitInfo' structures, each
-               -- specifying a command buffer submission batch.
+               -- specifying a command buffer submission batch. Command buffers and
+               -- semaphores specified in this array /may/ be accessed at any point until
+               -- the
+               -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-submission queue operations>
+               -- they define complete execution on the device.
                ("submits" ::: Vector (SomeStruct SubmitInfo))
             -> -- | @fence@ is an /optional/ handle to a fence to be signaled once all
                -- submitted command buffers have completed execution. If @fence@ is not
                -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
-               -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
+               -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
+               -- If it is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /may/ be
+               -- accessed at any point until this command completes on the device.
                Fence
             -> io ()
 queueSubmit queue submits fence = liftIO . evalContT $ do
@@ -471,10 +501,14 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- 'queueWaitIdle' is equivalent to having submitted a valid fence to every
 -- previously executed
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission command>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#devsandqueues-submission queue submission command>
 -- that accepts a fence, then waiting for all of those fences to signal
 -- using 'Vulkan.Core10.Fence.waitForFences' with an infinite timeout and
 -- @waitAll@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'.
+--
+-- Even though 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' does
+-- not have a fence parameter, it does accept a fence through
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentFenceInfoEXT'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -483,7 +517,9 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- == Host Synchronization
 --
--- -   Host access to @queue@ /must/ be externally synchronized
+-- -   Host access to @queue@ /must/ be externally synchronized if it was
+--     not created with
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR'
 --
 -- == Command Properties
 --
@@ -503,11 +539,15 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -571,7 +611,9 @@ deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
 -- == Host Synchronization
 --
 -- -   Host access to all 'Vulkan.Core10.Handles.Queue' objects created
---     from @device@ /must/ be externally synchronized
+--     from @device@ that are not created with
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR'
+--     /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -581,11 +623,15 @@ deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -613,12 +659,73 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- The order that command buffers appear in @pCommandBuffers@ is used to
 -- determine
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-submission-order submission order>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>,
 -- and thus all the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-implicit implicit ordering guarantees>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-implicit implicit ordering guarantees>
 -- that respect it. Other than these implicit ordering guarantees and any
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization explicit synchronization primitives>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization explicit synchronization primitives>,
 -- these command buffers /may/ overlap or otherwise execute out of order.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- of each
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>
+-- defined by this structure is limited to operations in stages indicated
+-- by the corresponding element of @pWaitDstStageMask@.
+--
+-- A common scenario for using @pWaitDstStageMask@ with values other than
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ALL_COMMANDS_BIT'
+-- is when synchronizing a window system presentation operation against
+-- subsequent command buffers which render the next frame. In this case, a
+-- presentation image /must/ not be overwritten until the presentation
+-- operation completes, but other pipeline stages /can/ execute without
+-- waiting. A mask of
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
+-- prevents subsequent color attachment writes from executing until the
+-- semaphore signals. Some implementations /may/ be able to execute
+-- transfer operations and\/or pre-rasterization work before the semaphore
+-- is signaled.
+--
+-- If an image layout transition needs to be performed on a presentable
+-- image before it is used in a framebuffer, that /can/ be performed as the
+-- first operation submitted to the queue after acquiring the image, and
+-- /should/ not prevent other work from overlapping with the presentation
+-- operation. For example, a 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier'
+-- could use:
+--
+-- -   @srcStageMask@ =
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
+--
+-- -   @srcAccessMask@ = 0
+--
+-- -   @dstStageMask@ =
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
+--
+-- -   @dstAccessMask@ =
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_BIT'
+--     |
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+--
+-- -   @oldLayout@ =
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR'
+--
+-- -   @newLayout@ =
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
+--
+-- Alternatively, @oldLayout@ /can/ be
+-- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED', if the image’s
+-- contents need not be preserved.
+--
+-- This barrier accomplishes a dependency chain between previous
+-- presentation operations and subsequent color attachment output
+-- operations, with the layout transition performed in between, and does
+-- not introduce a dependency between previous work and any
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>s.
+-- More precisely, the semaphore signals after the presentation operation
+-- completes, the semaphore wait stalls the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
+-- stage, and there is a dependency from that same stage to itself with the
+-- layout transition performed in between.
 --
 -- == Valid Usage
 --
@@ -677,6 +784,11 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     feature are enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-10754# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-accelerationStructure accelerationStructure>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
 -- -   #VUID-VkSubmitInfo-pCommandBuffers-00075# Each element of
 --     @pCommandBuffers@ /must/ not have been allocated with
 --     'Vulkan.Core10.Enums.CommandBufferLevel.COMMAND_BUFFER_LEVEL_SECONDARY'
@@ -719,7 +831,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value greater than the current value of the semaphore
 --     when the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     is executed
 --
 -- -   #VUID-VkSubmitInfo-pWaitSemaphores-03243# For each element of
@@ -731,7 +843,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- -   #VUID-VkSubmitInfo-pSignalSemaphores-03244# For each element of
 --     @pSignalSemaphores@ created with a
@@ -742,7 +854,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- -   #VUID-VkSubmitInfo-pNext-04120# If the @pNext@ chain of this
 --     structure does not include a
@@ -760,40 +872,66 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- -   #VUID-VkSubmitInfo-pCommandBuffers-06193# If @pCommandBuffers@
 --     contains any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-suspension resumed render pass instances>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-suspension resumed render pass instances>,
 --     they /must/ be suspended by a render pass instance earlier in
 --     submission order within @pCommandBuffers@
 --
 -- -   #VUID-VkSubmitInfo-pCommandBuffers-06014# If @pCommandBuffers@
 --     contains any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-suspension suspended render pass instances>,
 --     they /must/ be resumed by a render pass instance later in submission
 --     order within @pCommandBuffers@
 --
 -- -   #VUID-VkSubmitInfo-pCommandBuffers-06015# If @pCommandBuffers@
 --     contains any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-suspension suspended render pass instances>,
 --     there /must/ be no action or synchronization commands executed in a
 --     primary or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-secondary secondary>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-secondary secondary>
 --     command buffer between that render pass instance and the render pass
 --     instance that resumes it
 --
 -- -   #VUID-VkSubmitInfo-pCommandBuffers-06016# If @pCommandBuffers@
 --     contains any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-suspension suspended render pass instances>,
 --     there /must/ be no render pass instances between that render pass
 --     instance and the render pass instance that resumes it
 --
 -- -   #VUID-VkSubmitInfo-variableSampleLocations-06017# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-variableSampleLocations variableSampleLocations>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-variableSampleLocations variableSampleLocations>
 --     limit is not supported, and any element of @pCommandBuffers@
 --     contains any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-suspension suspended render pass instances>,
 --     where a graphics pipeline has been bound, any pipelines bound in the
 --     render pass instance that resumes it, or any subsequent render pass
 --     instances that resume from that one and so on, /must/ use the same
 --     sample locations
+--
+-- -   #VUID-VkSubmitInfo-pNext-09683# If the @pNext@ chain of this
+--     structure includes a
+--     'Vulkan.Extensions.VK_ARM_tensors.FrameBoundaryTensorsARM' structure
+--     then it /must/ also include a
+--     'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT' structure
+--
+-- -   #VUID-VkSubmitInfo-pCommandBufferInfos-09942# If at least one
+--     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.CommandBufferSubmitInfo'
+--     structure in @pCommandBufferInfos@ references a @commandBuffer@
+--     allocated from a pool that was created with a
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'
+--     structure in the @pNext@ chain of
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' that included a
+--     foreign data graph processing engine in its @pProcessingEngines@
+--     member, then @pWaitSemaphoreInfos@ and @pSignalSemaphoreInfos@
+--     /must/ only reference @semaphore@ objects that were created from
+--     external handle types reported as supported in a
+--     'Vulkan.Extensions.VK_ARM_data_graph.QueueFamilyDataGraphProcessingEnginePropertiesARM'::@foreignSemaphoreHandleTypes@
+--     structure via
+--     'Vulkan.Extensions.VK_ARM_data_graph.getPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM'
+--     with a @queueFamilyIndex@ matching the one the command pool was
+--     created for, for all the foreign data graph processing engines that
+--     were part of the
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'
+--     used to create the command pool
 --
 -- == Valid Usage (Implicit)
 --
@@ -807,6 +945,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Extensions.VK_KHR_external_semaphore_win32.D3D12FenceSubmitInfoKHR',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupSubmitInfo',
 --     'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT',
+--     'Vulkan.Extensions.VK_ARM_tensors.FrameBoundaryTensorsARM',
 --     'Vulkan.Extensions.VK_NV_low_latency2.LatencySubmissionPresentIdNV',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceQuerySubmitInfoKHR',
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo',
@@ -815,8 +954,8 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     or
 --     'Vulkan.Extensions.VK_NV_win32_keyed_mutex.Win32KeyedMutexAcquireReleaseInfoNV'
 --
--- -   #VUID-VkSubmitInfo-sType-unique# The @sType@ value of each struct in
---     the @pNext@ chain /must/ be unique
+-- -   #VUID-VkSubmitInfo-sType-unique# The @sType@ value of each structure
+--     in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkSubmitInfo-pWaitSemaphores-parameter# If
 --     @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a valid
@@ -859,7 +998,7 @@ data SubmitInfo (es :: [Type]) = SubmitInfo
     -- 'Vulkan.Core10.Handles.Semaphore' handles upon which to wait before the
     -- command buffers for this batch begin execution. If semaphores to wait on
     -- are provided, they define a
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>.
     waitSemaphores :: Vector Semaphore
   , -- | @pWaitDstStageMask@ is a pointer to an array of pipeline stages at which
     -- each corresponding semaphore wait will occur.
@@ -871,7 +1010,7 @@ data SubmitInfo (es :: [Type]) = SubmitInfo
     -- 'Vulkan.Core10.Handles.Semaphore' handles which will be signaled when
     -- the command buffers for this batch have completed execution. If
     -- semaphores to be signaled are provided, they define a
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
     signalSemaphores :: Vector Semaphore
   }
   deriving (Typeable)
@@ -886,6 +1025,7 @@ instance Extensible SubmitInfo where
   getNext SubmitInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubmitInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @FrameBoundaryTensorsARM = Just f
     | Just Refl <- eqT @e @LatencySubmissionPresentIdNV = Just f
     | Just Refl <- eqT @e @FrameBoundaryEXT = Just f
     | Just Refl <- eqT @e @AmigoProfilingSubmitInfoSEC = Just f

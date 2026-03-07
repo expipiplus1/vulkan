@@ -55,7 +55,7 @@
 --
 -- This extension allows the depth clipping operation, that is normally
 -- implicitly controlled by
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@,
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@,
 -- to instead be controlled explicitly by
 -- 'PipelineRasterizationDepthClipStateCreateInfoEXT'::@depthClipEnable@.
 --
@@ -72,7 +72,7 @@
 --     -   'PhysicalDeviceDepthClipEnableFeaturesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationDepthClipStateCreateInfoEXT'
 --
@@ -105,7 +105,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clip_enable Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_clip_enable Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

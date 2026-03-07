@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --         
@@ -223,7 +223,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_device_address_binding_report Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_device_address_binding_report Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -299,9 +299,13 @@ import Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsMessageTypeFlagsEXT)
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceAddressBindingReportFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceAddressBindingReportFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -359,7 +363,7 @@ instance Zero PhysicalDeviceAddressBindingReportFeaturesEXT where
 -- = Description
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-reportAddressBinding reportAddressBinding>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-reportAddressBinding reportAddressBinding>
 -- feature is enabled and the implementation binds or unbinds a region of
 -- virtual address space associated with a Vulkan object, the
 -- implementation /must/ submit a debug message with the following
@@ -379,7 +383,7 @@ instance Zero PhysicalDeviceAddressBindingReportFeaturesEXT where
 -- 'DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT'.
 --
 -- Object handles reported in this manner are not
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-validusage-handles valid object handles>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage-handles valid object handles>,
 -- and /must/ not be used as an input parameter to any Vulkan command.
 --
 -- Any valid object handle returned by an object creation function /must/
@@ -408,6 +412,10 @@ data DeviceAddressBindingCallbackDataEXT = DeviceAddressBindingCallbackDataEXT
     -- of a region of the virtual address space associated with a Vulkan
     -- object, as identified by the @pObjects@ member of
     -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCallbackDataEXT'.
+    --
+    -- #VUID-VkDeviceAddressBindingCallbackDataEXT-baseAddress-parameter#
+    -- @baseAddress@ /must/ be a valid
+    -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
     baseAddress :: DeviceAddress
   , -- | @size@ is the size in bytes of a region of GPU-accessible virtual
     -- address space.
@@ -473,6 +481,12 @@ type DeviceAddressBindingFlagsEXT = DeviceAddressBindingFlagBitsEXT
 -- | VkDeviceAddressBindingFlagBitsEXT - Bitmask specifying the additional
 -- information about a binding event
 --
+-- = Description
+--
+-- -   'DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT' specifies that
+--     'DeviceAddressBindingCallbackDataEXT' describes a Vulkan object that
+--     has not been made visible to the application via a Vulkan command.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_address_binding_report VK_EXT_device_address_binding_report>,
@@ -480,9 +494,7 @@ type DeviceAddressBindingFlagsEXT = DeviceAddressBindingFlagBitsEXT
 newtype DeviceAddressBindingFlagBitsEXT = DeviceAddressBindingFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT' specifies that
--- 'DeviceAddressBindingCallbackDataEXT' describes a Vulkan object that has
--- not been made visible to the application via a Vulkan command.
+-- No documentation found for Nested "VkDeviceAddressBindingFlagBitsEXT" "VK_DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT"
 pattern DEVICE_ADDRESS_BINDING_INTERNAL_OBJECT_BIT_EXT = DeviceAddressBindingFlagBitsEXT 0x00000001
 
 conNameDeviceAddressBindingFlagBitsEXT :: String
@@ -519,6 +531,14 @@ instance Read DeviceAddressBindingFlagBitsEXT where
 -- | VkDeviceAddressBindingTypeEXT - Enum describing a change in device
 -- address bindings
 --
+-- = Description
+--
+-- -   'DEVICE_ADDRESS_BINDING_TYPE_BIND_EXT' specifies that a new
+--     GPU-accessible virtual address range has been bound.
+--
+-- -   'DEVICE_ADDRESS_BINDING_TYPE_UNBIND_EXT' specifies that a
+--     GPU-accessible virtual address range has been unbound.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_address_binding_report VK_EXT_device_address_binding_report>,
@@ -526,12 +546,10 @@ instance Read DeviceAddressBindingFlagBitsEXT where
 newtype DeviceAddressBindingTypeEXT = DeviceAddressBindingTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DEVICE_ADDRESS_BINDING_TYPE_BIND_EXT' specifies that a new
--- GPU-accessible virtual address range has been bound.
+-- No documentation found for Nested "VkDeviceAddressBindingTypeEXT" "VK_DEVICE_ADDRESS_BINDING_TYPE_BIND_EXT"
 pattern DEVICE_ADDRESS_BINDING_TYPE_BIND_EXT = DeviceAddressBindingTypeEXT 0
 
--- | 'DEVICE_ADDRESS_BINDING_TYPE_UNBIND_EXT' specifies that a GPU-accessible
--- virtual address range has been unbound.
+-- No documentation found for Nested "VkDeviceAddressBindingTypeEXT" "VK_DEVICE_ADDRESS_BINDING_TYPE_UNBIND_EXT"
 pattern DEVICE_ADDRESS_BINDING_TYPE_UNBIND_EXT = DeviceAddressBindingTypeEXT 1
 
 {-# COMPLETE

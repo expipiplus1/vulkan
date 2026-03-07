@@ -8,6 +8,9 @@ module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHan
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+                                                                                               , EXTERNAL_MEMORY_HANDLE_TYPE_MTLHEAP_BIT_EXT
+                                                                                               , EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT
+                                                                                               , EXTERNAL_MEMORY_HANDLE_TYPE_MTLBUFFER_BIT_EXT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA
@@ -36,6 +39,97 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 -- handle types
 --
 -- = Description
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT' specifies a POSIX file
+--     descriptor handle that has only limited valid usage outside of
+--     Vulkan and other compatible APIs. It /must/ be compatible with the
+--     POSIX system calls @dup@, @dup2@, @close@, and the non-standard
+--     system call @dup3@. Additionally, it /must/ be transportable over a
+--     socket using an @SCM_RIGHTS@ control message. It owns a reference to
+--     the underlying memory resource represented by its Vulkan memory
+--     object.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT
+--     handle that has only limited valid usage outside of Vulkan and other
+--     compatible APIs. It /must/ be compatible with the functions
+--     @DuplicateHandle@, @CloseHandle@, @CompareObjectHandles@,
+--     @GetHandleInformation@, and @SetHandleInformation@. It owns a
+--     reference to the underlying memory resource represented by its
+--     Vulkan memory object.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a
+--     global share handle that has only limited valid usage outside of
+--     Vulkan and other compatible APIs. It is not compatible with any
+--     native APIs. It does not own a reference to the underlying memory
+--     resource represented by its Vulkan memory object, and will therefore
+--     become invalid when all Vulkan memory objects associated with it are
+--     destroyed.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT' specifies an NT
+--     handle returned by @IDXGIResource1@::@CreateSharedHandle@ referring
+--     to a Direct3D 10 or 11 texture resource. It owns a reference to the
+--     memory used by the Direct3D resource.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT' specifies a
+--     global share handle returned by @IDXGIResource@::@GetSharedHandle@
+--     referring to a Direct3D 10 or 11 texture resource. It does not own a
+--     reference to the underlying Direct3D resource, and will therefore
+--     become invalid when all Vulkan memory objects and Direct3D resources
+--     associated with it are destroyed.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT' specifies an NT handle
+--     returned by @ID3D12Device@::@CreateSharedHandle@ referring to a
+--     Direct3D 12 heap resource. It owns a reference to the resources used
+--     by the Direct3D heap.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT' specifies an NT
+--     handle returned by @ID3D12Device@::@CreateSharedHandle@ referring to
+--     a Direct3D 12 committed resource. It owns a reference to the memory
+--     used by the Direct3D resource.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT' specifies a
+--     host pointer returned by a host memory allocation command. It does
+--     not own a reference to the underlying memory resource, and will
+--     therefore become invalid if the host memory is freed.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
+--     specifies a host pointer to /host mapped foreign memory/. It does
+--     not own a reference to the underlying memory resource, and will
+--     therefore become invalid if the foreign memory is unmapped or
+--     otherwise becomes no longer available.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT' is a file descriptor
+--     for a Linux dma_buf. It owns a reference to the underlying memory
+--     resource represented by its Vulkan memory object.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     specifies an
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'
+--     object defined by the Android NDK. See
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
+--     for more details of this handle type.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA' is a Zircon
+--     handle to a virtual memory object.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV' is a handle to an
+--     allocation accessible by remote devices. It owns a reference to the
+--     underlying memory resource represented by its Vulkan memory object.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX' specifies a
+--     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.Screen_buffer'
+--     object defined by the QNX SDP. See
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-qnx-screen-buffer QNX Screen Buffer>
+--     for more details of this handle type.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_MTLBUFFER_BIT_EXT' is a handle to a
+--     @MTLResource@ holding a @MTLBuffer@.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT' is a handle to a
+--     @MTLResource@ holding a @MTLTexture@.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_MTLHEAP_BIT_EXT' is a handle to a
+--     @MTLResource@ holding a @MTLHeap@.
 --
 -- Some external memory handle types can only be shared within the same
 -- underlying physical device and\/or the same driver version, as defined
@@ -72,6 +166,12 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 -- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX'               | No restriction                                                                                             | No restriction                                                                                             |
 -- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_MTLBUFFER_BIT_EXT'                   | No restriction                                                                                             | Must match                                                                                                 |
+-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT'                  | No restriction                                                                                             | Must match                                                                                                 |
+-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_MTLHEAP_BIT_EXT'                     | No restriction                                                                                             | Must match                                                                                                 |
+-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 --
 -- External Memory Handle Types Compatibility
 --
@@ -94,116 +194,79 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_external_memory_metal.ImportMemoryMetalHandleInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryGetFdInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_external_memory_metal.MemoryGetMetalHandleInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_external_memory_rdma.MemoryGetRemoteAddressInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryGetWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryGetZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalBufferInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo',
+-- 'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceExternalTensorInfoARM',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.getMemoryHostPointerPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_external_memory_metal.getMemoryMetalHandlePropertiesEXT',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.getMemoryZirconHandlePropertiesFUCHSIA'
 newtype ExternalMemoryHandleTypeFlagBits = ExternalMemoryHandleTypeFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT' specifies a POSIX file
--- descriptor handle that has only limited valid usage outside of Vulkan
--- and other compatible APIs. It /must/ be compatible with the POSIX system
--- calls @dup@, @dup2@, @close@, and the non-standard system call @dup3@.
--- Additionally, it /must/ be transportable over a socket using an
--- @SCM_RIGHTS@ control message. It owns a reference to the underlying
--- memory resource represented by its Vulkan memory object.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = ExternalMemoryHandleTypeFlagBits 0x00000001
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT handle
--- that has only limited valid usage outside of Vulkan and other compatible
--- APIs. It /must/ be compatible with the functions @DuplicateHandle@,
--- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and
--- @SetHandleInformation@. It owns a reference to the underlying memory
--- resource represented by its Vulkan memory object.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = ExternalMemoryHandleTypeFlagBits 0x00000002
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a global
--- share handle that has only limited valid usage outside of Vulkan and
--- other compatible APIs. It is not compatible with any native APIs. It
--- does not own a reference to the underlying memory resource represented
--- by its Vulkan memory object, and will therefore become invalid when all
--- Vulkan memory objects associated with it are destroyed.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalMemoryHandleTypeFlagBits 0x00000004
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT' specifies an NT handle
--- returned by @IDXGIResource1@::@CreateSharedHandle@ referring to a
--- Direct3D 10 or 11 texture resource. It owns a reference to the memory
--- used by the Direct3D resource.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT = ExternalMemoryHandleTypeFlagBits 0x00000008
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT' specifies a global
--- share handle returned by @IDXGIResource@::@GetSharedHandle@ referring to
--- a Direct3D 10 or 11 texture resource. It does not own a reference to the
--- underlying Direct3D resource, and will therefore become invalid when all
--- Vulkan memory objects and Direct3D resources associated with it are
--- destroyed.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT = ExternalMemoryHandleTypeFlagBits 0x00000010
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT' specifies an NT handle
--- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D
--- 12 heap resource. It owns a reference to the resources used by the
--- Direct3D heap.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = ExternalMemoryHandleTypeFlagBits 0x00000020
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT' specifies an NT handle
--- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D
--- 12 committed resource. It owns a reference to the memory used by the
--- Direct3D resource.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = ExternalMemoryHandleTypeFlagBits 0x00000040
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX' specifies a
--- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.Screen_buffer'
--- object defined by the QNX SDP. See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-qnx-screen-buffer QNX Screen Buffer>
--- for more details of this handle type.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_MTLHEAP_BIT_EXT"
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_MTLHEAP_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00040000
+
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT"
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00020000
+
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_MTLBUFFER_BIT_EXT"
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_MTLBUFFER_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00010000
+
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX = ExternalMemoryHandleTypeFlagBits 0x00004000
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV' is a handle to an
--- allocation accessible by remote devices. It owns a reference to the
--- underlying memory resource represented by its Vulkan memory object.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV = ExternalMemoryHandleTypeFlagBits 0x00001000
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA' is a Zircon handle
--- to a virtual memory object.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA = ExternalMemoryHandleTypeFlagBits 0x00000800
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
--- specifies a host pointer to /host mapped foreign memory/. It does not
--- own a reference to the underlying memory resource, and will therefore
--- become invalid if the foreign memory is unmapped or otherwise becomes no
--- longer available.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000100
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT' specifies a host
--- pointer returned by a host memory allocation command. It does not own a
--- reference to the underlying memory resource, and will therefore become
--- invalid if the host memory is freed.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000080
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
--- specifies an
--- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'
--- object defined by the Android NDK. See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
--- for more details of this handle type.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID = ExternalMemoryHandleTypeFlagBits 0x00000400
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT' is a file descriptor for a
--- Linux dma_buf. It owns a reference to the underlying memory resource
--- represented by its Vulkan memory object.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000200
 
 conNameExternalMemoryHandleTypeFlagBits :: String
@@ -241,6 +304,18 @@ showTableExternalMemoryHandleTypeFlagBits =
   ,
     ( EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
     , "D3D12_RESOURCE_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_MTLHEAP_BIT_EXT
+    , "MTLHEAP_BIT_EXT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_MTLTEXTURE_BIT_EXT
+    , "MTLTEXTURE_BIT_EXT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_MTLBUFFER_BIT_EXT
+    , "MTLBUFFER_BIT_EXT"
     )
   ,
     ( EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX

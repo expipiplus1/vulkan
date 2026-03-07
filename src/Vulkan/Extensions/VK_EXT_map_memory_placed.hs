@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_map_memory2 VK_KHR_map_memory2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
 --
 -- [__Contact__]
 --
@@ -65,7 +67,8 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR':
+-- -   Extending
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo':
 --
 --     -   'MemoryMapPlacedInfoEXT'
 --
@@ -91,9 +94,9 @@
 --     -   'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_map_memory2.MemoryUnmapFlagBitsKHR':
+--     'Vulkan.Core14.Enums.MemoryUnmapFlagBits.MemoryUnmapFlagBits':
 --
---     -   'Vulkan.Extensions.VK_KHR_map_memory2.MEMORY_UNMAP_RESERVE_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.MemoryUnmapFlagBits.MEMORY_UNMAP_RESERVE_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -105,7 +108,7 @@
 --
 -- == Version History
 --
--- -   Revision 0, 2024-01-14 (Faith Ekstrand)
+-- -   Revision 1, 2024-01-14 (Faith Ekstrand)
 --
 --     -   Internal revisions
 --
@@ -116,7 +119,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_map_memory_placed Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_map_memory_placed Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -127,8 +130,6 @@ module Vulkan.Extensions.VK_EXT_map_memory_placed  ( PhysicalDeviceMapMemoryPlac
                                                    , pattern EXT_MAP_MEMORY_PLACED_SPEC_VERSION
                                                    , EXT_MAP_MEMORY_PLACED_EXTENSION_NAME
                                                    , pattern EXT_MAP_MEMORY_PLACED_EXTENSION_NAME
-                                                   , MemoryUnmapFlagBitsKHR(..)
-                                                   , MemoryUnmapFlagsKHR
                                                    ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -156,8 +157,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_MAP_PLACED_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_PROPERTIES_EXT))
-import Vulkan.Extensions.VK_KHR_map_memory2 (MemoryUnmapFlagBitsKHR(..))
-import Vulkan.Extensions.VK_KHR_map_memory2 (MemoryUnmapFlagsKHR)
 -- | VkPhysicalDeviceMapMemoryPlacedFeaturesEXT - Structure describing placed
 -- memory map features that can be supported by an implementation
 --
@@ -173,9 +172,13 @@ import Vulkan.Extensions.VK_KHR_map_memory2 (MemoryUnmapFlagsKHR)
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceMapMemoryPlacedFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceMapMemoryPlacedFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -319,19 +322,13 @@ instance Zero PhysicalDeviceMapMemoryPlacedPropertiesEXT where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkMemoryMapPlacedInfoEXT-flags-09576# If
---     'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR'::@flags@
---     contains
---     'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT',
---     @pPlacedAddress@ /must/ not be @NULL@
---
 -- -   #VUID-VkMemoryMapPlacedInfoEXT-pPlacedAddress-09577#
 --     @pPlacedAddress@ /must/ be aligned to an integer multiple of
 --     'PhysicalDeviceMapMemoryPlacedPropertiesEXT'::@minPlacedMemoryMapAlignment@
 --
 -- -   #VUID-VkMemoryMapPlacedInfoEXT-pPlacedAddress-09578# The address
 --     range specified by @pPlacedAddress@ and
---     'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR'::@size@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo'::@size@
 --     /must/ not overlap any existing Vulkan memory object mapping
 --
 -- == Valid Usage (Implicit)
@@ -345,8 +342,9 @@ instance Zero PhysicalDeviceMapMemoryPlacedPropertiesEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryMapPlacedInfoEXT = MemoryMapPlacedInfoEXT
   { -- | @pPlacedAddress@ is the virtual address at which to place the address.
-    -- If 'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR'::@flags@ does
-    -- not contain
+    -- If
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo'::@flags@
+    -- does not contain
     -- 'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT', this
     -- value is ignored.
     placedAddress :: Ptr () }

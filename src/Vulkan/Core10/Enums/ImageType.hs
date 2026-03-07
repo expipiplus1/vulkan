@@ -17,6 +17,14 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkImageType - Specifies the type of an image object
 --
+-- = Description
+--
+-- -   'IMAGE_TYPE_1D' specifies a one-dimensional image.
+--
+-- -   'IMAGE_TYPE_2D' specifies a two-dimensional image.
+--
+-- -   'IMAGE_TYPE_3D' specifies a three-dimensional image.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -30,13 +38,13 @@ import GHC.Show (Show(showsPrec))
 newtype ImageType = ImageType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'IMAGE_TYPE_1D' specifies a one-dimensional image.
+-- No documentation found for Nested "VkImageType" "VK_IMAGE_TYPE_1D"
 pattern IMAGE_TYPE_1D = ImageType 0
 
--- | 'IMAGE_TYPE_2D' specifies a two-dimensional image.
+-- No documentation found for Nested "VkImageType" "VK_IMAGE_TYPE_2D"
 pattern IMAGE_TYPE_2D = ImageType 1
 
--- | 'IMAGE_TYPE_3D' specifies a three-dimensional image.
+-- No documentation found for Nested "VkImageType" "VK_IMAGE_TYPE_3D"
 pattern IMAGE_TYPE_3D = ImageType 2
 
 {-# COMPLETE

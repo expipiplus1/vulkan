@@ -114,7 +114,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED_EXT'
+--     -   'ERROR_VALIDATION_FAILED_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -143,8 +143,8 @@
 --
 -- To capture events that occur while creating or destroying an instance an
 -- application /can/ link a 'DebugReportCallbackCreateInfoEXT' structure to
--- the @pNext@ element of the
--- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
+-- the @pNext@ chain of the
+-- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
@@ -251,8 +251,8 @@
 --
 -- __RESOLVED__: Due to the different nature of dispatchable and
 -- nondispatchable handles there is no generic way (that we know of) that
--- works for common compilers with 32bit, 64bit, C and C++. We recommend
--- applications use the same cast that the validation layers use:
+-- works for common C and C++ compilers in both 32-bit and 64-bit ABIs. We
+-- recommend applications use the same cast that the validation layers use:
 --
 -- +
 --
@@ -322,7 +322,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_debug_report Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_debug_report Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -331,6 +331,7 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                               , destroyDebugReportCallbackEXT
                                               , debugReportMessageEXT
                                               , pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT
+                                              , pattern ERROR_VALIDATION_FAILED_EXT
                                               , pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT
                                               , pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT
                                               , DebugReportCallbackCreateInfoEXT(..)
@@ -463,6 +464,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core10.Enums.Result (Result(ERROR_VALIDATION_FAILED))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (DebugReportCallbackEXT(..))
@@ -503,6 +505,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
@@ -519,7 +525,7 @@ createDebugReportCallbackEXT :: forall io
                                 -- called.
                                 DebugReportCallbackCreateInfoEXT
                              -> -- | @pAllocator@ controls host memory allocation as described in the
-                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                 -- chapter.
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugReportCallbackEXT)
@@ -618,7 +624,7 @@ destroyDebugReportCallbackEXT :: forall io
                                  -- active.
                                  DebugReportCallbackEXT
                               -> -- | @pAllocator@ controls host memory allocation as described in the
-                                 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter.
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
@@ -665,7 +671,7 @@ foreign import ccall
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @object@ /must/ be a
 --     Vulkan object of the corresponding type associated with @objectType@
 --     as defined in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debug-report-object-types>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#debug-report-object-types>
 --
 -- == Valid Usage (Implicit)
 --
@@ -747,6 +753,10 @@ debugReportMessageEXT instance'
 pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
 
 
+-- No documentation found for TopLevel "VK_ERROR_VALIDATION_FAILED_EXT"
+pattern ERROR_VALIDATION_FAILED_EXT = ERROR_VALIDATION_FAILED
+
+
 -- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT
 
@@ -800,7 +810,8 @@ data DebugReportCallbackCreateInfoEXT = DebugReportCallbackCreateInfoEXT
     -- #VUID-VkDebugReportCallbackCreateInfoEXT-pfnCallback-parameter#
     -- @pfnCallback@ /must/ be a valid 'PFN_vkDebugReportCallbackEXT' value
     pfnCallback :: PFN_vkDebugReportCallbackEXT
-  , -- | @pUserData@ is user data to be passed to the callback.
+  , -- | @pUserData@ is NULL or an application-defined user data pointer to be
+    -- passed to the callback.
     userData :: Ptr ()
   }
   deriving (Typeable)
@@ -852,6 +863,34 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 -- | VkDebugReportFlagBitsEXT - Bitmask specifying events which cause a debug
 -- report callback
 --
+-- = Description
+--
+-- -   'DEBUG_REPORT_ERROR_BIT_EXT' specifies that the application has
+--     violated a valid usage condition of the specification.
+--
+-- -   'DEBUG_REPORT_WARNING_BIT_EXT' specifies use of Vulkan that /may/
+--     expose an application bug. Such cases may not be immediately
+--     harmful, such as a fragment shader outputting to a location with no
+--     attachment. Other cases /may/ point to behavior that is almost
+--     certainly bad when unintended such as using an image whose memory
+--     has not been filled. In general if you see a warning but you know
+--     that the behavior is intended\/desired, then simply ignore the
+--     warning.
+--
+-- -   'DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT' specifies a potentially
+--     non-optimal use of Vulkan, e.g. using
+--     'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage' when
+--     setting 'Vulkan.Core10.Pass.AttachmentDescription'::@loadOp@ to
+--     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'
+--     would have worked.
+--
+-- -   'DEBUG_REPORT_INFORMATION_BIT_EXT' specifies an informational
+--     message such as resource details that may be handy when debugging an
+--     application.
+--
+-- -   'DEBUG_REPORT_DEBUG_BIT_EXT' specifies diagnostic information from
+--     the implementation and layers.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
@@ -859,34 +898,19 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 newtype DebugReportFlagBitsEXT = DebugReportFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DEBUG_REPORT_INFORMATION_BIT_EXT' specifies an informational message
--- such as resource details that may be handy when debugging an
--- application.
+-- No documentation found for Nested "VkDebugReportFlagBitsEXT" "VK_DEBUG_REPORT_INFORMATION_BIT_EXT"
 pattern DEBUG_REPORT_INFORMATION_BIT_EXT = DebugReportFlagBitsEXT 0x00000001
 
--- | 'DEBUG_REPORT_WARNING_BIT_EXT' specifies use of Vulkan that /may/ expose
--- an application bug. Such cases may not be immediately harmful, such as a
--- fragment shader outputting to a location with no attachment. Other cases
--- /may/ point to behavior that is almost certainly bad when unintended
--- such as using an image whose memory has not been filled. In general if
--- you see a warning but you know that the behavior is intended\/desired,
--- then simply ignore the warning.
+-- No documentation found for Nested "VkDebugReportFlagBitsEXT" "VK_DEBUG_REPORT_WARNING_BIT_EXT"
 pattern DEBUG_REPORT_WARNING_BIT_EXT = DebugReportFlagBitsEXT 0x00000002
 
--- | 'DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT' specifies a potentially
--- non-optimal use of Vulkan, e.g. using
--- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage' when setting
--- 'Vulkan.Core10.Pass.AttachmentDescription'::@loadOp@ to
--- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' would
--- have worked.
+-- No documentation found for Nested "VkDebugReportFlagBitsEXT" "VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT"
 pattern DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = DebugReportFlagBitsEXT 0x00000004
 
--- | 'DEBUG_REPORT_ERROR_BIT_EXT' specifies that the application has violated
--- a valid usage condition of the specification.
+-- No documentation found for Nested "VkDebugReportFlagBitsEXT" "VK_DEBUG_REPORT_ERROR_BIT_EXT"
 pattern DEBUG_REPORT_ERROR_BIT_EXT = DebugReportFlagBitsEXT 0x00000008
 
--- | 'DEBUG_REPORT_DEBUG_BIT_EXT' specifies diagnostic information from the
--- implementation and layers.
+-- No documentation found for Nested "VkDebugReportFlagBitsEXT" "VK_DEBUG_REPORT_DEBUG_BIT_EXT"
 pattern DEBUG_REPORT_DEBUG_BIT_EXT = DebugReportFlagBitsEXT 0x00000010
 
 conNameDebugReportFlagBitsEXT :: String
@@ -1012,10 +1036,14 @@ instance Read DebugReportFlagBitsEXT where
 --
 -- 'DebugReportObjectTypeEXT' and Vulkan Handle Relationship
 --
--- The primary expected use of
--- 'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED_EXT' is for
--- validation layer testing. It is not expected that an application would
--- see this error code during normal use of the validation layers.
+-- The primary expected use of 'ERROR_VALIDATION_FAILED_EXT' is for
+-- validation layer testing to prevent invalid commands from reaching the
+-- ICD. It is not expected that an application would see this error code
+-- during normal use of the validation layers. If an application returns
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' in
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCallbackDataEXT',
+-- the validation layers will return this error code instead of passing the
+-- command down the dispatch chain.
 --
 -- = See Also
 --
@@ -1407,11 +1435,12 @@ type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeE
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', @object@ /must/ be a Vulkan
 -- object of the corresponding type associated with @objectType@ as defined
 -- in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debug-report-object-types>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#debug-report-object-types>.
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'DebugReportCallbackCreateInfoEXT', 'DebugReportFlagsEXT',
 -- 'DebugReportObjectTypeEXT'
 type PFN_vkDebugReportCallbackEXT = FunPtr FN_vkDebugReportCallbackEXT

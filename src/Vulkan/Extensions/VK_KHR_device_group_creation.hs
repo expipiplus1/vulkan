@@ -76,7 +76,7 @@
 --
 -- -   'KHR_DEVICE_GROUP_CREATION_SPEC_VERSION'
 --
--- -   'Vulkan.Core10.APIConstants.MAX_DEVICE_GROUP_SIZE_KHR'
+-- -   'MAX_DEVICE_GROUP_SIZE_KHR'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MemoryHeapFlagBits':
@@ -132,14 +132,14 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_device_group_creation Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_device_group_creation Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_device_group_creation  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES_KHR
                                                        , pattern STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO_KHR
-                                                       , pattern MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR
                                                        , pattern MAX_DEVICE_GROUP_SIZE_KHR
+                                                       , pattern MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR
                                                        , enumeratePhysicalDeviceGroupsKHR
                                                        , PhysicalDeviceGroupPropertiesKHR
                                                        , DeviceGroupDeviceCreateInfoKHR
@@ -166,12 +166,12 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES_KHR = STRUCTURE_TYPE_PHY
 pattern STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO_KHR = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO
 
 
--- No documentation found for TopLevel "VK_MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR"
-pattern MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR = MEMORY_HEAP_MULTI_INSTANCE_BIT
-
-
 -- No documentation found for TopLevel "VK_MAX_DEVICE_GROUP_SIZE_KHR"
 pattern MAX_DEVICE_GROUP_SIZE_KHR = MAX_DEVICE_GROUP_SIZE
+
+
+-- No documentation found for TopLevel "VK_MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR"
+pattern MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR = MEMORY_HEAP_MULTI_INSTANCE_BIT
 
 
 -- No documentation found for TopLevel "vkEnumeratePhysicalDeviceGroupsKHR"

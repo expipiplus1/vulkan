@@ -53,7 +53,7 @@
 -- == Description
 --
 -- Vulkan apps may wish to export or import device memory handles to or
--- from other logical devices, instances or APIs.
+-- from other logical devices, instances, or APIs.
 --
 -- This memory sharing can eliminate copies of memory buffers when
 -- different subsystems need to interoperate on them. Sharing memory
@@ -112,7 +112,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_FUCHSIA_external_memory Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_FUCHSIA_external_memory Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

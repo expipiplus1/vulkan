@@ -69,6 +69,7 @@ import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'RenderPassInputAttachmentAspectCreateInfo'
@@ -158,6 +159,7 @@ instance Zero InputAttachmentAspectReference where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'InputAttachmentAspectReference',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -224,6 +226,7 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -284,6 +287,7 @@ instance Zero PhysicalDevicePointClippingProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -344,7 +348,7 @@ instance Zero ImageViewUsageCreateInfo where
 --
 -- If the 'PipelineTessellationDomainOriginStateCreateInfo' structure is
 -- included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo', it
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineTessellationStateCreateInfo', it
 -- controls the origin of the tessellation domain. If this structure is not
 -- present, it is as if @domainOrigin@ was
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
@@ -353,6 +357,7 @@ instance Zero ImageViewUsageCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'

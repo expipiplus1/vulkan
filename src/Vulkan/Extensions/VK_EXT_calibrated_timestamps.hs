@@ -97,8 +97,7 @@
 --
 --     -   'STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT'
 --
--- -   Extending
---     'Vulkan.Extensions.VK_KHR_calibrated_timestamps.TimeDomainKHR':
+-- -   Extending 'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR':
 --
 --     -   'TIME_DOMAIN_CLOCK_MONOTONIC_EXT'
 --
@@ -125,7 +124,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -152,16 +151,16 @@ import Data.String (IsString)
 import Vulkan.Extensions.VK_KHR_calibrated_timestamps (getCalibratedTimestampsKHR)
 import Vulkan.Extensions.VK_KHR_calibrated_timestamps (getPhysicalDeviceCalibrateableTimeDomainsKHR)
 import Vulkan.Extensions.VK_KHR_calibrated_timestamps (CalibratedTimestampInfoKHR)
-import Vulkan.Extensions.VK_KHR_calibrated_timestamps (TimeDomainKHR)
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR))
-import Vulkan.Extensions.VK_KHR_calibrated_timestamps (TimeDomainKHR(TIME_DOMAIN_CLOCK_MONOTONIC_KHR))
-import Vulkan.Extensions.VK_KHR_calibrated_timestamps (TimeDomainKHR(TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR))
-import Vulkan.Extensions.VK_KHR_calibrated_timestamps (TimeDomainKHR(TIME_DOMAIN_DEVICE_KHR))
-import Vulkan.Extensions.VK_KHR_calibrated_timestamps (TimeDomainKHR(TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR))
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR(TIME_DOMAIN_CLOCK_MONOTONIC_KHR))
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR(TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR))
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR(TIME_DOMAIN_DEVICE_KHR))
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR(TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR))
 import Vulkan.Extensions.VK_KHR_calibrated_timestamps (getCalibratedTimestampsKHR)
 import Vulkan.Extensions.VK_KHR_calibrated_timestamps (getPhysicalDeviceCalibrateableTimeDomainsKHR)
 import Vulkan.Extensions.VK_KHR_calibrated_timestamps (CalibratedTimestampInfoKHR(..))
-import Vulkan.Extensions.VK_KHR_calibrated_timestamps (TimeDomainKHR(..))
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR(..))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT"
 pattern STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT = STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR
 

@@ -61,7 +61,7 @@ import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (BufferDeviceAddressCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2CreateInfoKHR)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (BufferUsageFlags2CreateInfo)
 import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationBufferCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
@@ -106,8 +106,9 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateBuffer-device-09664# @device@ /must/ support at least
---     one queue family with one of the @VK_QUEUE_VIDEO_ENCODE_BIT_KHR@,
---     @VK_QUEUE_VIDEO_DECODE_BIT_KHR@,
+--     one queue family with one of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_ENCODE_BIT_KHR>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_DECODE_BIT_KHR>,
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT',
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
@@ -117,7 +118,7 @@ foreign import ccall
 --     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
 --     and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
 --     feature is not enabled, creating this 'Vulkan.Core10.Handles.Buffer'
 --     /must/ not cause the total required sparse memory for all currently
 --     valid sparse resources on the device to exceed
@@ -127,7 +128,7 @@ foreign import ccall
 --     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
 --     feature is enabled, and the @usage@ member of @pCreateInfo@ contains
 --     bits not in
 --     'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'::@extendedSparseBufferUsageFlags@,
@@ -146,7 +147,7 @@ foreign import ccall
 --     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
 --     and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-extendedSparseAddressSpace extendedSparseAddressSpace>
 --     feature is enabled, creating this 'Vulkan.Core10.Handles.Buffer'
 --     /must/ not cause the total required sparse memory for all currently
 --     valid sparse resources on the device to exceed
@@ -176,6 +177,9 @@ foreign import ccall
 -- -   #VUID-vkCreateBuffer-pBuffer-parameter# @pBuffer@ /must/ be a valid
 --     pointer to a 'Vulkan.Core10.Handles.Buffer' handle
 --
+-- -   #VUID-vkCreateBuffer-device-queuecount# The device /must/ have been
+--     created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -184,11 +188,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -204,7 +212,7 @@ createBuffer :: forall a io
                 -- parameters affecting creation of the buffer.
                 (BufferCreateInfo a)
              -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io (Buffer)
@@ -297,7 +305,7 @@ destroyBuffer :: forall io
               -> -- | @buffer@ is the buffer to destroy.
                  Buffer
               -> -- | @pAllocator@ controls host memory allocation as described in the
-                 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                  -- chapter.
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io ()
@@ -321,23 +329,25 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- = Description
 --
--- If the @pNext@ chain includes a
--- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+-- @usage@ defines the effective usage flags for the buffer. If the @pNext@
+-- chain includes a
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@
--- from that structure is used instead of @usage@ from this structure.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'::@usage@
+-- from that structure is used as the effective usage instead of @usage@
+-- from this structure.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkBufferCreateInfo-None-09499# If the @pNext@ chain does not
 --     include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkBufferCreateInfo-None-09500# If the @pNext@ chain does not
 --     include a
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ not be 0
 --
 -- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
@@ -362,17 +372,17 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     for the @physicalDevice@ that was used to create @device@
 --
 -- -   #VUID-VkBufferCreateInfo-flags-00915# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseBinding sparseBinding>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-sparseBinding sparseBinding>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
 --
 -- -   #VUID-VkBufferCreateInfo-flags-00916# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidencyBuffer sparseResidencyBuffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-sparseResidencyBuffer sparseResidencyBuffer>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkBufferCreateInfo-flags-00917# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidencyAliased sparseResidencyAliased>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-sparseResidencyAliased sparseResidencyAliased>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
 --
@@ -396,7 +406,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --
 -- -   #VUID-VkBufferCreateInfo-flags-01887# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-protectedMemory protectedMemory>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-protectedMemory protectedMemory>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --
@@ -433,14 +443,18 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-flags-03338# If @flags@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT bufferDeviceAddressCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT ::bufferDeviceAddressCaptureReplay>
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-usage-04813# If @usage@ includes
---     @VK_BUFFER_USAGE_VIDEO_DECODE_SRC_BIT_KHR@ or
---     @VK_BUFFER_USAGE_VIDEO_DECODE_DST_BIT_KHR@, and @flags@ does not
---     include @VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
---     the @pNext@ chain /must/ include a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferUsageFlagBits VK_BUFFER_USAGE_VIDEO_DECODE_SRC_BIT_KHR>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferUsageFlagBits VK_BUFFER_USAGE_VIDEO_DECODE_DST_BIT_KHR>,
+--     and @flags@ does not include
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferCreateFlagBits VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR>,
+--     then the @pNext@ chain /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
@@ -449,10 +463,12 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     operation
 --
 -- -   #VUID-VkBufferCreateInfo-usage-04814# If @usage@ includes
---     @VK_BUFFER_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@ or
---     @VK_BUFFER_USAGE_VIDEO_ENCODE_DST_BIT_KHR@, and @flags@ does not
---     include @VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
---     the @pNext@ chain /must/ include a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferUsageFlagBits VK_BUFFER_USAGE_VIDEO_ENCODE_SRC_BIT_KHR>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferUsageFlagBits VK_BUFFER_USAGE_VIDEO_ENCODE_DST_BIT_KHR>,
+--     and @flags@ does not include
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferCreateFlagBits VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR>,
+--     then the @pNext@ chain /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
@@ -461,17 +477,36 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     operation
 --
 -- -   #VUID-VkBufferCreateInfo-flags-08325# If @flags@ includes
---     @VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoMaintenance1 videoMaintenance1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferCreateFlagBits VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR>,
+--     then
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-videoMaintenance1 videoMaintenance1>
 --     /must/ be enabled
+--
+-- -   #VUID-VkBufferCreateInfo-pNext-10783# If the @pNext@ chain includes
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure and for any element of its @pProfiles@ member
+--     @videoCodecOperation@ is
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoCodecOperationFlagBitsKHR VK_VIDEO_CODEC_OPERATION_DECODE_VP9_BIT_KHR>,
+--     then the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-videoDecodeVP9 videoDecodeVP9>
+--     feature /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-pNext-10249# If the @pNext@ chain includes
 --     a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure and for any element of its @pProfiles@ member
 --     @videoCodecOperation@ is
---     @VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR@, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoEncodeAV1 videoEncodeAV1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoCodecOperationFlagBitsKHR VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR>,
+--     then the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-videoEncodeAV1 videoEncodeAV1>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkBufferCreateInfo-pNext-10919# If the @pNext@ chain includes
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeProfileRgbConversionInfoVALVE VkVideoEncodeProfileRgbConversionInfoVALVE>
+--     structure, then the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-videoEncodeRgbConversion videoEncodeRgbConversion>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-size-06409# @size@ /must/ be less than or
@@ -499,7 +534,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-flags-08099# If @flags@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-pNext-08100# If the @pNext@ chain includes
@@ -511,12 +546,12 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-usage-08101# If @usage@ includes
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferPushDescriptors descriptorBufferPushDescriptors>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferPushDescriptors descriptorBufferPushDescriptors>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-usage-08102# If @usage@ includes
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkBufferCreateInfo-usage-08103# If @usage@ includes
@@ -526,31 +561,98 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
 --
+-- -   #VUID-VkBufferCreateInfo-tileMemoryHeap-10762# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-tileMemoryHeap tileMemoryHeap>
+--     feature is not enabled, @usage@ /must/ not include
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TILE_MEMORY_BIT_QCOM'
+--
+-- -   #VUID-VkBufferCreateInfo-usage-10763# If @usage@ includes
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TILE_MEMORY_BIT_QCOM',
+--     then @flags@ /must/ not contain any of the following bits
+--
+--     -   'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferCreateFlagBits VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR>
+--
+-- -   #VUID-VkBufferCreateInfo-usage-10764# If @usage@ includes
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TILE_MEMORY_BIT_QCOM',
+--     then only the following @usages@ may be set:
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
+--
+--     -   and if
+--         'Vulkan.Extensions.VK_QCOM_tile_memory_heap.PhysicalDeviceTileMemoryHeapPropertiesQCOM'::@tileBufferTransfers@
+--         is 'Vulkan.Core10.FundamentalTypes.TRUE' then additionally
+--         'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_SRC_BIT'
+--         or
+--         'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
+--
 -- -   #VUID-VkBufferCreateInfo-flags-09641# If @flags@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT',
---     then @usage@ /must/ not contain any of the following bits
+--     then the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-effective-buffer-usage effective usage>
+--     /must/ not contain bits other than
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_SRC_BIT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR'
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT'
 --
---     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT'
+-- -   #VUID-VkBufferCreateInfo-flags-11277# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-protectedDescriptorHeaps protectedDescriptorHeaps>
+--     property is not supported and the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-effective-buffer-usage effective usage>
+--     includes the
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag, @flags@ /must/ not include the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--     flag
+--
+-- -   #VUID-VkBufferCreateInfo-flags-11279# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-sparseDescriptorHeaps sparseDescriptorHeaps>
+--     property is not supported and the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-effective-buffer-usage effective usage>
+--     includes the
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     flag, @flags@ /must/ not include any of the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
+--     or
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
+--     flags
 --
 -- == Valid Usage (Implicit)
 --
@@ -563,7 +665,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
@@ -571,7 +673,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --
 -- -   #VUID-VkBufferCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBufferCreateInfo-flags-parameter# @flags@ /must/ be a valid
 --     combination of
@@ -631,7 +733,7 @@ instance Extensible BufferCreateInfo where
     | Just Refl <- eqT @e @BufferOpaqueCaptureAddressCreateInfo = Just f
     | Just Refl <- eqT @e @ExternalMemoryBufferCreateInfo = Just f
     | Just Refl <- eqT @e @DedicatedAllocationBufferCreateInfoNV = Just f
-    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfoKHR = Just f
+    | Just Refl <- eqT @e @BufferUsageFlags2CreateInfo = Just f
     | otherwise = Nothing
 
 instance ( Extendss BufferCreateInfo es

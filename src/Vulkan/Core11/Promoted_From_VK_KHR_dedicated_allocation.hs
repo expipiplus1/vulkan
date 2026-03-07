@@ -36,13 +36,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- = Description
 --
 -- To determine the dedicated allocation requirements of a buffer or image
--- resource, add a 'MemoryDedicatedRequirements' structure to the @pNext@
--- chain of the
+-- or tensor resource, add a 'MemoryDedicatedRequirements' structure to the
+-- @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
 -- structure passed as the @pMemoryRequirements@ parameter of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2',
+-- 'Vulkan.Extensions.VK_ARM_tensors.getTensorMemoryRequirementsARM',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceBufferMemoryRequirements',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceImageMemoryRequirements',
 -- or
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2',
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 -- respectively.
 --
 -- Constraints on the values returned for buffer resources are:
@@ -103,6 +106,29 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     @requiresDedicatedAllocation@ will be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
+-- Constraints on the values returned for tensor resources are:
+--
+-- -   @requiresDedicatedAllocation@ /may/ be
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if the @pNext@ chain of
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM' for the call
+--     to 'Vulkan.Extensions.VK_ARM_tensors.createTensorARM' used to create
+--     the tensor being queried included a
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalMemoryTensorCreateInfoARM'
+--     structure, and any of the handle types specified in
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalMemoryTensorCreateInfoARM'::@handleTypes@
+--     requires dedicated allocation, as reported by
+--     'Vulkan.Extensions.VK_ARM_tensors.getPhysicalDeviceExternalTensorPropertiesARM'
+--     in
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM'::@externalMemoryProperties.externalMemoryFeatures@.
+--
+-- -   @requiresDedicatedAllocation@ will otherwise be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--
+-- -   When the implementation sets @requiresDedicatedAllocation@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', it /must/ also set
+--     @prefersDedicatedAllocation@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkMemoryDedicatedRequirements-sType-sType# @sType@ /must/ be
@@ -110,6 +136,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -179,7 +206,7 @@ instance Zero MemoryDedicatedRequirements where
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' and the memory is not an
 --     imported Android Hardware Buffer or an imported QNX Screen buffer ,
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
---     equal the
+--     be greater than or equal to the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
 --     image
 --
@@ -193,7 +220,7 @@ instance Zero MemoryDedicatedRequirements where
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' and the memory is not an
 --     imported Android Hardware Buffer or an imported QNX Screen buffer ,
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
---     equal the
+--     be greater than or equal to the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
 --     buffer
 --
@@ -297,6 +324,7 @@ instance Zero MemoryDedicatedRequirements where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'

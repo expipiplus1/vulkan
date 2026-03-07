@@ -7,11 +7,14 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , CuModuleNVX
                                   , CudaFunctionNV
                                   , CudaModuleNV
+                                  , DataGraphPipelineSessionARM
                                   , DebugReportCallbackEXT
                                   , DebugUtilsMessengerEXT
                                   , DeferredOperationKHR
                                   , DisplayKHR
                                   , DisplayModeKHR
+                                  , ExternalComputeQueueNV
+                                  , ExternalComputeQueueNV_T
                                   , IndirectCommandsLayoutEXT
                                   , IndirectCommandsLayoutNV
                                   , IndirectExecutionSetEXT
@@ -22,6 +25,8 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , ShaderEXT
                                   , SurfaceKHR
                                   , SwapchainKHR
+                                  , TensorARM
+                                  , TensorViewARM
                                   , ValidationCacheEXT
                                   ) where
 
@@ -48,6 +53,9 @@ data CudaFunctionNV
 data CudaModuleNV
 
 
+data DataGraphPipelineSessionARM
+
+
 data DebugReportCallbackEXT
 
 
@@ -61,6 +69,11 @@ data DisplayKHR
 
 
 data DisplayModeKHR
+
+
+data ExternalComputeQueueNV
+
+data ExternalComputeQueueNV_T
 
 
 data IndirectCommandsLayoutEXT
@@ -91,6 +104,12 @@ data SurfaceKHR
 
 
 data SwapchainKHR
+
+
+data TensorARM
+
+
+data TensorViewARM
 
 
 data ValidationCacheEXT

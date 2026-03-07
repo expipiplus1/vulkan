@@ -237,7 +237,7 @@
 -- __RESOLVED__: Defer. This could be a separate extension on top of the
 -- base WSI specs.
 --
--- 13) How many display objects should be enumerated for \"tiled\" display
+-- 13) How many display objects should be enumerated for “tiled” display
 -- devices? There are ongoing design discussions among lower-level display
 -- API authors regarding how to expose displays if they are one physical
 -- display device to an end user, but may internally be implemented as two
@@ -309,7 +309,7 @@
 --
 --     -   Reordered and grouped functions.
 --
---     -   Added functions to query count of display, mode and overlay.
+--     -   Added functions to query count of display, mode, and overlay.
 --
 --     -   Added native display handle, which may be needed on some
 --         platforms to create a native Window.
@@ -495,7 +495,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_display Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_display Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

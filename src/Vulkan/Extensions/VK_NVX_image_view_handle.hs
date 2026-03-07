@@ -15,7 +15,7 @@
 --     31
 --
 -- [__Revision__]
---     3
+--     4
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2024-11-04
+--     2025-12-03
 --
 -- [__Contributors__]
 --
@@ -43,6 +43,8 @@
 --
 --     -   Liam Middlebrook, NVIDIA
 --
+--     -   Rodrigo Locatti, NVIDIA
+--
 -- == Description
 --
 -- This extension allows applications to query an opaque handle from an
@@ -50,6 +52,8 @@
 -- direct functionality itself.
 --
 -- == New Commands
+--
+-- -   'getDeviceCombinedImageSamplerIndexNVX'
 --
 -- -   'getImageViewAddressNVX'
 --
@@ -77,6 +81,10 @@
 --
 -- == Version History
 --
+-- -   Revision 4, 2025-12-03 (Rodrigo Locatti)
+--
+--     -   Add 'getDeviceCombinedImageSamplerIndexNVX'
+--
 -- -   Revision 3, 2024-11-04 (Liam Middlebrook)
 --
 --     -   Add 'getImageViewHandle64NVX'
@@ -96,13 +104,14 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NVX_image_view_handle Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NVX_image_view_handle Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandleNVX
                                                    , getImageViewHandle64NVX
                                                    , getImageViewAddressNVX
+                                                   , getDeviceCombinedImageSamplerIndexNVX
                                                    , ImageViewHandleInfoNVX(..)
                                                    , ImageViewAddressPropertiesNVX(..)
                                                    , NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
@@ -143,11 +152,13 @@ import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
+import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceCombinedImageSamplerIndexNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewAddressNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandle64NVX))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandleNVX))
@@ -264,6 +275,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
@@ -300,6 +315,56 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
   pure $ (pProperties)
 
 
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetDeviceCombinedImageSamplerIndexNVX
+  :: FunPtr (Ptr Device_T -> Word64 -> Word64 -> IO Word64) -> Ptr Device_T -> Word64 -> Word64 -> IO Word64
+
+-- | vkGetDeviceCombinedImageSamplerIndexNVX - Get the handle for an image
+-- view and sampler index
+--
+-- = Description
+--
+-- Shaders take @imageViewIndex@ and @samplerIndex@, and multiply it by
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PhysicalDeviceDescriptorHeapPropertiesEXT'::@imageDescriptorSize@
+-- and
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PhysicalDeviceDescriptorHeapPropertiesEXT'::@samplerDescriptorSize@
+-- respectively to obtain the descriptor offset in bytes.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
+-- 'Vulkan.Core10.Handles.Device'
+getDeviceCombinedImageSamplerIndexNVX :: forall io
+                                       . (MonadIO io)
+                                      => -- | @device@ is the logical device that will use the result handle.
+                                         --
+                                         -- #VUID-vkGetDeviceCombinedImageSamplerIndexNVX-device-parameter# @device@
+                                         -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                         Device
+                                      -> -- | @imageViewIndex@ is the index within the resource heap.
+                                         ("imageViewIndex" ::: Word64)
+                                      -> -- | @samplerIndex@ is the index within the sampler heap.
+                                         ("samplerIndex" ::: Word64)
+                                      -> io (Word64)
+getDeviceCombinedImageSamplerIndexNVX device
+                                        imageViewIndex
+                                        samplerIndex = liftIO $ do
+  let vkGetDeviceCombinedImageSamplerIndexNVXPtr = pVkGetDeviceCombinedImageSamplerIndexNVX (case device of Device{deviceCmds} -> deviceCmds)
+  unless (vkGetDeviceCombinedImageSamplerIndexNVXPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceCombinedImageSamplerIndexNVX is null" Nothing Nothing
+  let vkGetDeviceCombinedImageSamplerIndexNVX' = mkVkGetDeviceCombinedImageSamplerIndexNVX vkGetDeviceCombinedImageSamplerIndexNVXPtr
+  r <- traceAroundEvent "vkGetDeviceCombinedImageSamplerIndexNVX" (vkGetDeviceCombinedImageSamplerIndexNVX'
+                                                                     (deviceHandle (device))
+                                                                     (imageViewIndex)
+                                                                     (samplerIndex))
+  pure $ (r)
+
+
 -- | VkImageViewHandleInfoNVX - Structure specifying the image view for
 -- handle queries
 --
@@ -323,14 +388,14 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
 --     the image that @imageView@ was created from /must/ have been created
 --     with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
---     usage bit set
+--     usage flag set
 --
 -- -   #VUID-VkImageViewHandleInfoNVX-imageView-02657# If descriptorType is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     the image that @imageView@ was created from /must/ have been created
 --     with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT'
---     usage bit set
+--     usage flag set
 --
 -- == Valid Usage (Implicit)
 --
@@ -476,11 +541,11 @@ instance Zero ImageViewAddressPropertiesNVX where
            zero
 
 
-type NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 3
+type NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 4
 
 -- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"
 pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION :: forall a . Integral a => a
-pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 3
+pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 4
 
 
 type NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME = "VK_NVX_image_view_handle"

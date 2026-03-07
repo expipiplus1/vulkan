@@ -29,10 +29,45 @@ type BufferCreateFlags = BufferCreateFlagBits
 --
 -- = Description
 --
+-- -   'BUFFER_CREATE_SPARSE_BINDING_BIT' specifies that the buffer will be
+--     backed using sparse memory binding.
+--
+-- -   'BUFFER_CREATE_SPARSE_RESIDENCY_BIT' specifies that the buffer /can/
+--     be partially backed using sparse memory binding. Buffers created
+--     with this flag /must/ also be created with the
+--     'BUFFER_CREATE_SPARSE_BINDING_BIT' flag.
+--
+-- -   'BUFFER_CREATE_SPARSE_ALIASED_BIT' specifies that the buffer will be
+--     backed using sparse memory binding with memory ranges that might
+--     also simultaneously be backing another buffer (or another portion of
+--     the same buffer). Buffers created with this flag /must/ also be
+--     created with the 'BUFFER_CREATE_SPARSE_BINDING_BIT' flag.
+--
+-- -   'BUFFER_CREATE_PROTECTED_BIT' specifies that the buffer is a
+--     protected buffer.
+--
+-- -   'BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT' specifies that the
+--     buffer’s address /can/ be saved and reused on a subsequent run (e.g.
+--     for trace capture and replay), see
+--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'
+--     for more detail.
+--
+-- -   'BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies
+--     that the buffer /can/ be used with descriptor buffers when capturing
+--     and replaying (e.g. for trace capture and replay), see
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     for more detail.
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferCreateFlagBits VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR>
+--     specifies that the buffer /can/ be used in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#video-coding video coding operations>
+--     without having to specify at buffer creation time the set of video
+--     profiles the buffer will be used with.
+--
 -- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features Physical Device Features>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features Physical Device Features>
 -- for details of the sparse memory features supported on a device.
 --
 -- = See Also
@@ -42,39 +77,22 @@ type BufferCreateFlags = BufferCreateFlagBits
 newtype BufferCreateFlagBits = BufferCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'BUFFER_CREATE_SPARSE_BINDING_BIT' specifies that the buffer will be
--- backed using sparse memory binding.
+-- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_SPARSE_BINDING_BIT"
 pattern BUFFER_CREATE_SPARSE_BINDING_BIT = BufferCreateFlagBits 0x00000001
 
--- | 'BUFFER_CREATE_SPARSE_RESIDENCY_BIT' specifies that the buffer /can/ be
--- partially backed using sparse memory binding. Buffers created with this
--- flag /must/ also be created with the 'BUFFER_CREATE_SPARSE_BINDING_BIT'
--- flag.
+-- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT"
 pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT = BufferCreateFlagBits 0x00000002
 
--- | 'BUFFER_CREATE_SPARSE_ALIASED_BIT' specifies that the buffer will be
--- backed using sparse memory binding with memory ranges that might also
--- simultaneously be backing another buffer (or another portion of the same
--- buffer). Buffers created with this flag /must/ also be created with the
--- 'BUFFER_CREATE_SPARSE_BINDING_BIT' flag.
+-- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_SPARSE_ALIASED_BIT"
 pattern BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlagBits 0x00000004
 
--- | 'BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies that
--- the buffer /can/ be used with descriptor buffers when capturing and
--- replaying (e.g. for trace capture and replay), see
--- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
--- for more detail.
+-- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
 pattern BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = BufferCreateFlagBits 0x00000020
 
--- | 'BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT' specifies that the
--- buffer’s address /can/ be saved and reused on a subsequent run (e.g. for
--- trace capture and replay), see
--- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'
--- for more detail.
+-- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT"
 pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = BufferCreateFlagBits 0x00000010
 
--- | 'BUFFER_CREATE_PROTECTED_BIT' specifies that the buffer is a protected
--- buffer.
+-- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_PROTECTED_BIT"
 pattern BUFFER_CREATE_PROTECTED_BIT = BufferCreateFlagBits 0x00000008
 
 conNameBufferCreateFlagBits :: String

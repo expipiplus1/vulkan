@@ -75,7 +75,7 @@
 --     -   'PhysicalDeviceColorWriteEnableFeaturesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendStateCreateInfo':
 --
 --     -   'PipelineColorWriteCreateInfoEXT'
 --
@@ -108,7 +108,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_color_write_enable Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_color_write_enable Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -183,11 +183,11 @@ foreign import ccall
 --
 -- This command sets the color write enables for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineColorWriteCreateInfoEXT'::@pColorWriteEnables@ values used to
 -- create the currently active pipeline.
@@ -195,7 +195,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetColorWriteEnableEXT-None-04803# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetColorWriteEnableEXT-attachmentCount-06656#
@@ -219,7 +219,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetColorWriteEnableEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetColorWriteEnableEXT-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -241,9 +242,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetColorWriteEnableEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -291,9 +297,13 @@ cmdSetColorWriteEnableEXT commandBuffer
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceColorWriteEnableFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceColorWriteEnableFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -351,22 +361,22 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 -- = Description
 --
 -- When this structure is included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo', it defines
--- per-attachment color write state. If this structure is not included in
--- the @pNext@ chain, it is equivalent to specifying this structure with
--- @attachmentCount@ equal to the @attachmentCount@ member of
--- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo', and
--- @pColorWriteEnables@ pointing to an array of as many
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendStateCreateInfo', it
+-- defines per-attachment color write state. If this structure is not
+-- included in the @pNext@ chain, it is equivalent to specifying this
+-- structure with @attachmentCount@ equal to the @attachmentCount@ member
+-- of 'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendStateCreateInfo',
+-- and @pColorWriteEnables@ pointing to an array of as many
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' values.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
 -- feature is not enabled, all 'Vulkan.Core10.FundamentalTypes.Bool32'
 -- elements in the @pColorWriteEnables@ array /must/ be
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- Color Write Enable interacts with the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-color-write-mask Color Write Mask>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#framebuffer-color-write-mask Color Write Mask>
 -- as follows:
 --
 -- -   If @colorWriteEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
@@ -380,7 +390,7 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 -- == Valid Usage
 --
 -- -   #VUID-VkPipelineColorWriteCreateInfoEXT-pAttachments-04801# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
 --     feature is not enabled, all elements of @pColorWriteEnables@ /must/
 --     be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
@@ -393,8 +403,8 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
 --     dynamic states not set, @attachmentCount@ /must/ be equal to the
 --     @attachmentCount@ member of the
---     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo' structure
---     specified during pipeline creation
+--     'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendStateCreateInfo'
+--     structure specified during pipeline creation
 --
 -- -   #VUID-VkPipelineColorWriteCreateInfoEXT-attachmentCount-06655#
 --     @attachmentCount@ /must/ be less than or equal to the

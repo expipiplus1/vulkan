@@ -43,13 +43,13 @@
 --         <https://registry.khronos.org/OpenGL/extensions/NV/NV_viewport_array2.txt GL_NV_viewport_array2>
 --
 --     -   This extension requires the
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-geometryShader geometryShader>
 --         and
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --         features.
 --
 --     -   This extension interacts with the
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-tessellationShader tessellationShader>
 --         feature.
 --
 -- [__Contributors__]
@@ -106,22 +106,22 @@
 -- == New or Modified Built-In Variables
 --
 -- -   (modified)
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-layer Layer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-layer Layer>
 --
 -- -   (modified)
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-viewportindex ViewportIndex>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-viewportindex ViewportIndex>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-viewportmask ViewportMaskNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-viewportmask ViewportMaskNV>
 --
 -- == New Variable Decoration
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-layer ViewportRelativeNV in Layer>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-layer ViewportRelativeNV in Layer>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerEXT ShaderViewportIndexLayerNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerEXT ShaderViewportIndexLayerNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportMaskNV ShaderViewportMaskNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportMaskNV ShaderViewportMaskNV>
 --
 -- == Version History
 --
@@ -136,7 +136,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_viewport_array2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_viewport_array2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

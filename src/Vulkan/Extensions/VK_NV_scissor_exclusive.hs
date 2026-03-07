@@ -80,7 +80,8 @@
 --
 --     -   'PhysicalDeviceExclusiveScissorFeaturesNV'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo':
 --
 --     -   'PipelineViewportExclusiveScissorStateCreateInfoNV'
 --
@@ -131,7 +132,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -213,11 +214,11 @@ foreign import ccall
 --
 -- This command sets the exclusive scissor rectangles for subsequent
 -- drawing commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineViewportExclusiveScissorStateCreateInfoNV'::@pExclusiveScissors@
 -- values used to create the currently active pipeline.
@@ -225,7 +226,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-None-02031# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02034# The
@@ -235,11 +236,11 @@ foreign import ccall
 --     inclusive
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02035# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @firstExclusiveScissor@ /must/ be @0@
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-02036# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-x-02037# The @x@ and @y@ members of
@@ -273,7 +274,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -295,9 +297,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetExclusiveScissorNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -353,11 +360,11 @@ foreign import ccall
 --
 -- This command sets the exclusive scissor enable for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is implied by the
 -- 'PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 -- value used to create the currently active pipeline, where all
@@ -369,7 +376,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetExclusiveScissorEnableNV-exclusiveScissor-07853# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
 --     feature /must/ be enabled, and the implementation /must/ support at
 --     least @specVersion@ @2@ of the @VK_NV_scissor_exclusive@ extension
 --
@@ -390,7 +397,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetExclusiveScissorEnableNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetExclusiveScissorEnableNV-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -412,9 +420,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetExclusiveScissorEnableNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -461,7 +474,7 @@ cmdSetExclusiveScissorEnableNV commandBuffer
 -- = Description
 --
 -- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test>
 -- for more information.
 --
 -- If the 'PhysicalDeviceExclusiveScissorFeaturesNV' structure is included
@@ -470,9 +483,13 @@ cmdSetExclusiveScissorEnableNV commandBuffer
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceExclusiveScissorFeaturesNV' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceExclusiveScissorFeaturesNV', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -534,7 +551,7 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 -- is ignored.
 --
 -- When this structure is included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo', it defines
 -- parameters of the exclusive scissor test. If this structure is not
 -- included in the @pNext@ chain, it is equivalent to specifying this
 -- structure with an @exclusiveScissorCount@ of @0@.
@@ -543,7 +560,7 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 --
 -- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02027#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @0@ or @1@
 --
 -- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02028#
@@ -553,7 +570,7 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 -- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02029#
 --     @exclusiveScissorCount@ /must/ be @0@ or greater than or equal to
 --     the @viewportCount@ member of
---     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --

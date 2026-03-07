@@ -50,24 +50,24 @@
 -- differs from a conventional image in the following ways:
 --
 -- -   Texels are centered on integer coordinates. See
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-unnormalized-to-integer Unnormalized Texel Coordinate Operations>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-unnormalized-to-integer Unnormalized Texel Coordinate Operations>
 --
 -- -   Normalized coordinates are scaled using coord × (dim - 1) rather
 --     than coord × dim, where dim is the size of one dimension of the
 --     image. See
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-normalized-to-unnormalized normalized texel coordinate transform>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-normalized-to-unnormalized normalized texel coordinate transform>.
 --
 -- -   Partial derivatives are scaled using coord × (dim - 1) rather than
 --     coord × dim. See
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-scale-factor Scale Factor Operation>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-scale-factor Scale Factor Operation>.
 --
 -- -   Calculation of the next higher LOD size goes according to ⌈dim \/ 2⌉
 --     rather than ⌊dim \/ 2⌋. See
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
 --
 -- -   The minimum level size is 2x2 for 2D images and 2x2x2 for 3D images.
 --     See
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
 --
 -- This image organization is designed to facilitate a system like Ptex
 -- with separate textures for each face of a subdivision or polygon mesh.
@@ -131,7 +131,7 @@
 -- 5.  Should we have a diagram in the “Image Operations” chapter
 --     demonstrating different texel sampling locations?
 --
---     __UNRESOLVED__: Probably, but later.
+--     __RESOLVED__: Maybe later.
 --
 -- == Version History
 --
@@ -150,7 +150,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_corner_sampled_image Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_corner_sampled_image Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

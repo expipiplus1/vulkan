@@ -130,17 +130,17 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordkhr BaryCoordKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-barycoordkhr BaryCoordKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordnoperspkhr BaryCoordNoPerspKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-barycoordnoperspkhr BaryCoordNoPerspKHR>
 --
 -- == New SPIR-V Decorations
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-interpolation-decorations-pervertexkhr PerVertexKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-interpolation-decorations-pervertexkhr PerVertexKHR>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentBarycentricKHR FragmentBarycentricKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentBarycentricKHR FragmentBarycentricKHR>
 --
 -- == Issues
 --
@@ -151,7 +151,7 @@
 -- @BaryCoordNoPerspKHR@ /may/ also be decorated with the @Centroid@ or
 -- @Sample@ qualifiers to specify interpolation, like any other fragment
 -- shader input. If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSampleRateInterpolationFunctions shaderSampleRateInterpolationFunctions>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderSampleRateInterpolationFunctions shaderSampleRateInterpolationFunctions>
 -- feature is enabled, the extended instructions InterpolateAtCentroid,
 -- InterpolateAtOffset, and InterpolateAtSample from the GLSL.std.450 /may/
 -- also be used with inputs decorated with @BaryCoordKHR@ or
@@ -170,7 +170,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_fragment_shader_barycentric Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_fragment_shader_barycentric Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_direct_mode_display VK_EXT_direct_mode_display>
@@ -75,7 +75,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_acquire_drm_display Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_acquire_drm_display Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -139,7 +139,7 @@ foreign import ccall
 -- display is either released or the connector is unplugged. The provided
 -- @drmFd@ /must/ correspond to the one owned by the @physicalDevice@. If
 -- not, the error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' /must/ be
--- returned. The DRM FD must have DRM master permissions. If any error is
+-- returned. The DRM FD must have DRM mast⁠er permissions. If any error is
 -- encountered during the acquisition of the display, the call /must/
 -- return the error code
 -- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
@@ -156,6 +156,10 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -209,7 +213,7 @@ foreign import ccall
 -- /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. The provided @drmFd@
 -- /must/ correspond to the one owned by the @physicalDevice@. If not, the
 -- error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' /must/ be
--- returned. Master permissions are not required, because the file
+-- returned. Mast⁠er permissions are not required, because the file
 -- descriptor is just used for information gathering purposes. The given
 -- @connectorId@ /must/ be a resource owned by the provided @drmFd@. If
 -- not, the error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' /must/ be
@@ -228,6 +232,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --

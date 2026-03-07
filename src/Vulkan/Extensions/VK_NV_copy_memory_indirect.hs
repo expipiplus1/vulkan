@@ -32,6 +32,12 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_memory_indirect VK_KHR_copy_memory_indirect>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
@@ -93,7 +99,7 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV'
 --
 -- == Version History
 --
@@ -108,20 +114,24 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_copy_memory_indirect Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_copy_memory_indirect Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_copy_memory_indirect  ( cmdCopyMemoryIndirectNV
                                                      , cmdCopyMemoryToImageIndirectNV
-                                                     , CopyMemoryIndirectCommandNV(..)
-                                                     , CopyMemoryToImageIndirectCommandNV(..)
+                                                     , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV
                                                      , PhysicalDeviceCopyMemoryIndirectFeaturesNV(..)
-                                                     , PhysicalDeviceCopyMemoryIndirectPropertiesNV(..)
+                                                     , CopyMemoryIndirectCommandNV
+                                                     , CopyMemoryToImageIndirectCommandNV
+                                                     , PhysicalDeviceCopyMemoryIndirectPropertiesNV
                                                      , NV_COPY_MEMORY_INDIRECT_SPEC_VERSION
                                                      , pattern NV_COPY_MEMORY_INDIRECT_SPEC_VERSION
                                                      , NV_COPY_MEMORY_INDIRECT_EXTENSION_NAME
                                                      , pattern NV_COPY_MEMORY_INDIRECT_EXTENSION_NAME
+                                                     , CopyMemoryIndirectCommandKHR(..)
+                                                     , CopyMemoryToImageIndirectCommandKHR(..)
+                                                     , PhysicalDeviceCopyMemoryIndirectPropertiesKHR(..)
                                                      ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -165,21 +175,23 @@ import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
+import Vulkan.Extensions.VK_KHR_copy_memory_indirect (CopyMemoryIndirectCommandKHR)
+import Vulkan.Extensions.VK_KHR_copy_memory_indirect (CopyMemoryToImageIndirectCommandKHR)
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyMemoryIndirectNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyMemoryToImageIndirectNV))
-import Vulkan.Core10.FundamentalTypes (DeviceSize)
-import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
 import Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
-import Vulkan.Core10.FundamentalTypes (Offset3D)
-import Vulkan.Core10.Enums.QueueFlagBits (QueueFlags)
+import Vulkan.Extensions.VK_KHR_copy_memory_indirect (PhysicalDeviceCopyMemoryIndirectPropertiesKHR)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR))
+import Vulkan.Extensions.VK_KHR_copy_memory_indirect (CopyMemoryIndirectCommandKHR(..))
+import Vulkan.Extensions.VK_KHR_copy_memory_indirect (CopyMemoryToImageIndirectCommandKHR(..))
+import Vulkan.Extensions.VK_KHR_copy_memory_indirect (PhysicalDeviceCopyMemoryIndirectPropertiesKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -198,7 +210,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-None-07653# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirectCopy>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-indirectCopy indirectCopy>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-copyBufferAddress-07654#
@@ -210,8 +222,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-commandBuffer-07656# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support at least one of the
---     'PhysicalDeviceCopyMemoryIndirectPropertiesNV'::@supportedQueues@
+--     allocated from /must/ support at least one of the queue types
+--     specified in
+--     'Vulkan.Extensions.VK_KHR_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectPropertiesKHR'::@supportedQueues@
+--
+-- -   #VUID-vkCmdCopyMemoryIndirectNV-copyBufferAddress-10946# Any of the
+--     source or destination memory regions specified in
+--     @copyBufferAddress@ /must/ not overlap with any of the specified
+--     destination memory regions
 --
 -- == Valid Usage (Implicit)
 --
@@ -219,17 +237,26 @@ foreign import ccall
 --     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
+-- -   #VUID-vkCmdCopyMemoryIndirectNV-copyBufferAddress-parameter#
+--     @copyBufferAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
+--
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-commandBuffer-recording#
 --     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-renderpass# This command /must/ only
 --     be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyMemoryIndirectNV-suspended# This command /must/ not
+--     be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -248,10 +275,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyMemoryIndirectNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -263,11 +295,11 @@ cmdCopyMemoryIndirectNV :: forall io
                         => -- | @commandBuffer@ is the command buffer into which the command will be
                            -- recorded.
                            CommandBuffer
-                        -> -- | @copyBufferAddress@ is the buffer address specifying the copy
-                           -- parameters. This buffer is laid out in memory as an array of
-                           -- 'CopyMemoryIndirectCommandNV' structures.
+                        -> -- | @copyBufferAddress@ is the memory address specifying the copy
+                           -- parameters. It is laid out as an array of 'CopyMemoryIndirectCommandNV'
+                           -- structures.
                            ("copyBufferAddress" ::: DeviceAddress)
-                        -> -- | @copyCount@ is the number of copies to execute, and can be zero.
+                        -> -- | @copyCount@ is the number of copies to execute, and /can/ be zero.
                            ("copyCount" ::: Word32)
                         -> -- | @stride@ is the stride in bytes between successive sets of copy
                            -- parameters.
@@ -296,8 +328,8 @@ foreign import ccall
   "dynamic" mkVkCmdCopyMemoryToImageIndirectNV
   :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> Word32 -> Word32 -> Image -> ImageLayout -> Ptr ImageSubresourceLayers -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> Word32 -> Word32 -> Image -> ImageLayout -> Ptr ImageSubresourceLayers -> IO ()
 
--- | vkCmdCopyMemoryToImageIndirectNV - Copy data from a memory region into
--- an image
+-- | vkCmdCopyMemoryToImageIndirectNV - Copy data from a memory region to an
+-- image object
 --
 -- = Description
 --
@@ -306,15 +338,26 @@ foreign import ccall
 -- image is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', the
 -- starting slice and number of slices to copy are specified in
 -- @pImageSubresources->baseArrayLayer@ and
--- @pImageSubresources->layerCount@ respectively. The copy /must/ be
--- performed on a queue that supports indirect copy operations, see
--- 'PhysicalDeviceCopyMemoryIndirectPropertiesNV'.
+-- @pImageSubresources->layerCount@ respectively.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-None-07660# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirectCopy>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-indirectCopy indirectCopy>
 --     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-offset-07676#
+--     @copyBufferAddress@ /must/ be 4 byte aligned
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-stride-07677# @stride@ /must/
+--     be a multiple of @4@ and /must/ be greater than or equal to
+--     sizeof('CopyMemoryToImageIndirectCommandNV')
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-commandBuffer-10956# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support at least one of the queue types
+--     specified in
+--     'Vulkan.Extensions.VK_KHR_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectPropertiesKHR'::@supportedQueues@
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07661# @dstImage@
 --     /must/ not be a protected image
@@ -323,18 +366,19 @@ foreign import ccall
 --     @aspectMask@ member for every subresource in @pImageSubresources@
 --     /must/ only have a single bit set
 --
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07663# The image
---     region specified by each element in @copyBufferAddress@ /must/ be a
---     region that is contained within @dstImage@
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-aspectMask-12287# The
+--     @aspectMask@ member for every subresource in @pImageSubresources@
+--     /must/ specify an aspect present in @dstImage@
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07664# @dstImage@
---     /must/ have been created with
+--     /must/ have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07665# If @dstImage@
---     is non-sparse then it /must/ be bound completely and contiguously to
---     a single 'Vulkan.Core10.Handles.DeviceMemory' object
+--     is non-sparse then the image or each specified /disjoint/ plane
+--     /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07973# @dstImage@
 --     /must/ have a sample count equal to
@@ -352,22 +396,49 @@ foreign import ccall
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-mipLevel-07670# The specified
---     @mipLevel@ of each region /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@
---     was created
---
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-layerCount-08764# If
---     @layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the specified
---     @baseArrayLayer@ + @layerCount@ of each region /must/ be less than
---     or equal to the @arrayLayers@ specified in
+--     @mipLevel@ of each region in @pImageSubresources@ /must/ be less
+--     than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @dstImage@ was created
 --
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-imageOffset-07672# The
---     @imageOffset@ and @imageExtent@ members of each region /must/
---     respect the image transfer granularity requirements of
---     @commandBuffer@’s command pool’s queue family, as described in
---     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-12288# If @dstImage@
+--     is not of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', and
+--     the specified @layerCount@ of each region in @pImageSubresources@ is
+--     not 'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     specified @baseArrayLayer@ + @layerCount@ of each region in
+--     @pImageSubresources@ /must/ be less than or equal to the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @dstImage@ was created
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-12289# If @dstImage@
+--     is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', and the
+--     specified @layerCount@ of each region in @pImageSubresources@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', for each
+--     destination region, (@imageSubresource.baseArrayLayer@ +
+--     @imageSubresource.layerCount@) /must/ be less than or equal to the
+--     depth of the specified subresource
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-12290# If @dstImage@
+--     is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', and the
+--     specified @layerCount@ of each region in @pImageSubresources@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', for each
+--     destination region, if (@imageSubresource.baseArrayLayer@ +
+--     @imageSubresource.layerCount@) does not equal the depth of the
+--     specified subresource, @imageSubresource.layerCount@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-12291# If @dstImage@
+--     is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each
+--     destination region, @imageSubresource.baseArrayLayer@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-12292# If @dstImage@
+--     is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each
+--     destination region, @imageSubresource.baseArrayLayer@ /must/ be less
+--     than or equal to the depth of the specified subresource
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07673# @dstImage@
 --     /must/ not have been created with @flags@ containing
@@ -382,24 +453,25 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-imageOffset-07675# For each
---     region in @copyBufferAddress@, @imageOffset.y@ and
---     (@imageExtent.height@ + @imageOffset.y@) /must/ both be greater than
---     or equal to @0@ and less than or equal to the height of the
---     specified subresource
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-10974# The format
+--     features of @dstImage@ /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-offset-07676# @offset@ /must/
---     be 4 byte aligned
---
--- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-stride-07677# @stride@ /must/
---     be a multiple of @4@ and /must/ be greater than or equal to
---     sizeof('CopyMemoryToImageIndirectCommandNV')
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-copyBufferAddress-10975# Any
+--     of the source or destination memory regions specified in
+--     @copyBufferAddress@ /must/ not overlap with any of the specified
+--     destination memory regions at the time this command is executed on
+--     device
 --
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-commandBuffer-parameter#
 --     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-copyBufferAddress-parameter#
+--     @copyBufferAddress@ /must/ be a valid
+--     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-parameter#
 --     @dstImage@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
@@ -420,11 +492,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-renderpass# This command
 --     /must/ only be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-suspended# This command
+--     /must/ not be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -450,10 +527,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyMemoryToImageIndirectNV is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -468,8 +550,8 @@ cmdCopyMemoryToImageIndirectNV :: forall io
                                => -- | @commandBuffer@ is the command buffer into which the command will be
                                   -- recorded.
                                   CommandBuffer
-                               -> -- | @copyBufferAddress@ is the buffer address specifying the copy
-                                  -- parameters. This buffer is laid out in memory as an array of
+                               -> -- | @copyBufferAddress@ is the address specifying the copy parameters which
+                                  -- are laid out in memory as an array of
                                   -- 'CopyMemoryToImageIndirectCommandNV' structures.
                                   ("copyBufferAddress" ::: DeviceAddress)
                                -> -- | @stride@ is the byte stride between successive sets of copy parameters.
@@ -479,10 +561,10 @@ cmdCopyMemoryToImageIndirectNV :: forall io
                                -> -- | @dstImageLayout@ is the layout of the destination image subresources for
                                   -- the copy.
                                   ("dstImageLayout" ::: ImageLayout)
-                               -> -- | @pImageSubresources@ is a pointer to an array of size @copyCount@ of
-                                  -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers' used to
-                                  -- specify the specific image subresource of the destination image data for
-                                  -- that copy.
+                               -> -- | @pImageSubresources@ is a pointer to an array of @copyCount@
+                                  -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers' structures,
+                                  -- specifying the image subresources of the destination image data for the
+                                  -- copy operation.
                                   ("imageSubresources" ::: Vector ImageSubresourceLayers)
                                -> io ()
 cmdCopyMemoryToImageIndirectNV commandBuffer
@@ -508,197 +590,8 @@ cmdCopyMemoryToImageIndirectNV commandBuffer
   pure $ ()
 
 
--- | VkCopyMemoryIndirectCommandNV - Structure specifying indirect memory
--- region copy operation
---
--- == Valid Usage
---
--- -   #VUID-VkCopyMemoryIndirectCommandNV-srcAddress-07657# The
---     @srcAddress@ /must/ be 4 byte aligned
---
--- -   #VUID-VkCopyMemoryIndirectCommandNV-dstAddress-07658# The
---     @dstAddress@ /must/ be 4 byte aligned
---
--- -   #VUID-VkCopyMemoryIndirectCommandNV-size-07659# The @size@ /must/ be
---     4 byte aligned
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_copy_memory_indirect VK_NV_copy_memory_indirect>,
--- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
-data CopyMemoryIndirectCommandNV = CopyMemoryIndirectCommandNV
-  { -- | @srcAddress@ is the starting address of the source device memory to copy
-    -- from.
-    srcAddress :: DeviceAddress
-  , -- | @dstAddress@ is the starting address of the destination device memory to
-    -- copy to.
-    dstAddress :: DeviceAddress
-  , -- | @size@ is the size of the copy in bytes.
-    size :: DeviceSize
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (CopyMemoryIndirectCommandNV)
-#endif
-deriving instance Show CopyMemoryIndirectCommandNV
-
-instance ToCStruct CopyMemoryIndirectCommandNV where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CopyMemoryIndirectCommandNV{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (srcAddress)
-    poke ((p `plusPtr` 8 :: Ptr DeviceAddress)) (dstAddress)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (size)
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (zero)
-    poke ((p `plusPtr` 8 :: Ptr DeviceAddress)) (zero)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
-    f
-
-instance FromCStruct CopyMemoryIndirectCommandNV where
-  peekCStruct p = do
-    srcAddress <- peek @DeviceAddress ((p `plusPtr` 0 :: Ptr DeviceAddress))
-    dstAddress <- peek @DeviceAddress ((p `plusPtr` 8 :: Ptr DeviceAddress))
-    size <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
-    pure $ CopyMemoryIndirectCommandNV
-             srcAddress dstAddress size
-
-instance Storable CopyMemoryIndirectCommandNV where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero CopyMemoryIndirectCommandNV where
-  zero = CopyMemoryIndirectCommandNV
-           zero
-           zero
-           zero
-
-
--- | VkCopyMemoryToImageIndirectCommandNV - Structure specifying indirect
--- buffer image copy operation
---
--- == Valid Usage
---
--- -   #VUID-VkCopyMemoryToImageIndirectCommandNV-srcAddress-07678# The
---     @srcAddress@ /must/ be 4 byte aligned
---
--- -   #VUID-VkCopyMemoryToImageIndirectCommandNV-bufferRowLength-07679#
---     @bufferRowLength@ /must/ be @0@, or greater than or equal to the
---     @width@ member of @imageExtent@
---
--- -   #VUID-VkCopyMemoryToImageIndirectCommandNV-bufferImageHeight-07680#
---     @bufferImageHeight@ /must/ be @0@, or greater than or equal to the
---     @height@ member of @imageExtent@
---
--- -   #VUID-VkCopyMemoryToImageIndirectCommandNV-imageOffset-07681#
---     @imageOffset@ /must/ specify a valid offset in the destination image
---
--- -   #VUID-VkCopyMemoryToImageIndirectCommandNV-imageExtent-07682#
---     @imageExtent@ /must/ specify a valid region in the destination image
---     and can be @0@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkCopyMemoryToImageIndirectCommandNV-imageSubresource-parameter#
---     @imageSubresource@ /must/ be a valid
---     'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers'
---     structure
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_copy_memory_indirect VK_NV_copy_memory_indirect>,
--- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
--- 'Vulkan.Core10.FundamentalTypes.Extent3D',
--- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
--- 'Vulkan.Core10.FundamentalTypes.Offset3D'
-data CopyMemoryToImageIndirectCommandNV = CopyMemoryToImageIndirectCommandNV
-  { -- | @srcAddress@ is the starting address of the source device memory to copy
-    -- from.
-    srcAddress :: DeviceAddress
-  , -- | @bufferRowLength@ and @bufferImageHeight@ specify in texels a subregion
-    -- of a larger two- or three-dimensional image in buffer memory, and
-    -- control the addressing calculations. If either of these values is zero,
-    -- that aspect of the buffer memory is considered to be tightly packed
-    -- according to the @imageExtent@.
-    bufferRowLength :: Word32
-  , -- No documentation found for Nested "VkCopyMemoryToImageIndirectCommandNV" "bufferImageHeight"
-    bufferImageHeight :: Word32
-  , -- | @imageSubresource@ is a
-    -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers' used to
-    -- specify the specific image subresources of the image used for the
-    -- destination image data, which /must/ match the values specified in
-    -- @pImageSubresources@ parameter of 'cmdCopyMemoryToImageIndirectNV'
-    -- during command recording.
-    imageSubresource :: ImageSubresourceLayers
-  , -- | @imageOffset@ selects the initial @x@, @y@, @z@ offsets in texels of the
-    -- sub-region of the destination image data.
-    imageOffset :: Offset3D
-  , -- | @imageExtent@ is the size in texels of the destination image in @width@,
-    -- @height@ and @depth@.
-    imageExtent :: Extent3D
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (CopyMemoryToImageIndirectCommandNV)
-#endif
-deriving instance Show CopyMemoryToImageIndirectCommandNV
-
-instance ToCStruct CopyMemoryToImageIndirectCommandNV where
-  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CopyMemoryToImageIndirectCommandNV{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (srcAddress)
-    poke ((p `plusPtr` 8 :: Ptr Word32)) (bufferRowLength)
-    poke ((p `plusPtr` 12 :: Ptr Word32)) (bufferImageHeight)
-    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (imageSubresource)
-    poke ((p `plusPtr` 32 :: Ptr Offset3D)) (imageOffset)
-    poke ((p `plusPtr` 44 :: Ptr Extent3D)) (imageExtent)
-    f
-  cStructSize = 56
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (zero)
-    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Offset3D)) (zero)
-    poke ((p `plusPtr` 44 :: Ptr Extent3D)) (zero)
-    f
-
-instance FromCStruct CopyMemoryToImageIndirectCommandNV where
-  peekCStruct p = do
-    srcAddress <- peek @DeviceAddress ((p `plusPtr` 0 :: Ptr DeviceAddress))
-    bufferRowLength <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
-    bufferImageHeight <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
-    imageSubresource <- peekCStruct @ImageSubresourceLayers ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers))
-    imageOffset <- peekCStruct @Offset3D ((p `plusPtr` 32 :: Ptr Offset3D))
-    imageExtent <- peekCStruct @Extent3D ((p `plusPtr` 44 :: Ptr Extent3D))
-    pure $ CopyMemoryToImageIndirectCommandNV
-             srcAddress
-             bufferRowLength
-             bufferImageHeight
-             imageSubresource
-             imageOffset
-             imageExtent
-
-instance Storable CopyMemoryToImageIndirectCommandNV where
-  sizeOf ~_ = 56
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero CopyMemoryToImageIndirectCommandNV where
-  zero = CopyMemoryToImageIndirectCommandNV
-           zero
-           zero
-           zero
-           zero
-           zero
-           zero
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV = STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR
 
 
 -- | VkPhysicalDeviceCopyMemoryIndirectFeaturesNV - Structure describing
@@ -716,9 +609,13 @@ instance Zero CopyMemoryToImageIndirectCommandNV where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCopyMemoryIndirectFeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCopyMemoryIndirectFeaturesNV', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -729,7 +626,7 @@ instance Zero CopyMemoryToImageIndirectCommandNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCopyMemoryIndirectFeaturesNV = PhysicalDeviceCopyMemoryIndirectFeaturesNV
   { -- | #features-indirectCopy# @indirectCopy@ indicates whether
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#indirect-copies indirect copies>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#indirect-copies indirect memory to memory or, memory to image copies>
     -- are supported.
     indirectCopy :: Bool }
   deriving (Typeable, Eq)
@@ -770,74 +667,16 @@ instance Zero PhysicalDeviceCopyMemoryIndirectFeaturesNV where
            zero
 
 
--- | VkPhysicalDeviceCopyMemoryIndirectPropertiesNV - Structure describing
--- supported queues for indirect copy
---
--- = Description
---
--- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirectCopy>
--- feature is supported, @supportedQueues@ /must/ return at least one
--- supported queue.
---
--- If the 'PhysicalDeviceCopyMemoryIndirectPropertiesNV' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
--- it is filled in with each corresponding implementation-dependent
--- property.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_copy_memory_indirect VK_NV_copy_memory_indirect>,
--- 'Vulkan.Core10.Enums.QueueFlagBits.QueueFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceCopyMemoryIndirectPropertiesNV = PhysicalDeviceCopyMemoryIndirectPropertiesNV
-  { -- | @supportedQueues@ is a bitmask of
-    -- 'Vulkan.Core10.Enums.QueueFlagBits.QueueFlagBits' indicating the queues
-    -- on which
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#indirect-copies indirect copy commands>
-    -- are supported.
-    supportedQueues :: QueueFlags }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceCopyMemoryIndirectPropertiesNV)
-#endif
-deriving instance Show PhysicalDeviceCopyMemoryIndirectPropertiesNV
+-- No documentation found for TopLevel "VkCopyMemoryIndirectCommandNV"
+type CopyMemoryIndirectCommandNV = CopyMemoryIndirectCommandKHR
 
-instance ToCStruct PhysicalDeviceCopyMemoryIndirectPropertiesNV where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceCopyMemoryIndirectPropertiesNV{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr QueueFlags)) (supportedQueues)
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr QueueFlags)) (zero)
-    f
 
-instance FromCStruct PhysicalDeviceCopyMemoryIndirectPropertiesNV where
-  peekCStruct p = do
-    supportedQueues <- peek @QueueFlags ((p `plusPtr` 16 :: Ptr QueueFlags))
-    pure $ PhysicalDeviceCopyMemoryIndirectPropertiesNV
-             supportedQueues
+-- No documentation found for TopLevel "VkCopyMemoryToImageIndirectCommandNV"
+type CopyMemoryToImageIndirectCommandNV = CopyMemoryToImageIndirectCommandKHR
 
-instance Storable PhysicalDeviceCopyMemoryIndirectPropertiesNV where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDeviceCopyMemoryIndirectPropertiesNV where
-  zero = PhysicalDeviceCopyMemoryIndirectPropertiesNV
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceCopyMemoryIndirectPropertiesNV"
+type PhysicalDeviceCopyMemoryIndirectPropertiesNV = PhysicalDeviceCopyMemoryIndirectPropertiesKHR
 
 
 type NV_COPY_MEMORY_INDIRECT_SPEC_VERSION = 1

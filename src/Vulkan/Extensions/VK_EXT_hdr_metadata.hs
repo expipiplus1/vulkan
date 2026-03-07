@@ -117,8 +117,7 @@
 --
 -- -   Revision 3, 2024-03-26 (Tobias Hector & Sebastian Wick)
 --
---     -   Clarifications and removal of erroneous \"reference monitor\"
---         term
+--     -   Clarifications and removal of erroneous “reference monitor” term
 --
 -- == See Also
 --
@@ -127,7 +126,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_hdr_metadata Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_hdr_metadata Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -352,7 +351,7 @@ instance Zero XYColorEXT where
 --     'Vulkan.Extensions.VK_HUAWEI_hdr_vivid.HdrVividDynamicMetadataHUAWEI'
 --
 -- -   #VUID-VkHdrMetadataEXT-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --

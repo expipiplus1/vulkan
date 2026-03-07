@@ -98,7 +98,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_buffer_marker Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_buffer_marker Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -148,22 +148,43 @@ foreign import ccall
 --
 -- = Description
 --
--- The command will write the 32-bit marker value into the buffer only
--- after all preceding commands have finished executing up to at least the
--- specified pipeline stage. This includes the completion of other
--- preceding 'cmdWriteBufferMarkerAMD' commands so long as their specified
--- pipeline stages occur either at the same time or earlier than this
--- command’s specified @pipelineStage@.
+-- When 'cmdWriteBufferMarkerAMD' is submitted to a queue, it defines an
+-- execution dependency between prior operations and writing the marker
+-- value, as well as a memory dependency from earlier
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffer-markers buffer marker write commands>.
 --
--- While consecutive buffer marker writes with the same @pipelineStage@
--- parameter are implicitly complete in submission order, memory and
--- execution dependencies between buffer marker writes and other operations
--- /must/ still be explicitly ordered using synchronization commands. The
--- access scope for buffer marker writes falls under the
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT', and the
--- pipeline stages for identifying the synchronization scope /must/ include
--- both @pipelineStage@ and
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes operations performed by operations that occur earlier in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>
+-- in the pipeline stage identified by @pipelineStage@. It additionally
+-- includes other
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffer-markers buffer marker write commands>
+-- that occur earlier in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>
+-- that specified either the same @pipelineStage@ or a stage that is
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages-order logically earlier>.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes only the buffer marker write.
+--
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- includes only accesses performed by other
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffer-markers buffer marker write commands>.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- is empty.
+--
+-- The access scope for buffer marker writes falls under the
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT' flag, and
+-- is performed by either @pipelineStage@ or
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization Synchronization commands>
+-- should specify this access flag and both pipeline stages when defining
+-- dependencies with this command.
 --
 -- Similar to 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp', if
 -- an implementation is unable to write a marker at any specific pipeline
@@ -243,9 +264,9 @@ foreign import ccall
 --     be less than or equal to the size of @dstBuffer@ minus @4@
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-dstBuffer-01799# @dstBuffer@ /must/
---     have been created with
+--     have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-dstBuffer-01800# If @dstBuffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
@@ -274,8 +295,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
+--
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-suspended# This command /must/ not
+--     be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -298,10 +324,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdWriteBufferMarkerAMD is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -357,22 +388,43 @@ foreign import ccall
 --
 -- = Description
 --
--- The command will write the 32-bit marker value into the buffer only
--- after all preceding commands have finished executing up to at least the
--- specified pipeline stage. This includes the completion of other
--- preceding 'cmdWriteBufferMarker2AMD' commands so long as their specified
--- pipeline stages occur either at the same time or earlier than this
--- command’s specified @stage@.
+-- When 'cmdWriteBufferMarker2AMD' is submitted to a queue, it defines an
+-- execution dependency between prior operations and writing the marker
+-- value, as well as a memory dependency from earlier
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffer-markers buffer marker write commands>.
 --
--- While consecutive buffer marker writes with the same @stage@ parameter
--- implicitly complete in submission order, memory and execution
--- dependencies between buffer marker writes and other operations /must/
--- still be explicitly ordered using synchronization commands. The access
--- scope for buffer marker writes falls under the
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT', and the
--- pipeline stages for identifying the synchronization scope /must/ include
--- both @stage@ and
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes operations performed by operations that occur earlier in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>
+-- in the pipeline stage identified by @pipelineStage@. It additionally
+-- includes other
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffer-markers buffer marker write commands>
+-- that occur earlier in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-submission-order submission order>
+-- that specified either the same @pipelineStage@ or a stage that is
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages-order logically earlier>.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes only the buffer marker write.
+--
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- includes only accesses performed by other
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffer-markers buffer marker write commands>.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- is empty.
+--
+-- The access scope for buffer marker writes falls under the
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT' flag, and
+-- is performed by either @pipelineStage@ or
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization Synchronization commands>
+-- should specify this access flag and both pipeline stages when defining
+-- dependencies with this command.
 --
 -- Similar to
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2',
@@ -446,8 +498,23 @@ foreign import ccall
 --     feature are enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR'
 --
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-10751# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-accelerationStructure accelerationStructure>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-10752# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingMaintenance1 rayTracingMaintenance1>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-10753# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-micromap micromap>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-synchronization2-03893# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03894# @stage@ /must/ include
@@ -463,7 +530,7 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-dstBuffer-03897# @dstBuffer@ /must/
 --     have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-dstBuffer-03898# If @dstBuffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
@@ -492,8 +559,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-suspended# This command /must/ not
+--     be called between suspended render pass instances
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -516,10 +588,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdWriteBufferMarker2AMD is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --

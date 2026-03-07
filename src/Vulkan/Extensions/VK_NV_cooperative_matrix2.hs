@@ -111,17 +111,17 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-TensorAddressingNV TensorAddressingNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-TensorAddressingNV TensorAddressingNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixReductionsNV CooperativeMatrixReductionsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixReductionsNV CooperativeMatrixReductionsNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixConversionsNV CooperativeMatrixConversionsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixConversionsNV CooperativeMatrixConversionsNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixPerElementOperationsNV CooperativeMatrixPerElementOperationsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixPerElementOperationsNV CooperativeMatrixPerElementOperationsNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixTensorAddressingNV CooperativeMatrixTensorAddressingNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixTensorAddressingNV CooperativeMatrixTensorAddressingNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixBlockLoadsNV CooperativeMatrixBlockLoadsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixBlockLoadsNV CooperativeMatrixBlockLoadsNV>
 --
 -- == Version History
 --
@@ -136,7 +136,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_cooperative_matrix2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_cooperative_matrix2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -193,7 +193,7 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR)
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -208,7 +208,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COOPERATI
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_FEATURES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.VK_KHR_cooperative_matrix (ComponentTypeKHR(..))
+import Vulkan.Extensions.VK_NV_cooperative_vector (ComponentTypeKHR(..))
 import Vulkan.Extensions.VK_KHR_cooperative_matrix (ScopeKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -235,7 +235,7 @@ foreign import ccall
 -- that not all the available flexible dimensions properties were returned.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixFlexibleDimensions cooperativeMatrixFlexibleDimensions>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-cooperativeMatrixFlexibleDimensions cooperativeMatrixFlexibleDimensions>
 -- feature is not supported, the implementation /must/ advertise zero
 -- properties.
 --
@@ -258,15 +258,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -318,9 +322,13 @@ getPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV physicalDevice 
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCooperativeMatrix2FeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCooperativeMatrix2FeaturesNV', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -464,7 +472,7 @@ data PhysicalDeviceCooperativeMatrix2PropertiesNV = PhysicalDeviceCooperativeMat
   , -- | #limits-cooperativeMatrixFlexibleDimensionsMaxDimension#
     -- @cooperativeMatrixFlexibleDimensionsMaxDimension@ is the maximum
     -- supported dimension for cooperative matrix types when the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixFlexibleDimensions cooperativeMatrixFlexibleDimensions>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-cooperativeMatrixFlexibleDimensions cooperativeMatrixFlexibleDimensions>
     -- feature is enabled.
     cooperativeMatrixFlexibleDimensionsMaxDimension :: Word32
   , -- | #limits-cooperativeMatrixWorkgroupScopeReservedSharedMemory#
@@ -552,7 +560,7 @@ instance Zero PhysicalDeviceCooperativeMatrix2PropertiesNV where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix2 VK_NV_cooperative_matrix2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR',
+-- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR',
 -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ScopeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV'
@@ -570,17 +578,17 @@ data CooperativeMatrixFlexibleDimensionsPropertiesNV = CooperativeMatrixFlexible
     -- value.
     kGranularity :: Word32
   , -- | @AType@ is the component type of matrix @A@, of type
-    -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR'.
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     aType :: ComponentTypeKHR
   , -- | @BType@ is the component type of matrix @B@, of type
-    -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR'.
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     bType :: ComponentTypeKHR
   , -- | @CType@ is the component type of matrix @C@, of type
-    -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR'.
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     cType :: ComponentTypeKHR
   , -- | @ResultType@ is the component type of matrix
     -- 'Vulkan.Core10.Enums.Result.Result', of type
-    -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.ComponentTypeKHR'.
+    -- 'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR'.
     resultType :: ComponentTypeKHR
   , -- | @saturatingAccumulation@ indicates whether the @SaturatingAccumulation@
     -- operand to @OpCooperativeMatrixMulAddKHR@ /must/ be present or not. If
