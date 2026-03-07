@@ -27,6 +27,12 @@
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_invocation_reorder.html SPV_NV_shader_invocation_reorder>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_ray_tracing_invocation_reorder VK_EXT_ray_tracing_invocation_reorder>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Eric Werness
@@ -80,6 +86,13 @@
 --
 -- -   'NV_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder.RayTracingInvocationReorderModeEXT':
+--
+--     -   'RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV'
+--
+--     -   'RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV'
@@ -94,7 +107,7 @@
 -- <https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen SPIR-V Intrinsics>.
 --
 -- The codes for shader invocation reorder are obtained from
--- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
+-- <https://github.khronos.org/SPIRV-Registry/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
 --
 -- > #define ShaderInvocationReorderNV 5383
 -- > #define HitObjectAttributeNV 5385
@@ -227,7 +240,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_ray_tracing_invocation_reorder Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_ray_tracing_invocation_reorder Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -85,7 +85,7 @@
 --     layers of a 2D array image to slices of a 3D image and vice versa.
 --
 -- -   Allow negative height to be specified in the
---     'Vulkan.Core10.Pipeline.Viewport'::@height@ field to perform
+--     'Vulkan.Core10.GraphicsPipeline.Viewport'::@height@ field to perform
 --     y-inversion of the clip-space to framebuffer-space transform. This
 --     allows apps to avoid having to use @gl_Position.y = -gl_Position.y@
 --     in shaders also targeting other APIs.
@@ -104,9 +104,9 @@
 --     just support transfer operations.
 --
 -- -   Fix the inconsistency of how error conditions are returned between
---     the 'Vulkan.Core10.Pipeline.createGraphicsPipelines' and
---     'Vulkan.Core10.Pipeline.createComputePipelines' functions and the
---     'Vulkan.Core10.DescriptorSet.allocateDescriptorSets' and
+--     the 'Vulkan.Core10.GraphicsPipeline.createGraphicsPipelines' and
+--     'Vulkan.Core10.ComputePipeline.createComputePipelines' functions and
+--     the 'Vulkan.Core10.DescriptorSet.allocateDescriptorSets' and
 --     'Vulkan.Core10.CommandBuffer.allocateCommandBuffers' functions.
 --
 -- -   Add new 'ERROR_OUT_OF_POOL_MEMORY_KHR' error so implementations can
@@ -180,7 +180,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance1 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

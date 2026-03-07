@@ -166,8 +166,8 @@
 -- features) for the queries, Vulkan was released only with the
 -- 'Vulkan.Core10.Handles.PhysicalDevice' versions. Many cases can be
 -- resolved by a Valid Usage statement, and\/or by a separate @pNext@ chain
--- version of the query struct specific to a given extension or parameters,
--- via extensible versions of the queries:
+-- version of the query structure specific to a given extension or
+-- parameters, via extensible versions of the queries:
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR',
 -- and
@@ -361,7 +361,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_surface Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_surface Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

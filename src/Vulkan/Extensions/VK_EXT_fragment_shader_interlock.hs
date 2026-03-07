@@ -104,11 +104,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderSampleInterlockEXT FragmentShaderInterlockEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderSampleInterlockEXT FragmentShaderInterlockEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderPixelInterlockEXT FragmentShaderPixelInterlockEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderPixelInterlockEXT FragmentShaderPixelInterlockEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderShadingRateInterlockEXT FragmentShaderShadingRateInterlockEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderShadingRateInterlockEXT FragmentShaderShadingRateInterlockEXT>
 --
 -- == Version History
 --
@@ -123,7 +123,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_shader_interlock Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_fragment_shader_interlock Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -172,9 +172,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceFragmentShaderInterlockFeaturesEXT' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceFragmentShaderInterlockFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

@@ -29,6 +29,9 @@
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_load_store_op_none VK_KHR_load_store_op_none>
 --         extension
 --
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Contact__]
 --
 --     -   Shahbaz Youssefi
@@ -102,7 +105,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_load_store_op_none Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_load_store_op_none Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -115,10 +118,10 @@ module Vulkan.Extensions.VK_EXT_load_store_op_none  ( pattern ATTACHMENT_LOAD_OP
                                                     ) where
 
 import Data.String (IsString)
-import Vulkan.Core10.Enums.AttachmentLoadOp (AttachmentLoadOp(ATTACHMENT_LOAD_OP_NONE_KHR))
+import Vulkan.Core10.Enums.AttachmentLoadOp (AttachmentLoadOp(ATTACHMENT_LOAD_OP_NONE))
 import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE))
 -- No documentation found for TopLevel "VK_ATTACHMENT_LOAD_OP_NONE_EXT"
-pattern ATTACHMENT_LOAD_OP_NONE_EXT = ATTACHMENT_LOAD_OP_NONE_KHR
+pattern ATTACHMENT_LOAD_OP_NONE_EXT = ATTACHMENT_LOAD_OP_NONE
 
 
 -- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_EXT"

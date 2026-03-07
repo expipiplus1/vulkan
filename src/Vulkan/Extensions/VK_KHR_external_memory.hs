@@ -108,7 +108,7 @@
 --
 -- -   'KHR_EXTERNAL_MEMORY_SPEC_VERSION'
 --
--- -   'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL_KHR'
+-- -   'QUEUE_FAMILY_EXTERNAL_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
@@ -146,7 +146,7 @@
 --
 -- 2) If memory objects are shared between processes and APIs, is this
 -- considered aliasing according to the rules outlined in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
 -- section?
 --
 -- __RESOLVED__: Yes. Applications must take care to obey all restrictions
@@ -220,7 +220,7 @@
 -- separate Vulkan instance, in that both operations ideally include
 -- scheduling a barrier on both sides of the transition: Both the releasing
 -- and the acquiring queue or process. Using a special queue family
--- requires adding an additional reserved queue family index. Re-using
+-- requires adding an additional reserved queue family index. Reusing
 -- 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' would have left it
 -- unclear how to transition a concurrent usage resource from one process
 -- to another, since the semantics would have likely been equivalent to the
@@ -331,7 +331,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_memory Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_external_memory Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

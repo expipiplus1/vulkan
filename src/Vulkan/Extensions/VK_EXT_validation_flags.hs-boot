@@ -54,7 +54,7 @@
 --
 -- == Description
 --
--- This extension provides the 'ValidationFlagsEXT' struct that can be
+-- This extension provides the 'ValidationFlagsEXT' structure that can be
 -- included in the @pNext@ chain of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure passed
 -- as the @pCreateInfo@ parameter of
@@ -108,7 +108,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_validation_flags Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_validation_flags Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

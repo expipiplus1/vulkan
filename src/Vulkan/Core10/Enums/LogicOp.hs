@@ -89,12 +89,12 @@ import GHC.Show (Show(showsPrec))
 --
 -- The result of the logical operation is then written to the color
 -- attachment as controlled by the component write mask, described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blendoperations Blend Operations>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#framebuffer-blendoperations Blend Operations>.
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendStateCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
 newtype LogicOp = LogicOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)

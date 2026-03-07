@@ -111,17 +111,17 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-TensorAddressingNV TensorAddressingNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-TensorAddressingNV TensorAddressingNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixReductionsNV CooperativeMatrixReductionsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixReductionsNV CooperativeMatrixReductionsNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixConversionsNV CooperativeMatrixConversionsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixConversionsNV CooperativeMatrixConversionsNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixPerElementOperationsNV CooperativeMatrixPerElementOperationsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixPerElementOperationsNV CooperativeMatrixPerElementOperationsNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixTensorAddressingNV CooperativeMatrixTensorAddressingNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixTensorAddressingNV CooperativeMatrixTensorAddressingNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixBlockLoadsNV CooperativeMatrixBlockLoadsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixBlockLoadsNV CooperativeMatrixBlockLoadsNV>
 --
 -- == Version History
 --
@@ -136,7 +136,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_cooperative_matrix2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_cooperative_matrix2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

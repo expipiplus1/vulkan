@@ -43,7 +43,7 @@
 --         <https://registry.khronos.org/OpenGL/extensions/NV/NV_geometry_shader_passthrough.txt GL_NV_geometry_shader_passthrough>
 --
 --     -   This extension requires the
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-geometryShader geometryShader>
 --         feature.
 --
 -- [__Contributors__]
@@ -89,13 +89,13 @@
 --
 -- == New Variable Decoration
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-passthrough-passthrough PassthroughNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#geometry-passthrough-passthrough PassthroughNV>
 --     in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-passthrough Geometry Shader Passthrough>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#geometry-passthrough Geometry Shader Passthrough>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-GeometryShaderPassthroughNV GeometryShaderPassthroughNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-GeometryShaderPassthroughNV GeometryShaderPassthroughNV>
 --
 -- == Issues
 --
@@ -122,7 +122,7 @@
 -- 2) How does interface matching work with passthrough geometry shaders?
 --
 -- __RESOLVED__: This is described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-passthrough-interface Passthrough Interface Matching>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#geometry-passthrough-interface Passthrough Interface Matching>.
 -- In GL when using passthrough geometry shaders in separable mode, all
 -- inputs must also be explicitly assigned location layout qualifiers. In
 -- Vulkan all SPIR-V shader inputs (except built-ins) must also have
@@ -206,7 +206,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_geometry_shader_passthrough Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_geometry_shader_passthrough Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

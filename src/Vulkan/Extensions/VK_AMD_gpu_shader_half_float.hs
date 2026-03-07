@@ -76,7 +76,7 @@
 --
 -- Functionality in this extension is included in the
 -- @VK_KHR_shader_float16_int8@ extension, when the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderFloat16 shaderFloat16>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderFloat16 shaderFloat16>
 -- feature is enabled.
 --
 -- == New Enum Constants
@@ -102,7 +102,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_gpu_shader_half_float Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_gpu_shader_half_float Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

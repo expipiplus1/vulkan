@@ -165,7 +165,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance7 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance7 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -263,9 +263,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceMaintenance7FeaturesKHR' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceMaintenance7FeaturesKHR', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -374,9 +378,9 @@ data PhysicalDeviceMaintenance7PropertiesKHR = PhysicalDeviceMaintenance7Propert
     -- of the render area. If it is 'Vulkan.Core10.FundamentalTypes.TRUE' and
     -- the fragment shading rate attachment was created with
     -- 'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@ equal to
-    -- 0, the scaled size /can/ be smaller than the render area, and shading
-    -- rates for missing texels are defined by
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-replacement texel replacement for invalid texels>.
+    -- 0, the scaled size /can/ be smaller than the render area, with missing
+    -- shading rates defined by
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-execution-memory-access-bounds out of bounds behavior>.
     robustFragmentShadingRateAttachmentAccess :: Bool
   , -- | #limits-separateDepthStencilAttachmentAccess#
     -- @separateDepthStencilAttachmentAccess@ indicates support for writing to
@@ -386,10 +390,10 @@ data PhysicalDeviceMaintenance7PropertiesKHR = PhysicalDeviceMaintenance7Propert
     -- result in read-modify-write operations on the other aspect. If
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', writes to one aspect /may/
     -- result in writes to the other aspect as defined by
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations render pass load operations>,
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-store-operations render pass store operations>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-load-operations render pass load operations>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-store-operations render pass store operations>
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-resolve-operations render pass resolve operations>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-resolve-operations render pass resolve operations>.
     separateDepthStencilAttachmentAccess :: Bool
   , -- | #limits-maxDescriptorSetTotalUniformBuffersDynamic#
     -- @maxDescriptorSetTotalUniformBuffersDynamic@ is the maximum total count
@@ -400,7 +404,7 @@ data PhysicalDeviceMaintenance7PropertiesKHR = PhysicalDeviceMaintenance7Propert
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
     maxDescriptorSetTotalUniformBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetTotalStorageBuffersDynamic#
     -- @maxDescriptorSetTotalStorageBuffersDynamic@ is the maximum total count
@@ -411,7 +415,7 @@ data PhysicalDeviceMaintenance7PropertiesKHR = PhysicalDeviceMaintenance7Propert
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebufferdynamic>.
     maxDescriptorSetTotalStorageBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetTotalBuffersDynamic#
     -- @maxDescriptorSetTotalBuffersDynamic@ is the maximum total count of
@@ -536,12 +540,12 @@ instance Zero PhysicalDeviceMaintenance7PropertiesKHR where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2')
 -- is returned in @layeredApiCount@. Otherwise, @layeredApiCount@ /must/ be
 -- set by the application to the number of elements in the @pLayeredApis@
--- array, and on return the variable is overwritten with the number of
--- values actually written to @pLayeredApis@. If the value of
--- @layeredApiCount@ is less than the number of layered implementations
--- underneath the Vulkan physical device, at most @layeredApiCount@ values
--- will be written to @pLayeredApis@. An implementation that is not a layer
--- will return 0 in @layeredApiCount@.
+-- array, and on return is overwritten with the number of values actually
+-- written to @pLayeredApis@. If the value of @layeredApiCount@ is less
+-- than the number of layered implementations underneath the Vulkan
+-- physical device, at most @layeredApiCount@ values will be written to
+-- @pLayeredApis@. An implementation that is not a layer will return 0 in
+-- @layeredApiCount@.
 --
 -- In the presence of multiple layered implementations, each element of
 -- @pLayeredApis@ corresponds to an API implementation that is implemented
@@ -646,7 +650,8 @@ instance Zero PhysicalDeviceLayeredApiPropertiesListKHR where
 --     'PhysicalDeviceLayeredApiVulkanPropertiesKHR'
 --
 -- -   #VUID-VkPhysicalDeviceLayeredApiPropertiesKHR-sType-unique# The
---     @sType@ value of each struct in the @pNext@ chain /must/ be unique
+--     @sType@ value of each structure in the @pNext@ chain /must/ be
+--     unique
 --
 -- = See Also
 --
@@ -803,6 +808,23 @@ instance Zero PhysicalDeviceLayeredApiVulkanPropertiesKHR where
 -- | VkPhysicalDeviceLayeredApiKHR - API implemented by the layered
 -- implementation
 --
+-- = Description
+--
+-- -   'PHYSICAL_DEVICE_LAYERED_API_VULKAN_KHR' - the device implements the
+--     Vulkan API.
+--
+-- -   'PHYSICAL_DEVICE_LAYERED_API_D3D12_KHR' - the device implements the
+--     D3D12 API.
+--
+-- -   'PHYSICAL_DEVICE_LAYERED_API_METAL_KHR' - the device implements the
+--     Metal API.
+--
+-- -   'PHYSICAL_DEVICE_LAYERED_API_OPENGL_KHR' - the device implements the
+--     OpenGL API.
+--
+-- -   'PHYSICAL_DEVICE_LAYERED_API_OPENGLES_KHR' - the device implements
+--     the OpenGL ES API.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance7 VK_KHR_maintenance7>,
@@ -810,24 +832,19 @@ instance Zero PhysicalDeviceLayeredApiVulkanPropertiesKHR where
 newtype PhysicalDeviceLayeredApiKHR = PhysicalDeviceLayeredApiKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PHYSICAL_DEVICE_LAYERED_API_VULKAN_KHR' - the device implements the
--- Vulkan API.
+-- No documentation found for Nested "VkPhysicalDeviceLayeredApiKHR" "VK_PHYSICAL_DEVICE_LAYERED_API_VULKAN_KHR"
 pattern PHYSICAL_DEVICE_LAYERED_API_VULKAN_KHR = PhysicalDeviceLayeredApiKHR 0
 
--- | 'PHYSICAL_DEVICE_LAYERED_API_D3D12_KHR' - the device implements the
--- D3D12 API.
+-- No documentation found for Nested "VkPhysicalDeviceLayeredApiKHR" "VK_PHYSICAL_DEVICE_LAYERED_API_D3D12_KHR"
 pattern PHYSICAL_DEVICE_LAYERED_API_D3D12_KHR = PhysicalDeviceLayeredApiKHR 1
 
--- | 'PHYSICAL_DEVICE_LAYERED_API_METAL_KHR' - the device implements the
--- Metal API.
+-- No documentation found for Nested "VkPhysicalDeviceLayeredApiKHR" "VK_PHYSICAL_DEVICE_LAYERED_API_METAL_KHR"
 pattern PHYSICAL_DEVICE_LAYERED_API_METAL_KHR = PhysicalDeviceLayeredApiKHR 2
 
--- | 'PHYSICAL_DEVICE_LAYERED_API_OPENGL_KHR' - the device implements the
--- OpenGL API.
+-- No documentation found for Nested "VkPhysicalDeviceLayeredApiKHR" "VK_PHYSICAL_DEVICE_LAYERED_API_OPENGL_KHR"
 pattern PHYSICAL_DEVICE_LAYERED_API_OPENGL_KHR = PhysicalDeviceLayeredApiKHR 3
 
--- | 'PHYSICAL_DEVICE_LAYERED_API_OPENGLES_KHR' - the device implements the
--- OpenGL ES API.
+-- No documentation found for Nested "VkPhysicalDeviceLayeredApiKHR" "VK_PHYSICAL_DEVICE_LAYERED_API_OPENGLES_KHR"
 pattern PHYSICAL_DEVICE_LAYERED_API_OPENGLES_KHR = PhysicalDeviceLayeredApiKHR 4
 
 {-# COMPLETE

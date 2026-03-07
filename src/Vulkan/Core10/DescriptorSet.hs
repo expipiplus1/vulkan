@@ -80,6 +80,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (BufferView)
 import Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph (DataGraphProcessingEngineCreateInfoARM)
 import Vulkan.Core10.Handles (DescriptorPool)
 import Vulkan.Core10.Handles (DescriptorPool(..))
 import Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits (DescriptorPoolCreateFlags)
@@ -127,6 +128,7 @@ import Vulkan.Exception (VulkanException(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (WriteDescriptorSetAccelerationStructureKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (WriteDescriptorSetAccelerationStructureNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (WriteDescriptorSetInlineUniformBlock)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_tensors (WriteDescriptorSetTensorARM)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_DESCRIPTOR_SET))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO))
@@ -155,7 +157,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCreateDescriptorSetLayout-support-09582# If the descriptor
 --     layout exceeds the limits reported through the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits physical device limits>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits physical device limits>,
 --     then
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'
 --     /must/ have returned
@@ -189,9 +191,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -209,7 +215,7 @@ createDescriptorSetLayout :: forall a io
                              -- structure specifying the state of the descriptor set layout object.
                              (DescriptorSetLayoutCreateInfo a)
                           -> -- | @pAllocator@ controls host memory allocation as described in the
-                             -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                             -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (DescriptorSetLayout)
@@ -304,7 +310,7 @@ destroyDescriptorSetLayout :: forall io
                            -> -- | @descriptorSetLayout@ is the descriptor set layout to destroy.
                               DescriptorSetLayout
                            -> -- | @pAllocator@ controls host memory allocation as described in the
-                              -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                              -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                               -- chapter.
                               ("allocator" ::: Maybe AllocationCallbacks)
                            -> io ()
@@ -355,6 +361,9 @@ foreign import ccall
 --     @pDescriptorPool@ /must/ be a valid pointer to a
 --     'Vulkan.Core10.Handles.DescriptorPool' handle
 --
+-- -   #VUID-vkCreateDescriptorPool-device-queuecount# The device /must/
+--     have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -363,11 +372,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Extensions.VK_EXT_descriptor_indexing.ERROR_FRAGMENTATION_EXT'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_EXT_descriptor_indexing.ERROR_FRAGMENTATION_EXT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -385,7 +398,7 @@ createDescriptorPool :: forall a io
                         -- specifying the state of the descriptor pool object.
                         (DescriptorPoolCreateInfo a)
                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DescriptorPool)
@@ -488,7 +501,7 @@ destroyDescriptorPool :: forall io
                       -> -- | @descriptorPool@ is the descriptor pool to destroy.
                          DescriptorPool
                       -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
@@ -556,7 +569,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     None
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -578,11 +594,11 @@ resetDescriptorPool device descriptorPool flags = liftIO $ do
   unless (vkResetDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetDescriptorPool is null" Nothing Nothing
   let vkResetDescriptorPool' = mkVkResetDescriptorPool vkResetDescriptorPoolPtr
-  _ <- traceAroundEvent "vkResetDescriptorPool" (vkResetDescriptorPool'
+  r <- traceAroundEvent "vkResetDescriptorPool" (vkResetDescriptorPool'
                                                    (deviceHandle (device))
                                                    (descriptorPool)
                                                    (flags))
-  pure $ ()
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
@@ -610,18 +626,18 @@ foreign import ccall
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
 --     bit set, all descriptors in that binding that are dynamically used
 --     /must/ have been populated before the descriptor set is
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-binding consumed>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-binding consumed>.
 --
 -- -   For descriptor set bindings created without the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
 --     bit set, all descriptors in that binding that are statically used
 --     /must/ have been populated before the descriptor set is
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-binding consumed>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-binding consumed>.
 --
 -- -   Descriptor bindings with descriptor type of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     /can/ be undefined when the descriptor set is
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-binding consumed>;
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-binding consumed>;
 --     though values in that block will be undefined.
 --
 -- -   Entries that are not used by a pipeline /can/ have undefined
@@ -669,13 +685,11 @@ foreign import ccall
 --     @pAllocateInfo->descriptorSetCount@
 --     'Vulkan.Core10.Handles.DescriptorSet' handles
 --
+-- -   #VUID-vkAllocateDescriptorSets-device-queuecount# The device /must/
+--     have been created with at least @1@ queue
+--
 -- -   #VUID-vkAllocateDescriptorSets-pAllocateInfo::descriptorSetCount-arraylength#
 --     @pAllocateInfo->descriptorSetCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @pAllocateInfo->descriptorPool@ /must/ be externally
---     synchronized
 --
 -- == Return Codes
 --
@@ -685,13 +699,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FRAGMENTED_POOL'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FRAGMENTED_POOL'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_POOL_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -803,7 +821,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     None
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -830,12 +851,12 @@ freeDescriptorSets device
   let vkFreeDescriptorSets' = mkVkFreeDescriptorSets vkFreeDescriptorSetsPtr
   pPDescriptorSets <- ContT $ allocaBytes @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
-  _ <- lift $ traceAroundEvent "vkFreeDescriptorSets" (vkFreeDescriptorSets'
+  r <- lift $ traceAroundEvent "vkFreeDescriptorSets" (vkFreeDescriptorSets'
                                                          (deviceHandle (device))
                                                          (descriptorPool)
                                                          ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32))
                                                          (pPDescriptorSets))
-  pure $ ()
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
@@ -864,14 +885,20 @@ foreign import ccall
 -- If the @dstSet@ member of any element of @pDescriptorWrites@ or
 -- @pDescriptorCopies@ is bound, accessed, or modified by any command that
 -- was recorded to a command buffer which is currently in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle recording or executable state>,
 -- and any of the descriptor bindings that are updated were not created
 -- with the
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 -- or
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
 -- bits set, that command buffer becomes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle invalid>.
+--
+-- Copying a descriptor from a descriptor set does not constitute a use of
+-- the referenced resource or view, as it is the reference itself that is
+-- copied. Applications /can/ copy a descriptor referencing a destroyed
+-- resource, and it /can/ copy an undefined descriptor. The destination
+-- descriptor becomes undefined in both cases.
 --
 -- == Valid Usage
 --
@@ -907,6 +934,8 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     the @imageView@ member of any element of @pDescriptorWrites@[i]
@@ -928,13 +957,13 @@ foreign import ccall
 --     structure in the @pNext@ chain of @pDescriptorWrites@[i] /must/ have
 --     been created on @device@
 --
--- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06940# For each
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-12324# For each
 --     element i where @pDescriptorWrites@[i].@descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
---     the @imageView@ member of any element of @pDescriptorWrites@[i]
---     /must/ have been created on @device@
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM',
+--     elements of the @pTensorViews@ member of a
+--     'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM'
+--     structure in the @pNext@ chain of @pDescriptorWrites@[i] /must/ have
+--     been created on @device@
 --
 -- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06493# For each
 --     element i where @pDescriptorWrites@[i].@descriptorType@ is
@@ -942,17 +971,10 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     @pDescriptorWrites@[i].@pImageInfo@ /must/ be a valid pointer to an
---     array of @pDescriptorWrites@[i].@descriptorCount@ valid
---     'DescriptorImageInfo' structures
---
--- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06941# For each
---     element i where @pDescriptorWrites@[i].@descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
 --     @pDescriptorWrites@[i].@pImageInfo@ /must/ be a valid pointer to an
 --     array of @pDescriptorWrites@[i].@descriptorCount@ valid
 --     'DescriptorImageInfo' structures
@@ -965,12 +987,12 @@ foreign import ccall
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
 --     bits set /must/ not be used by any command that was recorded to a
 --     command buffer which is in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06993# Host access to
 --     @pDescriptorWrites@[i].@dstSet@ and @pDescriptorCopies@[i].@dstSet@
 --     /must/ be
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --     unless explicitly denoted otherwise for specific flags
 --
 -- == Valid Usage (Implicit)
@@ -1055,7 +1077,7 @@ updateDescriptorSets device
 --     or equal to the size of @buffer@ minus @offset@
 --
 -- -   #VUID-VkDescriptorBufferInfo-buffer-02998# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, @buffer@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -1087,11 +1109,11 @@ data DescriptorBufferInfo = DescriptorBufferInfo
     -- to the end of the buffer.
     --
     -- When setting @range@ to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#buffer-info-effective-range effective range>
     -- /must/ not be larger than the maximum range for the descriptor type
-    -- (<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxUniformBufferRange maxUniformBufferRange>
+    -- (<https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxUniformBufferRange maxUniformBufferRange>
     -- or
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxStorageBufferRange maxStorageBufferRange>).
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxStorageBufferRange maxStorageBufferRange>).
     -- This means that 'Vulkan.Core10.APIConstants.WHOLE_SIZE' is not typically
     -- useful in the common case where uniform buffer descriptors are
     -- suballocated from a buffer that is much larger than
@@ -1166,13 +1188,13 @@ instance Zero DescriptorBufferInfo where
 --     set
 --
 -- -   #VUID-VkDescriptorImageInfo-descriptorType-06713# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-image2DViewOf3D image2DViewOf3D>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-image2DViewOf3D image2DViewOf3D>
 --     feature is not enabled or @descriptorType@ is not
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     then @imageView@ /must/ not be a 2D view created from a 3D image
 --
 -- -   #VUID-VkDescriptorImageInfo-descriptorType-06714# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sampler2DViewOf3D sampler2DViewOf3D>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-sampler2DViewOf3D sampler2DViewOf3D>
 --     feature is not enabled or @descriptorType@ is not
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     or
@@ -1206,19 +1228,13 @@ instance Zero DescriptorBufferInfo where
 --     then the @aspectMask@ used to create @imageView@ /must/ not include
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   #VUID-VkDescriptorImageInfo-imageLayout-00344# @imageLayout@ /must/
---     match the actual 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
---     each subresource accessible from @imageView@ at the time this
---     descriptor is accessed as defined by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-layouts-matching-rule image layout matching rules>
---
 -- -   #VUID-VkDescriptorImageInfo-sampler-01564# If @sampler@ is used and
 --     the 'Vulkan.Core10.Enums.Format.Format' of the image is a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     the image /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
 --     and the @aspectMask@ of the @imageView@ /must/ be a valid
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar-image-aspect multi-planar aspect mask>
 --     bit
 --
 -- -   #VUID-VkDescriptorImageInfo-mutableComparisonSamplers-04450# If the
@@ -1334,16 +1350,22 @@ instance Zero DescriptorImageInfo where
 -- in which case the source data for the descriptor writes is taken from
 -- the
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
--- structure in the @pNext@ chain of 'WriteDescriptorSet', as specified
--- below.
+-- structure in the @pNext@ chain of 'WriteDescriptorSet', or if
+-- @descriptorType@ is
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM', in
+-- which case the source data for the descriptor writes is taken from the
+-- instance of
+-- 'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM' in the
+-- @pNext@ chain of 'WriteDescriptorSet', as specified below.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
--- feature is enabled, the buffer, acceleration structure, imageView, or
--- bufferView /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from
--- a null descriptor return zero values and stores and atomics to a null
--- descriptor are discarded. A null acceleration structure descriptor
--- results in the miss shader being invoked.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- feature is enabled, the buffer, acceleration structure, tensor,
+-- imageView, or bufferView /can/ be
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from a null descriptor
+-- return zero values and stores and atomics to a null descriptor are
+-- discarded. A null acceleration structure descriptor results in the miss
+-- shader being invoked.
 --
 -- If the destination descriptor is a mutable descriptor, the active
 -- descriptor type for the destination descriptor becomes @descriptorType@.
@@ -1393,12 +1415,22 @@ instance Zero DescriptorImageInfo where
 -- -   #VUID-VkWriteDescriptorSet-descriptorCount-00317# All consecutive
 --     bindings updated via a single 'WriteDescriptorSet' structure, except
 --     those with a @descriptorCount@ of zero, /must/ have identical
---     @descriptorType@ and @stageFlags@
+--     @descriptorType@
+--
+-- -   #VUID-VkWriteDescriptorSet-descriptorCount-10776# All consecutive
+--     bindings updated via a single 'WriteDescriptorSet' structure, except
+--     those with a @descriptorCount@ of zero, /must/ have identical
+--     @stageFlags@
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorCount-00318# All consecutive
 --     bindings updated via a single 'WriteDescriptorSet' structure, except
 --     those with a @descriptorCount@ of zero, /must/ all either use
 --     immutable samplers or /must/ all not use immutable samplers
+--
+-- -   #VUID-VkWriteDescriptorSet-descriptorCount-10777# All consecutive
+--     bindings updated via a single 'WriteDescriptorSet' structure, except
+--     those with a @descriptorCount@ of zero, /must/ have identical
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00319# @descriptorType@
 --     /must/ match the type of @dstBinding@ within @dstSet@
@@ -1410,7 +1442,7 @@ instance Zero DescriptorImageInfo where
 --     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     specified by @dstBinding@, and all applicable
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02219# If @descriptorType@
 --     is
@@ -1437,7 +1469,7 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
 --     and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, each element of @pTexelBufferView@ /must/
 --     not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -1476,15 +1508,18 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, the @imageView@ member of each element of
 --     @pImageInfo@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-07683# If @descriptorType@
 --     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
+--     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the @imageView@ member of each element of @pImageInfo@ /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     then the @imageView@ member of each element of @pImageInfo@ /must/
+--     not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02221# If @descriptorType@
 --     is
@@ -1509,6 +1544,12 @@ instance Zero DescriptorImageInfo where
 --     structure whose @accelerationStructureCount@ member equals
 --     @descriptorCount@
 --
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-09945# If @descriptorType@
+--     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM',
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM'
+--     structure whose @tensorViewCount@ member equals @descriptorCount@
+--
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-01946# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
@@ -1526,7 +1567,8 @@ instance Zero DescriptorImageInfo where
 --     structure in its @pNext@ chain, then @dstSet@ /must/ have been
 --     allocated with a layout that included immutable samplers for
 --     @dstBinding@, and the corresponding immutable sampler /must/ have
---     been created with an /identically defined/
+--     been created with an
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary-identically-defined identically defined>
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     object
 --
@@ -1537,10 +1579,11 @@ instance Zero DescriptorImageInfo where
 --     samplers for @dstBinding@, then the @imageView@ member of each
 --     element of @pImageInfo@ which corresponds to an immutable sampler
 --     that enables
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     /must/ have been created with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
---     structure in its @pNext@ chain with an /identically defined/
+--     structure in its @pNext@ chain with an
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary-identically-defined identically defined>
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     to the corresponding immutable sampler
 --
@@ -1549,7 +1592,7 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     @dstSet@ was allocated with a layout that included immutable
 --     samplers for @dstBinding@, and those samplers enable
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     then @imageView@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -1589,9 +1632,9 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
 --     the @buffer@ member of each element of @pBufferInfo@ /must/ have
---     been created with
+--     been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
---     set
+--     usage flag set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00331# If @descriptorType@
 --     is
@@ -1599,9 +1642,9 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
 --     the @buffer@ member of each element of @pBufferInfo@ /must/ have
---     been created with
+--     been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
---     set
+--     usage flag set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00332# If @descriptorType@
 --     is
@@ -1609,7 +1652,7 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
 --     the @range@ member of each element of @pBufferInfo@, or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#buffer-info-effective-range effective range>
 --     if @range@ is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be
 --     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxUniformBufferRange@
@@ -1619,8 +1662,11 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     the @range@ member of each element of @pBufferInfo@, or the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
+--     and the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shader64BitIndexing shader64BitIndexing>
+--     feature is not enabled, the @range@ member of each element of
+--     @pBufferInfo@, or the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#buffer-info-effective-range effective range>
 --     if @range@ is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be
 --     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxStorageBufferRange@
@@ -1629,7 +1675,7 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
 --     the @pTexelBufferView@
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-views-usage buffer view usage>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-buffer-views-usage buffer view usage>
 --     /must/ include
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
 --
@@ -1637,7 +1683,7 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
 --     the @pTexelBufferView@
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-views-usage buffer view usage>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-buffer-views-usage buffer view usage>
 --     /must/ include
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --
@@ -1648,7 +1694,7 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00337# If @descriptorType@
 --     is
@@ -1656,51 +1702,53 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' set
+--     been created with the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
+--     usage flag set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-04149# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage Sampled Image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage Sampled Image>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-04150# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-04151# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment Input Attachment>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inputattachment Input Attachment>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-04152# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage Storage Image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage Storage Image>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00338# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
---     set
+--     usage flag set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00339# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
+--     been created with the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT'
+--     usage flag set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02752# If @descriptorType@
 --     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
@@ -1727,15 +1775,17 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with a view created with an @image@ created with
+--     been created with a view created with an @image@ created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM'
+--     usage flag set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-06943# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
---     been created with a view created with an @image@ created with
+--     been created with a view created with an @image@ created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLE_BLOCK_MATCH_BIT_QCOM'
+--     usage flag set
 --
 -- == Valid Usage (Implicit)
 --
@@ -1747,11 +1797,12 @@ instance Zero DescriptorImageInfo where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
---     or
---     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlock'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlock',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkWriteDescriptorSetPartitionedAccelerationStructureNV VkWriteDescriptorSetPartitionedAccelerationStructureNV>,
+--     or 'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM'
 --
 -- -   #VUID-VkWriteDescriptorSet-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-parameter#
 --     @descriptorType@ /must/ be a valid
@@ -1771,9 +1822,10 @@ instance Zero DescriptorImageInfo where
 -- 'Vulkan.Core10.Handles.BufferView', 'DescriptorBufferInfo',
 -- 'DescriptorImageInfo', 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSet',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSet',
 -- 'updateDescriptorSets'
 data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
@@ -1811,6 +1863,10 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     --     or
     --     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
     --     structure in the @pNext@ chain
+    --
+    -- -   a value matching the @descriptorCount@ of a
+    --     'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM'
+    --     structure in the @pNext@ chain
     descriptorCount :: Word32
   , -- | @descriptorType@ is a
     -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying the type
@@ -1831,7 +1887,7 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     bufferInfo :: Vector DescriptorBufferInfo
   , -- | @pTexelBufferView@ is a pointer to an array of
     -- 'Vulkan.Core10.Handles.BufferView' handles as described in the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-buffer-views Buffer Views>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-buffer-views Buffer Views>
     -- section or is ignored, as described below.
     texelBufferView :: Vector BufferView
   }
@@ -1847,6 +1903,7 @@ instance Extensible WriteDescriptorSet where
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @WriteDescriptorSetTensorARM = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureNV = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureKHR = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetInlineUniformBlock = Just f
@@ -1981,7 +2038,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     @srcArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     specified by @srcBinding@, and all applicable
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-dstBinding-00347# @dstBinding@ /must/ be a
 --     valid binding within @dstSet@
@@ -1990,7 +2047,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     specified by @dstBinding@, and all applicable
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-dstBinding-02632# The type of @dstBinding@
 --     within @dstSet@ /must/ be equal to the type of @srcBinding@ within
@@ -2000,7 +2057,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     @dstSet@, then the source and destination ranges of descriptors
 --     /must/ not overlap, where the ranges /may/ include array elements
 --     from
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-srcBinding-02223# If the descriptor type
 --     of the descriptor set binding specified by @srcBinding@ is
@@ -2239,8 +2296,24 @@ instance Zero CopyDescriptorSet where
 --     @NULL@, @pImmutableSamplers@ /must/ be a valid pointer to an array
 --     of @descriptorCount@ valid 'Vulkan.Core10.Handles.Sampler' handles
 --
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-12200# If
+--     @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     and @descriptorCount@ is not @0@ and @pImmutableSamplers@ is not
+--     @NULL@, either each element of @pImmutableSamplers@ /must/ be a
+--     'Vulkan.Core10.Handles.Sampler' that enables
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     or none of them enable sampler Y′CBCR conversion
+--
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-12215# If
+--     @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER', each
+--     element of @pImmutableSamplers@ /must/ not be a
+--     'Vulkan.Core10.Handles.Sampler' object that enables
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--
 -- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-04604# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-inlineUniformBlock inlineUniformBlock>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-inlineUniformBlock inlineUniformBlock>
 --     feature is not enabled, @descriptorType@ /must/ not be
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --
@@ -2266,7 +2339,7 @@ instance Zero CopyDescriptorSet where
 -- -   #VUID-VkDescriptorSetLayoutBinding-flags-08006# If
 --     'DescriptorSetLayoutCreateInfo'::@flags@ contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT',
---     @descriptorCount@ /must/ less than or equal to @1@
+--     @descriptorCount@ /must/ be less than or equal to @1@
 --
 -- -   #VUID-VkDescriptorSetLayoutBinding-flags-08007# If
 --     'DescriptorSetLayoutCreateInfo'::@flags@ contains
@@ -2444,15 +2517,24 @@ instance Zero DescriptorSetLayoutBinding where
 -- == Valid Usage
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-binding-00279# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-perStageDescriptorSet perStageDescriptorSet>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-perStageDescriptorSet perStageDescriptorSet>
 --     feature is not enabled, or @flags@ does not contain
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV',
 --     then the 'DescriptorSetLayoutBinding'::@binding@ members of the
 --     elements of the @pBindings@ array /must/ each have different values
 --
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-10354# If @flags@
+--     contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>
+--     extension is not enabled,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pushDescriptor pushDescriptor>
+--     /must/ be enabled
+--
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-00280# If @flags@
 --     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
 --     then all elements of @pBindings@ /must/ not have a @descriptorType@
 --     of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -2461,27 +2543,27 @@ instance Zero DescriptorSetLayoutBinding where
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-02208# If @flags@
 --     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
 --     then all elements of @pBindings@ /must/ not have a @descriptorType@
 --     of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-00281# If @flags@
 --     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
 --     then the total number of elements of all bindings /must/ be less
 --     than or equal to
---     'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR'::@maxPushDescriptors@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.PhysicalDevicePushDescriptorProperties'::@maxPushDescriptors@
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-04590# If @flags@
 --     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-04591# If @flags@
 --     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
 --     @pBindings@ /must/ not have a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --
@@ -2555,13 +2637,13 @@ instance Zero DescriptorSetLayoutBinding where
 --     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
 --     then @flags@ /must/ not contain
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-09463# If @flags@
 --     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PER_STAGE_BIT_NV',
 --     then
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-perStageDescriptorSet perStageDescriptorSet>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-perStageDescriptorSet perStageDescriptorSet>
 --     /must/ be enabled
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-09464# If @flags@
@@ -2585,7 +2667,7 @@ instance Zero DescriptorSetLayoutBinding where
 --     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
+--     value of each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-parameter# @flags@
 --     /must/ be a valid combination of
@@ -2605,7 +2687,7 @@ instance Zero DescriptorSetLayoutBinding where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDescriptorSetLayout',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport',
--- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'
 data DescriptorSetLayoutCreateInfo (es :: [Type]) = DescriptorSetLayoutCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -2678,15 +2760,16 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
 -- = Description
 --
 -- When creating a descriptor pool that will contain descriptors for
--- combined image samplers of multi-planar formats, an application needs to
--- account for non-trivial descriptor consumption when choosing the
--- @descriptorCount@ value, as indicated by
+-- combined image samplers of
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar formats>,
+-- an application needs to account for non-trivial descriptor consumption
+-- when choosing the @descriptorCount@ value, as indicated by
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@.
 --
 -- For simplicity the application /can/ use the
--- 'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6PropertiesKHR'::@maxCombinedImageSamplerDescriptorCount@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties'::@maxCombinedImageSamplerDescriptorCount@
 -- property, which is sized to accommodate any and all
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
 -- supported by the implementation.
 --
 -- == Valid Usage
@@ -2801,7 +2884,7 @@ instance Zero DescriptorPoolSize where
 -- If a @pPoolSizes@[i]::@type@ is
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT', a
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
--- struct in the @pNext@ chain /can/ be used to specify which mutable
+-- structure in the @pNext@ chain /can/ be used to specify which mutable
 -- descriptor types /can/ be allocated from the pool. If included in the
 -- @pNext@ chain,
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'::@pMutableDescriptorTypeLists@[i]
@@ -2842,7 +2925,7 @@ instance Zero DescriptorPoolSize where
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-descriptorPoolOverallocation-09227#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorPoolOverallocation descriptorPoolOverallocation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorPoolOverallocation descriptorPoolOverallocation>
 --     feature is not enabled, or @flags@ does not have
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_SETS_BIT_NV'
 --     set, @maxSets@ /must/ be greater than @0@
@@ -2852,7 +2935,7 @@ instance Zero DescriptorPoolSize where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_ALLOW_OVERALLOCATION_POOLS_BIT_NV'
 --     bits set, then
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorPoolOverallocation descriptorPoolOverallocation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorPoolOverallocation descriptorPoolOverallocation>
 --     /must/ be enabled
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-flags-04607# If @flags@ has the
@@ -2887,6 +2970,15 @@ instance Zero DescriptorPoolSize where
 --     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfo'
 --     structure whose @maxInlineUniformBlockBindings@ member is not zero
 --
+-- -   #VUID-VkDescriptorPoolCreateInfo-pNext-09946# If a
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'
+--     structure is included in the @pNext@ chain, each member of
+--     @pProcessingEngines@ /must/ be identical to an
+--     'Vulkan.Extensions.VK_ARM_data_graph.QueueFamilyDataGraphPropertiesARM'::@engine@
+--     retrieved from
+--     'Vulkan.Extensions.VK_ARM_data_graph.getPhysicalDeviceQueueFamilyDataGraphPropertiesARM'
+--     with the @physicalDevice@ that was used to create @device@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-sType-sType# @sType@ /must/ be
@@ -2895,12 +2987,13 @@ instance Zero DescriptorPoolSize where
 -- -   #VUID-VkDescriptorPoolCreateInfo-pNext-pNext# Each @pNext@ member of
 --     any structure (including this one) in the @pNext@ chain /must/ be
 --     either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfo'
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM',
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfo',
 --     or
 --     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-flags-parameter# @flags@ /must/ be
 --     a valid combination of
@@ -2944,6 +3037,7 @@ instance Extensible DescriptorPoolCreateInfo where
   getNext DescriptorPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorPoolCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @DataGraphProcessingEngineCreateInfoARM = Just f
     | Just Refl <- eqT @e @MutableDescriptorTypeCreateInfoEXT = Just f
     | Just Refl <- eqT @e @DescriptorPoolInlineUniformBlockCreateInfo = Just f
     | otherwise = Nothing
@@ -3015,7 +3109,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-00308# Each element of
 --     @pSetLayouts@ /must/ not have been created with
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT'
 --     set
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-03044# If any element
@@ -3061,7 +3155,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountAllocateInfo'
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-descriptorPool-parameter#
 --     @descriptorPool@ /must/ be a valid
@@ -3079,6 +3173,10 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --     @descriptorPool@, and the elements of @pSetLayouts@ /must/ have been
 --     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorPool@ /must/ be externally synchronized
 --
 -- = See Also
 --

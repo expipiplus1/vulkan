@@ -52,9 +52,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceSubgroupSizeControlFeatures' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceSubgroupSizeControlFeatures', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- The
 -- 'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeaturesEXT'
@@ -63,7 +67,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- the features structure but applications may assume that both
 -- @subgroupSizeControl@ and @computeFullSubgroups@ are supported if the
 -- extension is supported. (See also the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements Feature Requirements>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-requirements Feature Requirements>
 -- section.) Applications are advised to add a
 -- 'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeaturesEXT'
 -- structure to the @pNext@ chain of
@@ -158,7 +162,7 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeatures where
 -- If
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'::@supportedOperations@
 -- includes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroup-quad >,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroup-quad >,
 -- @minSubgroupSize@ /must/ be greater than or equal to 4.
 --
 -- == Valid Usage (Implicit)
@@ -177,7 +181,7 @@ data PhysicalDeviceSubgroupSizeControlProperties = PhysicalDeviceSubgroupSizeCon
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @minSubgroupSize@
     -- is a power-of-two. @minSubgroupSize@ is less than or equal to
     -- @maxSubgroupSize@. @minSubgroupSize@ is less than or equal to
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroupSize subgroupSize>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-subgroupSize subgroupSize>.
     minSubgroupSize :: Word32
   , -- | #extension-limits-maxSubgroupSize# @maxSubgroupSize@ is the maximum
     -- subgroup size supported by this device. @maxSubgroupSize@ is at least
@@ -186,7 +190,7 @@ data PhysicalDeviceSubgroupSizeControlProperties = PhysicalDeviceSubgroupSizeCon
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @maxSubgroupSize@
     -- is a power-of-two. @maxSubgroupSize@ is greater than or equal to
     -- @minSubgroupSize@. @maxSubgroupSize@ is greater than or equal to
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroupSize subgroupSize>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-subgroupSize subgroupSize>.
     maxSubgroupSize :: Word32
   , -- | #extension-limits-maxComputeWorkgroupSubgroups#
     -- @maxComputeWorkgroupSubgroups@ is the maximum number of subgroups
@@ -258,9 +262,9 @@ instance Zero PhysicalDeviceSubgroupSizeControlProperties where
 --
 -- If a 'PipelineShaderStageRequiredSubgroupSizeCreateInfo' structure is
 -- included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo', it specifies
--- that the pipeline shader stage being compiled has a required subgroup
--- size.
+-- 'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo', it
+-- specifies that the pipeline shader stage being compiled has a required
+-- subgroup size.
 --
 -- If a
 -- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderRequiredSubgroupSizeCreateInfoEXT'
@@ -272,6 +276,7 @@ instance Zero PhysicalDeviceSubgroupSizeControlProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -285,11 +290,11 @@ data PipelineShaderStageRequiredSubgroupSizeCreateInfo = PipelineShaderStageRequ
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfo-requiredSubgroupSize-02761#
     -- @requiredSubgroupSize@ /must/ be greater or equal to
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minSubgroupSize minSubgroupSize>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minSubgroupSize minSubgroupSize>
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfo-requiredSubgroupSize-02762#
     -- @requiredSubgroupSize@ /must/ be less than or equal to
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
     requiredSubgroupSize :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

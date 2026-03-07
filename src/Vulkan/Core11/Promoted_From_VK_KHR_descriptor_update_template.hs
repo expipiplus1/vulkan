@@ -114,6 +114,9 @@ foreign import ccall
 --     @pDescriptorUpdateTemplate@ /must/ be a valid pointer to a
 --     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
 --
+-- -   #VUID-vkCreateDescriptorUpdateTemplate-device-queuecount# The device
+--     /must/ have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -122,12 +125,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
@@ -140,11 +148,11 @@ createDescriptorUpdateTemplate :: forall io
                                -> -- | @pCreateInfo@ is a pointer to a 'DescriptorUpdateTemplateCreateInfo'
                                   -- structure specifying the set of descriptors to update with a single call
                                   -- to
-                                  -- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.cmdPushDescriptorSetWithTemplateKHR'
+                                  -- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSetWithTemplate'
                                   -- or 'updateDescriptorSetWithTemplate'.
                                   DescriptorUpdateTemplateCreateInfo
                                -> -- | @pAllocator@ controls host memory allocation as described in the
-                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (DescriptorUpdateTemplate)
@@ -232,6 +240,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
@@ -244,7 +253,7 @@ destroyDescriptorUpdateTemplate :: forall io
                                 -> -- | @descriptorUpdateTemplate@ is the descriptor update template to destroy.
                                    DescriptorUpdateTemplate
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                   -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
@@ -279,7 +288,9 @@ foreign import ccall
 --
 -- -   #VUID-vkUpdateDescriptorSetWithTemplate-pData-01685# @pData@ /must/
 --     be a valid pointer to a memory containing one or more valid
---     instances of 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+--     instances of 'Vulkan.Extensions.Handles.AccelerationStructureKHR'
+--     handles, 'Vulkan.Extensions.Handles.AccelerationStructureNV'
+--     handles, 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 --     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
 --     'Vulkan.Core10.Handles.BufferView' in a layout defined by
 --     @descriptorUpdateTemplate@ when it was created with
@@ -287,7 +298,7 @@ foreign import ccall
 --
 -- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorSet-06995# Host
 --     access to @descriptorSet@ /must/ be
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --     unless explicitly denoted otherwise for specific flags
 --
 -- == Valid Usage (Implicit)
@@ -389,6 +400,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
@@ -443,7 +455,7 @@ updateDescriptorSetWithTemplate device
 --     to the number of array elements in the descriptor set binding
 --     implicitly specified when using a descriptor update template to
 --     update descriptors, and all applicable
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02226# If
 --     @descriptor@ type is
@@ -463,6 +475,7 @@ updateDescriptorSetWithTemplate device
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'DescriptorUpdateTemplateCreateInfo'
@@ -579,24 +592,33 @@ instance Zero DescriptorUpdateTemplateEntry where
 --     @descriptorSetLayout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' handle
 --
+-- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-10355# If
+--     @templateType@ is
+--     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS',
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>
+--     extension is not enabled,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pushDescriptor pushDescriptor>
+--     /must/ be enabled
+--
 -- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-00351# If
 --     @templateType@ is
---     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
+--     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS',
 --     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
 -- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-00352# If
 --     @templateType@ is
---     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
+--     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS',
 --     @pipelineLayout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineLayout' handle
 --
 -- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-00353# If
 --     @templateType@ is
---     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
+--     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS',
 --     @set@ /must/ be the unique set number in the pipeline layout that
 --     uses a descriptor set layout that was created with
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT'
 --
 -- -   #VUID-VkDescriptorUpdateTemplateCreateInfo-templateType-04615# If
 --     @templateType@ is
@@ -636,6 +658,7 @@ instance Zero DescriptorUpdateTemplateEntry where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags.DescriptorUpdateTemplateCreateFlags',
@@ -644,8 +667,7 @@ instance Zero DescriptorUpdateTemplateEntry where
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'createDescriptorUpdateTemplate',
--- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR'
+-- 'createDescriptorUpdateTemplate', 'createDescriptorUpdateTemplate'
 data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
   { -- | @flags@ is reserved for future use.
     flags :: DescriptorUpdateTemplateCreateFlags
@@ -658,7 +680,7 @@ data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
     -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'
     -- it /can/ only be used to update descriptor sets with a fixed
     -- @descriptorSetLayout@. If set to
-    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
+    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS'
     -- it /can/ only be used to push descriptor sets using the provided
     -- @pipelineBindPoint@, @pipelineLayout@, and @set@ number.
     templateType :: DescriptorUpdateTemplateType
@@ -669,21 +691,23 @@ data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
     -- identically to) this layout. This parameter is ignored if @templateType@
     -- is not
     -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'.
+    -- The implementation /must/ not access this object outside of the duration
+    -- of the command this structure is passed to.
     descriptorSetLayout :: DescriptorSetLayout
   , -- | @pipelineBindPoint@ is a
     -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating the
     -- type of the pipeline that will use the descriptors. This parameter is
     -- ignored if @templateType@ is not
-    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
+    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS'
     pipelineBindPoint :: PipelineBindPoint
   , -- | @pipelineLayout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used
     -- to program the bindings. This parameter is ignored if @templateType@ is
     -- not
-    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
+    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS'
     pipelineLayout :: PipelineLayout
   , -- | @set@ is the set number of the descriptor set in the pipeline layout
     -- that will be updated. This parameter is ignored if @templateType@ is not
-    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
+    -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS'
     set :: Word32
   }
   deriving (Typeable)

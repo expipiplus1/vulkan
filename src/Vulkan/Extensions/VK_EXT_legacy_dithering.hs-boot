@@ -18,7 +18,7 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -28,6 +28,8 @@
 -- [__API Interactions__]
 --
 --     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_VERSION_1_4
 --
 --     -   Interacts with VK_KHR_dynamic_rendering
 --
@@ -95,12 +97,14 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
 -- is supported:
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
 --
@@ -138,7 +142,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_legacy_dithering Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_legacy_dithering Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

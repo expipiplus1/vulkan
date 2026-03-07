@@ -113,7 +113,7 @@
 -- presentation. This should be the easiest to implement as the driver need
 -- only track the largest present ID completed. This is also the
 -- \'natural\' consequence of interpreting the existing vkWaitForPresentKHR
--- specificationn.
+-- specification.
 --
 -- __OPTION C__: Finish both waits when both have completed. This will
 -- complete the earlier presentation later than the actual presentation
@@ -135,7 +135,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_present_wait Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_present_wait Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -243,19 +243,14 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device
 --
 -- = Description
 --
--- 'waitForPresentKHR' waits for the presentId associated with @swapchain@
--- to be increased in value so that it is at least equal to @presentId@.
---
--- For 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR' (or
--- other present mode where images may be replaced in the presentation
--- queue) any wait of this type associated with such an image /must/ be
--- signaled no later than a wait associated with the replacing image would
--- be signaled.
---
--- When the presentation has completed, the presentId associated with the
--- related @pSwapchains@ entry will be increased in value so that it is at
--- least equal to the value provided in the
--- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR' structure.
+-- The call to 'waitForPresentKHR' will block until either the presentId
+-- associated with @swapchain@ is greater than or equal to @presentId@, or
+-- @timeout@ nanoseconds passes. When the swapchain becomes OUT_OF_DATE,
+-- the call will either return 'Vulkan.Core10.Enums.Result.SUCCESS' (if the
+-- image was delivered to the presentation engine and may have been
+-- presented to the user) or will return early with status
+-- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR' (if the image could
+-- not be presented to the user).
 --
 -- There is no requirement for any precise timing relationship between the
 -- presentation of the image to the user and the update of the presentId
@@ -263,14 +258,11 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device
 -- the presentation of the first pixel in the next image being presented to
 -- the user.
 --
--- The call to 'waitForPresentKHR' will block until either the presentId
--- associated with @swapchain@ is greater than or equal to @presentId@, or
--- @timeout@ nanoseconds passes. When the swapchain becomes OUT_OF_DATE,
--- the call will either return 'Vulkan.Core10.Enums.Result.SUCCESS' (if the
--- image was delivered to the presentation engine and may have been
--- presented to the user) or will return early with status
--- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR' (if the image was not
--- presented to the user).
+-- For 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR' (or
+-- other present mode where images may be replaced in the presentation
+-- queue) any wait of this type associated with such an image /must/ be
+-- signaled no later than a wait associated with the replacing image would
+-- be signaled.
 --
 -- As an exception to the normal rules for objects which are externally
 -- synchronized, the @swapchain@ passed to 'waitForPresentKHR' /may/ be
@@ -285,7 +277,7 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device
 --     in the retired state
 --
 -- -   #VUID-vkWaitForPresentKHR-presentWait-06234# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentWait presentWait>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentWait presentWait>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -307,25 +299,29 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
+--     -   'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR'
+--
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 --     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
 --
---     -   'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR'
---
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -382,9 +378,13 @@ waitForPresentKHRSafe = waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHRSafe
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePresentWaitFeaturesKHR' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePresentWaitFeaturesKHR', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

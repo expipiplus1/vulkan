@@ -74,14 +74,14 @@
 --
 -- == Description
 --
--- This extension allows fragment shader invocations to read color, depth
+-- This extension allows fragment shader invocations to read color, depth,
 -- and stencil values at their pixel location in rasterization order. The
 -- functionality is only available when using dynamic render passes
 -- introduced by VK_KHR_dynamic_rendering. Example use cases are
 -- programmable blending and deferred shading.
 --
 -- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-shader-tileimage-reads fragment shader tile image reads>
 -- for more information.
 --
 -- == New Structures
@@ -152,7 +152,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_tile_image Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_tile_image Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

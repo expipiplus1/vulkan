@@ -151,7 +151,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -216,7 +216,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-None-04976# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-invocationMask invocationMask>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-invocationMask invocationMask>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-imageView-04977# If @imageView@
@@ -230,9 +230,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-imageView-04979# If @imageView@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
---     created with
+--     created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI'
---     set
+--     usage flag set
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-imageView-04980# If @imageView@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@
@@ -271,7 +271,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-renderpass# This command /must/
 --     only be called outside of a render pass instance
@@ -298,9 +299,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBindInvocationMaskHUAWEI is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -348,9 +354,13 @@ cmdBindInvocationMaskHUAWEI commandBuffer imageView imageLayout = liftIO $ do
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceInvocationMaskFeaturesHUAWEI' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceInvocationMaskFeaturesHUAWEI', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

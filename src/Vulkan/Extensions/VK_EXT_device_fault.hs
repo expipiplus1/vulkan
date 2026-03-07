@@ -18,7 +18,7 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -132,7 +132,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_device_fault Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_device_fault Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -260,7 +260,7 @@ foreign import ccall
 -- @pFaultInfo@.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceFaultVendorBinary vendor-specific crash dumps>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceFaultVendorBinary vendor-specific crash dumps>
 -- feature is not enabled, then implementations /must/ set
 -- @pFaultCounts@->vendorBinarySize to zero and /must/ not modify
 -- @pFaultInfo@->pVendorBinaryData.
@@ -297,7 +297,7 @@ foreign import ccall
 --
 -- If @pFaultCounts@->vendorBinarySize is less than what is necessary to
 -- store the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vendor-binary-crash-dumps binary crash dump header>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vendor-binary-crash-dumps binary crash dump header>,
 -- nothing will be written to @pFaultInfo@->pVendorBinaryData and zero will
 -- be written to @pFaultCounts@->vendorBinarySize.
 --
@@ -342,13 +342,17 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -394,9 +398,13 @@ getDeviceFaultInfoEXT device = liftIO . evalContT $ do
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceFaultFeaturesEXT' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
--- enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceFaultFeaturesEXT', it /must/ add an instance of the
+-- structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -491,6 +499,10 @@ data DeviceFaultAddressInfoEXT = DeviceFaultAddressInfoEXT
     -- /must/ be a valid 'DeviceFaultAddressTypeEXT' value
     addressType :: DeviceFaultAddressTypeEXT
   , -- | @reportedAddress@ is the GPU virtual address recorded by the device.
+    --
+    -- #VUID-VkDeviceFaultAddressInfoEXT-reportedAddress-parameter#
+    -- @reportedAddress@ /must/ be a valid
+    -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
     reportedAddress :: DeviceAddress
   , -- | @addressPrecision@ is a power of two value that specifies how precisely
     -- the device can report the address.
@@ -725,7 +737,7 @@ data DeviceFaultInfoEXT = DeviceFaultInfoEXT
   , -- | @pVendorBinaryData@ is @NULL@ or a pointer to @vendorBinarySize@ number
     -- of bytes of data, which will be populated with a vendor-specific binary
     -- crash dump, as described in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vendor-binary-crash-dumps Vendor Binary Crash Dumps>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vendor-binary-crash-dumps Vendor Binary Crash Dumps>.
     vendorBinaryData :: Ptr ()
   }
   deriving (Typeable)
@@ -806,7 +818,7 @@ data DeviceFaultVendorBinaryHeaderVersionOneEXT = DeviceFaultVendorBinaryHeaderV
   , -- | @headerVersion@ is a 'DeviceFaultVendorBinaryHeaderVersionEXT' enum
     -- value specifying the version of the header. A consumer of the crash dump
     -- /should/ use the header version to interpret the remainder of the
-    -- header.
+    -- header. @headerVersion@ /must/ be written as exactly 4 bytes.
     --
     -- #VUID-VkDeviceFaultVendorBinaryHeaderVersionOneEXT-headerVersion-07341#
     -- @headerVersion@ /must/ be
@@ -949,6 +961,32 @@ instance Zero DeviceFaultVendorBinaryHeaderVersionOneEXT where
 --
 -- = Description
 --
+-- -   'DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT' specifies that
+--     'DeviceFaultAddressInfoEXT' does not describe a page fault, or an
+--     instruction address.
+--
+-- -   'DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT' specifies that
+--     'DeviceFaultAddressInfoEXT' describes a page fault triggered by an
+--     invalid read operation.
+--
+-- -   'DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT' specifies that
+--     'DeviceFaultAddressInfoEXT' describes a page fault triggered by an
+--     invalid write operation.
+--
+-- -   'DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT' describes a page
+--     fault triggered by an attempt to execute non-executable memory.
+--
+-- -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT'
+--     specifies an instruction pointer value at the time the fault
+--     occurred. This may or may not be related to a fault.
+--
+-- -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT'
+--     specifies an instruction pointer value associated with an invalid
+--     instruction fault.
+--
+-- -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT' specifies
+--     an instruction pointer value associated with a fault.
+--
 -- The instruction pointer values recorded may not identify the specific
 -- instruction(s) that triggered the fault. The relationship between the
 -- instruction pointer reported and triggering instruction will be
@@ -961,36 +999,25 @@ instance Zero DeviceFaultVendorBinaryHeaderVersionOneEXT where
 newtype DeviceFaultAddressTypeEXT = DeviceFaultAddressTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT' specifies that
--- 'DeviceFaultAddressInfoEXT' does not describe a page fault, or an
--- instruction address.
+-- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT"
 pattern DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT = DeviceFaultAddressTypeEXT 0
 
--- | 'DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT' specifies that
--- 'DeviceFaultAddressInfoEXT' describes a page fault triggered by an
--- invalid read operation.
+-- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT"
 pattern DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT = DeviceFaultAddressTypeEXT 1
 
--- | 'DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT' specifies that
--- 'DeviceFaultAddressInfoEXT' describes a page fault triggered by an
--- invalid write operation.
+-- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT"
 pattern DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT = DeviceFaultAddressTypeEXT 2
 
--- | 'DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT' describes a page fault
--- triggered by an attempt to execute non-executable memory.
+-- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT"
 pattern DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT = DeviceFaultAddressTypeEXT 3
 
--- | 'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT' specifies an
--- instruction pointer value at the time the fault occurred. This may or
--- may not be related to a fault.
+-- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT"
 pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT = DeviceFaultAddressTypeEXT 4
 
--- | 'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT' specifies an
--- instruction pointer value associated with an invalid instruction fault.
+-- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT"
 pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT = DeviceFaultAddressTypeEXT 5
 
--- | 'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT' specifies an
--- instruction pointer value associated with a fault.
+-- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT"
 pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT = DeviceFaultAddressTypeEXT 6
 
 {-# COMPLETE
@@ -1062,6 +1089,11 @@ instance Read DeviceFaultAddressTypeEXT where
 -- | VkDeviceFaultVendorBinaryHeaderVersionEXT - Encode vendor binary crash
 -- dump version
 --
+-- = Description
+--
+-- -   'DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT' specifies
+--     version one of the binary crash dump header.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_fault VK_EXT_device_fault>,
@@ -1071,8 +1103,7 @@ newtype DeviceFaultVendorBinaryHeaderVersionEXT = DeviceFaultVendorBinaryHeaderV
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT' specifies version
--- one of the binary crash dump header.
+-- No documentation found for Nested "VkDeviceFaultVendorBinaryHeaderVersionEXT" "VK_DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT"
 pattern DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT = DeviceFaultVendorBinaryHeaderVersionEXT 1
 
 {-# COMPLETE DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT :: DeviceFaultVendorBinaryHeaderVersionEXT #-}

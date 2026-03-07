@@ -19,8 +19,14 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'FILTER_NEAREST' specifies nearest filtering.
+--
+-- -   'FILTER_LINEAR' specifies linear filtering.
+--
+-- -   'FILTER_CUBIC_EXT' specifies cubic filtering.
+--
 -- These filters are described in detail in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-texel-filtering Texel Filtering>.
 --
 -- = See Also
 --
@@ -32,13 +38,13 @@ import GHC.Show (Show(showsPrec))
 newtype Filter = Filter Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'FILTER_NEAREST' specifies nearest filtering.
+-- No documentation found for Nested "VkFilter" "VK_FILTER_NEAREST"
 pattern FILTER_NEAREST = Filter 0
 
--- | 'FILTER_LINEAR' specifies linear filtering.
+-- No documentation found for Nested "VkFilter" "VK_FILTER_LINEAR"
 pattern FILTER_LINEAR = Filter 1
 
--- | 'FILTER_CUBIC_EXT' specifies cubic filtering.
+-- No documentation found for Nested "VkFilter" "VK_FILTER_CUBIC_EXT"
 pattern FILTER_CUBIC_EXT = Filter 1000015000
 
 {-# COMPLETE

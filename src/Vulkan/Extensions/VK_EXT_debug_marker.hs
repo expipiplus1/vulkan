@@ -265,7 +265,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_debug_marker Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_debug_marker Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -362,19 +362,6 @@ foreign import ccall
 -- | vkDebugMarkerSetObjectNameEXT - Give an application-defined name to an
 -- object
 --
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDebugMarkerSetObjectNameEXT-device-parameter# @device@
---     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDebugMarkerSetObjectNameEXT-pNameInfo-parameter# @pNameInfo@
---     /must/ be a valid pointer to a valid 'DebugMarkerObjectNameInfoEXT'
---     structure
---
--- == Host Synchronization
---
--- -   Host access to @pNameInfo->object@ /must/ be externally synchronized
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -383,9 +370,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -394,9 +385,16 @@ foreign import ccall
 debugMarkerSetObjectNameEXT :: forall io
                              . (MonadIO io)
                             => -- | @device@ is the device that created the object.
+                               --
+                               -- #VUID-vkDebugMarkerSetObjectNameEXT-device-parameter# @device@ /must/ be
+                               -- a valid 'Vulkan.Core10.Handles.Device' handle
                                Device
                             -> -- | @pNameInfo@ is a pointer to a 'DebugMarkerObjectNameInfoEXT' structure
                                -- specifying the parameters of the name to set on the object.
+                               --
+                               -- #VUID-vkDebugMarkerSetObjectNameEXT-pNameInfo-parameter# @pNameInfo@
+                               -- /must/ be a valid pointer to a valid 'DebugMarkerObjectNameInfoEXT'
+                               -- structure
                                DebugMarkerObjectNameInfoEXT
                             -> io ()
 debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
@@ -420,19 +418,6 @@ foreign import ccall
 
 -- | vkDebugMarkerSetObjectTagEXT - Attach arbitrary data to an object
 --
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkDebugMarkerSetObjectTagEXT-device-parameter# @device@ /must/
---     be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkDebugMarkerSetObjectTagEXT-pTagInfo-parameter# @pTagInfo@
---     /must/ be a valid pointer to a valid 'DebugMarkerObjectTagInfoEXT'
---     structure
---
--- == Host Synchronization
---
--- -   Host access to @pTagInfo->object@ /must/ be externally synchronized
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -441,9 +426,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -452,9 +441,15 @@ foreign import ccall
 debugMarkerSetObjectTagEXT :: forall io
                             . (MonadIO io)
                            => -- | @device@ is the device that created the object.
+                              --
+                              -- #VUID-vkDebugMarkerSetObjectTagEXT-device-parameter# @device@ /must/ be
+                              -- a valid 'Vulkan.Core10.Handles.Device' handle
                               Device
                            -> -- | @pTagInfo@ is a pointer to a 'DebugMarkerObjectTagInfoEXT' structure
                               -- specifying the parameters of the tag to attach to the object.
+                              --
+                              -- #VUID-vkDebugMarkerSetObjectTagEXT-pTagInfo-parameter# @pTagInfo@ /must/
+                              -- be a valid pointer to a valid 'DebugMarkerObjectTagInfoEXT' structure
                               DebugMarkerObjectTagInfoEXT
                            -> io ()
 debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
@@ -478,6 +473,13 @@ foreign import ccall
 
 -- | vkCmdDebugMarkerBeginEXT - Open a command buffer marker region
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdDebugMarkerBeginEXT-None-10614# This command /must/ not
+--     be recorded when
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is enabled
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdDebugMarkerBeginEXT-commandBuffer-parameter#
@@ -494,10 +496,15 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDebugMarkerBeginEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- -   #VUID-vkCmdDebugMarkerBeginEXT-videocoding# This command /must/ only
---     be called outside of a video coding scope
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_OPTICAL_FLOW_BIT_NV',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_DECODE_BIT_KHR>,
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_ENCODE_BIT_KHR>
+--     operations
 --
 -- == Host Synchronization
 --
@@ -513,9 +520,18 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Both                                                                                                                        | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_OPTICAL_FLOW_BIT_NV                                                                                          |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_VIDEO_DECODE_BIT_KHR                                                                                         |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_VIDEO_ENCODE_BIT_KHR                                                                                         |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdDebugMarkerBeginEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -572,6 +588,11 @@ foreign import ccall
 --     'cmdDebugMarkerBeginEXT' command recorded to @commandBuffer@ that
 --     has not previously been ended by a call to 'cmdDebugMarkerEndEXT'
 --
+-- -   #VUID-vkCmdDebugMarkerEndEXT-None-10615# This command /must/ not be
+--     recorded when
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is enabled
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdDebugMarkerEndEXT-commandBuffer-parameter#
@@ -584,10 +605,15 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDebugMarkerEndEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- -   #VUID-vkCmdDebugMarkerEndEXT-videocoding# This command /must/ only
---     be called outside of a video coding scope
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_OPTICAL_FLOW_BIT_NV',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_DECODE_BIT_KHR>,
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_ENCODE_BIT_KHR>
+--     operations
 --
 -- == Host Synchronization
 --
@@ -603,9 +629,18 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Both                                                                                                                        | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_OPTICAL_FLOW_BIT_NV                                                                                          |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_VIDEO_DECODE_BIT_KHR                                                                                         |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_VIDEO_ENCODE_BIT_KHR                                                                                         |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdDebugMarkerEndEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -652,10 +687,15 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDebugMarkerInsertEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
---
--- -   #VUID-vkCmdDebugMarkerInsertEXT-videocoding# This command /must/
---     only be called outside of a video coding scope
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_OPTICAL_FLOW_BIT_NV',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_DECODE_BIT_KHR>,
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits VK_QUEUE_VIDEO_ENCODE_BIT_KHR>
+--     operations
 --
 -- == Host Synchronization
 --
@@ -671,9 +711,18 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Both                                                                                                                        | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_OPTICAL_FLOW_BIT_NV                                                                                          |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_VIDEO_DECODE_BIT_KHR                                                                                         |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_VIDEO_ENCODE_BIT_KHR                                                                                         |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdDebugMarkerInsertEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -709,7 +758,39 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
 -- calling 'debugMarkerSetObjectNameEXT' again with a new string. To remove
 -- a previously set name, @pObjectName@ /should/ be an empty string.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkDebugMarkerObjectNameInfoEXT-objectType-01490# @objectType@
+--     /must/ not be
+--     'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
+--
+-- -   #VUID-VkDebugMarkerObjectNameInfoEXT-object-01491# @object@ /must/
+--     not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkDebugMarkerObjectNameInfoEXT-object-01492# @object@ /must/
+--     be a Vulkan object of the type associated with @objectType@ as
+--     defined in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#debug-report-object-types>
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDebugMarkerObjectNameInfoEXT-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT'
+--
+-- -   #VUID-VkDebugMarkerObjectNameInfoEXT-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkDebugMarkerObjectNameInfoEXT-objectType-parameter#
+--     @objectType@ /must/ be a valid
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
+--     value
+--
+-- -   #VUID-VkDebugMarkerObjectNameInfoEXT-pObjectName-parameter#
+--     @pObjectName@ /must/ be a null-terminated UTF-8 string
+--
+-- == Host Synchronization
+--
+-- -   Host access to @object@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -721,29 +802,11 @@ data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
   { -- | @objectType@ is a
     -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
     -- specifying the type of the object to be named.
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-objectType-01490# @objectType@
-    -- /must/ not be
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-objectType-parameter# @objectType@
-    -- /must/ be a valid
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' value
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ is the object to be named.
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-object-01491# @object@ /must/ not
-    -- be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-object-01492# @object@ /must/ be a
-    -- Vulkan object of the type associated with @objectType@ as defined in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @pObjectName@ is a null-terminated UTF-8 string specifying the name to
     -- apply to @object@.
-    --
-    -- #VUID-VkDebugMarkerObjectNameInfoEXT-pObjectName-parameter#
-    -- @pObjectName@ /must/ be a null-terminated UTF-8 string
     objectName :: ByteString
   }
   deriving (Typeable)
@@ -797,7 +860,42 @@ instance Zero DebugMarkerObjectNameInfoEXT where
 -- being tagged. This can be used by debugging layers to easily filter for
 -- only data that can be used by that implementation.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-objectType-01493# @objectType@
+--     /must/ not be
+--     'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-object-01494# @object@ /must/
+--     not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-object-01495# @object@ /must/ be
+--     a Vulkan object of the type associated with @objectType@ as defined
+--     in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#debug-report-object-types>
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT'
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-objectType-parameter#
+--     @objectType@ /must/ be a valid
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
+--     value
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-pTag-parameter# @pTag@ /must/ be
+--     a valid pointer to an array of @tagSize@ bytes
+--
+-- -   #VUID-VkDebugMarkerObjectTagInfoEXT-tagSize-arraylength# @tagSize@
+--     /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @object@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -809,36 +907,15 @@ data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
   { -- | @objectType@ is a
     -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
     -- specifying the type of the object to be named.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-objectType-01493# @objectType@
-    -- /must/ not be
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-objectType-parameter# @objectType@
-    -- /must/ be a valid
-    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' value
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ is the object to be tagged.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-object-01494# @object@ /must/ not be
-    -- 'Vulkan.Core10.APIConstants.NULL_HANDLE'
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-object-01495# @object@ /must/ be a
-    -- Vulkan object of the type associated with @objectType@ as defined in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
     tagName :: Word64
   , -- | @tagSize@ is the number of bytes of data to attach to the object.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-tagSize-arraylength# @tagSize@
-    -- /must/ be greater than @0@
     tagSize :: Word64
   , -- | @pTag@ is a pointer to an array of @tagSize@ bytes containing the data
     -- to be associated with the object.
-    --
-    -- #VUID-VkDebugMarkerObjectTagInfoEXT-pTag-parameter# @pTag@ /must/ be a
-    -- valid pointer to an array of @tagSize@ bytes
     tag :: Ptr ()
   }
   deriving (Typeable)

@@ -12,6 +12,7 @@ module Vulkan.Core10.Enums.DescriptorType  (DescriptorType( DESCRIPTOR_TYPE_SAMP
                                                           , DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
                                                           , DESCRIPTOR_TYPE_INPUT_ATTACHMENT
                                                           , DESCRIPTOR_TYPE_MUTABLE_EXT
+                                                          , DESCRIPTOR_TYPE_TENSOR_ARM
                                                           , DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM
                                                           , DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
@@ -35,49 +36,52 @@ import GHC.Show (Show(showsPrec))
 -- = Description
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLER' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler sampler descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampler sampler descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler combined image sampler descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-combinedimagesampler combined image sampler descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLED_IMAGE' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage sampled image descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage sampled image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_IMAGE' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage image descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage storage image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebuffer storage buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_INPUT_ATTACHMENT' specifies an
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK' specifies an
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
 --
 -- -   'DESCRIPTOR_TYPE_MUTABLE_EXT' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-weightimage sampled weight image descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-weightimage sampled weight image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-blockmatch block matching image descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-blockmatch block matching image descriptor>.
+--
+-- -   'DESCRIPTOR_TYPE_TENSOR_ARM' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetensor storage tensor descriptor>.
 --
 -- When a descriptor set is updated via elements of
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', members of
@@ -136,7 +140,13 @@ import GHC.Show (Show(showsPrec))
 -- source data of the descriptor update operation is taken from the
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
 -- structure in the @pNext@ chain of
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'.
+-- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'. When updating
+-- descriptors with a @descriptorType@ of 'DESCRIPTOR_TYPE_TENSOR_ARM',
+-- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
+-- are accessed, instead the source data of the descriptor update operation
+-- is taken from the instance of
+-- 'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM' in the
+-- @pNext@ chain of 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'.
 --
 -- = See Also
 --
@@ -147,7 +157,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateEntry',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeListEXT',
--- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.ResourceDescriptorInfoEXT',
+-- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.getPhysicalDeviceDescriptorSizeEXT'
 newtype DescriptorType = DescriptorType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -187,6 +199,9 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = DescriptorType 10
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_MUTABLE_EXT"
 pattern DESCRIPTOR_TYPE_MUTABLE_EXT = DescriptorType 1000351000
 
+-- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_TENSOR_ARM"
+pattern DESCRIPTOR_TYPE_TENSOR_ARM = DescriptorType 1000460000
+
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM"
 pattern DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM = DescriptorType 1000440001
 
@@ -215,6 +230,7 @@ pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK = DescriptorType 1000138000
   , DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
   , DESCRIPTOR_TYPE_INPUT_ATTACHMENT
   , DESCRIPTOR_TYPE_MUTABLE_EXT
+  , DESCRIPTOR_TYPE_TENSOR_ARM
   , DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM
   , DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM
   , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
@@ -261,6 +277,7 @@ showTableDescriptorType =
     , "INPUT_ATTACHMENT"
     )
   , (DESCRIPTOR_TYPE_MUTABLE_EXT, "MUTABLE_EXT")
+  , (DESCRIPTOR_TYPE_TENSOR_ARM, "TENSOR_ARM")
   ,
     ( DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM
     , "BLOCK_MATCH_IMAGE_QCOM"

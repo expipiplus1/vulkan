@@ -59,9 +59,9 @@
 --     sample in the pixel coverage is covered, the color sample is
 --     covered. This is the default mode.
 --
--- -   Truncate: When there are more raster samples (N) than color
---     samples(M), there is one to one association of the first M raster
---     samples to the M color samples; other raster samples are ignored.
+-- -   Truncate: When there are more raster samples (N) than color samples
+--     (M), there is one to one association of the first M raster samples
+--     to the M color samples; other raster samples are ignored.
 --
 -- When the number of raster samples is equal to the color samples, there
 -- is a one to one mapping between them in either of the above modes.
@@ -89,7 +89,7 @@
 --     -   'PhysicalDeviceCoverageReductionModeFeaturesNV'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo':
 --
 --     -   'PipelineCoverageReductionStateCreateInfoNV'
 --
@@ -128,7 +128,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

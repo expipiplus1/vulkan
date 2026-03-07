@@ -27,6 +27,12 @@
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_subgroup_partitioned.html SPV_NV_shader_subgroup_partitioned>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_subgroup_partitioned VK_EXT_shader_subgroup_partitioned>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Jeff Bolz
@@ -35,7 +41,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-03-17
+--     2025-11-12
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -49,18 +55,24 @@
 -- == Description
 --
 -- This extension enables support for a new class of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-group-operations group operations>
 -- on
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroups>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-scope-subgroup subgroups>
 -- via the
 -- <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GL_NV_shader_subgroup_partitioned.txt GL_NV_shader_subgroup_partitioned>
 -- GLSL extension and
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_subgroup_partitioned.html SPV_NV_shader_subgroup_partitioned>
 -- SPIR-V extension. Support for these new operations is advertised via the
--- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
--- bit.
+-- 'SUBGROUP_FEATURE_PARTITIONED_BIT_NV' bit.
 --
 -- This extension requires Vulkan 1.1, for general subgroup support.
+--
+-- == Promotion to @VK_EXT_shader_subgroup_partitioned@
+--
+-- All functionality in this extension is included in
+-- @VK_EXT_shader_subgroup_partitioned@, with the suffix changed to EXT.
+-- The original type, enum, and command names are still available as
+-- aliases of the core functionality.
 --
 -- == New Enum Constants
 --
@@ -71,7 +83,7 @@
 -- -   Extending
 --     'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits':
 --
---     -   'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
+--     -   'SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
 --
 -- == Version History
 --
@@ -86,17 +98,23 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shader_subgroup_partitioned Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_shader_subgroup_partitioned Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_shader_subgroup_partitioned  ( NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
+module Vulkan.Extensions.VK_NV_shader_subgroup_partitioned  ( pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV
+                                                            , NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
                                                             , pattern NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
                                                             , NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
                                                             , pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
                                                             ) where
 
 import Data.String (IsString)
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_PARTITIONED_BIT_EXT))
+-- No documentation found for TopLevel "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"
+pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV = SUBGROUP_FEATURE_PARTITIONED_BIT_EXT
+
 
 type NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION = 1
 

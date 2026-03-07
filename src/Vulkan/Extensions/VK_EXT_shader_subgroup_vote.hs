@@ -147,7 +147,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SubgroupVoteKHR SubgroupVoteKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-SubgroupVoteKHR SubgroupVoteKHR>
 --
 -- == Version History
 --
@@ -162,7 +162,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_subgroup_vote Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_subgroup_vote Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

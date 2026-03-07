@@ -18,6 +18,26 @@ import GHC.Show (Show(showsPrec))
 -- | VkSubpassContents - Specify how commands in the first subpass of a
 -- render pass are provided
 --
+-- = Description
+--
+-- -   'SUBPASS_CONTENTS_INLINE' specifies that the contents of the subpass
+--     will be recorded inline in the primary command buffer, and secondary
+--     command buffers /must/ not be executed within the subpass.
+--
+-- -   'SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS' specifies that the
+--     contents are recorded in secondary command buffers that will be
+--     called from the primary command buffer, and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands' is the only
+--     valid command in the command buffer until
+--     'Vulkan.Core10.CommandBufferBuilding.cmdNextSubpass' or
+--     'Vulkan.Core10.CommandBufferBuilding.cmdEndRenderPass'.
+--
+-- -   'SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR'
+--     specifies that the contents of the subpass /can/ be recorded both
+--     inline and in secondary command buffers executed from this command
+--     buffer with
+--     'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -27,24 +47,13 @@ import GHC.Show (Show(showsPrec))
 newtype SubpassContents = SubpassContents Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SUBPASS_CONTENTS_INLINE' specifies that the contents of the subpass
--- will be recorded inline in the primary command buffer, and secondary
--- command buffers /must/ not be executed within the subpass.
+-- No documentation found for Nested "VkSubpassContents" "VK_SUBPASS_CONTENTS_INLINE"
 pattern SUBPASS_CONTENTS_INLINE = SubpassContents 0
 
--- | 'SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS' specifies that the contents
--- are recorded in secondary command buffers that will be called from the
--- primary command buffer, and
--- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands' is the only
--- valid command in the command buffer until
--- 'Vulkan.Core10.CommandBufferBuilding.cmdNextSubpass' or
--- 'Vulkan.Core10.CommandBufferBuilding.cmdEndRenderPass'.
+-- No documentation found for Nested "VkSubpassContents" "VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"
 pattern SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = SubpassContents 1
 
--- | 'SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR' specifies
--- that the contents of the subpass /can/ be recorded both inline and in
--- secondary command buffers executed from this command buffer with
--- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands'.
+-- No documentation found for Nested "VkSubpassContents" "VK_SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR"
 pattern SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR = SubpassContents 1000451000
 
 {-# COMPLETE

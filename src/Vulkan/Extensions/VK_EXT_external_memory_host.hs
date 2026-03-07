@@ -165,7 +165,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_external_memory_host Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_external_memory_host Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -284,9 +284,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -332,7 +336,7 @@ getMemoryHostPointerPropertiesEXT device
 -- continue to access the memory through the host pointer but it is the
 -- application’s responsibility to synchronize device and non-device access
 -- to the payload as defined in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess Host Access to Device Memory Objects>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-device-hostaccess Host Access to Device Memory Objects>.
 --
 -- Applications /can/ import the same payload into multiple instances of
 -- Vulkan and multiple times into a given Vulkan instance. However,
@@ -479,7 +483,7 @@ instance Zero ImportMemoryHostPointerInfoEXT where
 -- identify memory types which are host visible. Implementations /may/
 -- include bits that identify memory types which are not host visible.
 -- Behavior for imported pointers of such types is defined by
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#host-memory-import-non-visible-type >.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#host-memory-import-non-visible-type >.
 --
 -- == Valid Usage (Implicit)
 --

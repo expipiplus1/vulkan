@@ -18,7 +18,7 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -121,7 +121,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_subpass_merge_feedback Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_subpass_merge_feedback Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -502,9 +502,13 @@ instance Zero RenderPassSubpassFeedbackCreateInfoEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceSubpassMergeFeedbackFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceSubpassMergeFeedbackFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -557,6 +561,64 @@ instance Zero PhysicalDeviceSubpassMergeFeedbackFeaturesEXT where
 
 -- | VkSubpassMergeStatusEXT - Specify a subpass merging status
 --
+-- = Description
+--
+-- -   'SUBPASS_MERGE_STATUS_MERGED_EXT' specifies that the subpass is
+--     merged with a previous subpass.
+--
+-- -   'SUBPASS_MERGE_STATUS_DISALLOWED_EXT' specifies that the subpass is
+--     not merged because merging was disabled using
+--     'RenderPassCreationControlEXT'. If the render pass does not allow
+--     subpass merging, then all subpass statuses are set to this value. If
+--     a subpass description does not allow subpass merging, then only that
+--     subpass’s status is set to this value.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT' specifies that
+--     the subpass is not merged because it contains side effects.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT' specifies
+--     that the subpass is not merged because sample count is not
+--     compatible with the previous subpass.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT' specifies that
+--     the subpass is not merged because view masks do not match with
+--     previous subpass.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT' specifies that the
+--     subpass is not merged because of attachments aliasing between them.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT' specifies that
+--     the subpass is not merged because subpass dependencies do not allow
+--     merging.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT'
+--     specifies that the subpass is not merged because input attachment is
+--     not a color attachment from previous subpass or the formats are
+--     incompatible.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT' specifies
+--     that the subpass is not merged because of too many attachments.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT' specifies
+--     that the subpass is not merged because of insufficient memory.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT' specifies
+--     that the subpass is not merged because of too many depth\/stencil
+--     attachments.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT'
+--     specifies that the subpass is not merged because a resolve
+--     attachment is reused as an input attachment in a subsequent subpass.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT' specifies that
+--     the subpass is not merged because the render pass has only one
+--     subpass.
+--
+-- -   'SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT' specifies that the
+--     subpass is not merged for unspecified reasons. Implementations
+--     /should/ return this value when no other 'SubpassMergeStatusEXT'
+--     value is appropriate.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subpass_merge_feedback VK_EXT_subpass_merge_feedback>,
@@ -564,72 +626,46 @@ instance Zero PhysicalDeviceSubpassMergeFeedbackFeaturesEXT where
 newtype SubpassMergeStatusEXT = SubpassMergeStatusEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SUBPASS_MERGE_STATUS_MERGED_EXT' specifies that the subpass is merged
--- with a previous subpass.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_MERGED_EXT"
 pattern SUBPASS_MERGE_STATUS_MERGED_EXT = SubpassMergeStatusEXT 0
 
--- | 'SUBPASS_MERGE_STATUS_DISALLOWED_EXT' specifies that the subpass is not
--- merged because merging was disabled using
--- 'RenderPassCreationControlEXT'. If the render pass does not allow
--- subpass merging, then all subpass statuses are set to this value. If a
--- subpass description does not allow subpass merging, then only that
--- subpass’s status is set to this value.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_DISALLOWED_EXT"
 pattern SUBPASS_MERGE_STATUS_DISALLOWED_EXT = SubpassMergeStatusEXT 1
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT' specifies that the
--- subpass is not merged because it contains side effects.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT = SubpassMergeStatusEXT 2
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT' specifies that
--- the subpass is not merged because sample count is not compatible with
--- the previous subpass.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT = SubpassMergeStatusEXT 3
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT' specifies that the
--- subpass is not merged because view masks do not match with previous
--- subpass.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT = SubpassMergeStatusEXT 4
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT' specifies that the
--- subpass is not merged because of attachments aliasing between them.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT = SubpassMergeStatusEXT 5
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT' specifies that the
--- subpass is not merged because subpass dependencies do not allow merging.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT = SubpassMergeStatusEXT 6
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT'
--- specifies that the subpass is not merged because input attachment is not
--- a color attachment from previous subpass or the formats are
--- incompatible.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT = SubpassMergeStatusEXT 7
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT' specifies
--- that the subpass is not merged because of too many attachments.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT = SubpassMergeStatusEXT 8
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT' specifies
--- that the subpass is not merged because of insufficient memory.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT = SubpassMergeStatusEXT 9
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT' specifies that
--- the subpass is not merged because of too many depth\/stencil
--- attachments.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT = SubpassMergeStatusEXT 10
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT' specifies
--- that the subpass is not merged because a resolve attachment is reused as
--- an input attachment in a subsequent subpass.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT = SubpassMergeStatusEXT 11
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT' specifies that the
--- subpass is not merged because the render pass has only one subpass.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT = SubpassMergeStatusEXT 12
 
--- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT' specifies that the
--- subpass is not merged for unspecified reasons. Implementations /should/
--- return this value when no other 'SubpassMergeStatusEXT' value is
--- appropriate.
+-- No documentation found for Nested "VkSubpassMergeStatusEXT" "VK_SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT"
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT = SubpassMergeStatusEXT 13
 
 {-# COMPLETE

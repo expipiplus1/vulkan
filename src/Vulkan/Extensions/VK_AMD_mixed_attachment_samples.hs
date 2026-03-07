@@ -69,7 +69,7 @@
 --
 -- -   Extending
 --     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'AttachmentSampleCountInfoAMD'
 --
@@ -106,7 +106,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_mixed_attachment_samples Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_mixed_attachment_samples Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -170,14 +170,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMEN
 -- parameters of this structure are ignored.
 --
 -- 'AttachmentSampleCountInfoAMD' /can/ also be included in the @pNext@
--- chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'. When a
--- graphics pipeline is created without a
+-- chain of 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'.
+-- When a graphics pipeline is created without a
 -- 'Vulkan.Core10.Handles.RenderPass', if this structure is included in the
--- @pNext@ chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it
+-- @pNext@ chain of
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo', it
 -- specifies the sample count of attachments used for rendering. If this
 -- structure is not specified, and the pipeline does not include a
 -- 'Vulkan.Core10.Handles.RenderPass', the value of
--- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 -- is used as the sample count for each attachment. If a graphics pipeline
 -- is created with a valid 'Vulkan.Core10.Handles.RenderPass', parameters
 -- of this structure are ignored.

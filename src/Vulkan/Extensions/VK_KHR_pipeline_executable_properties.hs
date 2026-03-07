@@ -166,7 +166,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -307,7 +307,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipelineExecutableInfo-03270#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipeline-03271# The
@@ -336,15 +336,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -414,7 +418,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipelineExecutableInfo-03272#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03273# The
@@ -447,15 +451,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -533,7 +541,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipelineExecutableInfo-03276#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03277#
@@ -569,15 +577,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -635,10 +647,13 @@ getPipelineExecutableInternalRepresentationsKHR device
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR', it /must/ add
+-- an instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1125,6 +1140,27 @@ peekPipelineExecutableStatisticValueKHR tag p = case tag of
 -- | VkPipelineExecutableStatisticFormatKHR - Enum describing a pipeline
 -- executable statistic
 --
+-- = Description
+--
+-- -   'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR' specifies that the
+--     statistic is returned as a 32-bit boolean value which /must/ be
+--     either 'Vulkan.Core10.FundamentalTypes.TRUE' or
+--     'Vulkan.Core10.FundamentalTypes.FALSE' and /should/ be read from the
+--     @b32@ field of 'PipelineExecutableStatisticValueKHR'.
+--
+-- -   'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR' specifies that the
+--     statistic is returned as a signed 64-bit integer and /should/ be
+--     read from the @i64@ field of 'PipelineExecutableStatisticValueKHR'.
+--
+-- -   'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR' specifies that the
+--     statistic is returned as an unsigned 64-bit integer and /should/ be
+--     read from the @u64@ field of 'PipelineExecutableStatisticValueKHR'.
+--
+-- -   'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR' specifies that
+--     the statistic is returned as a 64-bit floating-point value and
+--     /should/ be read from the @f64@ field of
+--     'PipelineExecutableStatisticValueKHR'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
@@ -1132,26 +1168,16 @@ peekPipelineExecutableStatisticValueKHR tag p = case tag of
 newtype PipelineExecutableStatisticFormatKHR = PipelineExecutableStatisticFormatKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR' specifies that the
--- statistic is returned as a 32-bit boolean value which /must/ be either
--- 'Vulkan.Core10.FundamentalTypes.TRUE' or
--- 'Vulkan.Core10.FundamentalTypes.FALSE' and /should/ be read from the
--- @b32@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR = PipelineExecutableStatisticFormatKHR 0
 
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR' specifies that the
--- statistic is returned as a signed 64-bit integer and /should/ be read
--- from the @i64@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR = PipelineExecutableStatisticFormatKHR 1
 
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR' specifies that the
--- statistic is returned as an unsigned 64-bit integer and /should/ be read
--- from the @u64@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR = PipelineExecutableStatisticFormatKHR 2
 
--- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR' specifies that the
--- statistic is returned as a 64-bit floating-point value and /should/ be
--- read from the @f64@ field of 'PipelineExecutableStatisticValueKHR'.
+-- No documentation found for Nested "VkPipelineExecutableStatisticFormatKHR" "VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR"
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR = PipelineExecutableStatisticFormatKHR 3
 
 {-# COMPLETE

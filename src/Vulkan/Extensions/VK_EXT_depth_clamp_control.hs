@@ -74,7 +74,8 @@
 --
 --     -   'PhysicalDeviceDepthClampControlFeaturesEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo':
 --
 --     -   'PipelineViewportDepthClampControlCreateInfoEXT'
 --
@@ -137,7 +138,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clamp_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_clamp_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -222,11 +223,11 @@ foreign import ccall
 --
 -- This command sets the viewport depth clamp range for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'PipelineViewportDepthClampControlCreateInfoEXT'::@depthClampMode@ value
 -- used to create the currently active pipeline.
@@ -257,7 +258,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthClampRangeEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDepthClampRangeEXT-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -276,9 +278,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDepthClampRangeEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -330,9 +337,13 @@ cmdSetDepthClampRangeEXT commandBuffer
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDepthClampControlFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDepthClampControlFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -391,9 +402,9 @@ instance Zero PhysicalDeviceDepthClampControlFeaturesEXT where
 -- = Description
 --
 -- This structure extends
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' and specifies
--- the depth clamp range used in the pipeline. If this structure is not
--- provided in the next chain then @depthClampMode@ defaults to
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo' and
+-- specifies the depth clamp range used in the pipeline. If this structure
+-- is not provided in the next chain then @depthClampMode@ defaults to
 -- 'DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT'.
 --
 -- == Valid Usage
@@ -537,6 +548,19 @@ instance Zero DepthClampRangeEXT where
 
 -- | VkDepthClampModeEXT - Modes that determine the depth clamp range
 --
+-- = Description
+--
+-- -   'DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT' specifies that the depth clamp
+--     range follows the viewport depth range. The depth clamp range of
+--     each viewport will implicitly be set to zmin = min(n,f) and zmax =
+--     max(n,f), where n and f are the @minDepth@ and @maxDepth@ depth
+--     range values of the viewport.
+--
+-- -   'DEPTH_CLAMP_MODE_USER_DEFINED_RANGE_EXT' specifies that a single
+--     user-defined depth clamp range will be used for all viewports. The
+--     user-defined depth clamp range is defined by the @minDepthClamp@ and
+--     @maxDepthClamp@ members of 'DepthClampRangeEXT'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clamp_control VK_EXT_depth_clamp_control>,
@@ -545,17 +569,10 @@ instance Zero DepthClampRangeEXT where
 newtype DepthClampModeEXT = DepthClampModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT' specifies that the depth clamp
--- range follows the viewport depth range. The depth clamp range of each
--- viewport will implicitly be set to zmin = min(n,f) and zmax = max(n,f),
--- where n and f are the @minDepth@ and @maxDepth@ depth range values of
--- the viewport.
+-- No documentation found for Nested "VkDepthClampModeEXT" "VK_DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT"
 pattern DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT = DepthClampModeEXT 0
 
--- | 'DEPTH_CLAMP_MODE_USER_DEFINED_RANGE_EXT' specifies that a single
--- user-defined depth clamp range will be used for all viewports. The
--- user-defined depth clamp range is defined by the @minDepthClamp@ and
--- @maxDepthClamp@ members of 'DepthClampRangeEXT'.
+-- No documentation found for Nested "VkDepthClampModeEXT" "VK_DEPTH_CLAMP_MODE_USER_DEFINED_RANGE_EXT"
 pattern DEPTH_CLAMP_MODE_USER_DEFINED_RANGE_EXT = DepthClampModeEXT 1
 
 {-# COMPLETE

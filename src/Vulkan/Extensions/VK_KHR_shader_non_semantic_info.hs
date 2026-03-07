@@ -65,7 +65,7 @@
 -- Functionality in this extension is included in core Vulkan 1.3. Because
 -- the extension has no API controlling its functionality, this results
 -- only in a change to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Extensions table>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-extensions-table SPIR-V Extensions table>.
 --
 -- == Version History
 --
@@ -80,7 +80,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_non_semantic_info Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_shader_non_semantic_info Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -18,8 +18,12 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
+-- -   'SAMPLER_MIPMAP_MODE_NEAREST' specifies nearest filtering.
+--
+-- -   'SAMPLER_MIPMAP_MODE_LINEAR' specifies linear filtering.
+--
 -- These modes are described in detail in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-texel-filtering Texel Filtering>.
 --
 -- = See Also
 --
@@ -28,10 +32,10 @@ import GHC.Show (Show(showsPrec))
 newtype SamplerMipmapMode = SamplerMipmapMode Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SAMPLER_MIPMAP_MODE_NEAREST' specifies nearest filtering.
+-- No documentation found for Nested "VkSamplerMipmapMode" "VK_SAMPLER_MIPMAP_MODE_NEAREST"
 pattern SAMPLER_MIPMAP_MODE_NEAREST = SamplerMipmapMode 0
 
--- | 'SAMPLER_MIPMAP_MODE_LINEAR' specifies linear filtering.
+-- No documentation found for Nested "VkSamplerMipmapMode" "VK_SAMPLER_MIPMAP_MODE_LINEAR"
 pattern SAMPLER_MIPMAP_MODE_LINEAR = SamplerMipmapMode 1
 
 {-# COMPLETE

@@ -17,20 +17,26 @@ import GHC.Show (Show(showsPrec))
 -- | VkVertexInputRate - Specify rate at which vertex attributes are pulled
 -- from buffers
 --
+-- = Description
+--
+-- -   'VERTEX_INPUT_RATE_VERTEX' specifies that vertex attribute
+--     addressing is a function of the vertex index.
+--
+-- -   'VERTEX_INPUT_RATE_INSTANCE' specifies that vertex attribute
+--     addressing is a function of the instance index.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription',
+-- 'Vulkan.Core10.GraphicsPipeline.VertexInputBindingDescription',
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputBindingDescription2EXT'
 newtype VertexInputRate = VertexInputRate Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'VERTEX_INPUT_RATE_VERTEX' specifies that vertex attribute addressing is
--- a function of the vertex index.
+-- No documentation found for Nested "VkVertexInputRate" "VK_VERTEX_INPUT_RATE_VERTEX"
 pattern VERTEX_INPUT_RATE_VERTEX = VertexInputRate 0
 
--- | 'VERTEX_INPUT_RATE_INSTANCE' specifies that vertex attribute addressing
--- is a function of the instance index.
+-- No documentation found for Nested "VkVertexInputRate" "VK_VERTEX_INPUT_RATE_INSTANCE"
 pattern VERTEX_INPUT_RATE_INSTANCE = VertexInputRate 1
 
 {-# COMPLETE

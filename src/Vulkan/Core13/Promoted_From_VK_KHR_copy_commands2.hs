@@ -90,6 +90,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance10 (ResolveImageModeInfoKHR)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BLIT_IMAGE_INFO_2))
@@ -153,11 +154,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyBuffer2-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- -   #VUID-vkCmdCopyBuffer2-renderpass# This command /must/ only be
 --     called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyBuffer2-suspended# This command /must/ not be called
+--     between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyBuffer2-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -176,10 +182,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyBuffer2 is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -240,6 +251,156 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, @dstImage@ /must/ not be an unprotected image
 --
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-10217# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance10 maintenance10>
+--     feature is not enabled, for each element of
+--     @pCopyImageInfo->pRegions@, where the @aspectMask@ member of
+--     @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
+--     the @aspectMask@ of @dstSubresource@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11782# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11783# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11784# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11785# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-10218# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance10 maintenance10>
+--     feature is not enabled, for each element of
+--     @pCopyImageInfo->pRegions@, where the @aspectMask@ member of
+--     @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--     then the @aspectMask@ of @srcSubresource@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11786# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11787# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11788# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImage2-commandBuffer-11789# If the queue family used
+--     to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyImageInfo->pRegions@ the @aspectMask@ member
+--     of @dstSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     the @aspectMask@ of @srcSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdCopyImage2-commandBuffer-parameter# @commandBuffer@
@@ -254,11 +415,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyImage2-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- -   #VUID-vkCmdCopyImage2-renderpass# This command /must/ only be called
 --     outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyImage2-suspended# This command /must/ not be called
+--     between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyImage2-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -277,10 +443,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyImage2 is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -356,10 +527,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBlitImage2-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdBlitImage2-renderpass# This command /must/ only be called
 --     outside of a render pass instance
+--
+-- -   #VUID-vkCmdBlitImage2-suspended# This command /must/ not be called
+--     between suspended render pass instances
 --
 -- -   #VUID-vkCmdBlitImage2-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -378,9 +553,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBlitImage2 is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -459,11 +639,67 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-07739# If the queue
 --     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
 --     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', for each
---     element of @pCopyBufferToImageInfo->pRegions@, the @aspectMask@
---     member of @imageSubresource@ /must/ not be
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance10 maintenance10>
+--     feature is not enabled, for each element of
+--     @pCopyBufferToImageInfo->pRegions@, the @aspectMask@ member of
+--     @imageSubresource@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-11778# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyBufferToImageInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-11779# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyBufferToImageInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-11780# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyBufferToImageInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-11781# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyBufferToImageInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -481,11 +717,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- -   #VUID-vkCmdCopyBufferToImage2-renderpass# This command /must/ only
 --     be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyBufferToImage2-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyBufferToImage2-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -504,10 +745,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyBufferToImage2 is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -584,6 +830,71 @@ foreign import ccall
 --     family, as described in
 --     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
 --
+-- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-10216# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance10 maintenance10>
+--     feature is not enabled, for each element of
+--     @pCopyImageToBufferInfo->pRegions@, the @aspectMask@ member of
+--     @imageSubresource@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-11790# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyImageToBufferInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-11791# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyImageToBufferInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-11792# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', and
+--     in any element of @pCopyImageToBufferInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR'
+--
+-- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-11793# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' and
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', but does
+--     support 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT', and
+--     in any element of @pCopyImageToBufferInfo->pRegions@ the
+--     @aspectMask@ member of @imageSubresource@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-parameter#
@@ -600,11 +911,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT' operations
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2-renderpass# This command /must/ only
 --     be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdCopyImageToBuffer2-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -623,10 +939,15 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
--- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | VK_QUEUE_TRANSFER_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCopyImageToBuffer2 is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -660,7 +981,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdResolveImage2
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr ResolveImageInfo2 -> IO ()) -> Ptr CommandBuffer_T -> Ptr ResolveImageInfo2 -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct ResolveImageInfo2) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct ResolveImageInfo2) -> IO ()
 
 -- | vkCmdResolveImage2 - Resolve regions of an image
 --
@@ -703,10 +1024,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdResolveImage2-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdResolveImage2-renderpass# This command /must/ only be
 --     called outside of a render pass instance
+--
+-- -   #VUID-vkCmdResolveImage2-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdResolveImage2-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -725,23 +1050,28 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | Action                                                                                                                                 |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdResolveImage2 is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ResolveImageInfo2'
-cmdResolveImage2 :: forall io
-                  . (MonadIO io)
+cmdResolveImage2 :: forall a io
+                  . (Extendss ResolveImageInfo2 a, PokeChain a, MonadIO io)
                  => -- | @commandBuffer@ is the command buffer into which the command will be
                     -- recorded.
                     CommandBuffer
                  -> -- | @pResolveImageInfo@ is a pointer to a 'ResolveImageInfo2' structure
                     -- describing the resolve parameters.
-                    ResolveImageInfo2
+                    (ResolveImageInfo2 a)
                  -> io ()
 cmdResolveImage2 commandBuffer resolveImageInfo = liftIO . evalContT $ do
   let vkCmdResolveImage2Ptr = pVkCmdResolveImage2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
@@ -751,7 +1081,7 @@ cmdResolveImage2 commandBuffer resolveImageInfo = liftIO . evalContT $ do
   pResolveImageInfo <- ContT $ withCStruct (resolveImageInfo)
   lift $ traceAroundEvent "vkCmdResolveImage2" (vkCmdResolveImage2'
                                                   (commandBufferHandle (commandBuffer))
-                                                  pResolveImageInfo)
+                                                  (forgetExtensions pResolveImageInfo))
   pure $ ()
 
 
@@ -877,7 +1207,7 @@ instance Zero BufferCopy2 where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'CopyImageInfo2',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.CopyImageToImageInfoEXT',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.CopyImageToImageInfo',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
@@ -988,8 +1318,8 @@ instance Zero ImageCopy2 where
 --     pointer to a valid instance of
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --
--- -   #VUID-VkImageBlit2-sType-unique# The @sType@ value of each struct in
---     the @pNext@ chain /must/ be unique
+-- -   #VUID-VkImageBlit2-sType-unique# The @sType@ value of each structure
+--     in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkImageBlit2-srcSubresource-parameter# @srcSubresource@ /must/
 --     be a valid
@@ -1149,7 +1479,7 @@ instance es ~ '[] => Zero (ImageBlit2 es) where
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --
 -- -   #VUID-VkBufferImageCopy2-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBufferImageCopy2-imageSubresource-parameter#
 --     @imageSubresource@ /must/ be a valid
@@ -1270,9 +1600,18 @@ instance es ~ '[] => Zero (BufferImageCopy2 es) where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkImageResolve2-aspectMask-00266# The @aspectMask@ member of
+-- -   #VUID-VkImageResolve2-aspectMask-10993# The @aspectMask@ member of
 --     @srcSubresource@ and @dstSubresource@ /must/ only contain
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     or 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageResolve2-maintenance10-10994# If
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance10 maintenance10>
+--     feature is not enabled, @srcSubresource@ and @dstSubresource@ /must/
+--     not contain
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkImageResolve2-layerCount-08803# If neither of the
 --     @layerCount@ members of @srcSubresource@ or @dstSubresource@ are
@@ -1317,8 +1656,7 @@ data ImageResolve2 = ImageResolve2
   { -- | @srcSubresource@ and @dstSubresource@ are
     -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers' structures
     -- specifying the image subresources of the images used for the source and
-    -- destination image data, respectively. Resolve of depth\/stencil images
-    -- is not supported.
+    -- destination image data, respectively.
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffset@ and @dstOffset@ select the initial @x@, @y@, and @z@ offsets
     -- in texels of the sub-regions of the source and destination image data.
@@ -1411,18 +1749,18 @@ instance Zero ImageResolve2 where
 --     elements of @pRegions@, /must/ not overlap in memory
 --
 -- -   #VUID-VkCopyBufferInfo2-srcBuffer-00118# @srcBuffer@ /must/ have
---     been created with
+--     been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_SRC_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkCopyBufferInfo2-srcBuffer-00119# If @srcBuffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
 --     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-VkCopyBufferInfo2-dstBuffer-00120# @dstBuffer@ /must/ have
---     been created with
+--     been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkCopyBufferInfo2-dstBuffer-00121# If @dstBuffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
@@ -1458,7 +1796,7 @@ instance Zero ImageResolve2 where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCopy2',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdCopyBuffer2',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyBuffer2KHR'
+-- 'cmdCopyBuffer2'
 data CopyBufferInfo2 = CopyBufferInfo2
   { -- | @srcBuffer@ is the source buffer.
     srcBuffer :: Buffer
@@ -1564,13 +1902,13 @@ instance Zero CopyBufferInfo2 where
 -- -   #VUID-VkCopyImageInfo2-srcImage-01548# If the
 --     'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
 --     @dstImage@ is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     the 'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
 --     @dstImage@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-size-compatibility size-compatible>
 --
 -- -   #VUID-VkCopyImageInfo2-None-01549# In a copy to or from a plane of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar image>,
 --     the 'Vulkan.Core10.Enums.Format.Format' of the image and plane
 --     /must/ be compatible according to
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes the description of compatible planes>
@@ -1599,35 +1937,80 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-01551# If neither @srcImage@ nor
 --     @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
---     then for each element of @pRegions@, @srcSubresource.aspectMask@ and
---     @dstSubresource.aspectMask@ /must/ match
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance8 maintenance8>
+--     feature is not enabled then for each element of @pRegions@,
+--     @srcSubresource.aspectMask@ and @dstSubresource.aspectMask@ /must/
+--     match
+--
+-- -   #VUID-VkCopyImageInfo2-pRegions-12201# For each element of
+--     @pRegions@ where @srcSubresource.aspectMask@ and
+--     @dstSubresource.aspectMask@ each contain at least one of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     @srcSubresource.aspectMask@ and @dstSubresource.aspectMask@ /must/
+--     match
+--
+-- -   #VUID-VkCopyImageInfo2-srcSubresource-10214# If
+--     @srcSubresource.aspectMask@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
+--     then @dstSubresource.aspectMask@ /must/ not contain both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-VkCopyImageInfo2-dstSubresource-10215# If
+--     @dstSubresource.aspectMask@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
+--     then @srcSubresource.aspectMask@ /must/ not contain both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-08713# If @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @srcSubresource.aspectMask@
 --     /must/ be a single valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar-image-aspect multi-planar aspect mask>
 --     bit
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-08714# If @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @dstSubresource.aspectMask@
 --     /must/ be a single valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar-image-aspect multi-planar aspect mask>
 --     bit
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-01556# If @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>
 --     and the @dstImage@ does not have a multi-planar image format, then
 --     for each element of @pRegions@, @dstSubresource.aspectMask@ /must/
 --     be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-01557# If @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>
 --     and the @srcImage@ does not have a multi-planar image format, then
 --     for each element of @pRegions@, @srcSubresource.aspectMask@ /must/
 --     be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkCopyImageInfo2-srcSubresource-10211# If
+--     @srcSubresource.aspectMask@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' and
+--     @dstSubresource.aspectMask@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     then the 'Vulkan.Core10.Enums.Format.Format' values of @srcImage@
+--     and @dstImage@ /must/ be compatible according to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-zs-color the list of compatible depth-stencil and color formats>
+--
+-- -   #VUID-VkCopyImageInfo2-srcSubresource-10212# If
+--     @srcSubresource.aspectMask@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--     and @dstSubresource.aspectMask@ is
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
+--     then the 'Vulkan.Core10.Enums.Format.Format' values of @srcImage@
+--     and @dstImage@ /must/ be compatible according to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-zs-color the list of compatible depth-stencil and color formats>
 --
 -- -   #VUID-VkCopyImageInfo2-apiVersion-07932# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
@@ -1686,8 +2069,15 @@ instance Zero CopyBufferInfo2 where
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-01786# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/
---     be @1@
+--     of @pRegions@, @dstOffset.z@ /must/ be @0@
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-10907# If either the
+--     'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
+--     @dstImage@ is not a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compressed_image_formats compressed image format>,
+--     and @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @extent.depth@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-01787# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
@@ -1753,23 +2143,37 @@ instance Zero CopyBufferInfo2 where
 --     @dstSubresource.layerCount@
 --
 -- -   #VUID-VkCopyImageInfo2-dstOffset-00150# For each element of
---     @pRegions@, @dstOffset.x@ and (@extent.width@ + @dstOffset.x@)
+--     @pRegions@, @dstOffset.x@ and (@extent.width@ + @dstOffset.x@),
+--     where @extent@ is
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-size-compatibility adjusted for size-compatibility>,
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the width of the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkCopyImageInfo2-dstOffset-00151# For each element of
---     @pRegions@, @dstOffset.y@ and (@extent.height@ + @dstOffset.y@)
+--     @pRegions@, @dstOffset.y@ and (@extent.height@ + @dstOffset.y@),
+--     where @extent@ is
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-size-compatibility adjusted for size-compatibility>,
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the height of the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-00152# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @dstOffset.y@ /must/ be @0@ and @extent.height@
---     /must/ be @1@
+--     of @pRegions@, @dstOffset.y@ /must/ be @0@
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-10908# If either the
+--     'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
+--     @dstImage@ is not a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compressed_image_formats compressed image format>,
+--     and @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @extent.height@ /must/ be @1@, where @extent@ is
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-size-compatibility adjusted for size-compatibility>
 --
 -- -   #VUID-VkCopyImageInfo2-dstOffset-00153# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@)
+--     of @pRegions@, @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@),
+--     where @extent@ is
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-size-compatibility adjusted for size-compatibility>,
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the depth of the specified @dstSubresource@ of @dstImage@
 --
@@ -1824,69 +2228,44 @@ instance Zero CopyBufferInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageInfo2-dstImage-01732# For each element of
---     @pRegions@, if the sum of @dstOffset.x@ and @extent.width@ does not
---     equal the width of the subresource specified by @dstSubresource@,
---     @extent.width@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
--- -   #VUID-VkCopyImageInfo2-dstImage-01733# For each element of
---     @pRegions@, if the sum of @dstOffset.y@ and @extent.height@ does not
---     equal the height of the subresource specified by @dstSubresource@,
---     @extent.height@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
--- -   #VUID-VkCopyImageInfo2-dstImage-01734# For each element of
---     @pRegions@, if the sum of @dstOffset.z@ and @extent.depth@ does not
---     equal the depth of the subresource specified by @dstSubresource@,
---     @extent.depth@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
 -- -   #VUID-VkCopyImageInfo2-aspect-06662# If the @aspect@ member of any
 --     element of @pRegions@ includes any flag other than
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     or @srcImage@ was not created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     @srcImage@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
---     /must/ have been included in the
---     'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ used to create
---     @srcImage@
+--     usage flag set
 --
 -- -   #VUID-VkCopyImageInfo2-aspect-06663# If the @aspect@ member of any
 --     element of @pRegions@ includes any flag other than
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     or @dstImage@ was not created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     @dstImage@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     /must/ have been included in the
---     'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ used to create
---     @dstImage@
+--     usage flag set
 --
 -- -   #VUID-VkCopyImageInfo2-aspect-06664# If the @aspect@ member of any
 --     element of @pRegions@ includes
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     and @srcImage@ was created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     @srcImage@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
---     /must/ have been included in the
---     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
---     used to create @srcImage@
+--     usage flag set
 --
 -- -   #VUID-VkCopyImageInfo2-aspect-06665# If the @aspect@ member of any
 --     element of @pRegions@ includes
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     and @dstImage@ was created with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     @srcImage@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     /must/ have been included in the
---     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
---     used to create @dstImage@
+--     usage flag set
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-07966# If @srcImage@ is non-sparse
---     then the image or the specified /disjoint/ plane /must/ be bound
+--     then the image or each specified /disjoint/ plane /must/ be bound
 --     completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
@@ -1908,7 +2287,7 @@ instance Zero CopyBufferInfo2 where
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-07966# If @dstImage@ is non-sparse
---     then the image or the specified /disjoint/ plane /must/ be bound
+--     then the image or each specified /disjoint/ plane /must/ be bound
 --     completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
@@ -1968,7 +2347,7 @@ instance Zero CopyBufferInfo2 where
 -- 'Vulkan.Core10.Handles.Image', 'ImageCopy2',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdCopyImage2',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyImage2KHR'
+-- 'cmdCopyImage2'
 data CopyImageInfo2 = CopyImageInfo2
   { -- | @srcImage@ is the source image.
     srcImage :: Image
@@ -2039,14 +2418,6 @@ instance Zero CopyImageInfo2 where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkBlitImageInfo2-pRegions-00215# The source region specified
---     by each element of @pRegions@ /must/ be a region that is contained
---     within @srcImage@
---
--- -   #VUID-VkBlitImageInfo2-pRegions-00216# The destination region
---     specified by each element of @pRegions@ /must/ be a region that is
---     contained within @dstImage@
---
 -- -   #VUID-VkBlitImageInfo2-pRegions-00217# The union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
 --     in memory with any texel that /may/ be sampled during the blit
@@ -2061,9 +2432,9 @@ instance Zero CopyImageInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y′CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2-srcImage-00219# @srcImage@ /must/ have been
---     created with
+--     created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkBlitImageInfo2-srcImage-00220# If @srcImage@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single
@@ -2097,9 +2468,9 @@ instance Zero CopyImageInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y′CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2-dstImage-00224# @dstImage@ /must/ have been
---     created with
+--     created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkBlitImageInfo2-dstImage-00225# If @dstImage@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single
@@ -2177,7 +2548,7 @@ instance Zero CopyImageInfo2 where
 --     when @srcImage@ was created
 --
 -- -   #VUID-VkBlitImageInfo2-dstSubresource-01708# If
---     @srcSubresource.layerCount@ is not
+--     @dstSubresource.layerCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @dstSubresource.baseArrayLayer@ + @dstSubresource.layerCount@ of
 --     each element of @pRegions@ /must/ be less than or equal to the
@@ -2188,10 +2559,44 @@ instance Zero CopyImageInfo2 where
 --     /must/ not have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   #VUID-VkBlitImageInfo2-srcImage-00240# If either @srcImage@ or
---     @dstImage@ is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D',
---     then for each element of @pRegions@, @srcSubresource.baseArrayLayer@
---     and @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
+-- -   #VUID-VkBlitImageInfo2-maintenance8-10207# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance8 maintenance8>
+--     feature is enabled and @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@, and
+--     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
+--     each be @1@
+--
+-- -   #VUID-VkBlitImageInfo2-maintenance8-10208# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance8 maintenance8>
+--     feature is enabled and @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@, and
+--     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
+--     each be @1@
+--
+-- -   #VUID-VkBlitImageInfo2-maintenance8-10579# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance8 maintenance8>
+--     feature is enabled, @dstImage@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', and @srcImage@ is not
+--     of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each
+--     element of @pRegions@, the absolute difference of the @z@ member of
+--     each member of @dstOffsets@ /must/ equal @srcSubresource.layerCount@
+--
+-- -   #VUID-VkBlitImageInfo2-maintenance8-10580# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance8 maintenance8>
+--     feature is enabled, @srcImage@ is
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', and @dstImage@ is not
+--     of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each
+--     element of @pRegions@, the absolute difference of the @z@ member of
+--     each member of @srcOffsets@ /must/ equal @dstSubresource.layerCount@
+--
+-- -   #VUID-VkBlitImageInfo2-srcImage-00240# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance8 maintenance8>
+--     feature is not enabled and either @srcImage@ or @dstImage@ is of
+--     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each
+--     element of @pRegions@, @srcSubresource.baseArrayLayer@ and
+--     @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
 --     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
 --     each be @1@
 --
@@ -2271,11 +2676,11 @@ instance Zero CopyImageInfo2 where
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, then @srcImage@ /must/ not have a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>
 --
 -- -   #VUID-VkBlitImageInfo2-filter-09204# If @filter@ is
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' and if the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled then the cubic weights /must/ be
 --     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM'
 --
@@ -2289,7 +2694,7 @@ instance Zero CopyImageInfo2 where
 --     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.BlitImageCubicWeightsInfoQCOM'
 --
 -- -   #VUID-VkBlitImageInfo2-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBlitImageInfo2-srcImage-parameter# @srcImage@ /must/ be a
 --     valid 'Vulkan.Core10.Handles.Image' handle
@@ -2326,7 +2731,7 @@ instance Zero CopyImageInfo2 where
 -- 'Vulkan.Core10.Enums.Filter.Filter', 'Vulkan.Core10.Handles.Image',
 -- 'ImageBlit2', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdBlitImage2',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR'
+-- 'cmdBlitImage2'
 data BlitImageInfo2 (es :: [Type]) = BlitImageInfo2
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -2440,14 +2845,14 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing rotated destination region>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffers-images-rotation-addressing rotated destination region>
 --     /must/ be contained within @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04555# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, then @dstImage@ /must/ have a 1x1x1
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes texel block extent>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-compatibility-classes texel block extent>
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06203# If any element of
 --     @pRegions@ contains
@@ -2459,7 +2864,7 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, then @dstImage@ /must/ not have a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-pRegions-00171# @srcBuffer@ /must/ be
 --     large enough to contain all buffer locations that are accessed
@@ -2472,9 +2877,9 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     by the elements of @pRegions@, /must/ not overlap in memory
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-srcBuffer-00174# @srcBuffer@ /must/
---     have been created with
+--     have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_SRC_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-01997# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
@@ -2486,9 +2891,9 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-00177# @dstImage@ /must/
---     have been created with
+--     have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImageLayout-00180#
 --     @dstImageLayout@ /must/ specify the layout of the image subresources
@@ -2508,7 +2913,7 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     /must/ be in the range [0,1]
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07966# If @dstImage@ is
---     non-sparse then the image or the specified /disjoint/ plane /must/
+--     non-sparse then the image or each specified /disjoint/ plane /must/
 --     be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
@@ -2699,10 +3104,10 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     aspects present in @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07981# If @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
 --     /must/ be a single valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar-image-aspect multi-planar aspect mask>
 --     bit
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07983# If @dstImage@ is of
@@ -2729,13 +3134,13 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07975# If @dstImage@ does
 --     not have either a depth\/stencil format or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07976# If @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the element size of the compatible format for the format
 --     and the @aspectMask@ of the @imageSubresource@ as defined in
@@ -2797,8 +3202,7 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'cmdCopyBufferToImage2',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyBufferToImage2KHR'
+-- 'cmdCopyBufferToImage2', 'cmdCopyBufferToImage2'
 data CopyBufferToImageInfo2 = CopyBufferToImageInfo2
   { -- | @srcBuffer@ is the source buffer.
     srcBuffer :: Buffer
@@ -2874,14 +3278,14 @@ instance Zero CopyBufferToImageInfo2 where
 --     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing rotated source region>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffers-images-rotation-addressing rotated source region>
 --     /must/ be contained within @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04558# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, then @srcImage@ /must/ have a 1x1x1
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes texel block extent>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-compatibility-classes texel block extent>
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-06205# If any element of
 --     @pRegions@ contains
@@ -2893,7 +3297,7 @@ instance Zero CopyBufferToImageInfo2 where
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, then @srcImage@ /must/ not have a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-pRegions-00183# @dstBuffer@ /must/ be
 --     large enough to contain all buffer locations that are accessed
@@ -2906,9 +3310,9 @@ instance Zero CopyBufferToImageInfo2 where
 --     by the elements of @pRegions@, /must/ not overlap in memory
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-00186# @srcImage@ /must/
---     have been created with
+--     have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-01998# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
@@ -2916,9 +3320,9 @@ instance Zero CopyBufferToImageInfo2 where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-dstBuffer-00191# @dstBuffer@ /must/
---     have been created with
+--     have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-dstBuffer-00192# If @dstBuffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
@@ -2936,7 +3340,7 @@ instance Zero CopyBufferToImageInfo2 where
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07966# If @srcImage@ is
---     non-sparse then the image or the specified /disjoint/ plane /must/
+--     non-sparse then the image or each specified /disjoint/ plane /must/
 --     be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
@@ -3127,10 +3531,10 @@ instance Zero CopyBufferToImageInfo2 where
 --     aspects present in @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07981# If @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
 --     /must/ be a single valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-planes-image-aspect multi-planar aspect mask>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar-image-aspect multi-planar aspect mask>
 --     bit
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07983# If @srcImage@ is of
@@ -3157,13 +3561,13 @@ instance Zero CopyBufferToImageInfo2 where
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07975# If @srcImage@ does
 --     not have either a depth\/stencil format or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07976# If @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-multiplanar multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
 --     multiple of the element size of the compatible format for the format
 --     and the @aspectMask@ of the @imageSubresource@ as defined in
@@ -3225,8 +3629,7 @@ instance Zero CopyBufferToImageInfo2 where
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'cmdCopyImageToBuffer2',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyImageToBuffer2KHR'
+-- 'cmdCopyImageToBuffer2', 'cmdCopyImageToBuffer2'
 data CopyImageToBufferInfo2 = CopyImageToBufferInfo2
   { -- | @srcImage@ is the source image.
     srcImage :: Image
@@ -3290,6 +3693,50 @@ instance Zero CopyImageToBufferInfo2 where
 -- | VkResolveImageInfo2 - Structure specifying parameters of resolve image
 -- command
 --
+-- = Description
+--
+-- If the source format is a floating-point or normalized type, the resolve
+-- mode is chosen as implementation-dependent behavior, unless
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR' is
+-- included in the @pNext@ chain, in which case it is defined by
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@resolveMode@.
+-- If the resolve mode requires to calculate the result from multiple
+-- samples, such as by computing an average or weighted average of the
+-- samples, the values for each pixel are resolved with
+-- implementation-defined numerical precision.
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-numericformat numeric format>
+-- of @srcImage@ uses sRGB encoding and the resolve mode requires the
+-- implementation to convert the samples to floating-point to perform the
+-- calculations, the implementation /should/ convert samples from nonlinear
+-- to linear before resolving the samples as described in the “sRGB EOTF”
+-- section of the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#data-format Khronos Data Format Specification>.
+-- In this case, the implementation /must/ convert the linear averaged
+-- value to nonlinear before writing the resolved result to @dstImage@. If
+-- the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance10 maintenance10>
+-- feature is enabled, whether a nonlinear to linear conversion happens for
+-- sRGB encoded resolve is controlled by
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-resolveSrgbFormatAppliesTransferFunction resolveSrgbFormatAppliesTransferFunction>.
+-- If 'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR' is
+-- included in the @pNext@ chain, this default behavior /can/ be overridden
+-- with
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.RESOLVE_IMAGE_SKIP_TRANSFER_FUNCTION_BIT_KHR'
+-- or
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.RESOLVE_IMAGE_ENABLE_TRANSFER_FUNCTION_BIT_KHR'
+-- flags.
+--
+-- If the source format is an integer type, a single sample’s value is
+-- selected for each pixel, unless
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR' is
+-- included in the @pNext@ chain, in which case it is defined by
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@resolveMode@
+-- or
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@stencilResolveMode@
+-- depending on which aspect is being resolved.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkResolveImageInfo2-pRegions-00255# The union of all source
@@ -3334,10 +3781,22 @@ instance Zero CopyImageToBufferInfo2 where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
+-- -   #VUID-VkResolveImageInfo2-maintenance10-11799# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance10 maintenance10>
+--     feature is enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
 -- -   #VUID-VkResolveImageInfo2-dstImage-02003# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     if the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance10 maintenance10>
+--     feature is not enabled
 --
 -- -   #VUID-VkResolveImageInfo2-linearColorAttachment-06519# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
@@ -3442,9 +3901,9 @@ instance Zero CopyImageToBufferInfo2 where
 --     be @1@
 --
 -- -   #VUID-VkResolveImageInfo2-srcImage-06762# @srcImage@ /must/ have
---     been created with
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkResolveImageInfo2-srcImage-06763# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
@@ -3452,21 +3911,116 @@ instance Zero CopyImageToBufferInfo2 where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
 -- -   #VUID-VkResolveImageInfo2-dstImage-06764# @dstImage@ /must/ have
---     been created with
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     usage flag
+--     usage flag set
 --
 -- -   #VUID-VkResolveImageInfo2-dstImage-06765# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
+-- -   #VUID-VkResolveImageInfo2-srcSubresource-11800#
+--     @srcSubresource.aspectMask@ for each element in @pRegions@ /must/
+--     not specify an aspect which is not part of the image format of
+--     @srcImage@
+--
+-- -   #VUID-VkResolveImageInfo2-dstSubresource-11801#
+--     @dstSubresource.aspectMask@ for each element in @pRegions@ /must/
+--     not specify an aspect which is not part of the image format of
+--     @dstImage@
+--
+-- -   #VUID-VkResolveImageInfo2-srcSubresource-11802#
+--     @srcSubresource.aspectMask@ /must/ equal @dstSubresource.aspectMask@
+--     for each element in @pRegions@
+--
+-- -   #VUID-VkResolveImageInfo2-pNext-10982# If
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR' is
+--     included in the @pNext@ chain, @flags@ includes
+--     'Vulkan.Extensions.VK_KHR_maintenance10.RESOLVE_IMAGE_SKIP_TRANSFER_FUNCTION_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_maintenance10.RESOLVE_IMAGE_ENABLE_TRANSFER_FUNCTION_BIT_KHR',
+--     then the format of @srcImage@ and @dstImage@ /must/ use sRGB
+--     encoding
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10983# If @srcImage@ has a color
+--     format and
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR' is
+--     included in the @pNext@ chain, its @resolveMode@ /must/ not be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10984# If @srcImage@ has a
+--     non-integer color format, and
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR' is
+--     included in the @pNext@ chain, its @resolveMode@ /must/ be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_AVERAGE_BIT'
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10985# If @srcImage@ has an
+--     integer color format, and
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR' is
+--     included in the @pNext@ chain, its @resolveMode@ /must/ be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10986# If @srcImage@ has a
+--     depth-stencil format,
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'
+--     /must/ be included in the @pNext@ chain
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10987# If @srcImage@ has a
+--     depth-stencil format, and a depth aspect is referenced by
+--     @pRegions@,
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@resolveMode@
+--     /must/ not be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10988# If @srcImage@ has a
+--     depth-stencil format, and a stencil aspect is referenced by
+--     @pRegions@,
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@stencilResolveMode@
+--     /must/ not be
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10989# If @srcImage@ has a
+--     depth-stencil format, and a depth aspect is referenced by
+--     @pRegions@,
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@resolveMode@
+--     /must/ be one of the bits set in
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties'::@supportedDepthResolveModes@
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10990# If @srcImage@ has a
+--     depth-stencil format, and a stencil aspect is referenced by
+--     @pRegions@,
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@stencilResolveMode@
+--     /must/ be one of the bits set in
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties'::@supportedStencilResolveModes@
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10991# If @srcImage@ has a
+--     depth-stencil format, and both a depth aspect and stencil aspect is
+--     referenced by @pRegions@, and
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties'::@indepdendentResolve@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE',
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@resolveMode@
+--     /must/ be equal to
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'::@stencilResolveMode@
+--
+-- -   #VUID-VkResolveImageInfo2-srcImage-10992# If @srcImage@ has a
+--     depth-stencil format containing both a depth aspect and stencil
+--     aspect, and
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties'::@indepdendentResolveNone@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', every element of
+--     @pRegions@ /must/ contain both depth and stencil aspects
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkResolveImageInfo2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2'
 --
--- -   #VUID-VkResolveImageInfo2-pNext-pNext# @pNext@ /must/ be @NULL@
+-- -   #VUID-VkResolveImageInfo2-pNext-pNext# @pNext@ /must/ be @NULL@ or a
+--     pointer to a valid instance of
+--     'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR'
+--
+-- -   #VUID-VkResolveImageInfo2-sType-unique# The @sType@ value of each
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkResolveImageInfo2-srcImage-parameter# @srcImage@ /must/ be a
 --     valid 'Vulkan.Core10.Handles.Image' handle
@@ -3500,9 +4054,11 @@ instance Zero CopyImageToBufferInfo2 where
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve2',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdResolveImage2',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdResolveImage2KHR'
-data ResolveImageInfo2 = ResolveImageInfo2
-  { -- | @srcImage@ is the source image.
+-- 'cmdResolveImage2'
+data ResolveImageInfo2 (es :: [Type]) = ResolveImageInfo2
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcImage@ is the source image.
     srcImage :: Image
   , -- | @srcImageLayout@ is the layout of the source image subresources for the
     -- resolve.
@@ -3518,15 +4074,26 @@ data ResolveImageInfo2 = ResolveImageInfo2
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (ResolveImageInfo2)
+deriving instance Generic (ResolveImageInfo2 (es :: [Type]))
 #endif
-deriving instance Show ResolveImageInfo2
+deriving instance Show (Chain es) => Show (ResolveImageInfo2 es)
 
-instance ToCStruct ResolveImageInfo2 where
+instance Extensible ResolveImageInfo2 where
+  extensibleTypeName = "ResolveImageInfo2"
+  setNext ResolveImageInfo2{..} next' = ResolveImageInfo2{next = next', ..}
+  getNext ResolveImageInfo2{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends ResolveImageInfo2 e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @ResolveImageModeInfoKHR = Just f
+    | otherwise = Nothing
+
+instance ( Extendss ResolveImageInfo2 es
+         , PokeChain es ) => ToCStruct (ResolveImageInfo2 es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ResolveImageInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr Image)) (srcImage)
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (srcImageLayout)
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (dstImage)
@@ -3538,17 +4105,21 @@ instance ToCStruct ResolveImageInfo2 where
     lift $ f
   cStructSize = 56
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Image)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Image)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
+    lift $ f
 
-instance FromCStruct ResolveImageInfo2 where
+instance ( Extendss ResolveImageInfo2 es
+         , PeekChain es ) => FromCStruct (ResolveImageInfo2 es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcImage <- peek @Image ((p `plusPtr` 16 :: Ptr Image))
     srcImageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
     dstImage <- peek @Image ((p `plusPtr` 32 :: Ptr Image))
@@ -3557,10 +4128,11 @@ instance FromCStruct ResolveImageInfo2 where
     pRegions <- peek @(Ptr ImageResolve2) ((p `plusPtr` 48 :: Ptr (Ptr ImageResolve2)))
     pRegions' <- generateM (fromIntegral regionCount) (\i -> peekCStruct @ImageResolve2 ((pRegions `advancePtrBytes` (88 * (i)) :: Ptr ImageResolve2)))
     pure $ ResolveImageInfo2
-             srcImage srcImageLayout dstImage dstImageLayout pRegions'
+             next srcImage srcImageLayout dstImage dstImageLayout pRegions'
 
-instance Zero ResolveImageInfo2 where
+instance es ~ '[] => Zero (ResolveImageInfo2 es) where
   zero = ResolveImageInfo2
+           ()
            zero
            zero
            zero

@@ -24,7 +24,7 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Flags',
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineInputAssemblyStateCreateInfo'
 newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

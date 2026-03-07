@@ -15,6 +15,7 @@ import           Data.List                      ( dropWhileEnd
                                                 )
 import           Data.List.Extra                ( nubOrd )
 import qualified Data.Map                      as Map
+import qualified Data.Set                      as S
 import qualified Data.Text                     as T
 import           Data.Text.Extra                ( (<+>) )
 import           Data.Vector                    ( Vector )
@@ -102,19 +103,40 @@ parseSpec bs = do
               , Require {..}   <- toList fRequires
               , n              <- toList rCommandNames
               ])
+            -- Pre-filter types and commands to avoid parsing those from disabled
+            -- extensions (some contain unparseable C declarations)
+            disabledTypeByteNames = S.fromList
+              [ encodeUtf8 (unCName n) | n <- V.toList disabledTypeNames ]
+            disabledCommandByteNames = S.fromList
+              [ encodeUtf8 (unCName n) | n <- V.toList disabledCommandNames ]
+            enabledTypes =
+              [ c | c <- types
+              , case c of
+                  Element n -> maybe True (`S.notMember` disabledTypeByteNames)
+                                          (getAttr "name" n)
+                  _         -> True
+              ]
+            enabledCommand c = case c of
+              Element n -> maybe True (`S.notMember` disabledCommandByteNames)
+                                      (cmdProtoName n)
+              _         -> True
+            cmdProtoName node = do
+              proto <- listToMaybe [p | Element p <- contents node, name p == "proto"]
+              elemText "name" proto
         specHandles <- V.filter ((`V.notElem` disabledTypeNames) . hName)
-          <$> parseHandles @t types
+          <$> parseHandles @t enabledTypes
         specFuncPointers <- V.filter ((`V.notElem` disabledTypeNames) . fpName)
-          <$> parseFuncPointers types
+          <$> parseFuncPointers enabledTypes
         typeAliases      <- V.filter ((`V.notElem` disabledTypeAliasNames) . aName)
-          <$> parseTypeAliases ["handle", "enum", "bitmask", "struct"] types
+          <$> parseTypeAliases ["handle", "enum", "bitmask", "struct"] enabledTypes
         unsizedStructs <- V.filter ((`V.notElem` disabledTypeNames) . sName)
-          <$> parseStructs typeAliases types
+          <$> parseStructs typeAliases enabledTypes
         unsizedUnions <- V.filter ((`V.notElem` disabledTypeNames) . sName)
-          <$> parseUnions typeAliases types
+          <$> parseUnions typeAliases enabledTypes
         specCommands <-
           fmap (V.filter ((`V.notElem` disabledCommandNames) . cName))
           .   parseCommands
+          .   filter enabledCommand
           .   contents
           =<< oneChild "commands" n
         emptyBitmasks   <- parseEmptyBitmasks types
@@ -151,13 +173,33 @@ parseSpec bs = do
                            (parseDefinedConstants types)
         specExtensionConstants <- parseExtensionConstants (contents n)
         (specSPIRVExtensions, specSPIRVCapabilities) <- case sSpecFlavor @t of
-          SSpecVk ->
+          SSpecVk -> do
+            let disabledExtNameSet = S.fromList
+                  [ exName | Extension {..} <- toList specDisabledExtensions ]
+                disabledTypeNameSet = S.fromList (V.toList disabledTypeNames)
+                isDisabledReq (SPIRVReqExtension ext) =
+                  S.member ext disabledExtNameSet
+                isDisabledReq (SPIRVReqFeature s _ rs) =
+                  S.member s disabledTypeNameSet
+                  || any (`S.member` disabledExtNameSet) rs
+                isDisabledReq (SPIRVReqProperty s _ _ rs) =
+                  S.member s disabledTypeNameSet
+                  || any (`S.member` disabledExtNameSet) rs
+                isDisabledReq _ = False
+                filterSpirvExt se = se
+                  { spirvExtensionReqs =
+                      V.filter (not . isDisabledReq) (spirvExtensionReqs se)
+                  }
+                filterSpirvCap sc = sc
+                  { spirvCapabilityReqs =
+                      V.filter (not . isDisabledReq) (spirvCapabilityReqs sc)
+                  }
             (,)
-              <$> (   parseSPIRVExtensions
+              <$> (   fmap (V.map filterSpirvExt) . parseSPIRVExtensions
                   .   contents
                   =<< oneChild "spirvextensions" n
                   )
-              <*> (   parseSPIRVCapabilities
+              <*> (   fmap (V.map filterSpirvCap) . parseSPIRVCapabilities
                   .   contents
                   =<< oneChild "spirvcapabilities" n
                   )
@@ -506,10 +548,22 @@ withChildren ss =
 ----------------------------------------------------------------
 
 parseFeatures :: ParseDisabled -> [Content] -> P (Vector Feature)
-parseFeatures parseDisabled es = V.fromList
-  <$> sequenceV [ parseFeature e | Element e <- es, "feature" == name e
-                , disabled parseDisabled e
-                ]
+parseFeatures parseDisabled es = do
+  allFeatures <- sequenceV [ parseFeature e | Element e <- es, "feature" == name e
+                           , disabled parseDisabled e
+                           ]
+  -- Merge features that share the same version number. The Vulkan 1.4+ XML
+  -- splits each version into VK_BASE_VERSION, VK_COMPUTE_VERSION,
+  -- VK_GRAPHICS_VERSION and VK_VERSION sub-features. We merge their requires
+  -- so each version appears exactly once.
+  let grouped = Map.fromListWith (<>) [ (fVersion f, [f]) | f <- allFeatures ]
+      merge [] = error "parseFeatures: empty group"
+      merge (f:fs) = Feature
+        { fName     = fName (maybe f id (viaNonEmpty last fs))  -- prefer the public VK_VERSION_X_Y name
+        , fVersion  = fVersion f
+        , fRequires = foldMap fRequires (f:fs)
+        }
+  pure . V.fromList . map merge . Map.elems $ grouped
  where
   parseFeature :: Node -> P Feature
   parseFeature n = do
@@ -827,6 +881,30 @@ parseFuncPointers = onTypes "funcpointer" parseFuncPointer
  where
   parseFuncPointer :: Node -> P FuncPointer
   parseFuncPointer n = do
+    let hasProto = any (\case Element e -> name e == "proto"; _ -> False) (contents n)
+    if hasProto
+      then parseFuncPointerStructured n
+      else parseFuncPointerLegacy n
+
+  -- New XML format: <proto><type>void</type> <name>PFN_...</name></proto> <param>...</param>
+  parseFuncPointerStructured :: Node -> P FuncPointer
+  parseFuncPointerStructured n = do
+    proto  <- oneChild "proto" n
+    fpName <- nameElem "funcpointer" proto
+    context (unCName fpName) $ do
+      let retType = allTextOn ((`notElem` ["name", "comment"]) . name) proto
+          params  = [ allNonCommentText m
+                    | Element m <- contents n
+                    , name m == "param"
+                    ]
+          typeString = "typedef " <> retType <> " (VKAPI_PTR *)("
+                        <> BS.intercalate ", " params <> ")"
+      fpType <- parseCType typeString
+      pure FuncPointer { .. }
+
+  -- Legacy XML format: typedef text with inline <name> and <type> elements
+  parseFuncPointerLegacy :: Node -> P FuncPointer
+  parseFuncPointerLegacy n = do
     fpName <- nameElem "funcpointer" n
     context (unCName fpName) $ do
       let typeString = allTextOn ((`notElem` ["name", "comment"]) . name) n
@@ -1167,7 +1245,10 @@ allTypeNames :: forall r . HasErr r => [Content] -> Sem r TypeNames
 allTypeNames es = do
   let nameText :: Node -> Sem r ByteString
       nameText n =
-        note "Unable to get type name" (getAttr "name" n <|> elemText "name" n)
+        note "Unable to get type name" (getAttr "name" n <|> elemText "name" n <|> protoElemName n)
+      protoElemName node = do
+        proto <- listToMaybe [p | Element p <- contents node, name p == "proto"]
+        elemText "name" proto
   categoryTypeNames <- traverseV
     nameText
     [ n

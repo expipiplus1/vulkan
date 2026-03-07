@@ -84,8 +84,8 @@
 -- A set of new built-in output variables are used to express a visible
 -- cluster, including per-cluster shading rate. In addition, a new built-in
 -- function is used to emit these variables from CCS to the IA stage. The
--- IA stage can use these variables to fetches vertices of a visible
--- cluster and drive vertex shaders to shading these vertices.
+-- IA stage can use these variables to fetch vertices of a visible cluster
+-- and drive vertex shaders to shading these vertices.
 --
 -- Note that CCS do not work with geometry or tessellation shaders, but
 -- both IA and vertex shaders are preserved. Vertex shaders are still used
@@ -147,27 +147,27 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-indexcounthuawei IndexCountHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-indexcounthuawei IndexCountHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-vertexcounthuawei VertexCountHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-vertexcounthuawei VertexCountHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-instancecounthuawei InstanceCountHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-instancecounthuawei InstanceCountHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-firstindexhuawei FirstIndexHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-firstindexhuawei FirstIndexHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-firstvertexhuawei FirstVertexHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-firstvertexhuawei FirstVertexHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-vertexoffsethuawei VertexOffsetHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-vertexoffsethuawei VertexOffsetHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-firstinstancehuawei FirstInstanceHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-firstinstancehuawei FirstInstanceHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clusteridhuawei ClusterIDHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-clusteridhuawei ClusterIDHUAWEI>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clustershadingratehuawei ClusterShadingRateHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-clustershadingratehuawei ClusterShadingRateHUAWEI>
 --
 -- == New SPIR-V Capability
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ClusterCullingShadingHUAWEI ClusterCullingShadingHUAWEI>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-ClusterCullingShadingHUAWEI ClusterCullingShadingHUAWEI>
 --
 -- == Sample Code
 --
@@ -356,7 +356,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_cluster_culling_shader Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_HUAWEI_cluster_culling_shader Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

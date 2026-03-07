@@ -29,6 +29,11 @@
 --
 --     -   Interacts with VK_KHR_push_descriptor
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Contact__]
 --
 --     -   Jon Leech
@@ -87,12 +92,12 @@
 -- -   'Vulkan.Core10.APIConstants.NULL_HANDLE' is allowed to be used when
 --     binding an index buffer, instead of a valid
 --     'Vulkan.Core10.Handles.Buffer' handle. When the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is enabled, every index fetched results in a value of zero.
 --
 -- -   A new property @maxCombinedImageSamplerDescriptorCount@ to indicate
 --     the maximum number of descriptors needed for any of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
 --     supported by the implementation.
 --
 -- -   A new property @blockTexelViewCompatibleMultipleLayers@ indicating
@@ -171,15 +176,15 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR'
+--     -   'STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR'
+--     -   'STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR'
+--     -   'STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>
@@ -197,13 +202,15 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR'
+--     -   'STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR'
+--     -   'STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR'
 --
--- == Issues
+-- == Promotion to Vulkan 1.4
 --
--- None.
+-- Functionality in this extension is included in core Vulkan 1.4 with the
+-- KHR suffix omitted. The original type, enum, and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Version History
 --
@@ -218,18 +225,11 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance6 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance6 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_maintenance6  ( BindDescriptorBufferEmbeddedSamplersInfoEXT
-                                              , BindDescriptorSetsInfoKHR
-                                              , BindMemoryStatusKHR
-                                              , PhysicalDeviceMaintenance6FeaturesKHR
-                                              , PhysicalDeviceMaintenance6PropertiesKHR
-                                              , PushConstantsInfoKHR
-                                              , PushDescriptorSetInfoKHR
-                                              , PushDescriptorSetWithTemplateInfoKHR
                                               , SetDescriptorBufferOffsetsInfoEXT
                                               ) where
 
@@ -249,74 +249,6 @@ instance Show (Chain es) => Show (BindDescriptorBufferEmbeddedSamplersInfoEXT es
 
 instance ( Extendss BindDescriptorBufferEmbeddedSamplersInfoEXT es
          , PeekChain es ) => FromCStruct (BindDescriptorBufferEmbeddedSamplersInfoEXT es)
-
-
-type role BindDescriptorSetsInfoKHR nominal
-data BindDescriptorSetsInfoKHR (es :: [Type])
-
-instance ( Extendss BindDescriptorSetsInfoKHR es
-         , PokeChain es ) => ToCStruct (BindDescriptorSetsInfoKHR es)
-instance Show (Chain es) => Show (BindDescriptorSetsInfoKHR es)
-
-instance ( Extendss BindDescriptorSetsInfoKHR es
-         , PeekChain es ) => FromCStruct (BindDescriptorSetsInfoKHR es)
-
-
-data BindMemoryStatusKHR
-
-instance ToCStruct BindMemoryStatusKHR
-instance Show BindMemoryStatusKHR
-
-instance FromCStruct BindMemoryStatusKHR
-
-
-data PhysicalDeviceMaintenance6FeaturesKHR
-
-instance ToCStruct PhysicalDeviceMaintenance6FeaturesKHR
-instance Show PhysicalDeviceMaintenance6FeaturesKHR
-
-instance FromCStruct PhysicalDeviceMaintenance6FeaturesKHR
-
-
-data PhysicalDeviceMaintenance6PropertiesKHR
-
-instance ToCStruct PhysicalDeviceMaintenance6PropertiesKHR
-instance Show PhysicalDeviceMaintenance6PropertiesKHR
-
-instance FromCStruct PhysicalDeviceMaintenance6PropertiesKHR
-
-
-type role PushConstantsInfoKHR nominal
-data PushConstantsInfoKHR (es :: [Type])
-
-instance ( Extendss PushConstantsInfoKHR es
-         , PokeChain es ) => ToCStruct (PushConstantsInfoKHR es)
-instance Show (Chain es) => Show (PushConstantsInfoKHR es)
-
-instance ( Extendss PushConstantsInfoKHR es
-         , PeekChain es ) => FromCStruct (PushConstantsInfoKHR es)
-
-
-type role PushDescriptorSetInfoKHR nominal
-data PushDescriptorSetInfoKHR (es :: [Type])
-
-instance ( Extendss PushDescriptorSetInfoKHR es
-         , PokeChain es ) => ToCStruct (PushDescriptorSetInfoKHR es)
-instance Show (Chain es) => Show (PushDescriptorSetInfoKHR es)
-
-instance ( Extendss PushDescriptorSetInfoKHR es
-         , PeekChain es ) => FromCStruct (PushDescriptorSetInfoKHR es)
-
-
-type role PushDescriptorSetWithTemplateInfoKHR nominal
-data PushDescriptorSetWithTemplateInfoKHR (es :: [Type])
-
-instance ( Extendss PushDescriptorSetWithTemplateInfoKHR es
-         , PokeChain es ) => ToCStruct (PushDescriptorSetWithTemplateInfoKHR es)
-instance Show (Chain es) => Show (PushDescriptorSetWithTemplateInfoKHR es)
-
-instance ( Extendss PushDescriptorSetWithTemplateInfoKHR es
-         , PeekChain es ) => FromCStruct (PushDescriptorSetWithTemplateInfoKHR es)
 
 
 type role SetDescriptorBufferOffsetsInfoEXT nominal

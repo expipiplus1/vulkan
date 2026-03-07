@@ -50,6 +50,7 @@ renderParams handles = r
                   "VkDeviceOrHostAddressConstKHR" -> (<> "Const")
                   "VkDeviceOrHostAddressConstAMDX" -> (<> "ConstAMDX")
                   "VkDescriptorDataEXT" -> articalize
+                  "VkResourceDescriptorDataEXT" -> articalize
                   _ -> id
               )
             . upperCaseFirst

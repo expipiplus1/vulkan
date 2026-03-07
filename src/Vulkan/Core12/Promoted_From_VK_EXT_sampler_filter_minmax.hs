@@ -40,6 +40,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
+-- -   #extension-limits-filterMinmaxSingleComponentFormats#
+--     @filterMinmaxSingleComponentFormats@ is a boolean value indicating
+--     whether a minimum set of required formats support min\/max
+--     filtering.
+--
+-- -   #extension-limits-filterMinmaxImageComponentMapping#
+--     @filterMinmaxImageComponentMapping@ is a boolean value indicating
+--     whether the implementation supports non-identity component mapping
+--     of the image when doing min\/max filtering.
+--
 -- If the 'PhysicalDeviceSamplerFilterMinmaxProperties' structure is
 -- included in the @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
@@ -56,6 +66,30 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- they support
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT':
 --
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R8_UNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R8_SNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R16_UNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R16_SNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R16_SFLOAT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_R32_SFLOAT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_X8_D24_UNORM_PACK32'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM_S8_UINT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D24_UNORM_S8_UINT'
+--
+-- -   'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT_S8_UINT'
+--
 -- If the format is a depth\/stencil format, this bit only specifies that
 -- the depth aspect (not the stencil aspect) of an image of this format
 -- supports min\/max filtering, and that min\/max filtering of the depth
@@ -65,7 +99,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.FALSE' the component mapping of the
 -- image view used with min\/max filtering /must/ have been created with
 -- the @r@ component set to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
 -- Only the @r@ component of the sampled image value is defined and the
 -- other component values are undefined. If
 -- @filterMinmaxImageComponentMapping@ is
@@ -74,6 +108,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkPhysicalDeviceSamplerFilterMinmaxProperties-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax VK_EXT_sampler_filter_minmax>,
@@ -81,14 +119,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerFilterMinmaxProperties = PhysicalDeviceSamplerFilterMinmaxProperties
-  { -- | #extension-limits-filterMinmaxSingleComponentFormats#
-    -- @filterMinmaxSingleComponentFormats@ is a boolean value indicating
-    -- whether a minimum set of required formats support min\/max filtering.
+  { -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxProperties" "filterMinmaxSingleComponentFormats"
     filterMinmaxSingleComponentFormats :: Bool
-  , -- | #extension-limits-filterMinmaxImageComponentMapping#
-    -- @filterMinmaxImageComponentMapping@ is a boolean value indicating
-    -- whether the implementation supports non-identity component mapping of
-    -- the image when doing min\/max filtering.
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxProperties" "filterMinmaxImageComponentMapping"
     filterMinmaxImageComponentMapping :: Bool
   }
   deriving (Typeable, Eq)

@@ -116,7 +116,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_nested_command_buffer Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_nested_command_buffer Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -180,9 +180,13 @@ pattern RENDERING_CONTENTS_INLINE_BIT_EXT = RENDERING_CONTENTS_INLINE_BIT_KHR
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceNestedCommandBufferFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceNestedCommandBufferFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -194,14 +198,14 @@ pattern RENDERING_CONTENTS_INLINE_BIT_EXT = RENDERING_CONTENTS_INLINE_BIT_KHR
 data PhysicalDeviceNestedCommandBufferFeaturesEXT = PhysicalDeviceNestedCommandBufferFeaturesEXT
   { -- | #features-nestedCommandBuffer# @nestedCommandBuffer@ indicates the
     -- implementation supports nested command buffers, which allows
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Secondary Command Buffers>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary Secondary Command Buffers>
     -- to execute other
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Secondary Command Buffers>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary Secondary Command Buffers>.
     nestedCommandBuffer :: Bool
   , -- | #features-nestedCommandBufferRendering# @nestedCommandBufferRendering@
     -- indicates that it is valid to call
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands' inside a
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Secondary Command Buffer>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary Secondary Command Buffer>
     -- recorded with
     -- 'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'.
     nestedCommandBufferRendering :: Bool
@@ -288,7 +292,7 @@ data PhysicalDeviceNestedCommandBufferPropertiesEXT = PhysicalDeviceNestedComman
   { -- | #limits-maxCommandBufferNestingLevel# @maxCommandBufferNestingLevel@
     -- indicates the maximum nesting level of calls to
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands' from
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Secondary Command Buffers>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary Secondary Command Buffers>.
     -- A @maxCommandBufferNestingLevel@ of @UINT32_MAX@ means there is no limit
     -- to the nesting level.
     maxCommandBufferNestingLevel :: Word32 }

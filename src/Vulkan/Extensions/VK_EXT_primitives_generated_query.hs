@@ -99,7 +99,7 @@
 -- is inconvenient.
 --
 -- 3) On some hardware, this query cannot be implemented if
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
 -- is enabled. How will this be handled?
 --
 -- __RESOLVED__: A feature flag is exposed by this extension for this. On
@@ -135,7 +135,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_primitives_generated_query Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_primitives_generated_query Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -183,10 +183,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -204,7 +207,7 @@ data PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = PhysicalDevicePrimitive
   , -- | #features-primitivesGeneratedQueryWithRasterizerDiscard#
     -- @primitivesGeneratedQueryWithRasterizerDiscard@ indicates whether the
     -- implementation supports this query when
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-discard rasterization discard>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-discard rasterization discard>
     -- is enabled.
     primitivesGeneratedQueryWithRasterizerDiscard :: Bool
   , -- | #features-primitivesGeneratedQueryWithNonZeroStreams#

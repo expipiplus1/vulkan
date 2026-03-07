@@ -54,7 +54,7 @@
 --
 -- When this extension is enabled, the HDR profile is supported for all
 -- ASTC formats listed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC Compressed Image Formats>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#appendix-compressedtex-astc ASTC Compressed Image Formats>.
 --
 -- == New Structures
 --
@@ -106,12 +106,11 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- This extension has been partially promoted. Vulkan APIs in this
--- extension are included in core Vulkan 1.3, with the EXT suffix omitted.
--- However, the feature is made optional in Vulkan 1.3. External
--- interactions defined by this extension, such as SPIR-V token names,
--- retain their original names. The original Vulkan API names are still
--- available as aliases of the core functionality.
+-- Vulkan APIs in this extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. However, the feature is made optional in Vulkan 1.3.
+-- External interactions defined by this extension, such as SPIR-V token
+-- names, retain their original names. The original Vulkan API names are
+-- still available as aliases of the core functionality.
 --
 -- == Issues
 --
@@ -152,7 +151,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_texture_compression_astc_hdr Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_texture_compression_astc_hdr Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

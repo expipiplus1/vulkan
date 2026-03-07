@@ -91,7 +91,7 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationStateRasterizationOrderAMD'
 --
@@ -161,7 +161,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_rasterization_order Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_AMD_rasterization_order Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -266,6 +266,16 @@ instance Zero PipelineRasterizationStateRasterizationOrderAMD where
 -- | VkRasterizationOrderAMD - Specify rasterization order for a graphics
 -- pipeline
 --
+-- = Description
+--
+-- -   'RASTERIZATION_ORDER_STRICT_AMD' specifies that operations for each
+--     primitive in a subpass /must/ occur in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#drawing-primitive-order primitive order>.
+--
+-- -   'RASTERIZATION_ORDER_RELAXED_AMD' specifies that operations for each
+--     primitive in a subpass /may/ not occur in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#drawing-primitive-order primitive order>.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order VK_AMD_rasterization_order>,
@@ -273,14 +283,10 @@ instance Zero PipelineRasterizationStateRasterizationOrderAMD where
 newtype RasterizationOrderAMD = RasterizationOrderAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'RASTERIZATION_ORDER_STRICT_AMD' specifies that operations for each
--- primitive in a subpass /must/ occur in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
+-- No documentation found for Nested "VkRasterizationOrderAMD" "VK_RASTERIZATION_ORDER_STRICT_AMD"
 pattern RASTERIZATION_ORDER_STRICT_AMD = RasterizationOrderAMD 0
 
--- | 'RASTERIZATION_ORDER_RELAXED_AMD' specifies that operations for each
--- primitive in a subpass /may/ not occur in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
+-- No documentation found for Nested "VkRasterizationOrderAMD" "VK_RASTERIZATION_ORDER_RELAXED_AMD"
 pattern RASTERIZATION_ORDER_RELAXED_AMD = RasterizationOrderAMD 1
 
 {-# COMPLETE

@@ -117,7 +117,7 @@
 --
 -- -   'KHR_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION'
 --
--- -   'Vulkan.Core10.APIConstants.LUID_SIZE_KHR'
+-- -   'LUID_SIZE_KHR'
 --
 -- -   Extending
 --     'Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits.ExternalMemoryFeatureFlagBits':
@@ -162,59 +162,58 @@
 -- 1) Why do so many external memory capabilities need to be queried on a
 -- per-memory-handle-type basis?
 --
--- __PROPOSED RESOLUTION__: This is because some handle types are based on
--- OS-native objects that have far more limited capabilities than the very
--- generic Vulkan memory objects. Not all memory handle types can name
--- memory objects that support 3D images, for example. Some handle types
--- cannot even support the deferred image and memory binding behavior of
--- Vulkan and require specifying the image when allocating or importing the
--- memory object.
+-- This is because some handle types are based on OS-native objects that
+-- have far more limited capabilities than the very generic Vulkan memory
+-- objects. Not all memory handle types can name memory objects that
+-- support 3D images, for example. Some handle types cannot even support
+-- the deferred image and memory binding behavior of Vulkan and require
+-- specifying the image when allocating or importing the memory object.
 --
 -- 2) Do the 'ExternalImageFormatPropertiesKHR' and
 -- 'ExternalBufferPropertiesKHR' structs need to include a list of memory
 -- type bits that support the given handle type?
 --
--- __PROPOSED RESOLUTION__: No. The memory types that do not support the
--- handle types will simply be filtered out of the results returned by
+-- No. The memory types that do not support the handle types will simply be
+-- filtered out of the results returned by
 -- 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements' and
 -- 'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' when a set
 -- of handle types was specified at image or buffer creation time.
 --
 -- 3) Should the non-opaque handle types be moved to their own extension?
 --
--- __PROPOSED RESOLUTION__: Perhaps. However, defining the handle type bits
--- does very little and does not require any platform-specific types on its
--- own, and it is easier to maintain the bitfield values in a single
--- extension for now. Presumably more handle types could be added by
--- separate extensions though, and it would be midly weird to have some
--- platform-specific ones defined in the core spec and some in extensions
+-- Perhaps. However, defining the handle type bits does very little and
+-- does not require any platform-specific types on its own, and it is
+-- easier to maintain the bitfield values in a single extension for now.
+-- Presumably more handle types could be added by separate extensions
+-- though, and it would be midly weird to have some platform-specific ones
+-- defined in the core spec and some in extensions
 --
 -- 4) Do we need a @D3D11_TILEPOOL@ type?
 --
--- __PROPOSED RESOLUTION__: No. This is technically possible, but the
--- synchronization is awkward. D3D11 surfaces must be synchronized using
--- shared mutexes, and these synchronization primitives are shared by the
--- entire memory object, so D3D11 shared allocations divided among multiple
--- buffer and image bindings may be difficult to synchronize.
+-- No. This is technically possible, but the synchronization is awkward.
+-- D3D11 surfaces must be synchronized using shared mutexes, and these
+-- synchronization primitives are shared by the entire memory object, so
+-- D3D11 shared allocations divided among multiple buffer and image
+-- bindings may be difficult to synchronize.
 --
 -- 5) Should the Windows 7-compatible handle types be named “KMT” handles
 -- or “GLOBAL_SHARE” handles?
 --
--- __PROPOSED RESOLUTION__: KMT, simply because it is more concise.
+-- KMT, simply because it is more concise.
 --
 -- 6) How do applications identify compatible devices and drivers across
 -- instance, process, and API boundaries when sharing memory?
 --
--- __PROPOSED RESOLUTION__: New device properties are exposed that allow
--- applications to correctly correlate devices and drivers. A device and
--- driver UUID that must both match to ensure sharing compatibility between
--- two Vulkan instances, or a Vulkan instance and an extensible external
--- API are added. To allow correlating with Direct3D devices, a device LUID
--- is added that corresponds to a DXGI adapter LUID. A driver ID is not
--- needed for Direct3D because mismatched driver component versions are not
--- currently supported on the Windows OS. Should support for such
--- configurations be introduced at the OS level, further Vulkan extensions
--- would be needed to correlate userspace component builds.
+-- New device properties are exposed that allow applications to correctly
+-- correlate devices and drivers. A device and driver UUID that must both
+-- match to ensure sharing compatibility between two Vulkan instances, or a
+-- Vulkan instance and an extensible external API are added. To allow
+-- correlating with Direct3D devices, a device LUID is added that
+-- corresponds to a DXGI adapter LUID. A driver ID is not needed for
+-- Direct3D because mismatched driver component versions are not currently
+-- supported on the Windows OS. Should support for such configurations be
+-- introduced at the OS level, further Vulkan extensions would be needed to
+-- correlate userspace component builds.
 --
 -- == Version History
 --
@@ -229,7 +228,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_external_memory_capabilities Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -238,6 +237,7 @@ module Vulkan.Extensions.VK_KHR_external_memory_capabilities  ( pattern STRUCTUR
                                                               , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO_KHR
                                                               , pattern STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES_KHR
                                                               , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES_KHR
+                                                              , pattern LUID_SIZE_KHR
                                                               , pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR
                                                               , pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR
                                                               , pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR
@@ -248,7 +248,6 @@ module Vulkan.Extensions.VK_KHR_external_memory_capabilities  ( pattern STRUCTUR
                                                               , pattern EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_KHR
                                                               , pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_KHR
                                                               , pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR
-                                                              , pattern LUID_SIZE_KHR
                                                               , getPhysicalDeviceExternalBufferPropertiesKHR
                                                               , ExternalMemoryHandleTypeFlagsKHR
                                                               , ExternalMemoryFeatureFlagsKHR
@@ -324,6 +323,10 @@ pattern STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES_KHR = STRUCTURE_TYPE_EXTERNAL_
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
 
 
+-- No documentation found for TopLevel "VK_LUID_SIZE_KHR"
+pattern LUID_SIZE_KHR = LUID_SIZE
+
+
 -- No documentation found for TopLevel "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
 
@@ -362,10 +365,6 @@ pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_KHR = EXTERNAL_MEMORY_FEATURE_EXP
 
 -- No documentation found for TopLevel "VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR"
 pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR = EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
-
-
--- No documentation found for TopLevel "VK_LUID_SIZE_KHR"
-pattern LUID_SIZE_KHR = LUID_SIZE
 
 
 -- No documentation found for TopLevel "vkGetPhysicalDeviceExternalBufferPropertiesKHR"

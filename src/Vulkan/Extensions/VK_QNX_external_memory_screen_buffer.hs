@@ -136,7 +136,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QNX_external_memory_screen_buffer Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QNX_external_memory_screen_buffer Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -241,9 +241,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Extensions.VK_KHR_external_memory.ERROR_INVALID_EXTERNAL_HANDLE_KHR'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_KHR_external_memory.ERROR_INVALID_EXTERNAL_HANDLE_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -262,7 +266,7 @@ getScreenBufferPropertiesQNX :: forall a io
                              -> -- | @buffer@ is the QNX Screen buffer which will be imported.
                                 --
                                 -- #VUID-vkGetScreenBufferPropertiesQNX-buffer-08968# @buffer@ /must/ be a
-                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
+                                -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
                                 --
                                 -- #VUID-vkGetScreenBufferPropertiesQNX-buffer-parameter# @buffer@ /must/
                                 -- be a valid pointer to a valid 'Screen_buffer' value
@@ -303,7 +307,7 @@ getScreenBufferPropertiesQNX device buffer = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImportScreenBufferInfoQNX-buffer-08967# @buffer@ is not
 --     @NULL@, it /must/ be a pointer to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
 --
 -- == Valid Usage (Implicit)
 --
@@ -369,7 +373,7 @@ instance Zero ImportScreenBufferInfoQNX where
 --     'ScreenBufferFormatPropertiesQNX'
 --
 -- -   #VUID-VkScreenBufferPropertiesQNX-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -444,7 +448,7 @@ instance es ~ '[] => Zero (ScreenBufferPropertiesQNX es) where
 -- = Description
 --
 -- If the QNX Screen buffer has one of the formats listed in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-qnx-screen-buffer-formats QNX Screen Format Equivalence table>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-qnx-screen-buffer-formats QNX Screen Format Equivalence table>,
 -- then @format@ /must/ have the equivalent Vulkan format listed in the
 -- table. Otherwise, @format@ /may/ be
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', indicating the QNX Screen
@@ -669,7 +673,7 @@ instance Zero ExternalFormatQNX where
 --     Functionality in this row is always available.
 --
 -- The
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalscreenbuffer-table Functionality supported for QNX Screen buffer features>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-externalscreenbuffer-table Functionality supported for QNX Screen buffer features>
 -- table summarizes the functionality enabled by the
 -- 'PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX' structure. Each
 -- entry in the body of the table summarizes the functionality that /can/
@@ -683,10 +687,13 @@ instance Zero ExternalFormatQNX where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

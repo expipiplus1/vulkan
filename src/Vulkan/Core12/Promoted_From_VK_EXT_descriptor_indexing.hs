@@ -73,9 +73,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDescriptorIndexingFeatures' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDescriptorIndexingFeatures', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -480,7 +484,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
   , -- | #extension-limits-robustBufferAccessUpdateAfterBind#
     -- @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
     -- whether
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- /can/ be enabled on a device simultaneously with
     -- @descriptorBindingUniformBufferUpdateAfterBind@,
     -- @descriptorBindingStorageBufferUpdateAfterBind@,
@@ -488,14 +492,18 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', then either @robustBufferAccess@
     -- /must/ be disabled or all of these update-after-bind features /must/ be
-    -- disabled.
+    -- disabled. Similarly, if this property is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', robustness /must/ not be enabled
+    -- through the
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo'
+    -- mechanism.
     robustBufferAccessUpdateAfterBind :: Bool
   , -- | #extension-limits-quadDivergentImplicitLod# @quadDivergentImplicitLod@
     -- is a boolean value indicating whether implicit LOD calculations for
     -- image operations have well-defined results when the image and\/or
     -- sampler objects used for the instruction are not uniform within a quad.
     -- See
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
     quadDivergentImplicitLod :: Bool
   , -- | #extension-limits-maxPerStageDescriptorUpdateAfterBindSamplers#
     -- @maxPerStageDescriptorUpdateAfterBindSamplers@ is similar to
@@ -783,7 +791,7 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 -- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-flags-03003# If
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@flags@
 --     includes
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
 --     then all elements of @pBindingFlags@ /must/ not include
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT',
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT',
@@ -898,6 +906,14 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+--
+-- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingStorageTensorUpdateAfterBind-09697#
+--     If
+--     'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorFeaturesARM'::@descriptorBindingStorageTensorUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     /must/ not use
+--     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
 -- == Valid Usage (Implicit)
 --

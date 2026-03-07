@@ -55,7 +55,8 @@
 -- create.
 --
 -- This extension adds dynamic state support for what is normally static
--- state in 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo'.
+-- state in
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineVertexInputStateCreateInfo'.
 --
 -- == New Commands
 --
@@ -97,7 +98,7 @@
 --
 --     -   Make 'VertexInputBindingDescription2EXT' extensible
 --
---     -   Add new 'VertexInputAttributeDescription2EXT' struct for the
+--     -   Add new 'VertexInputAttributeDescription2EXT' structure for the
 --         @pVertexAttributeDescriptions@ parameter to
 --         'cmdSetVertexInputEXT' so it is also extensible
 --
@@ -112,7 +113,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_vertex_input_dynamic_state Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

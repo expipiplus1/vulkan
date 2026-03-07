@@ -248,7 +248,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_custom_border_color Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_custom_border_color Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -311,8 +311,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- sampler is used with an image with a stencil format, then the
 -- implementation /must/ source the custom border color from either the
 -- first or second components of
--- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@customBorderColor@ and
--- /should/ source it from the first component.
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ and /should/
+-- source it from the first component.
 --
 -- == Valid Usage
 --
@@ -322,11 +322,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ type /must/
 --     match the sampled type of the provided @format@, as shown in the
 --     /SPIR-V Type/ column of the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-numericformat>
 --     table
 --
 -- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04014# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
 --     feature is not enabled then @format@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
@@ -334,7 +334,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --     sampler is used to sample an image view of
 --     'Vulkan.Core10.Enums.Format.FORMAT_B4G4R4A4_UNORM_PACK16',
 --     'Vulkan.Core10.Enums.Format.FORMAT_B5G6R5_UNORM_PACK16',
---     'Vulkan.Core10.Enums.Format.FORMAT_A1B5G5R5_UNORM_PACK16_KHR', or
+--     'Vulkan.Core10.Enums.Format.FORMAT_A1B5G5R5_UNORM_PACK16', or
 --     'Vulkan.Core10.Enums.Format.FORMAT_B5G5R5A1_UNORM_PACK16' format
 --     then @format@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
@@ -353,7 +353,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color VK_EXT_custom_border_color>,
 -- 'Vulkan.Core10.CommandBufferBuilding.ClearColorValue',
 -- 'Vulkan.Core10.Enums.Format.Format',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
+-- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.registerCustomBorderColorEXT'
 data SamplerCustomBorderColorCreateInfoEXT = SamplerCustomBorderColorCreateInfoEXT
   { -- | @customBorderColor@ is a
     -- 'Vulkan.Core10.CommandBufferBuilding.ClearColorValue' representing the
@@ -362,7 +363,7 @@ data SamplerCustomBorderColorCreateInfoEXT = SamplerCustomBorderColorCreateInfoE
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' representing the
     -- format of the sampled image view(s). This field may be
     -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
     -- feature is enabled.
     format :: Format
   }
@@ -472,9 +473,13 @@ instance Zero PhysicalDeviceCustomBorderColorPropertiesEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceCustomBorderColorFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceCustomBorderColorFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

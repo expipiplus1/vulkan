@@ -96,12 +96,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetBufferOpaqueCaptureAddress-None-03326# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
---     feature /must/ be enabled
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
+--     and
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
+--     features /must/ be enabled
+--
+-- -   #VUID-vkGetBufferOpaqueCaptureAddress-pInfo-10725# @pInfo->buffer@
+--     /must/ have been created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--     flag
 --
 -- -   #VUID-vkGetBufferOpaqueCaptureAddress-device-03327# If @device@ was
 --     created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -149,18 +156,13 @@ foreign import ccall
 --
 -- = Description
 --
--- The 64-bit return value is an address of the start of @pInfo->buffer@.
--- The address range starting at this value and whose size is the size of
--- the buffer /can/ be used in a shader to access the memory bound to that
--- buffer, using the @SPV_KHR_physical_storage_buffer@ extension or the
--- equivalent @SPV_EXT_physical_storage_buffer@ extension and the
--- @PhysicalStorageBuffer@ storage class. For example, this value /can/ be
--- stored in a uniform buffer, and the shader /can/ read the value from the
--- uniform buffer and use it to do a dependent read\/write to this buffer.
+-- The 64-bit return value, @bufferBaseAddress@, is an address of the start
+-- of @pInfo->buffer@. Addresses in the range [@bufferBaseAddress@,
+-- @bufferBaseAddress@ + 'Vulkan.Core10.Buffer.BufferCreateInfo'::@size@)
+-- /can/ be used to access the memory bound to this buffer on the device.
+--
 -- A value of zero is reserved as a “null” pointer and /must/ not be
--- returned as a valid buffer device address. All loads, stores, and
--- atomics in a shader through @PhysicalStorageBuffer@ pointers /must/
--- access addresses in the address range of some buffer.
+-- returned as a valid buffer device address.
 --
 -- If the buffer was created with a non-zero value of
 -- 'BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@ or
@@ -184,16 +186,28 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetBufferDeviceAddress-bufferDeviceAddress-03324# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
---     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressEXT ::bufferDeviceAddress>
---     feature /must/ be enabled
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
+--     feature or the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressEXT ::bufferDeviceAddress>
+--     feature /must/ be enabled, and at least one of the following
+--     conditions /must/ be met
+--
+--     -   @buffer@ is sparse
+--
+--     -   @buffer@ is bound completely and contiguously to a single
+--         'Vulkan.Core10.Handles.DeviceMemory' object
+--
+--     -   @buffer@ was created with the
+--         'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--         flag and the
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressEXT ::bufferDeviceAddress>
+--         feature is enabled on the device
 --
 -- -   #VUID-vkGetBufferDeviceAddress-device-03325# If @device@ was created
 --     with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDeviceEXT ::bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDeviceEXT ::bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -206,6 +220,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_buffer_device_address VK_EXT_buffer_device_address>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
@@ -255,12 +270,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetDeviceMemoryOpaqueCaptureAddress-None-03334# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
---     feature /must/ be enabled
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
+--     and
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
+--     features /must/ be enabled
+--
+-- -   #VUID-vkGetDeviceMemoryOpaqueCaptureAddress-pInfo-10727#
+--     @pInfo->memory@ /must/ have been allocated using the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--     flag
 --
 -- -   #VUID-vkGetDeviceMemoryOpaqueCaptureAddress-device-03335# If
 --     @device@ was created with multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -318,9 +340,13 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceBufferDeviceAddressFeatures' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceBufferDeviceAddressFeatures', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -400,41 +426,28 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 -- | VkBufferDeviceAddressInfo - Structure specifying the buffer to query an
 -- address for
 --
--- == Valid Usage
---
--- -   #VUID-VkBufferDeviceAddressInfo-buffer-02600# If @buffer@ is
---     non-sparse and was not created with the
---     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
---     flag, then it /must/ be bound completely and contiguously to a
---     single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   #VUID-VkBufferDeviceAddressInfo-buffer-02601# @buffer@ /must/ have
---     been created with
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
---
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkBufferDeviceAddressInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO'
---
--- -   #VUID-VkBufferDeviceAddressInfo-pNext-pNext# @pNext@ /must/ be
---     @NULL@
---
--- -   #VUID-VkBufferDeviceAddressInfo-buffer-parameter# @buffer@ /must/ be
---     a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_buffer_device_address VK_EXT_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getBufferDeviceAddress',
--- 'Vulkan.Extensions.VK_EXT_buffer_device_address.getBufferDeviceAddressEXT',
--- 'Vulkan.Extensions.VK_KHR_buffer_device_address.getBufferDeviceAddressKHR',
--- 'getBufferOpaqueCaptureAddress',
--- 'Vulkan.Extensions.VK_KHR_buffer_device_address.getBufferOpaqueCaptureAddressKHR'
+-- 'getBufferDeviceAddress', 'getBufferDeviceAddress',
+-- 'getBufferDeviceAddress', 'getBufferOpaqueCaptureAddress',
+-- 'getBufferOpaqueCaptureAddress'
 data BufferDeviceAddressInfo = BufferDeviceAddressInfo
   { -- | @buffer@ specifies the buffer whose address is being queried.
+    --
+    -- #VUID-VkBufferDeviceAddressInfo-buffer-02601# @buffer@ /must/ have been
+    -- created with the
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
+    -- usage flag set
+    --
+    -- #VUID-VkBufferDeviceAddressInfo-buffer-parameter# @buffer@ /must/ be a
+    -- valid 'Vulkan.Core10.Handles.Buffer' handle
     buffer :: Buffer }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -488,9 +501,9 @@ instance Zero BufferDeviceAddressInfo where
 -- If this structure is not present, it is as if @opaqueCaptureAddress@ is
 -- zero.
 --
--- Apps /should/ avoid creating buffers with app-provided addresses and
--- implementation-provided addresses in the same process, to reduce the
--- likelihood of
+-- Applications /should/ avoid creating buffers with application-provided
+-- addresses and implementation-provided addresses in the same process, to
+-- reduce the likelihood of
 -- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS'
 -- errors.
 --
@@ -506,8 +519,8 @@ instance Zero BufferDeviceAddressInfo where
 --
 -- Implementations are expected to separate such buffers in the GPU address
 -- space so normal allocations will avoid using these addresses.
--- Apps\/tools should avoid mixing app-provided and implementation-provided
--- addresses for buffers created with
+-- Applications and tools should avoid mixing application-provided and
+-- implementation-provided addresses for buffers created with
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 -- to avoid address space allocation conflicts.
 --
@@ -646,7 +659,7 @@ instance Zero MemoryOpaqueCaptureAddressAllocateInfo where
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceMemoryOpaqueCaptureAddress',
--- 'Vulkan.Extensions.VK_KHR_buffer_device_address.getDeviceMemoryOpaqueCaptureAddressKHR'
+-- 'getDeviceMemoryOpaqueCaptureAddress'
 data DeviceMemoryOpaqueCaptureAddressInfo = DeviceMemoryOpaqueCaptureAddressInfo
   { -- | @memory@ specifies the memory whose address is being queried.
     --

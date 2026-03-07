@@ -47,6 +47,7 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -110,6 +111,7 @@ instance Zero ExternalMemoryImageCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -165,9 +167,10 @@ instance Zero ExternalMemoryBufferCreateInfo where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-00656# The bits in
+-- -   #VUID-VkExportMemoryAllocateInfo-handleTypes-09860# The bits in
 --     @handleTypes@ /must/ be supported and compatible, as reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM',
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
@@ -183,6 +186,7 @@ instance Zero ExternalMemoryBufferCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'

@@ -59,7 +59,7 @@
 -- customizable set of restrictions and features of a presentation engine.
 -- This makes it a useful portable test target for applications targeting a
 -- wide range of presentation engines where the actual target presentation
--- engines might be scarce, unavailable or otherwise undesirable or
+-- engines might be scarce, unavailable, or otherwise undesirable or
 -- inconvenient to use for general Vulkan application development.
 --
 -- == New Commands
@@ -97,7 +97,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_headless_surface Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_headless_surface Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -206,9 +206,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -225,7 +229,7 @@ createHeadlessSurfaceEXT :: forall io
                             HeadlessSurfaceCreateInfoEXT
                          -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                             -- surface object when there is no more specific allocator available (see
-                            -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                            -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (SurfaceKHR)
 createHeadlessSurfaceEXT instance'

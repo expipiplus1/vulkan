@@ -121,7 +121,7 @@
 -- 'Vulkan.Core10.Handles.CommandBuffer' that must be re-initialized.
 --
 -- (2) Why are viewport depth values specified as a partial
--- 'Vulkan.Core10.Pipeline.Viewport' struct, rather than a leaner
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport' struct, rather than a leaner
 -- depth-only struct?
 --
 -- __DISCUSSION__:
@@ -130,11 +130,11 @@
 -- @minDepth@ and @maxDepth@. However, as application developers would need
 -- to maintain both a @VK_NV_inherited_viewport_scissor@ code path and a
 -- fallback code path (at least in the short term), we ultimately chose to
--- continue using the existing 'Vulkan.Core10.Pipeline.Viewport' structure.
--- Doing so would allow application developers to reuse the same
--- 'Vulkan.Core10.Pipeline.Viewport' array for both code paths, rather than
--- constructing separate @VkViewportDepthNV@ and
--- 'Vulkan.Core10.Pipeline.Viewport' arrays for each code path.
+-- continue using the existing 'Vulkan.Core10.GraphicsPipeline.Viewport'
+-- structure. Doing so would allow application developers to reuse the same
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport' array for both code paths,
+-- rather than constructing separate @VkViewportDepthNV@ and
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport' arrays for each code path.
 --
 -- == Version History
 --
@@ -149,7 +149,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

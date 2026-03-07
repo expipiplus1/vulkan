@@ -22,10 +22,11 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance1.trimCommandPool',
--- 'Vulkan.Extensions.VK_KHR_maintenance1.trimCommandPoolKHR'
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance1.trimCommandPool'
 newtype CommandPoolTrimFlags = CommandPoolTrimFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

@@ -9,9 +9,9 @@ module Vulkan.Core11.Enums.SubgroupFeatureFlagBits  ( SubgroupFeatureFlags
                                                                              , SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
                                                                              , SUBGROUP_FEATURE_CLUSTERED_BIT
                                                                              , SUBGROUP_FEATURE_QUAD_BIT
-                                                                             , SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR
-                                                                             , SUBGROUP_FEATURE_ROTATE_BIT_KHR
-                                                                             , SUBGROUP_FEATURE_PARTITIONED_BIT_NV
+                                                                             , SUBGROUP_FEATURE_PARTITIONED_BIT_EXT
+                                                                             , SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT
+                                                                             , SUBGROUP_FEATURE_ROTATE_BIT
                                                                              , ..
                                                                              )
                                                     ) where
@@ -32,6 +32,55 @@ type SubgroupFeatureFlags = SubgroupFeatureFlagBits
 -- | VkSubgroupFeatureFlagBits - Bitmask describing what group operations are
 -- supported with subgroup scope
 --
+-- = Description
+--
+-- -   #features-subgroup-basic# 'SUBGROUP_FEATURE_BASIC_BIT' specifies the
+--     device will accept SPIR-V shader modules containing the
+--     @GroupNonUniform@ capability.
+--
+-- -   #features-subgroup-vote# 'SUBGROUP_FEATURE_VOTE_BIT' specifies the
+--     device will accept SPIR-V shader modules containing the
+--     @GroupNonUniformVote@ capability.
+--
+-- -   #features-subgroup-arithmetic# 'SUBGROUP_FEATURE_ARITHMETIC_BIT'
+--     specifies the device will accept SPIR-V shader modules containing
+--     the @GroupNonUniformArithmetic@ capability.
+--
+-- -   #features-subgroup-ballot# 'SUBGROUP_FEATURE_BALLOT_BIT' specifies
+--     the device will accept SPIR-V shader modules containing the
+--     @GroupNonUniformBallot@ capability.
+--
+-- -   #features-subgroup-shuffle# 'SUBGROUP_FEATURE_SHUFFLE_BIT' specifies
+--     the device will accept SPIR-V shader modules containing the
+--     @GroupNonUniformShuffle@ capability.
+--
+-- -   #features-subgroup-shuffle-relative#
+--     'SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT' specifies the device will
+--     accept SPIR-V shader modules containing the
+--     @GroupNonUniformShuffleRelative@ capability.
+--
+-- -   #features-subgroup-clustered# 'SUBGROUP_FEATURE_CLUSTERED_BIT'
+--     specifies the device will accept SPIR-V shader modules containing
+--     the @GroupNonUniformClustered@ capability.
+--
+-- -   #features-subgroup-quad# 'SUBGROUP_FEATURE_QUAD_BIT' specifies the
+--     device will accept SPIR-V shader modules containing the
+--     @GroupNonUniformQuad@ capability.
+--
+-- -   #features-subgroup-partitioned#
+--     'SUBGROUP_FEATURE_PARTITIONED_BIT_EXT' specifies the device will
+--     accept SPIR-V shader modules containing the
+--     @GroupNonUniformPartitionedEXT@ capability.
+--
+-- -   #features-subgroup-rotate# 'SUBGROUP_FEATURE_ROTATE_BIT' specifies
+--     the device will accept SPIR-V shader modules containing the
+--     @GroupNonUniformRotateKHR@ capability.
+--
+-- -   #features-subgroup-rotate-clustered#
+--     'SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT' specifies the device will
+--     accept SPIR-V shader modules that use the @ClusterSize@ operand to
+--     @OpGroupNonUniformRotateKHR@.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
@@ -39,62 +88,38 @@ type SubgroupFeatureFlags = SubgroupFeatureFlagBits
 newtype SubgroupFeatureFlagBits = SubgroupFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | #features-subgroup-basic# 'SUBGROUP_FEATURE_BASIC_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniform@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_BASIC_BIT"
 pattern SUBGROUP_FEATURE_BASIC_BIT = SubgroupFeatureFlagBits 0x00000001
 
--- | #features-subgroup-vote# 'SUBGROUP_FEATURE_VOTE_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformVote@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_VOTE_BIT"
 pattern SUBGROUP_FEATURE_VOTE_BIT = SubgroupFeatureFlagBits 0x00000002
 
--- | #features-subgroup-arithmetic# 'SUBGROUP_FEATURE_ARITHMETIC_BIT'
--- specifies the device will accept SPIR-V shader modules containing the
--- @GroupNonUniformArithmetic@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_ARITHMETIC_BIT"
 pattern SUBGROUP_FEATURE_ARITHMETIC_BIT = SubgroupFeatureFlagBits 0x00000004
 
--- | #features-subgroup-ballot# 'SUBGROUP_FEATURE_BALLOT_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformBallot@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_BALLOT_BIT"
 pattern SUBGROUP_FEATURE_BALLOT_BIT = SubgroupFeatureFlagBits 0x00000008
 
--- | #features-subgroup-shuffle# 'SUBGROUP_FEATURE_SHUFFLE_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformShuffle@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_SHUFFLE_BIT"
 pattern SUBGROUP_FEATURE_SHUFFLE_BIT = SubgroupFeatureFlagBits 0x00000010
 
--- | #features-subgroup-shuffle-relative#
--- 'SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT' specifies the device will accept
--- SPIR-V shader modules containing the @GroupNonUniformShuffleRelative@
--- capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT"
 pattern SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = SubgroupFeatureFlagBits 0x00000020
 
--- | #features-subgroup-clustered# 'SUBGROUP_FEATURE_CLUSTERED_BIT' specifies
--- the device will accept SPIR-V shader modules containing the
--- @GroupNonUniformClustered@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_CLUSTERED_BIT"
 pattern SUBGROUP_FEATURE_CLUSTERED_BIT = SubgroupFeatureFlagBits 0x00000040
 
--- | #features-subgroup-quad# 'SUBGROUP_FEATURE_QUAD_BIT' specifies the
--- device will accept SPIR-V shader modules containing the
--- @GroupNonUniformQuad@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_QUAD_BIT"
 pattern SUBGROUP_FEATURE_QUAD_BIT = SubgroupFeatureFlagBits 0x00000080
 
--- | #features-subgroup-rotate-clustered#
--- 'SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR' specifies the device will
--- accept SPIR-V shader modules that use the @ClusterSize@ operand to
--- @OpGroupNonUniformRotateKHR@.
-pattern SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR = SubgroupFeatureFlagBits 0x00000400
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT"
+pattern SUBGROUP_FEATURE_PARTITIONED_BIT_EXT = SubgroupFeatureFlagBits 0x00000100
 
--- | #features-subgroup-rotate# 'SUBGROUP_FEATURE_ROTATE_BIT_KHR' specifies
--- the device will accept SPIR-V shader modules containing the
--- @GroupNonUniformRotateKHR@ capability.
-pattern SUBGROUP_FEATURE_ROTATE_BIT_KHR = SubgroupFeatureFlagBits 0x00000200
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT"
+pattern SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT = SubgroupFeatureFlagBits 0x00000400
 
--- | #features-subgroup-partitioned# 'SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
--- specifies the device will accept SPIR-V shader modules containing the
--- @GroupNonUniformPartitionedNV@ capability.
-pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV = SubgroupFeatureFlagBits 0x00000100
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_ROTATE_BIT"
+pattern SUBGROUP_FEATURE_ROTATE_BIT = SubgroupFeatureFlagBits 0x00000200
 
 conNameSubgroupFeatureFlagBits :: String
 conNameSubgroupFeatureFlagBits = "SubgroupFeatureFlagBits"
@@ -125,16 +150,16 @@ showTableSubgroupFeatureFlagBits =
     )
   , (SUBGROUP_FEATURE_QUAD_BIT, "QUAD_BIT")
   ,
-    ( SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR
-    , "ROTATE_CLUSTERED_BIT_KHR"
+    ( SUBGROUP_FEATURE_PARTITIONED_BIT_EXT
+    , "PARTITIONED_BIT_EXT"
     )
   ,
-    ( SUBGROUP_FEATURE_ROTATE_BIT_KHR
-    , "ROTATE_BIT_KHR"
+    ( SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT
+    , "ROTATE_CLUSTERED_BIT"
     )
   ,
-    ( SUBGROUP_FEATURE_PARTITIONED_BIT_NV
-    , "PARTITIONED_BIT_NV"
+    ( SUBGROUP_FEATURE_ROTATE_BIT
+    , "ROTATE_BIT"
     )
   ]
 

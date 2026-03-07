@@ -87,7 +87,7 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo':
 --
 --     -   'PipelineCoverageModulationStateCreateInfoNV'
 --
@@ -99,7 +99,7 @@
 --
 -- -   Extending
 --     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'AttachmentSampleCountInfoNV'
 --
@@ -144,7 +144,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -266,7 +266,7 @@ pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV = STRUCTURE_TYPE_ATTACHME
 -- @coverageModulationMode@ is 'COVERAGE_MODULATION_MODE_NONE_NV'.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-coverage-reduction coverage reduction mode>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-coverage-reduction coverage reduction mode>
 -- is
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.COVERAGE_REDUCTION_MODE_TRUNCATE_NV',
 -- each color sample is associated with only a single coverage sample. In
@@ -426,6 +426,20 @@ instance Read PipelineCoverageModulationStateCreateFlagsNV where
 
 -- | VkCoverageModulationModeNV - Specify the coverage modulation mode
 --
+-- = Description
+--
+-- -   'COVERAGE_MODULATION_MODE_NONE_NV' specifies that no components are
+--     multiplied by the modulation factor.
+--
+-- -   'COVERAGE_MODULATION_MODE_RGB_NV' specifies that the red, green, and
+--     blue components are multiplied by the modulation factor.
+--
+-- -   'COVERAGE_MODULATION_MODE_ALPHA_NV' specifies that the alpha
+--     component is multiplied by the modulation factor.
+--
+-- -   'COVERAGE_MODULATION_MODE_RGBA_NV' specifies that all components are
+--     multiplied by the modulation factor.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
@@ -434,20 +448,16 @@ instance Read PipelineCoverageModulationStateCreateFlagsNV where
 newtype CoverageModulationModeNV = CoverageModulationModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COVERAGE_MODULATION_MODE_NONE_NV' specifies that no components are
--- multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_NONE_NV"
 pattern COVERAGE_MODULATION_MODE_NONE_NV = CoverageModulationModeNV 0
 
--- | 'COVERAGE_MODULATION_MODE_RGB_NV' specifies that the red, green, and
--- blue components are multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_RGB_NV"
 pattern COVERAGE_MODULATION_MODE_RGB_NV = CoverageModulationModeNV 1
 
--- | 'COVERAGE_MODULATION_MODE_ALPHA_NV' specifies that the alpha component
--- is multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_ALPHA_NV"
 pattern COVERAGE_MODULATION_MODE_ALPHA_NV = CoverageModulationModeNV 2
 
--- | 'COVERAGE_MODULATION_MODE_RGBA_NV' specifies that all components are
--- multiplied by the modulation factor.
+-- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_RGBA_NV"
 pattern COVERAGE_MODULATION_MODE_RGBA_NV = CoverageModulationModeNV 3
 
 {-# COMPLETE

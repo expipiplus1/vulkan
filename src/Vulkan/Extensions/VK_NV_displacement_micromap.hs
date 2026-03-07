@@ -29,6 +29,12 @@
 --         of provisional header files for enablement and stability
 --         details.__
 --
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cluster_acceleration_structure VK_NV_cluster_acceleration_structure>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
@@ -108,7 +114,9 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV'
 --
 -- -   Extending
 --     'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapTypeEXT':
@@ -132,9 +140,11 @@
 --
 -- (1) What is the status of this extension?
 --
--- -   Provisional and expected to change. The broad structure and encoding
---     format are stable, but there will likely be changes to the
---     structures, enumerant values, and shader interface.
+-- -   Deprecated. The VK_NV_cluster_acceleration_structure extension is
+--     not a one-to-one replacement for this extension but enables similar
+--     performance improvements for high-tessellation geometry and is
+--     considered the preferred direction to improve high-tessellation
+--     geometry performance.
 --
 -- == Version History
 --
@@ -153,11 +163,12 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_displacement_micromap Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_displacement_micromap Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_displacement_micromap  ( PhysicalDeviceDisplacementMicromapFeaturesNV(..)
+module Vulkan.Extensions.VK_NV_displacement_micromap  ( pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV
+                                                      , PhysicalDeviceDisplacementMicromapFeaturesNV(..)
                                                       , PhysicalDeviceDisplacementMicromapPropertiesNV(..)
                                                       , AccelerationStructureTrianglesDisplacementMicromapNV(..)
                                                       , DisplacementMicromapFormatNV( DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV
@@ -218,6 +229,8 @@ import Vulkan.Core10.Enums.IndexType (IndexType)
 import Vulkan.Extensions.Handles (MicromapEXT)
 import Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapUsageEXT)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_DISPLACEMENT_MICROMAP_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DISPLACEMENT_MICROMAP_FEATURES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DISPLACEMENT_MICROMAP_PROPERTIES_NV))
@@ -227,6 +240,10 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (DeviceOrHostAddressConst
 import Vulkan.Extensions.Handles (MicromapEXT(..))
 import Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapTypeEXT(..))
 import Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapUsageEXT(..))
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_NV = BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV
+
+
 -- | VkPhysicalDeviceDisplacementMicromapFeaturesNV - Structure describing
 -- the ray tracing displacement micromap features that can be supported by
 -- an implementation
@@ -243,9 +260,13 @@ import Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapUsageEXT(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDisplacementMicromapFeaturesNV' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceDisplacementMicromapFeaturesNV', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -469,7 +490,9 @@ data AccelerationStructureTrianglesDisplacementMicromapNV = AccelerationStructur
   , -- | @indexType@ is the type of triangle indices used when indexing this
     -- micromap.
     indexType :: IndexType
-  , -- | @indexBuffer@ is the address containing the triangle indices.
+  , -- | @indexBuffer@ is a device or host address of memory containing the
+    -- triangle indices. When @indexType@ is
+    -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR' it /must/ be @NULL@.
     indexBuffer :: DeviceOrHostAddressConstKHR
   , -- | @indexStride@ is the byte stride between triangle indices.
     indexStride :: DeviceSize
@@ -555,6 +578,21 @@ instance Zero AccelerationStructureTrianglesDisplacementMicromapNV where
 --
 -- = Description
 --
+-- -   'DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV' specifies
+--     that the given micromap format encodes 64 micro-triangles worth of
+--     displacements in 64 bytes as described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
+--
+-- -   'DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV' specifies
+--     that the given micromap format encodes 256 micro-triangles worth of
+--     displacements in 128 bytes as described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
+--
+-- -   'DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV' specifies
+--     that the given micromap format encodes 1024 micro-triangles worth of
+--     displacements in 128 bytes as described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
+--
 -- For compactness, these values are stored as 16-bit in some structures.
 --
 -- = See Also
@@ -565,22 +603,13 @@ newtype DisplacementMicromapFormatNV = DisplacementMicromapFormatNV Int32
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV' specifies that
--- the given micromap format encodes 64 micro-triangles worth of
--- displacements in 64 bytes as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
+-- No documentation found for Nested "VkDisplacementMicromapFormatNV" "VK_DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV"
 pattern DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV = DisplacementMicromapFormatNV 1
 
--- | 'DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV' specifies that
--- the given micromap format encodes 256 micro-triangles worth of
--- displacements in 128 bytes as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
+-- No documentation found for Nested "VkDisplacementMicromapFormatNV" "VK_DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV"
 pattern DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV = DisplacementMicromapFormatNV 2
 
--- | 'DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV' specifies
--- that the given micromap format encodes 1024 micro-triangles worth of
--- displacements in 128 bytes as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
+-- No documentation found for Nested "VkDisplacementMicromapFormatNV" "VK_DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV"
 pattern DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV = DisplacementMicromapFormatNV 3
 
 {-# COMPLETE

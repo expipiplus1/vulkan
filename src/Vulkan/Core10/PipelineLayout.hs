@@ -100,9 +100,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -118,7 +122,7 @@ createPipelineLayout :: forall io
                         -- specifying the state of the pipeline layout object.
                         PipelineLayoutCreateInfo
                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (PipelineLayout)
@@ -176,12 +180,6 @@ foreign import ccall
 --     provided when @pipelineLayout@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-02004# @pipelineLayout@
---     /must/ not have been passed to any @vkCmd*@ command for any command
---     buffers that are still in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---     when 'destroyPipelineLayout' is called
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkDestroyPipelineLayout-device-parameter# @device@ /must/ be a
@@ -216,7 +214,7 @@ destroyPipelineLayout :: forall io
                       -> -- | @pipelineLayout@ is the pipeline layout to destroy.
                          PipelineLayout
                       -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
@@ -408,16 +406,20 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@, /must/ be less than or equal to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxPerStageDescriptorInlineUniformBlocks@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03022# The total
---     number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03022# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingSampledImageUpdateAfterBind descriptorBindingSampledImageUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindSamplers@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03023# The total
---     number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03023# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingUniformBufferUpdateAfterBind descriptorBindingUniformBufferUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -425,8 +427,10 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindUniformBuffers@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03024# The total
---     number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03024# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingStorageBufferUpdateAfterBind descriptorBindingStorageBufferUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
@@ -434,8 +438,10 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindStorageBuffers@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03025# The total
---     number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03025# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingSampledImageUpdateAfterBind descriptorBindingSampledImageUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -444,8 +450,10 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindSampledImages@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03026# The total
---     number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03026# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingStorageImageUpdateAfterBind descriptorBindingStorageImageUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -453,15 +461,19 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindStorageImages@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03027# The total
---     number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03027# If any
+--     element of @pSetLayouts@ is created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set, the total number of descriptors with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindInputAttachments@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02215# The total
---     number of bindings with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02215# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingInlineUniformBlockUpdateAfterBind descriptorBindingInlineUniformBlockUpdateAfterBind>
+--     feature is supported on the device, the total number of bindings
+--     with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -487,7 +499,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetUniformBuffers@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03030# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is not enabled, the total number of descriptors in
 --     descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
@@ -498,7 +510,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetUniformBuffersDynamic@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-maintenance7-10003# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is enabled, the total number of descriptors in descriptor
 --     set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
@@ -506,7 +518,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetTotalUniformBuffersDynamic ::maxDescriptorSetTotalUniformBuffersDynamic>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorSetTotalUniformBuffersDynamic ::maxDescriptorSetTotalUniformBuffersDynamic>
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03031# The total
 --     number of descriptors in descriptor set layouts created without the
@@ -518,7 +530,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetStorageBuffers@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03032# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is not enabled, the total number of descriptors in
 --     descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
@@ -529,7 +541,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetStorageBuffersDynamic@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-maintenance7-10004# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is enabled, the total number of descriptors in descriptor
 --     set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
@@ -537,7 +549,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetTotalStorageBuffersDynamic ::maxDescriptorSetTotalStorageBuffersDynamic>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorSetTotalStorageBuffersDynamic ::maxDescriptorSetTotalStorageBuffersDynamic>
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-None-10005# The total number of
 --     descriptors in descriptor set layouts created without the
@@ -548,16 +560,20 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetTotalBuffersDynamic ::maxDescriptorSetTotalBuffersDynamic>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorSetTotalBuffersDynamic ::maxDescriptorSetTotalBuffersDynamic>
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-10006# The total number
---     of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-10006# If either the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingStorageBufferUpdateAfterBind descriptorBindingStorageBufferUpdateAfterBind>
+--     or
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingUniformBufferUpdateAfterBind descriptorBindingUniformBufferUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetUpdateAfterBindTotalBuffersDynamic ::maxDescriptorSetUpdateAfterBindTotalBuffersDynamic>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorSetUpdateAfterBindTotalBuffersDynamic ::maxDescriptorSetUpdateAfterBindTotalBuffersDynamic>
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03033# The total
 --     number of descriptors in descriptor set layouts created without the
@@ -600,23 +616,29 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxDescriptorSetInlineUniformBlocks@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03036# The total number
---     of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03036# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingSampledImageUpdateAfterBind descriptorBindingSampledImageUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindSamplers@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03037# The total number
---     of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03037# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingUniformBufferUpdateAfterBind descriptorBindingUniformBufferUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindUniformBuffers@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03038# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingUniformBufferUpdateAfterBind descriptorBindingUniformBufferUpdateAfterBind>
+--     feature is supported on the device, and if the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is not enabled, the total number of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
@@ -624,22 +646,28 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-maintenance7-10007# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingUniformBufferUpdateAfterBind descriptorBindingUniformBufferUpdateAfterBind>
+--     feature is supported on the device, and the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is enabled, the total number of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic ::maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic ::maxDescriptorSetUpdateAfterBindTotalUniformBuffersDynamic>
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03039# The total number
---     of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03039# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingStorageBufferUpdateAfterBind descriptorBindingStorageBufferUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindStorageBuffers@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03040# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingStorageBufferUpdateAfterBind descriptorBindingStorageBufferUpdateAfterBind>
+--     feature is supported on the device, and if the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is not enabled, the total number of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
@@ -647,15 +675,19 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-maintenance7-10008# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingStorageBufferUpdateAfterBind descriptorBindingStorageBufferUpdateAfterBind>
+--     feature is supported on the device, and if the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance7 maintenance7>
 --     feature is enabled, the total number of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic ::maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic ::maxDescriptorSetUpdateAfterBindTotalStorageBuffersDynamic>
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03041# The total number
---     of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03041# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingSampledImageUpdateAfterBind descriptorBindingSampledImageUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -664,8 +696,10 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindSampledImages@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03042# The total number
---     of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03042# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingStorageImageUpdateAfterBind descriptorBindingStorageImageUpdateAfterBind>
+--     feature is supported on the device, the total number of descriptors
+--     of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -673,15 +707,19 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindStorageImages@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03043# The total number
---     of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03043# If any element
+--     of @pSetLayouts@ is created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set, the total number of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindInputAttachments@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02217# The total
---     number of bindings with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02217# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBindingInlineUniformBlockUpdateAfterBind descriptorBindingInlineUniformBlockUpdateAfterBind>
+--     feature is supported on the device, the total number of bindings
+--     with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -701,7 +739,7 @@ instance Zero PushConstantRange where
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00293# @pSetLayouts@
 --     /must/ not contain more than one descriptor set layout that was
 --     created with
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT'
 --     set
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03571# The total
@@ -750,7 +788,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
 --     across all shader stages and across all elements of @pSetLayouts@
 --     /must/ be less than or equal to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-04606# Any element of
 --     @pSetLayouts@ /must/ not have been created with the
@@ -759,7 +797,7 @@ instance Zero PushConstantRange where
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-graphicsPipelineLibrary-06753# If
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
 --     feature is not enabled, elements of @pSetLayouts@ /must/ be valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' objects
 --
@@ -770,6 +808,38 @@ instance Zero PushConstantRange where
 --     the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     bit set
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-09698# The total number
+--     of descriptors in descriptor set layouts created without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     accessible to any given shader stage across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorPropertiesARM'::@maxPerStageDescriptorSetStorageTensors@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-09699# The total number
+--     of descriptors in descriptor set layouts created without the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--     bit set with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     accessible across all shader stages and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorPropertiesARM'::@maxDescriptorSetStorageTensors@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-09878# The total number
+--     of descriptors of the type
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     accessible across all shader stages and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorPropertiesARM'::@maxDescriptorSetUpdateAfterBindStorageTensors@
+--
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-09879# The total
+--     number of descriptors with a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM'
+--     accessible to any given shader stage across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorPropertiesARM'::@maxPerStageDescriptorUpdateAfterBindStorageTensors@
 --
 -- == Valid Usage (Implicit)
 --
@@ -805,7 +875,9 @@ data PipelineLayoutCreateInfo = PipelineLayoutCreateInfo
     -- specifying options for pipeline layout creation.
     flags :: PipelineLayoutCreateFlags
   , -- | @pSetLayouts@ is a pointer to an array of
-    -- 'Vulkan.Core10.Handles.DescriptorSetLayout' objects.
+    -- 'Vulkan.Core10.Handles.DescriptorSetLayout' objects. The implementation
+    -- /must/ not access these objects outside of the duration of the command
+    -- this structure is passed to.
     setLayouts :: Vector DescriptorSetLayout
   , -- | @pPushConstantRanges@ is a pointer to an array of 'PushConstantRange'
     -- structures defining a set of push constant ranges for use in a single

@@ -136,15 +136,38 @@ foreign import ccall
 --     @memoryTypeBits@ member of the 'MemoryRequirements' structure
 --     returned from a call to 'getBufferMemoryRequirements' with @buffer@
 --
--- -   #VUID-vkBindBufferMemory-memoryOffset-01036# @memoryOffset@ /must/
---     be an integer multiple of the @alignment@ member of the
---     'MemoryRequirements' structure returned from a call to
---     'getBufferMemoryRequirements' with @buffer@
+-- -   #VUID-vkBindBufferMemory-None-10739# If @memory@ was not allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @memoryOffset@ /must/ be an integer multiple of the
+--     @alignment@ member of the 'MemoryRequirements' structure returned
+--     from a call to 'getBufferMemoryRequirements' with @buffer@
 --
--- -   #VUID-vkBindBufferMemory-size-01037# The @size@ member of the
---     'MemoryRequirements' structure returned from a call to
---     'getBufferMemoryRequirements' with @buffer@ /must/ be less than or
---     equal to the size of @memory@ minus @memoryOffset@
+-- -   #VUID-vkBindBufferMemory-memory-10740# If @memory@ was allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @memoryOffset@ /must/ be an integer multiple of the
+--     @alignment@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to 'getBufferMemoryRequirements' with
+--     @buffer@
+--
+-- -   #VUID-vkBindBufferMemory-None-10741# If @memory@ was not allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @size@ member of the 'MemoryRequirements' structure
+--     returned from a call to 'getBufferMemoryRequirements' with @buffer@
+--     /must/ be less than or equal to the size of @memory@ minus
+--     @memoryOffset@
+--
+-- -   #VUID-vkBindBufferMemory-memory-10742# If @memory@ was allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @size@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to 'getBufferMemoryRequirements' with
+--     @buffer@ /must/ be less than or equal to the size of @memory@ minus
+--     @memoryOffset@
 --
 -- -   #VUID-vkBindBufferMemory-buffer-01444# If @buffer@ requires a
 --     dedicated allocation (as reported by
@@ -165,6 +188,14 @@ foreign import ccall
 --     /must/ equal
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
 --     and @memoryOffset@ /must/ be zero
+--
+-- -   #VUID-vkBindBufferMemory-memory-10925# If the
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
+--     allocated included a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure in its @pNext@ chain,
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     /must/ have been 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkBindBufferMemory-None-01898# If @buffer@ was created with
 --     the
@@ -225,7 +256,7 @@ foreign import ccall
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddress@
 --     feature is enabled and @buffer@ was created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
---     bit set, @memory@ /must/ have been allocated with the
+--     usage flag set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
@@ -259,6 +290,15 @@ foreign import ccall
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
 --
+-- -   #VUID-vkBindBufferMemory-buffer-11408# If the @buffer@ was created
+--     with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT'
+--     or
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkBindBufferMemory-device-parameter# @device@ /must/ be a
@@ -288,11 +328,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -464,6 +508,14 @@ foreign import ccall
 --     parameter of the image being bound /must/ be equal to or smaller
 --     than the original image for which the allocation was created
 --
+-- -   #VUID-vkBindImageMemory-memory-10926# If the
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
+--     allocated included a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure in its @pNext@ chain,
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--     /must/ have been 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-vkBindImageMemory-None-01901# If image was created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
 --     bit set, the image /must/ be bound to a memory object allocated with
@@ -517,16 +569,16 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
 --
--- -   #VUID-vkBindImageMemory-descriptorBufferCaptureReplay-08113# If the
---     @image@ was created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+-- -   #VUID-vkBindImageMemory-image-08113# If the @image@ was created with
+--     the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
 --
 -- -   #VUID-vkBindImageMemory-image-09202# If the @image@ was created with
 --     the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     bit set
@@ -541,15 +593,40 @@ foreign import ccall
 --     @memoryTypeBits@ member of the 'MemoryRequirements' structure
 --     returned from a call to 'getImageMemoryRequirements' with @image@
 --
--- -   #VUID-vkBindImageMemory-memoryOffset-01048# @memoryOffset@ /must/ be
---     an integer multiple of the @alignment@ member of the
---     'MemoryRequirements' structure returned from a call to
---     'getImageMemoryRequirements' with @image@
+-- -   #VUID-vkBindImageMemory-None-10735# If @memory@ was not allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @memoryOffset@ /must/ be an integer multiple of the
+--     @alignment@ member of the 'MemoryRequirements' structure returned
+--     from a call to 'getImageMemoryRequirements' with @image@
 --
--- -   #VUID-vkBindImageMemory-size-01049# The difference of the size of
---     @memory@ and @memoryOffset@ /must/ be greater than or equal to the
---     @size@ member of the 'MemoryRequirements' structure returned from a
---     call to 'getImageMemoryRequirements' with the same @image@
+-- -   #VUID-vkBindImageMemory-memory-10736# If @memory@ was allocated from
+--     a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @memoryOffset@ /must/ be an integer multiple of the
+--     @alignment@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
+--     with @image@
+--
+-- -   #VUID-vkBindImageMemory-None-10737# If @memory@ was not allocated
+--     from a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @size@ member of the 'MemoryRequirements' structure
+--     returned from a call to 'getImageMemoryRequirements' with @image@
+--     /must/ be less than or equal to the size of @memory@ minus
+--     @memoryOffset@
+--
+-- -   #VUID-vkBindImageMemory-memory-10738# If @memory@ was allocated from
+--     a memory heap with the
+--     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
+--     property set, @size@ member of the
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
+--     structure returned from a call to
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
+--     with @image@ /must/ be less than or equal to the size of @memory@
+--     minus @memoryOffset@
 --
 -- -   #VUID-vkBindImageMemory-image-06392# If @image@ was created with
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
@@ -587,9 +664,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --

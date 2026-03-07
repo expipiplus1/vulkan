@@ -58,9 +58,10 @@
 -- extension may be used in combination with VK_QCOM_render_pass_transform
 -- which adds rotated render passes.
 --
--- This extension adds an extension structure to the following commands:
--- vkCmdBlitImage2KHR, vkCmdCopyImageToBuffer2KHR and
--- vkCmdCopyBufferToImage2KHR
+-- This extension adds an extension structure to the commands
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyImageToBuffer2KHR', and
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyBufferToImage2KHR'
 --
 -- == Issues
 --
@@ -69,7 +70,7 @@
 -- @pNext@ chain should reflect the name of the base structure they
 -- extend.”, but in this case a single extension structure is used to
 -- extend three base structures (vkCmdBlitImage2KHR,
--- vkCmdCopyImageToBuffer2KHR and vkCmdCopyBufferToImage2KHR). Creating
+-- vkCmdCopyImageToBuffer2KHR, and vkCmdCopyBufferToImage2KHR). Creating
 -- three identical structures with unique names seemed undesirable.
 --
 -- __RESOLVED__: Deviate from the style guide for extension structure
@@ -123,7 +124,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_rotated_copy_commands Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_rotated_copy_commands Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -174,15 +175,15 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'.
 --
 -- Specifying a transform for a copy between an image and a buffer
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing rotates the region accessed in the image around the offset>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-buffers-images-rotation-addressing rotates the region accessed in the image around the offset>.
 -- Specifying a transform for a blit performs a similar transform as
 -- described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-images-scaling-rotation Image Blits with Scaling and Rotation>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#copies-images-scaling-rotation Image Blits with Scaling and Rotation>.
 --
 -- Rotations other than
 -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'
 -- /can/ only be specified for single-plane 2D images with a 1x1x1
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes texel block extent>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-compatibility-classes texel block extent>.
 --
 -- == Valid Usage (Implicit)
 --

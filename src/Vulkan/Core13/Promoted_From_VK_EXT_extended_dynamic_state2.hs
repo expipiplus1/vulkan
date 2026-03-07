@@ -43,13 +43,13 @@ foreign import ccall
 --
 -- This command sets the discard enable for subsequent drawing commands
 -- when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -82,7 +82,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetRasterizerDiscardEnable-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetRasterizerDiscardEnable-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -101,9 +102,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetRasterizerDiscardEnable is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -147,13 +153,13 @@ foreign import ccall
 --
 -- This command sets the depth bias enable for subsequent drawing commands
 -- when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE' set
 -- in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthBiasEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@depthBiasEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -186,7 +192,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthBiasEnable-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDepthBiasEnable-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -205,9 +212,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDepthBiasEnable is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -249,13 +261,13 @@ foreign import ccall
 --
 -- This command sets the primitive restart enable for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -288,7 +300,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetPrimitiveRestartEnable-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetPrimitiveRestartEnable-videocoding# This command
 --     /must/ only be called outside of a video coding scope
@@ -307,9 +320,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetPrimitiveRestartEnable is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -326,7 +344,7 @@ cmdSetPrimitiveRestartEnable :: forall io
                              -> -- | @primitiveRestartEnable@ controls whether a special vertex index value
                                 -- is treated as restarting the assembly of primitives. It behaves in the
                                 -- same way as
-                                -- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
+                                -- 'Vulkan.Core10.GraphicsPipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
                                 ("primitiveRestartEnable" ::: Bool)
                              -> io ()
 cmdSetPrimitiveRestartEnable commandBuffer primitiveRestartEnable = liftIO $ do

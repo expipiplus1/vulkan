@@ -1,5 +1,103 @@
 # Change Log
 
+## WIP
+
+Bump API version to v1.4.343 — first Vulkan 1.4 release, covering spec versions
+1.4.303 through 1.4.343.
+
+### Vulkan 1.4 Core
+
+New `Vulkan.Core14` module. The following 15 extensions are promoted to core:
+
+- `VK_EXT_host_image_copy`
+- `VK_EXT_pipeline_protected_access`
+- `VK_EXT_pipeline_robustness`
+- `VK_KHR_dynamic_rendering_local_read`
+- `VK_KHR_global_priority`
+- `VK_KHR_index_type_uint8`
+- `VK_KHR_line_rasterization`
+- `VK_KHR_maintenance5`
+- `VK_KHR_maintenance6`
+- `VK_KHR_map_memory2`
+- `VK_KHR_push_descriptor`
+- `VK_KHR_shader_expect_assume`
+- `VK_KHR_shader_float_controls2`
+- `VK_KHR_shader_subgroup_rotate`
+- `VK_KHR_vertex_attribute_divisor`
+
+Types like `BindDescriptorSetsInfoKHR` now have unprefixed core aliases
+(`BindDescriptorSetsInfo`). Old extension modules still exist and re-export.
+
+### Breaking Changes
+
+- `Vulkan.Core10.Pipeline` split into `Vulkan.Core10.ComputePipeline` and
+  `Vulkan.Core10.GraphicsPipeline`. Code importing `Vulkan.Core10.Pipeline`
+  directly must update imports. Importing via `Vulkan.Core10` is unaffected.
+- `AccelerationStructureGeometryKHR` is now extensible and takes a type-level
+  list parameter (`AccelerationStructureGeometryKHR '[]`). The `geometries`
+  field now expects `SomeStruct`-wrapped values.
+- `ResourceDescriptorDataEXT` union constructors renamed to avoid ambiguity
+  with handle types (e.g. `Image` → `AnImage`, `TensorARM` → `ATensorARM`).
+- Deprecated KHR/EXT-suffixed constants removed after core promotion:
+  `LUID_SIZE_KHR`, `QUEUE_FAMILY_EXTERNAL_KHR`, `MAX_DEVICE_GROUP_SIZE_KHR`,
+  `MAX_DRIVER_NAME_SIZE_KHR`, `MAX_DRIVER_INFO_SIZE_KHR`, `SHADER_UNUSED_NV`,
+  `MAX_GLOBAL_PRIORITY_SIZE_EXT`,
+  `DYNAMIC_STATE_LINE_STIPPLE_KHR` (now `DYNAMIC_STATE_LINE_STIPPLE`).
+- Some types moved between extension modules due to XML restructuring of
+  conditional `<require depends="...">` blocks (e.g. types previously in
+  `VK_KHR_device_group` now live in `VK_KHR_swapchain`).
+
+### New KHR Extensions
+
+- `VK_KHR_copy_memory_indirect`
+- `VK_KHR_depth_clamp_zero_one`
+- `VK_KHR_internally_synchronized_queues`
+- `VK_KHR_maintenance8`
+- `VK_KHR_maintenance9`
+- `VK_KHR_maintenance10`
+- `VK_KHR_present_id2`
+- `VK_KHR_present_mode_fifo_latest_ready`
+- `VK_KHR_present_wait2`
+- `VK_KHR_robustness2`
+- `VK_KHR_shader_bfloat16`
+- `VK_KHR_shader_fma`
+- `VK_KHR_shader_untyped_pointers`
+- `VK_KHR_surface_maintenance1`
+- `VK_KHR_swapchain_maintenance1`
+- `VK_KHR_unified_image_layouts`
+
+### New EXT Extensions
+
+- `VK_EXT_custom_resolve`
+- `VK_EXT_descriptor_heap`
+- `VK_EXT_external_memory_metal`
+- `VK_EXT_fragment_density_map_offset`
+- `VK_EXT_memory_decompression`
+- `VK_EXT_present_timing`
+- `VK_EXT_ray_tracing_invocation_reorder`
+- `VK_EXT_shader_64bit_indexing`
+- `VK_EXT_shader_float8`
+- `VK_EXT_shader_long_vector`
+- `VK_EXT_shader_subgroup_partitioned`
+- `VK_EXT_shader_uniform_buffer_unsized_array`
+- `VK_EXT_texture_compression_astc_3d`
+- `VK_EXT_zero_initialize_device_memory`
+
+### New Vendor Extensions
+
+- ARM: `tensors`, `data_graph`, `format_pack`, `pipeline_opacity_micromap`
+- AMDX: `dense_geometry_format`
+- NV: `cooperative_vector`, `external_compute_queue`, `ray_tracing_linear_swept_spheres`,
+  `present_metering`, `push_constant_bank`, `compute_occupancy_priority`
+- QCOM: `tile_shading`, `tile_memory_heap`, `cooperative_matrix_conversion`, `data_graph_model`
+- SEC: `pipeline_cache_incremental_mode`
+- VALVE: `fragment_density_map_layered`
+
+### Other
+
+- ~50 new format enumerants: ARM 14/12/10-bit packed formats, 3D ASTC,
+  promoted `FORMAT_A8_UNORM` and `FORMAT_A1B5G5R5_UNORM_PACK16`.
+
 ## [3.26.6] - 2026-03-07
 
 - Bump API version to v1.3.302

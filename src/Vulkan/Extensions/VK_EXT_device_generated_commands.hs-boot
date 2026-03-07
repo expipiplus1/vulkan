@@ -21,9 +21,16 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__API Interactions__]
 --
@@ -167,7 +174,7 @@
 --
 -- -   optionally preprocess the generated content using
 --     'cmdPreprocessGeneratedCommandsEXT', for example on an asynchronous
---     compute queue, or for the purpose of re-using the data in multiple
+--     compute queue, or for the purpose of reusing the data in multiple
 --     executions.
 --
 -- -   call 'cmdExecuteGeneratedCommandsEXT' to create and execute the
@@ -316,14 +323,14 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
 --
---     -   'ACCESS_COMMAND_PREPROCESS_READ_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_READ_BIT_EXT'
 --
---     -   'ACCESS_COMMAND_PREPROCESS_WRITE_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COMMAND_PREPROCESS_WRITE_BIT_EXT'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlagBits2KHR':
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BufferUsageFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_PREPROCESS_BUFFER_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_PREPROCESS_BUFFER_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
@@ -332,14 +339,14 @@
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateFlagBitsEXT':
@@ -393,7 +400,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_device_generated_commands Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_device_generated_commands Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -513,10 +520,12 @@ instance ( Extendss IndirectCommandsLayoutCreateInfoEXT es
 instance Show (Chain es) => Show (IndirectCommandsLayoutCreateInfoEXT es)
 
 
-data IndirectCommandsLayoutTokenEXT
+type role IndirectCommandsLayoutTokenEXT nominal
+data IndirectCommandsLayoutTokenEXT (es :: [Type])
 
-instance ToCStruct IndirectCommandsLayoutTokenEXT
-instance Show IndirectCommandsLayoutTokenEXT
+instance ( Extendss IndirectCommandsLayoutTokenEXT es
+         , PokeChain es ) => ToCStruct (IndirectCommandsLayoutTokenEXT es)
+instance Show (Chain es) => Show (IndirectCommandsLayoutTokenEXT es)
 
 
 data IndirectCommandsPushConstantTokenEXT

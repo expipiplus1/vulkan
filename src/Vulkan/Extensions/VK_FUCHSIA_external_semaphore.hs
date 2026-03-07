@@ -107,7 +107,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_FUCHSIA_external_semaphore Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_FUCHSIA_external_semaphore Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -199,7 +199,7 @@ foreign import ccall
 -- Exporting a Zircon event handle from a semaphore /may/ have side effects
 -- depending on the transference of the specified handle type, as described
 -- in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore State>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore State>.
 --
 -- == Return Codes
 --
@@ -209,9 +209,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -280,9 +284,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -337,13 +345,13 @@ importSemaphoreZirconHandleFUCHSIA device
 --
 -- -   #VUID-VkImportSemaphoreZirconHandleInfoFUCHSIA-handleType-04765#
 --     @handleType@ /must/ be a value included in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fuchsia Handle Types Supported by >
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphore-handletypes-fuchsia Handle Types Supported by >
 --     table
 --
 -- -   #VUID-VkImportSemaphoreZirconHandleInfoFUCHSIA-zirconHandle-04766#
 --     @zirconHandle@ /must/ obey any requirements listed for @handleType@
 --     in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   #VUID-VkImportSemaphoreZirconHandleInfoFUCHSIA-zirconHandle-04767#
 --     @zirconHandle@ /must/ have @ZX_RIGHTS_BASIC@ and @ZX_RIGHTS_SIGNAL@
@@ -475,7 +483,7 @@ instance Zero ImportSemaphoreZirconHandleInfoFUCHSIA where
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-semaphore-04759#
 --     @semaphore@ /must/ not currently have its payload replaced by an
 --     imported payload as described below in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@
@@ -483,13 +491,13 @@ instance Zero ImportSemaphoreZirconHandleInfoFUCHSIA where
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-handleType-04760# If
 --     @handleType@ refers to a handle type with copy payload transference
 --     semantics, as defined below in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 --     there /must/ be no queue waiting on @semaphore@
 --
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-handleType-04761# If
 --     @handleType@ refers to a handle type with copy payload transference
 --     semantics, @semaphore@ /must/ be signaled, or have an associated
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     pending execution
 --
 -- -   #VUID-VkSemaphoreGetZirconHandleInfoFUCHSIA-handleType-04762#

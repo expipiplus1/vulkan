@@ -32,6 +32,12 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_memory_indirect VK_KHR_copy_memory_indirect>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
@@ -93,7 +99,7 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV'
 --
 -- == Version History
 --
@@ -108,35 +114,15 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_copy_memory_indirect Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_copy_memory_indirect Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_copy_memory_indirect  ( CopyMemoryIndirectCommandNV
-                                                     , CopyMemoryToImageIndirectCommandNV
-                                                     , PhysicalDeviceCopyMemoryIndirectFeaturesNV
-                                                     , PhysicalDeviceCopyMemoryIndirectPropertiesNV
-                                                     ) where
+module Vulkan.Extensions.VK_NV_copy_memory_indirect  (PhysicalDeviceCopyMemoryIndirectFeaturesNV) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
-data CopyMemoryIndirectCommandNV
-
-instance ToCStruct CopyMemoryIndirectCommandNV
-instance Show CopyMemoryIndirectCommandNV
-
-instance FromCStruct CopyMemoryIndirectCommandNV
-
-
-data CopyMemoryToImageIndirectCommandNV
-
-instance ToCStruct CopyMemoryToImageIndirectCommandNV
-instance Show CopyMemoryToImageIndirectCommandNV
-
-instance FromCStruct CopyMemoryToImageIndirectCommandNV
-
 
 data PhysicalDeviceCopyMemoryIndirectFeaturesNV
 
@@ -144,12 +130,4 @@ instance ToCStruct PhysicalDeviceCopyMemoryIndirectFeaturesNV
 instance Show PhysicalDeviceCopyMemoryIndirectFeaturesNV
 
 instance FromCStruct PhysicalDeviceCopyMemoryIndirectFeaturesNV
-
-
-data PhysicalDeviceCopyMemoryIndirectPropertiesNV
-
-instance ToCStruct PhysicalDeviceCopyMemoryIndirectPropertiesNV
-instance Show PhysicalDeviceCopyMemoryIndirectPropertiesNV
-
-instance FromCStruct PhysicalDeviceCopyMemoryIndirectPropertiesNV
 

@@ -93,8 +93,8 @@
 --     whether a block of texels in the /target image/ matches a
 --     corresponding block of texels in the /reference image/. The error
 --     metric is computed per-component. @OpImageBlockMatchSADQCOM@
---     computes \"Sum Of Absolute Difference\" and
---     @OpImageBlockMatchSSDQCOM@ computes \"Sum of Squared Difference\".
+--     computes “Sum Of Absolute Difference” and @OpImageBlockMatchSSDQCOM@
+--     computes “Sum of Squared Difference”.
 --
 -- Each of the image processing instructions operate only on 2D images. The
 -- instructions do not-support sampling of mipmap, multi-plane,
@@ -182,7 +182,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_image_processing Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_image_processing Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

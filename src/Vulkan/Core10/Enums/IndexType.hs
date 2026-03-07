@@ -2,8 +2,8 @@
 -- No documentation found for Chapter "IndexType"
 module Vulkan.Core10.Enums.IndexType  (IndexType( INDEX_TYPE_UINT16
                                                 , INDEX_TYPE_UINT32
-                                                , INDEX_TYPE_UINT8_KHR
                                                 , INDEX_TYPE_NONE_KHR
+                                                , INDEX_TYPE_UINT8
                                                 , ..
                                                 )) where
 
@@ -18,9 +18,24 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkIndexType - Type of index buffer indices
 --
+-- = Description
+--
+-- -   'INDEX_TYPE_UINT16' specifies that indices are 16-bit unsigned
+--     integer values.
+--
+-- -   'INDEX_TYPE_UINT32' specifies that indices are 32-bit unsigned
+--     integer values.
+--
+-- -   'INDEX_TYPE_NONE_KHR' specifies that no indices are provided.
+--
+-- -   'INDEX_TYPE_UINT8' specifies that indices are 8-bit unsigned integer
+--     values.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_linear_swept_spheres.AccelerationStructureGeometryLinearSweptSpheresDataNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_linear_swept_spheres.AccelerationStructureGeometrySpheresDataNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
 -- 'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT',
@@ -29,30 +44,28 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
 newtype IndexType = IndexType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'INDEX_TYPE_UINT16' specifies that indices are 16-bit unsigned integer
--- values.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_UINT16"
 pattern INDEX_TYPE_UINT16 = IndexType 0
 
--- | 'INDEX_TYPE_UINT32' specifies that indices are 32-bit unsigned integer
--- values.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_UINT32"
 pattern INDEX_TYPE_UINT32 = IndexType 1
 
--- | 'INDEX_TYPE_UINT8_KHR' specifies that indices are 8-bit unsigned integer
--- values.
-pattern INDEX_TYPE_UINT8_KHR = IndexType 1000265000
-
--- | 'INDEX_TYPE_NONE_KHR' specifies that no indices are provided.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_NONE_KHR"
 pattern INDEX_TYPE_NONE_KHR = IndexType 1000165000
+
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_UINT8"
+pattern INDEX_TYPE_UINT8 = IndexType 1000265000
 
 {-# COMPLETE
   INDEX_TYPE_UINT16
   , INDEX_TYPE_UINT32
-  , INDEX_TYPE_UINT8_KHR
-  , INDEX_TYPE_NONE_KHR ::
+  , INDEX_TYPE_NONE_KHR
+  , INDEX_TYPE_UINT8 ::
     IndexType
   #-}
 
@@ -66,8 +79,8 @@ showTableIndexType :: [(IndexType, String)]
 showTableIndexType =
   [ (INDEX_TYPE_UINT16, "UINT16")
   , (INDEX_TYPE_UINT32, "UINT32")
-  , (INDEX_TYPE_UINT8_KHR, "UINT8_KHR")
   , (INDEX_TYPE_NONE_KHR, "NONE_KHR")
+  , (INDEX_TYPE_UINT8, "UINT8")
   ]
 
 instance Show IndexType where

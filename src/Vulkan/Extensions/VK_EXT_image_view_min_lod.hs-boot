@@ -55,10 +55,10 @@
 -- == Description
 --
 -- This extension allows applications to clamp the minimum LOD value during
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>,
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-gather Texel Gathering>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-gather Texel Gathering>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-integer-coordinate-operations Integer Texel Coordinate Operations>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-integer-coordinate-operations Integer Texel Coordinate Operations>
 -- with a given 'Vulkan.Core10.Handles.ImageView' by
 -- 'ImageViewMinLodCreateInfoEXT'::@minLod@.
 --
@@ -104,7 +104,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_view_min_lod Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_image_view_min_lod Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

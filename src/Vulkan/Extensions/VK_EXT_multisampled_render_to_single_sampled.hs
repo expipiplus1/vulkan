@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --         
@@ -171,7 +171,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_multisampled_render_to_single_sampled Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_multisampled_render_to_single_sampled Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -225,10 +225,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBPASS_R
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT'
--- /can/ also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT', it /must/
+-- add an instance of the structure, with the desired feature members set
+-- to 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -291,7 +294,7 @@ instance Zero PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT where
 -- on a multisampled attachment with this format can incur additional
 -- costs, including additional memory bandwidth usage and a higher memory
 -- footprint. If an attachment with such a format is used in a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>
 -- subpass, the additional memory and memory bandwidth usage can nullify
 -- the benefits of using the @VK_EXT_multisampled_render_to_single_sampled@
 -- extension.
@@ -385,7 +388,7 @@ instance Zero SubpassResolvePerformanceQueryEXT where
 data MultisampledRenderToSingleSampledInfoEXT = MultisampledRenderToSingleSampledInfoEXT
   { -- | @multisampledRenderToSingleSampledEnable@ controls whether multisampled
     -- rendering to single-sampled attachments is performed as described
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#multisampled-render-to-single-sampled below>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#multisampled-render-to-single-sampled below>.
     multisampledRenderToSingleSampledEnable :: Bool
   , -- | @rasterizationSamples@ is a
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' specifying

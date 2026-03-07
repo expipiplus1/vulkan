@@ -1,7 +1,6 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SubmitFlagBits"
-module Vulkan.Core13.Enums.SubmitFlagBits  ( pattern SUBMIT_PROTECTED_BIT_KHR
-                                           , SubmitFlags
+module Vulkan.Core13.Enums.SubmitFlagBits  ( SubmitFlags
                                            , SubmitFlagBits( SUBMIT_PROTECTED_BIT
                                                            , ..
                                                            )
@@ -18,13 +17,14 @@ import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
--- No documentation found for TopLevel "VK_SUBMIT_PROTECTED_BIT_KHR"
-pattern SUBMIT_PROTECTED_BIT_KHR = SUBMIT_PROTECTED_BIT
-
-
 type SubmitFlags = SubmitFlagBits
 
 -- | VkSubmitFlagBits - Bitmask specifying behavior of a submission
+--
+-- = Description
+--
+-- -   'SUBMIT_PROTECTED_BIT' specifies that this batch is a protected
+--     submission.
 --
 -- = See Also
 --
@@ -34,8 +34,7 @@ type SubmitFlags = SubmitFlagBits
 newtype SubmitFlagBits = SubmitFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SUBMIT_PROTECTED_BIT' specifies that this batch is a protected
--- submission.
+-- No documentation found for Nested "VkSubmitFlagBits" "VK_SUBMIT_PROTECTED_BIT"
 pattern SUBMIT_PROTECTED_BIT = SubmitFlagBits 0x00000001
 
 conNameSubmitFlagBits :: String

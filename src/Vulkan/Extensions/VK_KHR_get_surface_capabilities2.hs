@@ -134,7 +134,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -214,6 +214,7 @@ import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_present_timing (PresentTimingSurfaceCapabilitiesEXT)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shared_presentable_image (SharedPresentSurfaceCapabilitiesKHR)
@@ -222,13 +223,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceCapabilitiesFullScreenExclusiveEXT)
 import Vulkan.Extensions.VK_KHR_surface (SurfaceCapabilitiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (SurfaceCapabilitiesPresentBarrierNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id2 (SurfaceCapabilitiesPresentId2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_wait2 (SurfaceCapabilitiesPresentWait2KHR)
 import Vulkan.Extensions.VK_KHR_surface (SurfaceFormatKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
 import Vulkan.Extensions.Handles (SurfaceKHR)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentModeCompatibilityEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentModeEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentScalingCapabilitiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface_maintenance1 (SurfacePresentModeCompatibilityKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface_maintenance1 (SurfacePresentModeKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface_maintenance1 (SurfacePresentScalingCapabilitiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface_protected_capabilities (SurfaceProtectedCapabilitiesKHR)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR))
@@ -283,27 +286,27 @@ foreign import ccall
 --     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07776# If a
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeCompatibilityKHR'
 --     structure is included in the @pNext@ chain of
 --     @pSurfaceCapabilities@, a
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeKHR'
 --     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07777# If a
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentScalingCapabilitiesKHR'
 --     structure is included in the @pNext@ chain of
 --     @pSurfaceCapabilities@, a
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeKHR'
 --     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07778# If a
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeCompatibilityKHR'
 --     structure is included in the @pNext@ chain of
 --     @pSurfaceCapabilities@, @pSurfaceInfo->surface@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07779# If a
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentScalingCapabilitiesKHR'
 --     structure is included in the @pNext@ chain of
 --     @pSurfaceCapabilities@, @pSurfaceInfo->surface@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
@@ -330,11 +333,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -440,17 +447,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -555,10 +566,10 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
 --     or
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeKHR'
 --
 -- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-unique# The @sType@
---     value of each struct in the @pNext@ chain /must/ be unique
+--     value of each structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -587,7 +598,7 @@ instance Extensible PhysicalDeviceSurfaceInfo2KHR where
   getNext PhysicalDeviceSurfaceInfo2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceSurfaceInfo2KHR e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @SurfacePresentModeEXT = Just f
+    | Just Refl <- eqT @e @SurfacePresentModeKHR = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveWin32InfoEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveInfoEXT = Just f
     | otherwise = Nothing
@@ -654,16 +665,19 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 --     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.DisplayNativeHdrSurfaceCapabilitiesAMD',
 --     'Vulkan.Extensions.VK_NV_low_latency2.LatencySurfaceCapabilitiesNV',
+--     'Vulkan.Extensions.VK_EXT_present_timing.PresentTimingSurfaceCapabilitiesEXT',
 --     'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT',
 --     'Vulkan.Extensions.VK_NV_present_barrier.SurfaceCapabilitiesPresentBarrierNV',
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT',
---     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT',
+--     'Vulkan.Extensions.VK_KHR_present_id2.SurfaceCapabilitiesPresentId2KHR',
+--     'Vulkan.Extensions.VK_KHR_present_wait2.SurfaceCapabilitiesPresentWait2KHR',
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeCompatibilityKHR',
+--     'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentScalingCapabilitiesKHR',
 --     or
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
 --
 -- -   #VUID-VkSurfaceCapabilities2KHR-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -692,13 +706,16 @@ instance Extensible SurfaceCapabilities2KHR where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceCapabilities2KHR e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @LatencySurfaceCapabilitiesNV = Just f
-    | Just Refl <- eqT @e @SurfacePresentModeCompatibilityEXT = Just f
-    | Just Refl <- eqT @e @SurfacePresentScalingCapabilitiesEXT = Just f
+    | Just Refl <- eqT @e @SurfacePresentModeCompatibilityKHR = Just f
+    | Just Refl <- eqT @e @SurfacePresentScalingCapabilitiesKHR = Just f
+    | Just Refl <- eqT @e @SurfaceCapabilitiesPresentWait2KHR = Just f
+    | Just Refl <- eqT @e @SurfaceCapabilitiesPresentId2KHR = Just f
     | Just Refl <- eqT @e @SurfaceCapabilitiesPresentBarrierNV = Just f
     | Just Refl <- eqT @e @SurfaceCapabilitiesFullScreenExclusiveEXT = Just f
     | Just Refl <- eqT @e @SurfaceProtectedCapabilitiesKHR = Just f
     | Just Refl <- eqT @e @SharedPresentSurfaceCapabilitiesKHR = Just f
     | Just Refl <- eqT @e @DisplayNativeHdrSurfaceCapabilitiesAMD = Just f
+    | Just Refl <- eqT @e @PresentTimingSurfaceCapabilitiesEXT = Just f
     | otherwise = Nothing
 
 instance ( Extendss SurfaceCapabilities2KHR es
@@ -740,7 +757,7 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 -- = Description
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
 -- feature is supported and a
 -- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
 -- structure is included in the @pNext@ chain of this structure, then it
@@ -750,8 +767,8 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 -- == Valid Usage
 --
 -- -   #VUID-VkSurfaceFormat2KHR-pNext-06750# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
---     feature is not enabled, the @pNext@ chain /must/ not include an
+--     @VK_EXT_image_compression_control_swapchain@ extension is not
+--     supported, the @pNext@ chain /must/ not include an
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
 --     structure
 --
@@ -765,7 +782,7 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
 --
 -- -   #VUID-VkSurfaceFormat2KHR-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --

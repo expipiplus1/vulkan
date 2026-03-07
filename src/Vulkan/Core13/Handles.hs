@@ -41,13 +41,13 @@ import Vulkan.Core10.Handles (Semaphore(..))
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.createPrivateDataSlot',
--- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.createPrivateDataSlot',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.destroyPrivateDataSlot',
--- 'Vulkan.Extensions.VK_EXT_private_data.destroyPrivateDataSlotEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.destroyPrivateDataSlot',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.getPrivateData',
--- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.getPrivateData',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.setPrivateData',
--- 'Vulkan.Extensions.VK_EXT_private_data.setPrivateDataEXT'
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.setPrivateData'
 newtype PrivateDataSlot = PrivateDataSlot Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

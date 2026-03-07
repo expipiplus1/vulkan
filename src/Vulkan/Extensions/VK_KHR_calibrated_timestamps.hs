@@ -72,7 +72,7 @@
 --
 -- == New Enums
 --
--- -   'TimeDomainKHR'
+-- -   'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR'
 --
 -- == New Enum Constants
 --
@@ -97,40 +97,34 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_calibrated_timestamps Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_calibrated_timestamps Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_calibrated_timestamps  ( getPhysicalDeviceCalibrateableTimeDomainsKHR
                                                        , getCalibratedTimestampsKHR
                                                        , CalibratedTimestampInfoKHR(..)
-                                                       , TimeDomainKHR( TIME_DOMAIN_DEVICE_KHR
-                                                                      , TIME_DOMAIN_CLOCK_MONOTONIC_KHR
-                                                                      , TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR
-                                                                      , TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR
-                                                                      , ..
-                                                                      )
                                                        , KHR_CALIBRATED_TIMESTAMPS_SPEC_VERSION
                                                        , pattern KHR_CALIBRATED_TIMESTAMPS_SPEC_VERSION
                                                        , KHR_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
                                                        , pattern KHR_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
+                                                       , TimeDomainKHR(..)
                                                        ) where
 
-import Vulkan.Internal.Utils (enumReadPrec)
-import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Show (showsPrec)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -140,46 +134,56 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
-import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
-import GHC.Read (Read(readPrec))
-import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetCalibratedTimestampsKHR))
 import Vulkan.Core10.Handles (Device_T)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceCalibrateableTimeDomainsKHR))
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_present_timing (SwapchainCalibratedTimestampInfoEXT)
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR)
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR(..))
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Extensions.VK_EXT_present_timing (TimeDomainKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -216,27 +220,33 @@ foreign import ccall
 -- -   #VUID-vkGetPhysicalDeviceCalibrateableTimeDomainsKHR-pTimeDomains-parameter#
 --     If the value referenced by @pTimeDomainCount@ is not @0@, and
 --     @pTimeDomains@ is not @NULL@, @pTimeDomains@ /must/ be a valid
---     pointer to an array of @pTimeDomainCount@ 'TimeDomainKHR' values
+--     pointer to an array of @pTimeDomainCount@
+--     'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR' values
 --
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_calibrated_timestamps VK_KHR_calibrated_timestamps>,
--- 'Vulkan.Core10.Handles.PhysicalDevice', 'TimeDomainKHR'
+-- 'Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR'
 getPhysicalDeviceCalibrateableTimeDomainsKHR :: forall io
                                               . (MonadIO io)
                                              => -- | @physicalDevice@ is the physical device from which to query the set of
@@ -272,7 +282,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetCalibratedTimestampsKHR
-  :: FunPtr (Ptr Device_T -> Word32 -> Ptr CalibratedTimestampInfoKHR -> Ptr Word64 -> Ptr Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr CalibratedTimestampInfoKHR -> Ptr Word64 -> Ptr Word64 -> IO Result
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SomeStruct CalibratedTimestampInfoKHR) -> Ptr Word64 -> Ptr Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (SomeStruct CalibratedTimestampInfoKHR) -> Ptr Word64 -> Ptr Word64 -> IO Result
 
 -- | vkGetCalibratedTimestampsKHR - Query calibrated timestamps
 --
@@ -295,7 +305,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetCalibratedTimestampsEXT-timeDomain-09246# The
+-- -   #VUID-vkGetCalibratedTimestampsKHR-timeDomain-09246# The
 --     @timeDomain@ value of each 'CalibratedTimestampInfoKHR' in
 --     @pTimestampInfos@ /must/ be unique
 --
@@ -326,9 +336,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -342,21 +356,21 @@ getCalibratedTimestampsKHR :: forall io
                            -> -- | @pTimestampInfos@ is a pointer to an array of @timestampCount@
                               -- 'CalibratedTimestampInfoKHR' structures, describing the time domains the
                               -- calibrated timestamps should be captured from.
-                              ("timestampInfos" ::: Vector CalibratedTimestampInfoKHR)
+                              ("timestampInfos" ::: Vector (SomeStruct CalibratedTimestampInfoKHR))
                            -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
 getCalibratedTimestampsKHR device timestampInfos = liftIO . evalContT $ do
   let vkGetCalibratedTimestampsKHRPtr = pVkGetCalibratedTimestampsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetCalibratedTimestampsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetCalibratedTimestampsKHR is null" Nothing Nothing
   let vkGetCalibratedTimestampsKHR' = mkVkGetCalibratedTimestampsKHR vkGetCalibratedTimestampsKHRPtr
-  pPTimestampInfos <- ContT $ allocaBytes @CalibratedTimestampInfoKHR ((Data.Vector.length (timestampInfos)) * 24)
-  lift $ Data.Vector.imapM_ (\i e -> poke (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoKHR) (e)) (timestampInfos)
+  pPTimestampInfos <- ContT $ allocaBytes @(CalibratedTimestampInfoKHR _) ((Data.Vector.length (timestampInfos)) * 24)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr (CalibratedTimestampInfoKHR _))) (e) . ($ ())) (timestampInfos)
   pPTimestamps <- ContT $ bracket (callocBytes @Word64 ((fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) * 8)) free
   pPMaxDeviation <- ContT $ bracket (callocBytes @Word64 8) free
   r <- lift $ traceAroundEvent "vkGetCalibratedTimestampsKHR" (vkGetCalibratedTimestampsKHR'
                                                                  (deviceHandle (device))
                                                                  ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))
-                                                                 (pPTimestampInfos)
+                                                                 (forgetExtensions (pPTimestampInfos))
                                                                  (pPTimestamps)
                                                                  (pPMaxDeviation))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -368,176 +382,101 @@ getCalibratedTimestampsKHR device timestampInfos = liftIO . evalContT $ do
 -- | VkCalibratedTimestampInfoKHR - Structure specifying the input parameters
 -- of a calibrated timestamp query
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkCalibratedTimestampInfoKHR-timeDomain-02354# @timeDomain@
+--     /must/ be one of the
+--     'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR' values
+--     returned by 'getPhysicalDeviceCalibrateableTimeDomainsKHR'
+--
+-- -   #VUID-VkCalibratedTimestampInfoKHR-timeDomain-12227# If @timeDomain@
+--     is
+--     'Vulkan.Extensions.VK_EXT_present_timing.TIME_DOMAIN_SWAPCHAIN_LOCAL_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_present_timing.TIME_DOMAIN_PRESENT_STAGE_LOCAL_EXT',
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Extensions.VK_EXT_present_timing.SwapchainCalibratedTimestampInfoEXT'
+--     structure
+--
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkCalibratedTimestampInfoKHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR'
+--
+-- -   #VUID-VkCalibratedTimestampInfoKHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_present_timing.SwapchainCalibratedTimestampInfoEXT'
+--
+-- -   #VUID-VkCalibratedTimestampInfoKHR-sType-unique# The @sType@ value
+--     of each structure in the @pNext@ chain /must/ be unique
+--
+-- -   #VUID-VkCalibratedTimestampInfoKHR-timeDomain-parameter#
+--     @timeDomain@ /must/ be a valid
+--     'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR' value
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_calibrated_timestamps VK_KHR_calibrated_timestamps>,
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'TimeDomainKHR',
--- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.getCalibratedTimestampsEXT',
--- 'getCalibratedTimestampsKHR'
-data CalibratedTimestampInfoKHR = CalibratedTimestampInfoKHR
-  { -- | @timeDomain@ is a 'TimeDomainKHR' value specifying the time domain from
-    -- which the calibrated timestamp value should be returned.
-    --
-    -- #VUID-VkCalibratedTimestampInfoEXT-timeDomain-02354# @timeDomain@ /must/
-    -- be one of the 'TimeDomainKHR' values returned by
-    -- 'getPhysicalDeviceCalibrateableTimeDomainsKHR'
-    --
-    -- #VUID-VkCalibratedTimestampInfoKHR-timeDomain-parameter# @timeDomain@
-    -- /must/ be a valid 'TimeDomainKHR' value
-    timeDomain :: TimeDomainKHR }
-  deriving (Typeable, Eq)
+-- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR',
+-- 'getCalibratedTimestampsKHR', 'getCalibratedTimestampsKHR'
+data CalibratedTimestampInfoKHR (es :: [Type]) = CalibratedTimestampInfoKHR
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @timeDomain@ is a
+    -- 'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR' value specifying
+    -- the time domain from which the calibrated timestamp value should be
+    -- returned.
+    timeDomain :: TimeDomainKHR
+  }
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (CalibratedTimestampInfoKHR)
+deriving instance Generic (CalibratedTimestampInfoKHR (es :: [Type]))
 #endif
-deriving instance Show CalibratedTimestampInfoKHR
+deriving instance Show (Chain es) => Show (CalibratedTimestampInfoKHR es)
 
-instance ToCStruct CalibratedTimestampInfoKHR where
+instance Extensible CalibratedTimestampInfoKHR where
+  extensibleTypeName = "CalibratedTimestampInfoKHR"
+  setNext CalibratedTimestampInfoKHR{..} next' = CalibratedTimestampInfoKHR{next = next', ..}
+  getNext CalibratedTimestampInfoKHR{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends CalibratedTimestampInfoKHR e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @SwapchainCalibratedTimestampInfoEXT = Just f
+    | otherwise = Nothing
+
+instance ( Extendss CalibratedTimestampInfoKHR es
+         , PokeChain es ) => ToCStruct (CalibratedTimestampInfoKHR es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CalibratedTimestampInfoKHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr TimeDomainKHR)) (timeDomain)
-    f
+  pokeCStruct p CalibratedTimestampInfoKHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr TimeDomainKHR)) (timeDomain)
+    lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr TimeDomainKHR)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr TimeDomainKHR)) (zero)
+    lift $ f
 
-instance FromCStruct CalibratedTimestampInfoKHR where
+instance ( Extendss CalibratedTimestampInfoKHR es
+         , PeekChain es ) => FromCStruct (CalibratedTimestampInfoKHR es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     timeDomain <- peek @TimeDomainKHR ((p `plusPtr` 16 :: Ptr TimeDomainKHR))
     pure $ CalibratedTimestampInfoKHR
-             timeDomain
+             next timeDomain
 
-instance Storable CalibratedTimestampInfoKHR where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero CalibratedTimestampInfoKHR where
+instance es ~ '[] => Zero (CalibratedTimestampInfoKHR es) where
   zero = CalibratedTimestampInfoKHR
+           ()
            zero
 
-
--- | VkTimeDomainKHR - Supported time domains
---
--- = Description
---
--- An implementation supporting @VK_KHR_calibrated_timestamps@ or
--- @VK_EXT_calibrated_timestamps@ will use the same time domain for all its
--- 'Vulkan.Core10.Handles.Queue' so that timestamp values reported for
--- 'TIME_DOMAIN_DEVICE_KHR' can be matched to any timestamp captured
--- through 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' or
--- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2'
--- .
---
--- > struct timespec tv;
--- > clock_gettime(CLOCK_MONOTONIC, &tv);
--- > return tv.tv_nsec + tv.tv_sec*1000000000ull;
---
--- > struct timespec tv;
--- > clock_gettime(CLOCK_MONOTONIC_RAW, &tv);
--- > return tv.tv_nsec + tv.tv_sec*1000000000ull;
---
--- > LARGE_INTEGER counter;
--- > QueryPerformanceCounter(&counter);
--- > return counter.QuadPart;
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_calibrated_timestamps VK_KHR_calibrated_timestamps>,
--- 'CalibratedTimestampInfoKHR',
--- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.getPhysicalDeviceCalibrateableTimeDomainsEXT',
--- 'getPhysicalDeviceCalibrateableTimeDomainsKHR'
-newtype TimeDomainKHR = TimeDomainKHR Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | 'TIME_DOMAIN_DEVICE_KHR' specifies the device time domain. Timestamp
--- values in this time domain use the same units and are comparable with
--- device timestamp values captured using
--- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' or
--- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2'
--- and are defined to be incrementing according to the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
--- of the device.
-pattern TIME_DOMAIN_DEVICE_KHR = TimeDomainKHR 0
-
--- | 'TIME_DOMAIN_CLOCK_MONOTONIC_KHR' specifies the CLOCK_MONOTONIC time
--- domain available on POSIX platforms. Timestamp values in this time
--- domain are in units of nanoseconds and are comparable with platform
--- timestamp values captured using the POSIX clock_gettime API as computed
--- by this example:
-pattern TIME_DOMAIN_CLOCK_MONOTONIC_KHR = TimeDomainKHR 1
-
--- | 'TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR' specifies the CLOCK_MONOTONIC_RAW
--- time domain available on POSIX platforms. Timestamp values in this time
--- domain are in units of nanoseconds and are comparable with platform
--- timestamp values captured using the POSIX clock_gettime API as computed
--- by this example:
-pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR = TimeDomainKHR 2
-
--- | 'TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR' specifies the performance
--- counter (QPC) time domain available on Windows. Timestamp values in this
--- time domain are in the same units as those provided by the Windows
--- QueryPerformanceCounter API and are comparable with platform timestamp
--- values captured using that API as computed by this example:
-pattern TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR = TimeDomainKHR 3
-
-{-# COMPLETE
-  TIME_DOMAIN_DEVICE_KHR
-  , TIME_DOMAIN_CLOCK_MONOTONIC_KHR
-  , TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR
-  , TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR ::
-    TimeDomainKHR
-  #-}
-
-conNameTimeDomainKHR :: String
-conNameTimeDomainKHR = "TimeDomainKHR"
-
-enumPrefixTimeDomainKHR :: String
-enumPrefixTimeDomainKHR = "TIME_DOMAIN_"
-
-showTableTimeDomainKHR :: [(TimeDomainKHR, String)]
-showTableTimeDomainKHR =
-  [ (TIME_DOMAIN_DEVICE_KHR, "DEVICE_KHR")
-  ,
-    ( TIME_DOMAIN_CLOCK_MONOTONIC_KHR
-    , "CLOCK_MONOTONIC_KHR"
-    )
-  ,
-    ( TIME_DOMAIN_CLOCK_MONOTONIC_RAW_KHR
-    , "CLOCK_MONOTONIC_RAW_KHR"
-    )
-  ,
-    ( TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_KHR
-    , "QUERY_PERFORMANCE_COUNTER_KHR"
-    )
-  ]
-
-instance Show TimeDomainKHR where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixTimeDomainKHR
-      showTableTimeDomainKHR
-      conNameTimeDomainKHR
-      (\(TimeDomainKHR x) -> x)
-      (showsPrec 11)
-
-instance Read TimeDomainKHR where
-  readPrec =
-    enumReadPrec
-      enumPrefixTimeDomainKHR
-      showTableTimeDomainKHR
-      conNameTimeDomainKHR
-      TimeDomainKHR
 
 type KHR_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 1
 

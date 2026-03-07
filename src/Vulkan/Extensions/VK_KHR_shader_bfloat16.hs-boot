@@ -1,0 +1,145 @@
+{-# language CPP #-}
+-- | = Name
+--
+-- VK_KHR_shader_bfloat16 - device extension
+--
+-- = VK_KHR_shader_bfloat16
+--
+-- [__Name String__]
+--     @VK_KHR_shader_bfloat16@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     142
+--
+-- [__Revision__]
+--     1
+--
+-- [__Ratification Status__]
+--     Ratified
+--
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_cooperative_matrix
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_bfloat16.html SPV_KHR_bfloat16>
+--
+-- [__Contact__]
+--
+--     -   Tobias Hector
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_bfloat16] @tobski%0A*Here describe the issue or question you have about the VK_KHR_shader_bfloat16 extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_bfloat16.adoc VK_KHR_shader_bfloat16>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2024-04-09
+--
+-- [__IP Status__]
+--     No known IP claims.
+--
+-- [__Contributors__]
+--
+--     -   Tobias Hector, AMD
+--
+--     -   Stu Smith, AMD
+--
+--     -   Jeff Bolz, Nvidia
+--
+--     -   Kévin Petit, Arm
+--
+--     -   David Neto, Google
+--
+--     -   Graeme Leese, Broadcom
+--
+--     -   Ruihao Zhang, Qualcomm
+--
+--     -   Mark Sheppard, Imagination
+--
+--     -   Ben Ashbaugh, Intel
+--
+--     -   Dmitry Sidorov, Intel
+--
+--     -   Victor Mustya, Intel
+--
+-- == Description
+--
+-- This extension enables support for bfloat16 (“brain float”) operations
+-- in shaders as defined in @SPV_KHR_bfloat16@.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceShaderBfloat16FeaturesKHR'
+--
+-- == New Enum Constants
+--
+-- -   'KHR_SHADER_BFLOAT16_EXTENSION_NAME'
+--
+-- -   'KHR_SHADER_BFLOAT16_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_cooperative_matrix VK_KHR_cooperative_matrix>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_NV_cooperative_vector.ComponentTypeKHR':
+--
+--     -   'Vulkan.Extensions.VK_NV_cooperative_vector.COMPONENT_TYPE_BFLOAT16_KHR'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-BFloat16TypeKHR BFloat16TypeKHR>
+--
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-BFloat16DotProductKHR BFloat16DotProductKHR>
+--
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-BFloat16CooperativeMatrixKHR BFloat16CooperativeMatrixKHR>
+--
+-- == Version History
+--
+-- -   Revision 1, 2024-04-09 (Stu Smith)
+--
+--     -   Initial draft
+--
+-- == See Also
+--
+-- No cross-references are available
+--
+-- == Document Notes
+--
+-- For more information, see the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_shader_bfloat16 Vulkan Specification>.
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
+module Vulkan.Extensions.VK_KHR_shader_bfloat16  (PhysicalDeviceShaderBfloat16FeaturesKHR) where
+
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
+data PhysicalDeviceShaderBfloat16FeaturesKHR
+
+instance ToCStruct PhysicalDeviceShaderBfloat16FeaturesKHR
+instance Show PhysicalDeviceShaderBfloat16FeaturesKHR
+
+instance FromCStruct PhysicalDeviceShaderBfloat16FeaturesKHR
+

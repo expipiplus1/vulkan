@@ -23,6 +23,11 @@
 -- [__Extension and Version Dependencies__]
 --     None
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Contact__]
 --
 --     -   Shahbaz Youssefi
@@ -46,8 +51,7 @@
 --
 -- == Description
 --
--- This extension provides
--- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_NONE_KHR' and
+-- This extension provides 'ATTACHMENT_LOAD_OP_NONE_KHR' and
 -- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.ATTACHMENT_STORE_OP_NONE_KHR',
 -- which are identically promoted from the @VK_EXT_load_store_op_none@
 -- extension.
@@ -60,15 +64,21 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp':
 --
---     -   'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_NONE_KHR'
+--     -   'ATTACHMENT_LOAD_OP_NONE_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
 --     -   'Vulkan.Extensions.VK_KHR_dynamic_rendering.ATTACHMENT_STORE_OP_NONE_KHR'
 --
+-- == Promotion to Vulkan 1.4
+--
+-- Functionality in this extension is included in core Vulkan 1.4 with the
+-- KHR suffix omitted. The original type, enum, and command names are still
+-- available as aliases of the core functionality.
+--
 -- While 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE'
--- is part of Vulkan 1.3, this extension was not promoted to core either in
--- whole or in part. This functionality was promoted from
+-- is part of Vulkan 1.3, this extension was not promoted to core Vulkan
+-- 1.3 either in whole or in part. This functionality was promoted from
 -- @VK_KHR_dynamic_rendering@.
 --
 -- == Version History
@@ -84,11 +94,12 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_load_store_op_none Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_load_store_op_none Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_load_store_op_none  ( KHR_LOAD_STORE_OP_NONE_SPEC_VERSION
+module Vulkan.Extensions.VK_KHR_load_store_op_none  ( pattern ATTACHMENT_LOAD_OP_NONE_KHR
+                                                    , KHR_LOAD_STORE_OP_NONE_SPEC_VERSION
                                                     , pattern KHR_LOAD_STORE_OP_NONE_SPEC_VERSION
                                                     , KHR_LOAD_STORE_OP_NONE_EXTENSION_NAME
                                                     , pattern KHR_LOAD_STORE_OP_NONE_EXTENSION_NAME
@@ -96,7 +107,12 @@ module Vulkan.Extensions.VK_KHR_load_store_op_none  ( KHR_LOAD_STORE_OP_NONE_SPE
                                                     ) where
 
 import Data.String (IsString)
+import Vulkan.Core10.Enums.AttachmentLoadOp (AttachmentLoadOp(ATTACHMENT_LOAD_OP_NONE))
 import Vulkan.Extensions.VK_KHR_dynamic_rendering (pattern ATTACHMENT_STORE_OP_NONE_KHR)
+-- No documentation found for TopLevel "VK_ATTACHMENT_LOAD_OP_NONE_KHR"
+pattern ATTACHMENT_LOAD_OP_NONE_KHR = ATTACHMENT_LOAD_OP_NONE
+
+
 type KHR_LOAD_STORE_OP_NONE_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_LOAD_STORE_OP_NONE_SPEC_VERSION"

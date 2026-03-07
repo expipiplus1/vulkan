@@ -3,7 +3,7 @@
 module Vulkan.Core10.Enums.AttachmentLoadOp  (AttachmentLoadOp( ATTACHMENT_LOAD_OP_LOAD
                                                               , ATTACHMENT_LOAD_OP_CLEAR
                                                               , ATTACHMENT_LOAD_OP_DONT_CARE
-                                                              , ATTACHMENT_LOAD_OP_NONE_KHR
+                                                              , ATTACHMENT_LOAD_OP_NONE
                                                               , ..
                                                               )) where
 
@@ -19,6 +19,36 @@ import GHC.Show (Show(showsPrec))
 -- | VkAttachmentLoadOp - Specify how contents of an attachment are treated
 -- at the beginning of the subpass where it is first used
 --
+-- = Description
+--
+-- -   'ATTACHMENT_LOAD_OP_LOAD' specifies that the previous contents of
+--     the image within the render area will be preserved as the initial
+--     values. For attachments with a depth\/stencil format, this uses the
+--     access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT'.
+--     For attachments with a color format, this uses the access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_BIT'.
+--
+-- -   'ATTACHMENT_LOAD_OP_CLEAR' specifies that the contents within the
+--     render area will be cleared to a uniform value, which is specified
+--     when a render pass instance is begun. For attachments with a
+--     depth\/stencil format, this uses the access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
+--     For attachments with a color format, this uses the access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+--
+-- -   'ATTACHMENT_LOAD_OP_DONT_CARE' specifies that the previous contents
+--     within the area need not be preserved; the contents of the
+--     attachment will be undefined inside the render area. For attachments
+--     with a depth\/stencil format, this uses the access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
+--     For attachments with a color format, this uses the access type
+--     'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+--
+-- -   'ATTACHMENT_LOAD_OP_NONE' specifies that the previous contents of
+--     the image will be undefined inside the render pass. No access type
+--     is used as the image is not accessed.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -28,42 +58,23 @@ import GHC.Show (Show(showsPrec))
 newtype AttachmentLoadOp = AttachmentLoadOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'ATTACHMENT_LOAD_OP_LOAD' specifies that the previous contents of the
--- image within the render area will be preserved as the initial values.
--- For attachments with a depth\/stencil format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT'.
--- For attachments with a color format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_BIT'.
+-- No documentation found for Nested "VkAttachmentLoadOp" "VK_ATTACHMENT_LOAD_OP_LOAD"
 pattern ATTACHMENT_LOAD_OP_LOAD = AttachmentLoadOp 0
 
--- | 'ATTACHMENT_LOAD_OP_CLEAR' specifies that the contents within the render
--- area will be cleared to a uniform value, which is specified when a
--- render pass instance is begun. For attachments with a depth\/stencil
--- format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
--- For attachments with a color format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+-- No documentation found for Nested "VkAttachmentLoadOp" "VK_ATTACHMENT_LOAD_OP_CLEAR"
 pattern ATTACHMENT_LOAD_OP_CLEAR = AttachmentLoadOp 1
 
--- | 'ATTACHMENT_LOAD_OP_DONT_CARE' specifies that the previous contents
--- within the area need not be preserved; the contents of the attachment
--- will be undefined inside the render area. For attachments with a
--- depth\/stencil format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
--- For attachments with a color format, this uses the access type
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+-- No documentation found for Nested "VkAttachmentLoadOp" "VK_ATTACHMENT_LOAD_OP_DONT_CARE"
 pattern ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
 
--- | 'ATTACHMENT_LOAD_OP_NONE_KHR' specifies that the previous contents of
--- the image will be undefined inside the render pass. No access type is
--- used as the image is not accessed.
-pattern ATTACHMENT_LOAD_OP_NONE_KHR = AttachmentLoadOp 1000400000
+-- No documentation found for Nested "VkAttachmentLoadOp" "VK_ATTACHMENT_LOAD_OP_NONE"
+pattern ATTACHMENT_LOAD_OP_NONE = AttachmentLoadOp 1000400000
 
 {-# COMPLETE
   ATTACHMENT_LOAD_OP_LOAD
   , ATTACHMENT_LOAD_OP_CLEAR
   , ATTACHMENT_LOAD_OP_DONT_CARE
-  , ATTACHMENT_LOAD_OP_NONE_KHR ::
+  , ATTACHMENT_LOAD_OP_NONE ::
     AttachmentLoadOp
   #-}
 
@@ -78,7 +89,7 @@ showTableAttachmentLoadOp =
   [ (ATTACHMENT_LOAD_OP_LOAD, "LOAD")
   , (ATTACHMENT_LOAD_OP_CLEAR, "CLEAR")
   , (ATTACHMENT_LOAD_OP_DONT_CARE, "DONT_CARE")
-  , (ATTACHMENT_LOAD_OP_NONE_KHR, "NONE_KHR")
+  , (ATTACHMENT_LOAD_OP_NONE, "NONE")
   ]
 
 instance Show AttachmentLoadOp where

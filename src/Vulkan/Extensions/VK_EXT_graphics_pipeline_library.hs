@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --         
@@ -81,7 +81,8 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo':
 --
 --     -   'GraphicsPipelineLibraryCreateInfoEXT'
 --
@@ -145,7 +146,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_graphics_pipeline_library Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_graphics_pipeline_library Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -214,9 +215,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -228,7 +233,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 data PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT = PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT
   { -- | #features-graphicsPipelineLibrary# @graphicsPipelineLibrary@ indicates
     -- that the implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-library graphics pipeline libraries>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-library graphics pipeline libraries>.
     graphicsPipelineLibrary :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -357,23 +362,26 @@ instance Zero PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT where
 -- = Description
 --
 -- If a 'GraphicsPipelineLibraryCreateInfoEXT' structure is included in the
--- @pNext@ chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it
+-- @pNext@ chain of
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo', it
 -- specifies the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets subsets of the graphics pipeline>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets subsets of the graphics pipeline>
 -- being created, excluding any subsets from linked pipeline libraries. If
 -- the pipeline is created with pipeline libraries, state from those
 -- libraries is aggregated with said subset.
 --
 -- If this structure is omitted, and either
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@flags@ includes
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@flags@
+-- includes
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
--- or the 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pNext@
+-- or the
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@pNext@
 -- chain includes a
 -- 'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'
 -- structure with a @libraryCount@ greater than @0@, it is as if @flags@ is
 -- @0@. Otherwise if this structure is omitted, it is as if @flags@
 -- includes all possible subsets of the graphics pipeline (i.e. a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete complete graphics pipeline>).
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-complete complete graphics pipeline>).
 --
 -- == Valid Usage (Implicit)
 --
@@ -436,6 +444,24 @@ type GraphicsPipelineLibraryFlagsEXT = GraphicsPipelineLibraryFlagBitsEXT
 -- | VkGraphicsPipelineLibraryFlagBitsEXT - Bitmask specifying the subset of
 -- a graphics pipeline to compile
 --
+-- = Description
+--
+-- -   'GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT' specifies
+--     that a pipeline will include
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input interface state>.
+--
+-- -   'GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
+--     specifies that a pipeline will include
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>.
+--
+-- -   'GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT' specifies that a
+--     pipeline will include
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>.
+--
+-- -   'GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT'
+--     specifies that a pipeline will include
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_graphics_pipeline_library VK_EXT_graphics_pipeline_library>,
@@ -443,24 +469,16 @@ type GraphicsPipelineLibraryFlagsEXT = GraphicsPipelineLibraryFlagBitsEXT
 newtype GraphicsPipelineLibraryFlagBitsEXT = GraphicsPipelineLibraryFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT' specifies
--- that a pipeline will include
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input interface state>.
+-- No documentation found for Nested "VkGraphicsPipelineLibraryFlagBitsEXT" "VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT"
 pattern GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT = GraphicsPipelineLibraryFlagBitsEXT 0x00000001
 
--- | 'GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT' specifies
--- that a pipeline will include
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>.
+-- No documentation found for Nested "VkGraphicsPipelineLibraryFlagBitsEXT" "VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT"
 pattern GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT = GraphicsPipelineLibraryFlagBitsEXT 0x00000002
 
--- | 'GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT' specifies that a
--- pipeline will include
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>.
+-- No documentation found for Nested "VkGraphicsPipelineLibraryFlagBitsEXT" "VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT"
 pattern GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT = GraphicsPipelineLibraryFlagBitsEXT 0x00000004
 
--- | 'GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT' specifies
--- that a pipeline will include
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>.
+-- No documentation found for Nested "VkGraphicsPipelineLibraryFlagBitsEXT" "VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT"
 pattern GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT = GraphicsPipelineLibraryFlagBitsEXT 0x00000008
 
 conNameGraphicsPipelineLibraryFlagBitsEXT :: String

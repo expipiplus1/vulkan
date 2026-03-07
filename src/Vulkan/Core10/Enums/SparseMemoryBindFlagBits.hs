@@ -22,6 +22,11 @@ type SparseMemoryBindFlags = SparseMemoryBindFlagBits
 -- | VkSparseMemoryBindFlagBits - Bitmask specifying usage of a sparse memory
 -- binding operation
 --
+-- = Description
+--
+-- -   'SPARSE_MEMORY_BIND_METADATA_BIT' specifies that the memory being
+--     bound is only for the metadata aspect.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -29,8 +34,7 @@ type SparseMemoryBindFlags = SparseMemoryBindFlagBits
 newtype SparseMemoryBindFlagBits = SparseMemoryBindFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SPARSE_MEMORY_BIND_METADATA_BIT' specifies that the memory being bound
--- is only for the metadata aspect.
+-- No documentation found for Nested "VkSparseMemoryBindFlagBits" "VK_SPARSE_MEMORY_BIND_METADATA_BIT"
 pattern SPARSE_MEMORY_BIND_METADATA_BIT = SparseMemoryBindFlagBits 0x00000001
 
 conNameSparseMemoryBindFlagBits :: String

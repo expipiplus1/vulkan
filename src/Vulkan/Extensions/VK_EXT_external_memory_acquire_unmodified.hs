@@ -27,8 +27,8 @@
 --
 -- [__Contact__]
 --
---     -   Lina Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_acquire_unmodified] @linyaa-kiwi%0A*Here describe the issue or question you have about the VK_EXT_external_memory_acquire_unmodified extension* >
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_acquire_unmodified] @cubanismo%0A*Here describe the issue or question you have about the VK_EXT_external_memory_acquire_unmodified extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_external_memory_acquire_unmodified.adoc VK_EXT_external_memory_acquire_unmodified>
@@ -89,7 +89,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_external_memory_acquire_unmodified Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_external_memory_acquire_unmodified Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -138,13 +138,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 -- the /acquire operation/\'s memory barrier structure because this /may/
 -- reduce the performance penalty.
 --
--- This struct is ignored if @acquireUnmodifiedMemory@ is
+-- This structure is ignored if @acquireUnmodifiedMemory@ is
 -- 'Vulkan.Core10.FundamentalTypes.FALSE'. In particular,
 -- 'Vulkan.Core10.FundamentalTypes.FALSE' does /not/ specify that memory
 -- was modified.
 --
--- This struct is ignored if the memory barrier’s @srcQueueFamilyIndex@ is
--- not a special queue family reserved for external memory ownership
+-- This structure is ignored if the memory barrier’s @srcQueueFamilyIndex@
+-- is not a special queue family reserved for external memory ownership
 -- transfers.
 --
 -- The method by which the application determines whether memory was
@@ -170,7 +170,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 --     'Vulkan.Core10.FundamentalTypes.TRUE', and the memory barrier’s
 --     @srcQueueFamilyIndex@ is a special queue family reserved for
 --     external memory ownership transfers (as described in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers>),
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-queue-transfers>),
 --     then each range of 'Vulkan.Core10.Handles.DeviceMemory' bound to the
 --     resource /must/ have remained unmodified during all time since the
 --     resource’s most recent release of ownership to the queue family

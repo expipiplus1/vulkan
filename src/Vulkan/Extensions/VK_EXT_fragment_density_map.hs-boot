@@ -15,7 +15,7 @@
 --     219
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Ratification Status__]
 --     Ratified
@@ -45,7 +45,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-09-30
+--     2025-05-20
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -200,13 +200,13 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fragsize FragSizeEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-fragsize FragSizeEXT>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentDensityEXT FragmentDensityEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentDensityEXT FragmentDensityEXT>
 --
 -- == Version History
 --
@@ -218,6 +218,10 @@
 --
 --     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
+-- -   Revision 3, 2025-05-20 (Matthew Netsch)
+--
+--     -   Fixes fragmentDensityTexelSize calculation equation
+--
 -- == See Also
 --
 -- No cross-references are available
@@ -225,7 +229,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

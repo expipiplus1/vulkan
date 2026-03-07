@@ -72,7 +72,7 @@
 --
 -- == New Enums
 --
--- -   'TimeDomainKHR'
+-- -   'Vulkan.Extensions.VK_EXT_present_timing.TimeDomainKHR'
 --
 -- == New Enum Constants
 --
@@ -97,25 +97,26 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_calibrated_timestamps Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_calibrated_timestamps Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_calibrated_timestamps  ( CalibratedTimestampInfoKHR
-                                                       , TimeDomainKHR
-                                                       ) where
+module Vulkan.Extensions.VK_KHR_calibrated_timestamps  (CalibratedTimestampInfoKHR) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+type role CalibratedTimestampInfoKHR nominal
+data CalibratedTimestampInfoKHR (es :: [Type])
 
-data CalibratedTimestampInfoKHR
+instance ( Extendss CalibratedTimestampInfoKHR es
+         , PokeChain es ) => ToCStruct (CalibratedTimestampInfoKHR es)
+instance Show (Chain es) => Show (CalibratedTimestampInfoKHR es)
 
-instance ToCStruct CalibratedTimestampInfoKHR
-instance Show CalibratedTimestampInfoKHR
-
-instance FromCStruct CalibratedTimestampInfoKHR
-
-
-data TimeDomainKHR
+instance ( Extendss CalibratedTimestampInfoKHR es
+         , PeekChain es ) => FromCStruct (CalibratedTimestampInfoKHR es)
 

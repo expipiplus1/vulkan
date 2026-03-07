@@ -31,6 +31,9 @@
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_line_rasterization VK_KHR_line_rasterization>
 --         extension
 --
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Special Use__]
 --
 --     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse CAD support>
@@ -89,7 +92,7 @@
 --     -   'PhysicalDeviceLineRasterizationPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationLineStateCreateInfoEXT'
 --
@@ -106,6 +109,17 @@
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
 --     -   'DYNAMIC_STATE_LINE_STIPPLE_EXT'
+--
+-- -   Extending
+--     'Vulkan.Core14.Enums.LineRasterizationMode.LineRasterizationMode':
+--
+--     -   'LINE_RASTERIZATION_MODE_BRESENHAM_EXT'
+--
+--     -   'LINE_RASTERIZATION_MODE_DEFAULT_EXT'
+--
+--     -   'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT'
+--
+--     -   'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -139,14 +153,14 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_line_rasterization  (LineRasterizationModeEXT) where
 
 
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR)
+import {-# SOURCE #-} Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode)
 -- No documentation found for TopLevel "VkLineRasterizationModeEXT"
-type LineRasterizationModeEXT = LineRasterizationModeKHR
+type LineRasterizationModeEXT = LineRasterizationMode
 

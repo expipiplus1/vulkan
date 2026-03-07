@@ -73,8 +73,9 @@
 --
 -- This extension adds a new structure, 'DepthBiasRepresentationInfoEXT',
 -- that can be added to a @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' and allows
--- setting the scaling and representation of depth bias for a pipeline.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'
+-- and allows setting the scaling and representation of depth bias for a
+-- pipeline.
 --
 -- This state can also be set dynamically by using the new structure
 -- mentioned above in combination with the new 'cmdSetDepthBias2EXT'
@@ -89,7 +90,7 @@
 -- -   'DepthBiasInfoEXT'
 --
 -- -   Extending 'DepthBiasInfoEXT',
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'DepthBiasRepresentationInfoEXT'
 --
@@ -130,7 +131,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_bias_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_bias_control Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -246,7 +247,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthBias2EXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDepthBias2EXT-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -265,9 +267,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDepthBias2EXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -307,7 +314,7 @@ cmdSetDepthBias2EXT commandBuffer depthBiasInfo = liftIO . evalContT $ do
 -- == Valid Usage
 --
 -- -   #VUID-VkDepthBiasInfoEXT-depthBiasClamp-08950# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthBiasClamp depthBiasClamp>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-depthBiasClamp depthBiasClamp>
 --     feature is not enabled, @depthBiasClamp@ /must/ be @0.0@
 --
 -- == Valid Usage (Implicit)
@@ -319,7 +326,7 @@ cmdSetDepthBias2EXT commandBuffer depthBiasInfo = liftIO . evalContT $ do
 --     pointer to a valid instance of 'DepthBiasRepresentationInfoEXT'
 --
 -- -   #VUID-VkDepthBiasInfoEXT-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -403,18 +410,18 @@ instance es ~ '[] => Zero (DepthBiasInfoEXT es) where
 --
 -- -   #VUID-VkDepthBiasRepresentationInfoEXT-leastRepresentableValueForceUnormRepresentation-08947#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-leastRepresentableValueForceUnormRepresentation leastRepresentableValueForceUnormRepresentation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-leastRepresentableValueForceUnormRepresentation leastRepresentableValueForceUnormRepresentation>
 --     feature is not enabled, @depthBiasRepresentation@ /must/ not be
 --     'DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORCE_UNORM_EXT'
 --
 -- -   #VUID-VkDepthBiasRepresentationInfoEXT-floatRepresentation-08948# If
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-floatRepresentation floatRepresentation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-floatRepresentation floatRepresentation>
 --     feature is not enabled, @depthBiasRepresentation@ /must/ not be
 --     'DEPTH_BIAS_REPRESENTATION_FLOAT_EXT'
 --
 -- -   #VUID-VkDepthBiasRepresentationInfoEXT-depthBiasExact-08949# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthBiasExact depthBiasExact>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-depthBiasExact depthBiasExact>
 --     feature is not enabled, @depthBiasExact@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
@@ -573,6 +580,22 @@ instance Zero PhysicalDeviceDepthBiasControlFeaturesEXT where
 
 -- | VkDepthBiasRepresentationEXT - Specify the depth bias representation
 --
+-- = Description
+--
+-- -   'DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORMAT_EXT'
+--     specifies that the depth bias representation is a factor of the
+--     format’s r as described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-depthbias-computation>.
+--
+-- -   'DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORCE_UNORM_EXT'
+--     specifies that the depth bias representation is a factor of a
+--     constant r defined by the bit-size or mantissa of the format as
+--     described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-depthbias-computation>.
+--
+-- -   'DEPTH_BIAS_REPRESENTATION_FLOAT_EXT' specifies that the depth bias
+--     representation is a factor of constant r equal to 1.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_bias_control VK_EXT_depth_bias_control>,
@@ -580,20 +603,13 @@ instance Zero PhysicalDeviceDepthBiasControlFeaturesEXT where
 newtype DepthBiasRepresentationEXT = DepthBiasRepresentationEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORMAT_EXT'
--- specifies that the depth bias representation is a factor of the format’s
--- r as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-depthbias-computation>.
+-- No documentation found for Nested "VkDepthBiasRepresentationEXT" "VK_DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORMAT_EXT"
 pattern DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORMAT_EXT = DepthBiasRepresentationEXT 0
 
--- | 'DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORCE_UNORM_EXT'
--- specifies that the depth bias representation is a factor of a constant r
--- defined by the bit-size or mantissa of the format as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-depthbias-computation>.
+-- No documentation found for Nested "VkDepthBiasRepresentationEXT" "VK_DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORCE_UNORM_EXT"
 pattern DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORCE_UNORM_EXT = DepthBiasRepresentationEXT 1
 
--- | 'DEPTH_BIAS_REPRESENTATION_FLOAT_EXT' specifies that the depth bias
--- representation is a factor of constant r equal to 1.
+-- No documentation found for Nested "VkDepthBiasRepresentationEXT" "VK_DEPTH_BIAS_REPRESENTATION_FLOAT_EXT"
 pattern DEPTH_BIAS_REPRESENTATION_FLOAT_EXT = DepthBiasRepresentationEXT 2
 
 {-# COMPLETE

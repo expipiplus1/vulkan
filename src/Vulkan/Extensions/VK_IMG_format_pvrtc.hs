@@ -50,7 +50,7 @@
 -- compression format (called PVRTC).
 --
 -- As also noted in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#data-format Khronos Data Format Specification>,
 -- PVRTC1 images must have dimensions that are a power of two.
 --
 -- == Deprecation
@@ -95,7 +95,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_IMG_format_pvrtc Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_IMG_format_pvrtc Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

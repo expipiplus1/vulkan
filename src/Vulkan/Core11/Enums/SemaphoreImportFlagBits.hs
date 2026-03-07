@@ -26,17 +26,20 @@ type SemaphoreImportFlags = SemaphoreImportFlagBits
 --
 -- These bits have the following meanings:
 --
+-- -   'SEMAPHORE_IMPORT_TEMPORARY_BIT' specifies that the semaphore
+--     payload will be imported only temporarily, as described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+--     regardless of the permanence of @handleType@.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore VK_KHR_external_semaphore>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'SemaphoreImportFlags'
 newtype SemaphoreImportFlagBits = SemaphoreImportFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SEMAPHORE_IMPORT_TEMPORARY_BIT' specifies that the semaphore payload
--- will be imported only temporarily, as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
--- regardless of the permanence of @handleType@.
+-- No documentation found for Nested "VkSemaphoreImportFlagBits" "VK_SEMAPHORE_IMPORT_TEMPORARY_BIT"
 pattern SEMAPHORE_IMPORT_TEMPORARY_BIT = SemaphoreImportFlagBits 0x00000001
 
 conNameSemaphoreImportFlagBits :: String

@@ -100,13 +100,13 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16AddEXT AtomicFloat32MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16AddEXT AtomicFloat32MinMaxEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16MinMaxEXT AtomicFloat32MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16MinMaxEXT AtomicFloat32MinMaxEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32MinMaxEXT AtomicFloat32MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32MinMaxEXT AtomicFloat32MinMaxEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64MinMaxEXT AtomicFloat64MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64MinMaxEXT AtomicFloat64MinMaxEXT>
 --
 -- == Version History
 --
@@ -121,7 +121,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_atomic_float2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_atomic_float2 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -169,9 +169,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderAtomicFloat2FeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceShaderAtomicFloat2FeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -206,7 +210,7 @@ data PhysicalDeviceShaderAtomicFloat2FeaturesEXT = PhysicalDeviceShaderAtomicFlo
     shaderBufferFloat64AtomicMinMax :: Bool
   , -- | #features-shaderSharedFloat16Atomics# @shaderSharedFloat16Atomics@
     -- indicates whether shaders /can/ perform 16-bit floating-point load,
-    -- store and exchange atomic operations on shared and payload memory.
+    -- store, and exchange atomic operations on shared and payload memory.
     shaderSharedFloat16Atomics :: Bool
   , -- | #features-shaderSharedFloat16AtomicAdd# @shaderSharedFloat16AtomicAdd@
     -- indicates whether shaders /can/ perform 16-bit floating-point add atomic

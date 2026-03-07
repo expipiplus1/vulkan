@@ -18,12 +18,18 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_depth_clamp_zero_one VK_KHR_depth_clamp_zero_one>
+--         extension
 --
 -- [__Contact__]
 --
@@ -46,6 +52,13 @@
 -- portability in edge cases of features like depthBias. The particular
 -- behavior is chosen to match OpenGL to aid porting or emulation.
 --
+-- == Promotion to @VK_KHR_depth_clamp_zero_one@
+--
+-- All functionality in this extension is included in
+-- @VK_KHR_depth_clamp_zero_one@, with the suffix change to KHR. The
+-- original type, enum, and command names are still available as aliases of
+-- the core functionality.
+--
 -- == New Structures
 --
 -- -   Extending
@@ -62,7 +75,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT'
 --
 -- == Version History
 --
@@ -77,105 +90,29 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clamp_zero_one Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_depth_clamp_zero_one Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_depth_clamp_zero_one  ( PhysicalDeviceDepthClampZeroOneFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_depth_clamp_zero_one  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT
+                                                      , PhysicalDeviceDepthClampZeroOneFeaturesEXT
                                                       , EXT_DEPTH_CLAMP_ZERO_ONE_SPEC_VERSION
                                                       , pattern EXT_DEPTH_CLAMP_ZERO_ONE_SPEC_VERSION
                                                       , EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME
                                                       , pattern EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME
+                                                      , PhysicalDeviceDepthClampZeroOneFeaturesKHR(..)
                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT))
--- | VkPhysicalDeviceDepthClampZeroOneFeaturesEXT - Structure describing
--- feature to control zero to one depth clamping
---
--- = Members
---
--- This structure describes the following feature:
---
--- = Description
---
--- If the 'PhysicalDeviceDepthClampZeroOneFeaturesEXT' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceDepthClampZeroOneFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clamp_zero_one VK_EXT_depth_clamp_zero_one>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceDepthClampZeroOneFeaturesEXT = PhysicalDeviceDepthClampZeroOneFeaturesEXT
-  { -- | #features-depthClampZeroOne# @depthClampZeroOne@ indicates that the
-    -- implementation supports clamping the depth to a range of @0@ to @1@.
-    depthClampZeroOne :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceDepthClampZeroOneFeaturesEXT)
-#endif
-deriving instance Show PhysicalDeviceDepthClampZeroOneFeaturesEXT
+import Vulkan.Extensions.VK_KHR_depth_clamp_zero_one (PhysicalDeviceDepthClampZeroOneFeaturesKHR)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR))
+import Vulkan.Extensions.VK_KHR_depth_clamp_zero_one (PhysicalDeviceDepthClampZeroOneFeaturesKHR(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR
 
-instance ToCStruct PhysicalDeviceDepthClampZeroOneFeaturesEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceDepthClampZeroOneFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (depthClampZeroOne))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceDepthClampZeroOneFeaturesEXT where
-  peekCStruct p = do
-    depthClampZeroOne <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDeviceDepthClampZeroOneFeaturesEXT
-             (bool32ToBool depthClampZeroOne)
-
-instance Storable PhysicalDeviceDepthClampZeroOneFeaturesEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceDepthClampZeroOneFeaturesEXT where
-  zero = PhysicalDeviceDepthClampZeroOneFeaturesEXT
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceDepthClampZeroOneFeaturesEXT"
+type PhysicalDeviceDepthClampZeroOneFeaturesEXT = PhysicalDeviceDepthClampZeroOneFeaturesKHR
 
 
 type EXT_DEPTH_CLAMP_ZERO_ONE_SPEC_VERSION = 1

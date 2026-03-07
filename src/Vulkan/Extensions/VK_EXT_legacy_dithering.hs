@@ -18,7 +18,7 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -28,6 +28,8 @@
 -- [__API Interactions__]
 --
 --     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_VERSION_1_4
 --
 --     -   Interacts with VK_KHR_dynamic_rendering
 --
@@ -95,12 +97,14 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
 -- is supported:
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
 --
@@ -138,7 +142,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_legacy_dithering Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_legacy_dithering Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -147,8 +151,6 @@ module Vulkan.Extensions.VK_EXT_legacy_dithering  ( PhysicalDeviceLegacyDitherin
                                                   , pattern EXT_LEGACY_DITHERING_SPEC_VERSION
                                                   , EXT_LEGACY_DITHERING_EXTENSION_NAME
                                                   , pattern EXT_LEGACY_DITHERING_EXTENSION_NAME
-                                                  , PipelineCreateFlagBits2KHR(..)
-                                                  , PipelineCreateFlags2KHR
                                                   ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -173,8 +175,6 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT))
-import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlagBits2KHR(..))
-import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
 -- | VkPhysicalDeviceLegacyDitheringFeaturesEXT - Structure describing
 -- support for legacy dithering
 --
@@ -190,9 +190,13 @@ import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceLegacyDitheringFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceLegacyDitheringFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -204,7 +208,7 @@ import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
 data PhysicalDeviceLegacyDitheringFeaturesEXT = PhysicalDeviceLegacyDitheringFeaturesEXT
   { -- | #features-legacyDithering# @legacyDithering@ indicates whether the
     -- implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>.
     legacyDithering :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

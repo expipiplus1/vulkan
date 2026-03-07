@@ -111,7 +111,7 @@
 -- -   Extending 'Vulkan.Core10.Image.ImageCreateInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo',
 --     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo':
 --
 --     -   'ExternalFormatANDROID'
@@ -288,7 +288,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -402,9 +402,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Extensions.VK_KHR_external_memory.ERROR_INVALID_EXTERNAL_HANDLE_KHR'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_KHR_external_memory.ERROR_INVALID_EXTERNAL_HANDLE_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -479,9 +483,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -532,10 +540,11 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   #VUID-VkImportAndroidHardwareBufferInfoANDROID-buffer-01880# If
+-- -   #VUID-VkImportAndroidHardwareBufferInfoANDROID-buffer-09863# If
 --     @buffer@ is not @NULL@, Android hardware buffers /must/ be supported
 --     for import, as reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM',
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
@@ -543,7 +552,7 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 --     @buffer@ is not @NULL@, it /must/ be a valid Android hardware buffer
 --     object with @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan
 --     as described in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 --
 -- == Valid Usage (Implicit)
 --
@@ -606,7 +615,7 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 --
 -- The @androidHardwareBufferUsage@ field /must/ include Android hardware
 -- buffer usage flags listed in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
 -- table when the corresponding Vulkan image usage or image creation flags
 -- are included in the @usage@ or @flags@ fields of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'.
@@ -689,7 +698,8 @@ instance Zero AndroidHardwareBufferUsageANDROID where
 --     'Vulkan.Extensions.VK_ANDROID_external_format_resolve.AndroidHardwareBufferFormatResolvePropertiesANDROID'
 --
 -- -   #VUID-VkAndroidHardwareBufferPropertiesANDROID-sType-unique# The
---     @sType@ value of each struct in the @pNext@ chain /must/ be unique
+--     @sType@ value of each structure in the @pNext@ chain /must/ be
+--     unique
 --
 -- = See Also
 --
@@ -845,7 +855,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- = Description
 --
 -- If the Android hardware buffer has one of the formats listed in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-formats Format Equivalence table>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-android-hardware-buffer-formats Format Equivalence table>,
 -- then @format@ /must/ have the equivalent Vulkan format listed in the
 -- table. Otherwise, @format@ /may/ be
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', indicating the Android
@@ -864,7 +874,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 --
 -- The @formatFeatures@ member only indicates the features available when
 -- using an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external-format image>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external-format image>
 -- created from the Android hardware buffer. Images from Android hardware
 -- buffers with a format other than
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' are subject to the format
@@ -901,7 +911,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- with that format. If @format@ is
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', all members of
 -- @samplerYcbcrConversionComponents@ /must/ be the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
 --
 -- Implementations /may/ not always be able to determine the color model,
 -- numerical range, or chroma offsets of the image contents, so the values
@@ -1041,7 +1051,7 @@ instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
 -- = Description
 --
 -- When included in the @pNext@ chain of another structure, it indicates
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats additional format information>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-external-android-hardware-buffer-external-formats additional format information>
 -- beyond what is provided by 'Vulkan.Core10.Enums.Format.Format' values
 -- for an Android hardware buffer. If @externalFormat@ is zero, it
 -- indicates that no external format is used, and implementations should

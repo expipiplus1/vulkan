@@ -116,7 +116,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_fence_win32 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_external_fence_win32 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -212,7 +212,7 @@ foreign import ccall
 -- Exporting a Windows handle from a fence /may/ have side effects
 -- depending on the transference of the specified handle type, as described
 -- in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>.
 --
 -- == Return Codes
 --
@@ -222,9 +222,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -289,9 +293,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -347,7 +355,7 @@ importFenceWin32HandleKHR device
 --
 -- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01457# @handleType@
 --     /must/ be a value included in the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fence-handletypes-win32 Handle Types Supported by >
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fence-handletypes-win32 Handle Types Supported by >
 --     table
 --
 -- -   #VUID-VkImportFenceWin32HandleInfoKHR-handleType-01459# If
@@ -369,11 +377,11 @@ importFenceWin32HandleKHR device
 -- -   #VUID-VkImportFenceWin32HandleInfoKHR-handle-01539# If @handle@ is
 --     not @NULL@, it /must/ obey any requirements listed for @handleType@
 --     in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- -   #VUID-VkImportFenceWin32HandleInfoKHR-name-01540# If @name@ is not
 --     @NULL@, it /must/ obey any requirements listed for @handleType@ in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --
@@ -607,7 +615,7 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 -- -   #VUID-VkFenceGetWin32HandleInfoKHR-fence-01450# @fence@ /must/ not
 --     currently have its payload replaced by an imported payload as
 --     described below in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@
@@ -615,7 +623,7 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 -- -   #VUID-VkFenceGetWin32HandleInfoKHR-handleType-01451# If @handleType@
 --     refers to a handle type with copy payload transference semantics,
 --     @fence@ /must/ be signaled, or have an associated
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences-signaling fence signal operation>
 --     pending execution
 --
 -- -   #VUID-VkFenceGetWin32HandleInfoKHR-handleType-01452# @handleType@

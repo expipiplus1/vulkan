@@ -21,11 +21,18 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     None
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_rotate.html SPV_KHR_subgroup_rotate>
+--
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
 --
 -- [__Contact__]
 --
@@ -47,7 +54,7 @@
 --
 --     -   Tobias Hector, AMD
 --
---     -   John Leech, Khronos
+--     -   Jon Leech, Khronos
 --
 --     -   Matthew Netsch, Qualcomm
 --
@@ -78,27 +85,31 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR'
 --
 -- -   Extending
 --     'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits':
 --
---     -   'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
+--     -   'SUBGROUP_FEATURE_ROTATE_BIT_KHR'
 --
---     -   'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
+--     -   'SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-GroupNonUniformRotateKHR GroupNonUniformRotateKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-GroupNonUniformRotateKHR GroupNonUniformRotateKHR>
+--
+-- == Promotion to Vulkan 1.4
+--
+-- Functionality in this extension is included in core Vulkan 1.4 with the
+-- KHR suffix omitted. The original type, enum, and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Version History
 --
 -- -   Revision 2, 2024-01-29 (Kévin Petit)
 --
---     -   Add
---         'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_BIT_KHR'
---         and
---         'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
+--     -   Add 'SUBGROUP_FEATURE_ROTATE_BIT_KHR' and
+--         'SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR'
 --
 -- -   Revision 1, 2023-06-20 (Kévin Petit)
 --
@@ -111,111 +122,41 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_shader_subgroup_rotate Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_shader_subgroup_rotate  ( PhysicalDeviceShaderSubgroupRotateFeaturesKHR(..)
+module Vulkan.Extensions.VK_KHR_shader_subgroup_rotate  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR
+                                                        , pattern SUBGROUP_FEATURE_ROTATE_BIT_KHR
+                                                        , pattern SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR
+                                                        , PhysicalDeviceShaderSubgroupRotateFeaturesKHR
                                                         , KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION
                                                         , pattern KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION
                                                         , KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME
                                                         , pattern KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR))
--- | VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR - Structure describing
--- whether subgroup rotation is enabled
---
--- = Description
---
--- If the 'PhysicalDeviceShaderSubgroupRotateFeaturesKHR' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderSubgroupRotateFeaturesKHR' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_rotate VK_KHR_shader_subgroup_rotate>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceShaderSubgroupRotateFeaturesKHR = PhysicalDeviceShaderSubgroupRotateFeaturesKHR
-  { -- | #features-shaderSubgroupRotate# @shaderSubgroupRotate@ specifies whether
-    -- shader modules /can/ declare the @GroupNonUniformRotateKHR@ capability.
-    shaderSubgroupRotate :: Bool
-  , -- | #features-shaderSubgroupRotateClustered# @shaderSubgroupRotateClustered@
-    -- specifies whether shader modules /can/ use the @ClusterSize@ operand to
-    -- @OpGroupNonUniformRotateKHR@.
-    shaderSubgroupRotateClustered :: Bool
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceShaderSubgroupRotateFeaturesKHR)
-#endif
-deriving instance Show PhysicalDeviceShaderSubgroupRotateFeaturesKHR
+import Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap (PhysicalDeviceShaderSubgroupRotateFeatures)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES))
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ROTATE_BIT))
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES
 
-instance ToCStruct PhysicalDeviceShaderSubgroupRotateFeaturesKHR where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceShaderSubgroupRotateFeaturesKHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shaderSubgroupRotate))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (shaderSubgroupRotateClustered))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceShaderSubgroupRotateFeaturesKHR where
-  peekCStruct p = do
-    shaderSubgroupRotate <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    shaderSubgroupRotateClustered <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
-    pure $ PhysicalDeviceShaderSubgroupRotateFeaturesKHR
-             (bool32ToBool shaderSubgroupRotate)
-             (bool32ToBool shaderSubgroupRotateClustered)
+-- No documentation found for TopLevel "VK_SUBGROUP_FEATURE_ROTATE_BIT_KHR"
+pattern SUBGROUP_FEATURE_ROTATE_BIT_KHR = SUBGROUP_FEATURE_ROTATE_BIT
 
-instance Storable PhysicalDeviceShaderSubgroupRotateFeaturesKHR where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDeviceShaderSubgroupRotateFeaturesKHR where
-  zero = PhysicalDeviceShaderSubgroupRotateFeaturesKHR
-           zero
-           zero
+-- No documentation found for TopLevel "VK_SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR"
+pattern SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT_KHR = SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT
+
+
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderSubgroupRotateFeaturesKHR"
+type PhysicalDeviceShaderSubgroupRotateFeaturesKHR = PhysicalDeviceShaderSubgroupRotateFeatures
 
 
 type KHR_SHADER_SUBGROUP_ROTATE_SPEC_VERSION = 2

@@ -31,6 +31,9 @@
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vertex_attribute_divisor VK_KHR_vertex_attribute_divisor>
 --         extension
 --
+--         -   Which in turn was /promoted/ to
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4-promotions Vulkan 1.4>
+--
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
@@ -72,7 +75,7 @@
 --     -   'PhysicalDeviceVertexAttributeDivisorPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineVertexInputStateCreateInfo':
 --
 --     -   'PipelineVertexInputDivisorStateCreateInfoEXT'
 --
@@ -165,7 +168,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_vertex_attribute_divisor Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_vertex_attribute_divisor Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -179,9 +182,6 @@ module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor  ( pattern STRUCTURE_TY
                                                           , pattern EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION
                                                           , EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME
                                                           , pattern EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME
-                                                          , VertexInputBindingDivisorDescriptionKHR(..)
-                                                          , PipelineVertexInputDivisorStateCreateInfoKHR(..)
-                                                          , PhysicalDeviceVertexAttributeDivisorFeaturesKHR(..)
                                                           ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -202,22 +202,19 @@ import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
-import Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesKHR)
-import Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoKHR)
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PhysicalDeviceVertexAttributeDivisorFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PipelineVertexInputDivisorStateCreateInfo)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (VertexInputBindingDivisorDescriptionKHR)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR))
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (VertexInputBindingDivisorDescription)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR))
-import Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesKHR(..))
-import Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfoKHR(..))
-import Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (VertexInputBindingDivisorDescriptionKHR(..))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT"
-pattern STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR
+pattern STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT = STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO
 
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES
 
 
 -- | VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT - Structure
@@ -284,15 +281,15 @@ instance Zero PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
 
 
 -- No documentation found for TopLevel "VkVertexInputBindingDivisorDescriptionEXT"
-type VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescriptionKHR
+type VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescription
 
 
 -- No documentation found for TopLevel "VkPipelineVertexInputDivisorStateCreateInfoEXT"
-type PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorStateCreateInfoKHR
+type PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorStateCreateInfo
 
 
 -- No documentation found for TopLevel "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT"
-type PhysicalDeviceVertexAttributeDivisorFeaturesEXT = PhysicalDeviceVertexAttributeDivisorFeaturesKHR
+type PhysicalDeviceVertexAttributeDivisorFeaturesEXT = PhysicalDeviceVertexAttributeDivisorFeatures
 
 
 type EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION = 3

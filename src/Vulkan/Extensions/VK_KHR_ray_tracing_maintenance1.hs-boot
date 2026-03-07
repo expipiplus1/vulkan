@@ -102,11 +102,11 @@
 --
 --     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 --         to specify execution of
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure copy commands>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#acceleration-structure-copying acceleration structure copy commands>
 --
 --     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR'
 --         to specify read access to a
---         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table shader binding table>
+--         <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shader-binding-table shader binding table>
 --         in any shader pipeline stage
 --
 -- -   Adds two new acceleration structure query parameters:
@@ -121,7 +121,7 @@
 -- -   Adds an optional new indirect ray tracing dispatch command,
 --     'cmdTraceRaysIndirect2KHR', which sources the shader binding table
 --     parameters as well as the dispatch dimensions from the device. The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect2 rayTracingPipelineTraceRaysIndirect2>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect2 rayTracingPipelineTraceRaysIndirect2>
 --     feature indicates whether this functionality is supported.
 --
 -- == New Commands
@@ -196,11 +196,11 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-cullmask CullMaskKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-cullmask CullMaskKHR>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayCullMaskKHR RayCullMaskKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-RayCullMaskKHR RayCullMaskKHR>
 --
 -- == Issues
 --
@@ -219,7 +219,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_maintenance1 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_tracing_maintenance1 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

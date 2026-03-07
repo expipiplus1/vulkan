@@ -42,10 +42,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -60,9 +63,9 @@ data PhysicalDeviceShaderSubgroupExtendedTypesFeatures = PhysicalDeviceShaderSub
     -- @shaderSubgroupExtendedTypes@ is a boolean specifying whether subgroup
     -- operations can use 8-bit integer, 16-bit integer, 64-bit integer, 16-bit
     -- floating-point, and vectors of these types in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-scope-subgroup subgroup scope>,
     -- if the implementation supports the types.
     shaderSubgroupExtendedTypes :: Bool }
   deriving (Typeable, Eq)

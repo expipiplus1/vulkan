@@ -83,7 +83,7 @@
 -- values. These opacity values can control if a ray hitting that
 -- subtriangle is treated as an opaque hit, complete miss, or possible hit,
 -- depending on the controls described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
 --
 -- This extension provides:
 --
@@ -152,7 +152,8 @@
 -- -   'MicromapVersionInfoEXT'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR':
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
+--     'Vulkan.Extensions.VK_AMDX_dense_geometry_format.AccelerationStructureDenseGeometryFormatTrianglesDataAMDX':
 --
 --     -   'AccelerationStructureTrianglesOpacityMicromapEXT'
 --
@@ -211,18 +212,28 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT'
+--
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT'
 --
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryInstanceFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT'
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT'
+--     -   'GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT'
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT'
+--
+--     -   'GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.ObjectType.ObjectType':
 --
@@ -380,7 +391,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_opacity_micromap Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_opacity_micromap Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

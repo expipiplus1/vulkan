@@ -113,7 +113,8 @@
 --
 --     -   'PhysicalDeviceShaderModuleIdentifierPropertiesEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo':
 --
 --     -   'PipelineShaderStageModuleIdentifierCreateInfoEXT'
 --
@@ -148,7 +149,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_module_identifier Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_module_identifier Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -251,13 +252,13 @@ foreign import ccall
 -- if the difference does not affect pipeline compilation. Identifiers are
 -- only meaningful on different 'Vulkan.Core10.Handles.Device' objects if
 -- the device the identifier was queried from had the same
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-shaderModuleIdentifierAlgorithmUUID shaderModuleIdentifierAlgorithmUUID>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-shaderModuleIdentifierAlgorithmUUID shaderModuleIdentifierAlgorithmUUID>
 -- as the device consuming the identifier.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkGetShaderModuleIdentifierEXT-shaderModuleIdentifier-06884#
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderModuleIdentifier shaderModuleIdentifier>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderModuleIdentifier shaderModuleIdentifier>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -323,7 +324,7 @@ foreign import ccall
 -- difference does not affect pipeline compilation. Identifiers are only
 -- meaningful on different 'Vulkan.Core10.Handles.Device' objects if the
 -- device the identifier was queried from had the same
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-shaderModuleIdentifierAlgorithmUUID shaderModuleIdentifierAlgorithmUUID>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-shaderModuleIdentifierAlgorithmUUID shaderModuleIdentifierAlgorithmUUID>
 -- as the device consuming the identifier.
 --
 -- The identifier returned by the implementation in
@@ -335,7 +336,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetShaderModuleCreateInfoIdentifierEXT-shaderModuleIdentifier-06885#
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderModuleIdentifier shaderModuleIdentifier>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderModuleIdentifier shaderModuleIdentifier>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -400,9 +401,13 @@ getShaderModuleCreateInfoIdentifierEXT device
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderModuleIdentifierFeaturesEXT' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceShaderModuleIdentifierFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -559,12 +564,12 @@ instance Zero PhysicalDeviceShaderModuleIdentifierPropertiesEXT where
 -- -   #VUID-VkPipelineShaderStageModuleIdentifierCreateInfoEXT-pNext-06850#
 --     If this structure is included in a @pNext@ chain and
 --     @identifierSize@ is not equal to 0, the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderModuleIdentifier shaderModuleIdentifier>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderModuleIdentifier shaderModuleIdentifier>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineShaderStageModuleIdentifierCreateInfoEXT-pNext-06851#
---     If this struct is included in a @pNext@ chain of
---     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' and
+--     If this structure is included in a @pNext@ chain of
+--     'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo' and
 --     @identifierSize@ is not equal to 0, the pipeline /must/ be created
 --     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT'

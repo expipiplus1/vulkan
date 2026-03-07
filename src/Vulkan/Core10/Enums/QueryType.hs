@@ -29,6 +29,67 @@ import GHC.Show (Show(showsPrec))
 
 -- | VkQueryType - Specify the type of queries managed by a query pool
 --
+-- = Description
+--
+-- -   'QUERY_TYPE_OCCLUSION' specifies an
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-occlusion occlusion query>.
+--
+-- -   'QUERY_TYPE_PIPELINE_STATISTICS' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-pipestats pipeline statistics query>.
+--
+-- -   'QUERY_TYPE_TIMESTAMP' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-timestamps timestamp query>.
+--
+-- -   'QUERY_TYPE_PERFORMANCE_QUERY_KHR' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-performance performance query>.
+--
+-- -   'QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-transform-feedback transform feedback query>.
+--
+-- -   'QUERY_TYPE_PRIMITIVES_GENERATED_EXT' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-primitives-generated primitives generated query>.
+--
+-- -   'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
+--     for use with
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'.
+--
+-- -   'QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR' specifies
+--     a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#acceleration-structure-copying serialization acceleration structure size query>.
+--
+-- -   'QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR' specifies an
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
+--     for use with
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'.
+--
+-- -   'QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR'
+--     specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#serialized-as-header serialization acceleration structure pointer count query>.
+--
+-- -   'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV' specifies an
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
+--     for use with
+--     'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV'.
+--
+-- -   'QUERY_TYPE_PERFORMANCE_QUERY_INTEL' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-performance-intel Intel performance query>.
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryType VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR>
+--     specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-result-status-only result status query>.
+--
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryType VK_QUERY_TYPE_VIDEO_ENCODE_FEEDBACK_KHR>
+--     specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-video-encode-feedback video encode feedback query>.
+--
+-- -   'QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT' specifies a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-mesh-shader generated mesh primitives query>.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -41,16 +102,13 @@ import GHC.Show (Show(showsPrec))
 newtype QueryType = QueryType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'QUERY_TYPE_OCCLUSION' specifies an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-occlusion occlusion query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_OCCLUSION"
 pattern QUERY_TYPE_OCCLUSION = QueryType 0
 
--- | 'QUERY_TYPE_PIPELINE_STATISTICS' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-pipestats pipeline statistics query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_PIPELINE_STATISTICS"
 pattern QUERY_TYPE_PIPELINE_STATISTICS = QueryType 1
 
--- | 'QUERY_TYPE_TIMESTAMP' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps timestamp query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_TIMESTAMP"
 pattern QUERY_TYPE_TIMESTAMP = QueryType 2
 
 -- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT"
@@ -59,55 +117,34 @@ pattern QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT = QueryType 1000396001
 -- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT"
 pattern QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT = QueryType 1000396000
 
--- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR' specifies an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
--- for use with
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR'
--- or
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR"
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR = QueryType 1000386001
 
--- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR'
--- specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#serialized-as-header serialization acceleration structure pointer count query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR"
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR = QueryType 1000386000
 
--- | 'QUERY_TYPE_PRIMITIVES_GENERATED_EXT' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-primitives-generated primitives generated query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_PRIMITIVES_GENERATED_EXT"
 pattern QUERY_TYPE_PRIMITIVES_GENERATED_EXT = QueryType 1000382000
 
--- | 'QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-mesh-shader generated mesh primitives query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT"
 pattern QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT = QueryType 1000328000
 
--- | 'QUERY_TYPE_PERFORMANCE_QUERY_INTEL' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-performance-intel Intel performance query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_PERFORMANCE_QUERY_INTEL"
 pattern QUERY_TYPE_PERFORMANCE_QUERY_INTEL = QueryType 1000210000
 
--- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV' specifies an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
--- for use with
--- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV'.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV"
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = QueryType 1000165000
 
--- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying serialization acceleration structure size query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR"
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR = QueryType 1000150001
 
--- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
--- for use with
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR'
--- or
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR"
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR = QueryType 1000150000
 
--- | 'QUERY_TYPE_PERFORMANCE_QUERY_KHR' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-performance performance query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_PERFORMANCE_QUERY_KHR"
 pattern QUERY_TYPE_PERFORMANCE_QUERY_KHR = QueryType 1000116000
 
--- | 'QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' specifies a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-transform-feedback transform feedback query>.
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT"
 pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = QueryType 1000028004
 
 {-# COMPLETE

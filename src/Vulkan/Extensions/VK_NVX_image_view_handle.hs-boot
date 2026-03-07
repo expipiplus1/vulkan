@@ -15,7 +15,7 @@
 --     31
 --
 -- [__Revision__]
---     3
+--     4
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2024-11-04
+--     2025-12-03
 --
 -- [__Contributors__]
 --
@@ -43,6 +43,8 @@
 --
 --     -   Liam Middlebrook, NVIDIA
 --
+--     -   Rodrigo Locatti, NVIDIA
+--
 -- == Description
 --
 -- This extension allows applications to query an opaque handle from an
@@ -50,6 +52,8 @@
 -- direct functionality itself.
 --
 -- == New Commands
+--
+-- -   'getDeviceCombinedImageSamplerIndexNVX'
 --
 -- -   'getImageViewAddressNVX'
 --
@@ -77,6 +81,10 @@
 --
 -- == Version History
 --
+-- -   Revision 4, 2025-12-03 (Rodrigo Locatti)
+--
+--     -   Add 'getDeviceCombinedImageSamplerIndexNVX'
+--
 -- -   Revision 3, 2024-11-04 (Liam Middlebrook)
 --
 --     -   Add 'getImageViewHandle64NVX'
@@ -96,7 +104,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NVX_image_view_handle Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NVX_image_view_handle Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

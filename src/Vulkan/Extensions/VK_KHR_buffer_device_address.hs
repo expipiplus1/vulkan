@@ -114,8 +114,8 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- Support for the @bufferDeviceAddress@ feature is mandatory in Vulkan
--- 1.3, regardless of whether this extension is supported.
+-- If Vulkan 1.3 is supported, support for the @bufferDeviceAddress@
+-- capability is required.
 --
 -- == New Commands
 --
@@ -186,7 +186,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-PhysicalStorageBufferAddresses PhysicalStorageBufferAddresses>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-PhysicalStorageBufferAddresses PhysicalStorageBufferAddresses>
 --
 -- == Version History
 --
@@ -201,7 +201,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_buffer_device_address Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_buffer_device_address Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

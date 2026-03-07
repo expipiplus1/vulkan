@@ -103,8 +103,8 @@
 -- and require specifying the image when allocating or importing the memory
 -- object.
 --
--- 2) Does the 'ExternalImageFormatPropertiesNV' struct need to include a
--- list of memory type bits that support the given handle type?
+-- 2) Does the 'ExternalImageFormatPropertiesNV' structure need to include
+-- a list of memory type bits that support the given handle type?
 --
 -- __RESOLVED__: No. The memory types that do not support the handle types
 -- will simply be filtered out of the results returned by
@@ -133,7 +133,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_external_memory_capabilities Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_external_memory_capabilities Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -246,11 +246,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -433,6 +437,25 @@ type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
 -- | VkExternalMemoryHandleTypeFlagBitsNV - Bitmask specifying external
 -- memory handle types
 --
+-- = Description
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV' specifies a
+--     handle to memory returned by
+--     'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV'.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV' specifies a handle
+--     to memory returned by
+--     'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV',
+--     or one duplicated from such a handle using @DuplicateHandle()@.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV' specifies a valid
+--     NT handle to memory returned by
+--     @IDXGIResource1::CreateSharedHandle@, or a handle duplicated from
+--     such a handle using @DuplicateHandle()@.
+--
+-- -   'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV' specifies a
+--     handle to memory returned by @IDXGIResource::GetSharedHandle()@.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities VK_NV_external_memory_capabilities>,
@@ -440,24 +463,16 @@ type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
 newtype ExternalMemoryHandleTypeFlagBitsNV = ExternalMemoryHandleTypeFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV' specifies a handle to
--- memory returned by
--- 'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV',
--- or one duplicated from such a handle using @DuplicateHandle()@.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBitsNV" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000001
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV' specifies a handle
--- to memory returned by
--- 'Vulkan.Extensions.VK_NV_external_memory_win32.getMemoryWin32HandleNV'.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBitsNV" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000002
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV' specifies a valid NT
--- handle to memory returned by @IDXGIResource1::CreateSharedHandle@, or a
--- handle duplicated from such a handle using @DuplicateHandle()@.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBitsNV" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000004
 
--- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV' specifies a handle
--- to memory returned by @IDXGIResource::GetSharedHandle()@.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBitsNV" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV"
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = ExternalMemoryHandleTypeFlagBitsNV 0x00000008
 
 conNameExternalMemoryHandleTypeFlagBitsNV :: String
@@ -508,6 +523,18 @@ type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 -- | VkExternalMemoryFeatureFlagBitsNV - Bitmask specifying external memory
 -- features
 --
+-- = Description
+--
+-- -   'EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV' specifies that
+--     external memory of the specified type /must/ be created as a
+--     dedicated allocation when used in the manner specified.
+--
+-- -   'EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV' specifies that the
+--     implementation supports exporting handles of the specified type.
+--
+-- -   'EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV' specifies that the
+--     implementation supports importing handles of the specified type.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities VK_NV_external_memory_capabilities>,
@@ -516,17 +543,13 @@ type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 newtype ExternalMemoryFeatureFlagBitsNV = ExternalMemoryFeatureFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV' specifies that external
--- memory of the specified type /must/ be created as a dedicated allocation
--- when used in the manner specified.
+-- No documentation found for Nested "VkExternalMemoryFeatureFlagBitsNV" "VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV"
 pattern EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = ExternalMemoryFeatureFlagBitsNV 0x00000001
 
--- | 'EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV' specifies that the
--- implementation supports exporting handles of the specified type.
+-- No documentation found for Nested "VkExternalMemoryFeatureFlagBitsNV" "VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV"
 pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = ExternalMemoryFeatureFlagBitsNV 0x00000002
 
--- | 'EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV' specifies that the
--- implementation supports importing handles of the specified type.
+-- No documentation found for Nested "VkExternalMemoryFeatureFlagBitsNV" "VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV"
 pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = ExternalMemoryFeatureFlagBitsNV 0x00000004
 
 conNameExternalMemoryFeatureFlagBitsNV :: String

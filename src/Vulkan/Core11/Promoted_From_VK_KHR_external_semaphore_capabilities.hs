@@ -82,6 +82,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_capabilities VK_KHR_external_semaphore_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalSemaphoreProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalSemaphoreInfo'
@@ -136,7 +137,8 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
 --
 -- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-sType-unique# The
---     @sType@ value of each struct in the @pNext@ chain /must/ be unique
+--     @sType@ value of each structure in the @pNext@ chain /must/ be
+--     unique
 --
 -- -   #VUID-VkPhysicalDeviceExternalSemaphoreInfo-handleType-parameter#
 --     @handleType@ /must/ be a valid
@@ -145,11 +147,12 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_capabilities VK_KHR_external_semaphore_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalSemaphoreProperties',
--- 'Vulkan.Extensions.VK_KHR_external_semaphore_capabilities.getPhysicalDeviceExternalSemaphorePropertiesKHR'
+-- 'getPhysicalDeviceExternalSemaphoreProperties'
 data PhysicalDeviceExternalSemaphoreInfo (es :: [Type]) = PhysicalDeviceExternalSemaphoreInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -219,12 +222,13 @@ instance es ~ '[] => Zero (PhysicalDeviceExternalSemaphoreInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_capabilities VK_KHR_external_semaphore_capabilities>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.ExternalSemaphoreFeatureFlags',
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalSemaphoreProperties',
--- 'Vulkan.Extensions.VK_KHR_external_semaphore_capabilities.getPhysicalDeviceExternalSemaphorePropertiesKHR'
+-- 'getPhysicalDeviceExternalSemaphoreProperties'
 data ExternalSemaphoreProperties = ExternalSemaphoreProperties
   { -- | @exportFromImportedHandleTypes@ is a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'

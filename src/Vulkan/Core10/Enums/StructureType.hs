@@ -51,17 +51,64 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_MEMORY_BARRIER
                                                          , STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO
                                                          , STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV
+                                                         , STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR
+                                                         , STRUCTURE_TYPE_RENDERING_END_INFO_KHR
+                                                         , STRUCTURE_TYPE_RENDERING_ATTACHMENT_FLAGS_INFO_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM
+                                                         , STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT
+                                                         , STRUCTURE_TYPE_BEGIN_CUSTOM_RESOLVE_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV
+                                                         , STRUCTURE_TYPE_SET_PRESENT_CONFIG_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_PIPELINE_FRAGMENT_DENSITY_MAP_LAYERED_CREATE_INFO_VALVE
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_PROPERTIES_VALVE
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_FEATURES_VALVE
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_MEMORY_GET_METAL_HANDLE_INFO_EXT
+                                                         , STRUCTURE_TYPE_MEMORY_METAL_HANDLE_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV
                                                          , STRUCTURE_TYPE_COOPERATIVE_MATRIX_FLEXIBLE_DIMENSIONS_PROPERTIES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_FEATURES_NV
                                                          , STRUCTURE_TYPE_HDR_VIVID_DYNAMIC_METADATA_HUAWEI
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI
+                                                         , STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLAMP_CONTROL_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV
+                                                         , STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR
                                                          , STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_PROPERTIES_MESA
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_FEATURES_MESA
+                                                         , STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR
                                                          , STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT
                                                          , STRUCTURE_TYPE_GENERATED_COMMANDS_PIPELINE_INFO_EXT
                                                          , STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_SHADER_LAYOUT_INFO_EXT
@@ -77,6 +124,7 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_VECTOR_FEATURES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_API_VULKAN_PROPERTIES_KHR
@@ -86,35 +134,37 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COMMAND_BUFFER_INHERITANCE_FEATURES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV
+                                                         , STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV
+                                                         , STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_CREATE_INFO_NV
+                                                         , STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DEVICE_CREATE_INFO_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV
                                                          , STRUCTURE_TYPE_DISPLAY_MODE_STEREO_PROPERTIES_NV
                                                          , STRUCTURE_TYPE_DISPLAY_SURFACE_STEREO_CREATE_INFO_NV
+                                                         , STRUCTURE_TYPE_DECOMPRESS_MEMORY_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR
+                                                         , STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_TILE_MEMORY_SIZE_INFO_QCOM
+                                                         , STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM
+                                                         , STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV
                                                          , STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT
                                                          , STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT
-                                                         , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR
-                                                         , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR
-                                                         , STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR
-                                                         , STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR
-                                                         , STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR
                                                          , STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR
-                                                         , STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_SCREEN_BUFFER_FEATURES_QNX
                                                          , STRUCTURE_TYPE_EXTERNAL_FORMAT_QNX
                                                          , STRUCTURE_TYPE_IMPORT_SCREEN_BUFFER_INFO_QNX
                                                          , STRUCTURE_TYPE_SCREEN_BUFFER_FORMAT_PROPERTIES_QNX
                                                          , STRUCTURE_TYPE_SCREEN_BUFFER_PROPERTIES_QNX
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR
-                                                         , STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_KHR
+                                                         , STRUCTURE_TYPE_ATTACHMENT_FEEDBACK_LOOP_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUBIC_CLAMP_FEATURES_QCOM
                                                          , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_YCBCR_DEGAMMA_CREATE_INFO_QCOM
@@ -130,6 +180,26 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR
                                                          , STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM
+                                                         , STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM
+                                                         , STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_PROPERTIES_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PROCESSING_ENGINE_CREATE_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_IDENTIFIER_CREATE_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENT_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENTS_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_PROPERTY_QUERY_RESULT_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_FEATURES_ARM
+                                                         , STRUCTURE_TYPE_BIND_DATA_GRAPH_PIPELINE_SESSION_MEMORY_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_MEMORY_REQUIREMENTS_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM
+                                                         , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CREATE_INFO_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR
                                                          , STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR
@@ -142,6 +212,7 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_SET_LATENCY_MARKER_INFO_NV
                                                          , STRUCTURE_TYPE_LATENCY_SLEEP_INFO_NV
                                                          , STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM
@@ -153,9 +224,22 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_PROPERTIES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_FEATURES_NV
+                                                         , STRUCTURE_TYPE_CONVERT_COOPERATIVE_VECTOR_MATRIX_INFO_NV
+                                                         , STRUCTURE_TYPE_COOPERATIVE_VECTOR_PROPERTIES_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_PROPERTIES_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_FEATURES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM
+                                                         , STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_KHR
+                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR
+                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_KHR
+                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR
+                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR
+                                                         , STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR
+                                                         , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR
                                                          , STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_AMIGO_PROFILING_FEATURES_SEC
                                                          , STRUCTURE_TYPE_TILE_PROPERTIES_QCOM
@@ -176,21 +260,20 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_PRESENT_WAIT_2_INFO_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_2_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_2_FEATURES_KHR
+                                                         , STRUCTURE_TYPE_PRESENT_ID_2_KHR
+                                                         , STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_ID_2_KHR
+                                                         , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX
                                                          , STRUCTURE_TYPE_ANTI_LAG_PRESENTATION_INFO_AMD
                                                          , STRUCTURE_TYPE_ANTI_LAG_DATA_AMD
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD
-                                                         , STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR
-                                                         , STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR
-                                                         , STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR
-                                                         , STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR
-                                                         , STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO_KHR
-                                                         , STRUCTURE_TYPE_RENDERING_AREA_INFO_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR
                                                          , STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_PROPERTIES_ANDROID
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT
                                                          , STRUCTURE_TYPE_OPTICAL_FLOW_SESSION_CREATE_PRIVATE_DATA_INFO_NV
                                                          , STRUCTURE_TYPE_OPTICAL_FLOW_EXECUTE_INFO_NV
@@ -204,6 +287,30 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_MODULE_IDENTIFIER_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_FRAME_BOUNDARY_TENSORS_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_CAPTURE_DESCRIPTOR_DATA_INFO_ARM
+                                                         , STRUCTURE_TYPE_DESCRIPTOR_GET_TENSOR_INFO_ARM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_FEATURES_ARM
+                                                         , STRUCTURE_TYPE_EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM
+                                                         , STRUCTURE_TYPE_EXTERNAL_TENSOR_PROPERTIES_ARM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_TENSOR_INFO_ARM
+                                                         , STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_TENSOR_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_COPY_ARM
+                                                         , STRUCTURE_TYPE_COPY_TENSOR_INFO_ARM
+                                                         , STRUCTURE_TYPE_DEVICE_TENSOR_MEMORY_REQUIREMENTS_ARM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_MEMORY_BARRIER_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_MEMORY_REQUIREMENTS_INFO_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_FORMAT_PROPERTIES_ARM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_PROPERTIES_ARM
+                                                         , STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_TENSOR_ARM
+                                                         , STRUCTURE_TYPE_BIND_TENSOR_MEMORY_INFO_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM
+                                                         , STRUCTURE_TYPE_TENSOR_CREATE_INFO_ARM
                                                          , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG
                                                          , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG
                                                          , STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT
@@ -221,23 +328,19 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_SWAPCHAIN_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV
+                                                         , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV
+                                                         , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_LINEAR_SWEPT_SPHERES_DATA_NV
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_LINEAR_SWEPT_SPHERES_FEATURES_NV
                                                          , STRUCTURE_TYPE_PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV
                                                          , STRUCTURE_TYPE_COMPUTE_PIPELINE_INDIRECT_BUFFER_INFO_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV
-                                                         , STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM
                                                          , STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM
                                                          , STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM
                                                          , STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT
                                                          , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE
                                                          , STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE
@@ -246,7 +349,6 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM
                                                          , STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT
                                                          , STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT
@@ -274,6 +376,7 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_FEATURES_EXT
                                                          , STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT
@@ -308,7 +411,6 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA
                                                          , STRUCTURE_TYPE_MEMORY_ZIRCON_HANDLE_PROPERTIES_FUCHSIA
                                                          , STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT
@@ -372,6 +474,12 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT
                                                          , STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV
+                                                         , STRUCTURE_TYPE_DISPATCH_TILE_INFO_QCOM
+                                                         , STRUCTURE_TYPE_PER_TILE_END_INFO_QCOM
+                                                         , STRUCTURE_TYPE_PER_TILE_BEGIN_INFO_QCOM
+                                                         , STRUCTURE_TYPE_RENDER_PASS_TILE_SHADING_CREATE_INFO_QCOM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_PROPERTIES_QCOM
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_FEATURES_QCOM
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV
                                                          , STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV
@@ -385,11 +493,10 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_BARRIER_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_BARRIER_FEATURES_NV
                                                          , STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT
                                                          , STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT
                                                          , STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT
@@ -409,31 +516,10 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV
                                                          , STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV
-                                                         , STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT
-                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT
-                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT
-                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT
-                                                         , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT
-                                                         , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT
-                                                         , STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT
-                                                         , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT
                                                          , STRUCTURE_TYPE_MEMORY_MAP_PLACED_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT
-                                                         , STRUCTURE_TYPE_MEMORY_UNMAP_INFO_KHR
-                                                         , STRUCTURE_TYPE_MEMORY_MAP_INFO_KHR
-                                                         , STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT
-                                                         , STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE_EXT
-                                                         , STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO_EXT
-                                                         , STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT
-                                                         , STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT
-                                                         , STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO_EXT
-                                                         , STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY_EXT
-                                                         , STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT
                                                          , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR
                                                          , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR
                                                          , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR
@@ -468,9 +554,6 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT
-                                                         , STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR
-                                                         , STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD
                                                          , STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR
@@ -495,6 +578,16 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL
                                                          , STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL
+                                                         , STRUCTURE_TYPE_SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT
+                                                         , STRUCTURE_TYPE_PRESENT_TIMING_SURFACE_CAPABILITIES_EXT
+                                                         , STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_EXT
+                                                         , STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_INFO_EXT
+                                                         , STRUCTURE_TYPE_PRESENT_TIMING_INFO_EXT
+                                                         , STRUCTURE_TYPE_PRESENT_TIMINGS_INFO_EXT
+                                                         , STRUCTURE_TYPE_SWAPCHAIN_TIME_DOMAIN_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_SWAPCHAIN_TIMING_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT
                                                          , STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV
                                                          , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV
                                                          , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
@@ -507,15 +600,13 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD
-                                                         , STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR
-                                                         , STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD
                                                          , STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM
                                                          , STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
                                                          , STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV
@@ -578,7 +669,23 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT
                                                          , STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR
                                                          , STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM
+                                                         , STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV
+                                                         , STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT
+                                                         , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT
+                                                         , STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT
+                                                         , STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT
+                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT
+                                                         , STRUCTURE_TYPE_PUSH_DATA_INFO_EXT
+                                                         , STRUCTURE_TYPE_BIND_HEAP_INFO_EXT
+                                                         , STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT
+                                                         , STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT
+                                                         , STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT
                                                          , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX
                                                          , STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_CREATE_INFO_AMDX
                                                          , STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_SCRATCH_SIZE_AMDX
@@ -642,7 +749,6 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT
                                                          , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
                                                          , STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
                                                          , STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR
                                                          , STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR
@@ -657,9 +763,6 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR
                                                          , STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR
                                                          , STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES_EXT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT
-                                                         , STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
                                                          , STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
                                                          , STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN
@@ -714,20 +817,68 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_DEVICE_OBJECT_RESERVATION_CREATE_INFO
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_FEATURES
-                                                         , STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS
-                                                         , STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
-                                                         , STRUCTURE_TYPE_FORMAT_PROPERTIES_3
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES
+                                                         , STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO
+                                                         , STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES
+                                                         , STRUCTURE_TYPE_RENDERING_AREA_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES
+                                                         , STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES
+                                                         , STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES
+                                                         , STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES
+                                                         , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO
+                                                         , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO
+                                                         , STRUCTURE_TYPE_PUSH_CONSTANTS_INFO
+                                                         , STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES
+                                                         , STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES
+                                                         , STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY
+                                                         , STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE
+                                                         , STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO
+                                                         , STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO
+                                                         , STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO
+                                                         , STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO
+                                                         , STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY
+                                                         , STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES
+                                                         , STRUCTURE_TYPE_BIND_MEMORY_STATUS
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES
+                                                         , STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO
+                                                         , STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2
+                                                         , STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2
+                                                         , STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES
+                                                         , STRUCTURE_TYPE_MEMORY_UNMAP_INFO
+                                                         , STRUCTURE_TYPE_MEMORY_MAP_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES
+                                                         , STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES
+                                                         , STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES
                                                          , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES
                                                          , STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO
                                                          , STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO
                                                          , STRUCTURE_TYPE_RENDERING_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES
+                                                         , STRUCTURE_TYPE_IMAGE_RESOLVE_2
+                                                         , STRUCTURE_TYPE_IMAGE_BLIT_2
+                                                         , STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2
+                                                         , STRUCTURE_TYPE_BLIT_IMAGE_INFO_2
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES
                                                          , STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO
                                                          , STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES
@@ -735,19 +886,25 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES
                                                          , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES
-                                                         , STRUCTURE_TYPE_IMAGE_RESOLVE_2
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES
+                                                         , STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO
+                                                         , STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS
+                                                         , STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
+                                                         , STRUCTURE_TYPE_FORMAT_PROPERTIES_3
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES
                                                          , STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2
-                                                         , STRUCTURE_TYPE_IMAGE_BLIT_2
                                                          , STRUCTURE_TYPE_IMAGE_COPY_2
                                                          , STRUCTURE_TYPE_BUFFER_COPY_2
-                                                         , STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2
-                                                         , STRUCTURE_TYPE_BLIT_IMAGE_INFO_2
                                                          , STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2
                                                          , STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2
                                                          , STRUCTURE_TYPE_COPY_IMAGE_INFO_2
                                                          , STRUCTURE_TYPE_COPY_BUFFER_INFO_2
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES
                                                          , STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO
                                                          , STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO
@@ -756,16 +913,43 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2
                                                          , STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2
                                                          , STRUCTURE_TYPE_MEMORY_BARRIER_2
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES
                                                          , STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO
                                                          , STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES
-                                                         , STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES
+                                                         , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT
+                                                         , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
+                                                         , STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO
+                                                         , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO
+                                                         , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
+                                                         , STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO
+                                                         , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
+                                                         , STRUCTURE_TYPE_SUBPASS_END_INFO
+                                                         , STRUCTURE_TYPE_SUBPASS_BEGIN_INFO
+                                                         , STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
+                                                         , STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
+                                                         , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
+                                                         , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
+                                                         , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
+                                                         , STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
+                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT
+                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES
+                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
                                                          , STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO
                                                          , STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO
                                                          , STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO
@@ -778,47 +962,33 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES
-                                                         , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT
-                                                         , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
-                                                         , STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO
-                                                         , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO
-                                                         , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES
-                                                         , STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES
-                                                         , STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
-                                                         , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
-                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT
-                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES
-                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
-                                                         , STRUCTURE_TYPE_SUBPASS_END_INFO
-                                                         , STRUCTURE_TYPE_SUBPASS_BEGIN_INFO
-                                                         , STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
-                                                         , STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
-                                                         , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
-                                                         , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
-                                                         , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
                                                          , STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+                                                         , STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+                                                         , STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
+                                                         , STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
+                                                         , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
+                                                         , STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
+                                                         , STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
+                                                         , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
+                                                         , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
                                                          , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
+                                                         , STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
+                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
                                                          , STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
                                                          , STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
@@ -833,25 +1003,11 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
                                                          , STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
-                                                         , STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-                                                         , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
-                                                         , STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
-                                                         , STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
-                                                         , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
-                                                         , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
                                                          , STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES
                                                          , STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
-                                                         , STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
-                                                         , STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
                                                          , STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-                                                         , STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
                                                          , STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2
                                                          , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
@@ -873,14 +1029,11 @@ module Vulkan.Core10.Enums.StructureType  ( pattern STRUCTURE_TYPE_BIND_BUFFER_M
                                                          , STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
                                                          , STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
                                                          , STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
-                                                         , STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
                                                          , STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
                                                          , STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO
                                                          , STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
                                                          , STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
                                                          , STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
-                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
                                                          , ..
                                                          )
                                           ) where
@@ -912,11 +1065,14 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.AccelerationStructureCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
+-- 'Vulkan.Extensions.VK_AMDX_dense_geometry_format.AccelerationStructureDenseGeometryFormatTrianglesDataAMDX',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureDeviceAddressInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryAabbsDataKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryInstancesDataKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryKHR',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_linear_swept_spheres.AccelerationStructureGeometryLinearSweptSpheresDataNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_linear_swept_spheres.AccelerationStructureGeometrySpheresDataNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
@@ -938,22 +1094,27 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout',
+-- 'Vulkan.Extensions.VK_KHR_unified_image_layouts.AttachmentFeedbackLoopInfoEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout',
 -- 'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD',
 -- 'Vulkan.CStruct.Extends.BaseInStructure',
 -- 'Vulkan.CStruct.Extends.BaseOutStructure',
+-- 'Vulkan.Extensions.VK_EXT_custom_resolve.BeginCustomResolveInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.BindDataGraphPipelineSessionMemoryInfoARM',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorBufferEmbeddedSamplersInfoEXT',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorSetsInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindDescriptorSetsInfo',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.BindHeapInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo',
+-- 'Vulkan.Extensions.VK_ARM_tensors.BindTensorMemoryInfoARM',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBindVideoSessionMemoryInfoKHR VkBindVideoSessionMemoryInfoKHR>,
 -- 'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.BlitImageCubicWeightsInfoQCOM',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BlitImageInfo2',
@@ -973,26 +1134,36 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.BufferMemoryRequirementsInfo2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBuildPartitionedAccelerationStructureInfoNV VkBuildPartitionedAccelerationStructureInfoNV>,
 -- 'Vulkan.Extensions.VK_KHR_calibrated_timestamps.CalibratedTimestampInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.CheckpointData2NV',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.CheckpointDataNV',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureClustersBottomLevelInputNV VkClusterAccelerationStructureClustersBottomLevelInputNV>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureCommandsInfoNV VkClusterAccelerationStructureCommandsInfoNV>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureInputInfoNV VkClusterAccelerationStructureInputInfoNV>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureMoveObjectsInputNV VkClusterAccelerationStructureMoveObjectsInputNV>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureTriangleClusterInputNV VkClusterAccelerationStructureTriangleClusterInputNV>,
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferAllocateInfo',
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.CommandBufferInheritanceDescriptorHeapInfoEXT',
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
 -- 'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.CommandBufferSubmitInfo',
 -- 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo',
--- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+-- 'Vulkan.Extensions.VK_NV_compute_occupancy_priority.ComputeOccupancyPriorityParametersNV',
+-- 'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.ComputePipelineIndirectBufferInfoNV',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
+-- 'Vulkan.Extensions.VK_NV_cooperative_vector.ConvertCooperativeVectorMatrixInfoNV',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.CooperativeMatrixFlexibleDimensionsPropertiesNV',
 -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.CooperativeMatrixPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix.CooperativeMatrixPropertiesNV',
+-- 'Vulkan.Extensions.VK_NV_cooperative_vector.CooperativeVectorPropertiesNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureToMemoryInfoKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyBufferInfo2',
@@ -1001,13 +1172,16 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core10.DescriptorSet.CopyDescriptorSet',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyImageInfo2',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyImageToBufferInfo2',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.CopyImageToImageInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.CopyImageToMemoryInfoEXT',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.CopyImageToImageInfo',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.CopyImageToMemoryInfo',
+-- 'Vulkan.Extensions.VK_KHR_copy_memory_indirect.CopyMemoryIndirectInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyMemoryToAccelerationStructureInfoKHR',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.CopyMemoryToImageInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_copy_memory_indirect.CopyMemoryToImageIndirectInfoKHR',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.CopyMemoryToImageInfo',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMemoryToMicromapInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMicromapInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMicromapToMemoryInfoEXT',
+-- 'Vulkan.Extensions.VK_ARM_tensors.CopyTensorInfoARM',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuFunctionCreateInfoNVX',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuLaunchInfoNVX',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuModuleCreateInfoNVX',
@@ -1015,7 +1189,24 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaFunctionCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaLaunchInfoNV',
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaModuleCreateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_custom_resolve.CustomResolveCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.D3D12FenceSubmitInfoKHR',
+-- 'Vulkan.Extensions.VK_QCOM_data_graph_model.DataGraphPipelineBuiltinModelCreateInfoQCOM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineCompilerControlCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineConstantARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineDispatchInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineIdentifierCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelinePropertyQueryResultARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineResourceInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineSessionBindPointRequirementARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineSessionBindPointRequirementsInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineSessionCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineSessionMemoryRequirementsInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineShaderModuleCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM',
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerMarkerInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectTagInfoEXT',
@@ -1025,6 +1216,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_memory_decompression.DecompressMemoryInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
@@ -1035,9 +1227,11 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorBufferBindingInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorBufferBindingPushDescriptorBufferHandleEXT',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorGetInfoEXT',
+-- 'Vulkan.Extensions.VK_ARM_tensors.DescriptorGetTensorInfoARM',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfo',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT',
 -- 'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.DescriptorSetBindingReferenceVALVE',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetLayoutBindingFlagsCreateInfo',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
@@ -1063,19 +1257,21 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupSubmitInfo',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupSwapchainCreateInfoKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.DeviceImageMemoryRequirements',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.DeviceImageSubresourceInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.DeviceImageSubresourceInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.DeviceMemoryOpaqueCaptureAddressInfo',
 -- 'Vulkan.Extensions.VK_AMD_memory_overallocation_behavior.DeviceMemoryOverallocationCreateInfoAMD',
 -- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.DevicePipelineBinaryInternalCacheControlKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.DevicePrivateDataCreateInfo',
 -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo',
--- 'Vulkan.Extensions.VK_KHR_global_priority.DeviceQueueGlobalPriorityCreateInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_global_priority.DeviceQueueGlobalPriorityCreateInfo',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.DeviceQueueInfo2',
 -- 'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.DeviceTensorMemoryRequirementsARM',
 -- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingInfoLUNARG',
 -- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG',
 -- 'Vulkan.Extensions.VK_EXT_directfb_surface.DirectFBSurfaceCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_QCOM_tile_shading.DispatchTileInfoQCOM',
 -- 'Vulkan.Extensions.VK_EXT_display_control.DisplayEventInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModeCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayModeProperties2KHR',
@@ -1111,15 +1307,21 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ExportSemaphoreWin32HandleInfoKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties',
+-- 'Vulkan.Extensions.VK_NV_external_compute_queue.ExternalComputeQueueCreateInfoNV',
+-- 'Vulkan.Extensions.VK_NV_external_compute_queue.ExternalComputeQueueDataParamsNV',
+-- 'Vulkan.Extensions.VK_NV_external_compute_queue.ExternalComputeQueueDeviceCreateInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkExternalFormatOHOS VkExternalFormatOHOS>,
 -- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_acquire_unmodified.ExternalMemoryAcquireUnmodifiedEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV',
+-- 'Vulkan.Extensions.VK_ARM_tensors.ExternalMemoryTensorCreateInfoARM',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties',
+-- 'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM',
 -- 'Vulkan.Core10.Fence.FenceCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_fd.FenceGetFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_win32.FenceGetWin32HandleInfoKHR',
@@ -1128,6 +1330,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_format_feature_flags2.FormatProperties3',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_frame_boundary.FrameBoundaryEXT',
+-- 'Vulkan.Extensions.VK_ARM_tensors.FrameBoundaryTensorsARM',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo',
 -- 'Vulkan.Core10.Pass.FramebufferCreateInfo',
@@ -1142,15 +1345,15 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.GetLatencyMarkerInfoNV',
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Vulkan.Extensions.VK_EXT_hdr_metadata.HdrMetadataEXT',
 -- 'Vulkan.Extensions.VK_HUAWEI_hdr_vivid.HdrVividDynamicMetadataHUAWEI',
 -- 'Vulkan.Extensions.VK_EXT_headless_surface.HeadlessSurfaceCreateInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.HostImageCopyDevicePerformanceQueryEXT',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.HostImageLayoutTransitionInfoEXT',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.HostImageCopyDevicePerformanceQuery',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.HostImageLayoutTransitionInfo',
 -- 'Vulkan.Extensions.VK_MVK_ios_surface.IOSSurfaceCreateInfoMVK',
 -- 'Vulkan.Extensions.VK_MESA_image_alignment_control.ImageAlignmentControlCreateInfoMESA',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2',
@@ -1160,6 +1363,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImageConstraintsInfoFUCHSIA',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageCopy2',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.ImageDescriptorInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierPropertiesEXT',
@@ -1174,9 +1378,9 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageResolve2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageSparseMemoryRequirementsInfo2',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.ImageSubresource2KHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.ImageSubresource2',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.ImageToMemoryCopyEXT',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.ImageToMemoryCopy',
 -- 'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.ImageViewCaptureDescriptorDataInfoEXT',
@@ -1192,6 +1396,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_external_memory_metal.ImportMemoryMetalHandleInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
@@ -1199,12 +1404,14 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalIOSurfaceInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalSharedEventInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImportNativeBufferInfoOHOS VkImportNativeBufferInfoOHOS>,
 -- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ImportScreenBufferInfoQNX',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.ImportSemaphoreFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ImportSemaphoreWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_semaphore.ImportSemaphoreZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutCreateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.IndirectCommandsLayoutPushDataTokenNV',
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectExecutionSetCreateInfoEXT',
@@ -1225,22 +1432,27 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo',
 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.MemoryBarrier2',
+-- 'Vulkan.Extensions.VK_KHR_maintenance8.MemoryBarrierAccessFlags3KHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo',
+-- 'Vulkan.Extensions.VK_ARM_tensors.MemoryDedicatedAllocateInfoTensorARM',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryFdPropertiesKHR',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.MemoryGetAndroidHardwareBufferInfoANDROID',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryGetFdInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_external_memory_metal.MemoryGetMetalHandleInfoEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkMemoryGetNativeBufferInfoOHOS VkMemoryGetNativeBufferInfoOHOS>,
 -- 'Vulkan.Extensions.VK_NV_external_memory_rdma.MemoryGetRemoteAddressInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryGetWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryGetZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.MemoryHostPointerPropertiesEXT',
--- 'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo',
 -- 'Vulkan.Extensions.VK_EXT_map_memory_placed.MemoryMapPlacedInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_external_memory_metal.MemoryMetalHandlePropertiesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo',
 -- 'Vulkan.Extensions.VK_EXT_memory_priority.MemoryPriorityAllocateInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.MemoryToImageCopyEXT',
--- 'Vulkan.Extensions.VK_KHR_map_memory2.MemoryUnmapInfoKHR',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.MemoryToImageCopy',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryUnmapInfo',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryWin32HandlePropertiesKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryZirconHandlePropertiesFUCHSIA',
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.MetalSurfaceCreateInfoEXT',
@@ -1253,6 +1465,10 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.MultiviewPerViewAttributesInfoNVX',
 -- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkNativeBufferFormatPropertiesOHOS VkNativeBufferFormatPropertiesOHOS>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkNativeBufferPropertiesOHOS VkNativeBufferPropertiesOHOS>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkNativeBufferUsageOHOS VkNativeBufferUsageOHOS>,
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.OpaqueCaptureDataCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowExecuteInfoNV',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowImageFormatInfoNV',
@@ -1260,7 +1476,16 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowSessionCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowSessionCreatePrivateDataInfoNV',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.OutOfBandQueueTypeInfoNV',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPartitionedAccelerationStructureFlagsNV VkPartitionedAccelerationStructureFlagsNV>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPartitionedAccelerationStructureInstancesInputNV VkPartitionedAccelerationStructureInstancesInputNV>,
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PastPresentationTimingEXT',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PastPresentationTimingInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PastPresentationTimingPropertiesEXT',
+-- 'Vulkan.Extensions.VK_QCOM_tile_shading.PerTileBeginInfoQCOM',
+-- 'Vulkan.Extensions.VK_QCOM_tile_shading.PerTileEndInfoQCOM',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.PerformanceConfigurationAcquireInfoINTEL',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPerformanceCounterARM VkPerformanceCounterARM>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPerformanceCounterDescriptionARM VkPerformanceCounterDescriptionARM>,
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterDescriptionKHR',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterKHR',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.PerformanceMarkerInfoINTEL',
@@ -1283,24 +1508,31 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_border_color_swizzle.PhysicalDeviceBorderColorSwizzleFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures',
 -- 'Vulkan.Extensions.VK_EXT_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeaturesEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceClusterAccelerationStructureFeaturesNV VkPhysicalDeviceClusterAccelerationStructureFeaturesNV>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceClusterAccelerationStructurePropertiesNV VkPhysicalDeviceClusterAccelerationStructurePropertiesNV>,
 -- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderFeaturesHUAWEI',
 -- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderPropertiesHUAWEI',
 -- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI',
 -- 'Vulkan.Extensions.VK_AMD_device_coherent_memory.PhysicalDeviceCoherentMemoryFeaturesAMD',
 -- 'Vulkan.Extensions.VK_EXT_color_write_enable.PhysicalDeviceColorWriteEnableFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_command_buffer_inheritance.PhysicalDeviceCommandBufferInheritanceFeaturesNV',
+-- 'Vulkan.Extensions.VK_NV_compute_occupancy_priority.PhysicalDeviceComputeOccupancyPriorityFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_compute_shader_derivatives.PhysicalDeviceComputeShaderDerivativesFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_compute_shader_derivatives.PhysicalDeviceComputeShaderDerivativesPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.PhysicalDeviceConditionalRenderingFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_conservative_rasterization.PhysicalDeviceConservativeRasterizationPropertiesEXT',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.PhysicalDeviceCooperativeMatrix2FeaturesNV',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.PhysicalDeviceCooperativeMatrix2PropertiesNV',
+-- 'Vulkan.Extensions.VK_QCOM_cooperative_matrix_conversion.PhysicalDeviceCooperativeMatrixConversionFeaturesQCOM',
 -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.PhysicalDeviceCooperativeMatrixFeaturesKHR',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesNV',
+-- 'Vulkan.Extensions.VK_NV_cooperative_vector.PhysicalDeviceCooperativeVectorFeaturesNV',
+-- 'Vulkan.Extensions.VK_NV_cooperative_vector.PhysicalDeviceCooperativeVectorPropertiesNV',
+-- 'Vulkan.Extensions.VK_KHR_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectFeaturesKHR',
 -- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectFeaturesNV',
--- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectPropertiesNV',
+-- 'Vulkan.Extensions.VK_KHR_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_corner_sampled_image.PhysicalDeviceCornerSampledImageFeaturesNV',
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PhysicalDeviceCoverageReductionModeFeaturesNV',
 -- 'Vulkan.Extensions.VK_QCOM_filter_cubic_clamp.PhysicalDeviceCubicClampFeaturesQCOM',
@@ -1309,16 +1541,25 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.PhysicalDeviceCudaKernelLaunchPropertiesNV',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_custom_resolve.PhysicalDeviceCustomResolveFeaturesEXT',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.PhysicalDeviceDataGraphFeaturesARM',
+-- 'Vulkan.Extensions.VK_QCOM_data_graph_model.PhysicalDeviceDataGraphModelFeaturesQCOM',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
+-- 'Vulkan.Extensions.VK_AMDX_dense_geometry_format.PhysicalDeviceDenseGeometryFormatFeaturesAMDX',
 -- 'Vulkan.Extensions.VK_EXT_depth_bias_control.PhysicalDeviceDepthBiasControlFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_depth_clamp_control.PhysicalDeviceDepthClampControlFeaturesEXT',
--- 'Vulkan.Extensions.VK_EXT_depth_clamp_zero_one.PhysicalDeviceDepthClampZeroOneFeaturesEXT',
+-- 'Vulkan.Extensions.VK_KHR_depth_clamp_zero_one.PhysicalDeviceDepthClampZeroOneFeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_control.PhysicalDeviceDepthClipControlFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferPropertiesEXT',
+-- 'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceDescriptorBufferTensorFeaturesARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceDescriptorBufferTensorPropertiesARM',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PhysicalDeviceDescriptorHeapFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PhysicalDeviceDescriptorHeapPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PhysicalDeviceDescriptorHeapTensorPropertiesARM',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties',
 -- 'Vulkan.Extensions.VK_NV_descriptor_pool_overallocation.PhysicalDeviceDescriptorPoolOverallocationFeaturesNV',
@@ -1336,7 +1577,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
 -- 'Vulkan.Extensions.VK_EXT_physical_device_drm.PhysicalDeviceDrmPropertiesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PhysicalDeviceDynamicRenderingFeatures',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.PhysicalDeviceDynamicRenderingLocalReadFeatures',
 -- 'Vulkan.Extensions.VK_EXT_dynamic_rendering_unused_attachments.PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PhysicalDeviceExclusiveScissorFeaturesNV',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.PhysicalDeviceExtendedDynamicState2FeaturesEXT',
@@ -1346,6 +1587,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV',
 -- 'Vulkan.Extensions.VK_NV_extended_sparse_address_space.PhysicalDeviceExtendedSparseAddressSpacePropertiesNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalBufferInfo',
+-- 'Vulkan.Extensions.VK_NV_external_compute_queue.PhysicalDeviceExternalComputeQueuePropertiesNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.PhysicalDeviceExternalFenceInfo',
 -- 'Vulkan.Extensions.VK_ANDROID_external_format_resolve.PhysicalDeviceExternalFormatResolveFeaturesANDROID',
 -- 'Vulkan.Extensions.VK_ANDROID_external_format_resolve.PhysicalDeviceExternalFormatResolvePropertiesANDROID',
@@ -1354,14 +1596,18 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_external_memory_rdma.PhysicalDeviceExternalMemoryRDMAFeaturesNV',
 -- 'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.PhysicalDeviceExternalSemaphoreInfo',
+-- 'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceExternalTensorInfoARM',
 -- 'Vulkan.Extensions.VK_EXT_device_fault.PhysicalDeviceFaultFeaturesEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsProperties',
+-- 'Vulkan.Extensions.VK_ARM_format_pack.PhysicalDeviceFormatPackFeaturesARM',
 -- 'Vulkan.Extensions.VK_EXT_fragment_density_map2.PhysicalDeviceFragmentDensityMap2FeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_fragment_density_map2.PhysicalDeviceFragmentDensityMap2PropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapFeaturesEXT',
--- 'Vulkan.Extensions.VK_QCOM_fragment_density_map_offset.PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM',
--- 'Vulkan.Extensions.VK_QCOM_fragment_density_map_offset.PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM',
+-- 'Vulkan.Extensions.VK_VALVE_fragment_density_map_layered.PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE',
+-- 'Vulkan.Extensions.VK_VALVE_fragment_density_map_layered.PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE',
+-- 'Vulkan.Extensions.VK_EXT_fragment_density_map_offset.PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_fragment_density_map_offset.PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapPropertiesEXT',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shader_barycentric.PhysicalDeviceFragmentShaderBarycentricFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shader_barycentric.PhysicalDeviceFragmentShaderBarycentricPropertiesKHR',
@@ -1372,13 +1618,13 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRateKHR',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRatePropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_frame_boundary.PhysicalDeviceFrameBoundaryFeaturesEXT',
--- 'Vulkan.Extensions.VK_KHR_global_priority.PhysicalDeviceGlobalPriorityQueryFeaturesKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_global_priority.PhysicalDeviceGlobalPriorityQueryFeatures',
 -- 'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.PhysicalDeviceGroupProperties',
 -- 'Vulkan.Extensions.VK_HUAWEI_hdr_vivid.PhysicalDeviceHdrVividFeaturesHUAWEI',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.PhysicalDeviceHostImageCopyFeaturesEXT',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.PhysicalDeviceHostImageCopyPropertiesEXT',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.PhysicalDeviceHostImageCopyFeatures',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.PhysicalDeviceHostImageCopyProperties',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.PhysicalDeviceHostQueryResetFeatures',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties',
 -- 'Vulkan.Extensions.VK_EXT_image_2d_view_of_3d.PhysicalDeviceImage2DViewOf3DFeaturesEXT',
@@ -1397,10 +1643,11 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_filter_cubic.PhysicalDeviceImageViewImageFormatInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_image_view_min_lod.PhysicalDeviceImageViewMinLodFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.PhysicalDeviceImagelessFramebufferFeatures',
--- 'Vulkan.Extensions.VK_KHR_index_type_uint8.PhysicalDeviceIndexTypeUint8FeaturesKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap.PhysicalDeviceIndexTypeUint8Features',
 -- 'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.PhysicalDeviceInheritedViewportScissorFeaturesNV',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeatures',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties',
+-- 'Vulkan.Extensions.VK_KHR_internally_synchronized_queues.PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR',
 -- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.PhysicalDeviceInvocationMaskFeaturesHUAWEI',
 -- 'Vulkan.Extensions.VK_KHR_maintenance7.PhysicalDeviceLayeredApiPropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_maintenance7.PhysicalDeviceLayeredApiPropertiesListKHR',
@@ -1409,23 +1656,28 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_legacy_dithering.PhysicalDeviceLegacyDitheringFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_legacy_vertex_attributes.PhysicalDeviceLegacyVertexAttributesFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_legacy_vertex_attributes.PhysicalDeviceLegacyVertexAttributesPropertiesEXT',
--- 'Vulkan.Extensions.VK_KHR_line_rasterization.PhysicalDeviceLineRasterizationFeaturesKHR',
--- 'Vulkan.Extensions.VK_KHR_line_rasterization.PhysicalDeviceLineRasterizationPropertiesKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PhysicalDeviceLineRasterizationFeatures',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PhysicalDeviceLineRasterizationProperties',
 -- 'Vulkan.Extensions.VK_NV_linear_color_attachment.PhysicalDeviceLinearColorAttachmentFeaturesNV',
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.PhysicalDeviceMaintenance10FeaturesKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.PhysicalDeviceMaintenance10PropertiesKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Features',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Properties',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5FeaturesKHR',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5PropertiesKHR',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6FeaturesKHR',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6PropertiesKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PhysicalDeviceMaintenance5Features',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PhysicalDeviceMaintenance5Properties',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Features',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties',
 -- 'Vulkan.Extensions.VK_KHR_maintenance7.PhysicalDeviceMaintenance7FeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_maintenance7.PhysicalDeviceMaintenance7PropertiesKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance8.PhysicalDeviceMaintenance8FeaturesKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance9.PhysicalDeviceMaintenance9FeaturesKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance9.PhysicalDeviceMaintenance9PropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_map_memory_placed.PhysicalDeviceMapMemoryPlacedFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_map_memory_placed.PhysicalDeviceMapMemoryPlacedPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT',
--- 'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionFeaturesNV',
--- 'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionPropertiesNV',
+-- 'Vulkan.Extensions.VK_EXT_memory_decompression.PhysicalDeviceMemoryDecompressionFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_memory_decompression.PhysicalDeviceMemoryDecompressionPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_memory_priority.PhysicalDeviceMemoryPriorityFeaturesEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceMemoryProperties2',
 -- 'Vulkan.Extensions.VK_EXT_mesh_shader.PhysicalDeviceMeshShaderFeaturesEXT',
@@ -1450,24 +1702,34 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_optical_flow.PhysicalDeviceOpticalFlowPropertiesNV',
 -- 'Vulkan.Extensions.VK_EXT_pci_bus_info.PhysicalDevicePCIBusInfoPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDevicePartitionedAccelerationStructurePropertiesNV VkPhysicalDevicePartitionedAccelerationStructurePropertiesNV>,
 -- 'Vulkan.Extensions.VK_NV_per_stage_descriptor_set.PhysicalDevicePerStageDescriptorSetFeaturesNV',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDevicePerformanceCountersByRegionFeaturesARM VkPhysicalDevicePerformanceCountersByRegionFeaturesARM>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDevicePerformanceCountersByRegionPropertiesARM VkPhysicalDevicePerformanceCountersByRegionPropertiesARM>,
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PhysicalDevicePipelineBinaryFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PhysicalDevicePipelineBinaryPropertiesKHR',
+-- 'Vulkan.Extensions.VK_SEC_pipeline_cache_incremental_mode.PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeatures',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_pipeline_library_group_handles.PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT',
+-- 'Vulkan.Extensions.VK_ARM_pipeline_opacity_micromap.PhysicalDevicePipelineOpacityMicromapFeaturesARM',
 -- 'Vulkan.Extensions.VK_EXT_pipeline_properties.PhysicalDevicePipelinePropertiesFeaturesEXT',
--- 'Vulkan.Extensions.VK_EXT_pipeline_protected_access.PhysicalDevicePipelineProtectedAccessFeaturesEXT',
--- 'Vulkan.Extensions.VK_EXT_pipeline_robustness.PhysicalDevicePipelineRobustnessFeaturesEXT',
--- 'Vulkan.Extensions.VK_EXT_pipeline_robustness.PhysicalDevicePipelineRobustnessPropertiesEXT',
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality'.PhysicalDevicePipelineProtectedAccessFeatures',
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PhysicalDevicePipelineRobustnessFeatures',
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PhysicalDevicePipelineRobustnessProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
 -- 'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_present_barrier.PhysicalDevicePresentBarrierFeaturesNV',
+-- 'Vulkan.Extensions.VK_KHR_present_id2.PhysicalDevicePresentId2FeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_present_id.PhysicalDevicePresentIdFeaturesKHR',
--- 'Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready.PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT',
+-- 'Vulkan.Extensions.VK_NV_present_metering.PhysicalDevicePresentMeteringFeaturesNV',
+-- 'Vulkan.Extensions.VK_KHR_present_mode_fifo_latest_ready.PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PhysicalDevicePresentTimingFeaturesEXT',
+-- 'Vulkan.Extensions.VK_KHR_present_wait2.PhysicalDevicePresentWait2FeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_present_wait.PhysicalDevicePresentWaitFeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_primitive_topology_list_restart.PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_primitives_generated_query.PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT',
@@ -1477,13 +1739,19 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
 -- 'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexPropertiesEXT',
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR',
+-- 'Vulkan.Extensions.VK_NV_push_constant_bank.PhysicalDevicePushConstantBankFeaturesNV',
+-- 'Vulkan.Extensions.VK_NV_push_constant_bank.PhysicalDevicePushConstantBankPropertiesNV',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.PhysicalDevicePushDescriptorProperties',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM',
 -- 'Vulkan.Extensions.VK_EXT_rgba10x6_formats.PhysicalDeviceRGBA10X6FormatsFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access.PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_raw_access_chains.PhysicalDeviceRawAccessChainsFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_query.PhysicalDeviceRayQueryFeaturesKHR',
+-- 'Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderFeaturesNV',
+-- 'Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderPropertiesEXT',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderPropertiesNV',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_linear_swept_spheres.PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.PhysicalDeviceRayTracingMaintenance1FeaturesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.PhysicalDeviceRayTracingMotionBlurFeaturesNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelineFeaturesKHR',
@@ -1495,8 +1763,8 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_ARM_render_pass_striped.PhysicalDeviceRenderPassStripedFeaturesARM',
 -- 'Vulkan.Extensions.VK_ARM_render_pass_striped.PhysicalDeviceRenderPassStripedPropertiesARM',
 -- 'Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
--- 'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
--- 'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
+-- 'Vulkan.Extensions.VK_KHR_robustness2.PhysicalDeviceRobustness2FeaturesKHR',
+-- 'Vulkan.Extensions.VK_KHR_robustness2.PhysicalDeviceRobustness2PropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
@@ -1504,10 +1772,12 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsFeaturesARM',
 -- 'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsPropertiesARM',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.PhysicalDeviceSeparateDepthStencilLayoutsFeatures',
+-- 'Vulkan.Extensions.VK_EXT_shader_64bit_indexing.PhysicalDeviceShader64BitIndexingFeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_shader_atomic_float16_vector.PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV',
 -- 'Vulkan.Extensions.VK_EXT_shader_atomic_float2.PhysicalDeviceShaderAtomicFloat2FeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_shader_atomic_float.PhysicalDeviceShaderAtomicFloatFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64.PhysicalDeviceShaderAtomicInt64Features',
+-- 'Vulkan.Extensions.VK_KHR_shader_bfloat16.PhysicalDeviceShaderBfloat16FeaturesKHR',
 -- 'Vulkan.Extensions.VK_KHR_shader_clock.PhysicalDeviceShaderClockFeaturesKHR',
 -- 'Vulkan.Extensions.VK_ARM_shader_core_builtins.PhysicalDeviceShaderCoreBuiltinsFeaturesARM',
 -- 'Vulkan.Extensions.VK_ARM_shader_core_builtins.PhysicalDeviceShaderCoreBuiltinsPropertiesARM',
@@ -1519,14 +1789,18 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests.PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD',
 -- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.PhysicalDeviceShaderEnqueueFeaturesAMDX',
 -- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.PhysicalDeviceShaderEnqueuePropertiesAMDX',
--- 'Vulkan.Extensions.VK_KHR_shader_expect_assume.PhysicalDeviceShaderExpectAssumeFeaturesKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap.PhysicalDeviceShaderExpectAssumeFeatures',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8.PhysicalDeviceShaderFloat16Int8Features',
--- 'Vulkan.Extensions.VK_KHR_shader_float_controls2.PhysicalDeviceShaderFloatControls2FeaturesKHR',
+-- 'Vulkan.Extensions.VK_EXT_shader_float8.PhysicalDeviceShaderFloat8FeaturesEXT',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap.PhysicalDeviceShaderFloatControls2Features',
+-- 'Vulkan.Extensions.VK_KHR_shader_fma.PhysicalDeviceShaderFmaFeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_shader_image_atomic_int64.PhysicalDeviceShaderImageAtomicInt64FeaturesEXT',
 -- 'Vulkan.Extensions.VK_NV_shader_image_footprint.PhysicalDeviceShaderImageFootprintFeaturesNV',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product.PhysicalDeviceShaderIntegerDotProductFeatures',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product.PhysicalDeviceShaderIntegerDotProductProperties',
 -- 'Vulkan.Extensions.VK_INTEL_shader_integer_functions2.PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL',
+-- 'Vulkan.Extensions.VK_EXT_shader_long_vector.PhysicalDeviceShaderLongVectorFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_long_vector.PhysicalDeviceShaderLongVectorPropertiesEXT',
 -- 'Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence.PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.PhysicalDeviceShaderModuleIdentifierFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.PhysicalDeviceShaderModuleIdentifierPropertiesEXT',
@@ -1538,11 +1812,14 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_NV_shader_sm_builtins.PhysicalDeviceShaderSMBuiltinsFeaturesNV',
 -- 'Vulkan.Extensions.VK_NV_shader_sm_builtins.PhysicalDeviceShaderSMBuiltinsPropertiesNV',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types.PhysicalDeviceShaderSubgroupExtendedTypesFeatures',
--- 'Vulkan.Extensions.VK_KHR_shader_subgroup_rotate.PhysicalDeviceShaderSubgroupRotateFeaturesKHR',
+-- 'Vulkan.Extensions.VK_EXT_shader_subgroup_partitioned.PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap.PhysicalDeviceShaderSubgroupRotateFeatures',
 -- 'Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow.PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_shader_terminate_invocation.PhysicalDeviceShaderTerminateInvocationFeatures',
 -- 'Vulkan.Extensions.VK_EXT_shader_tile_image.PhysicalDeviceShaderTileImageFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_shader_tile_image.PhysicalDeviceShaderTileImagePropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_uniform_buffer_unsized_array.PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT',
+-- 'Vulkan.Extensions.VK_KHR_shader_untyped_pointers.PhysicalDeviceShaderUntypedPointersFeaturesKHR',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PhysicalDeviceShadingRateImageFeaturesNV',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PhysicalDeviceShadingRateImagePropertiesNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceSparseImageFormatInfo2',
@@ -1553,40 +1830,55 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.PhysicalDeviceSubpassShadingFeaturesHUAWEI',
 -- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.PhysicalDeviceSubpassShadingPropertiesHUAWEI',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.PhysicalDeviceSwapchainMaintenance1FeaturesEXT',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.PhysicalDeviceSwapchainMaintenance1FeaturesKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.PhysicalDeviceSynchronization2Features',
+-- 'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorFeaturesARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorPropertiesARM',
 -- 'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentProperties',
+-- 'Vulkan.Extensions.VK_EXT_texture_compression_astc_3d.PhysicalDeviceTextureCompressionASTC3DFeaturesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_texture_compression_astc_hdr.PhysicalDeviceTextureCompressionASTCHDRFeatures',
+-- 'Vulkan.Extensions.VK_QCOM_tile_memory_heap.PhysicalDeviceTileMemoryHeapFeaturesQCOM',
+-- 'Vulkan.Extensions.VK_QCOM_tile_memory_heap.PhysicalDeviceTileMemoryHeapPropertiesQCOM',
 -- 'Vulkan.Extensions.VK_QCOM_tile_properties.PhysicalDeviceTilePropertiesFeaturesQCOM',
+-- 'Vulkan.Extensions.VK_QCOM_tile_shading.PhysicalDeviceTileShadingFeaturesQCOM',
+-- 'Vulkan.Extensions.VK_QCOM_tile_shading.PhysicalDeviceTileShadingPropertiesQCOM',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreFeatures',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreProperties',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_tooling_info.PhysicalDeviceToolProperties',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackPropertiesEXT',
+-- 'Vulkan.Extensions.VK_KHR_unified_image_layouts.PhysicalDeviceUnifiedImageLayoutsFeaturesKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout.PhysicalDeviceUniformBufferStandardLayoutFeatures',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers.PhysicalDeviceVariablePointersFeatures',
--- 'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorFeaturesKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorFeatures',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties',
 -- 'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesEXT',
--- 'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_vertex_attribute_robustness.PhysicalDeviceVertexAttributeRobustnessFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.PhysicalDeviceVertexInputDynamicStateFeaturesEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoDecodeVP9FeaturesKHR VkPhysicalDeviceVideoDecodeVP9FeaturesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeAV1FeaturesKHR VkPhysicalDeviceVideoEncodeAV1FeaturesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoFormatInfoKHR VkPhysicalDeviceVideoFormatInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoMaintenance1FeaturesKHR VkPhysicalDeviceVideoMaintenance1FeaturesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoMaintenance2FeaturesKHR VkPhysicalDeviceVideoMaintenance2FeaturesKHR>,
 -- 'Vulkan.Core12.PhysicalDeviceVulkan11Features',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan11Properties',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Features',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties',
 -- 'Vulkan.Core13.PhysicalDeviceVulkan13Features',
 -- 'Vulkan.Core13.PhysicalDeviceVulkan13Properties',
+-- 'Vulkan.Core14.PhysicalDeviceVulkan14Features',
+-- 'Vulkan.Core14.PhysicalDeviceVulkan14Properties',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeatures',
 -- 'Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout.PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats.PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT',
 -- 'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.PhysicalDeviceYcbcrDegammaFeaturesQCOM',
 -- 'Vulkan.Extensions.VK_EXT_ycbcr_image_arrays.PhysicalDeviceYcbcrImageArraysFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_zero_initialize_device_memory.PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_zero_initialize_workgroup_memory.PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryDataInfoKHR',
@@ -1595,68 +1887,76 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryKeyKHR',
 -- 'Vulkan.Core10.PipelineCache.PipelineCacheCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PipelineColorBlendAdvancedStateCreateInfoEXT',
--- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineColorBlendStateCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_color_write_enable.PipelineColorWriteCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
 -- 'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.PipelineCoverageModulationStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PipelineCoverageReductionStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_fragment_coverage_to_color.PipelineCoverageToColorStateCreateInfoNV',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineCreateInfoKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo',
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineExecutableInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineExecutableInternalRepresentationKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineExecutablePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineExecutableStatisticKHR',
+-- 'Vulkan.Extensions.VK_VALVE_fragment_density_map_layered.PipelineFragmentDensityMapLayeredCreateInfoVALVE',
 -- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.PipelineIndirectDeviceAddressInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineInfoKHR',
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineInputAssemblyStateCreateInfo',
 -- 'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR',
--- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_pipeline_properties.PipelinePropertiesIdentifierEXT',
 -- 'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT',
--- 'Vulkan.Extensions.VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_provoking_vertex.PipelineRasterizationProvokingVertexStateCreateInfoEXT',
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo',
 -- 'Vulkan.Extensions.VK_AMD_rasterization_order.PipelineRasterizationStateRasterizationOrderAMD',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_representative_fragment_test.PipelineRepresentativeFragmentTestStateCreateInfoNV',
--- 'Vulkan.Extensions.VK_EXT_pipeline_robustness.PipelineRobustnessCreateInfoEXT',
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT',
--- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
+-- 'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.PipelineShaderStageModuleIdentifierCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.PipelineShaderStageNodeCreateInfoAMDX',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PipelineTessellationDomainOriginStateCreateInfo',
--- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo',
--- 'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfoKHR',
--- 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineTessellationStateCreateInfo',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineVertexInputStateCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportCoarseSampleOrderStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_EXT_depth_clamp_control.PipelineViewportDepthClampControlCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_control.PipelineViewportDepthClipControlCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV',
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV',
 -- 'Vulkan.Extensions.VK_GGP_frame_token.PresentFrameTokenGGP',
+-- 'Vulkan.Extensions.VK_KHR_present_id2.PresentId2KHR',
 -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR',
 -- 'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PresentTimingInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PresentTimingSurfaceCapabilitiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PresentTimingsInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_present_wait2.PresentWait2InfoKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.PrivateDataSlotCreateInfo',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.PushConstantsInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetWithTemplateInfoKHR',
+-- 'Vulkan.Extensions.VK_NV_push_constant_bank.PushConstantBankInfoNV',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetInfo',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetWithTemplateInfo',
 -- 'Vulkan.Extensions.VK_NV_low_latency.QueryLowLatencySupportNV',
 -- 'Vulkan.Core10.Query.QueryPoolCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
@@ -1664,17 +1964,21 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryPoolVideoEncodeFeedbackCreateInfoKHR VkQueryPoolVideoEncodeFeedbackCreateInfoKHR>,
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointProperties2NV',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV',
--- 'Vulkan.Extensions.VK_KHR_global_priority.QueueFamilyGlobalPriorityPropertiesKHR',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.QueueFamilyDataGraphProcessingEnginePropertiesARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.QueueFamilyDataGraphPropertiesARM',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_global_priority.QueueFamilyGlobalPriorityProperties',
+-- 'Vulkan.Extensions.VK_KHR_maintenance9.QueueFamilyOwnershipTransferPropertiesKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFamilyQueryResultStatusPropertiesKHR VkQueueFamilyQueryResultStatusPropertiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFamilyVideoPropertiesKHR VkQueueFamilyVideoPropertiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkRayTracingPipelineClusterAccelerationStructureCreateInfoNV VkRayTracingPipelineClusterAccelerationStructureCreateInfoNV>,
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineInterfaceCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingShaderGroupCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingShaderGroupCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_binary.ReleaseCapturedPipelineDataInfoKHR',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.ReleaseSwapchainImagesInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.ReleaseSwapchainImagesInfoKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'Vulkan.Core10.Pass.RenderPassCreateInfo',
@@ -1682,22 +1986,29 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationControlEXT',
 -- 'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationFeedbackCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_fragment_density_map_offset.RenderPassFragmentDensityMapOffsetEndInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.RenderPassInputAttachmentAspectCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkRenderPassPerformanceCountersByRegionBeginInfoARM VkRenderPassPerformanceCountersByRegionBeginInfoARM>,
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.RenderPassSampleLocationsBeginInfoEXT',
 -- 'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM',
 -- 'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeInfoARM',
 -- 'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeSubmitInfoARM',
 -- 'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassSubpassFeedbackCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_QCOM_tile_shading.RenderPassTileShadingCreateInfoQCOM',
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.RenderingAreaInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.RenderingAreaInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.RenderingAttachmentFlagsInfoKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingAttachmentInfo',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingAttachmentLocationInfo',
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.RenderingEndInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ResolveImageInfo2',
+-- 'Vulkan.Extensions.VK_KHR_maintenance10.ResolveImageModeInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.ResourceDescriptorInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT',
 -- 'Vulkan.Extensions.VK_QCOM_image_processing2.SamplerBlockMatchWindowCreateInfoQCOM',
 -- 'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
@@ -1705,6 +2016,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
 -- 'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.SamplerCubicWeightsCreateInfoQCOM',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.SamplerCustomBorderColorIndexCreateInfoEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties',
@@ -1723,7 +2035,9 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreWaitInfo',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.SetDescriptorBufferOffsetsInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.SetLatencyMarkerInfoNV',
+-- 'Vulkan.Extensions.VK_NV_present_metering.SetPresentConfigNV',
 -- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT',
 -- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.ShaderModuleIdentifierEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT',
@@ -1738,35 +2052,56 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassEndInfo',
--- 'Vulkan.Extensions.VK_QCOM_fragment_density_map_offset.SubpassFragmentDensityMapOffsetEndInfoQCOM',
 -- 'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.SubpassResolvePerformanceQueryEXT',
 -- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.SubpassShadingPipelineCreateInfoHUAWEI',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.SubresourceHostMemcpySizeEXT',
--- 'Vulkan.Extensions.VK_KHR_maintenance5.SubresourceLayout2KHR',
+-- 'Vulkan.Core14.PromotedStreamingTransfers'.SubresourceHostMemcpySize',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.SubsampledImageFormatPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCapabilities2EXT',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT',
 -- 'Vulkan.Extensions.VK_NV_present_barrier.SurfaceCapabilitiesPresentBarrierNV',
+-- 'Vulkan.Extensions.VK_KHR_present_id2.SurfaceCapabilitiesPresentId2KHR',
+-- 'Vulkan.Extensions.VK_KHR_present_wait2.SurfaceCapabilitiesPresentWait2KHR',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkSurfaceCreateInfoOHOS VkSurfaceCreateInfoOHOS>,
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
--- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT',
--- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT',
--- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT',
+-- 'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeCompatibilityKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentScalingCapabilitiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.SwapchainCalibratedTimestampInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.SwapchainCounterCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.SwapchainLatencyCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentFenceInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModeInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentFenceInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModeInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModesCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.SwapchainTimeDomainPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.SwapchainTimingPropertiesEXT',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.SysmemColorSpaceFUCHSIA',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorCaptureDescriptorDataInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorCopyARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorDependencyInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorDescriptionARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorFormatPropertiesARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorMemoryBarrierARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorMemoryRequirementsInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorViewCaptureDescriptorDataInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.TexelBufferDescriptorInfoEXT',
 -- 'Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.TextureLODGatherFormatPropertiesAMD',
+-- 'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryBindInfoQCOM',
+-- 'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM',
+-- 'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemorySizeInfoQCOM',
 -- 'Vulkan.Extensions.VK_QCOM_tile_properties.TilePropertiesQCOM',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkUbmSurfaceCreateInfoSEC VkUbmSurfaceCreateInfoSEC>,
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.ValidationCacheCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_features.ValidationFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_flags.ValidationFlagsEXT',
@@ -1778,24 +2113,30 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoCodingControlInfoKHR VkVideoCodingControlInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1CapabilitiesKHR VkVideoDecodeAV1CapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1DpbSlotInfoKHR VkVideoDecodeAV1DpbSlotInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1InlineSessionParametersInfoKHR VkVideoDecodeAV1InlineSessionParametersInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1PictureInfoKHR VkVideoDecodeAV1PictureInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1ProfileInfoKHR VkVideoDecodeAV1ProfileInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeAV1SessionParametersCreateInfoKHR VkVideoDecodeAV1SessionParametersCreateInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeCapabilitiesKHR VkVideoDecodeCapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264CapabilitiesKHR VkVideoDecodeH264CapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264DpbSlotInfoKHR VkVideoDecodeH264DpbSlotInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264InlineSessionParametersInfoKHR VkVideoDecodeH264InlineSessionParametersInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264PictureInfoKHR VkVideoDecodeH264PictureInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoKHR VkVideoDecodeH264ProfileInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264SessionParametersAddInfoKHR VkVideoDecodeH264SessionParametersAddInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264SessionParametersCreateInfoKHR VkVideoDecodeH264SessionParametersCreateInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265CapabilitiesKHR VkVideoDecodeH265CapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265DpbSlotInfoKHR VkVideoDecodeH265DpbSlotInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265InlineSessionParametersInfoKHR VkVideoDecodeH265InlineSessionParametersInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265PictureInfoKHR VkVideoDecodeH265PictureInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoKHR VkVideoDecodeH265ProfileInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265SessionParametersAddInfoKHR VkVideoDecodeH265SessionParametersAddInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265SessionParametersCreateInfoKHR VkVideoDecodeH265SessionParametersCreateInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeInfoKHR VkVideoDecodeInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeUsageInfoKHR VkVideoDecodeUsageInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeVP9CapabilitiesKHR VkVideoDecodeVP9CapabilitiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeVP9PictureInfoKHR VkVideoDecodeVP9PictureInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeVP9ProfileInfoKHR VkVideoDecodeVP9ProfileInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeAV1CapabilitiesKHR VkVideoEncodeAV1CapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeAV1DpbSlotInfoKHR VkVideoEncodeAV1DpbSlotInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeAV1GopRemainingFrameInfoKHR VkVideoEncodeAV1GopRemainingFrameInfoKHR>,
@@ -1839,6 +2180,9 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersFeedbackInfoKHR VkVideoEncodeH265SessionParametersFeedbackInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionParametersGetInfoKHR VkVideoEncodeH265SessionParametersGetInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeInfoKHR VkVideoEncodeInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeIntraRefreshCapabilitiesKHR VkVideoEncodeIntraRefreshCapabilitiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeIntraRefreshInfoKHR VkVideoEncodeIntraRefreshInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeProfileRgbConversionInfoVALVE VkVideoEncodeProfileRgbConversionInfoVALVE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQualityLevelInfoKHR VkVideoEncodeQualityLevelInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQualityLevelPropertiesKHR VkVideoEncodeQualityLevelPropertiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQuantizationMapCapabilitiesKHR VkVideoEncodeQuantizationMapCapabilitiesKHR>,
@@ -1846,8 +2190,11 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQuantizationMapSessionParametersCreateInfoKHR VkVideoEncodeQuantizationMapSessionParametersCreateInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeRateControlInfoKHR VkVideoEncodeRateControlInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeRateControlLayerInfoKHR VkVideoEncodeRateControlLayerInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeRgbConversionCapabilitiesVALVE VkVideoEncodeRgbConversionCapabilitiesVALVE>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeSessionIntraRefreshCreateInfoKHR VkVideoEncodeSessionIntraRefreshCreateInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeSessionParametersFeedbackInfoKHR VkVideoEncodeSessionParametersFeedbackInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeSessionParametersGetInfoKHR VkVideoEncodeSessionParametersGetInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeSessionRgbConversionCreateInfoVALVE VkVideoEncodeSessionRgbConversionCreateInfoVALVE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeUsageInfoKHR VkVideoEncodeUsageInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEndCodingInfoKHR VkVideoEndCodingInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatAV1QuantizationMapPropertiesKHR VkVideoFormatAV1QuantizationMapPropertiesKHR>,
@@ -1858,6 +2205,7 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoPictureResourceInfoKHR VkVideoPictureResourceInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoReferenceIntraRefreshInfoKHR VkVideoReferenceIntraRefreshInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoReferenceSlotInfoKHR VkVideoReferenceSlotInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionMemoryRequirementsKHR VkVideoSessionMemoryRequirementsKHR>,
@@ -1871,6 +2219,8 @@ pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlock',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkWriteDescriptorSetPartitionedAccelerationStructureNV VkWriteDescriptorSetPartitionedAccelerationStructureNV>,
+-- 'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM',
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.WriteIndirectExecutionSetPipelineEXT',
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.WriteIndirectExecutionSetShaderEXT',
 -- 'Vulkan.Extensions.VK_KHR_xcb_surface.XcbSurfaceCreateInfoKHR',
@@ -2025,8 +2375,116 @@ pattern STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = StructureType 47
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO"
 pattern STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = StructureType 48
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT = StructureType 1000662000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV = StructureType 1000645001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV"
+pattern STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV = StructureType 1000645000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT = StructureType 1000642000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC = StructureType 1000637000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT = StructureType 1000635001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT = StructureType 1000635000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR"
+pattern STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR = StructureType 1000630004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_END_INFO_KHR"
+pattern STRUCTURE_TYPE_RENDERING_END_INFO_KHR = StructureType 1000619003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_FLAGS_INFO_KHR"
+pattern STRUCTURE_TYPE_RENDERING_ATTACHMENT_FLAGS_INFO_KHR = StructureType 1000630002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR = StructureType 1000630001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR = StructureType 1000630000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM = StructureType 1000629001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM = StructureType 1000629000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT = StructureType 1000628002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BEGIN_CUSTOM_RESOLVE_INFO_EXT"
+pattern STRUCTURE_TYPE_BEGIN_CUSTOM_RESOLVE_INFO_EXT = StructureType 1000628001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT = StructureType 1000628000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT = StructureType 1000627000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR = StructureType 1000361000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT = StructureType 1000620000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT"
+pattern STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT = StructureType 1000425002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT = StructureType 1000425001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT = StructureType 1000425000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV = StructureType 1000613001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SET_PRESENT_CONFIG_NV"
+pattern STRUCTURE_TYPE_SET_PRESENT_CONFIG_NV = StructureType 1000613000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR = StructureType 1000286001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR = StructureType 1000286000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_FRAGMENT_DENSITY_MAP_LAYERED_CREATE_INFO_VALVE"
+pattern STRUCTURE_TYPE_PIPELINE_FRAGMENT_DENSITY_MAP_LAYERED_CREATE_INFO_VALVE = StructureType 1000611002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_PROPERTIES_VALVE"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_PROPERTIES_VALVE = StructureType 1000611001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_FEATURES_VALVE"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_FEATURES_VALVE = StructureType 1000611000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM = StructureType 1000609000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT = StructureType 1000608000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR = StructureType 1000421000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_GET_METAL_HANDLE_INFO_EXT"
+pattern STRUCTURE_TYPE_MEMORY_GET_METAL_HANDLE_INFO_EXT = StructureType 1000602002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_METAL_HANDLE_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_MEMORY_METAL_HANDLE_PROPERTIES_EXT = StructureType 1000602001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT"
+pattern STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT = StructureType 1000602000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM = StructureType 1000596000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV = StructureType 1000593002
@@ -2043,11 +2501,38 @@ pattern STRUCTURE_TYPE_HDR_VIVID_DYNAMIC_METADATA_HUAWEI = StructureType 1000590
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI = StructureType 1000590000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR = StructureType 1000584002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR = StructureType 1000584001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR = StructureType 1000584000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLAMP_CONTROL_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLAMP_CONTROL_CREATE_INFO_EXT = StructureType 1000582001
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT = StructureType 1000582000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT = StructureType 1000581001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT = StructureType 1000581000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV = StructureType 1000580002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV = StructureType 1000580001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV"
+pattern STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV = StructureType 1000580000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR = StructureType 1000579000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA"
 pattern STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA = StructureType 1000575002
@@ -2057,6 +2542,12 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_PROPERTIES_MESA =
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_FEATURES_MESA"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_FEATURES_MESA = StructureType 1000575000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR"
+pattern STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR = StructureType 1000574002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR = StructureType 1000574000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT"
 pattern STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT = StructureType 1000572014
@@ -2103,6 +2594,9 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_EXT = 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV = StructureType 1000568000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT = StructureType 1000567000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT = StructureType 1000564000
 
@@ -2130,6 +2624,18 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COMMAND_BUFFER_INHERITANCE_FEATURES_NV = 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR = StructureType 1000558000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV = StructureType 1000556003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV"
+pattern STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV = StructureType 1000556002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_CREATE_INFO_NV = StructureType 1000556001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DEVICE_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DEVICE_CREATE_INFO_NV = StructureType 1000556000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV = StructureType 1000555000
 
@@ -2138,6 +2644,42 @@ pattern STRUCTURE_TYPE_DISPLAY_MODE_STEREO_PROPERTIES_NV = StructureType 1000551
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_SURFACE_STEREO_CREATE_INFO_NV"
 pattern STRUCTURE_TYPE_DISPLAY_SURFACE_STEREO_CREATE_INFO_NV = StructureType 1000551000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DECOMPRESS_MEMORY_INFO_EXT"
+pattern STRUCTURE_TYPE_DECOMPRESS_MEMORY_INFO_EXT = StructureType 1000550002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT = StructureType 1000427001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT = StructureType 1000427000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR"
+pattern STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR = StructureType 1000549003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR"
+pattern STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR = StructureType 1000549002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR = StructureType 1000426001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR = StructureType 1000549000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TILE_MEMORY_SIZE_INFO_QCOM"
+pattern STRUCTURE_TYPE_TILE_MEMORY_SIZE_INFO_QCOM = StructureType 1000547004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM"
+pattern STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM = StructureType 1000547003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM"
+pattern STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM = StructureType 1000547002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM = StructureType 1000547001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM = StructureType 1000547000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV = StructureType 1000546000
@@ -2148,44 +2690,8 @@ pattern STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT = Struc
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT"
 pattern STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT = StructureType 1000545007
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR"
-pattern STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR = StructureType 1000545006
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR"
-pattern STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR = StructureType 1000545005
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR"
-pattern STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR = StructureType 1000545004
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR"
-pattern STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR = StructureType 1000545003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR"
-pattern STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR = StructureType 1000545002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR = StructureType 1000545001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR = StructureType 1000545000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR = StructureType 1000544000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR"
 pattern STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR = StructureType 1000184000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR = StructureType 1000259002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR"
-pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR = StructureType 1000259001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR = StructureType 1000259000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR = StructureType 1000265000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT = StructureType 1000530000
@@ -2205,17 +2711,11 @@ pattern STRUCTURE_TYPE_SCREEN_BUFFER_FORMAT_PROPERTIES_QNX = StructureType 10005
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SCREEN_BUFFER_PROPERTIES_QNX"
 pattern STRUCTURE_TYPE_SCREEN_BUFFER_PROPERTIES_QNX = StructureType 1000529000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR = StructureType 1000528000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_FEEDBACK_LOOP_INFO_EXT"
+pattern STRUCTURE_TYPE_ATTACHMENT_FEEDBACK_LOOP_INFO_EXT = StructureType 1000527001
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR = StructureType 1000190002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR"
-pattern STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR = StructureType 1000190001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_KHR = StructureType 1000525000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR = StructureType 1000527000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_FEATURES_EXT = StructureType 1000524000
@@ -2262,6 +2762,66 @@ pattern STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QC
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM = StructureType 1000510000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM = StructureType 1000507015
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM = StructureType 1000507019
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM = StructureType 1000507018
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_PROPERTIES_ARM = StructureType 1000507017
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PROCESSING_ENGINE_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PROCESSING_ENGINE_CREATE_INFO_ARM = StructureType 1000507016
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM = StructureType 1000507014
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_IDENTIFIER_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_IDENTIFIER_CREATE_INFO_ARM = StructureType 1000507013
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENT_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENT_ARM = StructureType 1000507012
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENTS_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENTS_INFO_ARM = StructureType 1000507011
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM = StructureType 1000507010
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_INFO_ARM = StructureType 1000507009
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_PROPERTY_QUERY_RESULT_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_PROPERTY_QUERY_RESULT_ARM = StructureType 1000507008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM = StructureType 1000507007
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_FEATURES_ARM = StructureType 1000507006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_DATA_GRAPH_PIPELINE_SESSION_MEMORY_INFO_ARM"
+pattern STRUCTURE_TYPE_BIND_DATA_GRAPH_PIPELINE_SESSION_MEMORY_INFO_ARM = StructureType 1000507005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_MEMORY_REQUIREMENTS_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_MEMORY_REQUIREMENTS_INFO_ARM = StructureType 1000507004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_ARM = StructureType 1000507003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM = StructureType 1000507002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM = StructureType 1000507001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CREATE_INFO_ARM = StructureType 1000507000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR = StructureType 1000506002
 
@@ -2298,6 +2858,9 @@ pattern STRUCTURE_TYPE_LATENCY_SLEEP_INFO_NV = StructureType 1000505001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV"
 pattern STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV = StructureType 1000505000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR = StructureType 1000504000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT = StructureType 1000499000
 
@@ -2331,6 +2894,18 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_PROPERTIES_
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_FEATURES_NV = StructureType 1000492000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CONVERT_COOPERATIVE_VECTOR_MATRIX_INFO_NV"
+pattern STRUCTURE_TYPE_CONVERT_COOPERATIVE_VECTOR_MATRIX_INFO_NV = StructureType 1000491004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COOPERATIVE_VECTOR_PROPERTIES_NV"
+pattern STRUCTURE_TYPE_COOPERATIVE_VECTOR_PROPERTIES_NV = StructureType 1000491002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_PROPERTIES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_PROPERTIES_NV = StructureType 1000491001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_FEATURES_NV = StructureType 1000491000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV = StructureType 1000490001
 
@@ -2339,6 +2914,33 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_N
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM = StructureType 1000488000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_KHR"
+pattern STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_KHR = StructureType 1000275005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR = StructureType 1000275004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_KHR"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_KHR = StructureType 1000275003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR = StructureType 1000275002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_KHR"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_KHR = StructureType 1000275001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR = StructureType 1000275000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR"
+pattern STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR = StructureType 1000274002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR"
+pattern STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR = StructureType 1000274001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR"
+pattern STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR = StructureType 1000274000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC"
 pattern STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC = StructureType 1000485001
@@ -2400,6 +3002,30 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT = StructureTyp
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR = StructureType 1000481000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_WAIT_2_INFO_KHR"
+pattern STRUCTURE_TYPE_PRESENT_WAIT_2_INFO_KHR = StructureType 1000480002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_2_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_2_FEATURES_KHR = StructureType 1000480001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR"
+pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR = StructureType 1000480000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_2_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_2_FEATURES_KHR = StructureType 1000479002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_ID_2_KHR"
+pattern STRUCTURE_TYPE_PRESENT_ID_2_KHR = StructureType 1000479001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_ID_2_KHR"
+pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_ID_2_KHR = StructureType 1000479000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX = StructureType 1000478001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX = StructureType 1000478000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ANTI_LAG_PRESENTATION_INFO_AMD"
 pattern STRUCTURE_TYPE_ANTI_LAG_PRESENTATION_INFO_AMD = StructureType 1000476002
 
@@ -2409,30 +3035,6 @@ pattern STRUCTURE_TYPE_ANTI_LAG_DATA_AMD = StructureType 1000476001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD = StructureType 1000476000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR"
-pattern STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR = StructureType 1000470006
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR"
-pattern STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR = StructureType 1000470005
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR"
-pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR = StructureType 1000338003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR"
-pattern STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR = StructureType 1000338002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO_KHR"
-pattern STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO_KHR = StructureType 1000470004
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_AREA_INFO_KHR"
-pattern STRUCTURE_TYPE_RENDERING_AREA_INFO_KHR = StructureType 1000470003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES_KHR = StructureType 1000470001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR = StructureType 1000470000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID"
 pattern STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID = StructureType 1000468002
 
@@ -2441,9 +3043,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_PROPERTIES_ANDROI
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID = StructureType 1000468000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT = StructureType 1000466000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT = StructureType 1000465000
@@ -2483,6 +3082,78 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT =
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT = StructureType 1000462000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FRAME_BOUNDARY_TENSORS_ARM"
+pattern STRUCTURE_TYPE_FRAME_BOUNDARY_TENSORS_ARM = StructureType 1000460023
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_ARM"
+pattern STRUCTURE_TYPE_TENSOR_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_ARM = StructureType 1000460022
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_CAPTURE_DESCRIPTOR_DATA_INFO_ARM"
+pattern STRUCTURE_TYPE_TENSOR_CAPTURE_DESCRIPTOR_DATA_INFO_ARM = StructureType 1000460021
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_GET_TENSOR_INFO_ARM"
+pattern STRUCTURE_TYPE_DESCRIPTOR_GET_TENSOR_INFO_ARM = StructureType 1000460020
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM = StructureType 1000460019
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_FEATURES_ARM = StructureType 1000460018
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM = StructureType 1000460017
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_TENSOR_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_EXTERNAL_TENSOR_PROPERTIES_ARM = StructureType 1000460016
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_TENSOR_INFO_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_TENSOR_INFO_ARM = StructureType 1000460015
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_TENSOR_ARM"
+pattern STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_TENSOR_ARM = StructureType 1000460014
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM"
+pattern STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM = StructureType 1000460013
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_COPY_ARM"
+pattern STRUCTURE_TYPE_TENSOR_COPY_ARM = StructureType 1000460012
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_TENSOR_INFO_ARM"
+pattern STRUCTURE_TYPE_COPY_TENSOR_INFO_ARM = StructureType 1000460011
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_TENSOR_MEMORY_REQUIREMENTS_ARM"
+pattern STRUCTURE_TYPE_DEVICE_TENSOR_MEMORY_REQUIREMENTS_ARM = StructureType 1000460010
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM = StructureType 1000460009
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_MEMORY_BARRIER_ARM"
+pattern STRUCTURE_TYPE_TENSOR_MEMORY_BARRIER_ARM = StructureType 1000460008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_MEMORY_REQUIREMENTS_INFO_ARM"
+pattern STRUCTURE_TYPE_TENSOR_MEMORY_REQUIREMENTS_INFO_ARM = StructureType 1000460007
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM"
+pattern STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM = StructureType 1000460006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_FORMAT_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_TENSOR_FORMAT_PROPERTIES_ARM = StructureType 1000460005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_PROPERTIES_ARM = StructureType 1000460004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_TENSOR_ARM"
+pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_TENSOR_ARM = StructureType 1000460003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_TENSOR_MEMORY_INFO_ARM"
+pattern STRUCTURE_TYPE_BIND_TENSOR_MEMORY_INFO_ARM = StructureType 1000460002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM = StructureType 1000460001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TENSOR_CREATE_INFO_ARM"
+pattern STRUCTURE_TYPE_TENSOR_CREATE_INFO_ARM = StructureType 1000460000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG"
 pattern STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG = StructureType 1000459001
@@ -2535,6 +3206,15 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV = StructureType 1000430000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV = StructureType 1000429010
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_LINEAR_SWEPT_SPHERES_DATA_NV"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_LINEAR_SWEPT_SPHERES_DATA_NV = StructureType 1000429009
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_LINEAR_SWEPT_SPHERES_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_LINEAR_SWEPT_SPHERES_FEATURES_NV = StructureType 1000429008
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV"
 pattern STRUCTURE_TYPE_PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV = StructureType 1000428002
 
@@ -2544,26 +3224,8 @@ pattern STRUCTURE_TYPE_COMPUTE_PIPELINE_INDIRECT_BUFFER_INFO_NV = StructureType 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV = StructureType 1000428000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV = StructureType 1000427001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV = StructureType 1000427000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV = StructureType 1000426001
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV = StructureType 1000426000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM"
-pattern STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM = StructureType 1000425002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM = StructureType 1000425001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM = StructureType 1000425000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM"
 pattern STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM = StructureType 1000424004
@@ -2582,9 +3244,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM = Struct
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT = StructureType 1000422000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT = StructureType 1000421000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE"
 pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE = StructureType 1000420002
@@ -2609,9 +3268,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM = Struct
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM"
 pattern STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM = StructureType 1000417000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR = StructureType 1000416000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM = StructureType 1000415000
@@ -2693,6 +3349,9 @@ pattern STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT = StructureType 100039
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT = StructureType 1000391000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR = StructureType 1000387000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR = StructureType 1000386000
@@ -2795,9 +3454,6 @@ pattern STRUCTURE_TYPE_MEMORY_ZIRCON_HANDLE_PROPERTIES_FUCHSIA = StructureType 1
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA"
 pattern STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA = StructureType 1000364000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT = StructureType 1000361000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT = StructureType 1000356000
@@ -2988,6 +3644,24 @@ pattern STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT = StructureType 10003
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV"
 pattern STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV = StructureType 1000310000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPATCH_TILE_INFO_QCOM"
+pattern STRUCTURE_TYPE_DISPATCH_TILE_INFO_QCOM = StructureType 1000309005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PER_TILE_END_INFO_QCOM"
+pattern STRUCTURE_TYPE_PER_TILE_END_INFO_QCOM = StructureType 1000309004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PER_TILE_BEGIN_INFO_QCOM"
+pattern STRUCTURE_TYPE_PER_TILE_BEGIN_INFO_QCOM = StructureType 1000309003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_TILE_SHADING_CREATE_INFO_QCOM"
+pattern STRUCTURE_TYPE_RENDER_PASS_TILE_SHADING_CREATE_INFO_QCOM = StructureType 1000309002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_PROPERTIES_QCOM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_PROPERTIES_QCOM = StructureType 1000309001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_FEATURES_QCOM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_FEATURES_QCOM = StructureType 1000309000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV = StructureType 1000307004
 
@@ -3027,6 +3701,9 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_BARRIER_FEATURES_NV = StructureTy
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR"
 pattern STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR = StructureType 1000290000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT = StructureType 1000288000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT = StructureType 1000287002
 
@@ -3035,12 +3712,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT = Stru
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT = StructureType 1000287000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT = StructureType 1000286001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT = StructureType 1000286000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT"
 pattern STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT = StructureType 1000284002
@@ -3099,33 +3770,6 @@ pattern STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV = StructureType 1000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV = StructureType 1000277000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT"
-pattern STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT = StructureType 1000275005
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT"
-pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT = StructureType 1000275004
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT"
-pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT = StructureType 1000275003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT"
-pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT = StructureType 1000275002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT"
-pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT = StructureType 1000275001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT = StructureType 1000275000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT"
-pattern STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT = StructureType 1000274002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT"
-pattern STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT = StructureType 1000274001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT"
-pattern STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT = StructureType 1000274000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT = StructureType 1000273000
 
@@ -3137,42 +3781,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_PROPERTIES_EXT = Struct
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT = StructureType 1000272000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_UNMAP_INFO_KHR"
-pattern STRUCTURE_TYPE_MEMORY_UNMAP_INFO_KHR = StructureType 1000271001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_MAP_INFO_KHR"
-pattern STRUCTURE_TYPE_MEMORY_MAP_INFO_KHR = StructureType 1000271000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT"
-pattern STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT = StructureType 1000270009
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE_EXT"
-pattern STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE_EXT = StructureType 1000270008
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO_EXT"
-pattern STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO_EXT = StructureType 1000270007
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT"
-pattern STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT = StructureType 1000270006
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT"
-pattern STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT = StructureType 1000270005
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO_EXT"
-pattern STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO_EXT = StructureType 1000270004
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY_EXT"
-pattern STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY_EXT = StructureType 1000270003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT"
-pattern STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT = StructureType 1000270002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT = StructureType 1000270001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT = StructureType 1000270000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR"
 pattern STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR = StructureType 1000269005
@@ -3276,15 +3884,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR = Struct
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT = StructureType 1000234000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR"
-pattern STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR = StructureType 1000232002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO_KHR"
-pattern STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO_KHR = StructureType 1000232001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR = StructureType 1000232000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD = StructureType 1000229000
 
@@ -3357,6 +3956,36 @@ pattern STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL = Structur
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL = StructureType 1000209000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT"
+pattern STRUCTURE_TYPE_SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT = StructureType 1000208009
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_TIMING_SURFACE_CAPABILITIES_EXT"
+pattern STRUCTURE_TYPE_PRESENT_TIMING_SURFACE_CAPABILITIES_EXT = StructureType 1000208008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_EXT"
+pattern STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_EXT = StructureType 1000208007
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_PROPERTIES_EXT = StructureType 1000208006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_INFO_EXT"
+pattern STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_INFO_EXT = StructureType 1000208005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_TIMING_INFO_EXT"
+pattern STRUCTURE_TYPE_PRESENT_TIMING_INFO_EXT = StructureType 1000208004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_TIMINGS_INFO_EXT"
+pattern STRUCTURE_TYPE_PRESENT_TIMINGS_INFO_EXT = StructureType 1000208003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_TIME_DOMAIN_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_SWAPCHAIN_TIME_DOMAIN_PROPERTIES_EXT = StructureType 1000208002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_TIMING_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_SWAPCHAIN_TIMING_PROPERTIES_EXT = StructureType 1000208001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT = StructureType 1000208000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV"
 pattern STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV = StructureType 1000314009
 
@@ -3393,15 +4022,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT =
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD"
 pattern STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD = StructureType 1000189000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR"
-pattern STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR = StructureType 1000388001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR = StructureType 1000388000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_KHR"
-pattern STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_KHR = StructureType 1000174000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD = StructureType 1000185000
 
@@ -3419,6 +4039,9 @@ pattern STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT = StructureType 100017
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT"
 pattern STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT = StructureType 1000178000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM = StructureType 1000172000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT"
 pattern STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT = StructureType 1000170001
@@ -3606,8 +4229,56 @@ pattern STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT = StructureTy
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT"
 pattern STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT = StructureType 1000143000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR = StructureType 1000141000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD"
 pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD = StructureType 1000044008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM = StructureType 1000135014
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT = StructureType 1000135013
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV"
+pattern STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV = StructureType 1000135012
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT = StructureType 1000135011
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT"
+pattern STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT = StructureType 1000135010
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT = StructureType 1000135009
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT = StructureType 1000135008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT = StructureType 1000135007
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT"
+pattern STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT = StructureType 1000135006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT"
+pattern STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT = StructureType 1000135005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_DATA_INFO_EXT"
+pattern STRUCTURE_TYPE_PUSH_DATA_INFO_EXT = StructureType 1000135004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_HEAP_INFO_EXT"
+pattern STRUCTURE_TYPE_BIND_HEAP_INFO_EXT = StructureType 1000135003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT"
+pattern STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT = StructureType 1000135002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT"
+pattern STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT = StructureType 1000135001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT"
+pattern STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT = StructureType 1000135000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX"
 pattern STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX = StructureType 1000134004
@@ -3798,9 +4469,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT = Stru
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT"
 pattern STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT = StructureType 1000081000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR = StructureType 1000080000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR"
 pattern STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR = StructureType 1000079001
 
@@ -3842,15 +4510,6 @@ pattern STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR = StructureType 10000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR"
 pattern STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR = StructureType 1000073000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES_EXT = StructureType 1000068002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT = StructureType 1000068001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT"
-pattern STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT = StructureType 1000068000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT = StructureType 1000067001
@@ -4014,29 +4673,155 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_PROPERTIES = StructureType 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_FEATURES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_FEATURES = StructureType 1000298000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS"
-pattern STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS = StructureType 1000413003
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO"
+pattern STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO = StructureType 1000232002
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS"
-pattern STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS = StructureType 1000413002
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO"
+pattern STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO = StructureType 1000232001
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES = StructureType 1000413001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES = StructureType 1000232000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES = StructureType 1000413000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_AREA_INFO"
+pattern STRUCTURE_TYPE_RENDERING_AREA_INFO = StructureType 1000470003
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3"
-pattern STRUCTURE_TYPE_FORMAT_PROPERTIES_3 = StructureType 1000360000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES = StructureType 1000190002
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES = StructureType 1000281001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO"
+pattern STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO = StructureType 1000190001
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES = StructureType 1000280001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES = StructureType 1000525000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES = StructureType 1000280000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES = StructureType 1000259002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO"
+pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO = StructureType 1000259001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES = StructureType 1000259000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES = StructureType 1000068002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES = StructureType 1000068001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO"
+pattern STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO = StructureType 1000068000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES = StructureType 1000466000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO"
+pattern STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO = StructureType 1000545006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO"
+pattern STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO = StructureType 1000545005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PUSH_CONSTANTS_INFO"
+pattern STRUCTURE_TYPE_PUSH_CONSTANTS_INFO = StructureType 1000545004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO"
+pattern STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO = StructureType 1000545003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES = StructureType 1000080000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO"
+pattern STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO = StructureType 1000470005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES = StructureType 1000544000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES = StructureType 1000528000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES = StructureType 1000416000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY"
+pattern STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY = StructureType 1000270009
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE"
+pattern STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE = StructureType 1000270008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO"
+pattern STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO = StructureType 1000270007
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO"
+pattern STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO = StructureType 1000270006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO"
+pattern STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO = StructureType 1000270005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO"
+pattern STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO = StructureType 1000270004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY"
+pattern STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY = StructureType 1000270003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY"
+pattern STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY = StructureType 1000270002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES = StructureType 1000270001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES = StructureType 1000270000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_MEMORY_STATUS"
+pattern STRUCTURE_TYPE_BIND_MEMORY_STATUS = StructureType 1000545002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES = StructureType 1000545001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES = StructureType 1000545000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO"
+pattern STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO = StructureType 1000470006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2"
+pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2 = StructureType 1000338003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2"
+pattern STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2 = StructureType 1000338002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO"
+pattern STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO = StructureType 1000470004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES = StructureType 1000470001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES = StructureType 1000470000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_UNMAP_INFO"
+pattern STRUCTURE_TYPE_MEMORY_UNMAP_INFO = StructureType 1000271001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_MAP_INFO"
+pattern STRUCTURE_TYPE_MEMORY_MAP_INFO = StructureType 1000271000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES = StructureType 1000265000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES"
+pattern STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES = StructureType 1000388001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES = StructureType 1000388000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO"
+pattern STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO = StructureType 1000174000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES = StructureType 56
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES = StructureType 55
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO"
 pattern STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO = StructureType 1000044004
@@ -4053,8 +4838,26 @@ pattern STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO = StructureType 1000044001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDERING_INFO"
 pattern STRUCTURE_TYPE_RENDERING_INFO = StructureType 1000044000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES = StructureType 1000066000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2"
+pattern STRUCTURE_TYPE_IMAGE_RESOLVE_2 = StructureType 1000337010
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_BLIT_2"
+pattern STRUCTURE_TYPE_IMAGE_BLIT_2 = StructureType 1000337008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2"
+pattern STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2 = StructureType 1000337005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2"
+pattern STRUCTURE_TYPE_BLIT_IMAGE_INFO_2 = StructureType 1000337004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES = StructureType 1000281001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES = StructureType 1000280001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES = StructureType 1000280000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO"
 pattern STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO = StructureType 1000138003
@@ -4077,26 +4880,50 @@ pattern STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES = StructureType 1000225000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2"
-pattern STRUCTURE_TYPE_IMAGE_RESOLVE_2 = StructureType 1000337010
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES = StructureType 1000335000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES = StructureType 1000325000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES = StructureType 1000297000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES = StructureType 1000276000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES = StructureType 1000215000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO"
+pattern STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO = StructureType 1000192000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS"
+pattern STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS = StructureType 1000413003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS"
+pattern STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS = StructureType 1000413002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES = StructureType 1000413001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES = StructureType 1000413000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3"
+pattern STRUCTURE_TYPE_FORMAT_PROPERTIES_3 = StructureType 1000360000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES = StructureType 1000066000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2"
 pattern STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2 = StructureType 1000337009
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_BLIT_2"
-pattern STRUCTURE_TYPE_IMAGE_BLIT_2 = StructureType 1000337008
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_COPY_2"
 pattern STRUCTURE_TYPE_IMAGE_COPY_2 = StructureType 1000337007
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_COPY_2"
 pattern STRUCTURE_TYPE_BUFFER_COPY_2 = StructureType 1000337006
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2"
-pattern STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2 = StructureType 1000337005
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2"
-pattern STRUCTURE_TYPE_BLIT_IMAGE_INFO_2 = StructureType 1000337004
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2"
 pattern STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2 = StructureType 1000337003
@@ -4109,12 +4936,6 @@ pattern STRUCTURE_TYPE_COPY_IMAGE_INFO_2 = StructureType 1000337001
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2"
 pattern STRUCTURE_TYPE_COPY_BUFFER_INFO_2 = StructureType 1000337000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES = StructureType 1000335000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES = StructureType 1000325000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES = StructureType 1000314007
@@ -4140,9 +4961,6 @@ pattern STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2 = StructureType 1000314001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_BARRIER_2"
 pattern STRUCTURE_TYPE_MEMORY_BARRIER_2 = StructureType 1000314000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES = StructureType 1000297000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO"
 pattern STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO = StructureType 1000295002
 
@@ -4152,23 +4970,107 @@ pattern STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO = StructureType 100029500
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES = StructureType 1000295000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES = StructureType 1000276000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES = StructureType 1000245000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES = StructureType 1000215000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO"
-pattern STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO = StructureType 1000192000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES = StructureType 54
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES = StructureType 53
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT"
+pattern STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT = StructureType 1000241002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT"
+pattern STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT = StructureType 1000241001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES = StructureType 1000241000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO"
+pattern STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO = StructureType 1000108003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO"
+pattern STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO = StructureType 1000108002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO"
+pattern STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO = StructureType 1000108001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES = StructureType 1000108000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO"
+pattern STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO = StructureType 1000246000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE"
+pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE = StructureType 1000199001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES = StructureType 1000199000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_END_INFO"
+pattern STRUCTURE_TYPE_SUBPASS_END_INFO = StructureType 1000109006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO"
+pattern STRUCTURE_TYPE_SUBPASS_BEGIN_INFO = StructureType 1000109005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2"
+pattern STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2 = StructureType 1000109004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2"
+pattern STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2 = StructureType 1000109003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2"
+pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2 = StructureType 1000109002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2"
+pattern STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2 = StructureType 1000109001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2"
+pattern STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2 = StructureType 1000109000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES = StructureType 1000175000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES = StructureType 1000253000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO"
+pattern STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO = StructureType 1000130001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES = StructureType 1000130000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES = StructureType 1000221000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT"
+pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT = StructureType 1000161004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO"
+pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO = StructureType 1000161003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES = StructureType 1000161002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES = StructureType 1000161001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO"
+pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO = StructureType 1000161000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES = StructureType 1000197000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES = StructureType 1000082000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES = StructureType 1000180000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES = StructureType 1000177000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO"
 pattern STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO = StructureType 1000257004
@@ -4206,104 +5108,11 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES = StructureTy
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES = StructureType 1000261000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT"
-pattern STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT = StructureType 1000241002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT"
-pattern STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT = StructureType 1000241001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES = StructureType 1000241000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES = StructureType 1000175000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES = StructureType 1000253000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO"
-pattern STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO = StructureType 1000108003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO"
-pattern STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO = StructureType 1000108002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO"
-pattern STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO = StructureType 1000108001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES = StructureType 1000108000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES = StructureType 1000211000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO"
-pattern STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO = StructureType 1000130001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES = StructureType 1000130000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO"
-pattern STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO = StructureType 1000246000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES = StructureType 1000221000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE"
-pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE = StructureType 1000199001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES = StructureType 1000199000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT"
-pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT = StructureType 1000161004
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO"
-pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO = StructureType 1000161003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES = StructureType 1000161002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES = StructureType 1000161001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO"
-pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO = StructureType 1000161000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES = StructureType 1000197000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES = StructureType 1000082000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES = StructureType 1000180000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES = StructureType 1000196000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES = StructureType 1000177000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_END_INFO"
-pattern STRUCTURE_TYPE_SUBPASS_END_INFO = StructureType 1000109006
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO"
-pattern STRUCTURE_TYPE_SUBPASS_BEGIN_INFO = StructureType 1000109005
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2"
-pattern STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2 = StructureType 1000109004
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2"
-pattern STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2 = StructureType 1000109003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2"
-pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2 = StructureType 1000109002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2"
-pattern STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2 = StructureType 1000109001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2"
-pattern STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2 = StructureType 1000109000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO"
 pattern STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO = StructureType 1000147000
@@ -4323,11 +5132,62 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES = StructureType 49
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = StructureType 1000063000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES = StructureType 1000053002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES = StructureType 1000053001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO"
+pattern STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO = StructureType 1000053000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO"
+pattern STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO = StructureType 1000117003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO"
+pattern STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO = StructureType 1000117001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES = StructureType 1000117000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO"
+pattern STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = StructureType 1000060003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES"
+pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES = StructureType 1000156005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES = StructureType 1000156004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO"
+pattern STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO = StructureType 1000156003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO"
+pattern STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO = StructureType 1000156002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO"
+pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO = StructureType 1000156001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO"
+pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO = StructureType 1000156000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"
 pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = StructureType 1000168001
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = StructureType 1000168000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO"
+pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO = StructureType 1000085000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES = StructureType 1000120000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = StructureType 1000083000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 1000094000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES"
 pattern STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES = StructureType 1000076001
@@ -4371,27 +5231,6 @@ pattern STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES = StructureType 10000710
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO = StructureType 1000071000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO"
-pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO = StructureType 1000085000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES"
-pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES = StructureType 1000156005
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES = StructureType 1000156004
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO"
-pattern STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO = StructureType 1000156003
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO"
-pattern STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO = StructureType 1000156002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO"
-pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO = StructureType 1000156001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO"
-pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO = StructureType 1000156000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2"
 pattern STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2 = StructureType 1000145003
 
@@ -4404,29 +5243,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES = StructureType
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO"
 pattern STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO = StructureType 1000145000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES = StructureType 1000120000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES = StructureType 1000053002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES = StructureType 1000053001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO"
-pattern STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO = StructureType 1000053000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO"
-pattern STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO = StructureType 1000117003
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO"
 pattern STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO = StructureType 1000117002
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO"
-pattern STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO = StructureType 1000117001
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES = StructureType 1000117000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2 = StructureType 1000059008
@@ -4491,9 +5309,6 @@ pattern STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO = StructureType 1000060005
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO"
 pattern STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO = StructureType 1000060004
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO"
-pattern STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = StructureType 1000060003
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO"
 pattern STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO = StructureType 1000060000
 
@@ -4503,17 +5318,11 @@ pattern STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO = StructureType 1000127001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS"
 pattern STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS = StructureType 1000127000
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = StructureType 1000083000
-
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO"
 pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO = StructureType 1000157001
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO"
 pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO = StructureType 1000157000
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES"
-pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 1000094000
 
 {-# COMPLETE
   STRUCTURE_TYPE_APPLICATION_INFO
@@ -4565,17 +5374,64 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_MEMORY_BARRIER
   , STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO
   , STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV
+  , STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT
+  , STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR
+  , STRUCTURE_TYPE_RENDERING_END_INFO_KHR
+  , STRUCTURE_TYPE_RENDERING_ATTACHMENT_FLAGS_INFO_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM
+  , STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT
+  , STRUCTURE_TYPE_BEGIN_CUSTOM_RESOLVE_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT
+  , STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV
+  , STRUCTURE_TYPE_SET_PRESENT_CONFIG_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR
+  , STRUCTURE_TYPE_PIPELINE_FRAGMENT_DENSITY_MAP_LAYERED_CREATE_INFO_VALVE
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_PROPERTIES_VALVE
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_FEATURES_VALVE
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR
+  , STRUCTURE_TYPE_MEMORY_GET_METAL_HANDLE_INFO_EXT
+  , STRUCTURE_TYPE_MEMORY_METAL_HANDLE_PROPERTIES_EXT
+  , STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV
   , STRUCTURE_TYPE_COOPERATIVE_MATRIX_FLEXIBLE_DIMENSIONS_PROPERTIES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_FEATURES_NV
   , STRUCTURE_TYPE_HDR_VIVID_DYNAMIC_METADATA_HUAWEI
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI
+  , STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR
   , STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLAMP_CONTROL_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV
+  , STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR
   , STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_PROPERTIES_MESA
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_FEATURES_MESA
+  , STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR
   , STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT
   , STRUCTURE_TYPE_GENERATED_COMMANDS_PIPELINE_INFO_EXT
   , STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_SHADER_LAYOUT_INFO_EXT
@@ -4591,6 +5447,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_VECTOR_FEATURES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_API_VULKAN_PROPERTIES_KHR
@@ -4600,35 +5457,37 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COMMAND_BUFFER_INHERITANCE_FEATURES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV
+  , STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV
+  , STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_CREATE_INFO_NV
+  , STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DEVICE_CREATE_INFO_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV
   , STRUCTURE_TYPE_DISPLAY_MODE_STEREO_PROPERTIES_NV
   , STRUCTURE_TYPE_DISPLAY_SURFACE_STEREO_CREATE_INFO_NV
+  , STRUCTURE_TYPE_DECOMPRESS_MEMORY_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT
+  , STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR
+  , STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR
+  , STRUCTURE_TYPE_TILE_MEMORY_SIZE_INFO_QCOM
+  , STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM
+  , STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV
   , STRUCTURE_TYPE_BIND_DESCRIPTOR_BUFFER_EMBEDDED_SAMPLERS_INFO_EXT
   , STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT
-  , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR
-  , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR
-  , STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR
-  , STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR
-  , STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR
   , STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR
-  , STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_SCREEN_BUFFER_FEATURES_QNX
   , STRUCTURE_TYPE_EXTERNAL_FORMAT_QNX
   , STRUCTURE_TYPE_IMPORT_SCREEN_BUFFER_INFO_QNX
   , STRUCTURE_TYPE_SCREEN_BUFFER_FORMAT_PROPERTIES_QNX
   , STRUCTURE_TYPE_SCREEN_BUFFER_PROPERTIES_QNX
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR
-  , STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_KHR
+  , STRUCTURE_TYPE_ATTACHMENT_FEEDBACK_LOOP_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUBIC_CLAMP_FEATURES_QCOM
   , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_YCBCR_DEGAMMA_CREATE_INFO_QCOM
@@ -4644,6 +5503,26 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR
   , STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_RENDER_AREAS_RENDER_PASS_BEGIN_INFO_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM
+  , STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM
+  , STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_PROPERTIES_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PROCESSING_ENGINE_CREATE_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_IDENTIFIER_CREATE_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENT_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENTS_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_PROPERTY_QUERY_RESULT_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_FEATURES_ARM
+  , STRUCTURE_TYPE_BIND_DATA_GRAPH_PIPELINE_SESSION_MEMORY_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_MEMORY_REQUIREMENTS_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM
+  , STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CREATE_INFO_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR
   , STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR
@@ -4656,6 +5535,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_SET_LATENCY_MARKER_INFO_NV
   , STRUCTURE_TYPE_LATENCY_SLEEP_INFO_NV
   , STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM
@@ -4667,9 +5547,22 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_PROPERTIES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_FEATURES_NV
+  , STRUCTURE_TYPE_CONVERT_COOPERATIVE_VECTOR_MATRIX_INFO_NV
+  , STRUCTURE_TYPE_COOPERATIVE_VECTOR_PROPERTIES_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_PROPERTIES_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_FEATURES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM
+  , STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_KHR
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_KHR
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR
+  , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR
+  , STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR
+  , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR
   , STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_AMIGO_PROFILING_FEATURES_SEC
   , STRUCTURE_TYPE_TILE_PROPERTIES_QCOM
@@ -4690,21 +5583,20 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR
+  , STRUCTURE_TYPE_PRESENT_WAIT_2_INFO_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_2_FEATURES_KHR
+  , STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_2_FEATURES_KHR
+  , STRUCTURE_TYPE_PRESENT_ID_2_KHR
+  , STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_ID_2_KHR
+  , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX
   , STRUCTURE_TYPE_ANTI_LAG_PRESENTATION_INFO_AMD
   , STRUCTURE_TYPE_ANTI_LAG_DATA_AMD
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD
-  , STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR
-  , STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR
-  , STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR
-  , STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR
-  , STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO_KHR
-  , STRUCTURE_TYPE_RENDERING_AREA_INFO_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR
   , STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_PROPERTIES_ANDROID
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT
   , STRUCTURE_TYPE_OPTICAL_FLOW_SESSION_CREATE_PRIVATE_DATA_INFO_NV
   , STRUCTURE_TYPE_OPTICAL_FLOW_EXECUTE_INFO_NV
@@ -4718,6 +5610,30 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_MODULE_IDENTIFIER_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT
+  , STRUCTURE_TYPE_FRAME_BOUNDARY_TENSORS_ARM
+  , STRUCTURE_TYPE_TENSOR_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_ARM
+  , STRUCTURE_TYPE_TENSOR_CAPTURE_DESCRIPTOR_DATA_INFO_ARM
+  , STRUCTURE_TYPE_DESCRIPTOR_GET_TENSOR_INFO_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_FEATURES_ARM
+  , STRUCTURE_TYPE_EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM
+  , STRUCTURE_TYPE_EXTERNAL_TENSOR_PROPERTIES_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_TENSOR_INFO_ARM
+  , STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_TENSOR_ARM
+  , STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM
+  , STRUCTURE_TYPE_TENSOR_COPY_ARM
+  , STRUCTURE_TYPE_COPY_TENSOR_INFO_ARM
+  , STRUCTURE_TYPE_DEVICE_TENSOR_MEMORY_REQUIREMENTS_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM
+  , STRUCTURE_TYPE_TENSOR_MEMORY_BARRIER_ARM
+  , STRUCTURE_TYPE_TENSOR_MEMORY_REQUIREMENTS_INFO_ARM
+  , STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM
+  , STRUCTURE_TYPE_TENSOR_FORMAT_PROPERTIES_ARM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_PROPERTIES_ARM
+  , STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_TENSOR_ARM
+  , STRUCTURE_TYPE_BIND_TENSOR_MEMORY_INFO_ARM
+  , STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM
+  , STRUCTURE_TYPE_TENSOR_CREATE_INFO_ARM
   , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG
   , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG
   , STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT
@@ -4735,23 +5651,19 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_SWAPCHAIN_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV
+  , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV
+  , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_LINEAR_SWEPT_SPHERES_DATA_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_LINEAR_SWEPT_SPHERES_FEATURES_NV
   , STRUCTURE_TYPE_PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV
   , STRUCTURE_TYPE_COMPUTE_PIPELINE_INDIRECT_BUFFER_INFO_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV
-  , STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM
   , STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM
   , STRUCTURE_TYPE_RENDER_PASS_STRIPE_INFO_ARM
   , STRUCTURE_TYPE_RENDER_PASS_STRIPE_BEGIN_INFO_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT
   , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE
   , STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE
@@ -4760,7 +5672,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM
   , STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT
   , STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT
@@ -4788,6 +5699,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_FEATURES_EXT
   , STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT
   , STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT
@@ -4822,7 +5734,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA
   , STRUCTURE_TYPE_MEMORY_ZIRCON_HANDLE_PROPERTIES_FUCHSIA
   , STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT
   , STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT
@@ -4886,6 +5797,12 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT
   , STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT
   , STRUCTURE_TYPE_QUERY_LOW_LATENCY_SUPPORT_NV
+  , STRUCTURE_TYPE_DISPATCH_TILE_INFO_QCOM
+  , STRUCTURE_TYPE_PER_TILE_END_INFO_QCOM
+  , STRUCTURE_TYPE_PER_TILE_BEGIN_INFO_QCOM
+  , STRUCTURE_TYPE_RENDER_PASS_TILE_SHADING_CREATE_INFO_QCOM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_PROPERTIES_QCOM
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_FEATURES_QCOM
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV
   , STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV
@@ -4899,11 +5816,10 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_BARRIER_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_BARRIER_FEATURES_NV
   , STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT
   , STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT
   , STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT
   , STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT
@@ -4923,31 +5839,10 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV
   , STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV
-  , STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT
-  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT
-  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT
-  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT
-  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT
-  , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT
-  , STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT
-  , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT
   , STRUCTURE_TYPE_MEMORY_MAP_PLACED_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT
-  , STRUCTURE_TYPE_MEMORY_UNMAP_INFO_KHR
-  , STRUCTURE_TYPE_MEMORY_MAP_INFO_KHR
-  , STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT
-  , STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE_EXT
-  , STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO_EXT
-  , STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT
-  , STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT
-  , STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO_EXT
-  , STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY_EXT
-  , STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT
   , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR
   , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR
   , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR
@@ -4982,9 +5877,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT
-  , STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR
-  , STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD
   , STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR
@@ -5009,6 +5901,16 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL
   , STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL
+  , STRUCTURE_TYPE_SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT
+  , STRUCTURE_TYPE_PRESENT_TIMING_SURFACE_CAPABILITIES_EXT
+  , STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_EXT
+  , STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_PROPERTIES_EXT
+  , STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_INFO_EXT
+  , STRUCTURE_TYPE_PRESENT_TIMING_INFO_EXT
+  , STRUCTURE_TYPE_PRESENT_TIMINGS_INFO_EXT
+  , STRUCTURE_TYPE_SWAPCHAIN_TIME_DOMAIN_PROPERTIES_EXT
+  , STRUCTURE_TYPE_SWAPCHAIN_TIMING_PROPERTIES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT
   , STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV
   , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV
   , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
@@ -5021,15 +5923,13 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT
   , STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD
-  , STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR
-  , STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD
   , STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT
   , STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT
   , STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM
   , STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
   , STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV
@@ -5092,7 +5992,23 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
   , STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT
   , STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR
   , STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM
+  , STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT
+  , STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV
+  , STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT
+  , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT
+  , STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT
+  , STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT
+  , STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT
+  , STRUCTURE_TYPE_PUSH_DATA_INFO_EXT
+  , STRUCTURE_TYPE_BIND_HEAP_INFO_EXT
+  , STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT
+  , STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT
+  , STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT
   , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX
   , STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_CREATE_INFO_AMDX
   , STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_SCRATCH_SIZE_AMDX
@@ -5156,7 +6072,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT
   , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
   , STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
   , STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR
   , STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR
@@ -5171,9 +6086,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR
   , STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR
   , STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES_EXT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT
-  , STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
   , STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
   , STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN
@@ -5228,20 +6140,68 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_DEVICE_OBJECT_RESERVATION_CREATE_INFO
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_FEATURES
-  , STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS
-  , STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
-  , STRUCTURE_TYPE_FORMAT_PROPERTIES_3
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES
+  , STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO
+  , STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES
+  , STRUCTURE_TYPE_RENDERING_AREA_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES
+  , STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES
+  , STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES
+  , STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES
+  , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO
+  , STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO
+  , STRUCTURE_TYPE_PUSH_CONSTANTS_INFO
+  , STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES
+  , STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES
+  , STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY
+  , STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE
+  , STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO
+  , STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO
+  , STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO
+  , STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO
+  , STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY
+  , STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES
+  , STRUCTURE_TYPE_BIND_MEMORY_STATUS
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES
+  , STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO
+  , STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2
+  , STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2
+  , STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES
+  , STRUCTURE_TYPE_MEMORY_UNMAP_INFO
+  , STRUCTURE_TYPE_MEMORY_MAP_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES
+  , STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES
+  , STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES
   , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES
   , STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO
   , STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO
   , STRUCTURE_TYPE_RENDERING_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES
+  , STRUCTURE_TYPE_IMAGE_RESOLVE_2
+  , STRUCTURE_TYPE_IMAGE_BLIT_2
+  , STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2
+  , STRUCTURE_TYPE_BLIT_IMAGE_INFO_2
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES
   , STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO
   , STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES
@@ -5249,19 +6209,25 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES
   , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES
-  , STRUCTURE_TYPE_IMAGE_RESOLVE_2
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES
+  , STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO
+  , STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS
+  , STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
+  , STRUCTURE_TYPE_FORMAT_PROPERTIES_3
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES
   , STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2
-  , STRUCTURE_TYPE_IMAGE_BLIT_2
   , STRUCTURE_TYPE_IMAGE_COPY_2
   , STRUCTURE_TYPE_BUFFER_COPY_2
-  , STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2
-  , STRUCTURE_TYPE_BLIT_IMAGE_INFO_2
   , STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2
   , STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2
   , STRUCTURE_TYPE_COPY_IMAGE_INFO_2
   , STRUCTURE_TYPE_COPY_BUFFER_INFO_2
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES
   , STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO
   , STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO
@@ -5270,16 +6236,43 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2
   , STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2
   , STRUCTURE_TYPE_MEMORY_BARRIER_2
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES
   , STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO
   , STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES
-  , STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES
+  , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT
+  , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
+  , STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO
+  , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO
+  , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
+  , STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO
+  , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
+  , STRUCTURE_TYPE_SUBPASS_END_INFO
+  , STRUCTURE_TYPE_SUBPASS_BEGIN_INFO
+  , STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
+  , STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
+  , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
+  , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
+  , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
+  , STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
+  , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT
+  , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES
+  , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
   , STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO
   , STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO
   , STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO
@@ -5292,47 +6285,33 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES
-  , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT
-  , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
-  , STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO
-  , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO
-  , STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES
-  , STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES
-  , STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
-  , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
-  , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT
-  , STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES
-  , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
-  , STRUCTURE_TYPE_SUBPASS_END_INFO
-  , STRUCTURE_TYPE_SUBPASS_BEGIN_INFO
-  , STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
-  , STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
-  , STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
-  , STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
-  , STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
   , STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+  , STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
+  , STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+  , STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
+  , STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
+  , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
+  , STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
+  , STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
+  , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
+  , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
   , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
+  , STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
   , STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
   , STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
@@ -5347,25 +6326,11 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
   , STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
-  , STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-  , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
-  , STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
-  , STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
-  , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
-  , STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
   , STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES
   , STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
-  , STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
-  , STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
   , STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-  , STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
   , STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
@@ -5387,14 +6352,11 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
   , STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
   , STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
-  , STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
   , STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
   , STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO
   , STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
   , STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
-  , STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
-  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES ::
+  , STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO ::
     StructureType
   #-}
 
@@ -5591,8 +6553,152 @@ showTableStructureType =
     , "LOADER_DEVICE_CREATE_INFO"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT
+    , "PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV
+    , "PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV
+    , "COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT
+    , "PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC
+    , "PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT
+    , "PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT
+    , "PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR
+    , "RESOLVE_IMAGE_MODE_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDERING_END_INFO_KHR
+    , "RENDERING_END_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDERING_ATTACHMENT_FLAGS_INFO_KHR
+    , "RENDERING_ATTACHMENT_FLAGS_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR
+    , "PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR
+    , "PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM
+    , "DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM
+    , "PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT
+    , "CUSTOM_RESOLVE_CREATE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_BEGIN_CUSTOM_RESOLVE_INFO_EXT
+    , "BEGIN_CUSTOM_RESOLVE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT
+    , "PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT
+    , "PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR
+    , "PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT
+    , "PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT
+    , "RENDER_PASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT
+    , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT
+    , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV
+    , "PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_SET_PRESENT_CONFIG_NV
+    , "SET_PRESENT_CONFIG_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR
+    , "PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR
+    , "PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PIPELINE_FRAGMENT_DENSITY_MAP_LAYERED_CREATE_INFO_VALVE
+    , "PIPELINE_FRAGMENT_DENSITY_MAP_LAYERED_CREATE_INFO_VALVE"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_PROPERTIES_VALVE
+    , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_PROPERTIES_VALVE"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_FEATURES_VALVE
+    , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_LAYERED_FEATURES_VALVE"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM
+    , "PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT
     , "PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR
+    , "PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_MEMORY_GET_METAL_HANDLE_INFO_EXT
+    , "MEMORY_GET_METAL_HANDLE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_MEMORY_METAL_HANDLE_PROPERTIES_EXT
+    , "MEMORY_METAL_HANDLE_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT
+    , "IMPORT_MEMORY_METAL_HANDLE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM
+    , "PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV
@@ -5615,12 +6721,48 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI"
     )
   ,
+    ( STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR
+    , "QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR
+    , "PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR
+    , "PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR"
+    )
+  ,
     ( STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLAMP_CONTROL_CREATE_INFO_EXT
     , "PIPELINE_VIEWPORT_DEPTH_CLAMP_CONTROL_CREATE_INFO_EXT"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT
     , "PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT
+    , "PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT
+    , "PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV
+    , "PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV
+    , "PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV
+    , "PUSH_CONSTANT_BANK_INFO_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR
+    , "PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR"
     )
   ,
     ( STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA
@@ -5633,6 +6775,14 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_FEATURES_MESA
     , "PHYSICAL_DEVICE_IMAGE_ALIGNMENT_CONTROL_FEATURES_MESA"
+    )
+  ,
+    ( STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR
+    , "MEMORY_BARRIER_ACCESS_FLAGS_3_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR
+    , "PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR"
     )
   ,
     ( STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT
@@ -5695,6 +6845,10 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT
+    , "PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT
     , "PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT"
     )
@@ -5731,6 +6885,22 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_SHADER_RELAXED_EXTENDED_INSTRUCTION_FEATURES_KHR"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV
+    , "PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV
+    , "EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_CREATE_INFO_NV
+    , "EXTERNAL_COMPUTE_QUEUE_CREATE_INFO_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DEVICE_CREATE_INFO_NV
+    , "EXTERNAL_COMPUTE_QUEUE_DEVICE_CREATE_INFO_NV"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV
     , "PHYSICAL_DEVICE_RAW_ACCESS_CHAINS_FEATURES_NV"
     )
@@ -5741,6 +6911,54 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_DISPLAY_SURFACE_STEREO_CREATE_INFO_NV
     , "DISPLAY_SURFACE_STEREO_CREATE_INFO_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_DECOMPRESS_MEMORY_INFO_EXT
+    , "DECOMPRESS_MEMORY_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT
+    , "PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT
+    , "PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR
+    , "COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR
+    , "COPY_MEMORY_INDIRECT_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR
+    , "PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR
+    , "PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_TILE_MEMORY_SIZE_INFO_QCOM
+    , "TILE_MEMORY_SIZE_INFO_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM
+    , "TILE_MEMORY_BIND_INFO_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM
+    , "TILE_MEMORY_REQUIREMENTS_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM
+    , "PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM
+    , "PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV
@@ -5755,56 +6973,8 @@ showTableStructureType =
     , "SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT"
     )
   ,
-    ( STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR
-    , "PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO_KHR
-    , "PUSH_DESCRIPTOR_SET_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PUSH_CONSTANTS_INFO_KHR
-    , "PUSH_CONSTANTS_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO_KHR
-    , "BIND_DESCRIPTOR_SETS_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_BIND_MEMORY_STATUS_KHR
-    , "BIND_MEMORY_STATUS_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR
-    , "PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR
-    , "PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR
-    , "PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR"
-    )
-  ,
     ( STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_KHR
     , "CALIBRATED_TIMESTAMP_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR
-    , "PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR
-    , "PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR
-    , "PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR
-    , "PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT
@@ -5831,20 +7001,12 @@ showTableStructureType =
     , "SCREEN_BUFFER_PROPERTIES_QNX"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR
-    , "PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR"
+    ( STRUCTURE_TYPE_ATTACHMENT_FEEDBACK_LOOP_INFO_EXT
+    , "ATTACHMENT_FEEDBACK_LOOP_INFO_EXT"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR
-    , "PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR
-    , "PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_KHR
-    , "PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_KHR"
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR
+    , "PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_FEATURES_EXT
@@ -5907,6 +7069,86 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM"
     )
   ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM
+    , "PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM
+    , "QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_PROPERTIES_ARM
+    , "QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PROCESSING_ENGINE_CREATE_INFO_ARM
+    , "DATA_GRAPH_PROCESSING_ENGINE_CREATE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_IDENTIFIER_CREATE_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_IDENTIFIER_CREATE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENT_ARM
+    , "DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENT_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENTS_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_REQUIREMENTS_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_PROPERTY_QUERY_RESULT_ARM
+    , "DATA_GRAPH_PIPELINE_PROPERTY_QUERY_RESULT_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_FEATURES_ARM
+    , "PHYSICAL_DEVICE_DATA_GRAPH_FEATURES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_DATA_GRAPH_PIPELINE_SESSION_MEMORY_INFO_ARM
+    , "BIND_DATA_GRAPH_PIPELINE_SESSION_MEMORY_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_MEMORY_REQUIREMENTS_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_SESSION_MEMORY_REQUIREMENTS_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_ARM
+    , "DATA_GRAPH_PIPELINE_CONSTANT_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CREATE_INFO_ARM
+    , "DATA_GRAPH_PIPELINE_CREATE_INFO_ARM"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR
     , "PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR"
     )
@@ -5955,6 +7197,10 @@ showTableStructureType =
     , "LATENCY_SLEEP_MODE_INFO_NV"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR
+    , "PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT
     , "PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT"
     )
@@ -5999,6 +7245,22 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_EXTENDED_SPARSE_ADDRESS_SPACE_FEATURES_NV"
     )
   ,
+    ( STRUCTURE_TYPE_CONVERT_COOPERATIVE_VECTOR_MATRIX_INFO_NV
+    , "CONVERT_COOPERATIVE_VECTOR_MATRIX_INFO_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_COOPERATIVE_VECTOR_PROPERTIES_NV
+    , "COOPERATIVE_VECTOR_PROPERTIES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_PROPERTIES_NV
+    , "PHYSICAL_DEVICE_COOPERATIVE_VECTOR_PROPERTIES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_VECTOR_FEATURES_NV
+    , "PHYSICAL_DEVICE_COOPERATIVE_VECTOR_FEATURES_NV"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV
     , "PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV"
     )
@@ -6009,6 +7271,42 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM
     , "PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_KHR
+    , "RELEASE_SWAPCHAIN_IMAGES_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR
+    , "SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_KHR
+    , "SWAPCHAIN_PRESENT_MODE_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR
+    , "SWAPCHAIN_PRESENT_MODES_CREATE_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_KHR
+    , "SWAPCHAIN_PRESENT_FENCE_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR
+    , "PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR
+    , "SURFACE_PRESENT_MODE_COMPATIBILITY_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR
+    , "SURFACE_PRESENT_SCALING_CAPABILITIES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR
+    , "SURFACE_PRESENT_MODE_KHR"
     )
   ,
     ( STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC
@@ -6091,6 +7389,35 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_RAY_TRACING_POSITION_FETCH_FEATURES_KHR"
     )
   ,
+    ( STRUCTURE_TYPE_PRESENT_WAIT_2_INFO_KHR
+    , "PRESENT_WAIT_2_INFO_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_2_FEATURES_KHR
+    , "PHYSICAL_DEVICE_PRESENT_WAIT_2_FEATURES_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR
+    , "SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_2_FEATURES_KHR
+    , "PHYSICAL_DEVICE_PRESENT_ID_2_FEATURES_KHR"
+    )
+  , (STRUCTURE_TYPE_PRESENT_ID_2_KHR, "PRESENT_ID_2_KHR")
+  ,
+    ( STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_ID_2_KHR
+    , "SURFACE_CAPABILITIES_PRESENT_ID_2_KHR"
+    )
+  ,
+    ( STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX
+    , "ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX
+    , "PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX"
+    )
+  ,
     ( STRUCTURE_TYPE_ANTI_LAG_PRESENTATION_INFO_AMD
     , "ANTI_LAG_PRESENTATION_INFO_AMD"
     )
@@ -6103,38 +7430,6 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD"
     )
   ,
-    ( STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR
-    , "BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR
-    , "PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_KHR
-    , "IMAGE_SUBRESOURCE_2_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR
-    , "SUBRESOURCE_LAYOUT_2_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO_KHR
-    , "DEVICE_IMAGE_SUBRESOURCE_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_RENDERING_AREA_INFO_KHR
-    , "RENDERING_AREA_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES_KHR
-    , "PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR
-    , "PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR"
-    )
-  ,
     ( STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID
     , "ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID"
     )
@@ -6145,10 +7440,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID
     , "PHYSICAL_DEVICE_EXTERNAL_FORMAT_RESOLVE_FEATURES_ANDROID"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT
-    , "PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES_EXT"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT
@@ -6201,6 +7492,99 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT
     , "PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_FRAME_BOUNDARY_TENSORS_ARM
+    , "FRAME_BOUNDARY_TENSORS_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_ARM
+    , "TENSOR_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_CAPTURE_DESCRIPTOR_DATA_INFO_ARM
+    , "TENSOR_CAPTURE_DESCRIPTOR_DATA_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_GET_TENSOR_INFO_ARM
+    , "DESCRIPTOR_GET_TENSOR_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM
+    , "PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_FEATURES_ARM
+    , "PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_FEATURES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM
+    , "EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_EXTERNAL_TENSOR_PROPERTIES_ARM
+    , "EXTERNAL_TENSOR_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_TENSOR_INFO_ARM
+    , "PHYSICAL_DEVICE_EXTERNAL_TENSOR_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_TENSOR_ARM
+    , "MEMORY_DEDICATED_ALLOCATE_INFO_TENSOR_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM
+    , "TENSOR_DEPENDENCY_INFO_ARM"
+    )
+  , (STRUCTURE_TYPE_TENSOR_COPY_ARM, "TENSOR_COPY_ARM")
+  ,
+    ( STRUCTURE_TYPE_COPY_TENSOR_INFO_ARM
+    , "COPY_TENSOR_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_DEVICE_TENSOR_MEMORY_REQUIREMENTS_ARM
+    , "DEVICE_TENSOR_MEMORY_REQUIREMENTS_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM
+    , "PHYSICAL_DEVICE_TENSOR_FEATURES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_MEMORY_BARRIER_ARM
+    , "TENSOR_MEMORY_BARRIER_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_MEMORY_REQUIREMENTS_INFO_ARM
+    , "TENSOR_MEMORY_REQUIREMENTS_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM
+    , "TENSOR_DESCRIPTION_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_FORMAT_PROPERTIES_ARM
+    , "TENSOR_FORMAT_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_PROPERTIES_ARM
+    , "PHYSICAL_DEVICE_TENSOR_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_TENSOR_ARM
+    , "WRITE_DESCRIPTOR_SET_TENSOR_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_TENSOR_MEMORY_INFO_ARM
+    , "BIND_TENSOR_MEMORY_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM
+    , "TENSOR_VIEW_CREATE_INFO_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_TENSOR_CREATE_INFO_ARM
+    , "TENSOR_CREATE_INFO_ARM"
     )
   ,
     ( STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG
@@ -6271,6 +7655,18 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV"
     )
   ,
+    ( STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV
+    , "ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_LINEAR_SWEPT_SPHERES_DATA_NV
+    , "ACCELERATION_STRUCTURE_GEOMETRY_LINEAR_SWEPT_SPHERES_DATA_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_LINEAR_SWEPT_SPHERES_FEATURES_NV
+    , "PHYSICAL_DEVICE_RAY_TRACING_LINEAR_SWEPT_SPHERES_FEATURES_NV"
+    )
+  ,
     ( STRUCTURE_TYPE_PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV
     , "PIPELINE_INDIRECT_DEVICE_ADDRESS_INFO_NV"
     )
@@ -6283,32 +7679,8 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV
-    , "PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_PROPERTIES_NV"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV
-    , "PHYSICAL_DEVICE_MEMORY_DECOMPRESSION_FEATURES_NV"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV
-    , "PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_NV"
-    )
-  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV
     , "PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_NV"
-    )
-  ,
-    ( STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM
-    , "SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM
-    , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM
-    , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM"
     )
   ,
     ( STRUCTURE_TYPE_RENDER_PASS_STRIPE_SUBMIT_INFO_ARM
@@ -6333,10 +7705,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
     , "PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT
-    , "PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT"
     )
   ,
     ( STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE
@@ -6369,10 +7737,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM
     , "DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR
-    , "PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES_KHR"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM
@@ -6481,6 +7845,10 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT
     , "PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR
+    , "PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR
@@ -6617,10 +7985,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA
     , "IMPORT_MEMORY_ZIRCON_HANDLE_INFO_FUCHSIA"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT
-    , "PHYSICAL_DEVICE_PRESENT_MODE_FIFO_LATEST_READY_FEATURES_EXT"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT
@@ -6875,6 +8239,30 @@ showTableStructureType =
     , "QUERY_LOW_LATENCY_SUPPORT_NV"
     )
   ,
+    ( STRUCTURE_TYPE_DISPATCH_TILE_INFO_QCOM
+    , "DISPATCH_TILE_INFO_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PER_TILE_END_INFO_QCOM
+    , "PER_TILE_END_INFO_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PER_TILE_BEGIN_INFO_QCOM
+    , "PER_TILE_BEGIN_INFO_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_TILE_SHADING_CREATE_INFO_QCOM
+    , "RENDER_PASS_TILE_SHADING_CREATE_INFO_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_PROPERTIES_QCOM
+    , "PHYSICAL_DEVICE_TILE_SHADING_PROPERTIES_QCOM"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_SHADING_FEATURES_QCOM
+    , "PHYSICAL_DEVICE_TILE_SHADING_FEATURES_QCOM"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV
     , "PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_PROPERTIES_NV"
     )
@@ -6924,6 +8312,10 @@ showTableStructureType =
     , "PIPELINE_LIBRARY_CREATE_INFO_KHR"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT
+    , "PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT"
+    )
+  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT
     , "PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT"
     )
@@ -6934,14 +8326,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT
     , "SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT
-    , "PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT
-    , "PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT"
     )
   ,
     ( STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT
@@ -7020,42 +8404,6 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV"
     )
   ,
-    ( STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT
-    , "RELEASE_SWAPCHAIN_IMAGES_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT
-    , "SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT
-    , "SWAPCHAIN_PRESENT_MODE_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT
-    , "SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT
-    , "SWAPCHAIN_PRESENT_FENCE_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT
-    , "PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT
-    , "SURFACE_PRESENT_MODE_COMPATIBILITY_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT
-    , "SURFACE_PRESENT_SCALING_CAPABILITIES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT
-    , "SURFACE_PRESENT_MODE_EXT"
-    )
-  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT
     , "PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT"
     )
@@ -7070,54 +8418,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT
     , "PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_MEMORY_UNMAP_INFO_KHR
-    , "MEMORY_UNMAP_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_MEMORY_MAP_INFO_KHR
-    , "MEMORY_MAP_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT
-    , "HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE_EXT
-    , "SUBRESOURCE_HOST_MEMCPY_SIZE_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO_EXT
-    , "COPY_IMAGE_TO_IMAGE_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT
-    , "HOST_IMAGE_LAYOUT_TRANSITION_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT
-    , "COPY_MEMORY_TO_IMAGE_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO_EXT
-    , "COPY_IMAGE_TO_MEMORY_INFO_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY_EXT
-    , "IMAGE_TO_MEMORY_COPY_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT
-    , "MEMORY_TO_IMAGE_COPY_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT
-    , "PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT
-    , "PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES_EXT"
     )
   ,
     ( STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR
@@ -7256,18 +8556,6 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT"
     )
   ,
-    ( STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR
-    , "RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO_KHR
-    , "RENDERING_ATTACHMENT_LOCATION_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR
-    , "PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR"
-    )
-  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD
     , "PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD"
     )
@@ -7364,6 +8652,46 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL"
     )
   ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT
+    , "SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PRESENT_TIMING_SURFACE_CAPABILITIES_EXT
+    , "PRESENT_TIMING_SURFACE_CAPABILITIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_EXT
+    , "PAST_PRESENTATION_TIMING_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_PROPERTIES_EXT
+    , "PAST_PRESENTATION_TIMING_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PAST_PRESENTATION_TIMING_INFO_EXT
+    , "PAST_PRESENTATION_TIMING_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PRESENT_TIMING_INFO_EXT
+    , "PRESENT_TIMING_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PRESENT_TIMINGS_INFO_EXT
+    , "PRESENT_TIMINGS_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_TIME_DOMAIN_PROPERTIES_EXT
+    , "SWAPCHAIN_TIME_DOMAIN_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_TIMING_PROPERTIES_EXT
+    , "SWAPCHAIN_TIMING_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT
+    , "PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT"
+    )
+  ,
     ( STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV
     , "CHECKPOINT_DATA_2_NV"
     )
@@ -7412,18 +8740,6 @@ showTableStructureType =
     , "DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD"
     )
   ,
-    ( STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR
-    , "QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR
-    , "PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_KHR
-    , "DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_KHR"
-    )
-  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD
     , "PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD"
     )
@@ -7446,6 +8762,10 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT
     , "IMPORT_MEMORY_HOST_POINTER_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM
+    , "PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM"
     )
   ,
     ( STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
@@ -7690,8 +9010,72 @@ showTableStructureType =
     , "SAMPLE_LOCATIONS_INFO_EXT"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR
+    , "PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR"
+    )
+  ,
     ( STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD
     , "ATTACHMENT_SAMPLE_COUNT_INFO_AMD"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM
+    , "PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM"
+    )
+  ,
+    ( STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT
+    , "SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV
+    , "INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT
+    , "SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT
+    , "COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT
+    , "PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT
+    , "PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT
+    , "OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT
+    , "SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT
+    , "DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_DATA_INFO_EXT
+    , "PUSH_DATA_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_HEAP_INFO_EXT
+    , "BIND_HEAP_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT
+    , "RESOURCE_DESCRIPTOR_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT
+    , "IMAGE_DESCRIPTOR_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT
+    , "TEXEL_BUFFER_DESCRIPTOR_INFO_EXT"
     )
   ,
     ( STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX
@@ -7943,10 +9327,6 @@ showTableStructureType =
     , "COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
-    , "PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"
-    )
-  ,
     ( STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
     , "SEMAPHORE_GET_FD_INFO_KHR"
     )
@@ -8001,18 +9381,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR
     , "IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES_EXT
-    , "PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT
-    , "PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT
-    , "PIPELINE_ROBUSTNESS_CREATE_INFO_EXT"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
@@ -8225,36 +9593,201 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_VULKAN_SC_1_0_FEATURES"
     )
   ,
-    ( STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS
-    , "DEVICE_IMAGE_MEMORY_REQUIREMENTS"
+    ( STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO
+    , "RENDERING_INPUT_ATTACHMENT_INDEX_INFO"
     )
   ,
-    ( STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS
-    , "DEVICE_BUFFER_MEMORY_REQUIREMENTS"
+    ( STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO
+    , "RENDERING_ATTACHMENT_LOCATION_INFO"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES
-    , "PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES"
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES
+    , "PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
-    , "PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES"
+    ( STRUCTURE_TYPE_RENDERING_AREA_INFO
+    , "RENDERING_AREA_INFO"
     )
   ,
-    ( STRUCTURE_TYPE_FORMAT_PROPERTIES_3
-    , "FORMAT_PROPERTIES_3"
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES
+    , "PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES
-    , "PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES"
+    ( STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO
+    , "PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES
-    , "PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES"
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES
+    , "PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES
-    , "PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES"
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES
+    , "PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO
+    , "PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES
+    , "PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES
+    , "PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES
+    , "PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO
+    , "PIPELINE_ROBUSTNESS_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES
+    , "PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO
+    , "PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO
+    , "PUSH_DESCRIPTOR_SET_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PUSH_CONSTANTS_INFO
+    , "PUSH_CONSTANTS_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO
+    , "BIND_DESCRIPTOR_SETS_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES
+    , "PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO
+    , "PIPELINE_CREATE_FLAGS_2_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY
+    , "HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY"
+    )
+  ,
+    ( STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE
+    , "SUBRESOURCE_HOST_MEMCPY_SIZE"
+    )
+  ,
+    ( STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO
+    , "COPY_IMAGE_TO_IMAGE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO
+    , "HOST_IMAGE_LAYOUT_TRANSITION_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO
+    , "COPY_MEMORY_TO_IMAGE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO
+    , "COPY_IMAGE_TO_MEMORY_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY
+    , "IMAGE_TO_MEMORY_COPY"
+    )
+  ,
+    ( STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY
+    , "MEMORY_TO_IMAGE_COPY"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES
+    , "PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES
+    , "PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_MEMORY_STATUS
+    , "BIND_MEMORY_STATUS"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES
+    , "PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES
+    , "PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO
+    , "BUFFER_USAGE_FLAGS_2_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2
+    , "IMAGE_SUBRESOURCE_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2
+    , "SUBRESOURCE_LAYOUT_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO
+    , "DEVICE_IMAGE_SUBRESOURCE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES
+    , "PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES
+    , "PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_MEMORY_UNMAP_INFO
+    , "MEMORY_UNMAP_INFO"
+    )
+  , (STRUCTURE_TYPE_MEMORY_MAP_INFO, "MEMORY_MAP_INFO")
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES
+    , "PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES
+    , "QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES
+    , "PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO
+    , "DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES
+    , "PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES
+    , "PHYSICAL_DEVICE_VULKAN_1_4_FEATURES"
     )
   ,
     ( STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO
@@ -8273,9 +9806,27 @@ showTableStructureType =
     , "RENDERING_ATTACHMENT_INFO"
     )
   , (STRUCTURE_TYPE_RENDERING_INFO, "RENDERING_INFO")
+  , (STRUCTURE_TYPE_IMAGE_RESOLVE_2, "IMAGE_RESOLVE_2")
+  , (STRUCTURE_TYPE_IMAGE_BLIT_2, "IMAGE_BLIT_2")
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES
-    , "PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES"
+    ( STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2
+    , "RESOLVE_IMAGE_INFO_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_BLIT_IMAGE_INFO_2
+    , "BLIT_IMAGE_INFO_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES
+    , "PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES
+    , "PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES"
     )
   ,
     ( STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO
@@ -8305,22 +9856,60 @@ showTableStructureType =
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES
     , "PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES"
     )
-  , (STRUCTURE_TYPE_IMAGE_RESOLVE_2, "IMAGE_RESOLVE_2")
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES
+    , "PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES
+    , "PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES
+    , "PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO
+    , "PIPELINE_CREATION_FEEDBACK_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS
+    , "DEVICE_IMAGE_MEMORY_REQUIREMENTS"
+    )
+  ,
+    ( STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS
+    , "DEVICE_BUFFER_MEMORY_REQUIREMENTS"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES
+    , "PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
+    , "PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_FORMAT_PROPERTIES_3
+    , "FORMAT_PROPERTIES_3"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES
+    , "PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES"
+    )
   ,
     ( STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2
     , "BUFFER_IMAGE_COPY_2"
     )
-  , (STRUCTURE_TYPE_IMAGE_BLIT_2, "IMAGE_BLIT_2")
   , (STRUCTURE_TYPE_IMAGE_COPY_2, "IMAGE_COPY_2")
   , (STRUCTURE_TYPE_BUFFER_COPY_2, "BUFFER_COPY_2")
-  ,
-    ( STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2
-    , "RESOLVE_IMAGE_INFO_2"
-    )
-  ,
-    ( STRUCTURE_TYPE_BLIT_IMAGE_INFO_2
-    , "BLIT_IMAGE_INFO_2"
-    )
   ,
     ( STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2
     , "COPY_IMAGE_TO_BUFFER_INFO_2"
@@ -8336,14 +9925,6 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_COPY_BUFFER_INFO_2
     , "COPY_BUFFER_INFO_2"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES
-    , "PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES
-    , "PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES
@@ -8369,10 +9950,6 @@ showTableStructureType =
     )
   , (STRUCTURE_TYPE_MEMORY_BARRIER_2, "MEMORY_BARRIER_2")
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES
-    , "PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES"
-    )
-  ,
     ( STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO
     , "PRIVATE_DATA_SLOT_CREATE_INFO"
     )
@@ -8385,20 +9962,8 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES
-    , "PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES"
-    )
-  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES
     , "PHYSICAL_DEVICE_TOOL_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES
-    , "PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO
-    , "PIPELINE_CREATION_FEEDBACK_CREATE_INFO"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES
@@ -8407,6 +9972,127 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES
     , "PHYSICAL_DEVICE_VULKAN_1_3_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT
+    , "ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT"
+    )
+  ,
+    ( STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT
+    , "ATTACHMENT_REFERENCE_STENCIL_LAYOUT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
+    , "PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO
+    , "RENDER_PASS_ATTACHMENT_BEGIN_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO
+    , "FRAMEBUFFER_ATTACHMENT_IMAGE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO
+    , "FRAMEBUFFER_ATTACHMENTS_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
+    , "PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO
+    , "IMAGE_STENCIL_USAGE_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE
+    , "SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
+    , "PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES"
+    )
+  , (STRUCTURE_TYPE_SUBPASS_END_INFO, "SUBPASS_END_INFO")
+  ,
+    ( STRUCTURE_TYPE_SUBPASS_BEGIN_INFO
+    , "SUBPASS_BEGIN_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
+    , "RENDER_PASS_CREATE_INFO_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
+    , "SUBPASS_DEPENDENCY_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
+    , "SUBPASS_DESCRIPTION_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
+    , "ATTACHMENT_REFERENCE_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
+    , "ATTACHMENT_DESCRIPTION_2"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
+    , "PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO
+    , "SAMPLER_REDUCTION_MODE_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES
+    , "PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
+    , "PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT
+    , "DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO
+    , "DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES
+    , "PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES
+    , "PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO
+    , "DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES
+    , "PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
+    , "PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
+    , "PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES"
     )
   ,
     ( STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO
@@ -8457,133 +10143,12 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES"
     )
   ,
-    ( STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT
-    , "ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT"
-    )
-  ,
-    ( STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT
-    , "ATTACHMENT_REFERENCE_STENCIL_LAYOUT"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
-    , "PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
-    , "PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
-    , "PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO
-    , "RENDER_PASS_ATTACHMENT_BEGIN_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO
-    , "FRAMEBUFFER_ATTACHMENT_IMAGE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO
-    , "FRAMEBUFFER_ATTACHMENTS_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
-    , "PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES"
-    )
-  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES
     , "PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES"
     )
   ,
-    ( STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO
-    , "SAMPLER_REDUCTION_MODE_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES
-    , "PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO
-    , "IMAGE_STENCIL_USAGE_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
-    , "PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE
-    , "SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
-    , "PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT
-    , "DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT"
-    )
-  ,
-    ( STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO
-    , "DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES
-    , "PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES
-    , "PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO
-    , "DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES
-    , "PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
-    , "PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
-    , "PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES"
-    )
-  ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES
     , "PHYSICAL_DEVICE_DRIVER_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
-    , "PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES"
-    )
-  , (STRUCTURE_TYPE_SUBPASS_END_INFO, "SUBPASS_END_INFO")
-  ,
-    ( STRUCTURE_TYPE_SUBPASS_BEGIN_INFO
-    , "SUBPASS_BEGIN_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2
-    , "RENDER_PASS_CREATE_INFO_2"
-    )
-  ,
-    ( STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
-    , "SUBPASS_DEPENDENCY_2"
-    )
-  ,
-    ( STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
-    , "SUBPASS_DESCRIPTION_2"
-    )
-  ,
-    ( STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
-    , "ATTACHMENT_REFERENCE_2"
-    )
-  ,
-    ( STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
-    , "ATTACHMENT_DESCRIPTION_2"
     )
   ,
     ( STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO
@@ -8610,12 +10175,80 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
+    , "PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+    , "PHYSICAL_DEVICE_MULTIVIEW_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
+    , "RENDER_PASS_MULTIVIEW_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+    , "PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
+    , "RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
+    , "PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
+    , "DEVICE_GROUP_RENDER_PASS_BEGIN_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
+    , "SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
+    , "PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
+    , "IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
+    , "BIND_IMAGE_PLANE_MEMORY_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
+    , "SAMPLER_YCBCR_CONVERSION_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
+    , "SAMPLER_YCBCR_CONVERSION_CREATE_INFO"
+    )
+  ,
     ( STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
     , "DESCRIPTOR_SET_LAYOUT_SUPPORT"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
     , "PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
+    , "DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
+    , "PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
+    , "PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
+    , "PHYSICAL_DEVICE_SUBGROUP_PROPERTIES"
     )
   ,
     ( STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
@@ -8674,34 +10307,6 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO"
     )
   ,
-    ( STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-    , "DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
-    , "SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
-    , "PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
-    , "IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
-    , "BIND_IMAGE_PLANE_MEMORY_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
-    , "SAMPLER_YCBCR_CONVERSION_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
-    , "SAMPLER_YCBCR_CONVERSION_CREATE_INFO"
-    )
-  ,
     ( STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2
     , "DEVICE_QUEUE_INFO_2"
     )
@@ -8718,36 +10323,8 @@ showTableStructureType =
     , "PROTECTED_SUBMIT_INFO"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
-    , "PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
-    , "PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
-    , "PHYSICAL_DEVICE_MULTIVIEW_FEATURES"
-    )
-  ,
-    ( STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
-    , "RENDER_PASS_MULTIVIEW_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
-    , "PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO"
-    )
-  ,
     ( STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
     , "IMAGE_VIEW_USAGE_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
-    , "RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
-    , "PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
@@ -8834,10 +10411,6 @@ showTableStructureType =
     , "DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO"
     )
   ,
-    ( STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
-    , "DEVICE_GROUP_RENDER_PASS_BEGIN_INFO"
-    )
-  ,
     ( STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
     , "MEMORY_ALLOCATE_FLAGS_INFO"
     )
@@ -8850,20 +10423,12 @@ showTableStructureType =
     , "MEMORY_DEDICATED_REQUIREMENTS"
     )
   ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
-    , "PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES"
-    )
-  ,
     ( STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
     , "BIND_IMAGE_MEMORY_INFO"
     )
   ,
     ( STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
     , "BIND_BUFFER_MEMORY_INFO"
-    )
-  ,
-    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
-    , "PHYSICAL_DEVICE_SUBGROUP_PROPERTIES"
     )
   ]
 

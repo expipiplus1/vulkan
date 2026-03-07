@@ -79,7 +79,8 @@
 --
 -- -   'ViewportWScalingNV'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo':
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo':
 --
 --     -   'PipelineViewportWScalingStateCreateInfoNV'
 --
@@ -99,7 +100,7 @@
 --
 -- == Issues
 --
--- 1) Is the pipeline struct name too long?
+-- 1) Is the pipeline structure name too long?
 --
 -- __RESOLVED__: It fits with the naming convention.
 --
@@ -200,7 +201,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_clip_space_w_scaling Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

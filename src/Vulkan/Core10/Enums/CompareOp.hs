@@ -52,24 +52,24 @@ import GHC.Show (Show(showsPrec))
 -- Comparison operators are used for:
 --
 -- -   The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
 --     operator for a sampler, specified by
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@compareOp@.
 --
 -- -   The stencil comparison operator for the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-stencil stencil test>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-stencil stencil test>,
 --     specified by
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'::@compareOp@
---     or 'Vulkan.Core10.Pipeline.StencilOpState'::@compareOp@.
+--     or 'Vulkan.Core10.GraphicsPipeline.StencilOpState'::@compareOp@.
 --
 -- -   The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth-comparison Depth Comparison>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-depth-comparison Depth Comparison>
 --     operator for the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth test>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-depth depth test>,
 --     specified by
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'::@depthCompareOp@
 --     or
---     'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthCompareOp@.
+--     'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'::@depthCompareOp@.
 --
 -- Each such use describes how the /reference/ and /test/ values for that
 -- comparison are determined.
@@ -77,13 +77,13 @@ import GHC.Show (Show(showsPrec))
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo',
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
--- 'Vulkan.Core10.Pipeline.StencilOpState',
+-- 'Vulkan.Core10.GraphicsPipeline.StencilOpState',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
 newtype CompareOp = CompareOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

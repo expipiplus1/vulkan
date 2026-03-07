@@ -27,7 +27,13 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_VERSION_1_2
+--
+--     -   Interacts with VK_AMD_draw_indirect_count
+--
 --     -   Interacts with VK_EXT_device_generated_commands
+--
+--     -   Interacts with VK_KHR_draw_indirect_count
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -72,7 +78,7 @@
 -- generate these collections to be processed by fixed-function primitive
 -- assembly and rasterization logic. When task and mesh shaders are
 -- dispatched, they replace the core
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization stages>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization stages>,
 -- including vertex array attribute fetching, vertex shader processing,
 -- tessellation, and geometry shader processing.
 --
@@ -83,11 +89,19 @@
 --
 -- == New Commands
 --
--- -   'cmdDrawMeshTasksIndirectCountNV'
---
 -- -   'cmdDrawMeshTasksIndirectNV'
 --
 -- -   'cmdDrawMeshTasksNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_draw_indirect_count VK_KHR_draw_indirect_count>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_draw_indirect_count VK_AMD_draw_indirect_count>
+-- is supported:
+--
+-- -   'cmdDrawMeshTasksIndirectCountNV'
 --
 -- == New Structures
 --
@@ -143,21 +157,21 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-taskcount TaskCountNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-taskcount TaskCountNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitivecount PrimitiveCountNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-primitivecount PrimitiveCountNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitiveindices PrimitiveIndicesNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-primitiveindices PrimitiveIndicesNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clipdistancepv ClipDistancePerViewNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-clipdistancepv ClipDistancePerViewNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-culldistancepv CullDistancePerViewNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-culldistancepv CullDistancePerViewNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-layerpv LayerPerViewNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-layerpv LayerPerViewNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-meshviewcount MeshViewCountNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-meshviewcount MeshViewCountNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-meshviewindices MeshViewIndicesNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-meshviewindices MeshViewIndicesNV>
 --
 -- -   (modified)@Position@
 --
@@ -193,7 +207,7 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-MeshShadingNV MeshShadingNV>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-MeshShadingNV MeshShadingNV>
 --
 -- == Issues
 --
@@ -267,7 +281,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_mesh_shader Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_mesh_shader Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

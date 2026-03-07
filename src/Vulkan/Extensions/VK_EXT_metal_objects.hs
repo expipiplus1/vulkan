@@ -196,7 +196,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_metal_objects Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_metal_objects Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -494,27 +494,30 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06799# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
 --     'Vulkan.Core10.Handles.Image' in its @image@ member does not have a
---     multi-planar format, then its @plane@ member /must/ be
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>,
+--     then its @plane@ member /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06800# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
 --     'Vulkan.Core10.Handles.Image' in its @image@ member has a
---     multi-planar format with only two planes, then its @plane@ member
---     /must/ not be
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>
+--     with only two planes, then its @plane@ member /must/ not be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06801# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
 --     'Vulkan.Core10.Handles.ImageView' in its @imageView@ member does not
---     have a multi-planar format, then its @plane@ member /must/ be
+--     have a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>,
+--     then its @plane@ member /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06802# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
 --     'Vulkan.Core10.Handles.ImageView' in its @imageView@ member has a
---     multi-planar format with only two planes, then its @plane@ member
---     /must/ not be
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>
+--     with only two planes, then its @plane@ member /must/ not be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06803# If the @pNext@ chain
@@ -565,7 +568,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     'ExportMetalSharedEventInfoEXT', or 'ExportMetalTextureInfoEXT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique, with the
+--     each structure in the @pNext@ chain /must/ be unique, with the
 --     exception of structures of type 'ExportMetalBufferInfoEXT',
 --     'ExportMetalCommandQueueInfoEXT', 'ExportMetalIOSurfaceInfoEXT',
 --     'ExportMetalSharedEventInfoEXT', or 'ExportMetalTextureInfoEXT'
@@ -996,6 +999,11 @@ instance Zero ExportMetalTextureInfoEXT where
 -- 'Vulkan.Core10.Handles.Image'. Failure to do so results in undefined
 -- behavior.
 --
+-- Due to @id\<MTLTexture>@ already being backed by memory, images created
+-- with 'ImportMetalTextureInfoEXT' in the @pNext@ of the
+-- 'Vulkan.Core10.Image.ImageCreateInfo' will be treated as bound to a
+-- VkDeviceMemory.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -1341,6 +1349,26 @@ type ExportMetalObjectTypeFlagsEXT = ExportMetalObjectTypeFlagBitsEXT
 -- | VkExportMetalObjectTypeFlagBitsEXT - Bitmask specifying Metal object
 -- types that can be exported from a Vulkan object
 --
+-- = Description
+--
+-- -   'EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT' specifies that a
+--     Metal @MTLDevice@ may be exported.
+--
+-- -   'EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT' specifies
+--     that a Metal @MTLCommandQueue@ may be exported.
+--
+-- -   'EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT' specifies that a
+--     Metal @MTLBuffer@ may be exported.
+--
+-- -   'EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT' specifies that a
+--     Metal @MTLTexture@ may be exported.
+--
+-- -   'EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT' specifies that a
+--     Metal @IOSurface@ may be exported.
+--
+-- -   'EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT' specifies that
+--     a Metal @MTLSharedEvent@ may be exported.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_objects VK_EXT_metal_objects>,
@@ -1348,28 +1376,22 @@ type ExportMetalObjectTypeFlagsEXT = ExportMetalObjectTypeFlagBitsEXT
 newtype ExportMetalObjectTypeFlagBitsEXT = ExportMetalObjectTypeFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT' specifies that a Metal
--- @MTLDevice@ may be exported.
+-- No documentation found for Nested "VkExportMetalObjectTypeFlagBitsEXT" "VK_EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT"
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000001
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT' specifies that a
--- Metal @MTLCommandQueue@ may be exported.
+-- No documentation found for Nested "VkExportMetalObjectTypeFlagBitsEXT" "VK_EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT"
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000002
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT' specifies that a Metal
--- @MTLBuffer@ may be exported.
+-- No documentation found for Nested "VkExportMetalObjectTypeFlagBitsEXT" "VK_EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT"
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000004
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT' specifies that a Metal
--- @MTLTexture@ may be exported.
+-- No documentation found for Nested "VkExportMetalObjectTypeFlagBitsEXT" "VK_EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT"
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000008
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT' specifies that a
--- Metal @IOSurface@ may be exported.
+-- No documentation found for Nested "VkExportMetalObjectTypeFlagBitsEXT" "VK_EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT"
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000010
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT' specifies that a
--- Metal @MTLSharedEvent@ may be exported.
+-- No documentation found for Nested "VkExportMetalObjectTypeFlagBitsEXT" "VK_EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT"
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000020
 
 conNameExportMetalObjectTypeFlagBitsEXT :: String

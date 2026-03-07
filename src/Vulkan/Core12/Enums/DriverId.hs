@@ -26,7 +26,8 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_MESA_NVK
                                               , DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA
                                               , DRIVER_ID_MESA_HONEYKRISP
-                                              , DRIVER_ID_RESERVED_27
+                                              , DRIVER_ID_VULKAN_SC_EMULATION_ON_VULKAN
+                                              , DRIVER_ID_MESA_KOSMICKRISP
                                               , ..
                                               )) where
 
@@ -143,8 +144,11 @@ pattern DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA = DriverId 25
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_HONEYKRISP"
 pattern DRIVER_ID_MESA_HONEYKRISP = DriverId 26
 
--- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_RESERVED_27"
-pattern DRIVER_ID_RESERVED_27 = DriverId 27
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_VULKAN_SC_EMULATION_ON_VULKAN"
+pattern DRIVER_ID_VULKAN_SC_EMULATION_ON_VULKAN = DriverId 27
+
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_KOSMICKRISP"
+pattern DRIVER_ID_MESA_KOSMICKRISP = DriverId 28
 
 {-# COMPLETE
   DRIVER_ID_AMD_PROPRIETARY
@@ -173,7 +177,8 @@ pattern DRIVER_ID_RESERVED_27 = DriverId 27
   , DRIVER_ID_MESA_NVK
   , DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA
   , DRIVER_ID_MESA_HONEYKRISP
-  , DRIVER_ID_RESERVED_27 ::
+  , DRIVER_ID_VULKAN_SC_EMULATION_ON_VULKAN
+  , DRIVER_ID_MESA_KOSMICKRISP ::
     DriverId
   #-}
 
@@ -226,7 +231,11 @@ showTableDriverId =
     , "IMAGINATION_OPEN_SOURCE_MESA"
     )
   , (DRIVER_ID_MESA_HONEYKRISP, "MESA_HONEYKRISP")
-  , (DRIVER_ID_RESERVED_27, "RESERVED_27")
+  ,
+    ( DRIVER_ID_VULKAN_SC_EMULATION_ON_VULKAN
+    , "VULKAN_SC_EMULATION_ON_VULKAN"
+    )
+  , (DRIVER_ID_MESA_KOSMICKRISP, "MESA_KOSMICKRISP")
   ]
 
 instance Show DriverId where

@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
@@ -143,11 +143,10 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- This extension has been partially promoted. All dynamic state enumerants
--- and commands in this extension are included in core Vulkan 1.3, with the
--- EXT suffix omitted. The feature structure is not promoted. Extension
--- interfaces that were promoted remain available as aliases of the core
--- functionality.
+-- All dynamic state enumerants and commands in this extension are included
+-- in core Vulkan 1.3, with the EXT suffix omitted. The feature structure
+-- is not promoted. Extension interfaces that were promoted remain
+-- available as aliases of the core functionality.
 --
 -- == Issues
 --
@@ -177,7 +176,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_extended_dynamic_state Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

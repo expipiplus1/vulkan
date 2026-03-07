@@ -67,7 +67,7 @@
 -- and gives implementations freedom to render the views in the most
 -- efficient way possible. This is done with a multiview configuration
 -- specified during
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass render pass>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass render pass>
 -- creation with the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'
 -- passed into 'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pNext@.
@@ -125,11 +125,11 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-viewindex ViewIndex>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-viewindex ViewIndex>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-MultiView MultiView>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-MultiView MultiView>
 --
 -- == Version History
 --
@@ -144,7 +144,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_multiview Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_multiview Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

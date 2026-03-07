@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_map_memory2 VK_KHR_map_memory2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
 --
 -- [__Contact__]
 --
@@ -65,7 +67,8 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR':
+-- -   Extending
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo':
 --
 --     -   'MemoryMapPlacedInfoEXT'
 --
@@ -91,9 +94,9 @@
 --     -   'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_map_memory2.MemoryUnmapFlagBitsKHR':
+--     'Vulkan.Core14.Enums.MemoryUnmapFlagBits.MemoryUnmapFlagBits':
 --
---     -   'Vulkan.Extensions.VK_KHR_map_memory2.MEMORY_UNMAP_RESERVE_BIT_EXT'
+--     -   'Vulkan.Core14.Enums.MemoryUnmapFlagBits.MEMORY_UNMAP_RESERVE_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -105,7 +108,7 @@
 --
 -- == Version History
 --
--- -   Revision 0, 2024-01-14 (Faith Ekstrand)
+-- -   Revision 1, 2024-01-14 (Faith Ekstrand)
 --
 --     -   Internal revisions
 --
@@ -116,7 +119,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_map_memory_placed Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_map_memory_placed Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

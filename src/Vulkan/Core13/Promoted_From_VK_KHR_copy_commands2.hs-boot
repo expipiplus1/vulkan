@@ -107,10 +107,13 @@ instance Show ImageResolve2
 instance FromCStruct ImageResolve2
 
 
-data ResolveImageInfo2
+type role ResolveImageInfo2 nominal
+data ResolveImageInfo2 (es :: [Type])
 
-instance ToCStruct ResolveImageInfo2
-instance Show ResolveImageInfo2
+instance ( Extendss ResolveImageInfo2 es
+         , PokeChain es ) => ToCStruct (ResolveImageInfo2 es)
+instance Show (Chain es) => Show (ResolveImageInfo2 es)
 
-instance FromCStruct ResolveImageInfo2
+instance ( Extendss ResolveImageInfo2 es
+         , PeekChain es ) => FromCStruct (ResolveImageInfo2 es)
 

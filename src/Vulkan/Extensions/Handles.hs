@@ -15,6 +15,9 @@ module Vulkan.Extensions.Handles  ( PipelineBinaryKHR(..)
                                   , OpticalFlowSessionNV(..)
                                   , MicromapEXT(..)
                                   , ShaderEXT(..)
+                                  , TensorARM(..)
+                                  , TensorViewARM(..)
+                                  , DataGraphPipelineSessionARM(..)
                                   , DisplayKHR(..)
                                   , DisplayModeKHR(..)
                                   , SurfaceKHR(..)
@@ -23,6 +26,8 @@ module Vulkan.Extensions.Handles  ( PipelineBinaryKHR(..)
                                   , DebugUtilsMessengerEXT(..)
                                   , CudaModuleNV(..)
                                   , CudaFunctionNV(..)
+                                  , ExternalComputeQueueNV(..)
+                                  , ExternalComputeQueueNV_T
                                   , Instance(..)
                                   , PhysicalDevice(..)
                                   , Device(..)
@@ -52,11 +57,16 @@ module Vulkan.Extensions.Handles  ( PipelineBinaryKHR(..)
                                   , PrivateDataSlot(..)
                                   ) where
 
+import Foreign.Ptr (ptrToWordPtr)
 import GHC.Show (showParen)
 import Numeric (showHex)
+import Foreign.Ptr (pattern WordPtr)
 import Vulkan.Zero (Zero)
+import Vulkan.Zero (Zero(..))
 import Foreign.Storable (Storable)
+import Foreign.Ptr (Ptr)
 import Data.Word (Word64)
+import Vulkan.Dynamic (DeviceCmds)
 import Vulkan.Core10.APIConstants (HasObjectType(..))
 import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
@@ -66,11 +76,13 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CUDA_FUNCTION_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CUDA_MODULE_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_FUNCTION_NVX))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_MODULE_NVX))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DATA_GRAPH_PIPELINE_SESSION_ARM))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_MODE_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_EXTERNAL_COMPUTE_QUEUE_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT))
@@ -81,6 +93,8 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PIPELINE_BINARY_KH
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SHADER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_TENSOR_ARM))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_TENSOR_VIEW_ARM))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_VALIDATION_CACHE_EXT))
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (BufferView(..))
@@ -178,7 +192,7 @@ instance Show IndirectCommandsLayoutEXT where
 --
 -- Indirect Execution Sets allow the device to bind different shaders and
 -- pipeline states using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands>.
 --
 -- = See Also
 --
@@ -339,6 +353,7 @@ instance Show BufferCollectionFUCHSIA where
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.copyMemoryToMicromapEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.copyMicromapEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.copyMicromapToMemoryEXT',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.createDataGraphPipelinesARM',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.createDeferredOperationKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.deferredOperationJoinKHR',
@@ -458,6 +473,76 @@ instance Show ShaderEXT where
   showsPrec p (ShaderEXT x) = showParen (p >= 11) (showString "ShaderEXT 0x" . showHex x)
 
 
+-- | VkTensorARM - Opaque handle to a tensor object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_tensors VK_ARM_tensors>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
+-- 'Vulkan.Extensions.VK_ARM_tensors.BindTensorMemoryInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.CopyTensorInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.FrameBoundaryTensorsARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.MemoryDedicatedAllocateInfoTensorARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorCaptureDescriptorDataInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorMemoryBarrierARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorMemoryRequirementsInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.createTensorARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.destroyTensorARM',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.getTensorOpaqueCaptureDataARM'
+newtype TensorARM = TensorARM Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType TensorARM where
+  objectTypeAndHandle (TensorARM h) = (OBJECT_TYPE_TENSOR_ARM, h)
+instance Show TensorARM where
+  showsPrec p (TensorARM x) = showParen (p >= 11) (showString "TensorARM 0x" . showHex x)
+
+
+-- | VkTensorViewARM - Opaque handle to an tensor view object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_tensors VK_ARM_tensors>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- 'Vulkan.Extensions.VK_ARM_tensors.DescriptorGetTensorInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.TensorViewCaptureDescriptorDataInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.createTensorViewARM',
+-- 'Vulkan.Extensions.VK_ARM_tensors.destroyTensorViewARM'
+newtype TensorViewARM = TensorViewARM Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType TensorViewARM where
+  objectTypeAndHandle (TensorViewARM h) = (OBJECT_TYPE_TENSOR_VIEW_ARM, h)
+instance Show TensorViewARM where
+  showsPrec p (TensorViewARM x) = showParen (p >= 11) (showString "TensorViewARM 0x" . showHex x)
+
+
+-- | VkDataGraphPipelineSessionARM - Opaque handle to a data graph pipeline
+-- session object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- 'Vulkan.Extensions.VK_ARM_data_graph.BindDataGraphPipelineSessionMemoryInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineSessionBindPointRequirementsInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineSessionMemoryRequirementsInfoARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.cmdDispatchDataGraphARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.createDataGraphPipelineSessionARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.destroyDataGraphPipelineSessionARM'
+newtype DataGraphPipelineSessionARM = DataGraphPipelineSessionARM Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType DataGraphPipelineSessionARM where
+  objectTypeAndHandle (DataGraphPipelineSessionARM h) = ( OBJECT_TYPE_DATA_GRAPH_PIPELINE_SESSION_ARM
+                                                        , h )
+instance Show DataGraphPipelineSessionARM where
+  showsPrec p (DataGraphPipelineSessionARM x) = showParen (p >= 11) (showString "DataGraphPipelineSessionARM 0x" . showHex x)
+
+
 -- | VkDisplayKHR - Opaque handle to a display object
 --
 -- = See Also
@@ -535,6 +620,8 @@ instance Show DisplayModeKHR where
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT',
 -- 'Vulkan.Extensions.VK_QNX_screen_surface.createScreenSurfaceQNX',
 -- 'Vulkan.Extensions.VK_GGP_stream_descriptor_surface.createStreamDescriptorSurfaceGGP',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateSurfaceOHOS vkCreateSurfaceOHOS>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateUbmSurfaceSEC vkCreateUbmSurfaceSEC>,
 -- 'Vulkan.Extensions.VK_NN_vi_surface.createViSurfaceNN',
 -- 'Vulkan.Extensions.VK_KHR_wayland_surface.createWaylandSurfaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_win32_surface.createWin32SurfaceKHR',
@@ -601,7 +688,7 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR', which releases the
 -- acquisition of the image. The application /can/ also release the
 -- acquisition of the image through
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.releaseSwapchainImagesEXT',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.releaseSwapchainImagesKHR',
 -- if the image is not in use by the device, and skip the present
 -- operation.
 --
@@ -620,8 +707,10 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.PastPresentationTimingInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.ReleaseSwapchainImagesInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.ReleaseSwapchainImagesInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.SwapchainCalibratedTimestampInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.acquireFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR',
@@ -634,6 +723,8 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getSwapchainImagesKHR',
 -- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.getSwapchainStatusKHR',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.getSwapchainTimeDomainPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.getSwapchainTimingPropertiesEXT',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.latencySleepNV',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.releaseFullScreenExclusiveModeEXT',
@@ -641,6 +732,8 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_NV_low_latency2.setLatencyMarkerNV',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.setLatencySleepModeNV',
 -- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD',
+-- 'Vulkan.Extensions.VK_EXT_present_timing.setSwapchainPresentTimingQueueSizeEXT',
+-- 'Vulkan.Extensions.VK_KHR_present_wait2.waitForPresent2KHR',
 -- 'Vulkan.Extensions.VK_KHR_present_wait.waitForPresentKHR'
 newtype SwapchainKHR = SwapchainKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -733,4 +826,28 @@ instance HasObjectType CudaFunctionNV where
   objectTypeAndHandle (CudaFunctionNV h) = (OBJECT_TYPE_CUDA_FUNCTION_NV, h)
 instance Show CudaFunctionNV where
   showsPrec p (CudaFunctionNV x) = showParen (p >= 11) (showString "CudaFunctionNV 0x" . showHex x)
+
+
+-- | An opaque type for representing pointers to VkExternalComputeQueueNV handles
+data ExternalComputeQueueNV_T
+-- | VkExternalComputeQueueNV - Opaque handle to an external compute queue
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_HANDLE VK_DEFINE_HANDLE>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_compute_queue VK_NV_external_compute_queue>,
+-- 'Vulkan.Extensions.VK_NV_external_compute_queue.createExternalComputeQueueNV',
+-- 'Vulkan.Extensions.VK_NV_external_compute_queue.destroyExternalComputeQueueNV',
+-- 'Vulkan.Extensions.VK_NV_external_compute_queue.getExternalComputeQueueDataNV'
+data ExternalComputeQueueNV = ExternalComputeQueueNV
+  { externalComputeQueueNVHandle :: Ptr ExternalComputeQueueNV_T
+  , deviceCmds :: DeviceCmds
+  }
+  deriving stock (Eq, Show)
+  deriving anyclass (IsHandle)
+instance Zero ExternalComputeQueueNV where
+  zero = ExternalComputeQueueNV zero zero
+instance HasObjectType ExternalComputeQueueNV where
+  objectTypeAndHandle (ExternalComputeQueueNV (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_EXTERNAL_COMPUTE_QUEUE_NV
+                                                                               , fromIntegral h )
 

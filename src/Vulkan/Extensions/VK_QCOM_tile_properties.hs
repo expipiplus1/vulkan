@@ -112,7 +112,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_tile_properties Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_tile_properties Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -134,6 +134,7 @@ import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -186,8 +187,10 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_PROPERTIES_FEATURES_QCOM))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_TILE_PROPERTIES_QCOM))
+import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingInfoKHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -245,12 +248,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     None
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -271,22 +277,24 @@ getFramebufferTilePropertiesQCOM device framebuffer = liftIO . evalContT $ do
   let vkGetFramebufferTilePropertiesQCOM' = mkVkGetFramebufferTilePropertiesQCOM vkGetFramebufferTilePropertiesQCOMPtr
   let device' = deviceHandle (device)
   pPPropertiesCount <- ContT $ bracket (callocBytes @Word32 4) free
-  _ <- lift $ traceAroundEvent "vkGetFramebufferTilePropertiesQCOM" (vkGetFramebufferTilePropertiesQCOM'
-                                                                       device'
-                                                                       (framebuffer)
-                                                                       (pPPropertiesCount)
-                                                                       (nullPtr))
-  pPropertiesCount <- lift $ peek @Word32 pPPropertiesCount
-  pPProperties <- ContT $ bracket (callocBytes @TilePropertiesQCOM ((fromIntegral (pPropertiesCount)) * 48)) free
-  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 48) :: Ptr TilePropertiesQCOM) . ($ ())) [0..(fromIntegral (pPropertiesCount)) - 1]
   r <- lift $ traceAroundEvent "vkGetFramebufferTilePropertiesQCOM" (vkGetFramebufferTilePropertiesQCOM'
                                                                        device'
                                                                        (framebuffer)
                                                                        (pPPropertiesCount)
-                                                                       ((pPProperties)))
+                                                                       (nullPtr))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pPropertiesCount <- lift $ peek @Word32 pPPropertiesCount
+  pPProperties <- ContT $ bracket (callocBytes @TilePropertiesQCOM ((fromIntegral (pPropertiesCount)) * 48)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 48) :: Ptr TilePropertiesQCOM) . ($ ())) [0..(fromIntegral (pPropertiesCount)) - 1]
+  r' <- lift $ traceAroundEvent "vkGetFramebufferTilePropertiesQCOM" (vkGetFramebufferTilePropertiesQCOM'
+                                                                        device'
+                                                                        (framebuffer)
+                                                                        (pPPropertiesCount)
+                                                                        ((pPProperties)))
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertiesCount' <- lift $ peek @Word32 pPPropertiesCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertiesCount')) (\i -> peekCStruct @TilePropertiesQCOM (((pPProperties) `advancePtrBytes` (48 * (i)) :: Ptr TilePropertiesQCOM)))
-  pure $ (r, pProperties')
+  pure $ ((r'), pProperties')
 
 
 foreign import ccall
@@ -306,7 +314,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     None
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -342,10 +353,11 @@ getDynamicRenderingTilePropertiesQCOM device
   let vkGetDynamicRenderingTilePropertiesQCOM' = mkVkGetDynamicRenderingTilePropertiesQCOM vkGetDynamicRenderingTilePropertiesQCOMPtr
   pRenderingInfo <- ContT $ withCStruct (renderingInfo)
   pPProperties <- ContT (withZeroCStruct @TilePropertiesQCOM)
-  _ <- lift $ traceAroundEvent "vkGetDynamicRenderingTilePropertiesQCOM" (vkGetDynamicRenderingTilePropertiesQCOM'
+  r <- lift $ traceAroundEvent "vkGetDynamicRenderingTilePropertiesQCOM" (vkGetDynamicRenderingTilePropertiesQCOM'
                                                                             (deviceHandle (device))
                                                                             (forgetExtensions pRenderingInfo)
                                                                             (pPProperties))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @TilePropertiesQCOM pPProperties
   pure $ (pProperties)
 
@@ -365,9 +377,13 @@ getDynamicRenderingTilePropertiesQCOM device
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceTilePropertiesFeaturesQCOM' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceTilePropertiesFeaturesQCOM', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -425,8 +441,8 @@ instance Zero PhysicalDeviceTilePropertiesFeaturesQCOM where
 -- All tiles will be tightly packed around the first tile, with edges being
 -- multiples of tile width and\/or height from the origin.
 --
--- Reported value for @apronSize@ will be zero and its functionality will
--- be described in a future extension.
+-- The @tileSize@ is guaranteed to be a multiple of
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-tileGranularity tileGranularity>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -444,7 +460,8 @@ data TilePropertiesQCOM = TilePropertiesQCOM
     -- the width and height of a tile in pixels, and depth corresponding to the
     -- number of slices the tile spans.
     tileSize :: Extent3D
-  , -- | @apronSize@ is the dimension of the apron.
+  , -- | @apronSize@ is the dimension of the
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-tile-shading-aprons apron>.
     apronSize :: Extent2D
   , -- | @origin@ is the top-left corner of the first tile in attachment space.
     origin :: Offset2D

@@ -59,6 +59,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.BorderColor (BorderColor)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Enums.CompareOp (CompareOp)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsObjectNameInfoEXT)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
@@ -84,6 +85,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_border_color_swizzle (SamplerBord
 import Vulkan.Core10.Enums.SamplerCreateFlagBits (SamplerCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_filter_cubic_weights (SamplerCubicWeightsCreateInfoQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (SamplerCustomBorderColorCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_heap (SamplerCustomBorderColorIndexCreateInfoEXT)
 import Vulkan.Core10.Enums.SamplerMipmapMode (SamplerMipmapMode)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (SamplerReductionModeCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (SamplerYcbcrConversionInfo)
@@ -121,6 +123,17 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.Sampler' objects currently created on the
 --     device
 --
+-- -   #VUID-vkCreateSampler-maxSamplerAllocationCount-11412# If there are
+--     any pipelines or shaders with embedded samplers currently created on
+--     the device, there /must/ be less than
+--     (<https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxSamplerAllocationCount maxSamplerAllocationCount>
+--     -
+--     (<https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minSamplerHeapReservedRangeWithEmbedded minSamplerHeapReservedRangeWithEmbedded>
+--     \/
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-samplerDescriptorSize samplerDescriptorSize>))
+--     'Vulkan.Core10.Handles.Sampler' objects currently created on the
+--     device
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateSampler-device-parameter# @device@ /must/ be a valid
@@ -144,11 +157,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -164,7 +181,7 @@ createSampler :: forall a io
                  -- the state of the sampler object.
                  (SamplerCreateInfo a)
               -> -- | @pAllocator@ controls host memory allocation as described in the
-                 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                  -- chapter.
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io (Sampler)
@@ -257,7 +274,7 @@ destroySampler :: forall io
                -> -- | @sampler@ is the sampler to destroy.
                   Sampler
                -> -- | @pAllocator@ controls host memory allocation as described in the
-                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                  -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                   -- chapter.
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io ()
@@ -302,7 +319,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.Filter.FILTER_NEAREST', respectively.
 --
 -- Note that using a @maxLod@ of zero would cause
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-filtering magnification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-texel-filtering magnification>
 -- to always be performed, and the @magFilter@ to always be used. This is
 -- valid, just not an exact match for OpenGL behavior. Clamping the maximum
 -- LOD to 0.25 allows the λ value to be non-zero and minification to be
@@ -312,7 +329,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- The maximum number of sampler objects which /can/ be simultaneously
 -- created on a device is implementation-dependent and specified by the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSamplerAllocationCount maxSamplerAllocationCount>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxSamplerAllocationCount maxSamplerAllocationCount>
 -- member of the 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
 -- structure.
 --
@@ -327,6 +344,30 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- implementations /may/ return the same handle for sampler state vectors
 -- that are identical. In such cases, all such objects would only count
 -- once against the @maxSamplerAllocationCount@ limit.
+--
+-- When this structure is used to write a descriptor via
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.writeSamplerDescriptorsEXT',
+-- applications /can/ give the descriptor a debug name in a similar way to
+-- naming an object, via the
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT'
+-- structure. However, as there is no actual object,
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT'
+-- /must/ be passed via the @pNext@ chain of this structure, with a
+-- @objectType@ of 'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN' and
+-- a @objectHandle@ of 'Vulkan.Core10.APIConstants.NULL_HANDLE'. The name
+-- is attached to the unique set of descriptor bits written by the
+-- implementation, and writing the same bits again with new debug info
+-- /may/ rename the original descriptor.
+--
+-- Implementations are not prevented from returning the same bits for
+-- different descriptors. This can result in multiple different samplers
+-- mapping to the same name.
+--
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT'
+-- /can/ also be chained in the same way when defining an embedded sampler
+-- via
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT',
+-- naming the embedded sampler.
 --
 -- == Valid Usage
 --
@@ -344,7 +385,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     than or equal to @minLod@
 --
 -- -   #VUID-VkSamplerCreateInfo-anisotropyEnable-01070# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerAnisotropy samplerAnisotropy>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-samplerAnisotropy samplerAnisotropy>
 --     feature is not enabled, @anisotropyEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
@@ -355,9 +396,9 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     inclusive
 --
 -- -   #VUID-VkSamplerCreateInfo-minFilter-01645# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#potential-format-features potential format features>
 --     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT',
 --     @minFilter@ and @magFilter@ /must/ be equal to the sampler Y′CBCR
@@ -398,7 +439,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.BorderColor.BorderColor' value
 --
 -- -   #VUID-VkSamplerCreateInfo-addressModeU-01646# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled, @addressModeU@, @addressModeV@, and @addressModeW@
 --     /must/ be
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE',
@@ -407,21 +448,21 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkSamplerCreateInfo-None-01647# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     structure, then the sampler reduction mode /must/ be
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --
 -- -   #VUID-VkSamplerCreateInfo-pNext-06726# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerFilterMinmax samplerFilterMinmax>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-samplerFilterMinmax samplerFilterMinmax>
 --     feature is not enabled and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     structure, then the sampler reduction mode /must/ be
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --
 -- -   #VUID-VkSamplerCreateInfo-addressModeU-01079# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
 --     feature is not enabled, and if the
 --     @VK_KHR_sampler_mirror_clamp_to_edge@ extension is not enabled,
 --     @addressModeU@, @addressModeV@ and @addressModeW@ /must/ not be
@@ -486,7 +527,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkSamplerCreateInfo-nonSeamlessCubeMap-06788# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nonSeamlessCubeMap nonSeamlessCubeMap>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nonSeamlessCubeMap nonSeamlessCubeMap>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT'
 --
@@ -498,7 +539,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     /must/ be included in the @pNext@ chain
 --
 -- -   #VUID-VkSamplerCreateInfo-customBorderColors-04085# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-customBorderColors customBorderColors>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-customBorderColors customBorderColors>
 --     feature is not enabled, @borderColor@ /must/ not be
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
@@ -515,7 +556,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSamplerCreateInfo-None-04012# The maximum number of samplers
 --     with custom border colors which /can/ be simultaneously created on a
 --     device is implementation-dependent and specified by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxCustomBorderColorSamplers maxCustomBorderColorSamplers>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxCustomBorderColorSamplers maxCustomBorderColorSamplers>
 --     member of the
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT'
 --     structure
@@ -523,7 +564,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSamplerCreateInfo-flags-08110# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkSamplerCreateInfo-pNext-08111# If the @pNext@ chain includes
@@ -578,17 +619,19 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSamplerCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 --     'Vulkan.Extensions.VK_QCOM_image_processing2.SamplerBlockMatchWindowCreateInfoQCOM',
 --     'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
 --     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.SamplerCubicWeightsCreateInfoQCOM',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.SamplerCustomBorderColorIndexCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --
 -- -   #VUID-VkSamplerCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkSamplerCreateInfo-flags-parameter# @flags@ /must/ be a valid
 --     combination of
@@ -623,11 +666,17 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.BorderColor.BorderColor',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorMappingSourceConstantOffsetEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorMappingSourceIndirectIndexArrayEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorMappingSourceIndirectIndexEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorMappingSourcePushIndexEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorMappingSourceShaderRecordIndexEXT',
 -- 'Vulkan.Core10.Enums.Filter.Filter',
 -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode',
 -- 'Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlags',
 -- 'Vulkan.Core10.Enums.SamplerMipmapMode.SamplerMipmapMode',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSampler'
+-- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSampler',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.writeSamplerDescriptorsEXT'
 data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -647,26 +696,36 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     mipmapMode :: SamplerMipmapMode
   , -- | @addressModeU@ is a
     -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for U coordinates outside [0,1).
+    -- specifying the
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-wrapping-operation wrapping operation>
+    -- used when the i coordinate used to sample the image would be out of
+    -- bounds.
     addressModeU :: SamplerAddressMode
   , -- | @addressModeV@ is a
     -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for V coordinates outside [0,1).
+    -- specifying the
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-wrapping-operation wrapping operation>
+    -- used when the j coordinate used to sample the image would be out of
+    -- bounds.
     addressModeV :: SamplerAddressMode
   , -- | @addressModeW@ is a
     -- 'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' value
-    -- specifying the addressing mode for W coordinates outside [0,1).
+    -- specifying the
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-wrapping-operation wrapping operation>
+    -- used when the k coordinate used to sample the image would be out of
+    -- bounds. If @unnormalizedCoordinates@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', @addressModeW@ is ignored.
     addressModeW :: SamplerAddressMode
   , -- | #samplers-mipLodBias# @mipLodBias@ is the bias to be added to mipmap LOD
     -- calculation and bias provided by image sampling functions in SPIR-V, as
     -- described in the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-level-of-detail-operation LOD Operation>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-level-of-detail-operation LOD Operation>
     -- section.
     mipLodBias :: Float
   , -- | #samplers-maxAnisotropy# @anisotropyEnable@ is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' to enable anisotropic filtering,
     -- as described in the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-anisotropic-filtering Texel Anisotropic Filtering>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-texel-anisotropic-filtering Texel Anisotropic Filtering>
     -- section, or 'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
     anisotropyEnable :: Bool
   , -- | @maxAnisotropy@ is the anisotropy value clamp used by the sampler when
@@ -684,14 +743,14 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
   , -- | @compareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
     -- specifying the comparison operator to apply to fetched data before
     -- filtering as described in the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
     -- section.
     compareOp :: CompareOp
   , -- | @minLod@ is used to clamp the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-level-of-detail-operation minimum of the computed LOD value>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-level-of-detail-operation minimum of the computed LOD value>.
     minLod :: Float
   , -- | @maxLod@ is used to clamp the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-level-of-detail-operation maximum of the computed LOD value>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-level-of-detail-operation maximum of the computed LOD value>.
     -- To avoid clamping the maximum value, set @maxLod@ to the constant
     -- 'Vulkan.Core10.APIConstants.LOD_CLAMP_NONE'.
     maxLod :: Float
@@ -738,11 +797,13 @@ instance Extensible SamplerCreateInfo where
   getNext SamplerCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SamplerCustomBorderColorIndexCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerBlockMatchWindowCreateInfoQCOM = Just f
     | Just Refl <- eqT @e @SamplerCubicWeightsCreateInfoQCOM = Just f
     | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerBorderColorComponentMappingCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerCustomBorderColorCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @DebugUtilsObjectNameInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerReductionModeCreateInfo = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f
     | otherwise = Nothing

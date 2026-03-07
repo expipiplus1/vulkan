@@ -42,16 +42,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported.
--- 'Vulkan.Extensions.VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeaturesKHR'
--- /can/ also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'Vulkan.Extensions.VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeaturesKHR',
+-- it /must/ add an instance of the structure, with the desired feature
+-- members set to 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@
+-- chain of 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model VK_KHR_vulkan_memory_model>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -68,7 +71,7 @@ data PhysicalDeviceVulkanMemoryModelFeatures = PhysicalDeviceVulkanMemoryModelFe
   , -- | #extension-features-vulkanMemoryModelAvailabilityVisibilityChains#
     -- @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether the
     -- Vulkan Memory Model can use
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
     -- with more than one element.
     vulkanMemoryModelAvailabilityVisibilityChains :: Bool
   }

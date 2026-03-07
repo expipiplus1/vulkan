@@ -27,8 +27,8 @@
 --
 -- [__Contact__]
 --
---     -   Lina Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @linyaa-kiwi%0A*Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension* >
+--     -   James Jones
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @cubanismo%0A*Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension* >
 --
 -- == Other Extension Metadata
 --
@@ -58,26 +58,27 @@
 -- 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT', which can be used
 -- to transfer ownership of resources backed by external memory to foreign,
 -- external queues. This is similar to
--- 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL_KHR', defined in
--- @VK_KHR_external_memory@. The key differences between the two are:
+-- 'Vulkan.Extensions.VK_KHR_external_memory.QUEUE_FAMILY_EXTERNAL_KHR',
+-- defined in @VK_KHR_external_memory@. The key differences between the two
+-- are:
 --
 -- -   The queues represented by
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL_KHR' must share
---     the same physical device and the same driver version as the current
---     'Vulkan.Core10.Handles.Instance'.
+--     'Vulkan.Extensions.VK_KHR_external_memory.QUEUE_FAMILY_EXTERNAL_KHR'
+--     must share the same physical device and the same driver version as
+--     the current 'Vulkan.Core10.Handles.Instance'.
 --     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT' has no such
 --     restrictions. It can represent devices and drivers from other
 --     vendors, and can even represent non-Vulkan-capable devices.
 --
 -- -   All resources backed by external memory support
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL_KHR'. Support for
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT' is more
---     restrictive.
+--     'Vulkan.Extensions.VK_KHR_external_memory.QUEUE_FAMILY_EXTERNAL_KHR'.
+--     Support for 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT' is
+--     more restrictive.
 --
 -- -   Applications should expect transitions to\/from
 --     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT' to be more
 --     expensive than transitions to\/from
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL_KHR'.
+--     'Vulkan.Extensions.VK_KHR_external_memory.QUEUE_FAMILY_EXTERNAL_KHR'.
 --
 -- == New Enum Constants
 --
@@ -100,7 +101,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_queue_family_foreign Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_queue_family_foreign Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

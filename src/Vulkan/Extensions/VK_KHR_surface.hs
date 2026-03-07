@@ -166,8 +166,8 @@
 -- features) for the queries, Vulkan was released only with the
 -- 'Vulkan.Core10.Handles.PhysicalDevice' versions. Many cases can be
 -- resolved by a Valid Usage statement, and\/or by a separate @pNext@ chain
--- version of the query struct specific to a given extension or parameters,
--- via extensible versions of the queries:
+-- version of the query structure specific to a given extension or
+-- parameters, via extensible versions of the queries:
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR',
 -- and
@@ -361,7 +361,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_surface Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_surface Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -377,7 +377,7 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                          , PRESENT_MODE_MAILBOX_KHR
                                                          , PRESENT_MODE_FIFO_KHR
                                                          , PRESENT_MODE_FIFO_RELAXED_KHR
-                                                         , PRESENT_MODE_FIFO_LATEST_READY_EXT
+                                                         , PRESENT_MODE_FIFO_LATEST_READY_KHR
                                                          , PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
                                                          , PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
                                                          , ..
@@ -567,7 +567,7 @@ destroySurfaceKHR :: forall io
                      SurfaceKHR
                   -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                      -- surface object when there is no more specific allocator available (see
-                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
@@ -629,11 +629,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -679,10 +683,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-surface-06523#
---     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
---
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-surface-06211#
 --     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
@@ -715,11 +715,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -834,17 +838,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -960,17 +968,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1092,7 +1104,7 @@ data SurfaceCapabilitiesKHR = SurfaceCapabilitiesKHR
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' representing
     -- the ways the application /can/ use the presentable images of a swapchain
     -- created with 'PresentModeKHR' set to
-    -- 'PRESENT_MODE_FIFO_LATEST_READY_EXT', 'PRESENT_MODE_IMMEDIATE_KHR',
+    -- 'PRESENT_MODE_FIFO_LATEST_READY_KHR', 'PRESENT_MODE_IMMEDIATE_KHR',
     -- 'PRESENT_MODE_MAILBOX_KHR', 'PRESENT_MODE_FIFO_KHR' or
     -- 'PRESENT_MODE_FIFO_RELAXED_KHR' for the surface on the specified device.
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
@@ -1238,6 +1250,86 @@ instance Zero SurfaceFormatKHR where
 --
 -- = Description
 --
+-- -   'PRESENT_MODE_IMMEDIATE_KHR' specifies that the presentation engine
+--     does not wait for a vertical blanking period to update the current
+--     image, meaning this mode /may/ result in visible tearing. No
+--     internal queuing of presentation requests is needed, as the requests
+--     are applied immediately.
+--
+-- -   'PRESENT_MODE_MAILBOX_KHR' specifies that the presentation engine
+--     waits for the next vertical blanking period to update the current
+--     image. Tearing /cannot/ be observed. An internal single-entry queue
+--     is used to hold pending presentation requests. If the queue is full
+--     when a new presentation request is received, the new request
+--     replaces the existing entry, and any images associated with the
+--     prior entry become available for reuse by the application. One
+--     request is removed from the queue and processed during each vertical
+--     blanking period in which the queue is non-empty.
+--
+-- -   'PRESENT_MODE_FIFO_KHR' specifies that the presentation engine waits
+--     for the next vertical blanking period to update the current image.
+--     Tearing /cannot/ be observed. An internal queue is used to hold
+--     pending presentation requests. New requests are appended to the end
+--     of the queue, and one request is removed from the beginning of the
+--     queue and processed during each vertical blanking period in which
+--     the queue is non-empty. This is the only value of @presentMode@ that
+--     is /required/ to be supported.
+--
+-- -   'PRESENT_MODE_FIFO_RELAXED_KHR' specifies that the presentation
+--     engine generally waits for the next vertical blanking period to
+--     update the current image. If a vertical blanking period has already
+--     passed since the last update of the current image then the
+--     presentation engine does not wait for another vertical blanking
+--     period for the update, meaning this mode /may/ result in visible
+--     tearing in this case. This mode is useful for reducing visual
+--     stutter with an application that will mostly present a new image
+--     before the next vertical blanking period, but may occasionally be
+--     late, and present a new image just after the next vertical blanking
+--     period. An internal queue is used to hold pending presentation
+--     requests. New requests are appended to the end of the queue, and one
+--     request is removed from the beginning of the queue and processed
+--     during or after each vertical blanking period in which the queue is
+--     non-empty.
+--
+-- -   'PRESENT_MODE_FIFO_LATEST_READY_KHR' specifies that the presentation
+--     engine waits for the next vertical blanking period to update the
+--     current image. Tearing /cannot/ be observed. An internal queue is
+--     used to hold pending presentation requests. New requests are
+--     appended to the end of the queue. At each vertical blanking period,
+--     the presentation engine dequeues all successive requests that are
+--     ready to be presented from the beginning of the queue. If using the
+--     @VK_GOOGLE_display_timing@ extension or the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-presentAtAbsoluteTime presentAtAbsoluteTime>
+--     feature to provide a target present time, the presentation engine
+--     checks the specified time for each image. If the target present time
+--     is less-than or equal-to the current time, the presentation engine
+--     dequeues the image and checks the next one. The image of the last
+--     dequeued request is presented. The other dequeued requests are
+--     dropped.
+--
+-- -   'PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR' specifies that the
+--     presentation engine and application have concurrent access to a
+--     single image, which is referred to as a /shared presentable image/.
+--     The presentation engine is only required to update the current image
+--     after a new presentation request is received. Therefore the
+--     application /must/ make a presentation request whenever an update is
+--     required. However, the presentation engine /may/ update the current
+--     image at any point, meaning this mode /may/ result in visible
+--     tearing.
+--
+-- -   'PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' specifies that the
+--     presentation engine and application have concurrent access to a
+--     single image, which is referred to as a /shared presentable image/.
+--     The presentation engine periodically updates the current image on
+--     its regular refresh cycle. The application is only required to make
+--     one initial presentation request, after which the presentation
+--     engine /must/ update the current image without any need for further
+--     presentation requests. The application /can/ indicate the image
+--     contents have been updated by making a presentation request, but
+--     this does not guarantee the timing of when it will be updated. This
+--     mode /may/ result in visible tearing if rendering to the image is
+--     not timed correctly.
+--
 -- The supported
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' of the
 -- presentable images of a swapchain created for a surface /may/ differ
@@ -1255,7 +1347,7 @@ instance Zero SurfaceFormatKHR where
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 -- | 'PRESENT_MODE_FIFO_RELAXED_KHR'              | 'SurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                             |
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
--- | 'PRESENT_MODE_FIFO_LATEST_READY_EXT'         | 'SurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                             |
+-- | 'PRESENT_MODE_FIFO_LATEST_READY_KHR'         | 'SurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                             |
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 -- | 'PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'     | 'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@ |
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
@@ -1275,95 +1367,35 @@ instance Zero SurfaceFormatKHR where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_NV_low_latency2.LatencySurfaceCapabilitiesNV',
--- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT',
--- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT',
+-- 'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeCompatibilityKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface_maintenance1.SurfacePresentModeKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModeInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModeInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentModesCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'getPhysicalDeviceSurfacePresentModesKHR'
 newtype PresentModeKHR = PresentModeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PRESENT_MODE_IMMEDIATE_KHR' specifies that the presentation engine does
--- not wait for a vertical blanking period to update the current image,
--- meaning this mode /may/ result in visible tearing. No internal queuing
--- of presentation requests is needed, as the requests are applied
--- immediately.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_IMMEDIATE_KHR"
 pattern PRESENT_MODE_IMMEDIATE_KHR = PresentModeKHR 0
 
--- | 'PRESENT_MODE_MAILBOX_KHR' specifies that the presentation engine waits
--- for the next vertical blanking period to update the current image.
--- Tearing /cannot/ be observed. An internal single-entry queue is used to
--- hold pending presentation requests. If the queue is full when a new
--- presentation request is received, the new request replaces the existing
--- entry, and any images associated with the prior entry become available
--- for reuse by the application. One request is removed from the queue and
--- processed during each vertical blanking period in which the queue is
--- non-empty.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_MAILBOX_KHR"
 pattern PRESENT_MODE_MAILBOX_KHR = PresentModeKHR 1
 
--- | 'PRESENT_MODE_FIFO_KHR' specifies that the presentation engine waits for
--- the next vertical blanking period to update the current image. Tearing
--- /cannot/ be observed. An internal queue is used to hold pending
--- presentation requests. New requests are appended to the end of the
--- queue, and one request is removed from the beginning of the queue and
--- processed during each vertical blanking period in which the queue is
--- non-empty. This is the only value of @presentMode@ that is /required/ to
--- be supported.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_FIFO_KHR"
 pattern PRESENT_MODE_FIFO_KHR = PresentModeKHR 2
 
--- | 'PRESENT_MODE_FIFO_RELAXED_KHR' specifies that the presentation engine
--- generally waits for the next vertical blanking period to update the
--- current image. If a vertical blanking period has already passed since
--- the last update of the current image then the presentation engine does
--- not wait for another vertical blanking period for the update, meaning
--- this mode /may/ result in visible tearing in this case. This mode is
--- useful for reducing visual stutter with an application that will mostly
--- present a new image before the next vertical blanking period, but may
--- occasionally be late, and present a new image just after the next
--- vertical blanking period. An internal queue is used to hold pending
--- presentation requests. New requests are appended to the end of the
--- queue, and one request is removed from the beginning of the queue and
--- processed during or after each vertical blanking period in which the
--- queue is non-empty.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_FIFO_RELAXED_KHR"
 pattern PRESENT_MODE_FIFO_RELAXED_KHR = PresentModeKHR 3
 
--- | 'PRESENT_MODE_FIFO_LATEST_READY_EXT' specifies that the presentation
--- engine waits for the next vertical blanking period to update the current
--- image. Tearing /cannot/ be observed. An internal queue is used to hold
--- pending presentation requests. New requests are appended to the end of
--- the queue. At each vertical blanking period, the presentation engine
--- dequeues all successive requests that are ready to be presented from the
--- beginning of the queue. If using @VK_GOOGLE_display_timing@ to provide a
--- target present time, the presentation engine will check the specified
--- time for each image. If the target present time is less-than or equal-to
--- the current time, the presentation engine will dequeue the image and
--- check the next one. The image of the last dequeued request will be
--- presented. The other dequeued requests will be dropped.
-pattern PRESENT_MODE_FIFO_LATEST_READY_EXT = PresentModeKHR 1000361000
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_FIFO_LATEST_READY_KHR"
+pattern PRESENT_MODE_FIFO_LATEST_READY_KHR = PresentModeKHR 1000361000
 
--- | 'PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' specifies that the
--- presentation engine and application have concurrent access to a single
--- image, which is referred to as a /shared presentable image/. The
--- presentation engine periodically updates the current image on its
--- regular refresh cycle. The application is only required to make one
--- initial presentation request, after which the presentation engine /must/
--- update the current image without any need for further presentation
--- requests. The application /can/ indicate the image contents have been
--- updated by making a presentation request, but this does not guarantee
--- the timing of when it will be updated. This mode /may/ result in visible
--- tearing if rendering to the image is not timed correctly.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR"
 pattern PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR = PresentModeKHR 1000111001
 
--- | 'PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR' specifies that the presentation
--- engine and application have concurrent access to a single image, which
--- is referred to as a /shared presentable image/. The presentation engine
--- is only required to update the current image after a new presentation
--- request is received. Therefore the application /must/ make a
--- presentation request whenever an update is required. However, the
--- presentation engine /may/ update the current image at any point, meaning
--- this mode /may/ result in visible tearing.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR"
 pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = PresentModeKHR 1000111000
 
 {-# COMPLETE
@@ -1371,7 +1403,7 @@ pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = PresentModeKHR 1000111000
   , PRESENT_MODE_MAILBOX_KHR
   , PRESENT_MODE_FIFO_KHR
   , PRESENT_MODE_FIFO_RELAXED_KHR
-  , PRESENT_MODE_FIFO_LATEST_READY_EXT
+  , PRESENT_MODE_FIFO_LATEST_READY_KHR
   , PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
   , PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR ::
     PresentModeKHR
@@ -1390,8 +1422,8 @@ showTablePresentModeKHR =
   , (PRESENT_MODE_FIFO_KHR, "FIFO_KHR")
   , (PRESENT_MODE_FIFO_RELAXED_KHR, "FIFO_RELAXED_KHR")
   ,
-    ( PRESENT_MODE_FIFO_LATEST_READY_EXT
-    , "FIFO_LATEST_READY_EXT"
+    ( PRESENT_MODE_FIFO_LATEST_READY_KHR
+    , "FIFO_LATEST_READY_KHR"
     )
   ,
     ( PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
@@ -1424,6 +1456,61 @@ instance Read PresentModeKHR where
 --
 -- = Description
 --
+-- -   'COLOR_SPACE_SRGB_NONLINEAR_KHR' specifies support for the images in
+--     sRGB color space, encoded according to the sRGB specification.
+--
+-- -   'COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT' specifies support for the
+--     images in Display-P3 color space, encoded using a Display-P3
+--     transfer function.
+--
+-- -   'COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT' specifies support for the
+--     images in extended sRGB color space, encoded using a linear transfer
+--     function.
+--
+-- -   'COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT' specifies support for the
+--     images in extended sRGB color space, encoded according to the scRGB
+--     specification.
+--
+-- -   'COLOR_SPACE_DISPLAY_P3_LINEAR_EXT' specifies support for the images
+--     in Display-P3 color space, encoded using a linear transfer function.
+--
+-- -   'COLOR_SPACE_DCI_P3_NONLINEAR_EXT' specifies support for the images
+--     in DCI-P3 color space, encoded according to the DCI-P3
+--     specification. Note that values in such an image are interpreted as
+--     XYZ encoded color data by the presentation engine.
+--
+-- -   'COLOR_SPACE_BT709_LINEAR_EXT' specifies support for the images in
+--     BT709 color space, encoded using a linear transfer function.
+--
+-- -   'COLOR_SPACE_BT709_NONLINEAR_EXT' specifies support for the images
+--     in BT709 color space, encoded according to the BT709 specification.
+--
+-- -   'COLOR_SPACE_BT2020_LINEAR_EXT' specifies support for the images in
+--     BT2020 color space, encoded using a linear transfer function.
+--
+-- -   'COLOR_SPACE_HDR10_ST2084_EXT' specifies support for the images in
+--     HDR10 (BT2020) color space, encoded according to SMPTE ST2084
+--     Perceptual Quantizer (PQ) specification.
+--
+-- -   'COLOR_SPACE_HDR10_HLG_EXT' specifies support for the images in
+--     HDR10 (BT2020) color space, encoded according to the Hybrid Log
+--     Gamma (HLG) specification.
+--
+-- -   'COLOR_SPACE_ADOBERGB_LINEAR_EXT' specifies support for images in
+--     Adobe RGB color space, encoded using a linear transfer function.
+--
+-- -   'COLOR_SPACE_ADOBERGB_NONLINEAR_EXT' specifies support for the
+--     images in Adobe RGB color space, encoded according to the Adobe RGB
+--     specification (approximately Gamma 2.2).
+--
+-- -   'COLOR_SPACE_PASS_THROUGH_EXT' specifies that color components are
+--     used “as is”. This is intended to allow applications to supply data
+--     for color spaces not described here.
+--
+-- -   'COLOR_SPACE_DISPLAY_NATIVE_AMD' specifies support for the display’s
+--     native color space. This matches the color space expectations of
+--     AMD’s FreeSync2 standard, for displays supporting it.
+--
 -- In the initial release of the @VK_KHR_surface@ and @VK_KHR_swapchain@
 -- extensions, the token 'COLORSPACE_SRGB_NONLINEAR_KHR' was used. Starting
 -- in the 2016-05-13 updates to the extension branches, matching release
@@ -1435,7 +1522,7 @@ instance Read PresentModeKHR where
 -- was misnamed
 -- 'Vulkan.Extensions.VK_EXT_swapchain_colorspace.COLOR_SPACE_DCI_P3_LINEAR_EXT'.
 -- This has been updated to indicate that it uses RGB color encoding, not
--- XYZ. The old name is deprecated but is maintained for backwards
+-- XYZ. The old name is legacy but is maintained for backwards
 -- compatibility.
 --
 -- In older versions of the @VK_EXT_swapchain_colorspace@ extension,
@@ -1445,19 +1532,24 @@ instance Read PresentModeKHR where
 -- process the image. However, Dolby Vision profile 8.4 describes an
 -- encoding using the Hybrid Log Gamma (HLG) OETF, and there is no
 -- swapchain extension for signaling Dolby Vision metadata to be used by a
--- proprietary OOTF. This enum is deprecated but is maintained for
--- backwards compatibility.
---
--- Note
+-- proprietary OOTF. This enum is legacy but is maintained for backwards
+-- compatibility.
 --
 -- For a traditional “Linear” or non-gamma transfer function color space
 -- use 'COLOR_SPACE_PASS_THROUGH_EXT'.
+--
+-- On Wayland, 'COLOR_SPACE_PASS_THROUGH_EXT' can be used to disable color
+-- management by the WSI on a surface, which makes it possible for the
+-- application to create a @wp_color_management_surface_v1@ object without
+-- triggering a @surface_exists@ protocol error.
+--
+-- See 'Vulkan.Extensions.VK_KHR_wayland_surface.createWaylandSurfaceKHR'
 --
 -- The presentation engine interprets the pixel values of the R, G, and B
 -- components as having been encoded using an appropriate transfer
 -- function. Applications /should/ ensure that the appropriate transfer
 -- function has been applied.
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-output-format-conversion Textures Output Format Conversion>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#images-texel-encode Texel encode>
 -- requires that all implementations implicitly apply the sRGB EOTF-1 on R,
 -- G, and B components when shaders write to an sRGB pixel format image,
 -- which is useful for sRGB color spaces. For sRGB color spaces with other
@@ -1508,7 +1600,7 @@ instance Read PresentModeKHR where
 --
 -- The transfer functions are described in the “Transfer Functions” chapter
 -- of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- Except Display-P3 OETF, which is:
 --
@@ -1533,75 +1625,52 @@ instance Read PresentModeKHR where
 newtype ColorSpaceKHR = ColorSpaceKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COLOR_SPACE_SRGB_NONLINEAR_KHR' specifies support for the images in
--- sRGB color space, encoded according to the sRGB specification.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_SRGB_NONLINEAR_KHR"
 pattern COLOR_SPACE_SRGB_NONLINEAR_KHR = ColorSpaceKHR 0
 
--- | 'COLOR_SPACE_DISPLAY_NATIVE_AMD' specifies support for the display’s
--- native color space. This matches the color space expectations of AMD’s
--- FreeSync2 standard, for displays supporting it.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DISPLAY_NATIVE_AMD"
 pattern COLOR_SPACE_DISPLAY_NATIVE_AMD = ColorSpaceKHR 1000213000
 
--- | 'COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT' specifies support for the
--- images in extended sRGB color space, encoded according to the scRGB
--- specification.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT"
 pattern COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = ColorSpaceKHR 1000104014
 
--- | 'COLOR_SPACE_PASS_THROUGH_EXT' specifies that color components are used
--- “as is”. This is intended to allow applications to supply data for color
--- spaces not described here.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_PASS_THROUGH_EXT"
 pattern COLOR_SPACE_PASS_THROUGH_EXT = ColorSpaceKHR 1000104013
 
--- | 'COLOR_SPACE_ADOBERGB_NONLINEAR_EXT' specifies support for the images in
--- Adobe RGB color space, encoded according to the Adobe RGB specification
--- (approximately Gamma 2.2).
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT"
 pattern COLOR_SPACE_ADOBERGB_NONLINEAR_EXT = ColorSpaceKHR 1000104012
 
--- | 'COLOR_SPACE_ADOBERGB_LINEAR_EXT' specifies support for images in Adobe
--- RGB color space, encoded using a linear transfer function.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT"
 pattern COLOR_SPACE_ADOBERGB_LINEAR_EXT = ColorSpaceKHR 1000104011
 
--- | 'COLOR_SPACE_HDR10_HLG_EXT' specifies support for the images in HDR10
--- (BT2020) color space, encoded according to the Hybrid Log Gamma (HLG)
--- specification.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_HDR10_HLG_EXT"
 pattern COLOR_SPACE_HDR10_HLG_EXT = ColorSpaceKHR 1000104010
 
 -- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DOLBYVISION_EXT"
 pattern COLOR_SPACE_DOLBYVISION_EXT = ColorSpaceKHR 1000104009
 
--- | 'COLOR_SPACE_HDR10_ST2084_EXT' specifies support for the images in HDR10
--- (BT2020) color space, encoded according to SMPTE ST2084 Perceptual
--- Quantizer (PQ) specification.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_HDR10_ST2084_EXT"
 pattern COLOR_SPACE_HDR10_ST2084_EXT = ColorSpaceKHR 1000104008
 
--- | 'COLOR_SPACE_BT2020_LINEAR_EXT' specifies support for the images in
--- BT2020 color space, encoded using a linear transfer function.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_BT2020_LINEAR_EXT"
 pattern COLOR_SPACE_BT2020_LINEAR_EXT = ColorSpaceKHR 1000104007
 
--- | 'COLOR_SPACE_BT709_NONLINEAR_EXT' specifies support for the images in
--- BT709 color space, encoded according to the BT709 specification.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_BT709_NONLINEAR_EXT"
 pattern COLOR_SPACE_BT709_NONLINEAR_EXT = ColorSpaceKHR 1000104006
 
--- | 'COLOR_SPACE_BT709_LINEAR_EXT' specifies support for the images in BT709
--- color space, encoded using a linear transfer function.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_BT709_LINEAR_EXT"
 pattern COLOR_SPACE_BT709_LINEAR_EXT = ColorSpaceKHR 1000104005
 
--- | 'COLOR_SPACE_DCI_P3_NONLINEAR_EXT' specifies support for the images in
--- DCI-P3 color space, encoded according to the DCI-P3 specification. Note
--- that values in such an image are interpreted as XYZ encoded color data
--- by the presentation engine.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DCI_P3_NONLINEAR_EXT"
 pattern COLOR_SPACE_DCI_P3_NONLINEAR_EXT = ColorSpaceKHR 1000104004
 
--- | 'COLOR_SPACE_DISPLAY_P3_LINEAR_EXT' specifies support for the images in
--- Display-P3 color space, encoded using a linear transfer function.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DISPLAY_P3_LINEAR_EXT"
 pattern COLOR_SPACE_DISPLAY_P3_LINEAR_EXT = ColorSpaceKHR 1000104003
 
--- | 'COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT' specifies support for the images
--- in extended sRGB color space, encoded using a linear transfer function.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT"
 pattern COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT = ColorSpaceKHR 1000104002
 
--- | 'COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT' specifies support for the images
--- in Display-P3 color space, encoded using a Display-P3 transfer function.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT"
 pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = ColorSpaceKHR 1000104001
 
 {-# COMPLETE
@@ -1706,6 +1775,30 @@ type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 --
 -- These values are described as follows:
 --
+-- -   'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha component, if it exists,
+--     of the images is ignored in the compositing process. Instead, the
+--     image is treated as if it has a constant alpha of 1.0.
+--
+-- -   'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha component, if it
+--     exists, of the images is respected in the compositing process. The
+--     non-alpha components of the image are expected to already be
+--     multiplied by the alpha component by the application.
+--
+-- -   'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha component, if
+--     it exists, of the images is respected in the compositing process.
+--     The non-alpha components of the image are not expected to already be
+--     multiplied by the alpha component by the application; instead, the
+--     compositor will multiply the non-alpha components of the image by
+--     the alpha component during compositing.
+--
+-- -   'COMPOSITE_ALPHA_INHERIT_BIT_KHR': The way in which the presentation
+--     engine treats the alpha component in the images is unknown to the
+--     Vulkan API. Instead, the application is responsible for setting the
+--     composite alpha blending mode using native window system commands.
+--     If the application does not set the blending mode using native
+--     window system commands, then a platform-specific default will be
+--     used.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
@@ -1714,31 +1807,16 @@ type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 newtype CompositeAlphaFlagBitsKHR = CompositeAlphaFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha component, if it exists, of
--- the images is ignored in the compositing process. Instead, the image is
--- treated as if it has a constant alpha of 1.0.
+-- No documentation found for Nested "VkCompositeAlphaFlagBitsKHR" "VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
 pattern COMPOSITE_ALPHA_OPAQUE_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000001
 
--- | 'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha component, if it
--- exists, of the images is respected in the compositing process. The
--- non-alpha components of the image are expected to already be multiplied
--- by the alpha component by the application.
+-- No documentation found for Nested "VkCompositeAlphaFlagBitsKHR" "VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR"
 pattern COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000002
 
--- | 'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha component, if it
--- exists, of the images is respected in the compositing process. The
--- non-alpha components of the image are not expected to already be
--- multiplied by the alpha component by the application; instead, the
--- compositor will multiply the non-alpha components of the image by the
--- alpha component during compositing.
+-- No documentation found for Nested "VkCompositeAlphaFlagBitsKHR" "VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR"
 pattern COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000004
 
--- | 'COMPOSITE_ALPHA_INHERIT_BIT_KHR': The way in which the presentation
--- engine treats the alpha component in the images is unknown to the Vulkan
--- API. Instead, the application is responsible for setting the composite
--- alpha blending mode using native window system commands. If the
--- application does not set the blending mode using native window system
--- commands, then a platform-specific default will be used.
+-- No documentation found for Nested "VkCompositeAlphaFlagBitsKHR" "VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR"
 pattern COMPOSITE_ALPHA_INHERIT_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000008
 
 conNameCompositeAlphaFlagBitsKHR :: String
@@ -1789,6 +1867,39 @@ type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 -- | VkSurfaceTransformFlagBitsKHR - Presentation transforms supported on a
 -- device
 --
+-- = Description
+--
+-- -   'SURFACE_TRANSFORM_IDENTITY_BIT_KHR' specifies that image content is
+--     presented without being transformed.
+--
+-- -   'SURFACE_TRANSFORM_ROTATE_90_BIT_KHR' specifies that image content
+--     is rotated 90 degrees clockwise.
+--
+-- -   'SURFACE_TRANSFORM_ROTATE_180_BIT_KHR' specifies that image content
+--     is rotated 180 degrees clockwise.
+--
+-- -   'SURFACE_TRANSFORM_ROTATE_270_BIT_KHR' specifies that image content
+--     is rotated 270 degrees clockwise.
+--
+-- -   'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR' specifies that image
+--     content is mirrored horizontally.
+--
+-- -   'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR' specifies
+--     that image content is mirrored horizontally, then rotated 90 degrees
+--     clockwise.
+--
+-- -   'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR' specifies
+--     that image content is mirrored horizontally, then rotated 180
+--     degrees clockwise.
+--
+-- -   'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR' specifies
+--     that image content is mirrored horizontally, then rotated 270
+--     degrees clockwise.
+--
+-- -   'SURFACE_TRANSFORM_INHERIT_BIT_KHR' specifies that the presentation
+--     transform is not specified, and is instead determined by
+--     platform-specific considerations and mechanisms outside Vulkan.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
@@ -1802,44 +1913,31 @@ type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 newtype SurfaceTransformFlagBitsKHR = SurfaceTransformFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SURFACE_TRANSFORM_IDENTITY_BIT_KHR' specifies that image content is
--- presented without being transformed.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR"
 pattern SURFACE_TRANSFORM_IDENTITY_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000001
 
--- | 'SURFACE_TRANSFORM_ROTATE_90_BIT_KHR' specifies that image content is
--- rotated 90 degrees clockwise.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR"
 pattern SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000002
 
--- | 'SURFACE_TRANSFORM_ROTATE_180_BIT_KHR' specifies that image content is
--- rotated 180 degrees clockwise.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR"
 pattern SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000004
 
--- | 'SURFACE_TRANSFORM_ROTATE_270_BIT_KHR' specifies that image content is
--- rotated 270 degrees clockwise.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR"
 pattern SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000008
 
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR' specifies that image
--- content is mirrored horizontally.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR"
 pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000010
 
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR' specifies that
--- image content is mirrored horizontally, then rotated 90 degrees
--- clockwise.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR"
 pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000020
 
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR' specifies that
--- image content is mirrored horizontally, then rotated 180 degrees
--- clockwise.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR"
 pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000040
 
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR' specifies that
--- image content is mirrored horizontally, then rotated 270 degrees
--- clockwise.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR"
 pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000080
 
--- | 'SURFACE_TRANSFORM_INHERIT_BIT_KHR' specifies that the presentation
--- transform is not specified, and is instead determined by
--- platform-specific considerations and mechanisms outside Vulkan.
+-- No documentation found for Nested "VkSurfaceTransformFlagBitsKHR" "VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR"
 pattern SURFACE_TRANSFORM_INHERIT_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000100
 
 conNameSurfaceTransformFlagBitsKHR :: String

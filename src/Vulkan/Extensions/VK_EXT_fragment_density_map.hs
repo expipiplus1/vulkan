@@ -15,7 +15,7 @@
 --     219
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Ratification Status__]
 --     Ratified
@@ -45,7 +45,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-09-30
+--     2025-05-20
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -200,13 +200,13 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fragsize FragSizeEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-fragsize FragSizeEXT>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentDensityEXT FragmentDensityEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-FragmentDensityEXT FragmentDensityEXT>
 --
 -- == Version History
 --
@@ -218,6 +218,10 @@
 --
 --     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
+-- -   Revision 3, 2025-05-20 (Matthew Netsch)
+--
+--     -   Fixes fragmentDensityTexelSize calculation equation
+--
 -- == See Also
 --
 -- No cross-references are available
@@ -225,7 +229,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -290,9 +294,13 @@ pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceFragmentDensityMapFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceFragmentDensityMapFeaturesEXT', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -322,9 +330,9 @@ data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensity
     -- implementation supports regular non-subsampled image attachments with
     -- fragment density map render passes. If this feature is not enabled,
     -- render passes with a
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
     -- /must/ only have
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-subsamplesampler subsampled attachments>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#samplers-subsamplesampler subsampled attachments>
     -- bound.
     fragmentDensityMapNonSubsampledImages :: Bool
   }
@@ -401,7 +409,7 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensityMapPropertiesEXT
   { -- | #limits-minFragmentDensityTexelSize# @minFragmentDensityTexelSize@ is
     -- the minimum
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size>.
     minFragmentDensityTexelSize :: Extent2D
   , -- | #limits-maxFragmentDensityTexelSize# @maxFragmentDensityTexelSize@ is
     -- the maximum fragment density texel size.
@@ -602,8 +610,9 @@ instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
 --
 -- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageView-06158#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
---     /must/ have been created with
+--     /must/ have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--     usage flag set_EXT
 --
 -- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageView-06159#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
@@ -612,7 +621,7 @@ instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
 --
 -- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-apiVersion-07908#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiview multiview>
 --     feature is not enabled,
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
 --     is less than Vulkan 1.1, and @imageView@ is not
@@ -691,11 +700,11 @@ instance Zero RenderingFragmentDensityMapAttachmentInfoEXT where
            zero
 
 
-type EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 2
+type EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"
 pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 2
+pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 3
 
 
 type EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME = "VK_EXT_fragment_density_map"

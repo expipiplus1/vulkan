@@ -107,7 +107,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_attachment_feedback_loop_dynamic_state Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_attachment_feedback_loop_dynamic_state Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -173,13 +173,13 @@ foreign import ccall
 -- For attachments that are written to in a render pass, only attachments
 -- with the aspects specified in @aspectMask@ /can/ be accessed as
 -- non-attachments by subsequent
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing drawing commands>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#drawing drawing commands>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetAttachmentFeedbackLoopEnableEXT-attachmentFeedbackLoopDynamicState-08862#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFeedbackLoopDynamicState attachmentFeedbackLoopDynamicState>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-attachmentFeedbackLoopDynamicState attachmentFeedbackLoopDynamicState>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetAttachmentFeedbackLoopEnableEXT-aspectMask-08863#
@@ -192,7 +192,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetAttachmentFeedbackLoopEnableEXT-attachmentFeedbackLoopLayout-08864#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
 --     feature is not enabled, @aspectMask@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE'
 --
@@ -212,7 +212,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetAttachmentFeedbackLoopEnableEXT-commandBuffer-cmdpool#
 --     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetAttachmentFeedbackLoopEnableEXT-videocoding# This
 --     command /must/ only be called outside of a video coding scope
@@ -231,9 +232,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetAttachmentFeedbackLoopEnableEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -276,10 +282,13 @@ cmdSetAttachmentFeedbackLoopEnableEXT commandBuffer aspectMask = liftIO $ do
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT'
--- /can/ also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT', it /must/
+-- add an instance of the structure, with the desired feature members set
+-- to 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

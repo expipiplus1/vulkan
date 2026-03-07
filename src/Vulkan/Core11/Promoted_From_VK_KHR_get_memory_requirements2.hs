@@ -74,6 +74,7 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.SparseResourceMemoryManagement (SparseImageMemoryRequirements)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_tile_memory_heap (TileMemoryRequirementsQCOM)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2))
@@ -94,6 +95,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BufferMemoryRequirementsInfo2', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements2'
@@ -143,6 +145,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
@@ -212,6 +215,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageSparseMemoryRequirementsInfo2',
 -- 'SparseImageMemoryRequirements2'
@@ -255,11 +259,11 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getBufferMemoryRequirements2',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR'
+-- 'getBufferMemoryRequirements2', 'getBufferMemoryRequirements2'
 data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
   { -- | @buffer@ is the buffer to query.
     --
@@ -362,18 +366,18 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --
 -- -   #VUID-VkImageMemoryRequirementsInfo2-sType-unique# The @sType@ value
---     of each struct in the @pNext@ chain /must/ be unique
+--     of each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkImageMemoryRequirementsInfo2-image-parameter# @image@ /must/
 --     be a valid 'Vulkan.Core10.Handles.Image' handle
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getImageMemoryRequirements2',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
+-- 'getImageMemoryRequirements2', 'getImageMemoryRequirements2'
 data ImageMemoryRequirementsInfo2 (es :: [Type]) = ImageMemoryRequirementsInfo2
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -434,11 +438,11 @@ instance es ~ '[] => Zero (ImageMemoryRequirementsInfo2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getImageSparseMemoryRequirements2',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
+-- 'getImageSparseMemoryRequirements2', 'getImageSparseMemoryRequirements2'
 data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
   { -- | @image@ is the image to query.
     --
@@ -490,29 +494,36 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 -- -   #VUID-VkMemoryRequirements2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2'
 --
--- -   #VUID-VkMemoryRequirements2-pNext-pNext# @pNext@ /must/ be @NULL@ or
---     a pointer to a valid instance of
+-- -   #VUID-VkMemoryRequirements2-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'
+--     or
+--     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryRequirementsQCOM'
 --
 -- -   #VUID-VkMemoryRequirements2-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getBufferMemoryRequirements2',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureMemoryRequirementsNV',
+-- 'getBufferMemoryRequirements2', 'getBufferMemoryRequirements2',
+-- 'Vulkan.Extensions.VK_ARM_data_graph.getDataGraphPipelineSessionMemoryRequirementsARM',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceBufferMemoryRequirements',
--- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceBufferMemoryRequirementsKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceBufferMemoryRequirements',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceImageMemoryRequirements',
--- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageMemoryRequirementsKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceImageMemoryRequirements',
+-- 'Vulkan.Extensions.VK_ARM_tensors.getDeviceTensorMemoryRequirementsARM',
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.getGeneratedCommandsMemoryRequirementsEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
--- 'getImageMemoryRequirements2',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR',
--- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.getPipelineIndirectMemoryRequirementsNV'
+-- 'getImageMemoryRequirements2', 'getImageMemoryRequirements2',
+-- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.getPipelineIndirectMemoryRequirementsNV',
+-- 'Vulkan.Extensions.VK_ARM_tensors.getTensorMemoryRequirementsARM'
 data MemoryRequirements2 (es :: [Type]) = MemoryRequirements2
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
@@ -533,6 +544,7 @@ instance Extensible MemoryRequirements2 where
   getNext MemoryRequirements2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryRequirements2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @TileMemoryRequirementsQCOM = Just f
     | Just Refl <- eqT @e @MemoryDedicatedRequirements = Just f
     | otherwise = Nothing
 
@@ -575,13 +587,13 @@ instance es ~ '[] => Zero (MemoryRequirements2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceImageSparseMemoryRequirements',
--- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageSparseMemoryRequirementsKHR',
--- 'getImageSparseMemoryRequirements2',
--- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceImageSparseMemoryRequirements',
+-- 'getImageSparseMemoryRequirements2', 'getImageSparseMemoryRequirements2'
 data SparseImageMemoryRequirements2 = SparseImageMemoryRequirements2
   { -- | @memoryRequirements@ is a
     -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements'

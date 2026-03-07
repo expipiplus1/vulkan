@@ -56,7 +56,7 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo':
 --
 --     -   'PipelineCoverageToColorStateCreateInfoNV'
 --
@@ -87,7 +87,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_fragment_coverage_to_color Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

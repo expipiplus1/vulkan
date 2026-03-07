@@ -197,7 +197,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_display_swapchain Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_display_swapchain Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -342,16 +342,11 @@ foreign import ccall
 --     @pSwapchains@ /must/ be a valid pointer to an array of
 --     @swapchainCount@ 'Vulkan.Extensions.Handles.SwapchainKHR' handles
 --
+-- -   #VUID-vkCreateSharedSwapchainsKHR-device-queuecount# The device
+--     /must/ have been created with at least @1@ queue
+--
 -- -   #VUID-vkCreateSharedSwapchainsKHR-swapchainCount-arraylength#
 --     @swapchainCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @pCreateInfos@[].surface /must/ be externally
---     synchronized
---
--- -   Host access to @pCreateInfos@[].oldSwapchain /must/ be externally
---     synchronized
 --
 -- == Return Codes
 --
@@ -361,15 +356,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INCOMPATIBLE_DISPLAY_KHR'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -389,7 +388,7 @@ createSharedSwapchainsKHR :: forall io
                           -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                              -- swapchain objects when there is no more specific allocator available
                              -- (see
-                             -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                             -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>).
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do

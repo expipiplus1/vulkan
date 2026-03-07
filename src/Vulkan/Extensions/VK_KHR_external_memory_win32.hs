@@ -131,7 +131,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_memory_win32 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_external_memory_win32 Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -239,9 +239,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -297,9 +301,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -374,10 +382,11 @@ getMemoryWin32HandlePropertiesKHR device
 --
 -- == Valid Usage
 --
--- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-00658# If
+-- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handleType-09861# If
 --     @handleType@ is not @0@, it /must/ be supported for import, as
 --     reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
+--     'Vulkan.Extensions.VK_ARM_tensors.ExternalTensorPropertiesARM',
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
@@ -412,11 +421,11 @@ getMemoryWin32HandlePropertiesKHR device
 -- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-01518# If @handle@ is
 --     not @NULL@, it /must/ obey any requirements listed for @handleType@
 --     in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- -   #VUID-VkImportMemoryWin32HandleInfoKHR-name-01519# If @name@ is not
 --     @NULL@, it /must/ obey any requirements listed for @handleType@ in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --

@@ -27,11 +27,27 @@ type ColorComponentFlags = ColorComponentFlagBits
 --
 -- = Description
 --
+-- -   'COLOR_COMPONENT_R_BIT' specifies that the R value is written to the
+--     color attachment for the appropriate sample. Otherwise, the value in
+--     memory is unmodified.
+--
+-- -   'COLOR_COMPONENT_G_BIT' specifies that the G value is written to the
+--     color attachment for the appropriate sample. Otherwise, the value in
+--     memory is unmodified.
+--
+-- -   'COLOR_COMPONENT_B_BIT' specifies that the B value is written to the
+--     color attachment for the appropriate sample. Otherwise, the value in
+--     memory is unmodified.
+--
+-- -   'COLOR_COMPONENT_A_BIT' specifies that the A value is written to the
+--     color attachment for the appropriate sample. Otherwise, the value in
+--     memory is unmodified.
+--
 -- The color write mask operation is applied regardless of whether blending
 -- is enabled.
 --
 -- The color write mask operation is applied only if
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-color-write-enable Color Write Enable>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#framebuffer-color-write-enable Color Write Enable>
 -- is enabled for the respective attachment. Otherwise the color write mask
 -- is ignored and writes to all components of the attachment are disabled.
 --
@@ -42,24 +58,16 @@ type ColorComponentFlags = ColorComponentFlagBits
 newtype ColorComponentFlagBits = ColorComponentFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COLOR_COMPONENT_R_BIT' specifies that the R value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_R_BIT"
 pattern COLOR_COMPONENT_R_BIT = ColorComponentFlagBits 0x00000001
 
--- | 'COLOR_COMPONENT_G_BIT' specifies that the G value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_G_BIT"
 pattern COLOR_COMPONENT_G_BIT = ColorComponentFlagBits 0x00000002
 
--- | 'COLOR_COMPONENT_B_BIT' specifies that the B value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_B_BIT"
 pattern COLOR_COMPONENT_B_BIT = ColorComponentFlagBits 0x00000004
 
--- | 'COLOR_COMPONENT_A_BIT' specifies that the A value is written to the
--- color attachment for the appropriate sample. Otherwise, the value in
--- memory is unmodified.
+-- No documentation found for Nested "VkColorComponentFlagBits" "VK_COLOR_COMPONENT_A_BIT"
 pattern COLOR_COMPONENT_A_BIT = ColorComponentFlagBits 0x00000008
 
 conNameColorComponentFlagBits :: String

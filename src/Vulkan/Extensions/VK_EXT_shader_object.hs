@@ -144,7 +144,7 @@
 --
 --     -   Timur Kristóf, Valve
 --
---     -   Constantine Shablya, Collabora
+--     -   Caterina Shablia, Collabora
 --
 --     -   Daniel Koch, NVIDIA
 --
@@ -369,7 +369,8 @@
 --
 --     -   'PhysicalDeviceShaderObjectPropertiesEXT'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
+-- -   Extending
+--     'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo',
 --     'ShaderCreateInfoEXT':
 --
 --     -   'ShaderRequiredSubgroupSizeCreateInfoEXT'
@@ -760,7 +761,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_object Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_shader_object Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -776,6 +777,7 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , ShaderCreateInfoEXT(..)
                                                , ShaderCreateFlagsEXT
                                                , ShaderCreateFlagBitsEXT( SHADER_CREATE_LINK_STAGE_BIT_EXT
+                                                                        , SHADER_CREATE_64_BIT_INDEXING_BIT_EXT
                                                                         , SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT
                                                                         , SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
                                                                         , SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT
@@ -783,6 +785,7 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                                         , SHADER_CREATE_NO_TASK_SHADER_BIT_EXT
                                                                         , SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT
                                                                         , SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
+                                                                        , SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT
                                                                         , ..
                                                                         )
                                                , ShaderCodeTypeEXT( SHADER_CODE_TYPE_BINARY_EXT
@@ -841,7 +844,6 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , CoverageModulationModeNV(..)
                                                , CoverageReductionModeNV(..)
                                                , ConservativeRasterizationModeEXT(..)
-                                               , LineRasterizationModeKHR(..)
                                                , ProvokingVertexModeEXT(..)
                                                , DepthClampModeEXT(..)
                                                , LineRasterizationModeEXT
@@ -945,6 +947,7 @@ import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_resolve (CustomResolveCreateInfoEXT)
 import Vulkan.Core10.Handles (DescriptorSetLayout)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
@@ -967,13 +970,14 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.PipelineLayout (PushConstantRange)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_heap (ShaderDescriptorSetAndBindingMappingInfoEXT)
 import Vulkan.Extensions.Handles (ShaderEXT)
 import Vulkan.Extensions.Handles (ShaderEXT(..))
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits)
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(..))
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.CStruct.Extends (SomeStruct)
-import Vulkan.Core10.Pipeline (SpecializationInfo)
+import Vulkan.Core10.ComputePipeline (SpecializationInfo)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_features (ValidationFeaturesEXT)
@@ -1043,7 +1047,6 @@ import Vulkan.Extensions.VK_NV_coverage_reduction_mode (CoverageReductionModeNV(
 import Vulkan.Extensions.VK_EXT_depth_clamp_control (DepthClampModeEXT(..))
 import Vulkan.Extensions.VK_EXT_depth_clamp_control (DepthClampRangeEXT(..))
 import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT)
-import Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR(..))
 import Vulkan.Extensions.VK_EXT_provoking_vertex (ProvokingVertexModeEXT(..))
 import Vulkan.Extensions.Handles (ShaderEXT(..))
 import Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (VertexInputAttributeDescription2EXT(..))
@@ -1095,7 +1098,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capability
 --
 -- -   #VUID-vkCreateShadersEXT-None-08400# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderObject shaderObject>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCreateShadersEXT-pCreateInfos-08402# If the @flags@ member
@@ -1157,19 +1160,35 @@ foreign import ccall
 --     of all elements of @pCreateInfos@ whose @flags@ member includes
 --     'SHADER_CREATE_LINK_STAGE_BIT_EXT' /must/ be the same
 --
+-- -   #VUID-vkCreateShadersEXT-pCreateInfos-12224# If @pCreateInfos@
+--     contains elements with both
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--     and
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
+--     both elements\' @flags@ include 'SHADER_CREATE_LINK_STAGE_BIT_EXT',
+--     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', at least
+--     one /must/ contain an @OpExecutionMode@ instruction specifying the
+--     orientation of triangles generated by the tessellator
+--
+-- -   #VUID-vkCreateShadersEXT-pCreateInfos-12225# If @pCreateInfos@
+--     contains elements with both
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--     and
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
+--     both elements\' @flags@ include 'SHADER_CREATE_LINK_STAGE_BIT_EXT',
+--     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', at least
+--     one /must/ contain an @OpExecutionMode@ instruction specifying the
+--     spacing of segments on the edges of tessellated primitives
+--
 -- -   #VUID-vkCreateShadersEXT-pCreateInfos-08867# If @pCreateInfos@
 --     contains elements with both
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
 --     and
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
 --     both elements\' @flags@ include 'SHADER_CREATE_LINK_STAGE_BIT_EXT',
---     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
---     stage’s @pCode@ contains an @OpExecutionMode@ instruction specifying
---     the type of subdivision, it /must/ match the subdivision type
---     specified in the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
---     stage
+--     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and both
+--     stages contains an @OpExecutionMode@ instruction specifying the type
+--     of subdivision, they /must/ be the same
 --
 -- -   #VUID-vkCreateShadersEXT-pCreateInfos-08868# If @pCreateInfos@
 --     contains elements with both
@@ -1177,27 +1196,9 @@ foreign import ccall
 --     and
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
 --     both elements\' @flags@ include 'SHADER_CREATE_LINK_STAGE_BIT_EXT',
---     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
---     stage’s @pCode@ contains an @OpExecutionMode@ instruction specifying
---     the orientation of triangles, it /must/ match the triangle
---     orientation specified in the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
---     stage
---
--- -   #VUID-vkCreateShadersEXT-pCreateInfos-08869# If @pCreateInfos@
---     contains elements with both
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
---     and
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
---     both elements\' @flags@ include 'SHADER_CREATE_LINK_STAGE_BIT_EXT',
---     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
---     stage’s @pCode@ contains an @OpExecutionMode@ instruction specifying
---     @PointMode@, the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
---     stage /must/ also contain an @OpExecutionMode@ instruction
---     specifying @PointMode@
+--     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and both
+--     stages contains an @OpExecutionMode@ instruction specifying the
+--     orientation of triangles, they /must/ be the same
 --
 -- -   #VUID-vkCreateShadersEXT-pCreateInfos-08870# If @pCreateInfos@
 --     contains elements with both
@@ -1205,13 +1206,10 @@ foreign import ccall
 --     and
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
 --     both elements\' @flags@ include 'SHADER_CREATE_LINK_STAGE_BIT_EXT',
---     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
---     stage’s @pCode@ contains an @OpExecutionMode@ instruction specifying
---     the spacing of segments on the edges of tessellated primitives, it
---     /must/ match the segment spacing specified in the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
---     stage
+--     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and both
+--     stages contains an @OpExecutionMode@ instruction specifying the
+--     spacing of segments on the edges of tessellated primitives, they
+--     /must/ be the same
 --
 -- -   #VUID-vkCreateShadersEXT-pCreateInfos-08871# If @pCreateInfos@
 --     contains elements with both
@@ -1219,13 +1217,9 @@ foreign import ccall
 --     and
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
 --     both elements\' @flags@ include 'SHADER_CREATE_LINK_STAGE_BIT_EXT',
---     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
---     stage’s @pCode@ contains an @OpExecutionMode@ instruction specifying
---     the output patch size, it /must/ match the output patch size
---     specified in the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
---     stage
+--     both elements\' @codeType@ is 'SHADER_CODE_TYPE_SPIRV_EXT', and both
+--     stages contains an @OpExecutionMode@ instruction specifying the
+--     output patch size, they /must/ be the same
 --
 -- -   #VUID-vkCreateShadersEXT-pCreateInfos-09632# If @pCreateInfos@
 --     contains a
@@ -1234,6 +1228,39 @@ foreign import ccall
 --     'SHADER_CREATE_NO_TASK_SHADER_BIT_EXT' is not set, then the mesh
 --     shader’s entry point /must/ not declare a variable with a
 --     @DrawIndex@ @BuiltIn@ decoration
+--
+-- -   #VUID-vkCreateShadersEXT-pCreateInfos-11413# If any element of
+--     @pCreateInfos@ sets 'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and
+--     includes embedded sampler mappings, there /must/ be less than
+--     (<https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxSamplerAllocationCount maxSamplerAllocationCount>
+--     -
+--     (<https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minSamplerHeapReservedRangeWithEmbedded minSamplerHeapReservedRangeWithEmbedded>
+--     \/
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-samplerDescriptorSize samplerDescriptorSize>))
+--     'Vulkan.Core10.Handles.Sampler' objects currently created on the
+--     device
+--
+-- -   #VUID-vkCreateShadersEXT-pCreateInfos-11428# If any element of
+--     @pCreateInfos@ sets 'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and
+--     includes embedded sampler mappings, this command /must/ not cause
+--     the total number of unique embedded samplers in pipelines and
+--     shaders on this device to exceed
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxDescriptorHeapEmbeddedSamplers maxDescriptorHeapEmbeddedSamplers>
+--
+-- -   #VUID-vkCreateShadersEXT-flags-11472# If the @flags@ member of any
+--     element of @pCreateInfos@ includes
+--     'SHADER_CREATE_LINK_STAGE_BIT_EXT' and
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT', the @flags@ member of all
+--     other elements of @pCreateInfos@ whose @stage@ is
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT',
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     /must/ also include 'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1259,17 +1286,21 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPATIBLE_SHADER_BINARY_EXT'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1285,7 +1316,7 @@ createShadersEXT :: forall io
                     -- structures.
                     ("createInfos" ::: Vector (SomeStruct ShaderCreateInfoEXT))
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io (Result, ("shaders" ::: Vector ShaderEXT))
@@ -1338,13 +1369,13 @@ foreign import ccall
 -- = Description
 --
 -- Destroying a shader object used by one or more command buffers in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- causes those command buffers to move into the /invalid state/.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkDestroyShaderEXT-None-08481# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderObject shaderObject>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkDestroyShaderEXT-shader-08482# All submitted commands that
@@ -1392,7 +1423,7 @@ destroyShaderEXT :: forall io
                  -> -- | @shader@ is the handle of the shader object to destroy.
                     ShaderEXT
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
@@ -1440,6 +1471,15 @@ foreign import ccall
 -- written to @pData@ unless @pDataSize@ is large enough to fit the data in
 -- its entirety.
 --
+-- This behavior is not consistent with the behavior described in
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-binaryresults Opaque Binary Data Results>,
+-- for historical reasons.
+--
+-- If the amount of data available is larger than the passed @pDataSize@,
+-- the query returns a 'Vulkan.Core10.Enums.Result.INCOMPLETE' success
+-- status instead of a
+-- 'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR' error status.
+--
 -- Binary shader code retrieved using 'getShaderBinaryDataEXT' /can/ be
 -- passed to a subsequent call to 'createShadersEXT' on a compatible
 -- physical device by specifying 'SHADER_CODE_TYPE_BINARY_EXT' in the
@@ -1452,7 +1492,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetShaderBinaryDataEXT-None-08461# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderObject shaderObject>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetShaderBinaryDataEXT-None-08499# If @pData@ is not @NULL@,
@@ -1480,15 +1520,19 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -1554,7 +1598,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindShadersEXT-None-08462# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderObject shaderObject>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBindShadersEXT-pStages-08463# Every element of @pStages@
@@ -1612,36 +1656,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT' in
 --     @pStages@ /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   #VUID-vkCmdBindShadersEXT-pShaders-08474# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
---     feature is not enabled, and @pStages@ contains
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
---     or
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
---     and @pShaders@ is not @NULL@, the same index or indices in
---     @pShaders@ /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-vkCmdBindShadersEXT-pShaders-08475# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
---     feature is not enabled, and @pStages@ contains
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
---     and @pShaders@ is not @NULL@, the same index in @pShaders@ /must/ be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-vkCmdBindShadersEXT-pShaders-08490# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-taskShader taskShader>
---     feature is not enabled, and @pStages@ contains
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT',
---     and @pShaders@ is not @NULL@, the same index in @pShaders@ /must/ be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   #VUID-vkCmdBindShadersEXT-pShaders-08491# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-meshShader meshShader>
---     feature is not enabled, and @pStages@ contains
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT',
---     and @pShaders@ is not @NULL@, the same index in @pShaders@ /must/ be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
 -- -   #VUID-vkCmdBindShadersEXT-pShaders-08476# If @pStages@ contains
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT',
 --     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
@@ -1684,7 +1698,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindShadersEXT-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdBindShadersEXT-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -1711,9 +1727,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBindShadersEXT is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1785,9 +1806,13 @@ pattern ERROR_INCOMPATIBLE_SHADER_BINARY_EXT = INCOMPATIBLE_SHADER_BINARY_EXT
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderObjectFeaturesEXT' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceShaderObjectFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1799,7 +1824,7 @@ pattern ERROR_INCOMPATIBLE_SHADER_BINARY_EXT = INCOMPATIBLE_SHADER_BINARY_EXT
 data PhysicalDeviceShaderObjectFeaturesEXT = PhysicalDeviceShaderObjectFeaturesEXT
   { -- | #features-shaderObject# @shaderObject@ indicates whether the
     -- implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>.
     shaderObject :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1846,7 +1871,7 @@ instance Zero PhysicalDeviceShaderObjectFeaturesEXT where
 --
 -- The purpose and usage of the values of this structure are described in
 -- greater detail in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects-binary-compatibility Binary Shader Compatibility>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects-binary-compatibility Binary Shader Compatibility>.
 --
 -- If the 'PhysicalDeviceShaderObjectPropertiesEXT' structure is included
 -- in the @pNext@ chain of the
@@ -1918,6 +1943,29 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 -- | VkShaderCreateInfoEXT - Structure specifying parameters of a newly
 -- created shader
 --
+-- = Description
+--
+-- When specifying descriptor heap mappings, only mappings corresponding to
+-- bindings that are actually present in the SPIR-V shader affect
+-- compilation. Mappings are ignored when @codeType@ is
+-- 'SHADER_CODE_TYPE_BINARY_EXT'. The resulting compiled binary from two
+-- different SPIR-V shaders which would have identical bit patterns /must/
+-- remain identical even if the mapping entries vary in any of the
+-- following ways:
+--
+-- -   Different numbers of unused mapping structures
+--
+-- -   Different binding counts for unused bindings
+--
+-- -   Unused parameters in mapping structures (e.g. sampler offsets)
+--
+-- -   Ignored parameters in mapping structures
+--
+-- -   Different order of mapping structures, used or unused
+--
+-- Calculating the same offset in a mapping via different parameter values
+-- is not guaranteed to provide identical results.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkShaderCreateInfoEXT-codeSize-08735# If @codeType@ is
@@ -1968,6 +2016,89 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Environment>
 --     appendix, one of the corresponding requirements /must/ be satisfied
 --
+-- -   #VUID-VkShaderCreateInfoEXT-descriptorHeap-11314# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-descriptorHeap descriptorHeap>
+--     feature is not enabled,
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::@mappingCount@
+--     /must/ be 0
+--
+-- -   #VUID-VkShaderCreateInfoEXT-pNext-11315# If the @pNext@ chain
+--     specifies a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT',
+--     the mapped resource in the shader /must/ be a variable with a
+--     structure type decorated with @Block@ in the @Uniform@ @Storage@
+--     @Class@
+--
+-- -   #VUID-VkShaderCreateInfoEXT-pNext-11316# If the @pNext@ chain
+--     specifies a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT',
+--     the mapped structure /must/ not be larger than the sum of
+--     @pushDataOffset@ used in the mapping and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxPushDataSize maxPushDataSize>
+--
+-- -   #VUID-VkShaderCreateInfoEXT-pNext-11317# If the @pNext@ chain
+--     specifies a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT',
+--     the sum of mapped structure size and @shaderRecordDataOffset@ used
+--     in the mapping /must/ not be larger than
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxShaderGroupStride maxShaderGroupStride>
+--
+-- -   #VUID-VkShaderCreateInfoEXT-pNext-11318# If the @pNext@ chain
+--     specifies a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     the mapped resource in the shader /must/ be one of:
+--
+--     -   A variable with a structure type decorated with @Block@ in the
+--         @Uniform@ @Storage@ @Class@
+--
+--     -   A variable with a structure type decorated with @BufferBlock@ in
+--         the @Uniform@ @Storage@ @Class@
+--
+--     -   A variable with a structure type decorated with @Block@ in the
+--         @StorageBuffer@ @Storage@ @Class@
+--
+--     -   A @OpTypeAccelerationStructureKHR@ variable
+--
+--     -   A @OpTypeAccelerationStructureNV@ variable
+--
+-- -   #VUID-VkShaderCreateInfoEXT-pNext-11378# If the @pNext@ chain
+--     specifies a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT',
+--     the @OpArrayLength@ or @OpUntypedArrayLengthKHR@ instruction /must/
+--     not be used on that resource
+--
+-- -   #VUID-VkShaderCreateInfoEXT-pNext-11399# If the @pNext@ chain
+--     specifies a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorheaps-bindings descriptor mapping>
+--     using
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT',
+--     and the mapped resource declaration is an array, the
+--     @pEmbeddedSampler@ member of the corresponding mapping structure
+--     /must/ be @NULL@
+--
 -- -   #VUID-VkShaderCreateInfoEXT-flags-08412# If @stage@ is not
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT',
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT',
@@ -1985,7 +2116,7 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     'SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-08487# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
 --     feature is not enabled, @flags@ /must/ not include
 --     'SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT'
 --
@@ -1995,23 +2126,23 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-08489# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
 --     feature is not enabled, @flags@ /must/ not include
 --     'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-09404# If @flags@ includes
 --     'SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT', the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-09405# If @flags@ includes
 --     'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT', the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-computeFullSubgroups computeFullSubgroups>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-computeFullSubgroups computeFullSubgroups>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-11005# If @flags@ includes
 --     'SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT', then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-11006# If @flags@ includes
@@ -2038,7 +2169,7 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     'SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT' and
 --     'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT', the local workgroup
 --     size in the X dimension of the shader /must/ be a multiple of
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-08417# If @flags@ includes
 --     'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT' but not
@@ -2046,31 +2177,31 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     'ShaderRequiredSubgroupSizeCreateInfoEXT' structure is included in
 --     the @pNext@ chain, the local workgroup size in the X dimension of
 --     the shader /must/ be a multiple of
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroupSize subgroupSize>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-subgroupSize subgroupSize>
 --
 -- -   #VUID-VkShaderCreateInfoEXT-stage-08418# @stage@ /must/ not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ALL_GRAPHICS'
 --     or 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ALL'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-stage-08419# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-tessellationShader tessellationShader>
 --     feature is not enabled, @stage@ /must/ not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-stage-08420# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @stage@ /must/ not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-stage-08421# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-taskShader taskShader>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-taskShader taskShader>
 --     feature is not enabled, @stage@ /must/ not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-stage-08422# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-meshShader meshShader>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-meshShader meshShader>
 --     feature is not enabled, @stage@ /must/ not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
 --
@@ -2089,14 +2220,14 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-nextStage-08428# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-tessellationShader tessellationShader>
 --     feature is not enabled, @nextStage@ /must/ not include
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-nextStage-08429# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @nextStage@ /must/ not include
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
 --
@@ -2174,12 +2305,6 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     that variable /must/ not have an array size greater than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSampleMaskWords@
 --
--- -   #VUID-VkShaderCreateInfoEXT-pCode-08452# If @codeType@ is
---     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
---     the identified entry point /must/ not include any input variable in
---     its interface that is decorated with @CullDistance@
---
 -- -   #VUID-VkShaderCreateInfoEXT-pCode-08453# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
@@ -2208,23 +2333,17 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --
 -- -   #VUID-VkShaderCreateInfoEXT-pCode-08456# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>,
 --     and the identified entry point writes to @Layer@ for any primitive,
 --     it /must/ write the same value to @Layer@ for all vertices of a
 --     given primitive
 --
 -- -   #VUID-VkShaderCreateInfoEXT-pCode-08457# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>,
 --     and the identified entry point writes to @ViewportIndex@ for any
 --     primitive, it /must/ write the same value to @ViewportIndex@ for all
 --     vertices of a given primitive
---
--- -   #VUID-VkShaderCreateInfoEXT-pCode-08458# If @codeType@ is
---     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT',
---     the identified entry point /must/ not include any output variables
---     in its interface decorated with @CullDistance@
 --
 -- -   #VUID-VkShaderCreateInfoEXT-pCode-08459# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is
@@ -2237,7 +2356,7 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 -- -   #VUID-VkShaderCreateInfoEXT-pCode-08460# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', the shader code in @pCode@ /must/ be
 --     valid as described by the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
 --     after applying the specializations provided in
 --     @pSpecializationInfo@, if any, and then converting all
 --     specialization constants into fixed constants
@@ -2248,21 +2367,9 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     @pCode@ /must/ contain an @OpExecutionMode@ instruction specifying
 --     the type of subdivision
 --
--- -   #VUID-VkShaderCreateInfoEXT-codeType-08873# If @codeType@ is
+-- -   #VUID-VkShaderCreateInfoEXT-codeType-12226# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
---     @pCode@ /must/ contain an @OpExecutionMode@ instruction specifying
---     the orientation of triangles generated by the tessellator
---
--- -   #VUID-VkShaderCreateInfoEXT-codeType-08874# If @codeType@ is
---     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
---     @pCode@ /must/ contain an @OpExecutionMode@ instruction specifying
---     the spacing of segments on the edges of tessellated primitives
---
--- -   #VUID-VkShaderCreateInfoEXT-codeType-08875# If @codeType@ is
---     'SHADER_CODE_TYPE_SPIRV_EXT', and @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
 --     @pCode@ /must/ contain an @OpExecutionMode@ instruction specifying
 --     the output patch size
 --
@@ -2271,14 +2378,80 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     in @stageFlags@
 --
 -- -   #VUID-VkShaderCreateInfoEXT-codeType-10064# If @codeType@ is
---     'SHADER_CODE_TYPE_SPIRV_EXT', and if a push constant block is
---     declared in a shader, then an element of
---     @pPushConstantRanges@::@stageFlags@ /must/ match @stage@
+--     'SHADER_CODE_TYPE_SPIRV_EXT', @flags@ does not include
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and if a push constant block
+--     is declared in a shader, then an element of
+--     @pPushConstantRanges->stageFlags@ /must/ match @stage@
 --
 -- -   #VUID-VkShaderCreateInfoEXT-codeType-10065# If @codeType@ is
---     'SHADER_CODE_TYPE_SPIRV_EXT', and if a push constant block is
---     declared in a shader, the block must be contained inside the element
---     of @pPushConstantRanges@ that matches the stage
+--     'SHADER_CODE_TYPE_SPIRV_EXT', @flags@ does not include
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and if a push constant block
+--     is declared in a shader, the block must be contained inside the
+--     element of @pPushConstantRanges@ that matches the stage
+--
+-- -   #VUID-VkShaderCreateInfoEXT-codeType-10383# If @codeType@ is
+--     'SHADER_CODE_TYPE_SPIRV_EXT', @flags@ does not include
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources resource variable>
+--     is declared in a shader, the corresponding descriptor set in
+--     @pSetLayouts@ /must/ match the shader stage
+--
+-- -   #VUID-VkShaderCreateInfoEXT-codeType-10384# If @codeType@ is
+--     'SHADER_CODE_TYPE_SPIRV_EXT', @flags@ does not include
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources resource variable>
+--     is declared in a shader, and the descriptor type is not
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
+--     the corresponding descriptor set in @pSetLayouts@ /must/ match the
+--     descriptor type
+--
+-- -   #VUID-VkShaderCreateInfoEXT-codeType-10385# If @codeType@ is
+--     'SHADER_CODE_TYPE_SPIRV_EXT', @flags@ does not include
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources resource variable>
+--     is declared in a shader as an array, the corresponding descriptor
+--     set in @pSetLayouts@ /must/ match the descriptor count
+--
+-- -   #VUID-VkShaderCreateInfoEXT-codeType-10386# If @codeType@ is
+--     'SHADER_CODE_TYPE_SPIRV_EXT', @flags@ does not include
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources resource variable>
+--     is declared in a shader as an array of descriptors, then the
+--     descriptor type of that variable /must/ not be
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11758# If
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shader64BitIndexing shader64BitIndexing>
+--     feature is not enabled, @flags@ /must/ not contain
+--     'SHADER_CREATE_64_BIT_INDEXING_BIT_EXT'
+--
+-- -   #VUID-VkShaderCreateInfoEXT-setLayoutCount-12257# @setLayoutCount@
+--     /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxBoundDescriptorSets@
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11290# If @flags@ includes
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT', @setLayoutCount@ /must/ be
+--     0
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11291# If @flags@ includes
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT', @pSetLayouts@ /must/ be
+--     @NULL@
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11370# If @flags@ includes
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT', @pushConstantRangeCount@
+--     /must/ be 0
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11371# If @flags@ includes
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT', @pPushConstantRanges@
+--     /must/ be @NULL@
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11292# If @flags@ includes
+--     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT', and @codeType@ is
+--     'SHADER_CODE_TYPE_SPIRV_EXT', all shader variables in the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources shader resource interface>
+--     with a 'Vulkan.Core10.Handles.DescriptorSet' and @Binding@
+--     decoration /must/ have a mapping declared in
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::pMappings
 --
 -- == Valid Usage (Implicit)
 --
@@ -2288,12 +2461,14 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 -- -   #VUID-VkShaderCreateInfoEXT-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfo'
+--     'Vulkan.Extensions.VK_EXT_custom_resolve.CustomResolveCreateInfoEXT',
+--     'Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfo',
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT',
 --     or
 --     'Vulkan.Extensions.VK_EXT_validation_features.ValidationFeaturesEXT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-parameter# @flags@ /must/ be a
 --     valid combination of 'ShaderCreateFlagBitsEXT' values
@@ -2330,7 +2505,7 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 -- -   #VUID-VkShaderCreateInfoEXT-pSpecializationInfo-parameter# If
 --     @pSpecializationInfo@ is not @NULL@, @pSpecializationInfo@ /must/ be
 --     a valid pointer to a valid
---     'Vulkan.Core10.Pipeline.SpecializationInfo' structure
+--     'Vulkan.Core10.ComputePipeline.SpecializationInfo' structure
 --
 -- -   #VUID-VkShaderCreateInfoEXT-codeSize-arraylength# @codeSize@ /must/
 --     be greater than @0@
@@ -2343,7 +2518,7 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 -- 'ShaderCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
--- 'Vulkan.Core10.Pipeline.SpecializationInfo',
+-- 'Vulkan.Core10.ComputePipeline.SpecializationInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createShadersEXT'
 data ShaderCreateInfoEXT (es :: [Type]) = ShaderCreateInfoEXT
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
@@ -2357,8 +2532,9 @@ data ShaderCreateInfoEXT (es :: [Type]) = ShaderCreateInfoEXT
     stage :: ShaderStageFlagBits
   , -- | @nextStage@ is a bitmask of
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' specifying
-    -- zero or stages which /may/ be used as a logically next bound stage when
-    -- drawing with the shader bound.
+    -- which stages /may/ be used as a logically next bound stage when drawing
+    -- with the shader bound. A value of zero indicates this shader stage
+    -- /must/ be the last one.
     nextStage :: ShaderStageFlags
   , -- | @codeType@ is a 'ShaderCodeTypeEXT' value specifying the type of the
     -- shader code pointed to be @pCode@.
@@ -2376,7 +2552,8 @@ data ShaderCreateInfoEXT (es :: [Type]) = ShaderCreateInfoEXT
     setLayoutCount :: Word32
   , -- | @pSetLayouts@ is a pointer to an array of
     -- 'Vulkan.Core10.Handles.DescriptorSetLayout' objects used by the shader
-    -- stage.
+    -- stage. The implementation /must/ not access these objects outside of the
+    -- duration of the command this structure is passed to.
     setLayouts :: Vector DescriptorSetLayout
   , -- | @pushConstantRangeCount@ is the number of push constant ranges pointed
     -- to by @pPushConstantRanges@.
@@ -2386,8 +2563,9 @@ data ShaderCreateInfoEXT (es :: [Type]) = ShaderCreateInfoEXT
     -- shader stage.
     pushConstantRanges :: Vector PushConstantRange
   , -- | @pSpecializationInfo@ is a pointer to a
-    -- 'Vulkan.Core10.Pipeline.SpecializationInfo' structure, as described in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-specialization-constants Specialization Constants>,
+    -- 'Vulkan.Core10.ComputePipeline.SpecializationInfo' structure, as
+    -- described in
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-specialization-constants Specialization Constants>,
     -- or @NULL@.
     specializationInfo :: Maybe SpecializationInfo
   }
@@ -2403,6 +2581,8 @@ instance Extensible ShaderCreateInfoEXT where
   getNext ShaderCreateInfoEXT{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ShaderCreateInfoEXT e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ShaderDescriptorSetAndBindingMappingInfoEXT = Just f
+    | Just Refl <- eqT @e @CustomResolveCreateInfoEXT = Just f
     | Just Refl <- eqT @e @PipelineShaderStageRequiredSubgroupSizeCreateInfo = Just f
     | Just Refl <- eqT @e @ValidationFeaturesEXT = Just f
     | otherwise = Nothing
@@ -2531,6 +2711,50 @@ type ShaderCreateFlagsEXT = ShaderCreateFlagBitsEXT
 -- | VkShaderCreateFlagBitsEXT - Bitmask controlling how a shader object is
 -- created
 --
+-- = Description
+--
+-- -   'SHADER_CREATE_LINK_STAGE_BIT_EXT' specifies that a shader is linked
+--     to all other shaders created in the same 'createShadersEXT' call
+--     whose 'ShaderCreateInfoEXT' structures\' @flags@ include
+--     'SHADER_CREATE_LINK_STAGE_BIT_EXT'.
+--
+-- -   'SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT' specifies that
+--     the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize>
+--     /may/ vary in a task, mesh, or compute shader.
+--
+-- -   'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT' specifies that the
+--     subgroup sizes /must/ be launched with all invocations active in a
+--     task, mesh, or compute shader.
+--
+-- -   'SHADER_CREATE_NO_TASK_SHADER_BIT_EXT' specifies that a mesh shader
+--     /must/ only be used without a task shader. Otherwise, the mesh
+--     shader /must/ only be used with a task shader.
+--
+-- -   'SHADER_CREATE_DISPATCH_BASE_BIT_EXT' specifies that a compute
+--     shader /can/ be used with
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.cmdDispatchBase'
+--     with a non-zero base workgroup.
+--
+-- -   'SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT' specifies
+--     that a fragment shader /can/ be used with a fragment shading rate
+--     attachment.
+--
+-- -   'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT' specifies
+--     that a fragment shader /can/ be used with a fragment density map
+--     attachment.
+--
+-- -   'SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT' specifies that the shader
+--     /can/ be used in combination with
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands>.
+--
+-- -   'SHADER_CREATE_64_BIT_INDEXING_BIT_EXT' specifies that the shader
+--     enables
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-64bindexing 64-bit indexing>.
+--
+-- -   'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' specifies that the shader
+--     will use descriptor heap mappings instead of descriptor set layouts.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
@@ -2538,45 +2762,35 @@ type ShaderCreateFlagsEXT = ShaderCreateFlagBitsEXT
 newtype ShaderCreateFlagBitsEXT = ShaderCreateFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SHADER_CREATE_LINK_STAGE_BIT_EXT' specifies that a shader is linked to
--- all other shaders created in the same 'createShadersEXT' call whose
--- 'ShaderCreateInfoEXT' structures\' @flags@ include
--- 'SHADER_CREATE_LINK_STAGE_BIT_EXT'.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_LINK_STAGE_BIT_EXT"
 pattern SHADER_CREATE_LINK_STAGE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000001
 
--- | 'SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT' specifies that the shader
--- /can/ be used in combination with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_64_BIT_INDEXING_BIT_EXT"
+pattern SHADER_CREATE_64_BIT_INDEXING_BIT_EXT = ShaderCreateFlagBitsEXT 0x00008000
+
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT"
 pattern SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000080
 
--- | 'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT' specifies that a
--- fragment shader /can/ be used with a fragment density map attachment.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
 pattern SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000040
 
--- | 'SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT' specifies that
--- a fragment shader /can/ be used with a fragment shading rate attachment.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT"
 pattern SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000020
 
--- | 'SHADER_CREATE_DISPATCH_BASE_BIT_EXT' specifies that a compute shader
--- /can/ be used with
--- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.cmdDispatchBase' with a
--- non-zero base workgroup.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_DISPATCH_BASE_BIT_EXT"
 pattern SHADER_CREATE_DISPATCH_BASE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000010
 
--- | 'SHADER_CREATE_NO_TASK_SHADER_BIT_EXT' specifies that a mesh shader
--- /must/ only be used without a task shader. Otherwise, the mesh shader
--- /must/ only be used with a task shader.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_NO_TASK_SHADER_BIT_EXT"
 pattern SHADER_CREATE_NO_TASK_SHADER_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000008
 
--- | 'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT' specifies that the
--- subgroup sizes /must/ be launched with all invocations active in a task,
--- mesh, or compute shader.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"
 pattern SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000004
 
--- | 'SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT' specifies that the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize>
--- /may/ vary in a task, mesh, or compute shader.
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"
 pattern SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000002
+
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT"
+pattern SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000400
 
 conNameShaderCreateFlagBitsEXT :: String
 conNameShaderCreateFlagBitsEXT = "ShaderCreateFlagBitsEXT"
@@ -2589,6 +2803,10 @@ showTableShaderCreateFlagBitsEXT =
   [
     ( SHADER_CREATE_LINK_STAGE_BIT_EXT
     , "LINK_STAGE_BIT_EXT"
+    )
+  ,
+    ( SHADER_CREATE_64_BIT_INDEXING_BIT_EXT
+    , "64_BIT_INDEXING_BIT_EXT"
     )
   ,
     ( SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT
@@ -2618,6 +2836,10 @@ showTableShaderCreateFlagBitsEXT =
     ( SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
     , "ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"
     )
+  ,
+    ( SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT
+    , "DESCRIPTOR_HEAP_BIT_EXT"
+    )
   ]
 
 instance Show ShaderCreateFlagBitsEXT where
@@ -2639,6 +2861,14 @@ instance Read ShaderCreateFlagBitsEXT where
 
 -- | VkShaderCodeTypeEXT - Indicate a shader code type
 --
+-- = Description
+--
+-- -   'SHADER_CODE_TYPE_BINARY_EXT' specifies shader code in an opaque,
+--     implementation-defined binary format specific to the physical
+--     device.
+--
+-- -   'SHADER_CODE_TYPE_SPIRV_EXT' specifies shader code in SPIR-V format.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
@@ -2646,11 +2876,10 @@ instance Read ShaderCreateFlagBitsEXT where
 newtype ShaderCodeTypeEXT = ShaderCodeTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'SHADER_CODE_TYPE_BINARY_EXT' specifies shader code in an opaque,
--- implementation-defined binary format specific to the physical device.
+-- No documentation found for Nested "VkShaderCodeTypeEXT" "VK_SHADER_CODE_TYPE_BINARY_EXT"
 pattern SHADER_CODE_TYPE_BINARY_EXT = ShaderCodeTypeEXT 0
 
--- | 'SHADER_CODE_TYPE_SPIRV_EXT' specifies shader code in SPIR-V format.
+-- No documentation found for Nested "VkShaderCodeTypeEXT" "VK_SHADER_CODE_TYPE_SPIRV_EXT"
 pattern SHADER_CODE_TYPE_SPIRV_EXT = ShaderCodeTypeEXT 1
 
 {-# COMPLETE

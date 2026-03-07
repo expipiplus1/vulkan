@@ -64,9 +64,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceImagelessFramebufferFeatures' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceImagelessFramebufferFeatures', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -136,6 +140,7 @@ instance Zero PhysicalDeviceImagelessFramebufferFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer VK_KHR_imageless_framebuffer>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'FramebufferAttachmentImageInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -322,7 +327,7 @@ instance Zero FramebufferAttachmentImageInfo where
 --
 -- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-03219# Each
 --     element of @pAttachments@ /must/ have been created with the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-04114# Each
 --     element of @pAttachments@ /must/ have been created with
@@ -330,7 +335,7 @@ instance Zero FramebufferAttachmentImageInfo where
 --     to 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'
 --
 -- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-07010# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>
 --     is enabled for any subpass, all element of @pAttachments@ which have
 --     a sample count equal to
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' /must/

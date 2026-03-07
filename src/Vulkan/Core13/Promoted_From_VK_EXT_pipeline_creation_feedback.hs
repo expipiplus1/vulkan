@@ -118,14 +118,17 @@ instance Zero PipelineCreationFeedback where
 -- When chained to
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV', or
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', the @i@ element of
--- @pPipelineStageCreationFeedbacks@ corresponds to the @i@ element of
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo', the @i@
+-- element of @pPipelineStageCreationFeedbacks@ corresponds to the @i@
+-- element of
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@pStages@,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@pStages@,
--- or 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@. When
--- chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo', the first
+-- or
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@pStages@.
+-- When chained to
+-- 'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo', the first
 -- element of @pPipelineStageCreationFeedbacks@ corresponds to
--- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'::@stage@.
+-- 'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo'::@stage@.
 --
 -- == Valid Usage (Implicit)
 --
@@ -147,8 +150,8 @@ instance Zero PipelineCreationFeedback where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
--- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+-- 'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo',
+-- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo',
 -- 'PipelineCreationFeedback',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',

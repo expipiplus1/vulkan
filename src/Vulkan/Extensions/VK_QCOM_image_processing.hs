@@ -93,8 +93,8 @@
 --     whether a block of texels in the /target image/ matches a
 --     corresponding block of texels in the /reference image/. The error
 --     metric is computed per-component. @OpImageBlockMatchSADQCOM@
---     computes \"Sum Of Absolute Difference\" and
---     @OpImageBlockMatchSSDQCOM@ computes \"Sum of Squared Difference\".
+--     computes “Sum Of Absolute Difference” and @OpImageBlockMatchSSDQCOM@
+--     computes “Sum of Squared Difference”.
 --
 -- Each of the image processing instructions operate only on 2D images. The
 -- instructions do not-support sampling of mipmap, multi-plane,
@@ -182,7 +182,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_image_processing Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_image_processing Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -229,10 +229,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- The @filterCenter@ specifies the origin or center of the filter kernel,
 -- as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-weightimage-filteroperation Weight Sampling Operation>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-weightimage-filteroperation Weight Sampling Operation>.
 -- The @numPhases@ describes the number of sub-pixel filter phases as
 -- described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-weightimage-filterphases Weight Sampling Phases>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-weightimage-filterphases Weight Sampling Phases>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -249,14 +249,14 @@ data ImageViewSampleWeightCreateInfoQCOM = ImageViewSampleWeightCreateInfoQCOM
   , -- | @filterSize@ is a 'Vulkan.Core10.FundamentalTypes.Extent2D' specifying
     -- weight filter dimensions.
     filterSize :: Extent2D
-  , -- | @numPhases@ is number of sub-pixel filter phases.
+  , -- | @numPhases@ is the number of sub-pixel filter phases.
     --
     -- #VUID-VkImageViewSampleWeightCreateInfoQCOM-numPhases-06962# @numPhases@
     -- /must/ be a power of two squared value (i.e., 1, 4, 16, 64, 256, etc.)
     --
     -- #VUID-VkImageViewSampleWeightCreateInfoQCOM-numPhases-06963# @numPhases@
     -- /must/ be less than or equal to
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-weightfilter-phases ::maxWeightFilterPhases>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-weightfilter-phases ::maxWeightFilterPhases>
     numPhases :: Word32
   }
   deriving (Typeable)
@@ -320,9 +320,13 @@ instance Zero ImageViewSampleWeightCreateInfoQCOM where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceImageProcessingFeaturesQCOM' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceImageProcessingFeaturesQCOM', it /must/ add an instance
+-- of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -420,7 +424,7 @@ data PhysicalDeviceImageProcessingPropertiesQCOM = PhysicalDeviceImageProcessing
   { -- | #limits-weightfilter-phases# @maxWeightFilterPhases@ is the maximum
     -- value that /can/ be specified for
     -- 'ImageViewSampleWeightCreateInfoQCOM'::@numPhases@ in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-weightimage-filterphases weight image sampling>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-weightimage-filterphases weight image sampling>
     -- operations.
     maxWeightFilterPhases :: Word32
   , -- | #limits-weightfilter-maxdimension# @maxWeightFilterDimension@ is a
@@ -432,14 +436,14 @@ data PhysicalDeviceImageProcessingPropertiesQCOM = PhysicalDeviceImageProcessing
     -- 'Vulkan.Core10.FundamentalTypes.Extent2D' describing the largest
     -- dimensions (@width@ and @height@) that /can/ be specified for
     -- @blockSize@ in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-blockmatch block matching>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-blockmatch block matching>
     -- operations.
     maxBlockMatchRegion :: Extent2D
   , -- | #limits-boxfilter-maxblocksize# @maxBoxFilterBlockSize@ is a
     -- 'Vulkan.Core10.FundamentalTypes.Extent2D' describing the maximum
     -- dimensions (@width@ and @height@) that /can/ be specified for
     -- @blocksize@ in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-boxfilter box filter sampling>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-boxfilter box filter sampling>
     -- operations.
     maxBoxFilterBlockSize :: Extent2D
   }

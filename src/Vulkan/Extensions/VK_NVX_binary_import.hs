@@ -163,6 +163,9 @@
 --     be a valid pointer to a 'Vulkan.Extensions.Handles.CuFunctionNVX'
 --     handle
 --
+-- -   #VUID-vkCreateCuFunctionNVX-device-queuecount# The device /must/
+--     have been created with at least @1@ queue
+--
 -- === Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -171,9 +174,13 @@
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- There is currently no specification language written for this type. This
 -- section acts only as placeholder and to avoid dead links in the
@@ -253,6 +260,9 @@
 -- -   #VUID-vkCreateCuModuleNVX-pModule-parameter# @pModule@ /must/ be a
 --     valid pointer to a 'Vulkan.Extensions.Handles.CuModuleNVX' handle
 --
+-- -   #VUID-vkCreateCuModuleNVX-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
+--
 -- === Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -261,9 +271,13 @@
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- There is currently no specification language written for this type. This
 -- section acts only as placeholder and to avoid dead links in the
@@ -287,7 +301,7 @@
 --     'CuModuleTexturingModeCreateInfoNVX'
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
 --     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@
@@ -359,7 +373,12 @@
 --
 -- -   #VUID-vkCmdCuLaunchKernelNVX-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
+--
+-- -   #VUID-vkCmdCuLaunchKernelNVX-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCuLaunchKernelNVX-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -376,9 +395,14 @@
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- === Conditional Rendering
+--
+-- vkCmdCuLaunchKernelNVX is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- There is currently no specification language written for this type. This
 -- section acts only as placeholder and to avoid dead links in the
@@ -437,7 +461,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NVX_binary_import Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NVX_binary_import Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -581,6 +605,9 @@ foreign import ccall
 -- -   #VUID-vkCreateCuModuleNVX-pModule-parameter# @pModule@ /must/ be a
 --     valid pointer to a 'Vulkan.Extensions.Handles.CuModuleNVX' handle
 --
+-- -   #VUID-vkCreateCuModuleNVX-device-queuecount# The device /must/ have
+--     been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -589,9 +616,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -667,6 +698,9 @@ foreign import ccall
 --     be a valid pointer to a 'Vulkan.Extensions.Handles.CuFunctionNVX'
 --     handle
 --
+-- -   #VUID-vkCreateCuFunctionNVX-device-queuecount# The device /must/
+--     have been created with at least @1@ queue
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -675,9 +709,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -858,7 +896,12 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCuLaunchKernelNVX-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
+--
+-- -   #VUID-vkCmdCuLaunchKernelNVX-suspended# This command /must/ not be
+--     called between suspended render pass instances
 --
 -- -   #VUID-vkCmdCuLaunchKernelNVX-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -875,9 +918,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | VK_QUEUE_GRAPHICS_BIT                                                                                                 |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdCuLaunchKernelNVX is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -914,7 +962,7 @@ cmdCuLaunchKernelNVX commandBuffer launchInfo = liftIO . evalContT $ do
 --     'CuModuleTexturingModeCreateInfoNVX'
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-sType-unique# The @sType@ value of
---     each struct in the @pNext@ chain /must/ be unique
+--     each structure in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
 --     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@

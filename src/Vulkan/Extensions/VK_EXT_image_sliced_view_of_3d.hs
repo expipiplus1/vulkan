@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --         
@@ -108,7 +108,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_sliced_view_of_3d Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_image_sliced_view_of_3d Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -167,7 +167,7 @@ import Vulkan.Core10.APIConstants (pattern REMAINING_3D_SLICES_EXT)
 -- The effective view depth is equal to @extent.depth@ used to create the
 -- @image@ for this view adjusted by @subresourceRange.baseMipLevel@ as
 -- specified in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>.
 --
 -- Shader access to this image view is only affected by
 -- 'ImageViewSlicedCreateInfoEXT' if it uses a descriptor of type
@@ -182,14 +182,14 @@ import Vulkan.Core10.APIConstants (pattern REMAINING_3D_SLICES_EXT)
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-sliceOffset-07867#
 --     @sliceOffset@ /must/ be less than the effective view depth as
 --     specified in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
 --
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-sliceCount-07868# If
 --     @sliceCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_3D_SLICES_EXT', it /must/ be
 --     non-zero and @sliceOffset@ + @sliceCount@ /must/ be less than or
 --     equal to the effective view depth as specified in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
 --
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-image-07869# @image@ /must/
 --     have been created with @imageType@ equal to
@@ -202,7 +202,7 @@ import Vulkan.Core10.APIConstants (pattern REMAINING_3D_SLICES_EXT)
 --     /must/ reference exactly 1 mip level
 --
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-None-07871# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageSlicedViewOf3D imageSlicedViewOf3D>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-imageSlicedViewOf3D imageSlicedViewOf3D>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -280,9 +280,13 @@ instance Zero ImageViewSlicedCreateInfoEXT where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceImageSlicedViewOf3DFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceImageSlicedViewOf3DFeaturesEXT', it /must/ add an
+-- instance of the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --

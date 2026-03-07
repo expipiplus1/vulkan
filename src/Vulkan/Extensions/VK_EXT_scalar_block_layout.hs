@@ -68,6 +68,11 @@
 -- names, retain their original names. The original Vulkan API names are
 -- still available as aliases of the core functionality.
 --
+-- == Promotion to Vulkan 1.4
+--
+-- If Vulkan 1.4 is supported, support for the @scalarBlockLayout@
+-- capability is required.
+--
 -- == New Structures
 --
 -- -   Extending
@@ -99,7 +104,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_scalar_block_layout Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_scalar_block_layout Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
 --
 -- [__Contact__]
 --
@@ -116,8 +118,9 @@
 --
 --     -   'DevicePipelineBinaryInternalCacheControlKHR'
 --
--- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
+-- -   Extending
+--     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR':
 --
 --     -   'PipelineBinaryInfoKHR'
@@ -146,9 +149,9 @@
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_PIPELINE_BINARY_KHR'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
@@ -191,7 +194,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_pipeline_binary Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_pipeline_binary Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -217,8 +220,6 @@ module Vulkan.Extensions.VK_KHR_pipeline_binary  ( createPipelineBinariesKHR
                                                  , KHR_PIPELINE_BINARY_EXTENSION_NAME
                                                  , pattern KHR_PIPELINE_BINARY_EXTENSION_NAME
                                                  , PipelineBinaryKHR(..)
-                                                 , PipelineCreateFlagBits2KHR(..)
-                                                 , PipelineCreateFlags2KHR
                                                  , MAX_PIPELINE_BINARY_KEY_SIZE_KHR
                                                  , pattern MAX_PIPELINE_BINARY_KEY_SIZE_KHR
                                                  ) where
@@ -312,8 +313,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RELEASE_C
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.APIConstants (MAX_PIPELINE_BINARY_KEY_SIZE_KHR)
 import Vulkan.Extensions.Handles (PipelineBinaryKHR(..))
-import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlagBits2KHR(..))
-import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
 import Vulkan.Core10.APIConstants (pattern MAX_PIPELINE_BINARY_KEY_SIZE_KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -360,19 +359,23 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   'Vulkan.Core10.Enums.Result.SUCCESS'
---
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
 --     -   'Vulkan.Core10.Enums.Result.PIPELINE_BINARY_MISSING_KHR'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -388,7 +391,7 @@ createPipelineBinariesKHR :: forall io
                              -- that contains the data to create the pipeline binaries from.
                              PipelineBinaryCreateInfoKHR
                           -> -- | @pAllocator@ controls host memory allocation as described in the
-                             -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                             -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (Result, ("binaries" ::: PipelineBinaryHandlesInfoKHR))
@@ -469,7 +472,7 @@ destroyPipelineBinaryKHR :: forall io
                          -> -- | @pipelineBinary@ is the handle of the pipeline binary object to destroy.
                             PipelineBinaryKHR
                          -> -- | @pAllocator@ controls host memory allocation as described in the
-                            -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                            -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                             -- chapter.
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io ()
@@ -518,9 +521,9 @@ foreign import ccall
 -- used instead of a shader module, the @pPipelineKey@ generated /must/ be
 -- equal to the key generated when using the shader module from which the
 -- identifier was queried. If the content of two @pPipelineKey@ are equal,
--- pipelines created with the two @pPipelineCreateInfo->pname@:pNext create
--- infos /must/ produce the same
--- 'Vulkan.Extensions.Handles.PipelineBinaryKHR' contents.
+-- pipelines created with the two @pPipelineCreateInfo->pNext@ create infos
+-- /must/ produce the same 'Vulkan.Extensions.Handles.PipelineBinaryKHR'
+-- contents.
 --
 -- The pipeline key is distinct from pipeline binary key. Pipeline binary
 -- keys /can/ only be obtained after compilation. The pipeline key is
@@ -553,9 +556,13 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -611,8 +618,12 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR' will be
 -- returned, instead of 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
+-- If the call returns one of the success return codes, the pipeline binary
+-- key is written to @pPipelineBinaryKey@, regardless of whether
+-- @pPipelineBinaryData@ is @NULL@ or not.
+--
 -- If
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-pipelineBinaryCompressedData pipelineBinaryCompressedData>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-pipelineBinaryCompressedData pipelineBinaryCompressedData>
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE', implementations /should/ not
 -- return compressed pipeline binary data to the application.
 --
@@ -645,11 +656,15 @@ foreign import ccall
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_NOT_ENOUGH_SPACE_KHR'
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -709,14 +724,14 @@ foreign import ccall
 --
 -- The implementation /may/ free any resources captured as a result of
 -- creating the pipeline with
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+-- 'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
 -- and put the pipeline into a state as if
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+-- 'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
 -- had not been provided at pipeline creation time.
 --
 -- Any resources captured as a result of creating the pipeline with
--- 'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
--- are implicitly freed by 'Vulkan.Core10.Pipeline.destroyPipeline'.
+-- 'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+-- are implicitly freed by 'Vulkan.Core10.ComputePipeline.destroyPipeline'.
 --
 -- == Valid Usage
 --
@@ -743,10 +758,6 @@ foreign import ccall
 --     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- == Host Synchronization
---
--- -   Host access to @pInfo->pipeline@ /must/ be externally synchronized
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -754,7 +765,10 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     None
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_VALIDATION_FAILED'
 --
 -- = See Also
 --
@@ -769,7 +783,7 @@ releaseCapturedPipelineDataKHR :: forall io
                                   -- which describes the pipeline to release the data from.
                                   ReleaseCapturedPipelineDataInfoKHR
                                -> -- | @pAllocator@ controls host memory allocation as described in the
-                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io ()
@@ -782,11 +796,11 @@ releaseCapturedPipelineDataKHR device info allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  _ <- lift $ traceAroundEvent "vkReleaseCapturedPipelineDataKHR" (vkReleaseCapturedPipelineDataKHR'
+  r <- lift $ traceAroundEvent "vkReleaseCapturedPipelineDataKHR" (vkReleaseCapturedPipelineDataKHR'
                                                                      (deviceHandle (device))
                                                                      pInfo
                                                                      pAllocator)
-  pure $ ()
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 -- | VkPipelineBinaryCreateInfoKHR - Structure specifying where to retrieve
@@ -797,7 +811,7 @@ releaseCapturedPipelineDataKHR device info allocator = liftIO . evalContT $ do
 -- When @pPipelineCreateInfo@ is not @NULL@, an implementation will attempt
 -- to retrieve pipeline binary data from an internal cache external to the
 -- application if
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-pipelineBinaryInternalCache pipelineBinaryInternalCache>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-pipelineBinaryInternalCache pipelineBinaryInternalCache>
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE'. Applications /can/ use this to
 -- determine if a pipeline /can/ be created without compilation. If the
 -- implementation fails to create a pipeline binary due to missing an
@@ -809,7 +823,7 @@ releaseCapturedPipelineDataKHR device info allocator = liftIO . evalContT $ do
 -- pipeline binary with the same parameters that succeeded earlier.
 --
 -- If
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-pipelineBinaryPrecompiledInternalCache pipelineBinaryPrecompiledInternalCache>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-pipelineBinaryPrecompiledInternalCache pipelineBinaryPrecompiledInternalCache>
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE', the implementation /may/ be
 -- able to create pipeline binaries even when @pPipelineCreateInfo@ has not
 -- been used to create binaries before by the application.
@@ -822,7 +836,7 @@ releaseCapturedPipelineDataKHR device info allocator = liftIO . evalContT $ do
 -- -   #VUID-VkPipelineBinaryCreateInfoKHR-pipeline-09607# If @pipeline@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @pipeline@ /must/ have
 --     been created with
---     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
 --
 -- -   #VUID-VkPipelineBinaryCreateInfoKHR-pipeline-09608# If @pipeline@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
@@ -831,7 +845,7 @@ releaseCapturedPipelineDataKHR device info allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkPipelineBinaryCreateInfoKHR-pipelineBinaryInternalCache-09609#
 --     If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-pipelineBinaryInternalCache pipelineBinaryInternalCache>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-pipelineBinaryInternalCache pipelineBinaryInternalCache>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE' pPipelineCreateInfo /must/
 --     be @NULL@
 --
@@ -1234,9 +1248,14 @@ instance Zero PipelineBinaryKeyKHR where
 -- 0 is included in the @pNext@ chain of any @Vk*PipelineCreateInfo@
 -- structure when creating a pipeline, implementations /must/ use the data
 -- in @pPipelineBinaries@ instead of recalculating it. Any shader module
--- identifiers or shader modules declared in
--- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' instances are
--- ignored.
+-- identifiers, shader modules, or chained
+-- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo' structures declared in
+-- 'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo' instances,
+-- are ignored. Any
+-- 'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'
+-- in the @pNext@ chains of
+-- 'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo' instances
+-- are ignored.
 --
 -- If this structure is not included in the @pNext@ chain, it is equivalent
 -- to specifying this structure with a @binaryCount@ of @0@.
@@ -1249,10 +1268,11 @@ instance Zero PipelineBinaryKeyKHR where
 --     @Vk*PipelineCreateInfo@ structure and its @pNext@ chain, ignoring
 --     the presence of the 'PipelineBinaryInfoKHR' structure, the presence
 --     of the
---     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
---     flag, and absence of any shader module identifiers or shader
---     modules, for the same
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#global-pipeline-key global pipeline key>,
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+--     flag, and absence of any shader module identifiers, shader modules,
+--     or 'Vulkan.Core10.Shader.ShaderModuleCreateInfo' structures, for the
+--     same
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#global-pipeline-key global pipeline key>,
 --     from either:
 --
 --     -   'PipelineBinaryCreateInfoKHR'::@pPipelineCreateInfo@, or
@@ -1317,7 +1337,31 @@ instance Zero PipelineBinaryInfoKHR where
 -- | VkReleaseCapturedPipelineDataInfoKHR - Structure specifying a pipeline
 -- whose captured data is to be released
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkReleaseCapturedPipelineDataInfoKHR-pipeline-09613#
+--     @pipeline@ /must/ have been created with
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+--
+-- -   #VUID-VkReleaseCapturedPipelineDataInfoKHR-pipeline-09618#
+--     @pipeline@ /must/ not have been used in a previous call to
+--     'releaseCapturedPipelineDataKHR'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkReleaseCapturedPipelineDataInfoKHR-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RELEASE_CAPTURED_PIPELINE_DATA_INFO_KHR'
+--
+-- -   #VUID-VkReleaseCapturedPipelineDataInfoKHR-pNext-pNext# @pNext@
+--     /must/ be @NULL@
+--
+-- -   #VUID-VkReleaseCapturedPipelineDataInfoKHR-pipeline-parameter#
+--     @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pipeline@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -1327,17 +1371,6 @@ instance Zero PipelineBinaryInfoKHR where
 -- 'releaseCapturedPipelineDataKHR'
 data ReleaseCapturedPipelineDataInfoKHR = ReleaseCapturedPipelineDataInfoKHR
   { -- | @pipeline@ the handle of the pipeline object to release the data from.
-    --
-    -- #VUID-VkReleaseCapturedPipelineDataInfoKHR-pipeline-09613# @pipeline@
-    -- /must/ have been created with
-    -- 'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
-    --
-    -- #VUID-VkReleaseCapturedPipelineDataInfoKHR-pipeline-09618# @pipeline@
-    -- /must/ not have been used in a previous call to
-    -- 'releaseCapturedPipelineDataKHR'
-    --
-    -- #VUID-VkReleaseCapturedPipelineDataInfoKHR-pipeline-parameter#
-    -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1494,9 +1527,13 @@ instance Zero PipelineCreateInfoKHR where
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePipelineBinaryFeaturesKHR' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDevicePipelineBinaryFeaturesKHR', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1508,7 +1545,7 @@ instance Zero PipelineCreateInfoKHR where
 data PhysicalDevicePipelineBinaryFeaturesKHR = PhysicalDevicePipelineBinaryFeaturesKHR
   { -- | #features-pipelineBinaries# @pipelineBinaries@ indicates that the
     -- implementation supports
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-binaries>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-binaries>.
     pipelineBinaries :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

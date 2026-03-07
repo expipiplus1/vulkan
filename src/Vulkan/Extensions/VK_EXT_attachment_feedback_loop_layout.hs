@@ -127,7 +127,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_attachment_feedback_loop_layout Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_attachment_feedback_loop_layout Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -178,8 +178,9 @@ data PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT = PhysicalDeviceAttac
   { -- | #features-attachmentFeedbackLoopLayout# @attachmentFeedbackLoopLayout@
     -- indicates whether the implementation supports using
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
-    -- image layout for images created with
-    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'.
+    -- image layout for images created with the
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
+    -- usage flag set.
     attachmentFeedbackLoopLayout :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

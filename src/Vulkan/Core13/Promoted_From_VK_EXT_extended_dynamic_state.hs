@@ -73,7 +73,7 @@ import Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlagBits(..))
 import Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlags)
 import Vulkan.Core10.Enums.StencilOp (StencilOp)
 import Vulkan.Core10.Enums.StencilOp (StencilOp(..))
-import Vulkan.Core10.Pipeline (Viewport)
+import Vulkan.Core10.GraphicsPipeline (Viewport)
 import Vulkan.Core10.Enums.DynamicState (DynamicState(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -88,12 +88,12 @@ foreign import ccall
 --
 -- This command sets the cull mode for subsequent drawing commands when
 -- drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@cullMode@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@cullMode@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -129,7 +129,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetCullMode-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetCullMode-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -148,9 +149,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetCullMode is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -192,12 +198,12 @@ foreign import ccall
 --
 -- This command sets the front face orientation for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRONT_FACE' set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@frontFace@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@frontFace@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -232,7 +238,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetFrontFace-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetFrontFace-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -251,9 +258,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetFrontFace is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -296,13 +308,13 @@ foreign import ccall
 --
 -- This command sets the primitive topology for subsequent drawing commands
 -- when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY' set
 -- in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -339,7 +351,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetPrimitiveTopology-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetPrimitiveTopology-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -358,9 +371,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetPrimitiveTopology is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -402,13 +420,13 @@ foreign import ccall
 --
 -- This command sets the viewport count and viewports state for subsequent
 -- drawing commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT' set
 -- in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the corresponding
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 -- and @pViewports@ values used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -435,7 +453,7 @@ foreign import ccall
 --     inclusive
 --
 -- -   #VUID-vkCmdSetViewportWithCount-viewportCount-03395# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetViewportWithCount-commandBuffer-04819# @commandBuffer@
@@ -451,7 +469,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetViewportWithCount-pViewports-parameter# @pViewports@
 --     /must/ be a valid pointer to an array of @viewportCount@ valid
---     'Vulkan.Core10.Pipeline.Viewport' structures
+--     'Vulkan.Core10.GraphicsPipeline.Viewport' structures
 --
 -- -   #VUID-vkCmdSetViewportWithCount-commandBuffer-recording#
 --     @commandBuffer@ /must/ be in the
@@ -459,7 +477,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetViewportWithCount-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetViewportWithCount-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -481,16 +500,22 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetViewportWithCount is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
--- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Pipeline.Viewport'
+-- 'Vulkan.Core10.Handles.CommandBuffer',
+-- 'Vulkan.Core10.GraphicsPipeline.Viewport'
 cmdSetViewportWithCount :: forall io
                          . (MonadIO io)
                         => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -527,13 +552,13 @@ foreign import ccall
 --
 -- This command sets the scissor count and scissor rectangular bounds state
 -- for subsequent drawing commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT' set
 -- in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the corresponding
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 -- and @pScissors@ values used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -560,7 +585,7 @@ foreign import ccall
 --     inclusive
 --
 -- -   #VUID-vkCmdSetScissorWithCount-scissorCount-03398# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @scissorCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetScissorWithCount-x-03399# The @x@ and @y@ members of
@@ -596,7 +621,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetScissorWithCount-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetScissorWithCount-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -618,9 +644,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetScissorWithCount is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -675,7 +706,7 @@ foreign import ccall
 -- All vertex input attributes that use each of these bindings will use
 -- these updated addresses in their address calculations for subsequent
 -- drawing commands. If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 -- feature is enabled, elements of @pBuffers@ /can/ be
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and /can/ be used by the
 -- vertex shader. If a vertex input attribute is bound to a vertex input
@@ -685,21 +716,21 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
 --
 -- This command also
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state dynamically sets>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-dynamic-state dynamically sets>
 -- the byte strides between consecutive elements within buffer
 -- @pBuffers@[i] to the corresponding @pStrides@[i] value when drawing
 -- using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, strides are specified by the
--- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ values
--- used to create the currently active pipeline.
+-- 'Vulkan.Core10.GraphicsPipeline.VertexInputBindingDescription'::@stride@
+-- values used to create the currently active pipeline.
 --
 -- If drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>
 -- or if the bound pipeline state object was also created with the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 -- dynamic state enabled then
@@ -713,6 +744,22 @@ foreign import ccall
 -- desired.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCmdBindVertexBuffers2-None-08971# At least one of the
+--     following /must/ be true:
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--         feature is enabled
+--
+--     -   the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--         feature is enabled
+--
+--     -   the value of
+--         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
+--         used to create the 'Vulkan.Core10.Handles.Instance' parent of
+--         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-firstBinding-03355# @firstBinding@
 --     /must/ be less than
@@ -734,14 +781,14 @@ foreign import ccall
 -- -   #VUID-vkCmdBindVertexBuffers2-pBuffers-03359# All elements of
 --     @pBuffers@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_VERTEX_BUFFER_BIT'
---     flag
+--     usage flag set
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-pBuffers-03360# Each element of
 --     @pBuffers@ that is non-sparse /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-pBuffers-04111# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, all elements of @pBuffers@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -758,9 +805,9 @@ foreign import ccall
 --     or equal to the maximum extent of all vertex input attributes
 --     fetched from the corresponding binding, where the extent is
 --     calculated as the
---     'Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@offset@
+--     'Vulkan.Core10.GraphicsPipeline.VertexInputAttributeDescription'::@offset@
 --     plus
---     'Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@
+--     'Vulkan.Core10.GraphicsPipeline.VertexInputAttributeDescription'::@format@
 --     size
 --
 -- == Valid Usage (Implicit)
@@ -792,7 +839,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -820,9 +868,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdBindVertexBuffers2 is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -909,13 +962,13 @@ foreign import ccall
 --
 -- This command sets the depth test enable for subsequent drawing commands
 -- when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE' set
 -- in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthTestEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'::@depthTestEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -948,7 +1001,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthTestEnable-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDepthTestEnable-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -967,9 +1021,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDepthTestEnable is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1011,13 +1070,13 @@ foreign import ccall
 --
 -- This command sets the depth write enable for subsequent drawing commands
 -- when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE' set
 -- in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthWriteEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'::@depthWriteEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -1050,7 +1109,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthWriteEnable-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDepthWriteEnable-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -1069,9 +1129,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDepthWriteEnable is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1113,12 +1178,12 @@ foreign import ccall
 --
 -- This command sets the depth comparison operator for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP' set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthCompareOp@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'::@depthCompareOp@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -1155,7 +1220,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthCompareOp-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDepthCompareOp-videocoding# This command /must/ only
 --     be called outside of a video coding scope
@@ -1174,9 +1240,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDepthCompareOp is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1192,9 +1263,9 @@ cmdSetDepthCompareOp :: forall io
                         CommandBuffer
                      -> -- | @depthCompareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
                         -- specifying the comparison operator used for the
-                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth-comparison Depth Comparison>
+                        -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-depth-comparison Depth Comparison>
                         -- step of the
-                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth test>.
+                        -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-depth depth test>.
                         ("depthCompareOp" ::: CompareOp)
                      -> io ()
 cmdSetDepthCompareOp commandBuffer depthCompareOp = liftIO $ do
@@ -1222,13 +1293,13 @@ foreign import ccall
 --
 -- This command sets the depth bounds enable for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE'
 -- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@depthBoundsTestEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'::@depthBoundsTestEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -1250,7 +1321,7 @@ foreign import ccall
 --         @commandBuffer@ is greater than or equal to Version 1.3
 --
 -- -   #VUID-vkCmdSetDepthBoundsTestEnable-depthBounds-10010# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthBounds depthBounds>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-depthBounds depthBounds>
 --     feature is not enabled, @depthBoundsTestEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
@@ -1266,7 +1337,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthBoundsTestEnable-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetDepthBoundsTestEnable-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -1285,9 +1357,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDepthBoundsTestEnable is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1329,13 +1406,13 @@ foreign import ccall
 --
 -- This command sets the stencil test enable for subsequent drawing
 -- commands when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE' set
 -- in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@stencilTestEnable@
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'::@stencilTestEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -1368,7 +1445,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetStencilTestEnable-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetStencilTestEnable-videocoding# This command /must/
 --     only be called outside of a video coding scope
@@ -1387,9 +1465,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetStencilTestEnable is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --
@@ -1431,12 +1514,12 @@ foreign import ccall
 --
 -- This command sets the stencil operation for subsequent drawing commands
 -- when when drawing using
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-objects shader objects>,
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-objects shader objects>,
 -- or when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP' set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the corresponding
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@failOp@,
+-- 'Vulkan.Core10.GraphicsPipeline.PipelineDepthStencilStateCreateInfo'::@failOp@,
 -- @passOp@, @depthFailOp@, and @compareOp@ values used to create the
 -- currently active pipeline, for both front and back faces.
 --
@@ -1488,7 +1571,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetStencilOp-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' operations
 --
 -- -   #VUID-vkCmdSetStencilOp-videocoding# This command /must/ only be
 --     called outside of a video coding scope
@@ -1507,9 +1591,14 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | VK_QUEUE_GRAPHICS_BIT                                                                                                 | State                                                                                                                                  |
 -- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetStencilOp is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
 --
 -- = See Also
 --

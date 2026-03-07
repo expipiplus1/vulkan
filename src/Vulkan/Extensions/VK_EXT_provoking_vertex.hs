@@ -97,7 +97,7 @@
 --     -   'PhysicalDeviceProvokingVertexPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo':
+--     'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo':
 --
 --     -   'PipelineRasterizationProvokingVertexStateCreateInfoEXT'
 --
@@ -175,7 +175,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_provoking_vertex Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_provoking_vertex Vulkan Specification>.
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -238,13 +238,17 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceProvokingVertexFeaturesEXT' /can/ also be used
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
+-- supported. If the application wishes to use a
+-- 'Vulkan.Core10.Handles.Device' with any features described by
+-- 'PhysicalDeviceProvokingVertexFeaturesEXT', it /must/ add an instance of
+-- the structure, with the desired feature members set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', to the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
+-- 'Vulkan.Core10.Handles.Device'.
 --
 -- When 'PhysicalDeviceProvokingVertexFeaturesEXT' is in the @pNext@ chain
 -- of 'Vulkan.Core10.Device.DeviceCreateInfo' but the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-transformFeedback transformFeedback>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-transformFeedback transformFeedback>
 -- feature is not enabled, the value of
 -- @transformFeedbackPreservesProvokingVertex@ is ignored.
 --
@@ -265,7 +269,7 @@ data PhysicalDeviceProvokingVertexFeaturesEXT = PhysicalDeviceProvokingVertexFea
     -- vertices within each primitive written by transform feedback will
     -- preserve the provoking vertex. This does not apply to triangle fan
     -- primitives when
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-transformFeedbackPreservesTriangleFanProvokingVertex transformFeedbackPreservesTriangleFanProvokingVertex>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-transformFeedbackPreservesTriangleFanProvokingVertex transformFeedbackPreservesTriangleFanProvokingVertex>
     -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     -- @transformFeedbackPreservesProvokingVertex@ /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' when the
@@ -394,11 +398,11 @@ instance Zero PhysicalDeviceProvokingVertexPropertiesEXT where
 --
 -- = Description
 --
--- If this struct is not provided when creating the pipeline, the pipeline
--- will use the 'PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT' mode.
+-- If this structure is not provided when creating the pipeline, the
+-- pipeline will use the 'PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT' mode.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-provokingVertexModePerPipeline provokingVertexModePerPipeline>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-provokingVertexModePerPipeline provokingVertexModePerPipeline>
 -- limit is 'Vulkan.Core10.FundamentalTypes.FALSE', then all pipelines
 -- bound within a render pass instance /must/ have the same
 -- @provokingVertexMode@.
@@ -408,7 +412,7 @@ instance Zero PhysicalDeviceProvokingVertexPropertiesEXT where
 -- -   #VUID-VkPipelineRasterizationProvokingVertexStateCreateInfoEXT-provokingVertexMode-04883#
 --     If @provokingVertexMode@ is 'PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT',
 --     then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-provokingVertexLast provokingVertexLast>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-provokingVertexLast provokingVertexLast>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -473,8 +477,16 @@ instance Zero PipelineRasterizationProvokingVertexStateCreateInfoEXT where
 --
 -- = Description
 --
+-- -   'PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT' specifies that the
+--     provoking vertex is the first non-adjacency vertex in the list of
+--     vertices used by a primitive.
+--
+-- -   'PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT' specifies that the provoking
+--     vertex is the last non-adjacency vertex in the list of vertices used
+--     by a primitive.
+--
 -- These modes are described more precisely in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-topologies Primitive Topologies>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#drawing-primitive-topologies Primitive Topologies>.
 --
 -- = See Also
 --
@@ -484,14 +496,10 @@ instance Zero PipelineRasterizationProvokingVertexStateCreateInfoEXT where
 newtype ProvokingVertexModeEXT = ProvokingVertexModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT' specifies that the provoking
--- vertex is the first non-adjacency vertex in the list of vertices used by
--- a primitive.
+-- No documentation found for Nested "VkProvokingVertexModeEXT" "VK_PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT"
 pattern PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT = ProvokingVertexModeEXT 0
 
--- | 'PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT' specifies that the provoking
--- vertex is the last non-adjacency vertex in the list of vertices used by
--- a primitive.
+-- No documentation found for Nested "VkProvokingVertexModeEXT" "VK_PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT"
 pattern PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT = ProvokingVertexModeEXT 1
 
 {-# COMPLETE

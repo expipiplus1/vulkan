@@ -22,17 +22,22 @@ type FenceImportFlags = FenceImportFlagBits
 -- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
 -- fence payload import
 --
+-- = Description
+--
+-- -   'FENCE_IMPORT_TEMPORARY_BIT' specifies that the fence payload will
+--     be imported only temporarily, as described in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
+--     regardless of the permanence of @handleType@.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence VK_KHR_external_fence>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'FenceImportFlags'
 newtype FenceImportFlagBits = FenceImportFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'FENCE_IMPORT_TEMPORARY_BIT' specifies that the fence payload will be
--- imported only temporarily, as described in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
--- regardless of the permanence of @handleType@.
+-- No documentation found for Nested "VkFenceImportFlagBits" "VK_FENCE_IMPORT_TEMPORARY_BIT"
 pattern FENCE_IMPORT_TEMPORARY_BIT = FenceImportFlagBits 0x00000001
 
 conNameFenceImportFlagBits :: String
