@@ -104,10 +104,12 @@ renderSPIRVThing
 renderSPIRVThing funName name reqs xs = do
   tellLanguageExtension (LanguageExtension "TupleSections")
   let case' x = do
-        let mergeReqs = Prelude.head -- TODO: this is probably wrong! discarding the
-                                     -- other reqs
-        (instReqs', devReqs') <- mergeReqs
-          <$> traverse renderReq (V.toList (reqs x))
+        let reqList = V.toList (reqs x)
+        (instReqs', devReqs') <- case reqList of
+          [] -> pure ([], [])
+          _  -> Prelude.head -- TODO: this is probably wrong! discarding the
+                             -- other reqs
+                  <$> traverse renderReq reqList
         pure $ viaShow (name x) <+> "-> (,)" <+> align
           (fillSep [align (list instReqs'), align (list devReqs')])
   cases <- (<> ["_ -> ([],[])"]) <$> traverse case' (V.toList xs)

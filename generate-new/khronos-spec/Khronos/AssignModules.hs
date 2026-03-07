@@ -185,6 +185,33 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
     extensionNumberMap = Map.fromList
       [ (exName, exNumber) | Extension{exName, exNumber} <- toList specExtensions ]
 
+    -- | For each extension, the set of later-extension numbers
+    -- referenced in its conditional @depends@ attributes.  Used to
+    -- detect when an unconditional require borrows types from a later
+    -- extension that has an explicit interaction block.
+    laterDepsOf :: Map Int (Data.Set.Set Int)
+    laterDepsOf = Map.fromListWith (<>)
+      [ (exNumber, Data.Set.singleton depNum)
+      | Extension{exNumber, exRequires} <- toList specExtensions
+      , Require{rDepends} <- toList exRequires
+      , Just dep <- [rDepends]
+      , let tokens = concatMap (T.splitOn "+") (T.splitOn "," dep)
+      , tok <- tokens
+      , let t = T.strip (T.filter (/= '(') (T.filter (/= ')') tok))
+      , Just depNum <- [Map.lookup t extensionNumberMap]
+      , depNum > exNumber
+      ]
+
+    -- | For each type name, the set of extension numbers that list it
+    -- in any require block.
+    typeClaimants :: Map CName (Data.Set.Set Int)
+    typeClaimants = Map.fromListWith (<>)
+      [ (n, Data.Set.singleton exNumber)
+      | Extension{exNumber, exRequires} <- toList specExtensions
+      , Require{rTypeNames} <- toList exRequires
+      , n <- toList rTypeNames
+      ]
+
     -- | Check if a @depends@ string references any extension with a
     -- higher number than the current one.  The depends string uses
     -- @+@ for AND, @,@ for OR, and may contain version identifiers
@@ -301,7 +328,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   -- belong to that later extension. This prevents cycles like:
   --   VK_EXT_shader_object (483) claiming vkCmdSetDepthClampRangeEXT
   --   before VK_EXT_depth_clamp_control (583) can.
-  forFeaturesAndExtensions $ \_ modname mExtNum ReqDeps {..} Require{rDepends} ->
+  forFeaturesAndExtensions $ \_ modname mExtNum ReqDeps {..} Require{rDepends, rTypeNames, rCommandNames, rEnumValueNames} ->
     case mExtNum of
       Nothing -> -- Feature: export everything
         forV_ directExporters $ export modname
@@ -313,7 +340,34 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
             refsLaterExt = case rDepends of
               Nothing  -> False
               Just dep -> dependsRefsLaterExtension extNum dep
-        in  forV_ noCore $ if refsLaterExt then reexport modname else export modname
+            -- For unconditional requires, check if this extension has
+            -- explicit conditional interactions with later extensions.
+            -- If so, types also claimed by those later extensions should
+            -- be reexported to avoid cycles.
+            myLaterDeps = fromMaybe mempty (Map.lookup extNum laterDepsOf)
+            laterClaimantTypeNames :: Data.Set.Set CName
+            laterClaimantTypeNames
+              | Data.Set.null myLaterDeps = mempty
+              | otherwise = Data.Set.fromList
+                  [ n
+                  | n <- toList rTypeNames
+                  , Just claimants <- [Map.lookup n typeClaimants]
+                  , not (Data.Set.null (Data.Set.intersection claimants myLaterDeps))
+                  ]
+        in  if refsLaterExt
+              then forV_ noCore $ reexport modname
+              else if Data.Set.null laterClaimantTypeNames
+                then forV_ noCore $ export modname
+                else do
+                  -- Resolve which exporter indices correspond to later-claimed types
+                  laterIndices <- fmap Data.Set.fromList . sequence $
+                    [ getExporter (mkTyName n)
+                    | n <- Data.Set.toList laterClaimantTypeNames
+                    ]
+                  forV_ noCore $ \i ->
+                    if Data.Set.member i laterIndices
+                      then reexport modname i
+                      else export modname i
 
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if they're not already assigned
