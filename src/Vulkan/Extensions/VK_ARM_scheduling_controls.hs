@@ -50,7 +50,7 @@
 -- == Description
 --
 -- This extension exposes a collection of controls to modify the scheduling
--- behaviour of Arm Mali devices.
+-- behavior of Arm Mali devices.
 --
 -- == New Structures
 --
@@ -108,11 +108,7 @@
 --
 -- == See Also
 --
--- 'DeviceQueueShaderCoreControlCreateInfoARM',
--- 'PhysicalDeviceSchedulingControlsFeaturesARM',
--- 'PhysicalDeviceSchedulingControlsFlagBitsARM',
--- 'PhysicalDeviceSchedulingControlsFlagsARM',
--- 'PhysicalDeviceSchedulingControlsPropertiesARM'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -190,7 +186,7 @@ data DeviceQueueShaderCoreControlCreateInfoARM = DeviceQueueShaderCoreControlCre
     -- #VUID-VkDeviceQueueShaderCoreControlCreateInfoARM-shaderCoreCount-09399#
     -- @shaderCoreCount@ /must/ be greater than 0 and less than or equal to the
     -- total number of shader cores as reported via
-    -- 'Vulkan.Extensions.VK_ARM_shader_core_builtins.PhysicalDeviceShaderCoreBuiltinsPropertiesARM'::@shaderCoreCount@.
+    -- 'Vulkan.Extensions.VK_ARM_shader_core_builtins.PhysicalDeviceShaderCoreBuiltinsPropertiesARM'::@shaderCoreCount@
     shaderCoreCount :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -376,11 +372,12 @@ type PhysicalDeviceSchedulingControlsFlagsARM = PhysicalDeviceSchedulingControls
 --
 -- = See Also
 --
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_scheduling_controls VK_ARM_scheduling_controls>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_scheduling_controls VK_ARM_scheduling_controls>,
+-- 'PhysicalDeviceSchedulingControlsFlagsARM'
 newtype PhysicalDeviceSchedulingControlsFlagBitsARM = PhysicalDeviceSchedulingControlsFlagBitsARM Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM' indicates
+-- | 'PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM' specifies
 -- that a 'DeviceQueueShaderCoreControlCreateInfoARM' structure /may/ be
 -- included in the @pNext@ chain of a
 -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' or

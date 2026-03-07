@@ -94,8 +94,7 @@
 --
 -- == See Also
 --
--- 'PipelineCompilerControlCreateInfoAMD',
--- 'PipelineCompilerControlFlagBitsAMD', 'PipelineCompilerControlFlagsAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

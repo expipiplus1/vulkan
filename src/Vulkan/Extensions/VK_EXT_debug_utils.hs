@@ -18,7 +18,7 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -212,7 +212,7 @@
 -- @VK_EXT_debug_utils@ allows an application to register multiple
 -- callbacks with any Vulkan component wishing to report debug information.
 -- Some callbacks may log the information to a file, others may cause a
--- debug break point or other application defined behavior. An application
+-- debug break point or other application-defined behavior. An application
 -- /can/ register callbacks even when no validation layers are enabled, but
 -- they will only be called for loader and, if implemented, driver events.
 --
@@ -468,20 +468,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkDebugUtilsMessengerCallbackEXT', 'DebugUtilsLabelEXT',
--- 'DebugUtilsMessageSeverityFlagBitsEXT',
--- 'DebugUtilsMessageSeverityFlagsEXT', 'DebugUtilsMessageTypeFlagBitsEXT',
--- 'DebugUtilsMessageTypeFlagsEXT', 'DebugUtilsMessengerCallbackDataEXT',
--- 'DebugUtilsMessengerCallbackDataFlagsEXT',
--- 'DebugUtilsMessengerCreateFlagsEXT', 'DebugUtilsMessengerCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
--- 'DebugUtilsObjectNameInfoEXT', 'DebugUtilsObjectTagInfoEXT',
--- 'cmdBeginDebugUtilsLabelEXT', 'cmdEndDebugUtilsLabelEXT',
--- 'cmdInsertDebugUtilsLabelEXT', 'createDebugUtilsMessengerEXT',
--- 'destroyDebugUtilsMessengerEXT', 'queueBeginDebugUtilsLabelEXT',
--- 'queueEndDebugUtilsLabelEXT', 'queueInsertDebugUtilsLabelEXT',
--- 'setDebugUtilsObjectNameEXT', 'setDebugUtilsObjectTagEXT',
--- 'submitDebugUtilsMessageEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -663,7 +650,8 @@ foreign import ccall
   "dynamic" mkVkSetDebugUtilsObjectNameEXT
   :: FunPtr (Ptr Device_T -> Ptr DebugUtilsObjectNameInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DebugUtilsObjectNameInfoEXT -> IO Result
 
--- | vkSetDebugUtilsObjectNameEXT - Give a user-friendly name to an object
+-- | vkSetDebugUtilsObjectNameEXT - Give an application-defined name to an
+-- object
 --
 -- == Valid Usage
 --
@@ -1723,7 +1711,7 @@ data DebugUtilsLabelEXT = DebugUtilsLabelEXT
   , -- | @color@ is an optional RGBA color value that can be associated with the
     -- label. A particular implementation /may/ choose to ignore this color
     -- value. The values contain RGBA values in order, in the range 0.0 to 1.0.
-    -- If all elements in @color@ are set to 0.0 then it is ignored.
+    -- If all elements in @color@ are 0.0, then it is ignored.
     color :: (Float, Float, Float, Float)
   }
   deriving (Typeable)
@@ -1927,8 +1915,6 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --
 -- = Description
 --
--- Note
---
 -- This structure should only be considered valid during the lifetime of
 -- the triggered callback.
 --
@@ -1938,8 +1924,6 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 -- result is that the first label in either @pQueueLabels@ or
 -- @pCmdBufLabels@ will be the first defined (and therefore the oldest)
 -- while the last label in each list will be the most recent.
---
--- Note
 --
 -- @pQueueLabels@ will only be non-@NULL@ if one of the objects in
 -- @pObjects@ can be related directly to a defined
@@ -1998,6 +1982,7 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --
 -- = See Also
 --
+-- 'PFN_vkDebugUtilsMessengerCallbackEXT',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsLabelEXT', 'DebugUtilsMessengerCallbackDataFlagsEXT',
 -- 'DebugUtilsObjectNameInfoEXT',
@@ -2148,7 +2133,8 @@ instance es ~ '[] => Zero (DebugUtilsMessengerCallbackDataEXT es) where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
--- 'DebugUtilsMessengerCreateInfoEXT'
+-- 'DebugUtilsMessengerCreateInfoEXT',
+-- 'Vulkan.Core10.FundamentalTypes.Flags'
 newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -2188,7 +2174,8 @@ instance Read DebugUtilsMessengerCreateFlagsEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
--- 'DebugUtilsMessengerCallbackDataEXT'
+-- 'DebugUtilsMessengerCallbackDataEXT',
+-- 'Vulkan.Core10.FundamentalTypes.Flags'
 newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDataFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -2225,8 +2212,6 @@ type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 --
 -- = Description
 --
--- Note
---
 -- The values of 'DebugUtilsMessageSeverityFlagBitsEXT' are sorted based on
 -- severity. The higher the flag value, the more severe the message. This
 -- allows for simple boolean operation comparisons when looking at
@@ -2243,6 +2228,7 @@ type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 --
 -- = See Also
 --
+-- 'PFN_vkDebugUtilsMessengerCallbackEXT',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagsEXT', 'submitDebugUtilsMessageEXT'
 newtype DebugUtilsMessageSeverityFlagBitsEXT = DebugUtilsMessageSeverityFlagBitsEXT Flags
@@ -2259,12 +2245,12 @@ pattern DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = DebugUtilsMessageSeverity
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000010
 
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT' specifies use of Vulkan
--- that /may/ expose an app bug. Such cases may not be immediately harmful,
--- such as a fragment shader outputting to a location with no attachment.
--- Other cases /may/ point to behavior that is almost certainly bad when
--- unintended such as using an image whose memory has not been filled. In
--- general if you see a warning but you know that the behavior is
--- intended\/desired, then simply ignore the warning.
+-- that /may/ expose an application bug. Such cases may not be immediately
+-- harmful, such as a fragment shader outputting to a location with no
+-- attachment. Other cases /may/ point to behavior that is almost certainly
+-- bad when unintended such as using an image whose memory has not been
+-- filled. In general if you see a warning but you know that the behavior
+-- is intended\/desired, then simply ignore the warning.
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000100
 
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT' specifies that the
@@ -2412,7 +2398,8 @@ type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT 
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
--- 'DebugUtilsMessengerCreateInfoEXT'
+-- 'DebugUtilsMessageSeverityFlagBitsEXT', 'DebugUtilsMessageTypeFlagsEXT',
+-- 'DebugUtilsMessengerCallbackDataEXT', 'DebugUtilsMessengerCreateInfoEXT'
 type PFN_vkDebugUtilsMessengerCallbackEXT = FunPtr FN_vkDebugUtilsMessengerCallbackEXT
 
 

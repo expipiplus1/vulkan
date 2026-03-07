@@ -73,9 +73,7 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_SCREEN_BUFFER_BIT_QNX'               | No restriction                                                                                             | No restriction                                                                                             |
 -- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 --
--- External memory handle types compatibility
---
--- Note
+-- External Memory Handle Types Compatibility
 --
 -- The above table does not restrict the drivers and devices with which
 -- 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT' and
@@ -83,8 +81,6 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 -- be shared, as these handle types inherently mean memory that does not
 -- come from the same device, as they import memory from the host or a
 -- foreign device, respectively.
---
--- Note
 --
 -- Even though the above table does not restrict the drivers and devices
 -- with which 'EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT' /may/ be

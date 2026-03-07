@@ -102,8 +102,7 @@
 --
 -- == See Also
 --
--- 'IOSSurfaceCreateFlagsMVK', 'IOSSurfaceCreateInfoMVK',
--- 'createIOSSurfaceMVK'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -191,8 +190,6 @@ foreign import ccall
 -- | vkCreateIOSSurfaceMVK - Create a VkSurfaceKHR object for an iOS UIView
 --
 -- = Description
---
--- Note
 --
 -- The 'createIOSSurfaceMVK' function is considered deprecated and has been
 -- superseded by
@@ -358,7 +355,7 @@ instance Zero IOSSurfaceCreateInfoMVK where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface VK_MVK_ios_surface>,
--- 'IOSSurfaceCreateInfoMVK'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'IOSSurfaceCreateInfoMVK'
 newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

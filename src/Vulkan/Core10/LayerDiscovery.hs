@@ -76,14 +76,14 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of layer properties
 -- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written, and
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available properties were returned.
+-- /must/ point to a variable set by the application to the number of
+-- elements in the @pProperties@ array, and on return the variable is
+-- overwritten with the number of structures actually written to
+-- @pProperties@. If @pPropertyCount@ is less than the number of layer
+-- properties available, at most @pPropertyCount@ structures will be
+-- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
+-- all the available properties were returned.
 --
 -- The list of available layers may change at any time due to actions
 -- outside of the Vulkan implementation, so two calls to
@@ -161,14 +161,14 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of layer properties
 -- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written, and
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available properties were returned.
+-- /must/ point to a variable set by the application to the number of
+-- elements in the @pProperties@ array, and on return the variable is
+-- overwritten with the number of structures actually written to
+-- @pProperties@. If @pPropertyCount@ is less than the number of layer
+-- properties available, at most @pPropertyCount@ structures will be
+-- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
+-- all the available properties were returned.
 --
 -- The list of layers enumerated by 'enumerateDeviceLayerProperties' /must/
 -- be exactly the sequence of layers enabled for the instance. The members
@@ -176,11 +176,9 @@ foreign import ccall
 -- properties when the layer was enumerated by
 -- 'enumerateInstanceLayerProperties'.
 --
--- Note
---
 -- Due to platform details on Android, 'enumerateDeviceLayerProperties' may
 -- be called with @physicalDevice@ equal to @NULL@ during layer discovery.
--- This behaviour will only be observed by layer implementations, and not
+-- This behavior will only be observed by layer implementations, and not
 -- the underlying Vulkan driver.
 --
 -- == Valid Usage (Implicit)

@@ -110,8 +110,6 @@ instance Zero PipelineCreationFeedback where
 -- in 'PipelineCreationFeedback'::@flags@ for @pPipelineCreationFeedback@
 -- and every element of @pPipelineStageCreationFeedbacks@.
 --
--- Note
---
 -- One common scenario for an implementation to skip per-stage feedback is
 -- when
 -- 'Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits.PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT'

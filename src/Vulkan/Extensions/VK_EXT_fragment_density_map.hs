@@ -18,12 +18,18 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
@@ -44,7 +50,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
 --
 -- [__Contributors__]
 --
@@ -98,6 +104,17 @@
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2':
 --
 --     -   'RenderPassFragmentDensityMapCreateInfoEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
+--
+--     -   'RenderingFragmentDensityMapAttachmentInfoEXT'
 --
 -- == New Enum Constants
 --
@@ -155,12 +172,31 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
 --
 --     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT'
 --
 -- == New or Modified Built-In Variables
 --
@@ -184,9 +220,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceFragmentDensityMapFeaturesEXT',
--- 'PhysicalDeviceFragmentDensityMapPropertiesEXT',
--- 'RenderPassFragmentDensityMapCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -195,9 +229,11 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_fragment_density_map  ( PhysicalDeviceFragmentDensityMapFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_fragment_density_map  ( pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
+                                                      , PhysicalDeviceFragmentDensityMapFeaturesEXT(..)
                                                       , PhysicalDeviceFragmentDensityMapPropertiesEXT(..)
                                                       , RenderPassFragmentDensityMapCreateInfoEXT(..)
+                                                      , RenderingFragmentDensityMapAttachmentInfoEXT(..)
                                                       , EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
                                                       , pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
                                                       , EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
@@ -226,10 +262,19 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.Pass (AttachmentReference)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Extent2D)
+import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
+import Vulkan.Core10.Handles (ImageView)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT))
+-- No documentation found for TopLevel "VK_PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
+pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
+
+
 -- | VkPhysicalDeviceFragmentDensityMapFeaturesEXT - Structure describing
 -- fragment density map features that can be supported by an implementation
 --
@@ -533,6 +578,116 @@ instance Storable RenderPassFragmentDensityMapCreateInfoEXT where
 
 instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
   zero = RenderPassFragmentDensityMapCreateInfoEXT
+           zero
+
+
+-- | VkRenderingFragmentDensityMapAttachmentInfoEXT - Structure specifying
+-- fragment shading rate attachment information
+--
+-- = Description
+--
+-- This structure can be included in the @pNext@ chain of
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo' to
+-- define a fragment density map. If this structure is not included in the
+-- @pNext@ chain, @imageView@ is treated as
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--
+-- == Valid Usage
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageView-06157#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @imageLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT'
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageView-06158#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
+--     /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageView-06159#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
+--     /must/ not have been created with
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-apiVersion-07908#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
+--     feature is not enabled,
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@apiVersion@
+--     is less than Vulkan 1.1, and @imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have a
+--     @layerCount@ equal to @1@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT'
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageView-parameter#
+--     @imageView@ /must/ be a valid 'Vulkan.Core10.Handles.ImageView'
+--     handle
+--
+-- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageLayout-parameter#
+--     @imageLayout@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
+-- 'Vulkan.Core10.Handles.ImageView',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data RenderingFragmentDensityMapAttachmentInfoEXT = RenderingFragmentDensityMapAttachmentInfoEXT
+  { -- | @imageView@ is the image view that will be used as a fragment density
+    -- map attachment.
+    imageView :: ImageView
+  , -- | @imageLayout@ is the layout that @imageView@ will be in during
+    -- rendering.
+    imageLayout :: ImageLayout
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderingFragmentDensityMapAttachmentInfoEXT)
+#endif
+deriving instance Show RenderingFragmentDensityMapAttachmentInfoEXT
+
+instance ToCStruct RenderingFragmentDensityMapAttachmentInfoEXT where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p RenderingFragmentDensityMapAttachmentInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ImageView)) (imageView)
+    poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (imageLayout)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ImageView)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
+    f
+
+instance FromCStruct RenderingFragmentDensityMapAttachmentInfoEXT where
+  peekCStruct p = do
+    imageView <- peek @ImageView ((p `plusPtr` 16 :: Ptr ImageView))
+    imageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
+    pure $ RenderingFragmentDensityMapAttachmentInfoEXT
+             imageView imageLayout
+
+instance Storable RenderingFragmentDensityMapAttachmentInfoEXT where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero RenderingFragmentDensityMapAttachmentInfoEXT where
+  zero = RenderingFragmentDensityMapAttachmentInfoEXT
+           zero
            zero
 
 

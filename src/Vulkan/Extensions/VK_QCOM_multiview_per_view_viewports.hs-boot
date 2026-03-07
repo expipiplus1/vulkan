@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -58,7 +60,7 @@
 --
 -- This extension adds a new way to control ViewportIndex with multiview.
 -- When the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-viewports multiviewPerViewViewports>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiviewPerViewViewports multiviewPerViewViewports>
 -- feature is enabled and if the last pre-rasterization shader entry
 -- point’s interface does not use the @ViewportIndex@ built-in decoration,
 -- then each view of a multiview render pass instance will use a viewport
@@ -84,24 +86,24 @@
 --
 -- == Issues
 --
--- 1) Is is possible to enable\/disable the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-viewports multiviewPerViewViewports>
+-- 1) Is it possible to enable\/disable the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiviewPerViewViewports multiviewPerViewViewports>
 -- feature for individual render pass instances?
 --
 -- __RESOLVED__: No, when the multiviewPerViewViewports feature is enabled
 -- during vkCreateDevice, then all created render pass instances (including
 -- dynamic render passes from @VK_KHR_dynamic_rendering@) and all created
 -- VkPipelines will have the feature enabled. This approach was chosen
--- because it simplifies application code and there is no known use case
+-- because it simplifies application code and there is no known use case to
 -- enable\/disable the feature for individual render passes or pipelines.
 --
 -- 2) When this extension is used, is the value of @ViewportIndex@
 -- implicitly written by the last pre-rasterization shader stage and can
 -- the value of @ViewportIndex@ be read in the fragment shader?
 --
--- __RESOLVED__: No, use of the extension extension does not add an
--- implicit write to @ViewportIndex@ in any shader stage, and additionally,
--- the value of @ViewportIndex@ in the fragment shader is undefined.
+-- __RESOLVED__: No, use of the extension does not add an implicit write to
+-- @ViewportIndex@ in any shader stage, and additionally, the value of
+-- @ViewportIndex@ in the fragment shader is undefined.
 --
 -- == Version History
 --
@@ -109,7 +111,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

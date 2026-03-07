@@ -18,12 +18,12 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -107,9 +107,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceVertexInputDynamicStateFeaturesEXT',
--- 'VertexInputAttributeDescription2EXT',
--- 'VertexInputBindingDescription2EXT', 'cmdSetVertexInputEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -206,6 +204,11 @@ foreign import ccall
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
 -- can be used instead of 'cmdSetVertexInputEXT' to dynamically set the
 -- stride.
+--
+-- The vertex attribute description for any location in the range
+-- [0,'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributes@)
+-- not specified in the @pVertexAttributeDescriptions@ array becomes
+-- undefined.
 --
 -- == Valid Usage
 --
@@ -451,7 +454,7 @@ data VertexInputBindingDescription2EXT = VertexInputBindingDescription2EXT
     inputRate :: VertexInputRate
   , -- | @divisor@ is the number of successive instances that will use the same
     -- value of the vertex attribute when instanced rendering is enabled. This
-    -- member /can/ be set to a value other than @1@ if the
+    -- member /can/ be a value other than @1@ if the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
     -- feature is enabled. For example, if the divisor is N, the same vertex
     -- attribute will be applied to N successive instances before moving on to

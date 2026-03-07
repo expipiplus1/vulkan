@@ -215,6 +215,10 @@ type AccessFlags = AccessFlagBits
 -- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 -- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV'               | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV'                |
 -- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT'               | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT'               |
+-- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT'              | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT'               |
+-- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 -- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR' | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' |
 -- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 -- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR'           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_VERTEX_SHADER_BIT',                       |
@@ -252,18 +256,6 @@ type AccessFlags = AccessFlagBits
 -- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 -- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI'               | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'               |
 -- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
--- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR'             | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_VERTEX_SHADER_BIT',                       |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT',         |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT',      |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT',                     |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT',                     |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMPUTE_SHADER_BIT',                      |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR',              |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT',                     |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT',                     |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI',               |
--- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI'        |
--- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 -- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT'                         | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT',                  |
 -- |                                                                                           | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'     |
 -- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
@@ -274,7 +266,7 @@ type AccessFlags = AccessFlagBits
 -- | 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV'                     | 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'                      |
 -- +-------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
 --
--- Supported access types
+-- Supported Access Types
 --
 -- = See Also
 --

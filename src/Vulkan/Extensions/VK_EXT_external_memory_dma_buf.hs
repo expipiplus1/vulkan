@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>
@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Lina Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_dma_buf] @versalinyaa%0A*Here describe the issue or question you have about the VK_EXT_external_memory_dma_buf extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_dma_buf] @linyaa-kiwi%0A*Here describe the issue or question you have about the VK_EXT_external_memory_dma_buf extension* >
 --
 -- == Other Extension Metadata
 --

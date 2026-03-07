@@ -58,15 +58,15 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- == Valid Usage
 --
 -- -   #VUID-VkAllocationCallbacks-pfnAllocation-00632# @pfnAllocation@
---     /must/ be a valid pointer to a valid user-defined
+--     /must/ be a valid pointer to a valid application-defined
 --     'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction'
 --
 -- -   #VUID-VkAllocationCallbacks-pfnReallocation-00633# @pfnReallocation@
---     /must/ be a valid pointer to a valid user-defined
+--     /must/ be a valid pointer to a valid application-defined
 --     'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction'
 --
 -- -   #VUID-VkAllocationCallbacks-pfnFree-00634# @pfnFree@ /must/ be a
---     valid pointer to a valid user-defined
+--     valid pointer to a valid application-defined
 --     'Vulkan.Core10.FuncPointers.PFN_vkFreeFunction'
 --
 -- -   #VUID-VkAllocationCallbacks-pfnInternalAllocation-00635# If either
@@ -115,12 +115,15 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Core10.Image.createImage',
 -- 'Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface.createImagePipeSurfaceFUCHSIA',
 -- 'Vulkan.Core10.ImageView.createImageView',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.createIndirectCommandsLayoutEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.createIndirectCommandsLayoutNV',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.createIndirectExecutionSetEXT',
 -- 'Vulkan.Core10.DeviceInitialization.createInstance',
 -- 'Vulkan.Extensions.VK_MVK_macos_surface.createMacOSSurfaceMVK',
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.createMicromapEXT',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.createOpticalFlowSessionNV',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.createPipelineBinariesKHR',
 -- 'Vulkan.Core10.PipelineCache.createPipelineCache',
 -- 'Vulkan.Core10.PipelineLayout.createPipelineLayout',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.createPrivateDataSlot',
@@ -171,11 +174,14 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Core10.Pass.destroyFramebuffer',
 -- 'Vulkan.Core10.Image.destroyImage',
 -- 'Vulkan.Core10.ImageView.destroyImageView',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.destroyIndirectCommandsLayoutEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.destroyIndirectCommandsLayoutNV',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.destroyIndirectExecutionSetEXT',
 -- 'Vulkan.Core10.DeviceInitialization.destroyInstance',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.destroyMicromapEXT',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.destroyOpticalFlowSessionNV',
 -- 'Vulkan.Core10.Pipeline.destroyPipeline',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.destroyPipelineBinaryKHR',
 -- 'Vulkan.Core10.PipelineCache.destroyPipelineCache',
 -- 'Vulkan.Core10.PipelineLayout.destroyPipelineLayout',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.destroyPrivateDataSlot',
@@ -195,7 +201,8 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkDestroyVideoSessionParametersKHR vkDestroyVideoSessionParametersKHR>,
 -- 'Vulkan.Core10.Memory.freeMemory',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDeviceEventEXT',
--- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT'
+-- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.releaseCapturedPipelineDataKHR'
 data AllocationCallbacks = AllocationCallbacks
   { -- No documentation found for Nested "VkAllocationCallbacks" "pUserData"
     userData :: Ptr ()

@@ -93,11 +93,12 @@
 -- from 'getSemaphoreWin32HandleKHR' when @handleType@ is
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_capabilities.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'?
 --
--- __RESOLVED__: Yes, unless it is passed back in to another driver
--- instance to import the object. A successful get call transfers ownership
--- of the handle to the application. Destroying the semaphore object will
--- not destroy the handle or the handle’s reference to the underlying
--- semaphore resource.
+-- __RESOLVED__: Yes. A successful get call transfers ownership of the
+-- handle to the application. Destroying the semaphore object will not
+-- destroy the handle or the handle’s reference to the underlying semaphore
+-- resource. Unlike file descriptor opaque handles, win32 opaque handle
+-- ownership can not be transferred back to a driver by an import
+-- operation.
 --
 -- 2) Should the language regarding KMT\/Windows 7 handles be moved to a
 -- separate extension so that it can be deprecated over time?
@@ -135,9 +136,7 @@
 --
 -- == See Also
 --
--- 'D3D12FenceSubmitInfoKHR', 'ExportSemaphoreWin32HandleInfoKHR',
--- 'ImportSemaphoreWin32HandleInfoKHR', 'SemaphoreGetWin32HandleInfoKHR',
--- 'getSemaphoreWin32HandleKHR', 'importSemaphoreWin32HandleKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

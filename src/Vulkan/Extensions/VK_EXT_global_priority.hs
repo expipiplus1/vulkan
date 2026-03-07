@@ -61,7 +61,7 @@
 -- 'Vulkan.Extensions.VK_KHR_global_priority.QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
 --
 -- The driver implementation will attempt to skew hardware resource
--- allocation in favour of the higher-priority task. Therefore,
+-- allocation in favor of the higher-priority task. Therefore,
 -- higher-priority work may retain similar latency and throughput
 -- characteristics even if the system is congested with lower priority
 -- work.
@@ -118,7 +118,7 @@
 --
 -- == See Also
 --
--- 'DeviceQueueGlobalPriorityCreateInfoEXT', 'QueueGlobalPriorityEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -74,7 +76,7 @@
 --
 -- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
 --
---     -   'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_CONTENTS_INLINE_BIT_EXT'
+--     -   'RENDERING_CONTENTS_INLINE_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -84,7 +86,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.SubpassContents.SubpassContents':
 --
---     -   'Vulkan.Core10.Enums.SubpassContents.SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT'
+--     -   'SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT'
 --
 -- == Issues
 --
@@ -109,8 +111,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceNestedCommandBufferFeaturesEXT',
--- 'PhysicalDeviceNestedCommandBufferPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -119,7 +120,9 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_nested_command_buffer  ( PhysicalDeviceNestedCommandBufferFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_nested_command_buffer  ( pattern SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT
+                                                       , pattern RENDERING_CONTENTS_INLINE_BIT_EXT
+                                                       , PhysicalDeviceNestedCommandBufferFeaturesEXT(..)
                                                        , PhysicalDeviceNestedCommandBufferPropertiesEXT(..)
                                                        , EXT_NESTED_COMMAND_BUFFER_SPEC_VERSION
                                                        , pattern EXT_NESTED_COMMAND_BUFFER_SPEC_VERSION
@@ -149,8 +152,19 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlags)
+import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlagBits(RENDERING_CONTENTS_INLINE_BIT_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_NESTED_COMMAND_BUFFER_FEATURES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_NESTED_COMMAND_BUFFER_PROPERTIES_EXT))
+import Vulkan.Core10.Enums.SubpassContents (SubpassContents(SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR))
+-- No documentation found for TopLevel "VK_SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT"
+pattern SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT = SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR
+
+
+-- No documentation found for TopLevel "VK_RENDERING_CONTENTS_INLINE_BIT_EXT"
+pattern RENDERING_CONTENTS_INLINE_BIT_EXT = RENDERING_CONTENTS_INLINE_BIT_KHR
+
+
 -- | VkPhysicalDeviceNestedCommandBufferFeaturesEXT - Structure describing
 -- whether nested command buffers are supported by the implementation
 --

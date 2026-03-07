@@ -115,8 +115,6 @@ instance Zero PhysicalDeviceShaderIntegerDotProductFeatures where
 -- These are properties of the integer dot product acceleration information
 -- of a physical device.
 --
--- Note
---
 -- A dot product operation is deemed accelerated if its implementation
 -- provides a performance advantage over application-provided code composed
 -- from elementary instructions and\/or other dot product instructions,

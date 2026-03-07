@@ -21,7 +21,11 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
 --
@@ -129,7 +133,7 @@
 -- __RESOLVED__: The extension covers all Vulkan objects, and is not
 -- restricted to objects backed by VkDeviceMemory objects.
 --
--- 3.) Should reallocation be identified explicitly, or as a unbind\/bind
+-- 3.) Should reallocation be identified explicitly, or as an unbind\/bind
 -- pair?
 --
 -- __RESOLVED__: Reallocation should be represented as an unbind\/bind
@@ -183,7 +187,7 @@
 --
 -- __RESOLVED__: Splitting of virtual address regions, and unmatched
 -- bind\/unbind callbacks may occur. Developers should anticipate that
--- sparse memory may exhibit this behaviour.
+-- sparse memory may exhibit this behavior.
 --
 -- 10.) The specification mandates that a callback /must/ be triggered
 -- whenever a GPU virtual address range associated with any Vulkan object
@@ -214,10 +218,7 @@
 --
 -- == See Also
 --
--- 'DeviceAddressBindingCallbackDataEXT',
--- 'DeviceAddressBindingFlagBitsEXT', 'DeviceAddressBindingFlagsEXT',
--- 'DeviceAddressBindingTypeEXT',
--- 'PhysicalDeviceAddressBindingReportFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

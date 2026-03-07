@@ -22,11 +22,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
 --     -   Lina Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_acquire_unmodified] @versalinyaa%0A*Here describe the issue or question you have about the VK_EXT_external_memory_acquire_unmodified extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_acquire_unmodified] @linyaa-kiwi%0A*Here describe the issue or question you have about the VK_EXT_external_memory_acquire_unmodified extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_external_memory_acquire_unmodified.adoc VK_EXT_external_memory_acquire_unmodified>
@@ -82,7 +84,7 @@
 --
 -- == See Also
 --
--- 'ExternalMemoryAcquireUnmodifiedEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -145,8 +147,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 -- not a special queue family reserved for external memory ownership
 -- transfers.
 --
--- Note
---
 -- The method by which the application determines whether memory was
 -- modified between the /release operation/ and /acquire operation/ is
 -- outside the scope of Vulkan.
@@ -173,7 +173,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers>),
 --     then each range of 'Vulkan.Core10.Handles.DeviceMemory' bound to the
 --     resource /must/ have remained unmodified during all time since the
---     resource’s most recent release of ownership to the queue family.
+--     resource’s most recent release of ownership to the queue family
 --
 -- == Valid Usage (Implicit)
 --

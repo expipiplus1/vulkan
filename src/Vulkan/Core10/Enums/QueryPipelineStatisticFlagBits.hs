@@ -47,8 +47,6 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 -- mesh or task shaders, which may affect several of the counters in
 -- unexpected ways.
 --
--- Note
---
 -- For example, tile-based rendering devices /may/ need to replay the scene
 -- multiple times, affecting some of the counts.
 --

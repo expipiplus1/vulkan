@@ -15,13 +15,17 @@
 --     426
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
 --
@@ -33,7 +37,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-09-03
+--     2024-06-17
 --
 -- [__Contributors__]
 --
@@ -44,6 +48,8 @@
 --     -   Jonathan Tinkham, Qualcomm Technologies, Inc.
 --
 --     -   Jeff Leger, Qualcomm Technologies, Inc.
+--
+--     -   Manan Katwala, Qualcomm Technologies, Inc.
 --
 -- == Description
 --
@@ -91,15 +97,17 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2024-06-17 (Matthew Netsch)
+--
+--     -   Fix typo in spec regarding fragmentDensityMapOffset feature
+--
 -- -   Revision 1, 2021-09-03 (Matthew Netsch)
 --
 --     -   Initial version
 --
 -- == See Also
 --
--- 'PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM',
--- 'PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM',
--- 'SubpassFragmentDensityMapOffsetEndInfoQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -181,7 +189,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBPASS_F
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM = PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM
-  { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM" "fragmentDensityMapOffset"
+  { -- | #features-fragmentDensityMapOffset# @fragmentDensityMapOffset@ specifies
+    -- whether the implementation supports
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density map offsets>
     fragmentDensityMapOffset :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -308,7 +318,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-fragmentDensityMapOffsets-06503#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffsets>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
 --     feature is not enabled or fragment density map is not enabled in the
 --     render pass, @fragmentDensityOffsetCount@ /must/ equal @0@
 --
@@ -437,11 +447,11 @@ instance Zero SubpassFragmentDensityMapOffsetEndInfoQCOM where
            mempty
 
 
-type QCOM_FRAGMENT_DENSITY_MAP_OFFSET_SPEC_VERSION = 1
+type QCOM_FRAGMENT_DENSITY_MAP_OFFSET_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_QCOM_FRAGMENT_DENSITY_MAP_OFFSET_SPEC_VERSION"
 pattern QCOM_FRAGMENT_DENSITY_MAP_OFFSET_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_FRAGMENT_DENSITY_MAP_OFFSET_SPEC_VERSION = 1
+pattern QCOM_FRAGMENT_DENSITY_MAP_OFFSET_SPEC_VERSION = 2
 
 
 type QCOM_FRAGMENT_DENSITY_MAP_OFFSET_EXTENSION_NAME = "VK_QCOM_fragment_density_map_offset"

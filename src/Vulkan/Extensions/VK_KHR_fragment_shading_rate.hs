@@ -21,19 +21,22 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
---     and
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
@@ -57,7 +60,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_shading_rate.txt GL_EXT_fragment_shading_rate>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_fragment_shading_rate.txt GL_EXT_fragment_shading_rate>
 --
 -- [__Contributors__]
 --
@@ -147,6 +150,17 @@
 --
 --     -   'FragmentShadingRateAttachmentInfoKHR'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
+--
+--     -   'RenderingFragmentShadingRateAttachmentInfoKHR'
+--
 -- == New Enums
 --
 -- -   'FragmentShadingRateCombinerOpKHR'
@@ -198,12 +212,31 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
 --
 --     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR'
 --
 -- == Version History
 --
@@ -217,14 +250,7 @@
 --
 -- == See Also
 --
--- 'FragmentShadingRateAttachmentInfoKHR',
--- 'FragmentShadingRateCombinerOpKHR',
--- 'PhysicalDeviceFragmentShadingRateFeaturesKHR',
--- 'PhysicalDeviceFragmentShadingRateKHR',
--- 'PhysicalDeviceFragmentShadingRatePropertiesKHR',
--- 'PipelineFragmentShadingRateStateCreateInfoKHR',
--- 'cmdSetFragmentShadingRateKHR',
--- 'getPhysicalDeviceFragmentShadingRatesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -235,11 +261,13 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( cmdSetFragmentShadingRateKHR
                                                        , getPhysicalDeviceFragmentShadingRatesKHR
+                                                       , pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                        , FragmentShadingRateAttachmentInfoKHR(..)
                                                        , PipelineFragmentShadingRateStateCreateInfoKHR(..)
                                                        , PhysicalDeviceFragmentShadingRateFeaturesKHR(..)
                                                        , PhysicalDeviceFragmentShadingRatePropertiesKHR(..)
                                                        , PhysicalDeviceFragmentShadingRateKHR(..)
+                                                       , RenderingFragmentShadingRateAttachmentInfoKHR(..)
                                                        , FragmentShadingRateCombinerOpKHR( FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR
                                                                                          , FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR
                                                                                          , FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR
@@ -315,6 +343,8 @@ import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetFragmentShadingRateKHR))
 import Vulkan.Core10.FundamentalTypes (Extent2D)
+import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
+import Vulkan.Core10.Handles (ImageView)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceFragmentShadingRatesKHR))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -327,11 +357,14 @@ import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlags)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -359,22 +392,22 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-pipelineFragmentShadingRate-04507#
---     If
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
---     is not enabled, @pFragmentSize->width@ /must/ be @1@
+--     feature is not enabled, @pFragmentSize->width@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-pipelineFragmentShadingRate-04508#
---     If
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
---     is not enabled, @pFragmentSize->height@ /must/ be @1@
+--     feature is not enabled, @pFragmentSize->height@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-pipelineFragmentShadingRate-04509#
---     One of
+--     One of the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>,
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>,
 --     or
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     /must/ be enabled
+--     features /must/ be enabled
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-primitiveFragmentShadingRate-04510#
 --     If the
@@ -517,9 +550,9 @@ foreign import ccall
 -- If @pFragmentShadingRates@ is @NULL@, then the number of fragment
 -- shading rates available is returned in @pFragmentShadingRateCount@.
 -- Otherwise, @pFragmentShadingRateCount@ /must/ point to a variable set by
--- the user to the number of elements in the @pFragmentShadingRates@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pFragmentShadingRates@. If
+-- the application to the number of elements in the @pFragmentShadingRates@
+-- array, and on return the variable is overwritten with the number of
+-- structures actually written to @pFragmentShadingRates@. If
 -- @pFragmentShadingRateCount@ is less than the number of fragment shading
 -- rates available, at most @pFragmentShadingRateCount@ structures will be
 -- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
@@ -581,8 +614,6 @@ foreign import ccall
 -- the required rates /must/ also include
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_2_BIT'.
 --
--- Note
---
 -- Including the {1,1} fragment size is done for completeness; it has no
 -- actual effect on the support of rendering without setting the fragment
 -- size. All sample counts and render pass transforms are supported for
@@ -595,8 +626,6 @@ foreign import ccall
 -- the application /must/ transform the returned fragment shading rates
 -- into the current (unrotated) coordinate system to get the supported
 -- rates for that transform.
---
--- Note
 --
 -- For example, consider an implementation returning support for 4x2, but
 -- not 2x4 in the set of supported fragment shading rates. This means that
@@ -668,6 +697,10 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
   pFragmentShadingRateCount' <- lift $ peek @Word32 pPFragmentShadingRateCount
   pFragmentShadingRates' <- lift $ generateM (fromIntegral (pFragmentShadingRateCount')) (\i -> peekCStruct @PhysicalDeviceFragmentShadingRateKHR (((pPFragmentShadingRates) `advancePtrBytes` (32 * (i)) :: Ptr PhysicalDeviceFragmentShadingRateKHR)))
   pure $ ((r'), pFragmentShadingRates')
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
+pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
 
 
 -- | VkFragmentShadingRateAttachmentInfoKHR - Structure specifying a fragment
@@ -1007,8 +1040,6 @@ instance Zero PhysicalDeviceFragmentShadingRateFeaturesKHR where
 -- implementation
 --
 -- = Description
---
--- Note
 --
 -- Multiplication of the combiner rates using the fragment width\/height in
 -- linear space is equivalent to an addition of those values in log2 space.
@@ -1393,6 +1424,161 @@ instance Storable PhysicalDeviceFragmentShadingRateKHR where
 
 instance Zero PhysicalDeviceFragmentShadingRateKHR where
   zero = PhysicalDeviceFragmentShadingRateKHR
+           zero
+           zero
+
+
+-- | VkRenderingFragmentShadingRateAttachmentInfoKHR - Structure specifying
+-- fragment shading rate attachment information
+--
+-- = Description
+--
+-- This structure can be included in the @pNext@ chain of
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo' to
+-- define a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+-- If @imageView@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or if this
+-- structure is not specified, the implementation behaves as if a valid
+-- shading rate attachment was specified with all texels specifying a
+-- single pixel per fragment.
+--
+-- == Valid Usage
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06147#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @layout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06148#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
+--     /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06149#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @shadingRateAttachmentTexelSize.width@ /must/ be a power of two
+--     value
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06150#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @shadingRateAttachmentTexelSize.width@ /must/ be less than or equal
+--     to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.width>
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06151#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @shadingRateAttachmentTexelSize.width@ /must/ be greater than or
+--     equal to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.width>
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06152#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @shadingRateAttachmentTexelSize.height@ /must/ be a power of two
+--     value
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06153#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @shadingRateAttachmentTexelSize.height@ /must/ be less than or equal
+--     to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.height>
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06154#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @shadingRateAttachmentTexelSize.height@ /must/ be greater than or
+--     equal to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.height>
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06155#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     quotient of @shadingRateAttachmentTexelSize.width@ and
+--     @shadingRateAttachmentTexelSize.height@ /must/ be less than or equal
+--     to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06156#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     quotient of @shadingRateAttachmentTexelSize.height@ and
+--     @shadingRateAttachmentTexelSize.width@ /must/ be less than or equal
+--     to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR'
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-parameter#
+--     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @imageView@ /must/ be a valid 'Vulkan.Core10.Handles.ImageView'
+--     handle
+--
+-- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageLayout-parameter#
+--     @imageLayout@ /must/ be a valid
+--     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
+-- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
+-- 'Vulkan.Core10.Handles.ImageView',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data RenderingFragmentShadingRateAttachmentInfoKHR = RenderingFragmentShadingRateAttachmentInfoKHR
+  { -- | @imageView@ is the image view that will be used as a fragment shading
+    -- rate attachment.
+    imageView :: ImageView
+  , -- | @imageLayout@ is the layout that @imageView@ will be in during
+    -- rendering.
+    imageLayout :: ImageLayout
+  , -- | @shadingRateAttachmentTexelSize@ specifies the number of pixels
+    -- corresponding to each texel in @imageView@.
+    shadingRateAttachmentTexelSize :: Extent2D
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderingFragmentShadingRateAttachmentInfoKHR)
+#endif
+deriving instance Show RenderingFragmentShadingRateAttachmentInfoKHR
+
+instance ToCStruct RenderingFragmentShadingRateAttachmentInfoKHR where
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p RenderingFragmentShadingRateAttachmentInfoKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ImageView)) (imageView)
+    poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (imageLayout)
+    poke ((p `plusPtr` 28 :: Ptr Extent2D)) (shadingRateAttachmentTexelSize)
+    f
+  cStructSize = 40
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Extent2D)) (zero)
+    f
+
+instance FromCStruct RenderingFragmentShadingRateAttachmentInfoKHR where
+  peekCStruct p = do
+    imageView <- peek @ImageView ((p `plusPtr` 16 :: Ptr ImageView))
+    imageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
+    shadingRateAttachmentTexelSize <- peekCStruct @Extent2D ((p `plusPtr` 28 :: Ptr Extent2D))
+    pure $ RenderingFragmentShadingRateAttachmentInfoKHR
+             imageView imageLayout shadingRateAttachmentTexelSize
+
+instance Storable RenderingFragmentShadingRateAttachmentInfoKHR where
+  sizeOf ~_ = 40
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero RenderingFragmentShadingRateAttachmentInfoKHR where
+  zero = RenderingFragmentShadingRateAttachmentInfoKHR
+           zero
            zero
            zero
 

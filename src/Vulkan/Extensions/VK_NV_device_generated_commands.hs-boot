@@ -21,9 +21,13 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
---     and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__Contact__]
 --
@@ -339,7 +343,7 @@
 -- 8) How do we allow re-using already “generated” @indirectCommands@?
 --
 -- Expose a @preprocessBuffer@ to reuse implementation-dependencyFlags
--- data. Set the @isPreprocessed@ to true in
+-- data. Set @isPreprocessed@ to 'Vulkan.Core10.FundamentalTypes.TRUE' in
 -- 'cmdExecuteGeneratedCommandsNV'.
 --
 -- 9) Under which conditions is 'cmdExecuteGeneratedCommandsNV' legal?
@@ -521,23 +525,7 @@
 --
 -- == See Also
 --
--- 'BindIndexBufferIndirectCommandNV', 'BindShaderGroupIndirectCommandNV',
--- 'BindVertexBufferIndirectCommandNV', 'GeneratedCommandsInfoNV',
--- 'GeneratedCommandsMemoryRequirementsInfoNV',
--- 'GraphicsPipelineShaderGroupsCreateInfoNV',
--- 'GraphicsShaderGroupCreateInfoNV', 'IndirectCommandsLayoutCreateInfoNV',
--- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV',
--- 'IndirectCommandsLayoutTokenNV',
--- 'IndirectCommandsLayoutUsageFlagBitsNV',
--- 'IndirectCommandsLayoutUsageFlagsNV', 'IndirectCommandsStreamNV',
--- 'IndirectCommandsTokenTypeNV', 'IndirectStateFlagBitsNV',
--- 'IndirectStateFlagsNV',
--- 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
--- 'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV',
--- 'SetStateFlagsIndirectCommandNV', 'cmdBindPipelineShaderGroupNV',
--- 'cmdExecuteGeneratedCommandsNV', 'cmdPreprocessGeneratedCommandsNV',
--- 'createIndirectCommandsLayoutNV', 'destroyIndirectCommandsLayoutNV',
--- 'getGeneratedCommandsMemoryRequirementsNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

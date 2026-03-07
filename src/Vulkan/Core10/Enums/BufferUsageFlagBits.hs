@@ -111,7 +111,10 @@ pattern BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlagBits 0x00000080
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsStreamNV',
 -- or @sequencesCountBuffer@ or @sequencesIndexBuffer@ or
 -- @preprocessedBuffer@ member of
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV'
+-- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV'.
+-- It is also suitable for passing as the underlying buffer of either the
+-- @preprocessAddress@ or @sequenceCountAddress@ members of
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.GeneratedCommandsInfoEXT'.
 pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT = BufferUsageFlagBits 0x00000100
 
 -- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT"

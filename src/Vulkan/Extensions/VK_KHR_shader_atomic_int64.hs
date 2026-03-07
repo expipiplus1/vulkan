@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -43,7 +45,7 @@
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_gpu_shader_int64.txt GL_ARB_gpu_shader_int64>
 --         and
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_atomic_int64.txt GL_EXT_shader_atomic_int64>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GL_EXT_shader_atomic_int64.txt GL_EXT_shader_atomic_int64>
 --
 -- [__Contributors__]
 --
@@ -68,8 +70,8 @@
 -- All functionality in this extension is included in core Vulkan 1.2, with
 -- the KHR suffix omitted. However, if Vulkan 1.2 is supported and this
 -- extension is not, the @shaderBufferInt64Atomics@ capability is optional.
--- The original type, enum and command names are still available as aliases
--- of the core functionality.
+-- The original type, enum, and command names are still available as
+-- aliases of the core functionality.
 --
 -- == New Structures
 --
@@ -101,7 +103,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderAtomicInt64FeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

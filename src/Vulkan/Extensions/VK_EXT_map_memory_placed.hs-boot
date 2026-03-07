@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_map_memory2 VK_KHR_map_memory2>
@@ -59,7 +59,7 @@
 --
 -- == Description
 --
--- This extension allows a client to request that
+-- This extension allows an application to request that
 -- 'Vulkan.Extensions.VK_KHR_map_memory2.mapMemory2KHR' attempt to place
 -- the memory map at a particular virtual address.
 --
@@ -111,8 +111,7 @@
 --
 -- == See Also
 --
--- 'MemoryMapPlacedInfoEXT', 'PhysicalDeviceMapMemoryPlacedFeaturesEXT',
--- 'PhysicalDeviceMapMemoryPlacedPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

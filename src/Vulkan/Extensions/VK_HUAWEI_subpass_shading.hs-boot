@@ -21,9 +21,16 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -42,7 +49,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/huawei/GLSL_HUAWEI_subpass_shading.txt GL_HUAWEI_subpass_shading>.
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/huawei/GLSL_HUAWEI_subpass_shading.txt GL_HUAWEI_subpass_shading>.
 --
 -- [__Contributors__]
 --
@@ -342,10 +349,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceSubpassShadingFeaturesHUAWEI',
--- 'PhysicalDeviceSubpassShadingPropertiesHUAWEI',
--- 'SubpassShadingPipelineCreateInfoHUAWEI', 'cmdSubpassShadingHUAWEI',
--- 'getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI'
+-- No cross-references are available
 --
 -- == Document Notes
 --

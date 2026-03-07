@@ -161,7 +161,7 @@
 --
 -- == See Also
 --
--- 'acquireWinrtDisplayNV', 'getWinrtDisplayNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -234,20 +234,14 @@ foreign import ccall
 -- entity, the call /must/ return the error code
 -- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
 --
--- Note
---
 -- The Vulkan instance acquires control of a
 -- <https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaytarget “winrt::Windows::Devices::Display::Core::DisplayTarget”>
 -- by performing an operation equivalent to
 -- <https://docs.microsoft.com/en-us/uwp/api/windows.devices.display.core.displaymanager.tryacquiretarget “winrt::Windows::Devices::Display::Core::DisplayManager.TryAcquireTarget()”>
 -- on the “DisplayTarget”.
 --
--- Note
---
 -- One example of when Windows 10 loses access to a display is when the
 -- display is hot-unplugged.
---
--- Note
 --
 -- One example of when a display has already been acquired by another
 -- entity is when the Windows desktop compositor (DWM) is in control of the

@@ -158,8 +158,7 @@
 --
 -- == See Also
 --
--- 'XlibSurfaceCreateFlagsKHR', 'XlibSurfaceCreateInfoKHR',
--- 'createXlibSurfaceKHR', 'getPhysicalDeviceXlibPresentationSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -471,7 +470,7 @@ instance Zero XlibSurfaceCreateInfoKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface VK_KHR_xlib_surface>,
--- 'XlibSurfaceCreateInfoKHR'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'XlibSurfaceCreateInfoKHR'
 newtype XlibSurfaceCreateFlagsKHR = XlibSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

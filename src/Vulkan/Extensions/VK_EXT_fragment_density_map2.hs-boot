@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
@@ -92,8 +92,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceFragmentDensityMap2FeaturesEXT',
--- 'PhysicalDeviceFragmentDensityMap2PropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

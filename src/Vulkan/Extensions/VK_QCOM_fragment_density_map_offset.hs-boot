@@ -15,13 +15,17 @@
 --     426
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
 --
@@ -33,7 +37,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-09-03
+--     2024-06-17
 --
 -- [__Contributors__]
 --
@@ -44,6 +48,8 @@
 --     -   Jonathan Tinkham, Qualcomm Technologies, Inc.
 --
 --     -   Jeff Leger, Qualcomm Technologies, Inc.
+--
+--     -   Manan Katwala, Qualcomm Technologies, Inc.
 --
 -- == Description
 --
@@ -91,15 +97,17 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2024-06-17 (Matthew Netsch)
+--
+--     -   Fix typo in spec regarding fragmentDensityMapOffset feature
+--
 -- -   Revision 1, 2021-09-03 (Matthew Netsch)
 --
 --     -   Initial version
 --
 -- == See Also
 --
--- 'PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM',
--- 'PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM',
--- 'SubpassFragmentDensityMapOffsetEndInfoQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -39,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_ray_tracing_motion_blur.txt GL_NV_ray_tracing_motion_blur>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_ray_tracing_motion_blur.txt GL_NV_ray_tracing_motion_blur>
 --
 -- [__Contributors__]
 --
@@ -161,16 +161,7 @@
 --
 -- == See Also
 --
--- 'AccelerationStructureGeometryMotionTrianglesDataNV',
--- 'AccelerationStructureMatrixMotionInstanceNV',
--- 'AccelerationStructureMotionInfoFlagsNV',
--- 'AccelerationStructureMotionInfoNV',
--- 'AccelerationStructureMotionInstanceDataNV',
--- 'AccelerationStructureMotionInstanceFlagsNV',
--- 'AccelerationStructureMotionInstanceNV',
--- 'AccelerationStructureMotionInstanceTypeNV',
--- 'AccelerationStructureSRTMotionInstanceNV',
--- 'PhysicalDeviceRayTracingMotionBlurFeaturesNV', 'SRTDataNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

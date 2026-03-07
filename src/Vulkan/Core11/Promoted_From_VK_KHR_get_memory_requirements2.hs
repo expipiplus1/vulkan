@@ -508,6 +508,7 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 -- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceBufferMemoryRequirementsKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceImageMemoryRequirements',
 -- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageMemoryRequirementsKHR',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.getGeneratedCommandsMemoryRequirementsEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'getImageMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR',

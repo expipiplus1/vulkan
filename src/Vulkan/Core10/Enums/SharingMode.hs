@@ -18,8 +18,6 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
--- Note
---
 -- 'SHARING_MODE_CONCURRENT' /may/ result in lower performance access to
 -- the buffer or image than 'SHARING_MODE_EXCLUSIVE'.
 --
@@ -33,8 +31,6 @@ import GHC.Show (Show(showsPrec))
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
 -- to make the memory contents of a range or image subresource accessible
 -- to a different queue family.
---
--- Note
 --
 -- Images still require a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-layouts layout transition>

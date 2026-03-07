@@ -30,8 +30,6 @@ type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 --
 -- = Description
 --
--- Note
---
 -- Shader resolve operations allow for custom resolve operations, but
 -- overdrawing pixels /may/ have a performance and\/or power cost.
 -- Furthermore, since the content of any depth stencil attachment or color

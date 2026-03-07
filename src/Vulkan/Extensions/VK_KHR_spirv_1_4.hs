@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_float_controls VK_KHR_shader_float_controls>
 --
@@ -72,7 +72,7 @@
 -- extensions with the @OpExtension@ opcode, since they are integral parts
 -- of SPIR-V 1.4.
 --
--- SPIR-V 1.4 introduces new floating point execution mode capabilities,
+-- SPIR-V 1.4 introduces new floating-point execution mode capabilities,
 -- also available via @SPV_KHR_float_controls@. Implementations are not
 -- required to support all of these new capabilities; support can be
 -- queried using
@@ -82,7 +82,7 @@
 -- == Promotion to Vulkan 1.2
 --
 -- All functionality in this extension is included in core Vulkan 1.2, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Enum Constants

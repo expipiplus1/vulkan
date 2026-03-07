@@ -1,6 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "AccessFlags2"
-module Vulkan.Core13.Enums.AccessFlags2  ( pattern ACCESS_2_NONE_KHR
+module Vulkan.Core13.Enums.AccessFlags2  ( pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT
+                                         , pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT
+                                         , pattern ACCESS_2_NONE_KHR
                                          , pattern ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR
                                          , pattern ACCESS_2_INDEX_READ_BIT_KHR
                                          , pattern ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR
@@ -76,6 +78,14 @@ import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags64)
+-- No documentation found for TopLevel "VK_ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT"
+pattern ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT = ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV
+
+
+-- No documentation found for TopLevel "VK_ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT"
+pattern ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT = ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV
+
+
 -- No documentation found for TopLevel "VK_ACCESS_2_NONE_KHR"
 pattern ACCESS_2_NONE_KHR = ACCESS_2_NONE
 
@@ -166,14 +176,10 @@ type AccessFlags2 = AccessFlagBits2
 --
 -- = Description
 --
--- Note
---
 -- In situations where an application wishes to select all access types for
 -- a given set of pipeline stages, 'ACCESS_2_MEMORY_READ_BIT' or
 -- 'ACCESS_2_MEMORY_WRITE_BIT' can be used. This is particularly useful
 -- when specifying stages that only have a single access type.
---
--- Note
 --
 -- The 'AccessFlags2' bitmask goes beyond the 31 individual bit flags
 -- allowable within a C99 enum, which is how
@@ -183,7 +189,8 @@ type AccessFlags2 = AccessFlagBits2
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'AccessFlags2'
 newtype AccessFlagBits2 = AccessFlagBits2 Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -234,8 +241,6 @@ pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT = AccessFlagBits2 0x0000000000000010
 -- -   'ACCESS_2_SHADER_SAMPLED_READ_BIT'
 --
 -- -   'ACCESS_2_SHADER_STORAGE_READ_BIT'
---
--- -   'ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR'
 pattern ACCESS_2_SHADER_READ_BIT = AccessFlagBits2 0x0000000000000020
 
 -- | 'ACCESS_2_SHADER_WRITE_BIT' is equivalent to
@@ -414,7 +419,7 @@ pattern ACCESS_2_MICROMAP_READ_BIT_EXT = AccessFlagBits2 0x0000100000000000
 -- in any shader pipeline stage.
 pattern ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR = AccessFlagBits2 0x0000010000000000
 
--- | 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI' specifies read access to a
+-- | 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI' specifies read access to an
 -- invocation mask image in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 -- pipeline stage.

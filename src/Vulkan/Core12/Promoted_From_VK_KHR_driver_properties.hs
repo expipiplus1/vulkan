@@ -147,8 +147,9 @@ data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties
     -- null-terminated UTF-8 string with additional information about the
     -- driver.
     driverInfo :: ByteString
-  , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
-    -- driver is conformant against (see 'ConformanceVersion').
+  , -- | @conformanceVersion@ is the latest version of the Vulkan conformance
+    -- test that the implementor has successfully tested this driver against
+    -- prior to release (see 'ConformanceVersion').
     conformanceVersion :: ConformanceVersion
   }
   deriving (Typeable)

@@ -42,7 +42,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing_position_fetch.txt GLSL_EXT_ray_tracing_position_fetch>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_ray_tracing_position_fetch.txt GLSL_EXT_ray_tracing_position_fetch>
 --
 --     -   Interacts with @VK_KHR_ray_tracing_pipeline@
 --
@@ -116,6 +116,8 @@
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTracingPositionFetchKHR RayTracingPositionFetchKHR>
 --
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryPositionFetchKHR RayQueryPositionFetchKHR>
+--
 -- == Issues
 --
 -- None Yet!
@@ -128,7 +130,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRayTracingPositionFetchFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

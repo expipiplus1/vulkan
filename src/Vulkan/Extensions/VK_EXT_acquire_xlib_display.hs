@@ -103,7 +103,7 @@
 --
 -- == See Also
 --
--- 'acquireXlibDisplayEXT', 'getRandROutputDisplayEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -181,8 +181,6 @@ foreign import ccall
 -- permission to access it has already been acquired by another entity, the
 -- call /must/ return the error code
 -- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
---
--- Note
 --
 -- One example of when an X11 server loses access to a display is when it
 -- loses ownership of its virtual terminal.

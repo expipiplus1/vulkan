@@ -18,7 +18,7 @@
 --     3
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -118,8 +118,7 @@
 --
 -- == See Also
 --
--- 'FilterCubicImageViewImageFormatPropertiesEXT',
--- 'PhysicalDeviceImageViewImageFormatInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

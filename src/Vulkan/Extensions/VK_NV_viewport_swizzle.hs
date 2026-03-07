@@ -254,9 +254,7 @@
 --
 -- == See Also
 --
--- 'PipelineViewportSwizzleStateCreateFlagsNV',
--- 'PipelineViewportSwizzleStateCreateInfoNV',
--- 'ViewportCoordinateSwizzleNV', 'ViewportSwizzleNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -479,6 +477,7 @@ instance Zero PipelineViewportSwizzleStateCreateInfoNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'PipelineViewportSwizzleStateCreateInfoNV'
 newtype PipelineViewportSwizzleStateCreateFlagsNV = PipelineViewportSwizzleStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -74,6 +74,8 @@ pattern PIPELINE_STAGE_TOP_OF_PIPE_BIT = PipelineStageFlagBits 0x00000001
 -- @VkTraceRaysIndirect*@ data structures are consumed. This stage also
 -- includes reading commands written by
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdExecuteGeneratedCommandsNV'.
+-- This stage also includes reading commands written by
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.cmdExecuteGeneratedCommandsEXT'.
 pattern PIPELINE_STAGE_DRAW_INDIRECT_BIT = PipelineStageFlagBits 0x00000002
 
 -- | 'PIPELINE_STAGE_VERTEX_INPUT_BIT' specifies the stage of the pipeline

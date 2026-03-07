@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -43,7 +45,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/khr/GLSL_KHR_cooperative_matrix.txt GLSL_KHR_cooperative_matrix>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/khr/GLSL_KHR_cooperative_matrix.txt GLSL_KHR_cooperative_matrix>
 --
 -- [__Contributors__]
 --
@@ -68,7 +70,7 @@
 -- Cooperative matrix types are defined by the
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_cooperative_matrix.html SPV_KHR_cooperative_matrix>
 -- SPIR-V extension and can be used with the
--- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/khr/GLSL_KHR_cooperative_matrix.txt GLSL_KHR_cooperative_matrix>
+-- <https://github.com/KhronosGroup/GLSL/blob/main/extensions/khr/GLSL_KHR_cooperative_matrix.txt GLSL_KHR_cooperative_matrix>
 -- GLSL extension.
 --
 -- This extension includes support for enumerating the matrix types and
@@ -129,10 +131,7 @@
 --
 -- == See Also
 --
--- 'ComponentTypeKHR', 'CooperativeMatrixPropertiesKHR',
--- 'PhysicalDeviceCooperativeMatrixFeaturesKHR',
--- 'PhysicalDeviceCooperativeMatrixPropertiesKHR', 'ScopeKHR',
--- 'getPhysicalDeviceCooperativeMatrixPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -246,8 +245,8 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of cooperative matrix
 -- properties available is returned in @pPropertyCount@. Otherwise,
--- @pPropertyCount@ /must/ point to a variable set by the user to the
--- number of elements in the @pProperties@ array, and on return the
+-- @pPropertyCount@ /must/ point to a variable set by the application to
+-- the number of elements in the @pProperties@ array, and on return the
 -- variable is overwritten with the number of structures actually written
 -- to @pProperties@. If @pPropertyCount@ is less than the number of
 -- cooperative matrix properties available, at most @pPropertyCount@
@@ -410,7 +409,9 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesKHR where
 -- At least one entry in the list /must/ have power of two values for all
 -- of @MSize@, @KSize@, and @NSize@.
 --
--- @scope@ /must/ be 'SCOPE_SUBGROUP_KHR'.
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixWorkgroupScope cooperativeMatrixWorkgroupScope>
+-- feature is not supported, @scope@ /must/ be 'SCOPE_SUBGROUP_KHR'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -439,7 +440,11 @@ data CooperativeMatrixPropertiesKHR = CooperativeMatrixPropertiesKHR
     -- 'Vulkan.Core10.Enums.Result.Result', of type 'ComponentTypeKHR'.
     resultType :: ComponentTypeKHR
   , -- | @saturatingAccumulation@ indicates whether the @SaturatingAccumulation@
-    -- operand to @OpCooperativeMatrixMulAddKHR@ /must/ be present.
+    -- operand to @OpCooperativeMatrixMulAddKHR@ /must/ be present or not. If
+    -- it is 'Vulkan.Core10.FundamentalTypes.TRUE', the
+    -- @SaturatingAccumulation@ operand /must/ be present. If it is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', the @SaturatingAccumulation@
+    -- operand /must/ not be present.
     saturatingAccumulation :: Bool
   , -- | @scope@ is the scope of all the matrix types, of type 'ScopeKHR'.
     scope :: ScopeKHR
@@ -602,6 +607,7 @@ instance Zero PhysicalDeviceCooperativeMatrixPropertiesKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_cooperative_matrix VK_KHR_cooperative_matrix>,
+-- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.CooperativeMatrixFlexibleDimensionsPropertiesNV',
 -- 'CooperativeMatrixPropertiesKHR'
 newtype ScopeKHR = ScopeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -665,6 +671,7 @@ instance Read ScopeKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_cooperative_matrix VK_KHR_cooperative_matrix>,
+-- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.CooperativeMatrixFlexibleDimensionsPropertiesNV',
 -- 'CooperativeMatrixPropertiesKHR'
 newtype ComponentTypeKHR = ComponentTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -678,28 +685,28 @@ pattern COMPONENT_TYPE_FLOAT32_KHR = ComponentTypeKHR 1
 -- | 'COMPONENT_TYPE_FLOAT64_KHR' corresponds to SPIR-V @OpTypeFloat@ 64.
 pattern COMPONENT_TYPE_FLOAT64_KHR = ComponentTypeKHR 2
 
--- | 'COMPONENT_TYPE_SINT8_KHR' corresponds to SPIR-V @OpTypeInt@ 8 1.
+-- | 'COMPONENT_TYPE_SINT8_KHR' corresponds to SPIR-V @OpTypeInt@ 8 0\/1.
 pattern COMPONENT_TYPE_SINT8_KHR = ComponentTypeKHR 3
 
--- | 'COMPONENT_TYPE_SINT16_KHR' corresponds to SPIR-V @OpTypeInt@ 16 1.
+-- | 'COMPONENT_TYPE_SINT16_KHR' corresponds to SPIR-V @OpTypeInt@ 16 0\/1.
 pattern COMPONENT_TYPE_SINT16_KHR = ComponentTypeKHR 4
 
--- | 'COMPONENT_TYPE_SINT32_KHR' corresponds to SPIR-V @OpTypeInt@ 32 1.
+-- | 'COMPONENT_TYPE_SINT32_KHR' corresponds to SPIR-V @OpTypeInt@ 32 0\/1.
 pattern COMPONENT_TYPE_SINT32_KHR = ComponentTypeKHR 5
 
--- | 'COMPONENT_TYPE_SINT64_KHR' corresponds to SPIR-V @OpTypeInt@ 64 1.
+-- | 'COMPONENT_TYPE_SINT64_KHR' corresponds to SPIR-V @OpTypeInt@ 64 0\/1.
 pattern COMPONENT_TYPE_SINT64_KHR = ComponentTypeKHR 6
 
--- | 'COMPONENT_TYPE_UINT8_KHR' corresponds to SPIR-V @OpTypeInt@ 8 0.
+-- | 'COMPONENT_TYPE_UINT8_KHR' corresponds to SPIR-V @OpTypeInt@ 8 0\/1.
 pattern COMPONENT_TYPE_UINT8_KHR = ComponentTypeKHR 7
 
--- | 'COMPONENT_TYPE_UINT16_KHR' corresponds to SPIR-V @OpTypeInt@ 16 0.
+-- | 'COMPONENT_TYPE_UINT16_KHR' corresponds to SPIR-V @OpTypeInt@ 16 0\/1.
 pattern COMPONENT_TYPE_UINT16_KHR = ComponentTypeKHR 8
 
--- | 'COMPONENT_TYPE_UINT32_KHR' corresponds to SPIR-V @OpTypeInt@ 32 0.
+-- | 'COMPONENT_TYPE_UINT32_KHR' corresponds to SPIR-V @OpTypeInt@ 32 0\/1.
 pattern COMPONENT_TYPE_UINT32_KHR = ComponentTypeKHR 9
 
--- | 'COMPONENT_TYPE_UINT64_KHR' corresponds to SPIR-V @OpTypeInt@ 64 0.
+-- | 'COMPONENT_TYPE_UINT64_KHR' corresponds to SPIR-V @OpTypeInt@ 64 0\/1.
 pattern COMPONENT_TYPE_UINT64_KHR = ComponentTypeKHR 10
 
 {-# COMPLETE

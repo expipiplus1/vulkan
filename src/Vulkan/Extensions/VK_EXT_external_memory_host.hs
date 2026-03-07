@@ -18,12 +18,12 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -160,9 +160,7 @@
 --
 -- == See Also
 --
--- 'ImportMemoryHostPointerInfoEXT', 'MemoryHostPointerPropertiesEXT',
--- 'PhysicalDeviceExternalMemoryHostPropertiesEXT',
--- 'getMemoryHostPointerPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -352,6 +350,24 @@ getMemoryHostPointerPropertiesEXT device
 -- ensure that the imported memory range remains valid and accessible for
 -- the lifetime of the imported memory object.
 --
+-- Implementations /may/ support importing host pointers for memory types
+-- which are not host-visible. In this case, after a successful call to
+-- 'Vulkan.Core10.Memory.allocateMemory', the memory range imported from
+-- @pHostPointer@ /must/ not be accessed by the application until the
+-- 'Vulkan.Core10.Handles.DeviceMemory' has been destroyed. Memory contents
+-- for the host memory becomes undefined on import, and is left undefined
+-- after the 'Vulkan.Core10.Handles.DeviceMemory' has been destroyed.
+-- Applications /must/ also not access host memory which is mapped to the
+-- same physical memory as @pHostPointer@, but mapped to a different host
+-- pointer while the 'Vulkan.Core10.Handles.DeviceMemory' handle is valid.
+-- Implementations running on general-purpose operating systems /should/
+-- not support importing host pointers for memory types which are not
+-- host-visible.
+--
+-- Using host pointers to back non-host visible allocations is a
+-- platform-specific use case, and applications should not attempt to do
+-- this unless instructed by the platform.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkImportMemoryHostPointerInfoEXT-handleType-01747# If
@@ -459,8 +475,11 @@ instance Zero ImportMemoryHostPointerInfoEXT where
 --
 -- = Description
 --
--- The value returned by @memoryTypeBits@ /must/ only include bits that
--- identify memory types which are host visible.
+-- The value returned by @memoryTypeBits@ /should/ only include bits that
+-- identify memory types which are host visible. Implementations /may/
+-- include bits that identify memory types which are not host visible.
+-- Behavior for imported pointers of such types is defined by
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#host-memory-import-non-visible-type >.
 --
 -- == Valid Usage (Implicit)
 --

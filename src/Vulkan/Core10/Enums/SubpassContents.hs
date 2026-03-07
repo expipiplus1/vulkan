@@ -2,7 +2,7 @@
 -- No documentation found for Chapter "SubpassContents"
 module Vulkan.Core10.Enums.SubpassContents  (SubpassContents( SUBPASS_CONTENTS_INLINE
                                                             , SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
-                                                            , SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT
+                                                            , SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR
                                                             , ..
                                                             )) where
 
@@ -41,16 +41,16 @@ pattern SUBPASS_CONTENTS_INLINE = SubpassContents 0
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdEndRenderPass'.
 pattern SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = SubpassContents 1
 
--- | 'SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT' specifies
+-- | 'SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR' specifies
 -- that the contents of the subpass /can/ be recorded both inline and in
 -- secondary command buffers executed from this command buffer with
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands'.
-pattern SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT = SubpassContents 1000451000
+pattern SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR = SubpassContents 1000451000
 
 {-# COMPLETE
   SUBPASS_CONTENTS_INLINE
   , SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
-  , SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT ::
+  , SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR ::
     SubpassContents
   #-}
 
@@ -68,8 +68,8 @@ showTableSubpassContents =
     , "SECONDARY_COMMAND_BUFFERS"
     )
   ,
-    ( SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT
-    , "INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT"
+    ( SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR
+    , "INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR"
     )
   ]
 

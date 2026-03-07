@@ -361,10 +361,9 @@ instance Zero ExternalImageFormatProperties where
 --
 -- Only usage flags representable in
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' are
--- returned in this structure’s @usage@. If a
+-- returned in this structure’s @usage@. If the @pNext@ chain includes a
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
--- structure is present in the @pNext@ chain, all usage flags of the buffer
--- are returned in
+-- structure, all usage flags of the buffer are returned in
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@.
 --
 -- == Valid Usage
@@ -372,13 +371,13 @@ instance Zero ExternalImageFormatProperties where
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09499# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ must be a valid combination of
+--     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09500# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ must not be 0
+--     structure, @usage@ /must/ not be 0
 --
 -- == Valid Usage (Implicit)
 --
@@ -606,8 +605,6 @@ instance Zero ExternalBufferProperties where
 -- identifies the Direct3D 12 node corresponding to @physicalDevice@.
 -- Otherwise, @deviceNodeMask@ /must/ be @1@.
 --
--- Note
---
 -- Although they have identical descriptions,
 -- 'PhysicalDeviceIDProperties'::@deviceUUID@ may differ from
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'::@pipelineCacheUUID@.
@@ -639,8 +636,6 @@ instance Zero ExternalBufferProperties where
 -- -   PCI bus ID, or similar system configuration information.
 --
 -- -   Driver binary checksums.
---
--- Note
 --
 -- While 'PhysicalDeviceIDProperties'::@deviceUUID@ is specified to remain
 -- consistent across driver versions and system reboots, it is not intended

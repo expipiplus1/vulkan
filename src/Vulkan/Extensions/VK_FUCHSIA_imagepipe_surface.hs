@@ -81,8 +81,7 @@
 --
 -- == See Also
 --
--- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
--- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'createImagePipeSurfaceFUCHSIA'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -318,6 +317,7 @@ instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface VK_FUCHSIA_imagepipe_surface>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA'
 newtype ImagePipeSurfaceCreateFlagsFUCHSIA = ImagePipeSurfaceCreateFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

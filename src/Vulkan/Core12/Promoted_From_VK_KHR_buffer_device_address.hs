@@ -248,8 +248,6 @@ foreign import ccall
 -- 'MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@, the
 -- return value /must/ be the same address.
 --
--- Note
---
 -- The expected usage for these opaque addresses is only for trace
 -- capture\/replay tools to store these addresses in a trace and
 -- subsequently specify them during replay.
@@ -307,8 +305,6 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 -- This structure describes the following features:
 --
 -- = Description
---
--- Note
 --
 -- @bufferDeviceAddressMultiDevice@ exists to allow certain legacy
 -- platforms to be able to support @bufferDeviceAddress@ without needing to
@@ -498,8 +494,6 @@ instance Zero BufferDeviceAddressInfo where
 -- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS'
 -- errors.
 --
--- Note
---
 -- The expected usage for this is that a trace capture\/replay tool will
 -- add the
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
@@ -576,8 +570,6 @@ instance Zero BufferOpaqueCaptureAddressCreateInfo where
 -- If @opaqueCaptureAddress@ is not zero, it /should/ be an address
 -- retrieved from 'getDeviceMemoryOpaqueCaptureAddress' on an identically
 -- created memory allocation on the same implementation.
---
--- Note
 --
 -- In most cases, it is expected that a non-zero @opaqueAddress@ is an
 -- address retrieved from 'getDeviceMemoryOpaqueCaptureAddress' on an

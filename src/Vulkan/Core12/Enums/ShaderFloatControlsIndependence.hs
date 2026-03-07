@@ -28,7 +28,7 @@ newtype ShaderFloatControlsIndependence = ShaderFloatControlsIndependence Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY' specifies that shader
--- float controls for 32-bit floating point /can/ be set independently;
+-- float controls for 32-bit floating-point /can/ be set independently;
 -- other bit widths /must/ be set identically to each other.
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = ShaderFloatControlsIndependence 0
 

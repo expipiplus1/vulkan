@@ -41,8 +41,6 @@ type QueueFlags = QueueFlagBits
 -- support graphics operations, compute operations, and protected memory
 -- operations.
 --
--- Note
---
 -- All commands that are allowed on a queue that supports transfer
 -- operations are also allowed on a queue that supports either graphics or
 -- compute operations. Thus, if the capabilities of a queue family include

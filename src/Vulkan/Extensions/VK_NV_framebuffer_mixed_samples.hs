@@ -23,6 +23,12 @@
 -- [__Extension and Version Dependencies__]
 --     None
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
+--
 -- [__Contact__]
 --
 --     -   Jeff Bolz
@@ -85,6 +91,18 @@
 --
 --     -   'PipelineCoverageModulationStateCreateInfoNV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--
+--     -   'AttachmentSampleCountInfoNV'
+--
 -- == New Enums
 --
 -- -   'CoverageModulationModeNV'
@@ -103,6 +121,16 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV'
+--
 -- == Version History
 --
 -- -   Revision 1, 2017-06-04 (Jeff Bolz)
@@ -111,9 +139,7 @@
 --
 -- == See Also
 --
--- 'CoverageModulationModeNV',
--- 'PipelineCoverageModulationStateCreateFlagsNV',
--- 'PipelineCoverageModulationStateCreateInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -122,7 +148,8 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModulationStateCreateInfoNV(..)
+module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV
+                                                          , PipelineCoverageModulationStateCreateInfoNV(..)
                                                           , PipelineCoverageModulationStateCreateFlagsNV(..)
                                                           , CoverageModulationModeNV( COVERAGE_MODULATION_MODE_NONE_NV
                                                                                     , COVERAGE_MODULATION_MODE_RGB_NV
@@ -130,10 +157,12 @@ module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModu
                                                                                     , COVERAGE_MODULATION_MODE_RGBA_NV
                                                                                     , ..
                                                                                     )
+                                                          , AttachmentSampleCountInfoNV
                                                           , NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION
                                                           , pattern NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION
                                                           , NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
                                                           , pattern NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
+                                                          , AttachmentSampleCountInfoAMD(..)
                                                           ) where
 
 import Data.Bits (Bits)
@@ -183,10 +212,17 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Extensions.VK_AMD_mixed_attachment_samples (AttachmentSampleCountInfoAMD)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV))
+import Vulkan.Extensions.VK_AMD_mixed_attachment_samples (AttachmentSampleCountInfoAMD(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV"
+pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV = STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD
+
+
 -- | VkPipelineCoverageModulationStateCreateInfoNV - Structure specifying
 -- parameters controlling coverage modulation
 --
@@ -220,7 +256,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- implementation-dependent precision, which is at least as fine as 1 \/ N,
 -- and clamped to [0,1].
 --
--- For each color attachment with a floating point or normalized color
+-- For each color attachment with a floating-point or normalized color
 -- format, each fragment output color value is replicated to M values which
 -- /can/ each be modulated (multiplied) by that color sample’s associated
 -- value of R. Which components are modulated is controlled by
@@ -357,6 +393,7 @@ instance Zero PipelineCoverageModulationStateCreateInfoNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'PipelineCoverageModulationStateCreateInfoNV'
 newtype PipelineCoverageModulationStateCreateFlagsNV = PipelineCoverageModulationStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -463,6 +500,10 @@ instance Read CoverageModulationModeNV where
       showTableCoverageModulationModeNV
       conNameCoverageModulationModeNV
       CoverageModulationModeNV
+
+-- No documentation found for TopLevel "VkAttachmentSampleCountInfoNV"
+type AttachmentSampleCountInfoNV = AttachmentSampleCountInfoAMD
+
 
 type NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION = 1
 

@@ -135,7 +135,7 @@
 -- __Example 2__
 --
 -- Annotating regions of a workload with naming information so that offline
--- analysis tools can display a more usable visualisation of the commands
+-- analysis tools can display a more usable visualization of the commands
 -- submitted.
 --
 -- >     extern VkDevice device;
@@ -213,7 +213,7 @@
 --
 -- __RESOLVED__: Yes. The functions have been expanded to take an optional
 -- color which can be used at will by implementations consuming the command
--- buffer annotations in their visualisation.
+-- buffer annotations in their visualization.
 --
 -- 3) Should the functions added in this extension accept an extensible
 -- structure as their parameter for a more flexible API, as opposed to
@@ -240,7 +240,7 @@
 --
 -- -   Revision 3, 2016-04-23 (Baldur Karlsson)
 --
---     -   Reorganise spec layout to closer match desired organisation
+--     -   Reorganize spec layout to closer match desired organization
 --
 --     -   Added optional color to markers (both regions and inserted
 --         labels)
@@ -260,12 +260,7 @@
 --
 -- == See Also
 --
--- 'DebugMarkerMarkerInfoEXT', 'DebugMarkerObjectNameInfoEXT',
--- 'DebugMarkerObjectTagInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT',
--- 'cmdDebugMarkerBeginEXT', 'cmdDebugMarkerEndEXT',
--- 'cmdDebugMarkerInsertEXT', 'debugMarkerSetObjectNameEXT',
--- 'debugMarkerSetObjectTagEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

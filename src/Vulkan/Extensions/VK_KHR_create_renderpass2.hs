@@ -21,9 +21,13 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview VK_KHR_multiview>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -48,8 +52,8 @@
 --
 -- == Description
 --
--- This extension provides a new entry point to create render passes in a
--- way that can be easily extended by other extensions through the
+-- This extension provides a new command to create render passes in a way
+-- that can be easily extended by other extensions through the
 -- substructures of render pass creation. The Vulkan 1.0 render pass
 -- creation sub-structures do not include @sType@\/@pNext@ members.
 -- Additionally, the render pass begin\/next\/end commands have been
@@ -87,7 +91,7 @@
 -- == Promotion to Vulkan 1.2
 --
 -- All functionality in this extension is included in core Vulkan 1.2, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Commands
@@ -146,11 +150,7 @@
 --
 -- == See Also
 --
--- 'AttachmentDescription2KHR', 'AttachmentReference2KHR',
--- 'RenderPassCreateInfo2KHR', 'SubpassBeginInfoKHR',
--- 'SubpassDependency2KHR', 'SubpassDescription2KHR', 'SubpassEndInfoKHR',
--- 'cmdBeginRenderPass2KHR', 'cmdEndRenderPass2KHR', 'cmdNextSubpass2KHR',
--- 'createRenderPass2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

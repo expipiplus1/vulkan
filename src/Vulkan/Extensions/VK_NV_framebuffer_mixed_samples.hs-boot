@@ -23,6 +23,12 @@
 -- [__Extension and Version Dependencies__]
 --     None
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
+--
 -- [__Contact__]
 --
 --     -   Jeff Bolz
@@ -85,6 +91,18 @@
 --
 --     -   'PipelineCoverageModulationStateCreateInfoNV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--
+--     -   'AttachmentSampleCountInfoNV'
+--
 -- == New Enums
 --
 -- -   'CoverageModulationModeNV'
@@ -103,6 +121,16 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV'
+--
 -- == Version History
 --
 -- -   Revision 1, 2017-06-04 (Jeff Bolz)
@@ -111,9 +139,7 @@
 --
 -- == See Also
 --
--- 'CoverageModulationModeNV',
--- 'PipelineCoverageModulationStateCreateFlagsNV',
--- 'PipelineCoverageModulationStateCreateInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

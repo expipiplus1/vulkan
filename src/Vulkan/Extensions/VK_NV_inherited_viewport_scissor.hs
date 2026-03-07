@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -142,8 +144,7 @@
 --
 -- == See Also
 --
--- 'CommandBufferInheritanceViewportScissorInfoNV',
--- 'PhysicalDeviceInheritedViewportScissorFeaturesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -306,8 +307,6 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 -- by binding a graphics pipeline that does not specify this state as
 -- dynamic.
 --
--- Note
---
 -- Due to this restriction, applications /should/ ensure either all or none
 -- of the graphics pipelines bound in this secondary command buffer use
 -- dynamic viewport\/scissor counts.
@@ -346,8 +345,6 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --
 -- -   If the provisional inherited state passes both checks, then it
 --     becomes the actual inherited state.
---
--- Note
 --
 -- There is no support for inheriting dynamic state from a secondary
 -- command buffer executed as part of a different

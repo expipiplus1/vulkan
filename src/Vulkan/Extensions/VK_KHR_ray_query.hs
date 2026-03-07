@@ -42,7 +42,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt GLSL_EXT_ray_query>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_ray_query.txt GLSL_EXT_ray_query>
 --
 -- [__Contributors__]
 --
@@ -235,7 +235,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRayQueryFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

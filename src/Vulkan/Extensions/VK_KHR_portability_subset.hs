@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
@@ -70,7 +72,7 @@
 -- This extension provides Vulkan implementations with the ability to mark
 -- otherwise-required capabilities as unsupported, or to establish
 -- additional properties and limits that the application should adhere to
--- in order to guarantee portable behaviour and operation across platforms,
+-- in order to guarantee portable behavior and operation across platforms,
 -- including platforms where Vulkan is not natively supported.
 --
 -- The goal of this specification is to document, and make queryable,
@@ -130,8 +132,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePortabilitySubsetFeaturesKHR',
--- 'PhysicalDevicePortabilitySubsetPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -270,18 +271,18 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation-isoline-tessellation isoline output>
     -- from the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>
-    -- stage of a graphics pipeline. This member is only meaningful if
+    -- stage of a graphics pipeline. This member is only meaningful if the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
-    -- are supported.
+    -- feature is supported.
     tessellationIsolines :: Bool
   , -- | #features-tessellationPointMode# @tessellationPointMode@ indicates
     -- whether this implementation supports
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation-point-mode point output>
     -- from the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>
-    -- stage of a graphics pipeline. This member is only meaningful if
+    -- stage of a graphics pipeline. This member is only meaningful if the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
-    -- are supported.
+    -- feature is supported.
     tessellationPointMode :: Bool
   , -- | #features-triangleFans# @triangleFans@ indicates whether this
     -- implementation supports

@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
@@ -50,13 +50,13 @@
 --
 -- Because there is no real presentation target, future extensions can
 -- layer on top of the headless surface to introduce arbitrary or
--- customisable sets of restrictions or features. These could include
+-- customizable sets of restrictions or features. These could include
 -- features like saving to a file or restrictions to emulate a particular
 -- presentation target.
 --
 -- This functionality is expected to be useful for application and driver
 -- development because it allows any platform to expose an arbitrary or
--- customisable set of restrictions and features of a presentation engine.
+-- customizable set of restrictions and features of a presentation engine.
 -- This makes it a useful portable test target for applications targeting a
 -- wide range of presentation engines where the actual target presentation
 -- engines might be scarce, unavailable or otherwise undesirable or
@@ -92,8 +92,7 @@
 --
 -- == See Also
 --
--- 'HeadlessSurfaceCreateFlagsEXT', 'HeadlessSurfaceCreateInfoEXT',
--- 'createHeadlessSurfaceEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -315,7 +314,7 @@ instance Zero HeadlessSurfaceCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface VK_EXT_headless_surface>,
--- 'HeadlessSurfaceCreateInfoEXT'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'HeadlessSurfaceCreateInfoEXT'
 newtype HeadlessSurfaceCreateFlagsEXT = HeadlessSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

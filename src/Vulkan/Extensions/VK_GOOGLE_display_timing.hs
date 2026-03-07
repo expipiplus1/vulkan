@@ -94,14 +94,11 @@
 --
 -- == Examples
 --
--- Note
---
 -- The example code for the this extension (like the @VK_KHR_surface@ and
 -- @VK_GOOGLE_display_timing@ extensions) is contained in the cube demo
 -- that is shipped with the official Khronos SDK, and is being kept
 -- up-to-date in that location (see:
--- <https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c>
--- ).
+-- <https://github.com/KhronosGroup/Vulkan-Tools/blob/main/cube/cube.c> ).
 --
 -- == Version History
 --
@@ -111,9 +108,7 @@
 --
 -- == See Also
 --
--- 'PastPresentationTimingGOOGLE', 'PresentTimeGOOGLE',
--- 'PresentTimesInfoGOOGLE', 'RefreshCycleDurationGOOGLE',
--- 'getPastPresentationTimingGOOGLE', 'getRefreshCycleDurationGOOGLE'
+-- No cross-references are available
 --
 -- == Document Notes
 --

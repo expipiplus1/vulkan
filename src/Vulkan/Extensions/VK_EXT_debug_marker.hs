@@ -135,7 +135,7 @@
 -- __Example 2__
 --
 -- Annotating regions of a workload with naming information so that offline
--- analysis tools can display a more usable visualisation of the commands
+-- analysis tools can display a more usable visualization of the commands
 -- submitted.
 --
 -- >     extern VkDevice device;
@@ -213,7 +213,7 @@
 --
 -- __RESOLVED__: Yes. The functions have been expanded to take an optional
 -- color which can be used at will by implementations consuming the command
--- buffer annotations in their visualisation.
+-- buffer annotations in their visualization.
 --
 -- 3) Should the functions added in this extension accept an extensible
 -- structure as their parameter for a more flexible API, as opposed to
@@ -240,7 +240,7 @@
 --
 -- -   Revision 3, 2016-04-23 (Baldur Karlsson)
 --
---     -   Reorganise spec layout to closer match desired organisation
+--     -   Reorganize spec layout to closer match desired organization
 --
 --     -   Added optional color to markers (both regions and inserted
 --         labels)
@@ -260,12 +260,7 @@
 --
 -- == See Also
 --
--- 'DebugMarkerMarkerInfoEXT', 'DebugMarkerObjectNameInfoEXT',
--- 'DebugMarkerObjectTagInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT',
--- 'cmdDebugMarkerBeginEXT', 'cmdDebugMarkerEndEXT',
--- 'cmdDebugMarkerInsertEXT', 'debugMarkerSetObjectNameEXT',
--- 'debugMarkerSetObjectTagEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -364,7 +359,8 @@ foreign import ccall
   "dynamic" mkVkDebugMarkerSetObjectNameEXT
   :: FunPtr (Ptr Device_T -> Ptr DebugMarkerObjectNameInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DebugMarkerObjectNameInfoEXT -> IO Result
 
--- | vkDebugMarkerSetObjectNameEXT - Give a user-friendly name to an object
+-- | vkDebugMarkerSetObjectNameEXT - Give an application-defined name to an
+-- object
 --
 -- == Valid Usage (Implicit)
 --
@@ -711,7 +707,7 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
 --
 -- Applications /may/ change the name associated with an object simply by
 -- calling 'debugMarkerSetObjectNameEXT' again with a new string. To remove
--- a previously set name, @pObjectName@ /should/ be set to an empty string.
+-- a previously set name, @pObjectName@ /should/ be an empty string.
 --
 -- == Valid Usage (Implicit)
 --
@@ -919,7 +915,7 @@ data DebugMarkerMarkerInfoEXT = DebugMarkerMarkerInfoEXT
   , -- | @color@ is an /optional/ RGBA color value that can be associated with
     -- the marker. A particular implementation /may/ choose to ignore this
     -- color value. The values contain RGBA values in order, in the range 0.0
-    -- to 1.0. If all elements in @color@ are set to 0.0 then it is ignored.
+    -- to 1.0. If all elements in @color@ are 0.0, then it is ignored.
     color :: (Float, Float, Float, Float)
   }
   deriving (Typeable)

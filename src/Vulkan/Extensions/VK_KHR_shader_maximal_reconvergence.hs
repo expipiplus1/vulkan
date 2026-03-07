@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -88,10 +88,6 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR'
 --
--- == New SPIR-V Capabilities
---
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-MaximallyReconvergesKHR MaximallyReconvergesKHR>
---
 -- == Version History
 --
 -- -   Revision 1, 2021-11-12 (Alan Baker)
@@ -100,7 +96,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -15,7 +15,7 @@
 --     30
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -38,7 +38,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-04-09
+--     2024-11-04
 --
 -- [__Contributors__]
 --
@@ -50,8 +50,6 @@
 --
 -- This extension allows applications to import CuBIN binaries and execute
 -- them.
---
--- Note
 --
 -- There is currently no specification language written for this extension.
 -- The links to APIs defined by the extension are to stubs that only
@@ -84,6 +82,10 @@
 --
 -- -   'CuModuleCreateInfoNVX'
 --
+-- -   Extending 'CuModuleCreateInfoNVX':
+--
+--     -   'CuModuleTexturingModeCreateInfoNVX'
+--
 -- == New Enum Constants
 --
 -- -   'NVX_BINARY_IMPORT_EXTENSION_NAME'
@@ -103,6 +105,8 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
@@ -279,10 +283,32 @@
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
+--     'CuModuleTexturingModeCreateInfoNVX'
+--
+-- -   #VUID-VkCuModuleCreateInfoNVX-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
 --     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@
 --     bytes
+--
+-- There is currently no specification language written for this type. This
+-- section acts only as placeholder and to avoid dead links in the
+-- specification and reference pages.
+--
+-- > // Provided by VK_NVX_binary_import
+-- > typedef struct VkCuModuleTexturingModeCreateInfoNVX {
+-- >     VkStructureType    sType;
+-- >     const void*        pNext;
+-- >     VkBool32           use64bitTexturing;
+-- > } VkCuModuleTexturingModeCreateInfoNVX;
+--
+-- === Valid Usage (Implicit)
+--
+-- -   #VUID-VkCuModuleTexturingModeCreateInfoNVX-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX'
 --
 -- There is currently no specification language written for this command.
 -- This section acts only as placeholder and to avoid dead links in the
@@ -396,17 +422,17 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2024-11-04 (Liam Middlebrook)
+--
+--     -   Add 'CuModuleTexturingModeCreateInfoNVX'
+--
 -- -   Revision 1, 2021-04-09 (Eric Werness)
 --
 --     -   Internal revisions
 --
 -- == See Also
 --
--- 'CuFunctionCreateInfoNVX', 'Vulkan.Extensions.Handles.CuFunctionNVX',
--- 'CuLaunchInfoNVX', 'CuModuleCreateInfoNVX',
--- 'Vulkan.Extensions.Handles.CuModuleNVX', 'cmdCuLaunchKernelNVX',
--- 'createCuFunctionNVX', 'createCuModuleNVX', 'destroyCuFunctionNVX',
--- 'destroyCuModuleNVX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -418,12 +444,16 @@
 module Vulkan.Extensions.VK_NVX_binary_import  ( CuFunctionCreateInfoNVX
                                                , CuLaunchInfoNVX
                                                , CuModuleCreateInfoNVX
+                                               , CuModuleTexturingModeCreateInfoNVX
                                                ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data CuFunctionCreateInfoNVX
 
 instance ToCStruct CuFunctionCreateInfoNVX
@@ -440,10 +470,21 @@ instance Show CuLaunchInfoNVX
 instance FromCStruct CuLaunchInfoNVX
 
 
-data CuModuleCreateInfoNVX
+type role CuModuleCreateInfoNVX nominal
+data CuModuleCreateInfoNVX (es :: [Type])
 
-instance ToCStruct CuModuleCreateInfoNVX
-instance Show CuModuleCreateInfoNVX
+instance ( Extendss CuModuleCreateInfoNVX es
+         , PokeChain es ) => ToCStruct (CuModuleCreateInfoNVX es)
+instance Show (Chain es) => Show (CuModuleCreateInfoNVX es)
 
-instance FromCStruct CuModuleCreateInfoNVX
+instance ( Extendss CuModuleCreateInfoNVX es
+         , PeekChain es ) => FromCStruct (CuModuleCreateInfoNVX es)
+
+
+data CuModuleTexturingModeCreateInfoNVX
+
+instance ToCStruct CuModuleTexturingModeCreateInfoNVX
+instance Show CuModuleTexturingModeCreateInfoNVX
+
+instance FromCStruct CuModuleTexturingModeCreateInfoNVX
 

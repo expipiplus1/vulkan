@@ -25,7 +25,14 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_EXT_device_generated_commands
+--
+--     -   Interacts with VK_KHR_fragment_shading_rate
+--
 --     -   Interacts with VK_NV_device_generated_commands
+--
+--     -   Interacts with
+--         VkPhysicalDeviceMeshShaderFeaturesEXT::primitiveFragmentShadingRateMeshShader
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -47,7 +54,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_mesh_shader.txt GLSL_EXT_mesh_shader>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_mesh_shader.txt GLSL_EXT_mesh_shader>
 --
 --     -   Interacts with Vulkan 1.1
 --
@@ -177,6 +184,17 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_EXT'
 --
 -- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_generated_commands VK_EXT_device_generated_commands>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsTokenTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_device_generated_commands.INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_COUNT_EXT'
+--
+--     -   'Vulkan.Extensions.VK_EXT_device_generated_commands.INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_EXT'
+--
+-- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>
 -- is supported:
 --
@@ -244,10 +262,7 @@
 --
 -- == See Also
 --
--- 'DrawMeshTasksIndirectCommandEXT',
--- 'PhysicalDeviceMeshShaderFeaturesEXT',
--- 'PhysicalDeviceMeshShaderPropertiesEXT', 'cmdDrawMeshTasksEXT',
--- 'cmdDrawMeshTasksIndirectCountEXT', 'cmdDrawMeshTasksIndirectEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

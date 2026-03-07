@@ -23,7 +23,11 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>
 --     and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -119,11 +123,7 @@
 --
 -- == See Also
 --
--- 'CoverageReductionModeNV', 'FramebufferMixedSamplesCombinationNV',
--- 'PhysicalDeviceCoverageReductionModeFeaturesNV',
--- 'PipelineCoverageReductionStateCreateFlagsNV',
--- 'PipelineCoverageReductionStateCreateInfoNV',
--- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -230,8 +230,8 @@ foreign import ccall
 -- If @pCombinations@ is @NULL@, then the number of supported combinations
 -- for the given @physicalDevice@ is returned in @pCombinationCount@.
 -- Otherwise, @pCombinationCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pCombinations@ array, and on
--- return the variable is overwritten with the number of values actually
+-- application to the number of elements in the @pCombinations@ array, and
+-- on return the variable is overwritten with the number of values actually
 -- written to @pCombinations@. If the value of @pCombinationCount@ is less
 -- than the number of combinations supported for the given
 -- @physicalDevice@, at most @pCombinationCount@ values will be written to
@@ -555,6 +555,7 @@ instance Zero FramebufferMixedSamplesCombinationNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'PipelineCoverageReductionStateCreateInfoNV'
 newtype PipelineCoverageReductionStateCreateFlagsNV = PipelineCoverageReductionStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

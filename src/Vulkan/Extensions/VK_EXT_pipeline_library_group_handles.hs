@@ -104,7 +104,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -39,15 +39,13 @@ type MemoryPropertyFlags = MemoryPropertyFlagBits
 -- are always automatically available and visible to both host and device
 -- memory domains.
 --
--- Note
---
 -- Device coherence is a useful property for certain debugging use cases
 -- (e.g. crash analysis, where performing separate coherence actions could
 -- mean values are not reported correctly). However, device coherent
 -- accesses may be slower than equivalent accesses without device
 -- coherence, particularly if they are also device uncached. For device
 -- uncached memory in particular, repeated accesses to the same or
--- neighbouring memory locations over a short time period (e.g. within a
+-- neighboring memory locations over a short time period (e.g. within a
 -- frame) may be slower than it would be for the equivalent cached memory
 -- type. As such, it is generally inadvisable to use device coherent or
 -- device uncached memory except when really needed.
@@ -71,11 +69,13 @@ pattern MEMORY_PROPERTY_DEVICE_LOCAL_BIT = MemoryPropertyFlagBits 0x00000001
 -- 'Vulkan.Core10.Memory.mapMemory'.
 pattern MEMORY_PROPERTY_HOST_VISIBLE_BIT = MemoryPropertyFlagBits 0x00000002
 
--- | 'MEMORY_PROPERTY_HOST_COHERENT_BIT' bit specifies that the host cache
--- management commands 'Vulkan.Core10.Memory.flushMappedMemoryRanges' and
+-- | #memory-coherent# 'MEMORY_PROPERTY_HOST_COHERENT_BIT' bit specifies that
+-- the host cache management commands
+-- 'Vulkan.Core10.Memory.flushMappedMemoryRanges' and
 -- 'Vulkan.Core10.Memory.invalidateMappedMemoryRanges' are not needed to
--- flush host writes to the device or make device writes visible to the
--- host, respectively.
+-- manage
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible availability and visibility>
+-- on the host.
 pattern MEMORY_PROPERTY_HOST_COHERENT_BIT = MemoryPropertyFlagBits 0x00000004
 
 -- | 'MEMORY_PROPERTY_HOST_CACHED_BIT' bit specifies that memory allocated
@@ -104,7 +104,10 @@ pattern MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD = MemoryPropertyFlagBits 0x00000
 
 -- | 'MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD' bit specifies that device
 -- accesses to allocations of this memory type are automatically made
--- available and visible.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible available and visible>
+-- on the device. If paired with 'MEMORY_PROPERTY_HOST_COHERENT_BIT',
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
+-- are also performed automatically between host and device.
 pattern MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD = MemoryPropertyFlagBits 0x00000040
 
 -- | 'MEMORY_PROPERTY_PROTECTED_BIT' bit specifies that the memory type only

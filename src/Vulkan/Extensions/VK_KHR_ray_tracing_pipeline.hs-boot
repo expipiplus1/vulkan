@@ -25,6 +25,10 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_KHR_ray_query
+--
 -- [__SPIR-V Dependencies__]
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_tracing.html SPV_KHR_ray_tracing>
@@ -42,7 +46,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt GLSL_EXT_ray_tracing>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_ray_tracing.txt GLSL_EXT_ray_tracing>
 --
 --     -   This extension interacts with
 --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.2 Vulkan 1.2>
@@ -608,7 +612,7 @@
 -- required dependency, particularly when the “Feature Requirements”
 -- section says it is required to be supported anyhow?
 --
--- __RESOLVED__: If @VK_KHR_pipeline_library@ were a required extension
+-- __RESOLVED__: If the @VK_KHR_pipeline_library@ extensino were a required
 -- dependency, then every application would need to enable the extension
 -- whether or not they actually want to use the pipeline library
 -- functionality. Developers found this to be annoying and unfriendly
@@ -701,19 +705,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR',
--- 'PhysicalDeviceRayTracingPipelineFeaturesKHR',
--- 'PhysicalDeviceRayTracingPipelinePropertiesKHR',
--- 'RayTracingPipelineCreateInfoKHR',
--- 'RayTracingPipelineInterfaceCreateInfoKHR',
--- 'RayTracingShaderGroupCreateInfoKHR', 'RayTracingShaderGroupTypeKHR',
--- 'ShaderGroupShaderKHR', 'StridedDeviceAddressRegionKHR',
--- 'TraceRaysIndirectCommandKHR', 'cmdSetRayTracingPipelineStackSizeKHR',
--- 'cmdTraceRaysIndirectKHR', 'cmdTraceRaysKHR',
--- 'createRayTracingPipelinesKHR',
--- 'getRayTracingCaptureReplayShaderGroupHandlesKHR',
--- 'getRayTracingShaderGroupHandlesKHR',
--- 'getRayTracingShaderGroupStackSizeKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

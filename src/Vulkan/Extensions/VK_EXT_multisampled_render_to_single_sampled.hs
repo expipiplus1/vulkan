@@ -21,9 +21,13 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_depth_stencil_resolve VK_KHR_depth_stencil_resolve>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__Contact__]
 --
@@ -162,9 +166,7 @@
 --
 -- == See Also
 --
--- 'MultisampledRenderToSingleSampledInfoEXT',
--- 'PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT',
--- 'SubpassResolvePerformanceQueryEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

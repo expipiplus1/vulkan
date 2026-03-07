@@ -18,12 +18,12 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -103,8 +103,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceColorWriteEnableFeaturesEXT',
--- 'PipelineColorWriteCreateInfoEXT', 'cmdSetColorWriteEnableEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -362,9 +361,8 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 --
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
--- feature is not enabled on the device, all
--- 'Vulkan.Core10.FundamentalTypes.Bool32' elements in the
--- @pColorWriteEnables@ array /must/ be
+-- feature is not enabled, all 'Vulkan.Core10.FundamentalTypes.Bool32'
+-- elements in the @pColorWriteEnables@ array /must/ be
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- Color Write Enable interacts with the

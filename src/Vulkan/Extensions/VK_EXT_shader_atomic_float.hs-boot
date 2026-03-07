@@ -18,12 +18,20 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with
+--         VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::sparseImageFloat32AtomicAdd
+--
+--     -   Interacts with
+--         VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::sparseImageFloat32Atomics
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -45,7 +53,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_atomic_float.txt GL_EXT_shader_atomic_float>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_shader_atomic_float.txt GL_EXT_shader_atomic_float>
 --
 -- [__Contributors__]
 --
@@ -94,7 +102,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderAtomicFloatFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

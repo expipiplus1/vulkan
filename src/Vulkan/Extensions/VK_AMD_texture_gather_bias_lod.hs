@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -144,7 +146,7 @@
 --
 -- == See Also
 --
--- 'TextureLODGatherFormatPropertiesAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -197,7 +199,7 @@ data TextureLODGatherFormatPropertiesAMD = TextureLODGatherFormatPropertiesAMD
   { -- | @supportsTextureGatherLODBiasAMD@ tells if the image format can be used
     -- with texture gather bias\/LOD functions, as introduced by the
     -- @VK_AMD_texture_gather_bias_lod@ extension. This field is set by the
-    -- implementation. User-specified value is ignored.
+    -- implementation. An application-specified value is ignored.
     supportsTextureGatherLODBiasAMD :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

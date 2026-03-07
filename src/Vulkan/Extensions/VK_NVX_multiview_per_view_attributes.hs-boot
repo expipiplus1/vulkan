@@ -22,6 +22,14 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview VK_KHR_multiview>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -43,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nvx/GL_NVX_multiview_per_view_attributes.txt GL_NVX_multiview_per_view_attributes>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nvx/GL_NVX_multiview_per_view_attributes.txt GL_NVX_multiview_per_view_attributes>
 --
 --     -   This extension interacts with @VK_NV_viewport_array2@.
 --
@@ -85,8 +93,8 @@
 -- subpass. Implementations are free to either use the per-view outputs or
 -- the non-per-view outputs, whichever would be more efficient.
 --
--- If @VK_NV_viewport_array2@ is not also supported and enabled, the
--- per-view viewport mask /must/ not be used.
+-- If the @VK_NV_viewport_array2@ extension is not also supported and
+-- enabled, the per-view viewport mask /must/ not be used.
 --
 -- == New Structures
 --
@@ -94,6 +102,19 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
 --
 --     -   'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
+--
+--     -   'MultiviewPerViewAttributesInfoNVX'
 --
 -- == New Enum Constants
 --
@@ -111,6 +132,16 @@
 --     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
 --
 --     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX'
 --
 -- == New Built-In Variables
 --
@@ -149,7 +180,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -158,11 +189,21 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NVX_multiview_per_view_attributes  (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX) where
+module Vulkan.Extensions.VK_NVX_multiview_per_view_attributes  ( MultiviewPerViewAttributesInfoNVX
+                                                               , PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
+                                                               ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
+
+data MultiviewPerViewAttributesInfoNVX
+
+instance ToCStruct MultiviewPerViewAttributesInfoNVX
+instance Show MultiviewPerViewAttributesInfoNVX
+
+instance FromCStruct MultiviewPerViewAttributesInfoNVX
+
 
 data PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 

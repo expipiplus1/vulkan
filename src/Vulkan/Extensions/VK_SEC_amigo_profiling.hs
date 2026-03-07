@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -47,21 +49,17 @@
 --
 -- This extension is intended to communicate information from layered API
 -- implementations such as ANGLE to internal proprietary system schedulers.
--- It has no behavioural implications beyond enabling more intelligent
--- behaviour from the system scheduler.
+-- It has no behavioral implications beyond enabling more intelligent
+-- behavior from the system scheduler.
 --
 -- Application developers should avoid using this extension. It is
 -- documented solely for the benefit of tools and layer developers, who may
 -- need to manipulate @pNext@ chains that include these structures.
 --
--- Note
---
 -- There is currently no specification language written for this extension.
 -- The links to APIs defined by the extension are to stubs that only
 -- include generated content such as API declarations and implicit valid
 -- usage statements.
---
--- Note
 --
 -- This extension is only intended for use in specific embedded
 -- environments with known implementation details, and is therefore
@@ -135,7 +133,7 @@
 --
 -- == See Also
 --
--- 'AmigoProfilingSubmitInfoSEC', 'PhysicalDeviceAmigoProfilingFeaturesSEC'
+-- No cross-references are available
 --
 -- == Document Notes
 --

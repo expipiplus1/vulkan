@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -76,7 +76,7 @@
 --
 -- __RESOLVED__: This situation can also arise without this extension (when
 -- fragment shaders replace depth values, for example), and this extension
--- does not change the behaviour, which is defined in the
+-- does not change the behavior, which is defined in the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth Depth Test>
 -- section of the Fragment Operations chapter.
 --

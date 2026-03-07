@@ -49,8 +49,6 @@ foreign import ccall
 -- back to the system. Command buffers allocated from the pool are not
 -- affected by the command.
 --
--- Note
---
 -- This command provides applications with some control over the internal
 -- memory allocations used by command pools.
 --

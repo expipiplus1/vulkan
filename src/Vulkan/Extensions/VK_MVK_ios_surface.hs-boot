@@ -102,8 +102,7 @@
 --
 -- == See Also
 --
--- 'IOSSurfaceCreateFlagsMVK', 'IOSSurfaceCreateInfoMVK',
--- 'createIOSSurfaceMVK'
+-- No cross-references are available
 --
 -- == Document Notes
 --

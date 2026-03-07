@@ -187,7 +187,7 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_ASTC_12x12_SRGB_BLOCK
                                           , FORMAT_A8_UNORM_KHR
                                           , FORMAT_A1B5G5R5_UNORM_PACK16_KHR
-                                          , FORMAT_R16G16_S10_5_NV
+                                          , FORMAT_R16G16_SFIXED5_NV
                                           , FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
                                           , FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
                                           , FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG
@@ -1325,10 +1325,14 @@ pattern FORMAT_A8_UNORM_KHR = Format 1000470001
 -- 5..9, and a 5-bit R component in bits 0..4.
 pattern FORMAT_A1B5G5R5_UNORM_PACK16_KHR = Format 1000470000
 
--- | 'FORMAT_R16G16_S10_5_NV' specifies a two-component, fixed-point format
--- where most significant bit specifies the sign bit, next 10 bits specify
--- the integer value and last 5 bits represent the fractional value.
-pattern FORMAT_R16G16_S10_5_NV = Format 1000464000
+-- | 'FORMAT_R16G16_SFIXED5_NV' specifies a two-component, 16-bit signed
+-- fixed-point format with linear encoding. The components are signed
+-- two’s-complement integers where the most significant bit specifies the
+-- sign bit, the next 10 bits specify the integer value, and the last 5
+-- bits represent the fractional value. The signed 16-bit values /can/ be
+-- converted to floats in the range [-1024,1023.96875] by dividing the
+-- value by 32 (25).
+pattern FORMAT_R16G16_SFIXED5_NV = Format 1000464000
 
 -- | 'FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG' specifies a four-component, PVRTC
 -- compressed format where each 64-bit compressed texel block encodes a 4×4
@@ -2239,7 +2243,7 @@ pattern FORMAT_G8B8G8R8_422_UNORM = Format 1000156000
   , FORMAT_ASTC_12x12_SRGB_BLOCK
   , FORMAT_A8_UNORM_KHR
   , FORMAT_A1B5G5R5_UNORM_PACK16_KHR
-  , FORMAT_R16G16_S10_5_NV
+  , FORMAT_R16G16_SFIXED5_NV
   , FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
   , FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
   , FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG
@@ -2539,7 +2543,7 @@ showTableFormat =
     ( FORMAT_A1B5G5R5_UNORM_PACK16_KHR
     , "A1B5G5R5_UNORM_PACK16_KHR"
     )
-  , (FORMAT_R16G16_S10_5_NV, "R16G16_S10_5_NV")
+  , (FORMAT_R16G16_SFIXED5_NV, "R16G16_SFIXED5_NV")
   ,
     ( FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
     , "PVRTC2_4BPP_SRGB_BLOCK_IMG"

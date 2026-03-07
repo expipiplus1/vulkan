@@ -52,6 +52,8 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern MAX_GLOBAL_PRIORITY_SIZE_KHR
                                    , MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
                                    , pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
+                                   , MAX_PIPELINE_BINARY_KEY_SIZE_KHR
+                                   , pattern MAX_PIPELINE_BINARY_KEY_SIZE_KHR
                                    , MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR
                                    , pattern MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR
                                    , SHADER_INDEX_UNUSED_AMDX
@@ -364,6 +366,17 @@ pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT :: forall a . Integral a => a
 pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
 
 
+type MAX_PIPELINE_BINARY_KEY_SIZE_KHR = 32
+
+-- | VK_MAX_PIPELINE_BINARY_KEY_SIZE_KHR - Maximum length of binary key
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_binary VK_KHR_pipeline_binary>
+pattern MAX_PIPELINE_BINARY_KEY_SIZE_KHR :: forall a . Integral a => a
+pattern MAX_PIPELINE_BINARY_KEY_SIZE_KHR = 32
+
+
 type MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR = 7
 
 -- No documentation found for TopLevel "VK_MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR"
@@ -386,6 +399,8 @@ pattern SHADER_INDEX_UNUSED_AMDX = 0xffffffff
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_USE_64_BIT_PTR_DEFINES VK_USE_64_BIT_PTR_DEFINES>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 pattern NULL_HANDLE :: IsHandle a => a
 pattern NULL_HANDLE <- ((== zero) -> True)

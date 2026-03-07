@@ -88,9 +88,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkGetInstanceProcAddrLUNARG', 'DirectDriverLoadingFlagsLUNARG',
--- 'DirectDriverLoadingInfoLUNARG', 'DirectDriverLoadingListLUNARG',
--- 'DirectDriverLoadingModeLUNARG'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -307,7 +305,7 @@ instance Zero DirectDriverLoadingListLUNARG where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading VK_LUNARG_direct_driver_loading>,
--- 'DirectDriverLoadingInfoLUNARG'
+-- 'DirectDriverLoadingInfoLUNARG', 'Vulkan.Core10.FundamentalTypes.Flags'
 newtype DirectDriverLoadingFlagsLUNARG = DirectDriverLoadingFlagsLUNARG Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -407,8 +405,6 @@ type FN_vkGetInstanceProcAddrLUNARG = Ptr Instance_T -> ("pName" ::: Ptr CChar) 
 -- used only to specify device driver addresses in
 -- 'DirectDriverLoadingInfoLUNARG'::@pfnGetInstanceProcAddr@.
 --
--- Note
---
 -- This type exists only because of limitations in the XML schema and
 -- processing scripts, and its name may change in the future. Ideally we
 -- would use the @PFN_vkGetInstanceProcAddr@ type generated in the
@@ -417,7 +413,7 @@ type FN_vkGetInstanceProcAddrLUNARG = Ptr Instance_T -> ("pName" ::: Ptr CChar) 
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading VK_LUNARG_direct_driver_loading>,
--- 'DirectDriverLoadingInfoLUNARG'
+-- 'DirectDriverLoadingInfoLUNARG', 'Vulkan.Core10.Handles.Instance'
 type PFN_vkGetInstanceProcAddrLUNARG = FunPtr FN_vkGetInstanceProcAddrLUNARG
 
 

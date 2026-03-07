@@ -73,15 +73,15 @@ import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.Handles (ImageView)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled (MultisampledRenderToSingleSampledInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (MultiviewPerViewAttributesInfoNVX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (MultiviewPerViewAttributesInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas (MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.FundamentalTypes (Rect2D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (RenderPassStripeBeginInfoARM)
 import Vulkan.Core13.Enums.RenderingFlagBits (RenderingFlags)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentDensityMapAttachmentInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentShadingRateAttachmentInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (RenderingFragmentDensityMapAttachmentInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (RenderingFragmentShadingRateAttachmentInfoKHR)
 import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.CStruct.Extends (SomeStruct)
@@ -127,6 +127,60 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
 --     feature is not enabled, @pRenderingInfo->flags@ /must/ not include
 --     'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT'
+--
+-- -   #VUID-vkCmdBeginRendering-pRenderingInfo-09588# If
+--     @pRenderingInfo->pDepthAttachment@ is not @NULL@ and
+--     @pRenderingInfo->pDepthAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pRenderingInfo->pDepthAttachment->imageView@ /must/ be in the
+--     layout specified by @pRenderingInfo->pDepthAttachment->imageLayout@
+--
+-- -   #VUID-vkCmdBeginRendering-pRenderingInfo-09589# If
+--     @pRenderingInfo->pDepthAttachment@ is not @NULL@,
+--     @pRenderingInfo->pDepthAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pRenderingInfo->pDepthAttachment->imageResolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and
+--     @pRenderingInfo->pDepthAttachment->resolveImageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pRenderingInfo->pDepthAttachment->resolveImageView@ /must/ be in
+--     the layout specified by
+--     @pRenderingInfo->pDepthAttachment->resolveImageLayout@
+--
+-- -   #VUID-vkCmdBeginRendering-pRenderingInfo-09590# If
+--     @pRenderingInfo->pStencilAttachment@ is not @NULL@ and
+--     @pRenderingInfo->pStencilAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pRenderingInfo->pStencilAttachment->imageView@ /must/ be in the
+--     layout specified by
+--     @pRenderingInfo->pStencilAttachment->imageLayout@
+--
+-- -   #VUID-vkCmdBeginRendering-pRenderingInfo-09591# If
+--     @pRenderingInfo->pStencilAttachment@ is not @NULL@,
+--     @pRenderingInfo->pStencilAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pRenderingInfo->pStencilAttachment->imageResolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and
+--     @pRenderingInfo->pStencilAttachment->resolveImageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pRenderingInfo->pStencilAttachment->resolveImageView@ /must/ be in
+--     the layout specified by
+--     @pRenderingInfo->pStencilAttachment->resolveImageLayout@
+--
+-- -   #VUID-vkCmdBeginRendering-pRenderingInfo-09592# For any element of
+--     @pRenderingInfo->pColorAttachments@, if @imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', that image view /must/ be
+--     in the layout specified by @imageLayout@
+--
+-- -   #VUID-vkCmdBeginRendering-pRenderingInfo-09593# For any element of
+--     @pRenderingInfo->pColorAttachments@, if either @imageResolveMode@ is
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
+--     or @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+--     @resolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and
+--     @resolveImageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @resolveImageView@ /must/ be in the layout specified by
+--     @resolveImageLayout@
 --
 -- == Valid Usage (Implicit)
 --
@@ -410,15 +464,15 @@ instance Zero PipelineRenderingCreateInfo where
 -- per-device by that structure.
 --
 -- If multiview is enabled, and the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-render-areas multiviewPerViewRenderAreas>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiviewPerViewRenderAreas multiviewPerViewRenderAreas>
 -- feature is enabled, and there is an instance of
 -- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
 -- included in the @pNext@ chain with @perViewRenderAreaCount@ not equal to
 -- @0@, then the elements of
 -- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'::@pPerViewRenderAreas@
 -- override @renderArea@ and define a render area for each view. In this
--- case, @renderArea@ /must/ be set to an area at least as large as the
--- union of all the per-view render areas.
+-- case, @renderArea@ /must/ be an area at least as large as the union of
+-- all the per-view render areas.
 --
 -- Each element of the @pColorAttachments@ array corresponds to an output
 -- location in the shader, i.e. if the shader declares an output variable
@@ -801,7 +855,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06107# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapNonSubsampledImages fragmentDensityMapNonSubsampledImages>
@@ -813,7 +867,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06108# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and @viewMask@ is not @0@,
 --     @imageView@ /must/ have a @layerCount@ greater than or equal to the
@@ -821,7 +875,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06109# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and @viewMask@ is @0@,
 --     @imageView@ /must/ have a @layerCount@ equal to @1@
@@ -831,7 +885,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0 and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     width greater than or equal to
@@ -842,7 +896,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0 and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     height greater than or equal to
@@ -852,7 +906,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     structure, its @deviceRenderAreaCount@ member is not 0, and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     width greater than or equal to
@@ -863,7 +917,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     structure, its @deviceRenderAreaCount@ member is not 0, and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     height greater than or equal to
@@ -872,50 +926,84 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06116# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ not be equal to
 --     the @imageView@ or @resolveImageView@ member of @pDepthAttachment@,
 --     @pStencilAttachment@, or any element of @pColorAttachments@
 --
--- -   #VUID-VkRenderingInfo-pNext-06119# If the @pNext@ chain does not
---     contain
+-- -   #VUID-VkRenderingInfo-pNext-06119# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, the @pNext@ chain does not contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
---     or its @deviceRenderAreaCount@ member is equal to 0 and the
+--     or its @deviceRenderAreaCount@ member is equal to 0, and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     width greater than or equal to
 --     \(\left\lceil{\frac{renderArea_{x}+renderArea_{width}}{shadingRateAttachmentTexelSize_{width}}}\right\rceil\)
 --
--- -   #VUID-VkRenderingInfo-pNext-06121# If the @pNext@ chain does not
---     contain
+-- -   #VUID-VkRenderingInfo-pNext-06121# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, the @pNext@ chain does not contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0 and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     height greater than or equal to
 --     \(\left\lceil{\frac{renderArea_{y}+renderArea_{height}}{shadingRateAttachmentTexelSize_{height}}}\right\rceil\)
 --
--- -   #VUID-VkRenderingInfo-pNext-06120# If the @pNext@ chain contains a
+-- -   #VUID-VkRenderingInfo-pNext-06120# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, the @pNext@ chain contains a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     structure, its @deviceRenderAreaCount@ member is not 0, and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     width greater than or equal to
 --     \(\left\lceil{\frac{pDeviceRenderAreas_{x}+pDeviceRenderAreas_{width}}{shadingRateAttachmentTexelSize_{width}}}\right\rceil\)
 --     for each element of @pDeviceRenderAreas@
 --
--- -   #VUID-VkRenderingInfo-pNext-06122# If the @pNext@ chain contains a
+-- -   #VUID-VkRenderingInfo-pNext-06122# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, the @pNext@ chain contains a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     structure, its @deviceRenderAreaCount@ member is not 0, and the
 --     @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@ /must/ have a
 --     height greater than or equal to
@@ -928,7 +1016,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06123# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and @viewMask@ is @0@,
 --     @imageView@ /must/ have a @layerCount@ that is either equal to @1@
@@ -936,7 +1024,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06124# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and @viewMask@ is not @0@,
 --     @imageView@ /must/ have a @layerCount@ that either equal to @1@ or
@@ -945,7 +1033,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06125# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ not be equal to
 --     the @imageView@ or @resolveImageView@ member of @pDepthAttachment@,
@@ -953,11 +1041,11 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-06126# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ not be equal to
 --     the @imageView@ member of a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain
 --
 -- -   #VUID-VkRenderingInfo-multiview-06127# If the
@@ -972,25 +1060,27 @@ instance Zero PipelineRenderingCreateInfo where
 --     @perViewRenderAreaCount@ member of a
 --     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
 --     structure included in the @pNext@ chain is not @0@, then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-render-areas multiviewPerViewRenderAreas>
---     feature /must/ be enabled.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiviewPerViewRenderAreas multiviewPerViewRenderAreas>
+--     feature /must/ be enabled
 --
 -- -   #VUID-VkRenderingInfo-perViewRenderAreaCount-07858# If the
 --     @perViewRenderAreaCount@ member of a
 --     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM'
 --     structure included in the @pNext@ chain is not @0@, then
 --     @renderArea@ /must/ specify a render area that includes the union of
---     all per view render areas.
+--     all per view render areas
 --
 -- -   #VUID-VkRenderingInfo-None-09044# Valid attachments specified by
 --     this structure /must/ not be bound to memory locations that are
 --     bound to any other valid attachments specified by this structure
 --
--- -   #VUID-VkRenderingInfo-flags-09381# If @flags@ includes
---     'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_CONTENTS_INLINE_BIT_EXT'
---     then the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
---     feature /must/ be enabled
+-- -   #VUID-VkRenderingInfo-flags-10012# If @flags@ includes
+--     'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_CONTENTS_INLINE_BIT_KHR'
+--     then at least one of the following features /must/ be enabled
+--
+--     -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--
+--     -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
 --
 -- -   #VUID-VkRenderingInfo-pDepthAttachment-09318#
 --     @pDepthAttachment->resolveMode@ /must/ not be
@@ -1008,13 +1098,13 @@ instance Zero PipelineRenderingCreateInfo where
 -- -   #VUID-VkRenderingInfo-resolveMode-09321# If the @resolveMode@ of any
 --     element of @pColorAttachments@ is
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkRenderingInfo-resolveMode-09322# If the @resolveMode@ of any
 --     element of @pColorAttachments@ is
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID',
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkRenderingInfo-pNext-09535# If the @pNext@ chain contains a
@@ -1075,7 +1165,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-09485# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
 --     created with the
@@ -1083,7 +1173,7 @@ instance Zero PipelineRenderingCreateInfo where
 --
 -- -   #VUID-VkRenderingInfo-imageView-09486# If the @imageView@ member of
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
 --     created with the
@@ -1099,12 +1189,12 @@ instance Zero PipelineRenderingCreateInfo where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
 --     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT',
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX',
+--     'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.MultiviewPerViewAttributesInfoNVX',
 --     'Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas.MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
 --     'Vulkan.Extensions.VK_ARM_render_pass_striped.RenderPassStripeBeginInfoARM',
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT',
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --
 -- -   #VUID-VkRenderingInfo-sType-unique# The @sType@ value of each struct
 --     in the @pNext@ chain /must/ be unique
@@ -1261,8 +1351,6 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 -- undefined once
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-operations load operations>
 -- have completed.
---
--- Note
 --
 -- The resolve mode and store operation are independent; it is valid to
 -- write both resolved and unresolved values, and equally valid to discard
@@ -1438,9 +1526,9 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 --     @resolveImageLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR'
 --
--- -   #VUID-VkRenderingAttachmentInfo-externalFormatResolve-09323# If
+-- -   #VUID-VkRenderingAttachmentInfo-externalFormatResolve-09323# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-externalFormatResolve externalFormatResolve>
---     is not enabled, @resolveMode@ /must/ not be
+--     feature is not enabled, @resolveMode@ /must/ not be
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'
 --
 -- -   #VUID-VkRenderingAttachmentInfo-resolveMode-09324# If @resolveMode@

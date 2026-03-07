@@ -18,6 +18,8 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV
                                                                            , PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
                                                                            , PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR
+                                                                           , PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+                                                                           , PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
                                                                            , PIPELINE_CREATE_DEFER_COMPILE_BIT_NV
                                                                            , PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR
@@ -26,8 +28,6 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
-                                                                           , PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
-                                                                           , PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                            , PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT
                                                                            , PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT
                                                                            , PIPELINE_CREATE_DISPATCH_BASE_BIT
@@ -148,7 +148,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     a subsequent run (e.g. for trace capture and replay).
 --
 -- -   'PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV' specifies that the
---     pipeline can be used in combination with
+--     pipeline /can/ be used in combination with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
 --
 -- -   'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT' specifies
@@ -156,7 +156,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     creation of a valid 'Vulkan.Core10.Handles.Pipeline' object;
 --     'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED' will be
 --     returned by pipeline creation, and the
---     'Vulkan.Core10.Handles.Pipeline' will be set to
+--     'Vulkan.Core10.Handles.Pipeline' will be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- -   When creating multiple pipelines,
@@ -231,8 +231,6 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 -- with 'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' if available,
 -- whether or not that bit was specified.
 --
--- Note
---
 -- Using 'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' (or not) when
 -- linking pipeline libraries is intended as a performance tradeoff between
 -- host and device. If the bit is omitted, linking should be faster and
@@ -303,6 +301,12 @@ pattern PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = PipelineCreat
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR"
 pattern PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR = PipelineCreateFlagBits 0x00000040
 
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
+pattern PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineCreateFlagBits 0x00200000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
+pattern PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = PipelineCreateFlagBits 0x00400000
+
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV"
 pattern PIPELINE_CREATE_DEFER_COMPILE_BIT_NV = PipelineCreateFlagBits 0x00000020
 
@@ -326,12 +330,6 @@ pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = Pipeli
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00004000
-
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
-pattern PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = PipelineCreateFlagBits 0x00400000
-
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
-pattern PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineCreateFlagBits 0x00200000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT"
 pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT = PipelineCreateFlagBits 0x00000200
@@ -422,6 +420,14 @@ showTablePipelineCreateFlagBits =
     , "CAPTURE_STATISTICS_BIT_KHR"
     )
   ,
+    ( PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+    , "RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
+    )
+  ,
+    ( PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
+    , "RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
+    )
+  ,
     ( PIPELINE_CREATE_DEFER_COMPILE_BIT_NV
     , "DEFER_COMPILE_BIT_NV"
     )
@@ -452,14 +458,6 @@ showTablePipelineCreateFlagBits =
   ,
     ( PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
     , "RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"
-    )
-  ,
-    ( PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
-    , "RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
-    )
-  ,
-    ( PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
-    , "RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
     )
   ,
     ( PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT

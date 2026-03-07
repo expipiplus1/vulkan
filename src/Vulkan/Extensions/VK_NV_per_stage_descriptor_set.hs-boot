@@ -99,7 +99,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePerStageDescriptorSetFeaturesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

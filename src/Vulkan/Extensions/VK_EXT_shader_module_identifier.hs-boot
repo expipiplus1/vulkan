@@ -18,12 +18,19 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control VK_EXT_pipeline_creation_cache_control>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__Contact__]
 --
@@ -136,12 +143,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT',
--- 'PhysicalDeviceShaderModuleIdentifierFeaturesEXT',
--- 'PhysicalDeviceShaderModuleIdentifierPropertiesEXT',
--- 'PipelineShaderStageModuleIdentifierCreateInfoEXT',
--- 'ShaderModuleIdentifierEXT', 'getShaderModuleCreateInfoIdentifierEXT',
--- 'getShaderModuleIdentifierEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

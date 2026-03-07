@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -144,8 +144,8 @@
 -- == Promotion to Vulkan 1.3
 --
 -- This extension has been partially promoted. All dynamic state enumerants
--- and entry points in this extension are included in core Vulkan 1.3, with
--- the EXT suffix omitted. The feature structure is not promoted. Extension
+-- and commands in this extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. The feature structure is not promoted. Extension
 -- interfaces that were promoted remain available as aliases of the core
 -- functionality.
 --
@@ -172,13 +172,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceExtendedDynamicStateFeaturesEXT',
--- 'cmdBindVertexBuffers2EXT', 'cmdSetCullModeEXT',
--- 'cmdSetDepthBoundsTestEnableEXT', 'cmdSetDepthCompareOpEXT',
--- 'cmdSetDepthTestEnableEXT', 'cmdSetDepthWriteEnableEXT',
--- 'cmdSetFrontFaceEXT', 'cmdSetPrimitiveTopologyEXT',
--- 'cmdSetScissorWithCountEXT', 'cmdSetStencilOpEXT',
--- 'cmdSetStencilTestEnableEXT', 'cmdSetViewportWithCountEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

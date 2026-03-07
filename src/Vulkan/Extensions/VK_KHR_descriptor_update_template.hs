@@ -65,18 +65,17 @@
 -- For those cases it is also not unlikely that all information required to
 -- update a single descriptor set is stored in a single struct. This
 -- extension provides a way to update a fixed set of descriptors in a
--- single 'Vulkan.Core10.Handles.DescriptorSet' with a pointer to a user
--- defined data structure describing the new descriptors.
+-- single 'Vulkan.Core10.Handles.DescriptorSet' with a pointer to an
+-- application-defined data structure describing the new descriptors.
 --
 -- == Promotion to Vulkan 1.1
 --
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR'
--- is included as an interaction with @VK_KHR_push_descriptor@. If Vulkan
--- 1.1 and @VK_KHR_push_descriptor@ are supported, this is included by
--- @VK_KHR_push_descriptor@.
+-- 'cmdPushDescriptorSetWithTemplateKHR' is included as an interaction with
+-- @VK_KHR_push_descriptor@. If Vulkan 1.1 and @VK_KHR_push_descriptor@ are
+-- supported, this is included by @VK_KHR_push_descriptor@.
 --
 -- The base functionality in this extension is included in core Vulkan 1.1,
--- with the KHR suffix omitted. The original type, enum and command names
+-- with the KHR suffix omitted. The original type, enum, and command names
 -- are still available as aliases of the core functionality.
 --
 -- == New Object Types
@@ -95,7 +94,7 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>
 -- is supported:
 --
--- -   'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR'
+-- -   'cmdPushDescriptorSetWithTemplateKHR'
 --
 -- == New Structures
 --
@@ -156,12 +155,7 @@
 --
 -- == See Also
 --
--- 'DescriptorUpdateTemplateCreateFlagsKHR',
--- 'DescriptorUpdateTemplateCreateInfoKHR',
--- 'DescriptorUpdateTemplateEntryKHR', 'DescriptorUpdateTemplateKHR',
--- 'DescriptorUpdateTemplateTypeKHR', 'createDescriptorUpdateTemplateKHR',
--- 'destroyDescriptorUpdateTemplateKHR',
--- 'updateDescriptorSetWithTemplateKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -170,7 +164,8 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_descriptor_update_template  ( pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR
+module Vulkan.Extensions.VK_KHR_descriptor_update_template  ( cmdPushDescriptorSetWithTemplateKHR
+                                                            , pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR
                                                             , pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR
                                                             , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR
                                                             , pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT
@@ -186,25 +181,231 @@ module Vulkan.Extensions.VK_KHR_descriptor_update_template  ( pattern STRUCTURE_
                                                             , pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION
                                                             , KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME
                                                             , pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME
-                                                            , cmdPushDescriptorSetWithTemplateKHR
                                                             , DebugReportObjectTypeEXT(..)
                                                             ) where
 
+import Vulkan.Internal.Utils (traceAroundEvent)
+import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (createDescriptorUpdateTemplate)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (destroyDescriptorUpdateTemplate)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (updateDescriptorSetWithTemplate)
+import Vulkan.NamedType ((:::))
+import Vulkan.Core10.Handles (CommandBuffer)
+import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
+import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core11.Handles (DescriptorUpdateTemplate)
+import Vulkan.Core11.Handles (DescriptorUpdateTemplate(..))
 import Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags (DescriptorUpdateTemplateCreateFlags)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateCreateInfo)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateEntry)
 import Vulkan.Core11.Enums.DescriptorUpdateTemplateType (DescriptorUpdateTemplateType)
+import Vulkan.Dynamic (DeviceCmds(pVkCmdPushDescriptorSetWithTemplateKHR))
+import Vulkan.Core10.Handles (PipelineLayout)
+import Vulkan.Core10.Handles (PipelineLayout(..))
 import Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT))
 import Vulkan.Core11.Enums.DescriptorUpdateTemplateType (DescriptorUpdateTemplateType(DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO))
-import Vulkan.Extensions.VK_KHR_push_descriptor (cmdPushDescriptorSetWithTemplateKHR)
 import Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(..))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdPushDescriptorSetWithTemplateKHR
+  :: FunPtr (Ptr CommandBuffer_T -> DescriptorUpdateTemplate -> PipelineLayout -> Word32 -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> DescriptorUpdateTemplate -> PipelineLayout -> Word32 -> Ptr () -> IO ()
+
+-- | vkCmdPushDescriptorSetWithTemplateKHR - Pushes descriptor updates into a
+-- command buffer using a descriptor update template
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-00366# The
+--     @pipelineBindPoint@ specified during the creation of the descriptor
+--     update template /must/ be supported by the @commandBuffer@’s parent
+--     'Vulkan.Core10.Handles.CommandPool'’s queue family
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-pData-01686# @pData@
+--     /must/ be a valid pointer to a memory containing one or more valid
+--     instances of 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+--     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
+--     'Vulkan.Core10.Handles.BufferView' in a layout defined by
+--     @descriptorUpdateTemplate@ when it was created with
+--     'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.createDescriptorUpdateTemplate'
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-layout-07993# @layout@
+--     /must/ be compatible with the layout used to create
+--     @descriptorUpdateTemplate@
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-descriptorUpdateTemplate-07994#
+--     @descriptorUpdateTemplate@ /must/ have been created with a
+--     @templateType@ of
+--     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-set-07995# @set@ /must/
+--     be the same value used to create @descriptorUpdateTemplate@
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-set-07304# @set@ /must/
+--     be less than
+--     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
+--     provided when @layout@ was created
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-set-07305# @set@ /must/
+--     be the unique set number in the pipeline layout that uses a
+--     descriptor set layout that was created with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.CommandBuffer' handle
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-descriptorUpdateTemplate-parameter#
+--     @descriptorUpdateTemplate@ /must/ be a valid
+--     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-layout-parameter#
+--     @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'
+--     handle
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support graphics, or compute operations
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-videocoding# This
+--     command /must/ only be called outside of a video coding scope
+--
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commonparent# Each of
+--     @commandBuffer@, @descriptorUpdateTemplate@, and @layout@ /must/
+--     have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- __API Example__
+--
+-- > struct AppDataStructure
+-- > {
+-- >     VkDescriptorImageInfo  imageInfo;          // a single image info
+-- >     // ... some more application-related data
+-- > };
+-- >
+-- > const VkDescriptorUpdateTemplateEntry descriptorUpdateTemplateEntries[] =
+-- > {
+-- >     // binding to a single image descriptor
+-- >     {
+-- >         .binding = 0,
+-- >         .dstArrayElement = 0,
+-- >         .descriptorCount = 1,
+-- >         .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+-- >         .offset = offsetof(AppDataStructure, imageInfo),
+-- >         .stride = 0     // not required if descriptorCount is 1
+-- >     }
+-- > };
+-- >
+-- > // create a descriptor update template for push descriptor set updates
+-- > const VkDescriptorUpdateTemplateCreateInfo createInfo =
+-- > {
+-- >     .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,
+-- >     .pNext = NULL,
+-- >     .flags = 0,
+-- >     .descriptorUpdateEntryCount = 1,
+-- >     .pDescriptorUpdateEntries = descriptorUpdateTemplateEntries,
+-- >     .templateType = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,
+-- >     .descriptorSetLayout = 0,   // ignored by given templateType
+-- >     .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
+-- >     .pipelineLayout = myPipelineLayout,
+-- >     .set = 0,
+-- > };
+-- >
+-- > VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;
+-- > myResult = vkCreateDescriptorUpdateTemplate(
+-- >     myDevice,
+-- >     &createInfo,
+-- >     NULL,
+-- >     &myDescriptorUpdateTemplate);
+-- >
+-- > AppDataStructure appData;
+-- > // fill appData here or cache it in your engine
+-- > vkCmdPushDescriptorSetWithTemplateKHR(myCmdBuffer, myDescriptorUpdateTemplate, myPipelineLayout, 0,&appData);
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template VK_KHR_descriptor_update_template>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
+-- 'Vulkan.Core10.Handles.CommandBuffer',
+-- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
+-- 'Vulkan.Core10.Handles.PipelineLayout'
+cmdPushDescriptorSetWithTemplateKHR :: forall io
+                                     . (MonadIO io)
+                                    => -- | @commandBuffer@ is the command buffer that the descriptors will be
+                                       -- recorded in.
+                                       CommandBuffer
+                                    -> -- | @descriptorUpdateTemplate@ is a descriptor update template defining how
+                                       -- to interpret the descriptor information in @pData@.
+                                       DescriptorUpdateTemplate
+                                    -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
+                                       -- program the bindings. It /must/ be compatible with the layout used to
+                                       -- create the @descriptorUpdateTemplate@ handle.
+                                       PipelineLayout
+                                    -> -- | @set@ is the set number of the descriptor set in the pipeline layout
+                                       -- that will be updated. This /must/ be the same number used to create the
+                                       -- @descriptorUpdateTemplate@ handle.
+                                       ("set" ::: Word32)
+                                    -> -- | @pData@ is a pointer to memory containing descriptors for the templated
+                                       -- update.
+                                       ("data" ::: Ptr ())
+                                    -> io ()
+cmdPushDescriptorSetWithTemplateKHR commandBuffer
+                                      descriptorUpdateTemplate
+                                      layout
+                                      set
+                                      data' = liftIO $ do
+  let vkCmdPushDescriptorSetWithTemplateKHRPtr = pVkCmdPushDescriptorSetWithTemplateKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
+  unless (vkCmdPushDescriptorSetWithTemplateKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetWithTemplateKHR is null" Nothing Nothing
+  let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHRPtr
+  traceAroundEvent "vkCmdPushDescriptorSetWithTemplateKHR" (vkCmdPushDescriptorSetWithTemplateKHR'
+                                                              (commandBufferHandle (commandBuffer))
+                                                              (descriptorUpdateTemplate)
+                                                              (layout)
+                                                              (set)
+                                                              (data'))
+  pure $ ()
+
+
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR"
 pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
 

@@ -104,8 +104,6 @@ foreign import ccall
 -- be the return value of any one of the memory binding operations which
 -- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
--- Note
---
 -- If the 'bindBufferMemory2' command failed,
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR' structures
 -- were not included in the @pNext@ chains of each element of @pBindInfos@,
@@ -185,8 +183,6 @@ foreign import ccall
 -- the 'Vulkan.Core10.Enums.Result.Result' returned by this command /must/
 -- be the return value of any one of the memory binding operations which
 -- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
---
--- Note
 --
 -- If the 'bindImageMemory2' command failed,
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindMemoryStatusKHR' structures

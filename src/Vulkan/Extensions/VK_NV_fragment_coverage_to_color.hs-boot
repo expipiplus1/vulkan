@@ -82,8 +82,7 @@
 --
 -- == See Also
 --
--- 'PipelineCoverageToColorStateCreateFlagsNV',
--- 'PipelineCoverageToColorStateCreateInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

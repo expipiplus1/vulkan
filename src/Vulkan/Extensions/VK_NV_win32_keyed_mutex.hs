@@ -223,7 +223,7 @@
 --
 -- == See Also
 --
--- 'Win32KeyedMutexAcquireReleaseInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

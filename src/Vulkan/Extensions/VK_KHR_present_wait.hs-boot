@@ -130,7 +130,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePresentWaitFeaturesKHR', 'waitForPresentKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

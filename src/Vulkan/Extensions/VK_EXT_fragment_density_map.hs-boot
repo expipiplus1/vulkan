@@ -18,12 +18,18 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
@@ -44,7 +50,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
 --
 -- [__Contributors__]
 --
@@ -98,6 +104,17 @@
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2':
 --
 --     -   'RenderPassFragmentDensityMapCreateInfoEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
+--
+--     -   'RenderingFragmentDensityMapAttachmentInfoEXT'
 --
 -- == New Enum Constants
 --
@@ -155,12 +172,31 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
 --
 --     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT'
 --
 -- == New or Modified Built-In Variables
 --
@@ -184,9 +220,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceFragmentDensityMapFeaturesEXT',
--- 'PhysicalDeviceFragmentDensityMapPropertiesEXT',
--- 'RenderPassFragmentDensityMapCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -198,6 +232,7 @@
 module Vulkan.Extensions.VK_EXT_fragment_density_map  ( PhysicalDeviceFragmentDensityMapFeaturesEXT
                                                       , PhysicalDeviceFragmentDensityMapPropertiesEXT
                                                       , RenderPassFragmentDensityMapCreateInfoEXT
+                                                      , RenderingFragmentDensityMapAttachmentInfoEXT
                                                       ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -226,4 +261,12 @@ instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT
 instance Show RenderPassFragmentDensityMapCreateInfoEXT
 
 instance FromCStruct RenderPassFragmentDensityMapCreateInfoEXT
+
+
+data RenderingFragmentDensityMapAttachmentInfoEXT
+
+instance ToCStruct RenderingFragmentDensityMapAttachmentInfoEXT
+instance Show RenderingFragmentDensityMapAttachmentInfoEXT
+
+instance FromCStruct RenderingFragmentDensityMapAttachmentInfoEXT
 

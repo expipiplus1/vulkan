@@ -21,7 +21,7 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -40,7 +40,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_sm_builtins.txt GL_NV_shader_sm_builtins>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_shader_sm_builtins.txt GL_NV_shader_sm_builtins>
 --
 -- [__Contributors__]
 --
@@ -122,8 +122,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderSMBuiltinsFeaturesNV',
--- 'PhysicalDeviceShaderSMBuiltinsPropertiesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

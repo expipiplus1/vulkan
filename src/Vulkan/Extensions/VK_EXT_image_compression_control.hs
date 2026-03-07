@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -136,13 +138,7 @@
 --
 -- == See Also
 --
--- 'ImageCompressionControlEXT', 'ImageCompressionFixedRateFlagBitsEXT',
--- 'ImageCompressionFixedRateFlagsEXT', 'ImageCompressionFlagBitsEXT',
--- 'ImageCompressionFlagsEXT', 'ImageCompressionPropertiesEXT',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.ImageSubresource2EXT',
--- 'PhysicalDeviceImageCompressionControlFeaturesEXT',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.SubresourceLayout2EXT',
--- 'Vulkan.Extensions.VK_EXT_host_image_copy.getImageSubresourceLayout2EXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -279,8 +275,6 @@ pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT = STRUCTURE_TYPE_IMAGE_SUBRESOURC
 --
 -- -   #VUID-VkImageCompressionControlEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT'
---
--- Note
 --
 -- Some combinations of compression properties may not be supported. For
 -- example, some implementations may not support different fixed-rate
@@ -497,8 +491,6 @@ type ImageCompressionFlagsEXT = ImageCompressionFlagBitsEXT
 -- the @pFixedRateFlags@ array specifies the allowed compression rates for
 -- the image’s @i@th plane.
 --
--- Note
---
 -- If 'IMAGE_COMPRESSION_DISABLED_EXT' is included in
 -- 'ImageCompressionControlEXT'::@flags@, both lossless and fixed-rate
 -- compression will be disabled. This is likely to have a negative impact
@@ -594,8 +586,6 @@ type ImageCompressionFixedRateFlagsEXT = ImageCompressionFixedRateFlagBitsEXT
 -- multiple bits are set in 'ImageCompressionControlEXT'::@pFixedRateFlags@
 -- for a plane, implementations /should/ apply the lowest allowed bitrate
 -- that is supported.
---
--- Note
 --
 -- The choice of “bits per component” terminology was chosen so that the
 -- same compression rate describes the same degree of compression applied

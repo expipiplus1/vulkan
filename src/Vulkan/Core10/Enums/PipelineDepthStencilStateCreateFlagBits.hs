@@ -26,12 +26,12 @@ type PipelineDepthStencilStateCreateFlags = PipelineDepthStencilStateCreateFlagB
 -- = Description
 --
 -- -   'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'
---     indicates that access to the depth aspects of depth\/stencil and
+--     specifies that access to the depth aspects of depth\/stencil and
 --     input attachments will have implicit framebuffer-local memory
 --     dependencies.
 --
 -- -   'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'
---     indicates that access to the stencil aspects of depth\/stencil and
+--     specifies that access to the stencil aspects of depth\/stencil and
 --     input attachments will have implicit framebuffer-local memory
 --     dependencies.
 --

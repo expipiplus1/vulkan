@@ -151,6 +151,18 @@ foreign import ccall
 
 -- | vkCreateDescriptorSetLayout - Create a new descriptor set layout
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCreateDescriptorSetLayout-support-09582# If the descriptor
+--     layout exceeds the limits reported through the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits physical device limits>,
+--     then
+--     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'
+--     /must/ have returned
+--     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.DescriptorSetLayoutSupport'
+--     with @support@ equal to 'Vulkan.Core10.FundamentalTypes.TRUE' for
+--     @pCreateInfo@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateDescriptorSetLayout-device-parameter# @device@ /must/
@@ -543,6 +555,9 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     None
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -786,6 +801,9 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     None
 --
 -- = See Also
 --
@@ -1068,8 +1086,6 @@ data DescriptorBufferInfo = DescriptorBufferInfo
     -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to use the range from @offset@
     -- to the end of the buffer.
     --
-    -- Note
-    --
     -- When setting @range@ to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
     -- /must/ not be larger than the maximum range for the descriptor type
@@ -1332,6 +1348,8 @@ instance Zero DescriptorImageInfo where
 -- If the destination descriptor is a mutable descriptor, the active
 -- descriptor type for the destination descriptor becomes @descriptorType@.
 --
+-- __Consecutive Binding Updates__
+--
 -- If the @dstBinding@ has fewer than @descriptorCount@ array elements
 -- remaining starting from @dstArrayElement@, then the remainder will be
 -- used to update the subsequent binding - @dstBinding@+1 starting at array
@@ -1348,8 +1366,6 @@ instance Zero DescriptorImageInfo where
 -- supported descriptor types in
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 -- /must/ be equally defined.
---
--- Note
 --
 -- The same behavior applies to bindings with a descriptor type of
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
@@ -1370,6 +1386,10 @@ instance Zero DescriptorImageInfo where
 -- -   #VUID-VkWriteDescriptorSet-dstBinding-00316# @dstBinding@ /must/ be
 --     a binding with a non-zero @descriptorCount@
 --
+-- -   #VUID-VkWriteDescriptorSet-dstBinding-10009# @dstBinding@ /must/ be
+--     a binding with a non-zero
+--     'DescriptorSetLayoutCreateInfo'::@bindingCount@
+--
 -- -   #VUID-VkWriteDescriptorSet-descriptorCount-00317# All consecutive
 --     bindings updated via a single 'WriteDescriptorSet' structure, except
 --     those with a @descriptorCount@ of zero, /must/ have identical
@@ -1389,9 +1409,8 @@ instance Zero DescriptorImageInfo where
 -- -   #VUID-VkWriteDescriptorSet-dstArrayElement-00321# The sum of
 --     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
---     specified by @dstBinding@, and all applicable consecutive bindings,
---     as described by
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
+--     specified by @dstBinding@, and all applicable
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02219# If @descriptorType@
 --     is
@@ -1789,6 +1808,8 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     --
     -- -   a value matching the @accelerationStructureCount@ of a
     --     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+    --     or
+    --     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
     --     structure in the @pNext@ chain
     descriptorCount :: Word32
   , -- | @descriptorType@ is a
@@ -1945,8 +1966,6 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 -- corresponding destination descriptor. The active descriptor type /can/
 -- be different for each source descriptor.
 --
--- Note
---
 -- The intention is that copies to and from mutable descriptors is a simple
 -- memcpy. Copies between non-mutable and mutable descriptors are expected
 -- to require one memcpy per descriptor to handle the difference in size,
@@ -1961,9 +1980,8 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 -- -   #VUID-VkCopyDescriptorSet-srcArrayElement-00346# The sum of
 --     @srcArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
---     specified by @srcBinding@, and all applicable consecutive bindings,
---     as described by
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
+--     specified by @srcBinding@, and all applicable
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-dstBinding-00347# @dstBinding@ /must/ be a
 --     valid binding within @dstSet@
@@ -1971,9 +1989,8 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 -- -   #VUID-VkCopyDescriptorSet-dstArrayElement-00348# The sum of
 --     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
---     specified by @dstBinding@, and all applicable consecutive bindings,
---     as described by
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
+--     specified by @dstBinding@, and all applicable
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-dstBinding-02632# The type of @dstBinding@
 --     within @dstSet@ /must/ be equal to the type of @srcBinding@ within
@@ -1982,8 +1999,8 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 -- -   #VUID-VkCopyDescriptorSet-srcSet-00349# If @srcSet@ is equal to
 --     @dstSet@, then the source and destination ranges of descriptors
 --     /must/ not overlap, where the ranges /may/ include array elements
---     from consecutive bindings as described by
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
+--     from
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-srcBinding-02223# If the descriptor type
 --     of the descriptor set binding specified by @srcBinding@ is
@@ -2208,8 +2225,6 @@ instance Zero CopyDescriptorSet where
 -- memory in the descriptor set layout even if not all descriptor bindings
 -- are used, though it /should/ not consume additional memory from the
 -- descriptor pool.
---
--- Note
 --
 -- The maximum binding number specified /should/ be as compact as possible
 -- to avoid wasted memory.
@@ -2493,10 +2508,10 @@ instance Zero DescriptorSetLayoutBinding where
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-pBindings-07303# If any
 --     element @pBindings@[i] has a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
---     then a
+--     then the @pNext@ chain /must/ include a
 --     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
---     /must/ be present in the @pNext@ chain, and
---     @mutableDescriptorTypeListCount@ /must/ be greater than i
+--     structure, and @mutableDescriptorTypeListCount@ /must/ be greater
+--     than i
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-descriptorType-04594# If a
 --     binding has a @descriptorType@ value of
@@ -2662,8 +2677,6 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
 --
 -- = Description
 --
--- Note
---
 -- When creating a descriptor pool that will contain descriptors for
 -- combined image samplers of multi-planar formats, an application needs to
 -- account for non-trivial descriptor consumption when choosing the
@@ -2819,8 +2832,6 @@ instance Zero DescriptorPoolSize where
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeListEXT'
 -- assigned to it. The application /must/ ensure that partial overlap does
 -- not exist in @pPoolSizes@.
---
--- Note
 --
 -- The requirement of no partial overlap is intended to resolve ambiguity
 -- for validation as there is no confusion which @pPoolSizes@ entries will

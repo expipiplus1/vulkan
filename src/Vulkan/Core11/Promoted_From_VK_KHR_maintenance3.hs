@@ -97,8 +97,6 @@ foreign import ccall
 -- layout limits such as @maxPerStageDescriptor@* in order to be used in a
 -- pipeline layout.
 --
--- Note
---
 -- This is a 'Vulkan.Core10.Handles.Device' query rather than
 -- 'Vulkan.Core10.Handles.PhysicalDevice' because the answer /may/ depend
 -- on enabled features.
@@ -227,8 +225,8 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 --
 -- = Description
 --
--- @supported@ is set to 'Vulkan.Core10.FundamentalTypes.TRUE' if the
--- descriptor set /can/ be created, or else is set to
+-- @supported@ will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
+-- descriptor set /can/ be created, or else
 -- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage (Implicit)

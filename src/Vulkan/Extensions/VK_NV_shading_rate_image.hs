@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -40,7 +42,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shading_rate_image.txt GL_NV_shading_rate_image>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_shading_rate_image.txt GL_NV_shading_rate_image>
 --
 -- [__Contributors__]
 --
@@ -259,14 +261,7 @@
 --
 -- == See Also
 --
--- 'CoarseSampleLocationNV', 'CoarseSampleOrderCustomNV',
--- 'CoarseSampleOrderTypeNV', 'PhysicalDeviceShadingRateImageFeaturesNV',
--- 'PhysicalDeviceShadingRateImagePropertiesNV',
--- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV',
--- 'PipelineViewportShadingRateImageStateCreateInfoNV',
--- 'ShadingRatePaletteEntryNV', 'ShadingRatePaletteNV',
--- 'cmdBindShadingRateImageNV', 'cmdSetCoarseSampleOrderNV',
--- 'cmdSetViewportShadingRatePaletteNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -488,9 +483,8 @@ cmdBindShadingRateImageNV :: forall io
                              -- recorded.
                              CommandBuffer
                           -> -- | @imageView@ is an image view handle specifying the shading rate image.
-                             -- @imageView@ /may/ be set to 'Vulkan.Core10.APIConstants.NULL_HANDLE',
-                             -- which is equivalent to specifying a view of an image filled with zero
-                             -- values.
+                             -- @imageView@ /may/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE', which is
+                             -- equivalent to specifying a view of an image filled with zero values.
                              ImageView
                           -> -- | @imageLayout@ is the layout that the image subresources accessible from
                              -- @imageView@ will be in when the shading rate image is accessed.
@@ -935,8 +929,8 @@ data PhysicalDeviceShadingRateImageFeaturesNV = PhysicalDeviceShadingRateImageFe
     -- the implementation supports the @ShadingRateNV@ SPIR-V execution mode.
     shadingRateImage :: Bool
   , -- | #features-shadingRateCoarseSampleOrder# @shadingRateCoarseSampleOrder@
-    -- indicates that the implementation supports a user-configurable ordering
-    -- of coverage samples in fragments larger than one pixel.
+    -- indicates that the implementation supports an application-configurable
+    -- ordering of coverage samples in fragments larger than one pixel.
     shadingRateCoarseSampleOrder :: Bool
   }
   deriving (Typeable, Eq)

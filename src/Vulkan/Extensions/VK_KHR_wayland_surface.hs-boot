@@ -175,9 +175,7 @@
 --
 -- == See Also
 --
--- 'WaylandSurfaceCreateFlagsKHR', 'WaylandSurfaceCreateInfoKHR',
--- 'createWaylandSurfaceKHR',
--- 'getPhysicalDeviceWaylandPresentationSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -111,12 +111,7 @@
 --
 -- == See Also
 --
--- 'ShaderModuleValidationCacheCreateInfoEXT',
--- 'ValidationCacheCreateFlagsEXT', 'ValidationCacheCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.ValidationCacheEXT',
--- 'ValidationCacheHeaderVersionEXT', 'createValidationCacheEXT',
--- 'destroyValidationCacheEXT', 'getValidationCacheDataEXT',
--- 'mergeValidationCachesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

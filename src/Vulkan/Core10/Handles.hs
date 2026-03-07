@@ -76,6 +76,8 @@ data Instance_T
 --
 -- = See Also
 --
+-- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.PFN_vkGetInstanceProcAddrLUNARG',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_HANDLE VK_DEFINE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT',
@@ -124,6 +126,7 @@ data PhysicalDevice_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_HANDLE VK_DEFINE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.PhysicalDeviceGroupProperties',
@@ -144,6 +147,7 @@ data PhysicalDevice_T
 -- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.getDrmDisplayEXT',
 -- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.getPhysicalDeviceCalibrateableTimeDomainsEXT',
 -- 'Vulkan.Extensions.VK_KHR_calibrated_timestamps.getPhysicalDeviceCalibrateableTimeDomainsKHR',
+-- 'Vulkan.Extensions.VK_NV_cooperative_matrix2.getPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV',
 -- 'Vulkan.Extensions.VK_KHR_cooperative_matrix.getPhysicalDeviceCooperativeMatrixPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_cooperative_matrix.getPhysicalDeviceCooperativeMatrixPropertiesNV',
 -- 'Vulkan.Extensions.VK_EXT_directfb_surface.getPhysicalDeviceDirectFBPresentationSupportEXT',
@@ -225,6 +229,7 @@ data Device_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_HANDLE VK_DEFINE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.acquireFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImage2KHR',
@@ -234,6 +239,7 @@ data Device_T
 -- 'Vulkan.Core10.CommandBuffer.allocateCommandBuffers',
 -- 'Vulkan.Core10.DescriptorSet.allocateDescriptorSets',
 -- 'Vulkan.Core10.Memory.allocateMemory',
+-- 'Vulkan.Extensions.VK_AMD_anti_lag.antiLagUpdateAMD',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.bindAccelerationStructureMemoryNV',
 -- 'Vulkan.Core10.MemoryManagement.bindBufferMemory',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.bindBufferMemory2',
@@ -278,9 +284,12 @@ data Device_T
 -- 'Vulkan.Core10.Pipeline.createGraphicsPipelines',
 -- 'Vulkan.Core10.Image.createImage',
 -- 'Vulkan.Core10.ImageView.createImageView',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.createIndirectCommandsLayoutEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.createIndirectCommandsLayoutNV',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.createIndirectExecutionSetEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.createMicromapEXT',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.createOpticalFlowSessionNV',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.createPipelineBinariesKHR',
 -- 'Vulkan.Core10.PipelineCache.createPipelineCache',
 -- 'Vulkan.Core10.PipelineLayout.createPipelineLayout',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.createPrivateDataSlot',
@@ -325,10 +334,13 @@ data Device_T
 -- 'Vulkan.Core10.Pass.destroyFramebuffer',
 -- 'Vulkan.Core10.Image.destroyImage',
 -- 'Vulkan.Core10.ImageView.destroyImageView',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.destroyIndirectCommandsLayoutEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.destroyIndirectCommandsLayoutNV',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.destroyIndirectExecutionSetEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.destroyMicromapEXT',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.destroyOpticalFlowSessionNV',
 -- 'Vulkan.Core10.Pipeline.destroyPipeline',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.destroyPipelineBinaryKHR',
 -- 'Vulkan.Core10.PipelineCache.destroyPipelineCache',
 -- 'Vulkan.Core10.PipelineLayout.destroyPipelineLayout',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.destroyPrivateDataSlot',
@@ -411,6 +423,7 @@ data Device_T
 -- 'Vulkan.Core10.Fence.getFenceStatus',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_win32.getFenceWin32HandleKHR',
 -- 'Vulkan.Extensions.VK_QCOM_tile_properties.getFramebufferTilePropertiesQCOM',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.getGeneratedCommandsMemoryRequirementsEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.getImageDrmFormatModifierPropertiesEXT',
 -- 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements',
@@ -424,6 +437,7 @@ data Device_T
 -- 'Vulkan.Extensions.VK_EXT_host_image_copy.getImageSubresourceLayout2EXT',
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.getImageSubresourceLayout2KHR',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewAddressNVX',
+-- 'Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewHandle64NVX',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewHandleNVX',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.getImageViewOpaqueCaptureDescriptorDataEXT',
 -- 'Vulkan.Extensions.VK_NV_low_latency2.getLatencyTimingsNV',
@@ -440,12 +454,14 @@ data Device_T
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.getMicromapBuildSizesEXT',
 -- 'Vulkan.Extensions.VK_GOOGLE_display_timing.getPastPresentationTimingGOOGLE',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.getPerformanceParameterINTEL',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.getPipelineBinaryDataKHR',
 -- 'Vulkan.Core10.PipelineCache.getPipelineCacheData',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableInternalRepresentationsKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutablePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableStatisticsKHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.getPipelineIndirectDeviceAddressNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.getPipelineIndirectMemoryRequirementsNV',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.getPipelineKeyKHR',
 -- 'Vulkan.Extensions.VK_EXT_pipeline_properties.getPipelinePropertiesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.getPrivateData',
 -- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
@@ -487,6 +503,7 @@ data Device_T
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.mergeValidationCachesEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDeviceEventEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.releaseCapturedPipelineDataKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.releaseFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.releasePerformanceConfigurationINTEL',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.releaseProfilingLockKHR',
@@ -519,6 +536,8 @@ data Device_T
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplate',
 -- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR',
 -- 'Vulkan.Core10.DescriptorSet.updateDescriptorSets',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.updateIndirectExecutionSetPipelineEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.updateIndirectExecutionSetShaderEXT',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkUpdateVideoSessionParametersKHR vkUpdateVideoSessionParametersKHR>,
 -- 'Vulkan.Core10.Fence.waitForFences',
 -- 'Vulkan.Extensions.VK_KHR_present_wait.waitForPresentKHR',
@@ -545,11 +564,12 @@ data Queue_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_HANDLE VK_DEFINE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalCommandQueueInfoEXT',
 -- 'Vulkan.Core10.Queue.getDeviceQueue',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2',
--- 'Vulkan.Extensions.VK_KHR_synchronization2.getQueueCheckpointData2NV',
+-- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.getQueueCheckpointData2NV',
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.getQueueCheckpointDataNV',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.queueBeginDebugUtilsLabelEXT',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.queueBindSparse',
@@ -581,6 +601,7 @@ data CommandBuffer_T
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_HANDLE VK_DEFINE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.CommandBufferSubmitInfo',
 -- 'Vulkan.Core10.Queue.SubmitInfo',
@@ -695,6 +716,7 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdEndVideoCodingKHR vkCmdEndVideoCodingKHR>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.cmdExecuteGeneratedCommandsEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdExecuteGeneratedCommandsNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',
 -- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.cmdInitializeGraphScratchMemoryAMDX',
@@ -706,13 +728,14 @@ data CommandBuffer_T
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdPipelineBarrier2',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdPipelineBarrier2KHR',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.cmdPreprocessGeneratedCommandsEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPushConstants',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.cmdPushConstants2KHR',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.cmdPushDescriptorSet2KHR',
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.cmdPushDescriptorSetWithTemplate2KHR',
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR',
+-- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.cmdPushDescriptorSetWithTemplateKHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdResetEvent2',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdResetEvent2KHR',
@@ -748,6 +771,7 @@ data CommandBuffer_T
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT',
+-- 'Vulkan.Extensions.VK_EXT_depth_clamp_control.cmdSetDepthClampRangeEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp',
@@ -833,7 +857,7 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
--- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteBufferMarker2AMD',
+-- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarker2AMD',
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.cmdWriteMicromapsPropertiesEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp',
@@ -859,6 +883,7 @@ instance HasObjectType CommandBuffer where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
@@ -900,6 +925,7 @@ instance Show DeviceMemory where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferAllocateInfo',
 -- 'Vulkan.Core10.CommandPool.createCommandPool',
@@ -921,6 +947,7 @@ instance Show CommandPool where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
@@ -979,7 +1006,7 @@ instance Show CommandPool where
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdUpdateBuffer',
--- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteBufferMarker2AMD',
+-- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarker2AMD',
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',
 -- 'Vulkan.Core10.Buffer.createBuffer',
 -- 'Vulkan.Core10.Buffer.destroyBuffer',
@@ -997,6 +1024,7 @@ instance Show Buffer where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalTextureInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet',
@@ -1015,6 +1043,7 @@ instance Show BufferView where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BlitImageInfo2',
@@ -1069,6 +1098,7 @@ instance Show Image where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalTextureInfoEXT',
@@ -1077,8 +1107,9 @@ instance Show Image where
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingAttachmentInfo',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQuantizationMapInfoKHR VkVideoEncodeQuantizationMapInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoPictureResourceInfoKHR VkVideoPictureResourceInfoKHR>,
 -- 'Vulkan.Extensions.VK_NV_optical_flow.bindOpticalFlowSessionImageNV',
 -- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.cmdBindInvocationMaskHUAWEI',
@@ -1099,6 +1130,7 @@ instance Show ImageView where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
 -- 'Vulkan.Core10.Shader.createShaderModule',
@@ -1117,21 +1149,28 @@ instance Show ShaderModule where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.GeneratedCommandsPipelineInfoEXT',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectExecutionSetPipelineInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineExecutableInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.PipelineIndirectDeviceAddressInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.ReleaseCapturedPipelineDataInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.WriteIndirectExecutionSetPipelineEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdBindPipelineShaderGroupNV',
+-- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.cmdInitializeGraphScratchMemoryAMDX',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.cmdUpdatePipelineIndirectBufferNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.compileDeferredNV',
 -- 'Vulkan.Core10.Pipeline.createComputePipelines',
@@ -1160,6 +1199,7 @@ instance Show Pipeline where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorBufferEmbeddedSamplersInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorSetsInfoKHR',
@@ -1167,6 +1207,7 @@ instance Show Pipeline where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
 -- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.PushConstantsInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.PushDescriptorSetInfoKHR',
@@ -1178,7 +1219,7 @@ instance Show Pipeline where
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPushConstants',
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR',
+-- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.cmdPushDescriptorSetWithTemplateKHR',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
 -- 'Vulkan.Core10.PipelineLayout.createPipelineLayout',
 -- 'Vulkan.Core10.PipelineLayout.destroyPipelineLayout'
@@ -1195,6 +1236,7 @@ instance Show PipelineLayout where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorDataEXT',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
@@ -1216,6 +1258,7 @@ instance Show Sampler where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorSetsInfoKHR',
 -- 'Vulkan.Core10.DescriptorSet.CopyDescriptorSet',
@@ -1239,10 +1282,12 @@ instance Show DescriptorSet where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
 -- 'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.DescriptorSetBindingReferenceVALVE',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectExecutionSetShaderLayoutInfoEXT',
 -- 'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.createDescriptorSetLayout',
@@ -1263,6 +1308,7 @@ instance Show DescriptorSetLayout where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
 -- 'Vulkan.Core10.DescriptorSet.createDescriptorPool',
@@ -1282,6 +1328,7 @@ instance Show DescriptorPool where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_fd.FenceGetFdInfoKHR',
@@ -1312,6 +1359,7 @@ instance Show Fence where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo',
@@ -1346,6 +1394,7 @@ instance Show Semaphore where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalSharedEventInfoEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent',
@@ -1373,6 +1422,7 @@ instance Show Event where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoInlineQueryInfoKHR VkVideoInlineQueryInfoKHR>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery',
@@ -1405,6 +1455,7 @@ instance Show QueryPool where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
@@ -1424,6 +1475,7 @@ instance Show Framebuffer where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Core10.Pass.FramebufferCreateInfo',
@@ -1449,6 +1501,7 @@ instance Show RenderPass where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.createComputePipelines',
 -- 'Vulkan.Extensions.VK_AMDX_shader_enqueue.createExecutionGraphPipelinesAMDX',

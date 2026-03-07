@@ -24,6 +24,8 @@
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -89,7 +91,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePresentIdFeaturesKHR', 'PresentIdKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -228,7 +230,7 @@ instance Zero PhysicalDevicePresentIdFeaturesKHR where
 -- identifiers.
 --
 -- Each 'Vulkan.Extensions.Handles.SwapchainKHR' has a presentId associated
--- with it. This value is initially set to zero when the
+-- with it. This value is initially zero when the
 -- 'Vulkan.Extensions.Handles.SwapchainKHR' is created.
 --
 -- When a 'PresentIdKHR' structure with a non-NULL @pPresentIds@ is

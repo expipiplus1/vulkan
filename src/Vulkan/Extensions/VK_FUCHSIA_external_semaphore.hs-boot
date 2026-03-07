@@ -102,9 +102,7 @@
 --
 -- == See Also
 --
--- 'ImportSemaphoreZirconHandleInfoFUCHSIA',
--- 'SemaphoreGetZirconHandleInfoFUCHSIA',
--- 'getSemaphoreZirconHandleFUCHSIA', 'importSemaphoreZirconHandleFUCHSIA'
+-- No cross-references are available
 --
 -- == Document Notes
 --

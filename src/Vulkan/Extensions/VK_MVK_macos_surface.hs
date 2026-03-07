@@ -102,8 +102,7 @@
 --
 -- == See Also
 --
--- 'MacOSSurfaceCreateFlagsMVK', 'MacOSSurfaceCreateInfoMVK',
--- 'createMacOSSurfaceMVK'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -192,8 +191,6 @@ foreign import ccall
 -- NSView
 --
 -- = Description
---
--- Note
 --
 -- The 'createMacOSSurfaceMVK' function is considered deprecated and has
 -- been superseded by
@@ -361,7 +358,7 @@ instance Zero MacOSSurfaceCreateInfoMVK where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface VK_MVK_macos_surface>,
--- 'MacOSSurfaceCreateInfoMVK'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'MacOSSurfaceCreateInfoMVK'
 newtype MacOSSurfaceCreateFlagsMVK = MacOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

@@ -21,11 +21,17 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
 --
 --     -   Interacts with VK_EXT_debug_report
 --
@@ -34,6 +40,12 @@
 -- [__SPIR-V Dependencies__]
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_ray_tracing.html SPV_NV_ray_tracing>
+--
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
+--         extension
 --
 -- [__Contact__]
 --
@@ -48,7 +60,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_ray_tracing.txt GL_NV_ray_tracing>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_ray_tracing.txt GL_NV_ray_tracing>
 --
 -- [__Contributors__]
 --
@@ -170,6 +182,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'Vulkan.Extensions.VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
@@ -447,29 +461,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_NV', 'AabbPositionsNV',
--- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureInfoNV',
--- 'AccelerationStructureInstanceNV',
--- 'AccelerationStructureMemoryRequirementsInfoNV',
--- 'AccelerationStructureMemoryRequirementsTypeNV',
--- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
--- 'AccelerationStructureTypeNV', 'BindAccelerationStructureMemoryInfoNV',
--- 'BuildAccelerationStructureFlagBitsNV',
--- 'BuildAccelerationStructureFlagsNV', 'CopyAccelerationStructureModeNV',
--- 'GeometryAABBNV', 'GeometryDataNV', 'GeometryFlagBitsNV',
--- 'GeometryFlagsNV', 'GeometryInstanceFlagBitsNV',
--- 'GeometryInstanceFlagsNV', 'GeometryNV', 'GeometryTrianglesNV',
--- 'GeometryTypeNV', 'PhysicalDeviceRayTracingPropertiesNV',
--- 'RayTracingPipelineCreateInfoNV', 'RayTracingShaderGroupCreateInfoNV',
--- 'RayTracingShaderGroupTypeNV', 'TransformMatrixNV',
--- 'WriteDescriptorSetAccelerationStructureNV',
--- 'bindAccelerationStructureMemoryNV', 'cmdBuildAccelerationStructureNV',
--- 'cmdCopyAccelerationStructureNV', 'cmdTraceRaysNV',
--- 'cmdWriteAccelerationStructuresPropertiesNV', 'compileDeferredNV',
--- 'createAccelerationStructureNV', 'createRayTracingPipelinesNV',
--- 'destroyAccelerationStructureNV', 'getAccelerationStructureHandleNV',
--- 'getAccelerationStructureMemoryRequirementsNV',
--- 'getRayTracingShaderGroupHandlesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

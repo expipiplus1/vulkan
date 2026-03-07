@@ -18,7 +18,7 @@
 --     3
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -118,8 +118,7 @@
 --
 -- == See Also
 --
--- 'FilterCubicImageViewImageFormatPropertiesEXT',
--- 'PhysicalDeviceImageViewImageFormatInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -245,11 +244,11 @@ instance Zero PhysicalDeviceImageViewImageFormatInfoEXT where
 data FilterCubicImageViewImageFormatPropertiesEXT = FilterCubicImageViewImageFormatPropertiesEXT
   { -- | @filterCubic@ tells if image format, image type and image view type
     -- /can/ be used with cubic filtering. This field is set by the
-    -- implementation. User-specified value is ignored.
+    -- implementation. An application-specified value is ignored.
     filterCubic :: Bool
   , -- | @filterCubicMinmax@ tells if image format, image type and image view
     -- type /can/ be used with cubic filtering and minmax filtering. This field
-    -- is set by the implementation. User-specified value is ignored.
+    -- is set by the implementation. An application-specified value is ignored.
     filterCubicMinmax :: Bool
   }
   deriving (Typeable, Eq)

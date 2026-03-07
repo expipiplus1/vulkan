@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -113,7 +115,7 @@
 -- (2) This is intended to be a general pipeline properties query, but is
 -- currently only retrieving the pipeline identifier. Should the pipeline
 -- identifier query be mandatory for this extension and for all queries
--- using this entry point?
+-- using this command?
 --
 -- __RESOLVED__: Use 'Vulkan.CStruct.Extends.BaseOutStructure' for the
 -- return parameter. Currently this is required to actually be a
@@ -136,8 +138,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePipelinePropertiesFeaturesEXT', 'PipelineInfoEXT',
--- 'PipelinePropertiesIdentifierEXT', 'getPipelinePropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

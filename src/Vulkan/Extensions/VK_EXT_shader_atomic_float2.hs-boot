@@ -18,10 +18,15 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_atomic_float VK_EXT_shader_atomic_float>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with
+--         VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::sparseImageFloat32AtomicMinMax
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -45,7 +50,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_atomic_float2.txt GLSL_EXT_shader_atomic_float2>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_shader_atomic_float2.txt GLSL_EXT_shader_atomic_float2>
 --
 -- [__Contributors__]
 --
@@ -111,7 +116,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderAtomicFloat2FeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

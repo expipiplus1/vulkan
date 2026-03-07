@@ -49,6 +49,10 @@
 -- functionality specific to Imagination Technologies PowerVR Texture
 -- compression format (called PVRTC).
 --
+-- As also noted in the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>,
+-- PVRTC1 images must have dimensions that are a power of two.
+--
 -- == Deprecation
 --
 -- Both PVRTC1 and PVRTC2 are slower than standard image formats on PowerVR

@@ -161,11 +161,7 @@
 --
 -- == See Also
 --
--- 'FragmentShadingRateNV', 'FragmentShadingRateTypeNV',
--- 'PhysicalDeviceFragmentShadingRateEnumsFeaturesNV',
--- 'PhysicalDeviceFragmentShadingRateEnumsPropertiesNV',
--- 'PipelineFragmentShadingRateEnumStateCreateInfoNV',
--- 'cmdSetFragmentShadingRateEnumNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -282,8 +278,6 @@ foreign import ccall
 -- 'PipelineFragmentShadingRateEnumStateCreateInfoNV' values used to create
 -- the currently active pipeline.
 --
--- Note
---
 -- This command allows specifying additional shading rates beyond those
 -- supported by
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.cmdSetFragmentShadingRateKHR'.
@@ -293,24 +287,24 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-pipelineFragmentShadingRate-04576#
---     If
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
---     is not enabled, @shadingRate@ /must/ be
+--     feature is not enabled, @shadingRate@ /must/ be
 --     'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-supersampleFragmentShadingRates-04577#
---     If
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
---     is not enabled, @shadingRate@ /must/ not be
+--     feature is not enabled, @shadingRate@ /must/ not be
 --     'FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV',
 --     'FRAGMENT_SHADING_RATE_4_INVOCATIONS_PER_PIXEL_NV',
 --     'FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV', or
 --     'FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-noInvocationFragmentShadingRates-04578#
---     If
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
---     is not enabled, @shadingRate@ /must/ not be
+--     feature is not enabled, @shadingRate@ /must/ not be
 --     'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-fragmentShadingRateEnums-04579#
@@ -712,10 +706,12 @@ instance Zero PipelineFragmentShadingRateEnumStateCreateInfoNV where
 -- 'FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV', and
 -- 'FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV' as a pipeline,
 -- primitive, or attachment shading rate, the
--- @supersampleFragmentShadingRates@ feature /must/ be enabled. To use the
--- shading rate 'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV' as a pipeline,
--- primitive, or attachment shading rate, the
--- @noInvocationFragmentShadingRates@ feature /must/ be enabled.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
+-- feature /must/ be enabled. To use the shading rate
+-- 'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV' as a pipeline, primitive, or
+-- attachment shading rate, the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
+-- feature /must/ be enabled.
 --
 -- = See Also
 --

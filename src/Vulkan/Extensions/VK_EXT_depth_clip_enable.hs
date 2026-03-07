@@ -18,12 +18,12 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -100,9 +100,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceDepthClipEnableFeaturesEXT',
--- 'PipelineRasterizationDepthClipStateCreateFlagsEXT',
--- 'PipelineRasterizationDepthClipStateCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -185,7 +183,7 @@ data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFea
     -- via the 'PipelineRasterizationDepthClipStateCreateInfoEXT' pipeline
     -- state. Otherwise depth clipping is only enabled when
     -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
-    -- is set to 'Vulkan.Core10.FundamentalTypes.FALSE'.
+    -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     depthClipEnable :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -299,6 +297,7 @@ instance Zero PipelineRasterizationDepthClipStateCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_enable VK_EXT_depth_clip_enable>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'PipelineRasterizationDepthClipStateCreateInfoEXT'
 newtype PipelineRasterizationDepthClipStateCreateFlagsEXT = PipelineRasterizationDepthClipStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

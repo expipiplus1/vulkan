@@ -95,6 +95,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCreateEvent-device-09672# @device@ /must/ support at least
+--     one queue family with one of the @VK_QUEUE_VIDEO_ENCODE_BIT_KHR@,
+--     @VK_QUEUE_VIDEO_DECODE_BIT_KHR@,
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
+--
 -- -   #VUID-vkCreateEvent-events-04468# If the @VK_KHR_portability_subset@
 --     extension is enabled, and
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@events@
@@ -361,8 +367,6 @@ foreign import ccall
 --
 -- If @event@ is already in the signaled state when 'setEvent' is executed,
 -- then 'setEvent' has no effect, and no event signal operation occurs.
---
--- Note
 --
 -- If a command buffer is waiting for an event to be signaled from the
 -- host, the application must signal the event before submitting the

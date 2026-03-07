@@ -107,8 +107,7 @@
 --
 -- == See Also
 --
--- 'FrameBoundaryEXT', 'FrameBoundaryFlagBitsEXT', 'FrameBoundaryFlagsEXT',
--- 'PhysicalDeviceFrameBoundaryFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -194,14 +193,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR', or
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo'.
 --
--- The frame identifier is used to associate one or more queue submission
--- to a frame, it is thus meant to be unique within a frame lifetime, i.e.
--- it is possible (but not recommended) to reuse frame identifiers, as long
--- as any two frames with any chance of having overlapping queue
--- submissions (as in the example above) use two different frame
--- identifiers.
---
--- Note
+-- The frame identifier is used to associate one or more queue submissions
+-- to a frame. It is meant to be unique within a frame lifetime, i.e. it is
+-- possible (though not recommended) to reuse frame identifiers, as long as
+-- any two frames that may have overlapping queue submissions (as in the
+-- example above) use different frame identifiers.
 --
 -- Since the concept of frame is application-dependent, there is no way to
 -- validate the use of frame identifier. It is good practice to use a

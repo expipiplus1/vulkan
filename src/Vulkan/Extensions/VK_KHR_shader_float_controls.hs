@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -67,7 +69,7 @@
 -- == Promotion to Vulkan 1.2
 --
 -- All functionality in this extension is included in core Vulkan 1.2, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Structures
@@ -169,7 +171,7 @@
 -- facet of the extension, we ended up with two different behaviors in the
 -- wild, where some implementations worked as written, and others worked
 -- based on the naming. As these are hard limits in hardware with reasons
--- for exposure as written, it was not possible to standardise on a single
+-- for exposure as written, it was not possible to standardize on a single
 -- way to make this work within the existing API.
 --
 -- No known users of this part of the extension exist in the wild, and as
@@ -203,8 +205,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceFloatControlsPropertiesKHR',
--- 'ShaderFloatControlsIndependenceKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -48,7 +50,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
 --
 -- [__Contributors__]
 --
@@ -75,14 +77,14 @@
 -- shader extension, which adds a new @ViewIndex@ built-in type that allows
 -- shaders to control what to do for each view. If using GLSL there is also
 -- the
--- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
+-- <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
 -- extension that introduces a @highp int gl_ViewIndex;@ built-in variable
 -- for vertex, tessellation, geometry, and fragment shaders.
 --
 -- == Promotion to Vulkan 1.1
 --
 -- All functionality in this extension is included in core Vulkan 1.1, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Structures
@@ -137,9 +139,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceMultiviewFeaturesKHR',
--- 'PhysicalDeviceMultiviewPropertiesKHR',
--- 'RenderPassMultiviewCreateInfoKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

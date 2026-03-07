@@ -128,14 +128,12 @@
 --
 -- == Examples
 --
--- Note
---
 -- The example code for the @VK_KHR_display@ and @VK_KHR_display_swapchain@
 -- extensions was removed from the appendix after revision 1.0.43. The
 -- display swapchain creation example code was ported to the cube demo that
 -- is shipped with the official Khronos SDK, and is being kept up-to-date
 -- in that location (see:
--- <https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c>).
+-- <https://github.com/KhronosGroup/Vulkan-Tools/blob/main/cube/cube.c>).
 --
 -- == Version History
 --
@@ -194,7 +192,7 @@
 --
 -- == See Also
 --
--- 'DisplayPresentInfoKHR', 'createSharedSwapchainsKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

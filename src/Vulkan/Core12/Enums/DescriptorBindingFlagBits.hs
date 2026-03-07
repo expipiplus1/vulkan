@@ -27,8 +27,6 @@ type DescriptorBindingFlags = DescriptorBindingFlagBits
 --
 -- = Description
 --
--- Note
---
 -- Note that while 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT' and
 -- 'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' both involve
 -- updates to descriptor sets after they are bound,
@@ -45,7 +43,7 @@ type DescriptorBindingFlags = DescriptorBindingFlagBits
 newtype DescriptorBindingFlagBits = DescriptorBindingFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT' indicates that if descriptors
+-- | 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT' specifies that if descriptors
 -- in this binding are updated between when the descriptor set is bound in
 -- a command buffer and when that command buffer is submitted to a queue,
 -- then the submission will use the most recently set descriptors for this
@@ -61,7 +59,7 @@ newtype DescriptorBindingFlagBits = DescriptorBindingFlagBits Flags
 -- another thread, but not concurrently with the set being reset or freed.
 pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = DescriptorBindingFlagBits 0x00000001
 
--- | 'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' indicates that
+-- | 'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' specifies that
 -- descriptors in this binding /can/ be updated after a command buffer has
 -- bound this descriptor set, or while a command buffer that uses this
 -- descriptor set is pending execution, as long as the descriptors that are
@@ -78,7 +76,7 @@ pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = DescriptorBindingFlagBits 0x0
 -- used by any shader invocations.
 pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = DescriptorBindingFlagBits 0x00000002
 
--- | 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' indicates that descriptors in
+-- | 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' specifies that descriptors in
 -- this binding that are not /dynamically used/ need not contain valid
 -- descriptors at the time the descriptors are consumed. A descriptor is
 -- dynamically used if any shader invocation executes an instruction that
@@ -87,7 +85,7 @@ pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = DescriptorBindingFl
 -- considered to be referenced during command execution.
 pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = DescriptorBindingFlagBits 0x00000004
 
--- | 'DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT' indicates that this
+-- | 'DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT' specifies that this
 -- is a /variable-sized descriptor binding/ whose size will be specified
 -- when a descriptor set is allocated using this layout. The value of
 -- @descriptorCount@ is treated as an upper bound on the size of the

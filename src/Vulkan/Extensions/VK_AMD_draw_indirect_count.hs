@@ -68,7 +68,7 @@
 --
 -- All functionality in this extension is included in
 -- @VK_KHR_draw_indirect_count@, with the suffix changed to KHR. The
--- original type, enum and command names are still available as aliases of
+-- original type, enum, and command names are still available as aliases of
 -- the core functionality.
 --
 -- == New Commands
@@ -95,7 +95,7 @@
 --
 -- == See Also
 --
--- 'cmdDrawIndexedIndirectCountAMD', 'cmdDrawIndirectCountAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

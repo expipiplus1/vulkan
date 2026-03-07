@@ -62,7 +62,7 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- Functionality in this extension is included in core Vulkan 1.3 Because
+-- Functionality in this extension is included in core Vulkan 1.3. Because
 -- the extension has no API controlling its functionality, this results
 -- only in a change to the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Extensions table>.

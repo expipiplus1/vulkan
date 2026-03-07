@@ -328,6 +328,15 @@ instance Zero PhysicalDeviceVulkan11Features where
 -- and
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'.
 --
+-- The @subgroupSupportedStages@, @subgroupSupportedOperations@, and
+-- @subgroupQuadOperationsInAllStages@ members of this structure correspond
+-- respectively to the
+-- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'::@supportedStages@,
+-- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'::@supportedOperations@,
+-- and
+-- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'::@quadOperationsInAllStages@
+-- members, but add the @subgroup@ prefix to the member name.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -360,7 +369,7 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- LUID and @deviceNodeMask@ contains a valid node mask, and
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' if they do not.
     deviceLUIDValid :: Bool
-  , -- | #limits-subgroup-size# @subgroupSize@ is the default number of
+  , -- | #limits-subgroupSize# @subgroupSize@ is the default number of
     -- invocations in each subgroup. @subgroupSize@ is at least 1 if any of the
     -- physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
@@ -370,20 +379,21 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
   , -- | #limits-subgroupSupportedStages# @subgroupSupportedStages@ is a bitfield
     -- of 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
     -- describing the shader stages that
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
     -- are supported in. @subgroupSupportedStages@ will have the
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
     -- set if any of the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
     subgroupSupportedStages :: ShaderStageFlags
-  , -- | @subgroupSupportedOperations@ is a bitmask of
+  , -- | #limits-subgroupSupportedOperations# @subgroupSupportedOperations@ is a
+    -- bitmask of
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
     -- specifying the sets of
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
     -- supported on this device. @subgroupSupportedOperations@ will have the
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
     -- bit set if any of the physical device’s queues support
@@ -392,7 +402,7 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     subgroupSupportedOperations :: SubgroupFeatureFlags
   , -- | #limits-subgroupQuadOperationsInAllStages#
     -- @subgroupQuadOperationsInAllStages@ is a boolean specifying whether
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
     -- are available in all stages, or are restricted to fragment and compute
     -- stages.
     subgroupQuadOperationsInAllStages :: Bool
@@ -550,12 +560,6 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = Description
 --
--- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
---     identifying this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to a structure extending this
---     structure.
---
 -- -   #features-samplerMirrorClampToEdge# @samplerMirrorClampToEdge@
 --     indicates whether the implementation supports the
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
@@ -628,7 +632,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     the implementation supports the minimum set of descriptor indexing
 --     features as described in the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements Feature Requirements>
---     section. Enabling the @descriptorIndexing@ member when
+--     section. Enabling this feature when
 --     'Vulkan.Core10.Device.createDevice' is called does not imply the
 --     other minimum descriptor indexing features are also enabled. Those
 --     other descriptor indexing features /must/ be enabled individually as
@@ -636,9 +640,10 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-shaderInputAttachmentArrayDynamicIndexing#
 --     @shaderInputAttachmentArrayDynamicIndexing@ indicates whether arrays
---     of input attachments /can/ be indexed by dynamically uniform integer
---     expressions in shader code. If this feature is not enabled,
---     resources with a descriptor type of
+--     of input attachments /can/ be indexed by integer expressions that
+--     are dynamically uniform within either the subgroup or the invocation
+--     group in shader code. If this feature is not enabled, resources with
+--     a descriptor type of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     /must/ be indexed only by constant integral expressions when
 --     aggregated into arrays in shader code. This also indicates whether
@@ -647,8 +652,9 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-shaderUniformTexelBufferArrayDynamicIndexing#
 --     @shaderUniformTexelBufferArrayDynamicIndexing@ indicates whether
---     arrays of uniform texel buffers /can/ be indexed by dynamically
---     uniform integer expressions in shader code. If this feature is not
+--     arrays of uniform texel buffers /can/ be indexed by integer
+--     expressions that are dynamically uniform within either the subgroup
+--     or the invocation group in shader code. If this feature is not
 --     enabled, resources with a descriptor type of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
 --     /must/ be indexed only by constant integral expressions when
@@ -658,8 +664,9 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-shaderStorageTexelBufferArrayDynamicIndexing#
 --     @shaderStorageTexelBufferArrayDynamicIndexing@ indicates whether
---     arrays of storage texel buffers /can/ be indexed by dynamically
---     uniform integer expressions in shader code. If this feature is not
+--     arrays of storage texel buffers /can/ be indexed by integer
+--     expressions that are dynamically uniform within either the subgroup
+--     or the invocation group in shader code. If this feature is not
 --     enabled, resources with a descriptor type of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
 --     /must/ be indexed only by constant integral expressions when
@@ -853,8 +860,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     uniform buffers as for storage and other kinds of buffers. See
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
 --
--- -   #features-subgroup-extended-types# @shaderSubgroupExtendedTypes@ is
---     a boolean specifying whether subgroup operations can use 8-bit
+-- -   #features-shaderSubgroupExtendedTypes# @shaderSubgroupExtendedTypes@
+--     is a boolean specifying whether subgroup operations can use 8-bit
 --     integer, 16-bit integer, 64-bit integer, 16-bit floating-point, and
 --     vectors of these types in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
@@ -1379,8 +1386,9 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- null-terminated UTF-8 string with additional information about the
     -- driver.
     driverInfo :: ByteString
-  , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
-    -- driver is conformant against (see
+  , -- | @conformanceVersion@ is the latest version of the Vulkan conformance
+    -- test that the implementor has successfully tested this driver against
+    -- prior to release (see
     -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion').
     conformanceVersion :: ConformanceVersion
   , -- | #features-denormBehaviorIndependence# @denormBehaviorIndependence@ is a
@@ -1504,40 +1512,40 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
   , -- | #limits-shaderUniformBufferArrayNonUniformIndexingNative#
     -- @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether uniform buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of uniform buffers /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderUniformBufferArrayNonUniformIndexingNative :: Bool
   , -- | #limits-shaderSampledImageArrayNonUniformIndexingNative#
     -- @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether sampler and image descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of samplers or images /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderSampledImageArrayNonUniformIndexingNative :: Bool
   , -- | #limits-shaderStorageBufferArrayNonUniformIndexingNative#
     -- @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether storage buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of storage buffers /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderStorageBufferArrayNonUniformIndexingNative :: Bool
   , -- | #limits-shaderStorageImageArrayNonUniformIndexingNative#
     -- @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether storage image descriptors natively support nonuniform
-    -- indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of storage images /may/ execute multiple times in order to access
-    -- all the descriptors.
+    -- indicating whether storage image descriptors natively support
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
+    -- indexes an array of storage images /may/ execute multiple times in order
+    -- to access all the descriptors.
     shaderStorageImageArrayNonUniformIndexingNative :: Bool
   , -- | #limits-shaderInputAttachmentArrayNonUniformIndexingNative#
     -- @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether input attachment descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of input attachments /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderInputAttachmentArrayNonUniformIndexingNative :: Bool

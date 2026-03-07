@@ -89,7 +89,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

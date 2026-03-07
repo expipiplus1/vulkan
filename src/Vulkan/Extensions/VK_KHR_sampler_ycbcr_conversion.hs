@@ -21,13 +21,19 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
 --
@@ -103,8 +109,8 @@
 -- All functionality in this extension is included in core Vulkan 1.1, with
 -- the KHR suffix omitted. However, if Vulkan 1.1 is supported and this
 -- extension is not, the @samplerYcbcrConversion@ capability is optional.
--- The original type, enum and command names are still available as aliases
--- of the core functionality.
+-- The original type, enum, and command names are still available as
+-- aliases of the core functionality.
 --
 -- == New Object Types
 --
@@ -377,14 +383,7 @@
 --
 -- == See Also
 --
--- 'BindImagePlaneMemoryInfoKHR', 'ChromaLocationKHR',
--- 'ImagePlaneMemoryRequirementsInfoKHR',
--- 'PhysicalDeviceSamplerYcbcrConversionFeaturesKHR',
--- 'SamplerYcbcrConversionCreateInfoKHR',
--- 'SamplerYcbcrConversionImageFormatPropertiesKHR',
--- 'SamplerYcbcrConversionInfoKHR', 'SamplerYcbcrConversionKHR',
--- 'SamplerYcbcrModelConversionKHR', 'SamplerYcbcrRangeKHR',
--- 'createSamplerYcbcrConversionKHR', 'destroySamplerYcbcrConversionKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

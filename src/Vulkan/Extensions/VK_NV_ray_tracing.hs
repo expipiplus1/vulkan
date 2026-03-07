@@ -21,11 +21,17 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_1
 --
 --     -   Interacts with VK_EXT_debug_report
 --
@@ -34,6 +40,12 @@
 -- [__SPIR-V Dependencies__]
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_ray_tracing.html SPV_NV_ray_tracing>
+--
+-- [__Deprecation State__]
+--
+--     -   /Deprecated/ by
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
+--         extension
 --
 -- [__Contact__]
 --
@@ -48,7 +60,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_ray_tracing.txt GL_NV_ray_tracing>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_ray_tracing.txt GL_NV_ray_tracing>
 --
 -- [__Contributors__]
 --
@@ -170,6 +182,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 VK_KHR_get_memory_requirements2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'Vulkan.Extensions.VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
@@ -447,29 +461,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_NV', 'AabbPositionsNV',
--- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureInfoNV',
--- 'AccelerationStructureInstanceNV',
--- 'AccelerationStructureMemoryRequirementsInfoNV',
--- 'AccelerationStructureMemoryRequirementsTypeNV',
--- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
--- 'AccelerationStructureTypeNV', 'BindAccelerationStructureMemoryInfoNV',
--- 'BuildAccelerationStructureFlagBitsNV',
--- 'BuildAccelerationStructureFlagsNV', 'CopyAccelerationStructureModeNV',
--- 'GeometryAABBNV', 'GeometryDataNV', 'GeometryFlagBitsNV',
--- 'GeometryFlagsNV', 'GeometryInstanceFlagBitsNV',
--- 'GeometryInstanceFlagsNV', 'GeometryNV', 'GeometryTrianglesNV',
--- 'GeometryTypeNV', 'PhysicalDeviceRayTracingPropertiesNV',
--- 'RayTracingPipelineCreateInfoNV', 'RayTracingShaderGroupCreateInfoNV',
--- 'RayTracingShaderGroupTypeNV', 'TransformMatrixNV',
--- 'WriteDescriptorSetAccelerationStructureNV',
--- 'bindAccelerationStructureMemoryNV', 'cmdBuildAccelerationStructureNV',
--- 'cmdCopyAccelerationStructureNV', 'cmdTraceRaysNV',
--- 'cmdWriteAccelerationStructuresPropertiesNV', 'compileDeferredNV',
--- 'createAccelerationStructureNV', 'createRayTracingPipelinesNV',
--- 'destroyAccelerationStructureNV', 'getAccelerationStructureHandleNV',
--- 'getAccelerationStructureMemoryRequirementsNV',
--- 'getRayTracingShaderGroupHandlesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -1732,23 +1724,69 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysNV-magFilter-04553# If a
 --     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
---     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
---     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
---     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
---
--- -   #VUID-vkCmdTraceRaysNV-mipmapMode-04770# If a
---     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
---     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
 --     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
 --     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-magFilter-09598# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-mipmapMode-09599# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-unnormalizedCoordinates-09635# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @levelCount@ and @layerCount@ /must/ be 1
+--
+-- -   #VUID-vkCmdTraceRaysNV-unnormalizedCoordinates-09636# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @viewType@ /must/ be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-06479# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
@@ -1817,7 +1855,7 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   #VUID-vkCmdTraceRaysNV-cubicRangeClamp-09212# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-cubicRangeClamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ not have a
@@ -1834,7 +1872,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT'
 --
 -- -   #VUID-vkCmdTraceRaysNV-selectableCubicWeights-09214# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ have
@@ -1905,6 +1943,13 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
 --     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-10068# For each array of resources that
+--     is used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     the indices used to access members of the array /must/ be less than
+--     the descriptor count for the identified binding in the descriptor
+--     sets used by this command
 --
 -- -   #VUID-vkCmdTraceRaysNV-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
@@ -1982,10 +2027,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-08608# If a pipeline is bound to the
 --     pipeline bind point used by this command, there /must/ not have been
---     any calls to dynamic state setting commands for any state not
---     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
---     bound to the pipeline bind point used by this command, since that
---     pipeline was bound
+--     any calls to dynamic state setting commands for any state specified
+--     statically in the 'Vulkan.Core10.Handles.Pipeline' object bound to
+--     the pipeline bind point used by this command, since that pipeline
+--     was bound
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -2025,11 +2070,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-08607# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
+--     feature is enabled, either a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command, or a valid combination of
+--     valid and 'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects
+--     /must/ be bound to every supported shader stage corresponding to the
+--     pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdTraceRaysNV-uniformBuffers-06935# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -2101,7 +2146,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
 --     command, then the image view’s @viewType@ /must/ match the @Dim@
 --     operand of the @OpTypeImage@ as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-image-dimensions ???>
 --
 -- -   #VUID-vkCmdTraceRaysNV-format-07753# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
@@ -2253,7 +2298,7 @@ foreign import ccall
 --     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
 --     instruction is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
---     the image view’s format /must/ be a single-component format.
+--     the image view’s format /must/ be a single-component format
 --
 -- -   #VUID-vkCmdTraceRaysNV-OpImageBlockMatchWindow-09217# If a
 --     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
@@ -2265,9 +2310,21 @@ foreign import ccall
 --     this command /must/
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
 --
+-- -   #VUID-vkCmdTraceRaysNV-None-09600# If a descriptor with type equal
+--     to any of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     is accessed as a result of this command, the image subresource
+--     identified by that descriptor /must/ be in the image layout
+--     identified when the descriptor was written
+--
 -- -   #VUID-vkCmdTraceRaysNV-None-03429# Any shader group handle
---     referenced by this call /must/ have been queried from the currently
---     bound ray tracing pipeline
+--     referenced by this call /must/ have been queried from the bound ray
+--     tracing pipeline
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-09458# If the bound ray tracing pipeline
 --     state was created with the
@@ -2591,8 +2648,8 @@ getAccelerationStructureHandleNV :: forall io
                                     -- #VUID-vkGetAccelerationStructureHandleNV-dataSize-arraylength#
                                     -- @dataSize@ /must/ be greater than @0@
                                     ("dataSize" ::: Word64)
-                                 -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
-                                    -- be written.
+                                 -> -- | @pData@ is a pointer to an application-allocated buffer where the
+                                    -- results will be written.
                                     --
                                     -- #VUID-vkGetAccelerationStructureHandleNV-pData-parameter# @pData@ /must/
                                     -- be a valid pointer to an array of @dataSize@ bytes
@@ -2631,6 +2688,10 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCreateRayTracingPipelinesNV-device-09677# @device@ /must/
+--     support at least one queue family with the
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' capability
+--
 -- -   #VUID-vkCreateRayTracingPipelinesNV-flags-03415# If the @flags@
 --     member of any element of @pCreateInfos@ contains the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
@@ -2655,6 +2716,44 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT',
 --     host access to @pipelineCache@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
+--
+-- -   #VUID-vkCreateRayTracingPipelinesNV-pNext-09616# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@, @pipelineCache@ /must/
+--     be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCreateRayTracingPipelinesNV-pNext-09617# If a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+--     structure with the
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+--     flag set is included in the @pNext@ chain of any element of
+--     @pCreateInfos@, @pipelineCache@ /must/ be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCreateRayTracingPipelinesNV-binaryCount-09620# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@,
+--     'Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits.PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT'
+--     /must/ not be set in the @flags@ of that element
+--
+-- -   #VUID-vkCreateRayTracingPipelinesNV-binaryCount-09621# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@,
+--     'Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits.PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT'
+--     /must/ not be set in the @flags@ of that element
+--
+-- -   #VUID-vkCreateRayTracingPipelinesNV-binaryCount-09622# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@,
+--     'Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     /must/ not be set in the @flags@ of that element
+--
+-- -   #VUID-vkCreateRayTracingPipelinesNV-pNext-10150# If a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+--     structure is included in the @pNext@ chain of any element of
+--     @pCreateInfos@,
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+--     flag /must/ not be set
 --
 -- == Valid Usage (Implicit)
 --
@@ -3064,9 +3163,9 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- described in more detail in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>.
 --
--- If a
+-- If the @pNext@ chain includes a
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
--- structure is present in the @pNext@ chain,
+-- structure,
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'::@flags@
 -- from that structure is used instead of @flags@ from this structure.
 --
@@ -3075,7 +3174,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-None-09497# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
---     structure, @flags@ must be a valid combination of
+--     structure, @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
@@ -3100,7 +3199,11 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-07987# If a push
 --     constant block is declared in a shader, a push constant range in
---     @layout@ /must/ match both the shader stage and range
+--     @layout@ /must/ match the shader stage
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-10069# If a push
+--     constant block is declared in a shader, the block must be contained
+--     inside the push constant range in @layout@ that matches the stage
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-layout-07988# If a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources resource variables>
@@ -3215,6 +3318,10 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07998# @flags@ /must/
 --     not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV'
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-11008# @flags@ /must/
+--     not include
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --

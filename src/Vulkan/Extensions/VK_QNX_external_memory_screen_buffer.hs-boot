@@ -31,7 +31,7 @@
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
 --          or
 --         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
 --
@@ -131,10 +131,7 @@
 --
 -- == See Also
 --
--- 'ExternalFormatQNX', 'ImportScreenBufferInfoQNX',
--- 'PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX',
--- 'ScreenBufferFormatPropertiesQNX', 'ScreenBufferPropertiesQNX',
--- 'getScreenBufferPropertiesQNX'
+-- No cross-references are available
 --
 -- == Document Notes
 --

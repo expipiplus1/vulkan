@@ -21,7 +21,7 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>
 --
@@ -156,13 +156,7 @@
 --
 -- == See Also
 --
--- 'GetLatencyMarkerInfoNV', 'LatencyMarkerNV', 'LatencySleepInfoNV',
--- 'LatencySleepModeInfoNV', 'LatencySubmissionPresentIdNV',
--- 'LatencySurfaceCapabilitiesNV', 'LatencyTimingsFrameReportNV',
--- 'OutOfBandQueueTypeInfoNV', 'OutOfBandQueueTypeNV',
--- 'SetLatencyMarkerInfoNV', 'SwapchainLatencyCreateInfoNV',
--- 'getLatencyTimingsNV', 'latencySleepNV', 'queueNotifyOutOfBandNV',
--- 'setLatencyMarkerNV', 'setLatencySleepModeNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

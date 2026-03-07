@@ -81,8 +81,7 @@
 --
 -- == See Also
 --
--- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
--- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'createImagePipeSurfaceFUCHSIA'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -44,7 +44,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_subgroup_extended_types.txt GLSL_EXT_shader_subgroup_extended_types>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_shader_subgroup_extended_types.txt GLSL_EXT_shader_subgroup_extended_types>
 --
 -- [__Contributors__]
 --
@@ -73,7 +73,7 @@
 -- == Promotion to Vulkan 1.2
 --
 -- All functionality in this extension is included in core Vulkan 1.2, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Structures
@@ -102,7 +102,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

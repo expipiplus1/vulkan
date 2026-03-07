@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_float_controls VK_KHR_shader_float_controls>
 --
@@ -55,7 +55,7 @@
 --
 -- This extension enables use of the more expressive fast floating-point
 -- math flags in the SPV_KHR_float_controls2 extension. These flags give
--- finer- grained control over which optimisations compilers may apply,
+-- finer- grained control over which optimizations compilers may apply,
 -- potentially speeding up execution while retaining correct results.
 --
 -- The extension also adds control over the fast-math modes to the GLSL
@@ -93,7 +93,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderFloatControls2FeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -80,9 +80,7 @@
 --
 -- == See Also
 --
--- 'ScreenSurfaceCreateFlagsQNX', 'ScreenSurfaceCreateInfoQNX',
--- 'createScreenSurfaceQNX',
--- 'getPhysicalDeviceScreenPresentationSupportQNX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -388,7 +386,7 @@ instance Zero ScreenSurfaceCreateInfoQNX where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QNX_screen_surface VK_QNX_screen_surface>,
--- 'ScreenSurfaceCreateInfoQNX'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'ScreenSurfaceCreateInfoQNX'
 newtype ScreenSurfaceCreateFlagsQNX = ScreenSurfaceCreateFlagsQNX Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

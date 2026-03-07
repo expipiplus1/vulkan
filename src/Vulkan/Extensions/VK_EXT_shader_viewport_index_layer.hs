@@ -51,9 +51,13 @@
 --         and
 --         <https://registry.khronos.org/OpenGL/extensions/NV/NV_viewport_array2.txt GL_NV_viewport_array2>
 --
---     -   This extension requires the @multiViewport@ feature.
+--     -   This extension requires the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
+--         feature.
 --
---     -   This extension interacts with the @tessellationShader@ feature.
+--     -   This extension interacts with the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--         feature.
 --
 -- [__Contributors__]
 --
@@ -79,13 +83,11 @@
 --
 -- When using GLSL source-based shading languages, the @gl_ViewportIndex@
 -- and @gl_Layer@ built-in variables map to the SPIR-V @ViewportIndex@ and
--- @Layer@ built-in decorations, respectively. Behaviour of these variables
+-- @Layer@ built-in decorations, respectively. Behavior of these variables
 -- is extended as described in the @GL_ARB_shader_viewport_layer_array@ (or
 -- the precursor @GL_AMD_vertex_shader_layer@,
 -- @GL_AMD_vertex_shader_viewport_index@, and @GL_NV_viewport_array2@
 -- extensions).
---
--- Note
 --
 -- The @ShaderViewportIndexLayerEXT@ capability is equivalent to the
 -- @ShaderViewportIndexLayerNV@ capability added by

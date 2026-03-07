@@ -21,11 +21,19 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__Contact__]
 --
@@ -52,8 +60,6 @@
 -- Optical flow are fundamental algorithms in computer vision (CV) area.
 -- This extension allows applications to estimate 2D displacement of pixels
 -- between two frames.
---
--- Note
 --
 -- This extension is designed to be used with upcoming NVIDIA Optical Flow
 -- SDK Version 5 which will be available on NVIDIA Developer webpage.
@@ -141,7 +147,9 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Format.Format':
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_R16G16_S10_5_NV'
+--     -   'FORMAT_R16G16_S10_5_NV'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_R16G16_SFIXED5_NV'
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
@@ -267,21 +275,7 @@
 --
 -- == See Also
 --
--- 'OpticalFlowExecuteFlagBitsNV', 'OpticalFlowExecuteFlagsNV',
--- 'OpticalFlowExecuteInfoNV', 'OpticalFlowGridSizeFlagBitsNV',
--- 'OpticalFlowGridSizeFlagsNV', 'OpticalFlowImageFormatInfoNV',
--- 'OpticalFlowImageFormatPropertiesNV', 'OpticalFlowPerformanceLevelNV',
--- 'OpticalFlowSessionBindingPointNV',
--- 'OpticalFlowSessionCreateFlagBitsNV', 'OpticalFlowSessionCreateFlagsNV',
--- 'OpticalFlowSessionCreateInfoNV',
--- 'OpticalFlowSessionCreatePrivateDataInfoNV',
--- 'Vulkan.Extensions.Handles.OpticalFlowSessionNV',
--- 'OpticalFlowUsageFlagBitsNV', 'OpticalFlowUsageFlagsNV',
--- 'PhysicalDeviceOpticalFlowFeaturesNV',
--- 'PhysicalDeviceOpticalFlowPropertiesNV',
--- 'bindOpticalFlowSessionImageNV', 'cmdOpticalFlowExecuteNV',
--- 'createOpticalFlowSessionNV', 'destroyOpticalFlowSessionNV',
--- 'getPhysicalDeviceOpticalFlowImageFormatsNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

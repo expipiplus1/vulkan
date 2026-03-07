@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence VK_KHR_external_fence>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -95,8 +95,7 @@
 --
 -- == See Also
 --
--- 'FenceGetFdInfoKHR', 'ImportFenceFdInfoKHR', 'getFenceFdKHR',
--- 'importFenceFdKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -186,8 +185,6 @@ foreign import ccall
 -- transfer ownership of it to the application. To avoid leaking resources,
 -- the application /must/ release ownership of the file descriptor when it
 -- is no longer needed.
---
--- Note
 --
 -- Ownership can be released in many ways. For example, the application can
 -- call @close@() on the file descriptor, or transfer ownership back to
@@ -356,8 +353,6 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 -- operation will succeed and the 'Vulkan.Core10.Handles.Fence' will have a
 -- temporarily imported payload as if a valid file descriptor had been
 -- provided.
---
--- Note
 --
 -- This special behavior for importing an invalid sync file descriptor
 -- allows easier interoperability with other system APIs which use the

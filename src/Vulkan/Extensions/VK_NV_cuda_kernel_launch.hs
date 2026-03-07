@@ -75,7 +75,7 @@
 -- 'getCudaModuleCacheNV' with a @NULL@ pointer to a buffer and with a
 -- valid pointer receiving the size; then another call of the same function
 -- with a valid pointer to a buffer to retrieve the data. The resulting
--- cache could then be user later for further runs of this application by
+-- cache could then be used later for further runs of this application by
 -- sending this cache instead of the PTX code (using the same
 -- 'createCudaModuleNV'), thus significantly speeding up the initialization
 -- of the CUDA module.
@@ -174,13 +174,7 @@
 --
 -- == See Also
 --
--- 'CudaFunctionCreateInfoNV', 'Vulkan.Extensions.Handles.CudaFunctionNV',
--- 'CudaLaunchInfoNV', 'CudaModuleCreateInfoNV',
--- 'Vulkan.Extensions.Handles.CudaModuleNV',
--- 'PhysicalDeviceCudaKernelLaunchFeaturesNV',
--- 'PhysicalDeviceCudaKernelLaunchPropertiesNV', 'cmdCudaLaunchKernelNV',
--- 'createCudaFunctionNV', 'createCudaModuleNV', 'destroyCudaFunctionNV',
--- 'destroyCudaModuleNV', 'getCudaModuleCacheNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -403,18 +397,16 @@ foreign import ccall
 --
 -- If @pCacheData@ is @NULL@, then the size of the binary cache, in bytes,
 -- is returned in @pCacheSize@. Otherwise, @pCacheSize@ /must/ point to a
--- variable set by the user to the size of the buffer, in bytes, pointed to
--- by @pCacheData@, and on return the variable is overwritten with the
--- amount of data actually written to @pCacheData@. If @pCacheSize@ is less
--- than the size of the binary shader code, nothing is written to
--- @pCacheData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS'.
+-- variable set by the application to the size of the buffer, in bytes,
+-- pointed to by @pCacheData@, and on return the variable is overwritten
+-- with the amount of data actually written to @pCacheData@. If
+-- @pCacheSize@ is less than the size of the binary shader code, nothing is
+-- written to @pCacheData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
+-- will be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
 -- The returned cache /may/ then be used later for further initialization
 -- of the CUDA module, by sending this cache /instead/ of the PTX code when
 -- using 'createCudaModuleNV'.
---
--- Note
 --
 -- Using the binary cache instead of the original PTX code /should/
 -- significantly speed up initialization of the CUDA module, given that the
@@ -786,7 +778,7 @@ data CudaModuleCreateInfoNV = CudaModuleCreateInfoNV
   { -- | @dataSize@ is the length of the @pData@ array.
     --
     -- #VUID-VkCudaModuleCreateInfoNV-dataSize-09413# @dataSize@ /must/ be the
-    -- total size in bytes of the PTX files or binary cache passed to @pData@.
+    -- total size in bytes of the PTX files or binary cache passed to @pData@
     --
     -- #VUID-VkCudaModuleCreateInfoNV-dataSize-arraylength# @dataSize@ /must/
     -- be greater than @0@
@@ -912,12 +904,11 @@ instance Zero CudaFunctionCreateInfoNV where
 -- <https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__EXEC.html#group__CUDA__EXEC_1gb8f3dc3031b40da29d5f9a7139e52e15 cuLaunchKernel>
 --
 -- If @function@ has N parameters, then @pParams@ /must/ be an array of N
--- pointers and @paramCount@ /must/ be set to N. Each of @kernelParams@[0]
--- through @kernelParams@[N-1] /must/ point to a region of memory from
--- which the actual kernel parameter will be copied. The number of kernel
--- parameters and their offsets and sizes are not specified here as that
--- information is stored in the 'Vulkan.Extensions.Handles.CudaFunctionNV'
--- object.
+-- pointers and @paramCount@ /must/ be N. Each of @kernelParams@[0] through
+-- @kernelParams@[N-1] /must/ point to a region of memory from which the
+-- actual kernel parameter will be copied. The number of kernel parameters
+-- and their offsets and sizes are not specified here as that information
+-- is stored in the 'Vulkan.Extensions.Handles.CudaFunctionNV' object.
 --
 -- The application-owned memory pointed to by @pParams@ and
 -- @kernelParams@[0] through @kernelParams@[N-1] are consumed immediately,
@@ -939,7 +930,7 @@ data CudaLaunchInfoNV = CudaLaunchInfoNV
     -- valid 'Vulkan.Extensions.Handles.CudaFunctionNV' handle
     function :: CudaFunctionNV
   , -- | @gridDimX@ is the number of local workgroups to dispatch in the X
-    -- dimension. It must be less than or equal to
+    -- dimension. It /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
     --
     -- #VUID-VkCudaLaunchInfoNV-gridDimX-09406# @gridDimX@ /must/ be less than
@@ -947,7 +938,7 @@ data CudaLaunchInfoNV = CudaLaunchInfoNV
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
     gridDimX :: Word32
   , -- | @gridDimY@ is the number of local workgroups to dispatch in the Y
-    -- dimension. It must be less than or equal to
+    -- dimension. It /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
     --
     -- #VUID-VkCudaLaunchInfoNV-gridDimY-09407# @gridDimY@ /must/ be less than
@@ -955,7 +946,7 @@ data CudaLaunchInfoNV = CudaLaunchInfoNV
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
     gridDimY :: Word32
   , -- | @gridDimZ@ is the number of local workgroups to dispatch in the Z
-    -- dimension. It must be less than or equal to
+    -- dimension. It /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
     --
     -- #VUID-VkCudaLaunchInfoNV-gridDimZ-09408# @gridDimZ@ /must/ be less than
@@ -976,11 +967,11 @@ data CudaLaunchInfoNV = CudaLaunchInfoNV
     --
     -- #VUID-VkCudaLaunchInfoNV-pParams-09410# @pParams@ /must/ be a pointer to
     -- a table of @paramCount@ parameters, corresponding to the arguments of
-    -- @function@.
+    -- @function@
     params :: Vector (Ptr ())
   , -- | @pExtras@ is reserved for future use.
     --
-    -- #VUID-VkCudaLaunchInfoNV-pExtras-09412# @pExtras@ must be NULL
+    -- #VUID-VkCudaLaunchInfoNV-pExtras-09412# @pExtras@ /must/ be NULL
     extras :: Vector (Ptr ())
   }
   deriving (Typeable)

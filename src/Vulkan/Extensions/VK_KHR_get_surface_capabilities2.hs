@@ -129,9 +129,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceSurfaceInfo2KHR', 'SurfaceCapabilities2KHR',
--- 'SurfaceFormat2KHR', 'getPhysicalDeviceSurfaceCapabilities2KHR',
--- 'getPhysicalDeviceSurfaceFormats2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -395,8 +393,8 @@ foreign import ccall
 -- If @pSurfaceFormats@ is @NULL@, then the number of format tuples
 -- supported for the given @surface@ is returned in @pSurfaceFormatCount@.
 -- Otherwise, @pSurfaceFormatCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pSurfaceFormats@ array, and on
--- return the variable is overwritten with the number of structures
+-- application to the number of elements in the @pSurfaceFormats@ array,
+-- and on return the variable is overwritten with the number of structures
 -- actually written to @pSurfaceFormats@. If the value of
 -- @pSurfaceFormatCount@ is less than the number of format tuples
 -- supported, at most @pSurfaceFormatCount@ structures will be written, and

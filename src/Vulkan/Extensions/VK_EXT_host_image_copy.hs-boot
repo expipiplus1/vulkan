@@ -21,11 +21,19 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__Contact__]
 --
@@ -229,16 +237,7 @@
 --
 -- == See Also
 --
--- 'CopyImageToImageInfoEXT', 'CopyImageToMemoryInfoEXT',
--- 'CopyMemoryToImageInfoEXT', 'HostImageCopyDevicePerformanceQueryEXT',
--- 'HostImageCopyFlagBitsEXT', 'HostImageCopyFlagsEXT',
--- 'HostImageLayoutTransitionInfoEXT', 'ImageSubresource2EXT',
--- 'ImageToMemoryCopyEXT', 'MemoryToImageCopyEXT',
--- 'PhysicalDeviceHostImageCopyFeaturesEXT',
--- 'PhysicalDeviceHostImageCopyPropertiesEXT',
--- 'SubresourceHostMemcpySizeEXT', 'SubresourceLayout2EXT',
--- 'copyImageToImageEXT', 'copyImageToMemoryEXT', 'copyMemoryToImageEXT',
--- 'getImageSubresourceLayout2EXT', 'transitionImageLayoutEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

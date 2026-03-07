@@ -82,6 +82,11 @@
 --
 --     -   'ATTACHMENT_STORE_OP_NONE_EXT'
 --
+-- While 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE'
+-- is part of Vulkan 1.3, this extension was not promoted to core either in
+-- whole or in part. This functionality was promoted from
+-- @VK_KHR_dynamic_rendering@.
+--
 -- == Version History
 --
 -- -   Revision 1, 2021-06-06 (Shahbaz Youssefi)

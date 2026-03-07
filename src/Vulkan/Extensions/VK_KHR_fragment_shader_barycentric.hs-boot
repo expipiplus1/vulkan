@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -45,7 +47,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_shader_barycentric.txt GL_EXT_fragment_shader_barycentric>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_fragment_shader_barycentric.txt GL_EXT_fragment_shader_barycentric>
 --
 -- [__Contributors__]
 --
@@ -148,9 +150,9 @@
 -- __RESOLVED__: The inputs decorated with @BaryCoordKHR@ or
 -- @BaryCoordNoPerspKHR@ /may/ also be decorated with the @Centroid@ or
 -- @Sample@ qualifiers to specify interpolation, like any other fragment
--- shader input. If
+-- shader input. If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderSampleRateInterpolationFunctions shaderSampleRateInterpolationFunctions>
--- is enabled, the extended instructions InterpolateAtCentroid,
+-- feature is enabled, the extended instructions InterpolateAtCentroid,
 -- InterpolateAtOffset, and InterpolateAtSample from the GLSL.std.450 /may/
 -- also be used with inputs decorated with @BaryCoordKHR@ or
 -- @BaryCoordNoPerspKHR@.
@@ -163,8 +165,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceFragmentShaderBarycentricFeaturesKHR',
--- 'PhysicalDeviceFragmentShaderBarycentricPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -21,7 +21,7 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>
 --
@@ -156,13 +156,7 @@
 --
 -- == See Also
 --
--- 'GetLatencyMarkerInfoNV', 'LatencyMarkerNV', 'LatencySleepInfoNV',
--- 'LatencySleepModeInfoNV', 'LatencySubmissionPresentIdNV',
--- 'LatencySurfaceCapabilitiesNV', 'LatencyTimingsFrameReportNV',
--- 'OutOfBandQueueTypeInfoNV', 'OutOfBandQueueTypeNV',
--- 'SetLatencyMarkerInfoNV', 'SwapchainLatencyCreateInfoNV',
--- 'getLatencyTimingsNV', 'latencySleepNV', 'queueNotifyOutOfBandNV',
--- 'setLatencyMarkerNV', 'setLatencySleepModeNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -374,9 +368,9 @@ foreign import ccall
 -- with @pSleepInfo->signalSemaphore@ to delay host CPU work. CPU work
 -- refers to application work done before presenting which includes but is
 -- not limited to: input sampling, simulation, command buffer recording,
--- command buffer submission, and present submission. It is recommended to
--- call this function before input sampling. When using this function, it
--- /should/ be called exactly once between presents.
+-- command buffer submission, and present submission. Applications /should/
+-- call this function before input sampling, and exactly once between
+-- presents.
 --
 -- == Return Codes
 --
@@ -385,8 +379,7 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--     None
 --
 -- = See Also
 --
@@ -422,11 +415,11 @@ latencySleepNV device swapchain sleepInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkLatencySleepNV is null" Nothing Nothing
   let vkLatencySleepNV' = mkVkLatencySleepNV vkLatencySleepNVPtr
   pSleepInfo <- ContT $ withCStruct (sleepInfo)
-  r <- lift $ traceAroundEvent "vkLatencySleepNV" (vkLatencySleepNV'
+  _ <- lift $ traceAroundEvent "vkLatencySleepNV" (vkLatencySleepNV'
                                                      (deviceHandle (device))
                                                      (swapchain)
                                                      pSleepInfo)
-  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pure $ ()
 
 
 foreign import ccall
@@ -600,7 +593,7 @@ queueNotifyOutOfBandNV queue queueTypeInfo = liftIO . evalContT $ do
 --
 -- = Description
 --
--- If @lowLatencyMode@ is set to 'Vulkan.Core10.FundamentalTypes.FALSE',
+-- If @lowLatencyMode@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
 -- @lowLatencyBoost@ will still hint to the GPU to increase its power state
 -- and 'latencySleepNV' will still enforce @minimumIntervalUs@ between
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' calls.
@@ -754,7 +747,11 @@ instance Zero LatencySleepInfoNV where
 -- 'LatencyMarkerNV', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setLatencyMarkerNV'
 data SetLatencyMarkerInfoNV = SetLatencyMarkerInfoNV
-  { -- No documentation found for Nested "VkSetLatencyMarkerInfoNV" "presentID"
+  { -- | @presentID@ is an application provided value that is used to associate
+    -- the timestamp with a
+    -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' command using
+    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@ for a
+    -- given present.
     presentID :: Word64
   , -- | @marker@ is the type of timestamp to be recorded.
     --
@@ -811,8 +808,8 @@ instance Zero SetLatencyMarkerInfoNV where
 --
 -- If @pTimings@ is @NULL@ then the maximum number of queryable frame data
 -- is returned in @timingCount@. Otherwise, @timingCount@ /must/ be set by
--- the user to the number of elements in the @pTimings@ array, and on
--- return the variable is overwritten with the number of values actually
+-- the application to the number of elements in the @pTimings@ array, and
+-- on return the variable is overwritten with the number of values actually
 -- written to @pTimings@. The elements of @pTimings@ are arranged in the
 -- order they were requested in, with the oldest data in the first entry.
 --
@@ -832,8 +829,8 @@ instance Zero SetLatencyMarkerInfoNV where
 -- 'LatencyTimingsFrameReportNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getLatencyTimingsNV'
 data GetLatencyMarkerInfoNV = GetLatencyMarkerInfoNV
-  { -- | @timingCount@ is an integer related to the number of of previous frames
-    -- of latency data available or queried, as described below.
+  { -- | @timingCount@ is an integer related to the number of previous frames of
+    -- latency data available or queried, as described below.
     timingCount :: Word32
   , -- | @pTimings@ is either @NULL@ or a pointer to an array of
     -- 'LatencyTimingsFrameReportNV' structures.
@@ -894,7 +891,11 @@ instance Zero GetLatencyMarkerInfoNV where
 -- 'GetLatencyMarkerInfoNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data LatencyTimingsFrameReportNV = LatencyTimingsFrameReportNV
-  { -- No documentation found for Nested "VkLatencyTimingsFrameReportNV" "presentID"
+  { -- | @presentID@ is the application provided value that is used to associate
+    -- the timestamp with a
+    -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' command using
+    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@ for a
+    -- given present.
     presentID :: Word64
   , -- No documentation found for Nested "VkLatencyTimingsFrameReportNV" "inputSampleTimeUs"
     inputSampleTimeUs :: Word64
@@ -1101,10 +1102,10 @@ instance Zero OutOfBandQueueTypeInfoNV where
 -- = Description
 --
 -- For any submission to be tracked with low latency mode pacing, it needs
--- to be associated with other submissions in a given present. Applications
--- /must/ include the VkLatencySubmissionPresentIdNV in the pNext chain of
--- 'Vulkan.Core10.Queue.queueSubmit' to associate that submission with the
--- @presentId@ present for low latency mode.
+-- to be associated with other submissions in a given present. To associate
+-- a submission with @presentID@ for low latency mode, the @pNext@ chain of
+-- 'Vulkan.Core10.Queue.queueSubmit' /must/ include a
+-- 'LatencySubmissionPresentIdNV' structure.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1113,7 +1114,10 @@ instance Zero OutOfBandQueueTypeInfoNV where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_low_latency2 VK_NV_low_latency2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data LatencySubmissionPresentIdNV = LatencySubmissionPresentIdNV
-  { -- No documentation found for Nested "VkLatencySubmissionPresentIdNV" "presentID"
+  { -- | @presentID@ is used to associate the 'Vulkan.Core10.Queue.queueSubmit'
+    -- with the presentId used for a given
+    -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' via
+    -- 'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR'::@pPresentIds@.
     presentID :: Word64 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1164,7 +1168,9 @@ instance Zero LatencySubmissionPresentIdNV where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SwapchainLatencyCreateInfoNV = SwapchainLatencyCreateInfoNV
-  { -- No documentation found for Nested "VkSwapchainLatencyCreateInfoNV" "latencyModeEnable"
+  { -- | @latencyModeEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if the
+    -- created swapchain will utilize low latency mode,
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
     latencyModeEnable :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1210,9 +1216,9 @@ instance Zero SwapchainLatencyCreateInfoNV where
 --
 -- If @pPresentModes@ is @NULL@, then the number of present modes that are
 -- optimized for use with low latency mode returned in @presentModeCount@.
--- Otherwise, @presentModeCount@ must be set by the user to the number of
--- elements in the @pPresentModes@ array, and on return the variable is
--- overwritten with the number of values actually written to
+-- Otherwise, @presentModeCount@ /must/ be set by the application to the
+-- number of elements in the @pPresentModes@ array, and on return the
+-- variable is overwritten with the number of values actually written to
 -- @pPresentModes@. If the value of @presentModeCount@ is less than the
 -- number of optimized present modes, at most @presentModeCount@ values
 -- will be written to @pPresentModes@.
@@ -1441,11 +1447,11 @@ instance Read LatencyMarkerNV where
 newtype OutOfBandQueueTypeNV = OutOfBandQueueTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'OUT_OF_BAND_QUEUE_TYPE_RENDER_NV' indicates that work will be submitted
+-- | 'OUT_OF_BAND_QUEUE_TYPE_RENDER_NV' specifies that work will be submitted
 -- to this queue.
 pattern OUT_OF_BAND_QUEUE_TYPE_RENDER_NV = OutOfBandQueueTypeNV 0
 
--- | 'OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV' indicates that this queue will be
+-- | 'OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV' specifies that this queue will be
 -- presented from.
 pattern OUT_OF_BAND_QUEUE_TYPE_PRESENT_NV = OutOfBandQueueTypeNV 1
 

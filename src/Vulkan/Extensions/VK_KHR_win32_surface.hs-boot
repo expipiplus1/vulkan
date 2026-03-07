@@ -202,8 +202,7 @@
 --
 -- == See Also
 --
--- 'Win32SurfaceCreateFlagsKHR', 'Win32SurfaceCreateInfoKHR',
--- 'createWin32SurfaceKHR', 'getPhysicalDeviceWin32PresentationSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

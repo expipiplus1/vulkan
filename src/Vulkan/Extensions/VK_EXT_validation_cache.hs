@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -111,12 +111,7 @@
 --
 -- == See Also
 --
--- 'ShaderModuleValidationCacheCreateInfoEXT',
--- 'ValidationCacheCreateFlagsEXT', 'ValidationCacheCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.ValidationCacheEXT',
--- 'ValidationCacheHeaderVersionEXT', 'createValidationCacheEXT',
--- 'destroyValidationCacheEXT', 'getValidationCacheDataEXT',
--- 'mergeValidationCachesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -233,8 +228,6 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
 -- Applications /can/ track and manage the total host memory size of a
 -- validation cache object using the @pAllocator@. Applications /can/ limit
 -- the amount of data retrieved from a validation cache object in
@@ -253,8 +246,6 @@ foreign import ccall
 -- use of the validation cache object in these commands is internally
 -- synchronized, and the same validation cache object /can/ be used in
 -- multiple threads simultaneously.
---
--- Note
 --
 -- Implementations /should/ make every effort to limit any critical
 -- sections to the actual accesses to the cache, which is expected to be
@@ -433,11 +424,12 @@ foreign import ccall
 -- If @pData@ is @NULL@, then the maximum size of the data that /can/ be
 -- retrieved from the validation cache, in bytes, is returned in
 -- @pDataSize@. Otherwise, @pDataSize@ /must/ point to a variable set by
--- the user to the size of the buffer, in bytes, pointed to by @pData@, and
--- on return the variable is overwritten with the amount of data actually
--- written to @pData@. If @pDataSize@ is less than the maximum size that
--- /can/ be retrieved by the validation cache, at most @pDataSize@ bytes
--- will be written to @pData@, and 'getValidationCacheDataEXT' will return
+-- the application to the size of the buffer, in bytes, pointed to by
+-- @pData@, and on return the variable is overwritten with the amount of
+-- data actually written to @pData@. If @pDataSize@ is less than the
+-- maximum size that /can/ be retrieved by the validation cache, at most
+-- @pDataSize@ bytes will be written to @pData@, and
+-- 'getValidationCacheDataEXT' will return
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all of the
 -- validation cache was returned.
@@ -477,7 +469,7 @@ foreign import ccall
 -- |        |                                        | these validation results                 |
 -- +--------+----------------------------------------+------------------------------------------+
 --
--- Layout for validation cache header version
+-- Layout for Validation Cache Header Version
 -- 'VALIDATION_CACHE_HEADER_VERSION_ONE_EXT'
 --
 -- The first four bytes encode the length of the entire validation cache
@@ -577,8 +569,6 @@ foreign import ccall
 -- caches
 --
 -- = Description
---
--- Note
 --
 -- The details of the merge operation are implementation-dependent, but
 -- implementations /should/ merge the contents of the specified validation
@@ -817,7 +807,7 @@ instance Zero ShaderModuleValidationCacheCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
--- 'ValidationCacheCreateInfoEXT'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'ValidationCacheCreateInfoEXT'
 newtype ValidationCacheCreateFlagsEXT = ValidationCacheCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

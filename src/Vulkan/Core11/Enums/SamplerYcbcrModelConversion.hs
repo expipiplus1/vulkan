@@ -61,8 +61,6 @@ import GHC.Show (Show(showsPrec))
 -- swizzle operation (controlled by
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@components@).
 --
--- Note
---
 -- For example, an “YUVA” 32-bit format comprising four 8-bit components
 -- can be implemented as 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM'
 -- with a component mapping:

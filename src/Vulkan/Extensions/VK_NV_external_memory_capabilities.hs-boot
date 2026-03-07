@@ -128,10 +128,7 @@
 --
 -- == See Also
 --
--- 'ExternalImageFormatPropertiesNV', 'ExternalMemoryFeatureFlagBitsNV',
--- 'ExternalMemoryFeatureFlagsNV', 'ExternalMemoryHandleTypeFlagBitsNV',
--- 'ExternalMemoryHandleTypeFlagsNV',
--- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

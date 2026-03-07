@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "VendorId"
-module Vulkan.Core10.Enums.VendorId  (VendorId( VENDOR_ID_VIV
+module Vulkan.Core10.Enums.VendorId  (VendorId( VENDOR_ID_KHRONOS
+                                              , VENDOR_ID_VIV
                                               , VENDOR_ID_VSI
                                               , VENDOR_ID_KAZAN
                                               , VENDOR_ID_CODEPLAY
@@ -23,8 +24,6 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
--- Note
---
 -- Khronos vendor IDs may be allocated by vendors at any time. Only the
 -- latest canonical versions of this Specification, of the corresponding
 -- @vk.xml@ API Registry, and of the corresponding @vulkan_core.h@ header
@@ -41,6 +40,9 @@ newtype VendorId = VendorId Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
+
+-- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_KHRONOS"
+pattern VENDOR_ID_KHRONOS = VendorId 65536
 
 -- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_VIV"
 pattern VENDOR_ID_VIV = VendorId 65537
@@ -64,7 +66,8 @@ pattern VENDOR_ID_POCL = VendorId 65542
 pattern VENDOR_ID_MOBILEYE = VendorId 65543
 
 {-# COMPLETE
-  VENDOR_ID_VIV
+  VENDOR_ID_KHRONOS
+  , VENDOR_ID_VIV
   , VENDOR_ID_VSI
   , VENDOR_ID_KAZAN
   , VENDOR_ID_CODEPLAY
@@ -82,7 +85,8 @@ enumPrefixVendorId = "VENDOR_ID_"
 
 showTableVendorId :: [(VendorId, String)]
 showTableVendorId =
-  [ (VENDOR_ID_VIV, "VIV")
+  [ (VENDOR_ID_KHRONOS, "KHRONOS")
+  , (VENDOR_ID_VIV, "VIV")
   , (VENDOR_ID_VSI, "VSI")
   , (VENDOR_ID_KAZAN, "KAZAN")
   , (VENDOR_ID_CODEPLAY, "CODEPLAY")

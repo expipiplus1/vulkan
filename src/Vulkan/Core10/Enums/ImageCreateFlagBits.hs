@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "ImageCreateFlagBits"
-module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlags
+module Vulkan.Core10.Enums.ImageCreateFlagBits  ( pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
+                                                , ImageCreateFlags
                                                 , ImageCreateFlagBits( IMAGE_CREATE_SPARSE_BINDING_BIT
                                                                      , IMAGE_CREATE_SPARSE_RESIDENCY_BIT
                                                                      , IMAGE_CREATE_SPARSE_ALIASED_BIT
@@ -35,6 +36,10 @@ import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
+-- No documentation found for TopLevel "VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"
+pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+
+
 type ImageCreateFlags = ImageCreateFlagBits
 
 -- | VkImageCreateFlagBits - Bitmask specifying additional parameters of an

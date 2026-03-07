@@ -28,8 +28,6 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 --
 -- = Description
 --
--- Note
---
 -- The approximations used when
 -- 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' is specified
 -- are implementation defined. Some implementations /may/ interpolate

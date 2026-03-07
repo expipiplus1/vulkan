@@ -106,9 +106,7 @@
 --
 -- == See Also
 --
--- 'StreamDescriptorSurfaceCreateFlagsGGP',
--- 'StreamDescriptorSurfaceCreateInfoGGP',
--- 'createStreamDescriptorSurfaceGGP'
+-- No cross-references are available
 --
 -- == Document Notes
 --

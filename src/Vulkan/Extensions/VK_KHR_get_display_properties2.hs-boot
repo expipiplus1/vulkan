@@ -133,12 +133,7 @@
 --
 -- == See Also
 --
--- 'DisplayModeProperties2KHR', 'DisplayPlaneCapabilities2KHR',
--- 'DisplayPlaneInfo2KHR', 'DisplayPlaneProperties2KHR',
--- 'DisplayProperties2KHR', 'getDisplayModeProperties2KHR',
--- 'getDisplayPlaneCapabilities2KHR',
--- 'getPhysicalDeviceDisplayPlaneProperties2KHR',
--- 'getPhysicalDeviceDisplayProperties2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -157,13 +152,19 @@ module Vulkan.Extensions.VK_KHR_get_display_properties2  ( DisplayModeProperties
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+type role DisplayModeProperties2KHR nominal
+data DisplayModeProperties2KHR (es :: [Type])
 
-data DisplayModeProperties2KHR
+instance ( Extendss DisplayModeProperties2KHR es
+         , PokeChain es ) => ToCStruct (DisplayModeProperties2KHR es)
+instance Show (Chain es) => Show (DisplayModeProperties2KHR es)
 
-instance ToCStruct DisplayModeProperties2KHR
-instance Show DisplayModeProperties2KHR
-
-instance FromCStruct DisplayModeProperties2KHR
+instance ( Extendss DisplayModeProperties2KHR es
+         , PeekChain es ) => FromCStruct (DisplayModeProperties2KHR es)
 
 
 data DisplayPlaneCapabilities2KHR

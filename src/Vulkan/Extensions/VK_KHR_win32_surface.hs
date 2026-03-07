@@ -202,8 +202,7 @@
 --
 -- == See Also
 --
--- 'Win32SurfaceCreateFlagsKHR', 'Win32SurfaceCreateInfoKHR',
--- 'createWin32SurfaceKHR', 'getPhysicalDeviceWin32PresentationSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -300,7 +299,7 @@ foreign import ccall
   "dynamic" mkVkCreateWin32SurfaceKHR
   :: FunPtr (Ptr Instance_T -> Ptr Win32SurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr Win32SurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateWin32SurfaceKHR - Create a VkSurfaceKHR object for an Win32
+-- | vkCreateWin32SurfaceKHR - Create a VkSurfaceKHR object for a Win32
 -- native window
 --
 -- == Valid Usage (Implicit)
@@ -336,10 +335,10 @@ foreign import ccall
 -- interacting with a 'Vulkan.Extensions.Handles.SurfaceKHR' through a
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'. In a multithreaded
 -- environment, calling @SendMessage@ from a thread that is not the thread
--- associated with @pCreateInfo@::@hwnd@ will block until the application
--- has processed the window message. Thus, applications /should/ either
--- call these Vulkan functions on the message pump thread, or make sure
--- their message pump is actively running. Failing to do so /may/ result in
+-- associated with @pCreateInfo->hwnd@ will block until the application has
+-- processed the window message. Thus, applications /should/ either call
+-- these Vulkan functions on the message pump thread, or make sure their
+-- message pump is actively running. Failing to do so /may/ result in
 -- deadlocks.
 --
 -- The functions subject to this requirement are:
@@ -532,7 +531,7 @@ instance Zero Win32SurfaceCreateInfoKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
--- 'Win32SurfaceCreateInfoKHR'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'Win32SurfaceCreateInfoKHR'
 newtype Win32SurfaceCreateFlagsKHR = Win32SurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

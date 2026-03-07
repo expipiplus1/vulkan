@@ -149,8 +149,7 @@
 --
 -- == See Also
 --
--- 'MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
--- 'PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -229,7 +228,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM = PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM
-  { -- | #features-multiview-per-view-render-areas# @multiviewPerViewRenderAreas@
+  { -- | #features-multiviewPerViewRenderAreas# @multiviewPerViewRenderAreas@
     -- indicates that the implementation supports multiview per-view render
     -- areas.
     multiviewPerViewRenderAreas :: Bool }
@@ -292,13 +291,13 @@ instance Zero PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM where
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderArea@
 -- or
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@renderArea@
--- /must/ be set to a render area that includes the union of all per-view
--- render areas, /may/ be used by the implementation for optimizations, but
--- does not affect loads, stores, or resolves.
+-- /must/ be a render area that includes the union of all per-view render
+-- areas, /may/ be used by the implementation for optimizations, but does
+-- not affect loads, stores, or resolves.
 --
 -- If this structure is present and if @perViewRenderAreaCount@ is not
--- zero, then @perViewRenderAreaCount@ /must/ be at least least one greater
--- than the most significant bit set in any any element of
+-- zero, then @perViewRenderAreaCount@ /must/ be at least one greater than
+-- the most significant bit set in any element of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@.
 -- or
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
@@ -335,7 +334,7 @@ instance Zero PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM where
 --     render pass object included an element in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
 --     that set bit @n@, then @perViewRenderAreaCount@ /must/ be at least
---     equal to @n+1@.
+--     equal to @n+1@
 --
 -- -   #VUID-VkMultiviewPerViewRenderAreasRenderPassBeginInfoQCOM-pNext-07866#
 --     If this structure is in the @pNext@ chain of
@@ -343,7 +342,7 @@ instance Zero PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM where
 --     and if
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --     set bit @n@, then @perViewRenderAreaCount@ /must/ be at least equal
---     to @n+1@.
+--     to @n+1@
 --
 -- == Valid Usage (Implicit)
 --

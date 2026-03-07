@@ -286,14 +286,12 @@
 --
 -- == Examples
 --
--- Note
---
 -- The example code for the @VK_KHR_display@ and @VK_KHR_display_swapchain@
 -- extensions was removed from the appendix after revision 1.0.43. The
 -- display enumeration example code was ported to the cube demo that is
 -- shipped with the official Khronos SDK, and is being kept up-to-date in
 -- that location (see:
--- <https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c>).
+-- <https://github.com/KhronosGroup/Vulkan-Tools/blob/main/cube/cube.c>).
 --
 -- == Version History
 --
@@ -492,19 +490,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeCreateFlagsKHR',
--- 'DisplayModeCreateInfoKHR', 'Vulkan.Extensions.Handles.DisplayModeKHR',
--- 'DisplayModeParametersKHR', 'DisplayModePropertiesKHR',
--- 'DisplayPlaneAlphaFlagBitsKHR', 'DisplayPlaneAlphaFlagsKHR',
--- 'DisplayPlaneCapabilitiesKHR', 'DisplayPlanePropertiesKHR',
--- 'DisplayPropertiesKHR', 'DisplaySurfaceCreateFlagsKHR',
--- 'DisplaySurfaceCreateInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagsKHR',
--- 'createDisplayModeKHR', 'createDisplayPlaneSurfaceKHR',
--- 'getDisplayModePropertiesKHR', 'getDisplayPlaneCapabilitiesKHR',
--- 'getDisplayPlaneSupportedDisplaysKHR',
--- 'getPhysicalDeviceDisplayPlanePropertiesKHR',
--- 'getPhysicalDeviceDisplayPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -525,7 +511,10 @@ module Vulkan.Extensions.VK_KHR_display  ( DisplayModeCreateInfoKHR
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data DisplayModeCreateInfoKHR
 
 instance ToCStruct DisplayModeCreateInfoKHR
@@ -574,10 +563,13 @@ instance Show DisplayPropertiesKHR
 instance FromCStruct DisplayPropertiesKHR
 
 
-data DisplaySurfaceCreateInfoKHR
+type role DisplaySurfaceCreateInfoKHR nominal
+data DisplaySurfaceCreateInfoKHR (es :: [Type])
 
-instance ToCStruct DisplaySurfaceCreateInfoKHR
-instance Show DisplaySurfaceCreateInfoKHR
+instance ( Extendss DisplaySurfaceCreateInfoKHR es
+         , PokeChain es ) => ToCStruct (DisplaySurfaceCreateInfoKHR es)
+instance Show (Chain es) => Show (DisplaySurfaceCreateInfoKHR es)
 
-instance FromCStruct DisplaySurfaceCreateInfoKHR
+instance ( Extendss DisplaySurfaceCreateInfoKHR es
+         , PeekChain es ) => FromCStruct (DisplaySurfaceCreateInfoKHR es)
 

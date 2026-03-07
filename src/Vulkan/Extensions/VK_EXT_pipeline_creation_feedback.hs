@@ -106,9 +106,11 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- Functionality in this extension is included in core Vulkan 1.3, with the
--- EXT suffix omitted. The original type, enum and command names are still
--- available as aliases of the core functionality.
+-- Vulkan APIs in this extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. External interactions defined by this extension,
+-- such as SPIR-V token names, retain their original names. The original
+-- Vulkan API names are still available as aliases of the core
+-- functionality.
 --
 -- == Version History
 --
@@ -118,9 +120,7 @@
 --
 -- == See Also
 --
--- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
--- 'PipelineCreationFeedbackFlagBitsEXT',
--- 'PipelineCreationFeedbackFlagsEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

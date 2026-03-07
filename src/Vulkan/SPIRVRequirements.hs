@@ -17,7 +17,10 @@ import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures(..))
 import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT(..))
 import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI(..))
-import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV(..))
+import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesKHR(..))
+import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
+import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesKHR(..))
+import Vulkan.Extensions.VK_NV_cooperative_matrix2 (PhysicalDeviceCooperativeMatrix2FeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV(..))
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures(..))
@@ -30,6 +33,7 @@ import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentSha
 import Vulkan.Extensions.VK_QCOM_image_processing2 (PhysicalDeviceImageProcessing2FeaturesQCOM(..))
 import Vulkan.Extensions.VK_QCOM_image_processing (PhysicalDeviceImageProcessingFeaturesQCOM(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
+import Vulkan.Extensions.VK_NV_raw_access_chains (PhysicalDeviceRawAccessChainsFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
@@ -50,8 +54,8 @@ import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImage
 import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
 import Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeatures(..))
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(..))
-import Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence (PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_shader_quad_control (PhysicalDeviceShaderQuadControlFeaturesKHR(..))
+import Vulkan.Extensions.VK_EXT_shader_replicated_composites (PhysicalDeviceShaderReplicatedCompositesFeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_tile_image (PhysicalDeviceShaderTileImageFeaturesEXT(..))
@@ -90,6 +94,7 @@ import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (pattern EXT_SHADER_ATOMIC_
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (pattern EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_shader_replicated_composites (pattern EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_stencil_export (pattern EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_subgroup_ballot (pattern EXT_SHADER_SUBGROUP_BALLOT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_subgroup_vote (pattern EXT_SHADER_SUBGROUP_VOTE_EXTENSION_NAME)
@@ -105,6 +110,7 @@ import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADE
 import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_8bit_storage (pattern KHR_8BIT_STORAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_buffer_device_address (pattern KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (pattern KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_cooperative_matrix (pattern KHR_COOPERATIVE_MATRIX_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_device_group (pattern KHR_DEVICE_GROUP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_format_feature_flags2 (pattern KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME)
@@ -126,6 +132,7 @@ import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (pattern KHR_SHADER_I
 import Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence (pattern KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info (pattern KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_quad_control (pattern KHR_SHADER_QUAD_CONTROL_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_shader_relaxed_extended_instruction (pattern KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (pattern KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (pattern KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME)
@@ -136,10 +143,12 @@ import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (pattern KHR_WO
 import Vulkan.Version (pattern MAKE_API_VERSION)
 import Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME)
+import Vulkan.Extensions.VK_NV_cooperative_matrix2 (pattern NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_cooperative_matrix (pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_geometry_shader_passthrough (pattern NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_mesh_shader (pattern NV_MESH_SHADER_EXTENSION_NAME)
+import Vulkan.Extensions.VK_NV_raw_access_chains (pattern NV_RAW_ACCESS_CHAINS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_ray_tracing (pattern NV_RAY_TRACING_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder (pattern NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (pattern NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME)
@@ -829,6 +838,60 @@ spirvExtensionRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "SPV_NV_raw_access_chains" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_RAW_ACCESS_CHAINS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_compute_shader_derivatives" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_EXT_replicated_composites" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_KHR_relaxed_extended_instruction" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_RELAXED_EXTENDED_INSTRUCTION_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_NV_cooperative_matrix2" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_NV_tensor_addressing" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
@@ -1404,15 +1467,6 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "ShaderViewportIndexLayerNV" ->
-    (,)
-      []
-      [ RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_VIEWPORT_ARRAY_2_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
   "ShaderViewportMaskNV" ->
     (,)
       []
@@ -1918,45 +1972,31 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "ComputeDerivativeGroupQuadsNV" ->
+  "ComputeDerivativeGroupQuadsKHR" ->
     (,)
       []
       [ RequireDeviceFeature
           { featureName = "computeDerivativeGroupQuads"
-          , checkFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesNV{computeDerivativeGroupQuads} -> computeDerivativeGroupQuads
-          , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesNV{..} -> PhysicalDeviceComputeShaderDerivativesFeaturesNV{computeDerivativeGroupQuads = True, ..}
+          , checkFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupQuads} -> computeDerivativeGroupQuads
+          , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{..} -> PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupQuads = True, ..}
           }
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
+          , deviceExtensionName = KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]
-  "ComputeDerivativeGroupLinearNV" ->
+  "ComputeDerivativeGroupLinearKHR" ->
     (,)
       []
       [ RequireDeviceFeature
           { featureName = "computeDerivativeGroupLinear"
-          , checkFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesNV{computeDerivativeGroupLinear} -> computeDerivativeGroupLinear
-          , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesNV{..} -> PhysicalDeviceComputeShaderDerivativesFeaturesNV{computeDerivativeGroupLinear = True, ..}
+          , checkFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupLinear} -> computeDerivativeGroupLinear
+          , enableFeature = \PhysicalDeviceComputeShaderDerivativesFeaturesKHR{..} -> PhysicalDeviceComputeShaderDerivativesFeaturesKHR{computeDerivativeGroupLinear = True, ..}
           }
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "FragmentBarycentricNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "fragmentShaderBarycentric"
-          , checkFeature = \PhysicalDeviceFragmentShaderBarycentricFeaturesKHR{fragmentShaderBarycentric} -> fragmentShaderBarycentric
-          , enableFeature = \_ -> PhysicalDeviceFragmentShaderBarycentricFeaturesKHR{fragmentShaderBarycentric = True}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+          , deviceExtensionName = KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]
@@ -1971,20 +2011,6 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
-          , deviceExtensionMinVersion = 0
-          }
-      ]
-  "ShadingRateNV" ->
-    (,)
-      []
-      [ RequireDeviceFeature
-          { featureName = "shadingRateImage"
-          , checkFeature = \PhysicalDeviceShadingRateImageFeaturesNV{shadingRateImage} -> shadingRateImage
-          , enableFeature = \PhysicalDeviceShadingRateImageFeaturesNV{..} -> PhysicalDeviceShadingRateImageFeaturesNV{shadingRateImage = True, ..}
-          }
-      , RequireDeviceExtension
-          { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = NV_SHADING_RATE_IMAGE_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]
@@ -2217,7 +2243,7 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "DemoteToHelperInvocationEXT" ->
+  "DemoteToHelperInvocation" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [ RequireDeviceFeature
@@ -2288,7 +2314,7 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "DotProductInputAllKHR" ->
+  "DotProductInputAll" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [ RequireDeviceFeature
@@ -2303,7 +2329,7 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "DotProductInput4x8BitKHR" ->
+  "DotProductInput4x8Bit" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [ RequireDeviceFeature
@@ -2318,7 +2344,7 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "DotProductInput4x8BitPackedKHR" ->
+  "DotProductInput4x8BitPacked" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [ RequireDeviceFeature
@@ -2333,7 +2359,7 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "DotProductKHR" ->
+  "DotProduct" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0]
       [ RequireDeviceFeature
@@ -2487,6 +2513,20 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "RayQueryPositionFetchKHR" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "rayTracingPositionFetch"
+          , checkFeature = \PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch} -> rayTracingPositionFetch
+          , enableFeature = \_ -> PhysicalDeviceRayTracingPositionFetchFeaturesKHR{rayTracingPositionFetch = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_RAY_TRACING_POSITION_FETCH_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "TileImageColorReadAccessEXT" ->
     (,)
       []
@@ -2549,7 +2589,7 @@ spirvCapabilityRequirements = \case
       [ RequireDeviceFeature
           { featureName = "shaderEnqueue"
           , checkFeature = \PhysicalDeviceShaderEnqueueFeaturesAMDX{shaderEnqueue} -> shaderEnqueue
-          , enableFeature = \_ -> PhysicalDeviceShaderEnqueueFeaturesAMDX{shaderEnqueue = True}
+          , enableFeature = \PhysicalDeviceShaderEnqueueFeaturesAMDX{..} -> PhysicalDeviceShaderEnqueueFeaturesAMDX{shaderEnqueue = True, ..}
           }
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
@@ -2613,17 +2653,115 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
-  "MaximallyReconvergesKHR" ->
+  "RawAccessChainsNV" ->
     (,)
       []
       [ RequireDeviceFeature
-          { featureName = "shaderMaximalReconvergence"
-          , checkFeature = \PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR{shaderMaximalReconvergence} -> shaderMaximalReconvergence
-          , enableFeature = \_ -> PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR{shaderMaximalReconvergence = True}
+          { featureName = "shaderRawAccessChains"
+          , checkFeature = \PhysicalDeviceRawAccessChainsFeaturesNV{shaderRawAccessChains} -> shaderRawAccessChains
+          , enableFeature = \_ -> PhysicalDeviceRawAccessChainsFeaturesNV{shaderRawAccessChains = True}
           }
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
-          , deviceExtensionName = KHR_SHADER_MAXIMAL_RECONVERGENCE_EXTENSION_NAME
+          , deviceExtensionName = NV_RAW_ACCESS_CHAINS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "ReplicatedCompositesEXT" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderReplicatedComposites"
+          , checkFeature = \PhysicalDeviceShaderReplicatedCompositesFeaturesEXT{shaderReplicatedComposites} -> shaderReplicatedComposites
+          , enableFeature = \_ -> PhysicalDeviceShaderReplicatedCompositesFeaturesEXT{shaderReplicatedComposites = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_SHADER_REPLICATED_COMPOSITES_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "TensorAddressingNV" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "cooperativeMatrixTensorAddressing"
+          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing} -> cooperativeMatrixTensorAddressing
+          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "CooperativeMatrixReductionsNV" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "cooperativeMatrixReductions"
+          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixReductions} -> cooperativeMatrixReductions
+          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixReductions = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "CooperativeMatrixConversionsNV" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "cooperativeMatrixConversions"
+          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixConversions} -> cooperativeMatrixConversions
+          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixConversions = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "CooperativeMatrixPerElementOperationsNV" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "cooperativeMatrixPerElementOperations"
+          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixPerElementOperations} -> cooperativeMatrixPerElementOperations
+          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixPerElementOperations = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "CooperativeMatrixTensorAddressingNV" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "cooperativeMatrixTensorAddressing"
+          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing} -> cooperativeMatrixTensorAddressing
+          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixTensorAddressing = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "CooperativeMatrixBlockLoadsNV" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "cooperativeMatrixBlockLoads"
+          , checkFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixBlockLoads} -> cooperativeMatrixBlockLoads
+          , enableFeature = \PhysicalDeviceCooperativeMatrix2FeaturesNV{..} -> PhysicalDeviceCooperativeMatrix2FeaturesNV{cooperativeMatrixBlockLoads = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_COOPERATIVE_MATRIX_2_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

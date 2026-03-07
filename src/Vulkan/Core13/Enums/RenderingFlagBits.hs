@@ -7,8 +7,8 @@ module Vulkan.Core13.Enums.RenderingFlagBits  ( pattern RENDERING_CONTENTS_SECON
                                               , RenderingFlagBits( RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT
                                                                  , RENDERING_SUSPENDING_BIT
                                                                  , RENDERING_RESUMING_BIT
+                                                                 , RENDERING_CONTENTS_INLINE_BIT_KHR
                                                                  , RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
-                                                                 , RENDERING_CONTENTS_INLINE_BIT_EXT
                                                                  , ..
                                                                  )
                                               ) where
@@ -75,19 +75,17 @@ pattern RENDERING_SUSPENDING_BIT = RenderingFlagBits 0x00000002
 -- resuming an earlier suspended render pass instance.
 pattern RENDERING_RESUMING_BIT = RenderingFlagBits 0x00000004
 
+-- | 'RENDERING_CONTENTS_INLINE_BIT_KHR' specifies that draw calls for the
+-- render pass instance /can/ be recorded inline within the current command
+-- buffer. This /can/ be combined with the
+-- 'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT' bit to allow draw
+-- calls to be recorded both inline and in secondary command buffers.
+pattern RENDERING_CONTENTS_INLINE_BIT_KHR = RenderingFlagBits 0x00000010
+
 -- | 'RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT' specifies that
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>
 -- is enabled for the render pass instance.
 pattern RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT = RenderingFlagBits 0x00000008
-
--- | 'RENDERING_CONTENTS_INLINE_BIT_EXT' specifies that draw calls for the
--- render pass instance /can/ be recorded inline within the current command
--- buffer. When the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
--- feature is enabled this /can/ be combined with the
--- 'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT' bit to allow draw
--- calls to be recorded both inline and in secondary command buffers.
-pattern RENDERING_CONTENTS_INLINE_BIT_EXT = RenderingFlagBits 0x00000010
 
 conNameRenderingFlagBits :: String
 conNameRenderingFlagBits = "RenderingFlagBits"
@@ -104,12 +102,12 @@ showTableRenderingFlagBits =
   , (RENDERING_SUSPENDING_BIT, "SUSPENDING_BIT")
   , (RENDERING_RESUMING_BIT, "RESUMING_BIT")
   ,
-    ( RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
-    , "ENABLE_LEGACY_DITHERING_BIT_EXT"
+    ( RENDERING_CONTENTS_INLINE_BIT_KHR
+    , "CONTENTS_INLINE_BIT_KHR"
     )
   ,
-    ( RENDERING_CONTENTS_INLINE_BIT_EXT
-    , "CONTENTS_INLINE_BIT_EXT"
+    ( RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
+    , "ENABLE_LEGACY_DITHERING_BIT_EXT"
     )
   ]
 

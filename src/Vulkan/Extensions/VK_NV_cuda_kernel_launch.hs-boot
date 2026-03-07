@@ -75,7 +75,7 @@
 -- 'getCudaModuleCacheNV' with a @NULL@ pointer to a buffer and with a
 -- valid pointer receiving the size; then another call of the same function
 -- with a valid pointer to a buffer to retrieve the data. The resulting
--- cache could then be user later for further runs of this application by
+-- cache could then be used later for further runs of this application by
 -- sending this cache instead of the PTX code (using the same
 -- 'createCudaModuleNV'), thus significantly speeding up the initialization
 -- of the CUDA module.
@@ -174,13 +174,7 @@
 --
 -- == See Also
 --
--- 'CudaFunctionCreateInfoNV', 'Vulkan.Extensions.Handles.CudaFunctionNV',
--- 'CudaLaunchInfoNV', 'CudaModuleCreateInfoNV',
--- 'Vulkan.Extensions.Handles.CudaModuleNV',
--- 'PhysicalDeviceCudaKernelLaunchFeaturesNV',
--- 'PhysicalDeviceCudaKernelLaunchPropertiesNV', 'cmdCudaLaunchKernelNV',
--- 'createCudaFunctionNV', 'createCudaModuleNV', 'destroyCudaFunctionNV',
--- 'destroyCudaModuleNV', 'getCudaModuleCacheNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

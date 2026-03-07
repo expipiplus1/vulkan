@@ -15,10 +15,10 @@
 --     105
 --
 -- [__Revision__]
---     4
+--     5
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
@@ -94,7 +94,7 @@
 -- the color spaces?
 --
 -- __RESOLVED__: Pixel format is independent of color space (though some
--- color spaces really want \/ need floating point color components to be
+-- color spaces really want \/ need floating-point color components to be
 -- useful). Therefore, do not plan on documenting what formats support
 -- which color spaces. An application /can/ call
 -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceFormatsKHR' to
@@ -132,6 +132,13 @@
 --
 --     -   Clarify DCI-P3 and Display P3 usage.
 --
+-- -   Revision 5, 2024-03-16 (Zehui Lin)
+--
+--     -   Fix interchanged concepts of EOTF and OETF.
+--
+--     -   Clarify that the presentation engine can accept the color
+--         spaces.
+--
 -- == See Also
 --
 -- No cross-references are available
@@ -158,11 +165,11 @@ import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR(..))
 pattern COLOR_SPACE_DCI_P3_LINEAR_EXT = COLOR_SPACE_DISPLAY_P3_LINEAR_EXT
 
 
-type EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 4
+type EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 5
 
 -- No documentation found for TopLevel "VK_EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION"
 pattern EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 4
+pattern EXT_SWAPCHAIN_COLOR_SPACE_SPEC_VERSION = 5
 
 
 type EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME = "VK_EXT_swapchain_colorspace"

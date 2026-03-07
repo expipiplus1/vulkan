@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -46,7 +46,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GLSL_EXT_shader_tile_image.txt GL_EXT_shader_tile_image>
+--         <https://raw.githubusercontent.com/KhronosGroup/GLSL/main/extensions/ext/GLSL_EXT_shader_tile_image.txt GL_EXT_shader_tile_image>
 --
 -- [__Contributors__]
 --
@@ -147,8 +147,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderTileImageFeaturesEXT',
--- 'PhysicalDeviceShaderTileImagePropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

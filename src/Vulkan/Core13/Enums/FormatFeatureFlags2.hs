@@ -392,8 +392,6 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --     in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>.
 --
---     Note
---
 --     Specific
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-profiles video profiles>
 --     /may/ have additional restrictions on the format and other image
@@ -454,6 +452,25 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 -- -   'FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT_EXT' specifies that an
 --     image /can/ be created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT'.
+--
+-- -   @VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@
+--     specifies that an image view with this format /can/ be used as a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#encode-quantization-delta-map quantization delta map>
+--     in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>.
+--
+-- -   @VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@ specifies
+--     that an image view with this format /can/ be used as an
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#encode-emphasis-map emphasis map>
+--     in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>.
+--
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#encode-quantization-map Video encode quantization maps>
+--     have additional restrictions specific to the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-profiles video profile>
+--     they are used with that /can/ be enumerated using the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetPhysicalDeviceVideoFormatPropertiesKHR vkGetPhysicalDeviceVideoFormatPropertiesKHR>
+--     command.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by <VkBuffer.html buffers> or
@@ -517,7 +534,8 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'FormatFeatureFlags2'
 newtype FormatFeatureFlagBits2 = FormatFeatureFlagBits2 Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

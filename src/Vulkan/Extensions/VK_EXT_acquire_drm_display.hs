@@ -70,7 +70,7 @@
 --
 -- == See Also
 --
--- 'acquireDrmDisplayEXT', 'getDrmDisplayEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -137,14 +137,15 @@ foreign import ccall
 -- All permissions necessary to control the display are granted to the
 -- Vulkan instance associated with the provided @physicalDevice@ until the
 -- display is either released or the connector is unplugged. The provided
--- @drmFd@ must correspond to the one owned by the @physicalDevice@. If
--- not, the error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' must be
+-- @drmFd@ /must/ correspond to the one owned by the @physicalDevice@. If
+-- not, the error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' /must/ be
 -- returned. The DRM FD must have DRM master permissions. If any error is
--- encountered during the acquisition of the display, the call must return
--- the error code 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
+-- encountered during the acquisition of the display, the call /must/
+-- return the error code
+-- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
 --
 -- The provided DRM fd should not be closed before the display is released,
--- attempting to do it may result in undefined behaviour.
+-- attempting to do it may result in undefined behavior.
 --
 -- == Return Codes
 --
@@ -204,16 +205,16 @@ foreign import ccall
 -- = Description
 --
 -- If there is no 'Vulkan.Extensions.Handles.DisplayKHR' corresponding to
--- the @connectorId@ on the @physicalDevice@, the returning @display@ must
--- be set to 'Vulkan.Core10.APIConstants.NULL_HANDLE'. The provided @drmFd@
--- must correspond to the one owned by the @physicalDevice@. If not, the
--- error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' must be returned.
--- Master permissions are not required, because the file descriptor is just
--- used for information gathering purposes. The given @connectorId@ must be
--- a resource owned by the provided @drmFd@. If not, the error code
--- 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' must be returned. If any
--- error is encountered during the identification of the display, the call
--- must return the error code
+-- the @connectorId@ on the @physicalDevice@, the returning @display@
+-- /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. The provided @drmFd@
+-- /must/ correspond to the one owned by the @physicalDevice@. If not, the
+-- error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' /must/ be
+-- returned. Master permissions are not required, because the file
+-- descriptor is just used for information gathering purposes. The given
+-- @connectorId@ /must/ be a resource owned by the provided @drmFd@. If
+-- not, the error code 'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN' /must/ be
+-- returned. If any error is encountered during the identification of the
+-- display, the call /must/ return the error code
 -- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
 --
 -- == Return Codes

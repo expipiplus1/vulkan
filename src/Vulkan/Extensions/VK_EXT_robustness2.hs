@@ -18,12 +18,12 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -118,8 +118,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRobustness2FeaturesEXT',
--- 'PhysicalDeviceRobustness2PropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -169,41 +168,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
--- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
---     identifying this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to a structure extending this
---     structure.
---
--- -   #features-robustBufferAccess2# @robustBufferAccess2@ indicates
---     whether buffer accesses are tightly bounds-checked against the range
---     of the descriptor. Uniform buffers /must/ be bounds-checked to the
---     range of the descriptor, where the range is rounded up to a multiple
---     of
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>.
---     Storage buffers /must/ be bounds-checked to the range of the
---     descriptor, where the range is rounded up to a multiple of
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>.
---     Out of bounds buffer loads will return zero values, and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures image load, sample, and atomic operations>
---     from texel buffers will have (0,0,1) values
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
---     based on the format.
---
--- -   #features-robustImageAccess2# @robustImageAccess2@ indicates whether
---     image accesses are tightly bounds-checked against the dimensions of
---     the image view. Out of bounds
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures image load, sample, and atomic operations>
---     from images will return zero values, with (0,0,1) values
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
---     based on the format.
---
--- -   #features-nullDescriptor# @nullDescriptor@ indicates whether
---     descriptors /can/ be written with a
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' resource or view, which are
---     considered valid to access and act as if the descriptor were bound
---     to nothing.
---
 -- If the 'PhysicalDeviceRobustness2FeaturesEXT' structure is included in
 -- the @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
@@ -233,11 +197,32 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRobustness2FeaturesEXT = PhysicalDeviceRobustness2FeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceRobustness2FeaturesEXT" "robustBufferAccess2"
+  { -- | #features-robustBufferAccess2# @robustBufferAccess2@ indicates whether
+    -- buffer accesses are tightly bounds-checked against the range of the
+    -- descriptor. Uniform buffers /must/ be bounds-checked to the range of the
+    -- descriptor, where the range is rounded up to a multiple of
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>.
+    -- Storage buffers /must/ be bounds-checked to the range of the descriptor,
+    -- where the range is rounded up to a multiple of
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>.
+    -- Out of bounds buffer loads will return zero values, and
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures image load, sample, and atomic operations>
+    -- from texel buffers will have (0,0,1) values
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
+    -- based on the format.
     robustBufferAccess2 :: Bool
-  , -- No documentation found for Nested "VkPhysicalDeviceRobustness2FeaturesEXT" "robustImageAccess2"
+  , -- | #features-robustImageAccess2# @robustImageAccess2@ indicates whether
+    -- image accesses are tightly bounds-checked against the dimensions of the
+    -- image view. Out of bounds
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures image load, sample, and atomic operations>
+    -- from images will return zero values, with (0,0,1) values
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
+    -- based on the format.
     robustImageAccess2 :: Bool
-  , -- No documentation found for Nested "VkPhysicalDeviceRobustness2FeaturesEXT" "nullDescriptor"
+  , -- | #features-nullDescriptor# @nullDescriptor@ indicates whether descriptors
+    -- /can/ be written with a 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+    -- resource or view, which are considered valid to access and act as if the
+    -- descriptor were bound to nothing.
     nullDescriptor :: Bool
   }
   deriving (Typeable, Eq)

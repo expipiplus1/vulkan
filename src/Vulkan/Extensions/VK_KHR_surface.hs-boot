@@ -132,14 +132,12 @@
 --
 -- == Examples
 --
--- Note
---
 -- The example code for the @VK_KHR_surface@ and @VK_KHR_swapchain@
 -- extensions was removed from the appendix after revision 1.0.29. This WSI
 -- example code was ported to the cube demo that is shipped with the
 -- official Khronos SDK, and is being kept up-to-date in that location
 -- (see:
--- <https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c>).
+-- <https://github.com/KhronosGroup/Vulkan-Tools/blob/main/cube/cube.c>).
 --
 -- == Issues
 --
@@ -358,13 +356,7 @@
 --
 -- == See Also
 --
--- 'ColorSpaceKHR', 'CompositeAlphaFlagBitsKHR', 'CompositeAlphaFlagsKHR',
--- 'PresentModeKHR', 'SurfaceCapabilitiesKHR', 'SurfaceFormatKHR',
--- 'Vulkan.Extensions.Handles.SurfaceKHR', 'SurfaceTransformFlagBitsKHR',
--- 'destroySurfaceKHR', 'getPhysicalDeviceSurfaceCapabilitiesKHR',
--- 'getPhysicalDeviceSurfaceFormatsKHR',
--- 'getPhysicalDeviceSurfacePresentModesKHR',
--- 'getPhysicalDeviceSurfaceSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

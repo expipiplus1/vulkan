@@ -111,9 +111,7 @@
 --
 -- == See Also
 --
--- 'ExportFenceWin32HandleInfoKHR', 'FenceGetWin32HandleInfoKHR',
--- 'ImportFenceWin32HandleInfoKHR', 'getFenceWin32HandleKHR',
--- 'importFenceWin32HandleKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

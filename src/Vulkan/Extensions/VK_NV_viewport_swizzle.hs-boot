@@ -254,9 +254,7 @@
 --
 -- == See Also
 --
--- 'PipelineViewportSwizzleStateCreateFlagsNV',
--- 'PipelineViewportSwizzleStateCreateInfoNV',
--- 'ViewportCoordinateSwizzleNV', 'ViewportSwizzleNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

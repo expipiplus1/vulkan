@@ -129,9 +129,7 @@
 --
 -- == See Also
 --
--- 'MutableDescriptorTypeCreateInfoVALVE',
--- 'MutableDescriptorTypeListVALVE',
--- 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -18,10 +18,12 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -119,8 +121,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceDepthClipControlFeaturesEXT',
--- 'PipelineViewportDepthClipControlCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -236,9 +237,9 @@ instance Zero PhysicalDeviceDepthClipControlFeaturesEXT where
 -- == Valid Usage
 --
 -- -   #VUID-VkPipelineViewportDepthClipControlCreateInfoEXT-negativeOneToOne-06470#
---     If
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthClipControl depthClipControl>
---     is not enabled, @negativeOneToOne@ /must/ be
+--     feature is not enabled, @negativeOneToOne@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)

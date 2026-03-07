@@ -122,10 +122,7 @@
 --
 -- == See Also
 --
--- 'PresentGravityFlagBitsEXT', 'PresentGravityFlagsEXT',
--- 'PresentScalingFlagBitsEXT', 'PresentScalingFlagsEXT',
--- 'SurfacePresentModeCompatibilityEXT', 'SurfacePresentModeEXT',
--- 'SurfacePresentScalingCapabilitiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

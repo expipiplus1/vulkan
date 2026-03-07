@@ -333,8 +333,6 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 -- value from this structure as that used at device creation time in a
 -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure.
 --
--- Note
---
 -- Normally, if you create both protected-capable and non-protected-capable
 -- queues with the same family, they are treated as separate lists of
 -- queues and @queueIndex@ is relative to the start of the list of queues
@@ -360,7 +358,7 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 -- queues are instead located in the extended range described in the
 -- preceding two paragraphs.
 --
--- This behaviour will not be observed on any driver that has passed Vulkan
+-- This behavior will not be observed on any driver that has passed Vulkan
 -- conformance test suite version 1.3.3.0, or any subsequent version. This
 -- information can be found by querying
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties'::@conformanceVersion@.

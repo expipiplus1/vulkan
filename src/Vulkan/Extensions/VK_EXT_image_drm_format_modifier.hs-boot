@@ -18,35 +18,36 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
---             
+--                 
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>
---              and
---             
+--                  and
+--                 
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---              and
---             
+--                  and
+--                 
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_image_format_list VK_KHR_image_format_list>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
 -- [__Contact__]
 --
 --     -   Lina Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @versalinyaa%0A*Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @linyaa-kiwi%0A*Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension* >
 --
 -- == Other Extension Metadata
 --
@@ -320,6 +321,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   'DrmFormatModifierProperties2EXT'
@@ -368,6 +371,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
@@ -548,12 +553,7 @@
 --
 -- == See Also
 --
--- 'DrmFormatModifierPropertiesEXT', 'DrmFormatModifierPropertiesListEXT',
--- 'ImageDrmFormatModifierExplicitCreateInfoEXT',
--- 'ImageDrmFormatModifierListCreateInfoEXT',
--- 'ImageDrmFormatModifierPropertiesEXT',
--- 'PhysicalDeviceImageDrmFormatModifierInfoEXT',
--- 'getImageDrmFormatModifierPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

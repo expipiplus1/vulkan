@@ -106,7 +106,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderSubgroupRotateFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

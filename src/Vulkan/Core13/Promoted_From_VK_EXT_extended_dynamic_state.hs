@@ -706,8 +706,6 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 -- /can/ be used instead of 'cmdBindVertexBuffers2' to set the stride.
 --
--- Note
---
 -- Unlike the static state to set the same, @pStrides@ must be between 0
 -- and the maximum extent of the attributes in the binding.
 -- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
@@ -1250,6 +1248,11 @@ foreign import ccall
 --         'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
 --         used to create the 'Vulkan.Core10.Handles.Instance' parent of
 --         @commandBuffer@ is greater than or equal to Version 1.3
+--
+-- -   #VUID-vkCmdSetDepthBoundsTestEnable-depthBounds-10010# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthBounds depthBounds>
+--     feature is not enabled, @depthBoundsTestEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --

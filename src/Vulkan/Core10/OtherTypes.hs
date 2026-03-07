@@ -178,8 +178,6 @@ instance Zero MemoryBarrier where
 -- is performed where available memory in the device domain is also made
 -- available to the host domain.
 --
--- Note
---
 -- When
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_COHERENT_BIT'
 -- is used, available memory in host domain is automatically made visible
@@ -190,15 +188,15 @@ instance Zero MemoryBarrier where
 -- @srcQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
--- for the specified buffer range, and the second access scope includes no
--- access, as if @dstAccessMask@ was @0@.
+-- for the specified buffer range, and the second synchronization scope of
+-- the calling command does not apply to this operation.
 --
 -- If @dstQueueFamilyIndex@ is not equal to @srcQueueFamilyIndex@, and
 -- @dstQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
--- for the specified buffer range, and the first access scope includes no
--- access, as if @srcAccessMask@ was @0@.
+-- for the specified buffer range, and the first synchronization scope of
+-- the calling command does not apply to this operation.
 --
 -- == Valid Usage
 --
@@ -452,15 +450,16 @@ instance es ~ '[] => Zero (BufferMemoryBarrier es) where
 -- @srcQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
--- for the specified image subresource range, and the second access scope
--- includes no access, as if @dstAccessMask@ was @0@.
+-- for the specified image subresource range, and the second
+-- synchronization scope of the calling command does not apply to this
+-- operation.
 --
 -- If @dstQueueFamilyIndex@ is not equal to @srcQueueFamilyIndex@, and
 -- @dstQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
--- for the specified image subresource range, and the first access scope
--- includes no access, as if @srcAccessMask@ was @0@.
+-- for the specified image subresource range, and the first synchronization
+-- scope of the calling command does not apply to this operation.
 --
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -468,8 +467,6 @@ instance es ~ '[] => Zero (BufferMemoryBarrier es) where
 -- @oldLayout@ and @newLayout@ define an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>
 -- for the specified image subresource range.
---
--- Note
 --
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -786,6 +783,17 @@ instance es ~ '[] => Zero (BufferMemoryBarrier es) where
 --     @VK_IMAGE_LAYOUT_VIDEO_ENCODE_DPB_KHR@ then @image@ /must/ have been
 --     created with @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@
 --
+-- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-10287# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     @VK_IMAGE_LAYOUT_VIDEO_ENCODE_QUANTIZATION_MAP_KHR@ then @image@
+--     /must/ have been created with
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@
+--
 -- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-07006# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
@@ -913,6 +921,10 @@ instance es ~ '[] => Zero (BufferMemoryBarrier es) where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkImageMemoryBarrier-subresourceRange-09601#
+--     @subresourceRange.aspectMask@ /must/ be valid for the @format@ the
+--     @image@ was created with
 --
 -- -   #VUID-VkImageMemoryBarrier-None-09052# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -1199,7 +1211,7 @@ instance Zero PipelineCacheHeaderVersionOne where
            mempty
 
 
--- | VkDrawIndirectCommand - Structure specifying a indirect drawing command
+-- | VkDrawIndirectCommand - Structure specifying an indirect drawing command
 --
 -- = Description
 --
@@ -1234,11 +1246,6 @@ instance Zero PipelineCacheHeaderVersionOne where
 --     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesKHR'::@supportsNonZeroFirstInstance@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
---
--- -   #VUID-VkDrawIndirectCommand-None-00500# For a given vertex buffer
---     binding, any attribute data fetched /must/ be entirely contained
---     within the corresponding vertex buffer binding, as described in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>
 --
 -- -   #VUID-VkDrawIndirectCommand-firstInstance-00501# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
@@ -1304,7 +1311,7 @@ instance Zero DrawIndirectCommand where
            zero
 
 
--- | VkDrawIndexedIndirectCommand - Structure specifying a indexed indirect
+-- | VkDrawIndexedIndirectCommand - Structure specifying an indexed indirect
 -- drawing command
 --
 -- = Description
@@ -1341,10 +1348,10 @@ instance Zero DrawIndirectCommand where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --
--- -   #VUID-VkDrawIndexedIndirectCommand-robustBufferAccess2-08798# If
+-- -   #VUID-VkDrawIndexedIndirectCommand-robustBufferAccess2-08798# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
---     is not enabled, (@indexSize@ × (@firstIndex@ + @indexCount@) +
---     @offset@) /must/ be less than or equal to the size of the bound
+--     feature is not enabled, (@indexSize@ × (@firstIndex@ + @indexCount@)
+--     + @offset@) /must/ be less than or equal to the size of the bound
 --     index buffer, with @indexSize@ being based on the type specified by
 --     @indexType@, where the index buffer, @indexType@, and @offset@ are
 --     specified via
@@ -1353,12 +1360,6 @@ instance Zero DrawIndirectCommand where
 --     'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR' is
 --     used to bind the index buffer, the size of the bound index buffer is
 --     'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR'::@size@
---
--- -   #VUID-VkDrawIndexedIndirectCommand-None-00552# For a given vertex
---     buffer binding, any attribute data fetched /must/ be entirely
---     contained within the corresponding vertex buffer binding, as
---     described in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>
 --
 -- -   #VUID-VkDrawIndexedIndirectCommand-firstInstance-00554# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
@@ -1431,7 +1432,7 @@ instance Zero DrawIndexedIndirectCommand where
            zero
 
 
--- | VkDispatchIndirectCommand - Structure specifying a indirect dispatching
+-- | VkDispatchIndirectCommand - Structure specifying an indirect dispatching
 -- command
 --
 -- = Description

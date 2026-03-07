@@ -133,12 +133,7 @@
 --
 -- == See Also
 --
--- 'DisplayModeProperties2KHR', 'DisplayPlaneCapabilities2KHR',
--- 'DisplayPlaneInfo2KHR', 'DisplayPlaneProperties2KHR',
--- 'DisplayProperties2KHR', 'getDisplayModeProperties2KHR',
--- 'getDisplayPlaneCapabilities2KHR',
--- 'getPhysicalDeviceDisplayPlaneProperties2KHR',
--- 'getPhysicalDeviceDisplayProperties2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -177,11 +172,13 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -195,6 +192,7 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -210,24 +208,35 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Extensions.Handles (DisplayKHR)
 import Vulkan.Extensions.Handles (DisplayKHR(..))
 import Vulkan.Extensions.Handles (DisplayModeKHR)
 import Vulkan.Extensions.VK_KHR_display (DisplayModePropertiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_display_stereo (DisplayModeStereoPropertiesNV)
 import Vulkan.Extensions.VK_KHR_display (DisplayPlaneCapabilitiesKHR)
 import Vulkan.Extensions.VK_KHR_display (DisplayPlanePropertiesKHR)
 import Vulkan.Extensions.VK_KHR_display (DisplayPropertiesKHR)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Dynamic (InstanceCmds(pVkGetDisplayModeProperties2KHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetDisplayPlaneCapabilities2KHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayPlaneProperties2KHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayProperties2KHR))
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR))
@@ -411,7 +420,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetDisplayModeProperties2KHR
-  :: FunPtr (Ptr PhysicalDevice_T -> DisplayKHR -> Ptr Word32 -> Ptr DisplayModeProperties2KHR -> IO Result) -> Ptr PhysicalDevice_T -> DisplayKHR -> Ptr Word32 -> Ptr DisplayModeProperties2KHR -> IO Result
+  :: FunPtr (Ptr PhysicalDevice_T -> DisplayKHR -> Ptr Word32 -> Ptr (SomeStruct DisplayModeProperties2KHR) -> IO Result) -> Ptr PhysicalDevice_T -> DisplayKHR -> Ptr Word32 -> Ptr (SomeStruct DisplayModeProperties2KHR) -> IO Result
 
 -- | vkGetDisplayModeProperties2KHR - Query information about the available
 -- display modes.
@@ -462,13 +471,16 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeProperties2KHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayModeProperties2KHR :: forall io
-                              . (MonadIO io)
+getDisplayModeProperties2KHR :: forall a io
+                              . ( Extendss DisplayModeProperties2KHR a
+                                , PokeChain a
+                                , PeekChain a
+                                , MonadIO io )
                              => -- | @physicalDevice@ is the physical device associated with @display@.
                                 PhysicalDevice
                              -> -- | @display@ is the display to query.
                                 DisplayKHR
-                             -> io (Result, ("properties" ::: Vector DisplayModeProperties2KHR))
+                             -> io (Result, ("properties" ::: Vector (DisplayModeProperties2KHR a)))
 getDisplayModeProperties2KHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModeProperties2KHRPtr = pVkGetDisplayModeProperties2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayModeProperties2KHRPtr /= nullFunPtr) $
@@ -480,19 +492,19 @@ getDisplayModeProperties2KHR physicalDevice display = liftIO . evalContT $ do
                                                                    physicalDevice'
                                                                    (display)
                                                                    (pPPropertyCount)
-                                                                   (nullPtr))
+                                                                   (forgetExtensions (nullPtr)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
-  pPProperties <- ContT $ bracket (callocBytes @DisplayModeProperties2KHR ((fromIntegral (pPropertyCount)) * 40)) free
-  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 40) :: Ptr DisplayModeProperties2KHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
+  pPProperties <- ContT $ bracket (callocBytes @(DisplayModeProperties2KHR _) ((fromIntegral (pPropertyCount)) * 40)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 40) :: Ptr (DisplayModeProperties2KHR _)) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
   r' <- lift $ traceAroundEvent "vkGetDisplayModeProperties2KHR" (vkGetDisplayModeProperties2KHR'
                                                                     physicalDevice'
                                                                     (display)
                                                                     (pPPropertyCount)
-                                                                    ((pPProperties)))
+                                                                    (forgetExtensions ((pPProperties))))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
-  pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayModeProperties2KHR (((pPProperties) `advancePtrBytes` (40 * (i)) :: Ptr DisplayModeProperties2KHR)))
+  pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @(DisplayModeProperties2KHR _) (((pPProperties) `advancePtrBytes` (40 * (i)) :: Ptr (DisplayModeProperties2KHR _))))
   pure $ ((r'), pProperties')
 
 
@@ -669,51 +681,74 @@ instance Zero DisplayPlaneProperties2KHR where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDisplayModeProperties2KHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR'
+--
+-- -   #VUID-VkDisplayModeProperties2KHR-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_NV_display_stereo.DisplayModeStereoPropertiesNV'
+--
+-- -   #VUID-VkDisplayModeProperties2KHR-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDisplayModeProperties2KHR'
-data DisplayModeProperties2KHR = DisplayModeProperties2KHR
-  { -- | @displayModeProperties@ is a
+data DisplayModeProperties2KHR (es :: [Type]) = DisplayModeProperties2KHR
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @displayModeProperties@ is a
     -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR' structure.
-    displayModeProperties :: DisplayModePropertiesKHR }
+    displayModeProperties :: DisplayModePropertiesKHR
+  }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (DisplayModeProperties2KHR)
+deriving instance Generic (DisplayModeProperties2KHR (es :: [Type]))
 #endif
-deriving instance Show DisplayModeProperties2KHR
+deriving instance Show (Chain es) => Show (DisplayModeProperties2KHR es)
 
-instance ToCStruct DisplayModeProperties2KHR where
+instance Extensible DisplayModeProperties2KHR where
+  extensibleTypeName = "DisplayModeProperties2KHR"
+  setNext DisplayModeProperties2KHR{..} next' = DisplayModeProperties2KHR{next = next', ..}
+  getNext DisplayModeProperties2KHR{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends DisplayModeProperties2KHR e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @DisplayModeStereoPropertiesNV = Just f
+    | otherwise = Nothing
+
+instance ( Extendss DisplayModeProperties2KHR es
+         , PokeChain es ) => ToCStruct (DisplayModeProperties2KHR es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DisplayModeProperties2KHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (displayModeProperties)
-    f
+  pokeCStruct p DisplayModeProperties2KHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (displayModeProperties)
+    lift $ f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR)) (zero)
+    lift $ f
 
-instance FromCStruct DisplayModeProperties2KHR where
+instance ( Extendss DisplayModeProperties2KHR es
+         , PeekChain es ) => FromCStruct (DisplayModeProperties2KHR es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     displayModeProperties <- peekCStruct @DisplayModePropertiesKHR ((p `plusPtr` 16 :: Ptr DisplayModePropertiesKHR))
     pure $ DisplayModeProperties2KHR
-             displayModeProperties
+             next displayModeProperties
 
-instance Storable DisplayModeProperties2KHR where
-  sizeOf ~_ = 40
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DisplayModeProperties2KHR where
+instance es ~ '[] => Zero (DisplayModeProperties2KHR es) where
   zero = DisplayModeProperties2KHR
+           ()
            zero
 
 
@@ -721,8 +756,6 @@ instance Zero DisplayModeProperties2KHR where
 -- of a display plane
 --
 -- = Description
---
--- Note
 --
 -- This parameter also implicitly specifies a display.
 --

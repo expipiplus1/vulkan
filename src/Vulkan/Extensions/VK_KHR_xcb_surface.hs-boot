@@ -158,8 +158,7 @@
 --
 -- == See Also
 --
--- 'XcbSurfaceCreateFlagsKHR', 'XcbSurfaceCreateInfoKHR',
--- 'createXcbSurfaceKHR', 'getPhysicalDeviceXcbPresentationSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

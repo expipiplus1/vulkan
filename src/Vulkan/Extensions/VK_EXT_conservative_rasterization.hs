@@ -18,12 +18,12 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -153,10 +153,7 @@
 --
 -- == See Also
 --
--- 'ConservativeRasterizationModeEXT',
--- 'PhysicalDeviceConservativeRasterizationPropertiesEXT',
--- 'PipelineRasterizationConservativeStateCreateFlagsEXT',
--- 'PipelineRasterizationConservativeStateCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -399,7 +396,7 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 --
 -- If this structure is not included in the @pNext@ chain,
 -- @conservativeRasterizationMode@ is considered to be
--- 'CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT', and and conservative
+-- 'CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT', and conservative
 -- rasterization is disabled.
 --
 -- Polygon rasterization /can/ be made conservative by setting
@@ -407,8 +404,6 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT' or
 -- 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' in
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'.
---
--- Note
 --
 -- If
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
@@ -509,6 +504,7 @@ instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'
 newtype PipelineRasterizationConservativeStateCreateFlagsEXT = PipelineRasterizationConservativeStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

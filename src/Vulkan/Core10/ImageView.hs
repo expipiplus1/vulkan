@@ -105,6 +105,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCreateImageView-device-09667# @device@ /must/ support at
+--     least one queue family with one of the
+--     @VK_QUEUE_VIDEO_ENCODE_BIT_KHR@, @VK_QUEUE_VIDEO_DECODE_BIT_KHR@,
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
+--
 -- -   #VUID-vkCreateImageView-image-09179# 'ImageViewCreateInfo'::@image@
 --     /must/ have been created from @device@
 --
@@ -602,15 +608,13 @@ instance Zero ImageSubresourceRange where
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' when
 -- used as a framebuffer attachment.
 --
--- Note
---
 -- Values intended to be used with one view format /may/ not be exactly
 -- preserved when written or read through a different format. For example,
--- an integer value that happens to have the bit pattern of a floating
--- point denorm or NaN /may/ be flushed or canonicalized when written or
--- read through a view with a floating point format. Similarly, a value
--- written through a signed normalized format that has a bit pattern
--- exactly equal to -2b /may/ be changed to -2b + 1 as described in
+-- an integer value that happens to have the bit pattern of a
+-- floating-point denorm or NaN /may/ be flushed or canonicalized when
+-- written or read through a view with a floating-point format. Similarly,
+-- a value written through a signed normalized format that has a bit
+-- pattern exactly equal to -2b /may/ be changed to -2b + 1 as described in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-fixedfpconv Conversion from Normalized Fixed-Point to Floating-Point>.
 --
 -- If @image@ was created with the
@@ -713,7 +717,7 @@ instance Zero ImageSubresourceRange where
 -- | 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'         | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' |
 -- +----------------------------------------------------------------+-----------------------------------------------+
 --
--- Image type and image view type compatibility requirements
+-- Image Type and Image View Type Compatibility Requirements
 --
 -- == Valid Usage
 --
@@ -748,17 +752,6 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' then
 --     @subresourceRange.levelCount@ /must/ be 1
---
--- -   #VUID-VkImageViewCreateInfo-image-04971# If @image@ was created with
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @viewType@ is
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' then
---     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ /must/ not contain
---     any of
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
---     and
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --
 -- -   #VUID-VkImageViewCreateInfo-image-04972# If @image@ was created with
 --     a @samples@ value not equal to
@@ -842,6 +835,20 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-image-08338# If @image@ was created with
 --     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then @usage@
 --     /must/ not include @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@
+--
+-- -   #VUID-VkImageViewCreateInfo-usage-10259# If @usage@ contains
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@, then
+--     the image view’s
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     @VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@
+--
+-- -   #VUID-VkImageViewCreateInfo-usage-10260# If @usage@ contains
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, then the image
+--     view’s
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     @VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-08932# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
@@ -969,8 +976,8 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 --     flag, the
 --     'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6PropertiesKHR'::@blockTexelViewCompatibleMultipleLayers@
---     property is not set to 'Vulkan.Core10.FundamentalTypes.TRUE', and
---     @format@ is a non-compressed format, then the @layerCount@ member of
+--     property is not 'Vulkan.Core10.FundamentalTypes.TRUE', and @format@
+--     is a non-compressed format, then the @layerCount@ member of
 --     @subresourceRange@ /must/ be @1@
 --
 -- -   #VUID-VkImageViewCreateInfo-pNext-01585# If a
@@ -1266,6 +1273,13 @@ instance Zero ImageSubresourceRange where
 --     /must/ be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
+-- -   #VUID-VkImageViewCreateInfo-image-10261# If @image@ was created with
+--     @usage@ containing
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, then @viewType@
+--     /must/ be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
+--
 -- -   #VUID-VkImageViewCreateInfo-flags-08106# If @flags@ includes
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
 --     the
@@ -1388,6 +1402,10 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'::@filterSize.height@
 --     /must/ be less than or equal to
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-weightfilter-maxdimension ::maxWeightFilterDimension.height>
+--
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-09594#
+--     @subresourceRange.aspectMask@ /must/ be valid for the @format@ the
+--     @image@ was created with
 --
 -- == Valid Usage (Implicit)
 --

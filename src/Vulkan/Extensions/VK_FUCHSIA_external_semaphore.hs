@@ -102,9 +102,7 @@
 --
 -- == See Also
 --
--- 'ImportSemaphoreZirconHandleInfoFUCHSIA',
--- 'SemaphoreGetZirconHandleInfoFUCHSIA',
--- 'getSemaphoreZirconHandleFUCHSIA', 'importSemaphoreZirconHandleFUCHSIA'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -192,8 +190,6 @@ foreign import ccall
 -- event handle and transfer ownership of it to the application. To avoid
 -- leaking resources, the application /must/ release ownership of the
 -- Zircon event handle when it is no longer needed.
---
--- Note
 --
 -- Ownership can be released in many ways. For example, the application can
 -- call zx_handle_close() on the file descriptor, or transfer ownership

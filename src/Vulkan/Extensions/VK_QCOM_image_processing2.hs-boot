@@ -40,7 +40,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/qcom/GLSL_QCOM_image_processing2.txt GL_QCOM_image_processing2>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/qcom/GLSL_QCOM_image_processing2.txt GL_QCOM_image_processing2>
 --
 -- [__Contributors__]
 --
@@ -55,7 +55,7 @@
 -- -   The @opImageBlockMatchWindowSADQCOM@\` SPIR-V instruction builds
 --     upon the functionality of @opImageBlockMatchSADQCOM@\` by repeatedly
 --     performing block match operations across a 2D window. The “2D
---     windowExtent” and “compareMode” are are specified by
+--     windowExtent” and “compareMode” are specified by
 --     'SamplerBlockMatchWindowCreateInfoQCOM' in the sampler used to
 --     create the /target image/. Like @OpImageBlockMatchSADQCOM@,
 --     @opImageBlockMatchWindowSADQCOM@ computes an error metric, that
@@ -190,7 +190,7 @@
 -- 1) What is the precision of the min\/max comparison checks?
 --
 -- __RESOLVED__: Intermediate computations for the new operations are
--- performed at 16-bit floating point precision. If the value of
+-- performed at 16-bit floating-point precision. If the value of
 -- @\"float SAD\"@ in the above code sample is a 16-bit denorm value, then
 -- behavior of the MIN\/MAX comparison is undefined.
 --
@@ -200,10 +200,7 @@
 --
 -- == See Also
 --
--- 'BlockMatchWindowCompareModeQCOM',
--- 'PhysicalDeviceImageProcessing2FeaturesQCOM',
--- 'PhysicalDeviceImageProcessing2PropertiesQCOM',
--- 'SamplerBlockMatchWindowCreateInfoQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

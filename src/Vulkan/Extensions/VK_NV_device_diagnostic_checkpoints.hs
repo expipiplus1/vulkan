@@ -22,6 +22,14 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_synchronization2
 --
 -- [__Contact__]
 --
@@ -61,6 +69,14 @@
 --
 -- -   'getQueueCheckpointDataNV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- is supported:
+--
+-- -   'getQueueCheckpointData2NV'
+--
 -- == New Structures
 --
 -- -   'CheckpointDataNV'
@@ -69,6 +85,19 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2':
 --
 --     -   'QueueFamilyCheckpointPropertiesNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- is supported:
+--
+-- -   'CheckpointData2NV'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2':
+--
+--     -   'QueueFamilyCheckpointProperties2NV'
 --
 -- == New Enum Constants
 --
@@ -82,6 +111,18 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV'
+--
 -- == Version History
 --
 -- -   Revision 1, 2018-07-16 (Nuno Subtil)
@@ -94,8 +135,7 @@
 --
 -- == See Also
 --
--- 'CheckpointDataNV', 'QueueFamilyCheckpointPropertiesNV',
--- 'cmdSetCheckpointNV', 'getQueueCheckpointDataNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -106,8 +146,11 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( cmdSetCheckpointNV
                                                               , getQueueCheckpointDataNV
+                                                              , getQueueCheckpointData2NV
                                                               , QueueFamilyCheckpointPropertiesNV(..)
                                                               , CheckpointDataNV(..)
+                                                              , QueueFamilyCheckpointProperties2NV(..)
+                                                              , CheckpointData2NV(..)
                                                               , NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION
                                                               , pattern NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION
                                                               , NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME
@@ -156,15 +199,19 @@ import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetCheckpointNV))
+import Vulkan.Dynamic (DeviceCmds(pVkGetQueueCheckpointData2NV))
 import Vulkan.Dynamic (DeviceCmds(pVkGetQueueCheckpointDataNV))
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
 import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CHECKPOINT_DATA_NV))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -249,8 +296,8 @@ foreign import ccall
 -- available is returned in @pCheckpointDataCount@.
 --
 -- Otherwise, @pCheckpointDataCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pCheckpointData@ array, and on
--- return the variable is overwritten with the number of structures
+-- application to the number of elements in the @pCheckpointData@ array,
+-- and on return the variable is overwritten with the number of structures
 -- actually written to @pCheckpointData@.
 --
 -- If @pCheckpointDataCount@ is less than the number of checkpoint markers
@@ -306,6 +353,82 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
                                                           ((pPCheckpointData)))
   pCheckpointDataCount' <- lift $ peek @Word32 pPCheckpointDataCount
   pCheckpointData' <- lift $ generateM (fromIntegral (pCheckpointDataCount')) (\i -> peekCStruct @CheckpointDataNV (((pPCheckpointData) `advancePtrBytes` (32 * (i)) :: Ptr CheckpointDataNV)))
+  pure $ (pCheckpointData')
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetQueueCheckpointData2NV
+  :: FunPtr (Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointData2NV -> IO ()) -> Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointData2NV -> IO ()
+
+-- | vkGetQueueCheckpointData2NV - Retrieve diagnostic checkpoint data
+--
+-- = Description
+--
+-- If @pCheckpointData@ is @NULL@, then the number of checkpoint markers
+-- available is returned in @pCheckpointDataCount@. Otherwise,
+-- @pCheckpointDataCount@ /must/ point to a variable set by the application
+-- to the number of elements in the @pCheckpointData@ array, and on return
+-- the variable is overwritten with the number of structures actually
+-- written to @pCheckpointData@.
+--
+-- If @pCheckpointDataCount@ is less than the number of checkpoint markers
+-- available, at most @pCheckpointDataCount@ structures will be written.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkGetQueueCheckpointData2NV-queue-03892# The device that
+--     @queue@ belongs to /must/ be in the lost state
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetQueueCheckpointData2NV-queue-parameter# @queue@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Queue' handle
+--
+-- -   #VUID-vkGetQueueCheckpointData2NV-pCheckpointDataCount-parameter#
+--     @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   #VUID-vkGetQueueCheckpointData2NV-pCheckpointData-parameter# If the
+--     value referenced by @pCheckpointDataCount@ is not @0@, and
+--     @pCheckpointData@ is not @NULL@, @pCheckpointData@ /must/ be a valid
+--     pointer to an array of @pCheckpointDataCount@ 'CheckpointData2NV'
+--     structures
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'CheckpointData2NV', 'Vulkan.Core10.Handles.Queue'
+getQueueCheckpointData2NV :: forall io
+                           . (MonadIO io)
+                          => -- | @queue@ is the 'Vulkan.Core10.Handles.Queue' object the caller would
+                             -- like to retrieve checkpoint data for
+                             Queue
+                          -> io (("checkpointData" ::: Vector CheckpointData2NV))
+getQueueCheckpointData2NV queue = liftIO . evalContT $ do
+  let vkGetQueueCheckpointData2NVPtr = pVkGetQueueCheckpointData2NV (case queue of Queue{deviceCmds} -> deviceCmds)
+  lift $ unless (vkGetQueueCheckpointData2NVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueueCheckpointData2NV is null" Nothing Nothing
+  let vkGetQueueCheckpointData2NV' = mkVkGetQueueCheckpointData2NV vkGetQueueCheckpointData2NVPtr
+  let queue' = queueHandle (queue)
+  pPCheckpointDataCount <- ContT $ bracket (callocBytes @Word32 4) free
+  lift $ traceAroundEvent "vkGetQueueCheckpointData2NV" (vkGetQueueCheckpointData2NV'
+                                                           queue'
+                                                           (pPCheckpointDataCount)
+                                                           (nullPtr))
+  pCheckpointDataCount <- lift $ peek @Word32 pPCheckpointDataCount
+  pPCheckpointData <- ContT $ bracket (callocBytes @CheckpointData2NV ((fromIntegral (pCheckpointDataCount)) * 32)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCheckpointData `advancePtrBytes` (i * 32) :: Ptr CheckpointData2NV) . ($ ())) [0..(fromIntegral (pCheckpointDataCount)) - 1]
+  lift $ traceAroundEvent "vkGetQueueCheckpointData2NV" (vkGetQueueCheckpointData2NV'
+                                                           queue'
+                                                           (pPCheckpointDataCount)
+                                                           ((pPCheckpointData)))
+  pCheckpointDataCount' <- lift $ peek @Word32 pPCheckpointDataCount
+  pCheckpointData' <- lift $ generateM (fromIntegral (pCheckpointDataCount')) (\i -> peekCStruct @CheckpointData2NV (((pPCheckpointData) `advancePtrBytes` (32 * (i)) :: Ptr CheckpointData2NV)))
   pure $ (pCheckpointData')
 
 
@@ -430,6 +553,133 @@ instance Storable CheckpointDataNV where
 
 instance Zero CheckpointDataNV where
   zero = CheckpointDataNV
+           zero
+           zero
+
+
+-- | VkQueueFamilyCheckpointProperties2NV - Return structure for queue family
+-- checkpoint information query
+--
+-- = Description
+--
+-- Additional queue family information can be queried by setting
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2'::@pNext@
+-- to point to a 'QueueFamilyCheckpointProperties2NV' structure.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data QueueFamilyCheckpointProperties2NV = QueueFamilyCheckpointProperties2NV
+  { -- | @checkpointExecutionStageMask@ is a mask indicating which pipeline
+    -- stages the implementation can execute checkpoint markers in.
+    checkpointExecutionStageMask :: PipelineStageFlags2 }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (QueueFamilyCheckpointProperties2NV)
+#endif
+deriving instance Show QueueFamilyCheckpointProperties2NV
+
+instance ToCStruct QueueFamilyCheckpointProperties2NV where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p QueueFamilyCheckpointProperties2NV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (checkpointExecutionStageMask)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (zero)
+    f
+
+instance FromCStruct QueueFamilyCheckpointProperties2NV where
+  peekCStruct p = do
+    checkpointExecutionStageMask <- peek @PipelineStageFlags2 ((p `plusPtr` 16 :: Ptr PipelineStageFlags2))
+    pure $ QueueFamilyCheckpointProperties2NV
+             checkpointExecutionStageMask
+
+instance Storable QueueFamilyCheckpointProperties2NV where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero QueueFamilyCheckpointProperties2NV where
+  zero = QueueFamilyCheckpointProperties2NV
+           zero
+
+
+-- | VkCheckpointData2NV - Return structure for command buffer checkpoint
+-- data
+--
+-- == Valid Usage (Implicit)
+--
+-- The stages at which a checkpoint marker /can/ be executed are
+-- implementation-defined and /can/ be queried by calling
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'getQueueCheckpointData2NV'
+data CheckpointData2NV = CheckpointData2NV
+  { -- | @stage@ indicates a single pipeline stage which the checkpoint marker
+    -- data refers to.
+    stage :: PipelineStageFlags2
+  , -- | @pCheckpointMarker@ contains the value of the last checkpoint marker
+    -- executed in the stage that @stage@ refers to.
+    checkpointMarker :: Ptr ()
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CheckpointData2NV)
+#endif
+deriving instance Show CheckpointData2NV
+
+instance ToCStruct CheckpointData2NV where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CheckpointData2NV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (stage)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (checkpointMarker)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
+    f
+
+instance FromCStruct CheckpointData2NV where
+  peekCStruct p = do
+    stage <- peek @PipelineStageFlags2 ((p `plusPtr` 16 :: Ptr PipelineStageFlags2))
+    pCheckpointMarker <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
+    pure $ CheckpointData2NV
+             stage pCheckpointMarker
+
+instance Storable CheckpointData2NV where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero CheckpointData2NV where
+  zero = CheckpointData2NV
            zero
            zero
 

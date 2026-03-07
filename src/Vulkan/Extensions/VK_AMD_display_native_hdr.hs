@@ -21,7 +21,11 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 VK_KHR_get_surface_capabilities2>
 --     and
@@ -114,8 +118,7 @@
 --
 -- == See Also
 --
--- 'DisplayNativeHdrSurfaceCapabilitiesAMD',
--- 'SwapchainDisplayNativeHdrCreateInfoAMD', 'setLocalDimmingAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

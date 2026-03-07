@@ -15,19 +15,27 @@
 --     135
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 VK_KHR_spirv_1_4>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_library VK_KHR_pipeline_library>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 VK_KHR_spirv_1_4>
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
@@ -36,6 +44,8 @@
 --         details.__
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_mesh_shader
 --
 --     -   Interacts with VK_KHR_maintenance5
 --
@@ -54,7 +64,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-07-22
+--     2024-07-17
 --
 -- [__Provisional__]
 --     __This extension is /provisional/ and /should/ not be used in
@@ -86,8 +96,8 @@
 --
 -- == Description
 --
--- This extension adds the ability for developers to enqueue compute shader
--- workgroups from other compute shaders.
+-- This extension adds the ability for developers to enqueue mesh and
+-- compute shader workgroups from other compute shaders.
 --
 -- == New Commands
 --
@@ -167,11 +177,21 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
 -- is supported:
 --
--- -   Extending 'BufferUsageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlagBits2KHR':
 --
---     -   'BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--     -   'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX'
 --
 -- == Version History
+--
+-- -   Revision 2, 2024-07-17 (Tobias Hector)
+--
+--     -   Add mesh nodes
 --
 -- -   Revision 1, 2021-07-22 (Tobias Hector)
 --
@@ -179,18 +199,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.SHADER_INDEX_UNUSED_AMDX',
--- 'DeviceOrHostAddressConstAMDX', 'DispatchGraphCountInfoAMDX',
--- 'DispatchGraphInfoAMDX', 'ExecutionGraphPipelineCreateInfoAMDX',
--- 'ExecutionGraphPipelineScratchSizeAMDX',
--- 'PhysicalDeviceShaderEnqueueFeaturesAMDX',
--- 'PhysicalDeviceShaderEnqueuePropertiesAMDX',
--- 'PipelineShaderStageNodeCreateInfoAMDX', 'cmdDispatchGraphAMDX',
--- 'cmdDispatchGraphIndirectAMDX', 'cmdDispatchGraphIndirectCountAMDX',
--- 'cmdInitializeGraphScratchMemoryAMDX',
--- 'createExecutionGraphPipelinesAMDX',
--- 'getExecutionGraphPipelineNodeIndexAMDX',
--- 'getExecutionGraphPipelineScratchSizeAMDX'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
@@ -70,7 +72,7 @@
 -- This extension provides Vulkan implementations with the ability to mark
 -- otherwise-required capabilities as unsupported, or to establish
 -- additional properties and limits that the application should adhere to
--- in order to guarantee portable behaviour and operation across platforms,
+-- in order to guarantee portable behavior and operation across platforms,
 -- including platforms where Vulkan is not natively supported.
 --
 -- The goal of this specification is to document, and make queryable,
@@ -130,8 +132,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePortabilitySubsetFeaturesKHR',
--- 'PhysicalDevicePortabilitySubsetPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

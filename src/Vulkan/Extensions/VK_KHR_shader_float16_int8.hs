@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -47,7 +49,7 @@
 --     -   This extension interacts with @VK_KHR_shader_float_controls@
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_explicit_arithmetic_types.txt GL_EXT_shader_explicit_arithmetic_types>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GL_EXT_shader_explicit_arithmetic_types.txt GL_EXT_shader_explicit_arithmetic_types>
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -85,7 +87,7 @@
 -- All functionality in this extension is included in core Vulkan 1.2, with
 -- the KHR suffix omitted. However, if Vulkan 1.2 is supported and this
 -- extension is not, both the @shaderFloat16@ and @shaderInt8@ capabilities
--- are optional. The original type, enum and command names are still
+-- are optional. The original type, enum, and command names are still
 -- available as aliases of the core functionality.
 --
 -- == New Structures
@@ -118,8 +120,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceFloat16Int8FeaturesKHR',
--- 'PhysicalDeviceShaderFloat16Int8FeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

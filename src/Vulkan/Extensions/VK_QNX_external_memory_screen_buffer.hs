@@ -31,7 +31,7 @@
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
 --          or
 --         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
 --
@@ -131,10 +131,7 @@
 --
 -- == See Also
 --
--- 'ExternalFormatQNX', 'ImportScreenBufferInfoQNX',
--- 'PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX',
--- 'ScreenBufferFormatPropertiesQNX', 'ScreenBufferPropertiesQNX',
--- 'getScreenBufferPropertiesQNX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -666,7 +663,7 @@ instance Zero ExternalFormatQNX where
 -- |                                   | 'ExternalFormatQNX'                |
 -- +-----------------------------------+------------------------------------+
 --
--- Functionality supported for QNX Screen Buffer features
+-- Functionality Supported for QNX Screen Buffer Features
 --
 -- [1]
 --     Functionality in this row is always available.
@@ -701,7 +698,7 @@ instance Zero ExternalFormatQNX where
 data PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX = PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX
   { -- | #features-screenBufferImport# @screenBufferImport@ indicates whether QNX
     -- Screen buffer import functionality is supported. If @screenBufferImport@
-    -- is set to 'Vulkan.Core10.FundamentalTypes.TRUE',
+    -- is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- 'Vulkan.Core10.Handles.DeviceMemory' supports importing 'Screen_buffer'
     -- from applications. In this case, the application is responsible for the
     -- resource management of the 'Screen_buffer'.

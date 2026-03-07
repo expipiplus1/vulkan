@@ -18,12 +18,12 @@
 --     12
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Uses__]
 --
@@ -243,9 +243,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceCustomBorderColorFeaturesEXT',
--- 'PhysicalDeviceCustomBorderColorPropertiesEXT',
--- 'SamplerCustomBorderColorCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -297,8 +295,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- border color
 --
 -- = Description
---
--- Note
 --
 -- If @format@ is a depth\/stencil format, the aspect is determined by the
 -- value of 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@. If

@@ -39,8 +39,6 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 --
 -- = Members
 --
--- Note
---
 -- A 'ExternalMemoryImageCreateInfo' structure with a non-zero
 -- @handleTypes@ field must be included in the creation parameters for an
 -- image that will be bound to memory that is either exported or imported.
@@ -103,8 +101,6 @@ instance Zero ExternalMemoryImageCreateInfo where
 -- by external memory
 --
 -- = Members
---
--- Note
 --
 -- A 'ExternalMemoryBufferCreateInfo' structure with a non-zero
 -- @handleTypes@ field must be included in the creation parameters for a

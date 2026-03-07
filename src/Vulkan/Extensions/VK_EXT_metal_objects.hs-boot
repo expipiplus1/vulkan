@@ -15,10 +15,10 @@
 --     312
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -34,7 +34,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-05-28
+--     2024-04-04
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -183,17 +183,15 @@
 --         mask fields to individual bit fields to simplify Valid Usage
 --         rules.
 --
+-- -   Revision 2, 2024-04-04 (Bill Hollings)
+--
+--     -   Add an @__unsafe_unretained@ ownership qualifier to all Metal
+--         object declarations, to support Automatic Reference Counting
+--         (ARC) on Apple devices.
+--
 -- == See Also
 --
--- 'IOSurfaceRef', 'MTLBuffer_id', 'MTLCommandQueue_id', 'MTLDevice_id',
--- 'MTLSharedEvent_id', 'MTLTexture_id', 'ExportMetalBufferInfoEXT',
--- 'ExportMetalCommandQueueInfoEXT', 'ExportMetalDeviceInfoEXT',
--- 'ExportMetalIOSurfaceInfoEXT', 'ExportMetalObjectCreateInfoEXT',
--- 'ExportMetalObjectTypeFlagBitsEXT', 'ExportMetalObjectTypeFlagsEXT',
--- 'ExportMetalObjectsInfoEXT', 'ExportMetalSharedEventInfoEXT',
--- 'ExportMetalTextureInfoEXT', 'ImportMetalBufferInfoEXT',
--- 'ImportMetalIOSurfaceInfoEXT', 'ImportMetalSharedEventInfoEXT',
--- 'ImportMetalTextureInfoEXT', 'exportMetalObjectsEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

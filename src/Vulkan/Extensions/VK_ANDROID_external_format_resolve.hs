@@ -25,6 +25,8 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_VERSION_1_3
+--
 --     -   Interacts with VK_KHR_dynamic_rendering
 --
 -- [__Special Use__]
@@ -113,6 +115,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
@@ -128,9 +132,7 @@
 --
 -- == See Also
 --
--- 'AndroidHardwareBufferFormatResolvePropertiesANDROID',
--- 'PhysicalDeviceExternalFormatResolveFeaturesANDROID',
--- 'PhysicalDeviceExternalFormatResolvePropertiesANDROID'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -373,14 +375,14 @@ data AndroidHardwareBufferFormatResolvePropertiesANDROID = AndroidHardwareBuffer
     -- specifying the format of color attachment images that /must/ be used for
     -- color attachments when resolving to the specified external format. If
     -- the implementation supports external format resolves for the specified
-    -- external format, this value will be set to a color format supporting the
+    -- external format, this value will be a color format supporting the
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
     -- in
     -- 'Vulkan.Core10.DeviceInitialization.FormatProperties'::@optimalTilingFeatures@
     -- as returned by
     -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
     -- with @format@ equal to @colorAttachmentFormat@ If external format
-    -- resolves are not supported, this value will be set to
+    -- resolves are not supported, this value will be
     -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
     colorAttachmentFormat :: Format }
   deriving (Typeable, Eq)

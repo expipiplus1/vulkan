@@ -106,9 +106,7 @@
 --
 -- == See Also
 --
--- 'StreamDescriptorSurfaceCreateFlagsGGP',
--- 'StreamDescriptorSurfaceCreateInfoGGP',
--- 'createStreamDescriptorSurfaceGGP'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -348,6 +346,7 @@ instance Zero StreamDescriptorSurfaceCreateInfoGGP where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface VK_GGP_stream_descriptor_surface>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'StreamDescriptorSurfaceCreateInfoGGP'
 newtype StreamDescriptorSurfaceCreateFlagsGGP = StreamDescriptorSurfaceCreateFlagsGGP Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

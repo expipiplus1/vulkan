@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -117,10 +119,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePipelineRobustnessFeaturesEXT',
--- 'PhysicalDevicePipelineRobustnessPropertiesEXT',
--- 'PipelineRobustnessBufferBehaviorEXT',
--- 'PipelineRobustnessCreateInfoEXT', 'PipelineRobustnessImageBehaviorEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -191,16 +190,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
--- Note
---
--- Enabling
+-- Enabling the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineRobustness pipelineRobustness>
--- may, on some platforms, incur a minor performance cost when
+-- feature may, on some platforms, incur a minor performance cost when the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
--- is disabled, even for pipelines which do not make use of any robustness
--- features. If robustness is not needed,
+-- feature is not enabled, even for pipelines which do not make use of any
+-- robustness features. If robustness is not needed, the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineRobustness pipelineRobustness>
--- should not be enabled by an application.
+-- feature should not be enabled by an application.
 --
 -- If the 'PhysicalDevicePipelineRobustnessFeaturesEXT' structure is
 -- included in the @pNext@ chain of the
@@ -384,7 +381,7 @@ instance Zero PhysicalDevicePipelineRobustnessFeaturesEXT where
 -- 'PipelineRobustnessImageBehaviorEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRobustnessCreateInfoEXT = PipelineRobustnessCreateInfoEXT
-  { -- | @storageBuffers@ sets the behaviour of out of bounds accesses made to
+  { -- | @storageBuffers@ sets the behavior of out of bounds accesses made to
     -- resources bound as:
     --
     -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
@@ -393,7 +390,7 @@ data PipelineRobustnessCreateInfoEXT = PipelineRobustnessCreateInfoEXT
     --
     -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
     storageBuffers :: PipelineRobustnessBufferBehaviorEXT
-  , -- | @uniformBuffers@ describes the behaviour of out of bounds accesses made
+  , -- | @uniformBuffers@ describes the behavior of out of bounds accesses made
     -- to resources bound as:
     --
     -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
@@ -404,10 +401,10 @@ data PipelineRobustnessCreateInfoEXT = PipelineRobustnessCreateInfoEXT
     --
     -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
     uniformBuffers :: PipelineRobustnessBufferBehaviorEXT
-  , -- | @vertexInputs@ describes the behaviour of out of bounds accesses made to
+  , -- | @vertexInputs@ describes the behavior of out of bounds accesses made to
     -- vertex input attributes
     vertexInputs :: PipelineRobustnessBufferBehaviorEXT
-  , -- | @images@ describes the behaviour of out of bounds accesses made to
+  , -- | @images@ describes the behavior of out of bounds accesses made to
     -- resources bound as:
     --
     -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
@@ -495,19 +492,19 @@ instance Zero PipelineRobustnessCreateInfoEXT where
 -- 'PipelineRobustnessImageBehaviorEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePipelineRobustnessPropertiesEXT = PhysicalDevicePipelineRobustnessPropertiesEXT
-  { -- | @defaultRobustnessStorageBuffers@ describes the behaviour of out of
+  { -- | @defaultRobustnessStorageBuffers@ describes the behavior of out of
     -- bounds accesses made to storage buffers when no robustness features are
     -- enabled
     defaultRobustnessStorageBuffers :: PipelineRobustnessBufferBehaviorEXT
-  , -- | @defaultRobustnessUniformBuffers@ describes the behaviour of out of
+  , -- | @defaultRobustnessUniformBuffers@ describes the behavior of out of
     -- bounds accesses made to uniform buffers when no robustness features are
     -- enabled
     defaultRobustnessUniformBuffers :: PipelineRobustnessBufferBehaviorEXT
-  , -- | @defaultRobustnessVertexInputs@ describes the behaviour of out of bounds
+  , -- | @defaultRobustnessVertexInputs@ describes the behavior of out of bounds
     -- accesses made to vertex input attributes when no robustness features are
     -- enabled
     defaultRobustnessVertexInputs :: PipelineRobustnessBufferBehaviorEXT
-  , -- | @defaultRobustnessImages@ describes the behaviour of out of bounds
+  , -- | @defaultRobustnessImages@ describes the behavior of out of bounds
     -- accesses made to images when no robustness features are enabled
     defaultRobustnessImages :: PipelineRobustnessImageBehaviorEXT
   }
@@ -577,7 +574,7 @@ newtype PipelineRobustnessBufferBehaviorEXT = PipelineRobustnessBufferBehaviorEX
 
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT' specifies that
 -- this pipeline stage follows the behavior of robustness features that are
--- enabled on the device that created this pipeline
+-- enabled that created this pipeline
 pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT = PipelineRobustnessBufferBehaviorEXT 0
 
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT' specifies that buffer

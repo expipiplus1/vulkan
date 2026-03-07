@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -116,8 +116,7 @@
 --
 -- == See Also
 --
--- 'ImportMemoryFdInfoKHR', 'MemoryFdPropertiesKHR', 'MemoryGetFdInfoKHR',
--- 'getMemoryFdKHR', 'getMemoryFdPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -504,8 +503,6 @@ instance Zero MemoryFdPropertiesKHR where
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 -- for a description of the properties of the defined external memory
 -- handle types.
---
--- Note
 --
 -- The size of the exported file /may/ be larger than the size requested by
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@. If

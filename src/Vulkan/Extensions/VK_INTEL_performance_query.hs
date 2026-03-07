@@ -55,7 +55,7 @@
 -- <https://github.com/intel/metrics-discovery>
 --
 -- Performance analysis tools such as
--- <https://software.intel.com/content/www/us/en/develop/tools/graphics-performance-analyzers.html Graphics Performance Analyzers>
+-- <https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html Graphics Performance Analyzers>
 -- make use of this extension and the metrics-discovery library to present
 -- the data in a human readable way.
 --
@@ -295,22 +295,7 @@
 --
 -- == See Also
 --
--- 'InitializePerformanceApiInfoINTEL',
--- 'PerformanceConfigurationAcquireInfoINTEL',
--- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL',
--- 'PerformanceConfigurationTypeINTEL', 'PerformanceMarkerInfoINTEL',
--- 'PerformanceOverrideInfoINTEL', 'PerformanceOverrideTypeINTEL',
--- 'PerformanceParameterTypeINTEL', 'PerformanceStreamMarkerInfoINTEL',
--- 'PerformanceValueDataINTEL', 'PerformanceValueINTEL',
--- 'PerformanceValueTypeINTEL', 'QueryPoolCreateInfoINTEL',
--- 'QueryPoolPerformanceQueryCreateInfoINTEL',
--- 'QueryPoolSamplingModeINTEL', 'acquirePerformanceConfigurationINTEL',
--- 'cmdSetPerformanceMarkerINTEL', 'cmdSetPerformanceOverrideINTEL',
--- 'cmdSetPerformanceStreamMarkerINTEL', 'getPerformanceParameterINTEL',
--- 'initializePerformanceApiINTEL',
--- 'queueSetPerformanceConfigurationINTEL',
--- 'releasePerformanceConfigurationINTEL',
--- 'uninitializePerformanceApiINTEL'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -40,8 +40,6 @@ type ShaderStageFlags = ShaderStageFlagBits
 --
 -- = Description
 --
--- Note
---
 -- 'SHADER_STAGE_ALL_GRAPHICS' only includes the original five graphics
 -- stages included in Vulkan 1.0, and not any stages added by extensions.
 -- Thus, it may not have the desired effect in all cases.

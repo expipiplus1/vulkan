@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -56,8 +58,8 @@
 -- /and/ late fragment tests with the @EarlyAndLateFragmentTestsAMD@
 -- execution mode.
 --
--- If @VK_EXT_shader_stencil_export@ is supported, additional execution
--- modes allowing early depth tests similar to @DepthUnchanged@,
+-- If the @VK_EXT_shader_stencil_export@ extension is supported, additional
+-- execution modes allowing early depth tests similar to @DepthUnchanged@,
 -- @DepthLess@, and @DepthGreater@ are provided.
 --
 -- == New Structures
@@ -86,7 +88,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

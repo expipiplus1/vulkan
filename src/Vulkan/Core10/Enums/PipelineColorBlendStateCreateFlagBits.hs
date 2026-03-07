@@ -25,7 +25,7 @@ type PipelineColorBlendStateCreateFlags = PipelineColorBlendStateCreateFlagBits
 -- = Description
 --
 -- -   'PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT'
---     indicates that access to color and input attachments will have
+--     specifies that access to color and input attachments will have
 --     implicit framebuffer-local memory dependencies, allowing
 --     applications to express custom blending operations in a fragment
 --     shader.

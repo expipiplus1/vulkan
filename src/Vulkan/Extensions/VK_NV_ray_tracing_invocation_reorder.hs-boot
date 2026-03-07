@@ -40,7 +40,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_invocation_reorder.txt GL_NV_shader_invocation_reorder>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_shader_invocation_reorder.txt GL_NV_shader_invocation_reorder>
 --
 -- [__Contributors__]
 --
@@ -94,7 +94,7 @@
 -- <https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen SPIR-V Intrinsics>.
 --
 -- The codes for shader invocation reorder are obtained from
--- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
 --
 -- > #define ShaderInvocationReorderNV 5383
 -- > #define HitObjectAttributeNV 5385
@@ -222,9 +222,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRayTracingInvocationReorderFeaturesNV',
--- 'PhysicalDeviceRayTracingInvocationReorderPropertiesNV',
--- 'RayTracingInvocationReorderModeNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

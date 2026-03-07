@@ -149,8 +149,7 @@
 --
 -- == See Also
 --
--- 'ANativeWindow', 'AndroidSurfaceCreateFlagsKHR',
--- 'AndroidSurfaceCreateInfoKHR', 'createAndroidSurfaceKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -246,8 +245,6 @@ foreign import ccall
 -- 'ANativeWindow' handle any attempts to create another surface for the
 -- same 'ANativeWindow' and any attempts to connect to the same
 -- 'ANativeWindow' through other platform mechanisms will fail.
---
--- Note
 --
 -- In particular, only one 'Vulkan.Extensions.Handles.SurfaceKHR' /can/
 -- exist at a time for a given window. Similarly, a native window /cannot/
@@ -410,7 +407,7 @@ instance Zero AndroidSurfaceCreateInfoKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface VK_KHR_android_surface>,
--- 'AndroidSurfaceCreateInfoKHR'
+-- 'AndroidSurfaceCreateInfoKHR', 'Vulkan.Core10.FundamentalTypes.Flags'
 newtype AndroidSurfaceCreateFlagsKHR = AndroidSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

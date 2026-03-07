@@ -77,6 +77,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExternalMemoryIma
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_MESA_image_alignment_control (ImageAlignmentControlCreateInfoMESA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (ImageDrmFormatModifierExplicitCreateInfoEXT)
@@ -118,6 +119,15 @@ foreign import ccall
 -- | vkCreateImage - Create a new image object
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCreateImage-device-09666# @device@ /must/ support at least
+--     one queue family with one of the @VK_QUEUE_VIDEO_ENCODE_BIT_KHR@,
+--     @VK_QUEUE_VIDEO_DECODE_BIT_KHR@,
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_OPTICAL_FLOW_BIT_NV',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_SPARSE_BINDING_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
 --
 -- -   #VUID-vkCreateImage-flags-00939# If the @flags@ member of
 --     @pCreateInfo@ includes
@@ -529,8 +539,9 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   @mipLevels@ is 1
 --
--- -   @arrayLayers@ is 1, unless the @ycbcrImageArrays@ feature is
---     enabled, or otherwise indicated by
+-- -   @arrayLayers@ is 1, unless the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-ycbcrImageArrays ycbcrImageArrays>
+--     feature is enabled, or otherwise indicated by
 --     'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@maxArrayLayers@,
 --     as returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
@@ -559,8 +570,6 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-memory-requirements Sparse Resource Memory Requirements>
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association Resource Memory Association>.
---
--- Note
 --
 -- For images created without
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_EXTENDED_USAGE_BIT'
@@ -877,7 +886,9 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --         -   'ImageCreateInfo'::@format@ equals
 --             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>::@format@.
 --
---         -   'ImageCreateInfo'::@flags@ only contains bits also set in
+--         -   'ImageCreateInfo'::@flags@ only contains
+--             @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@ and\/or
+--             bits also set in
 --             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>::@imageCreateFlags@.
 --
 --         -   'ImageCreateInfo'::@imageType@ equals
@@ -887,7 +898,9 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>::@imageTiling@.
 --
 --         -   'ImageCreateInfo'::@usage@ only contains bits also set in
---             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>::@imageUsageFlags@.
+--             <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>::@imageUsageFlags@,
+--             or 'ImageCreateInfo'::@flags@ includes
+--             'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_EXTENDED_USAGE_BIT'.
 --
 --     -   Otherwise @supportedVideoFormat@ is
 --         'Vulkan.Core10.FundamentalTypes.FALSE'.
@@ -977,6 +990,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT',
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
+-- -   #VUID-VkImageCreateInfo-imageType-10197# If @flags@ contains
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT',
+--     @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT',
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--
 -- -   #VUID-VkImageCreateInfo-extent-02252# @extent.width@ /must/ be less
 --     than or equal to @imageCreateMaxExtent.width@ (as defined in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
@@ -1056,14 +1077,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
 -- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06514# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffset>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
 --     feature is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.width@ /must/ be less than or equal to
 --     \(\left\lceil{\frac{maxFramebufferWidth}{minFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
 -- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06515# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffset>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
 --     feature is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.height@ /must/ be less than or equal to
@@ -1284,10 +1305,18 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-format-04712# If @format@ has a @_422@ or
---     @_420@ suffix, @width@ /must/ be a multiple of 2
+--     @_420@ suffix, @extent.width@ /must/ be a multiple of 2
 --
 -- -   #VUID-VkImageCreateInfo-format-04713# If @format@ has a @_420@
---     suffix, @height@ /must/ be a multiple of 2
+--     suffix, @extent.height@ /must/ be a multiple of 2
+--
+-- -   #VUID-VkImageCreateInfo-format-09583# If @format@ is one of the
+--     @VK_FORMAT_PVTRC1_*_IMG@ formats, @extent.width@ /must/ be a power
+--     of 2
+--
+-- -   #VUID-VkImageCreateInfo-format-09584# If @format@ is one of the
+--     @VK_FORMAT_PVTRC1_*_IMG@ formats, @extent.height@ /must/ be a power
+--     of 2
 --
 -- -   #VUID-VkImageCreateInfo-tiling-02261# If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -1533,7 +1562,9 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06722# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---     structure was included in the @pNext@ chain and
+--     structure was included in the @pNext@ chain and @format@ is not a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     format and
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     is not zero, then each format in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
@@ -1542,6 +1573,19 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     or, if @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
 --     be an uncompressed format that is size-compatible with @format@
+--
+-- -   #VUID-VkImageCreateInfo-pNext-10062# If a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--     structure was included in the @pNext@ chain and @format@ is a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     format and @flags@ contains
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
+--     and
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
+--     is not zero, then each format in
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
+--     /must/ be compatible with the 'Vulkan.Core10.Enums.Format.Format'
+--     for the plane of the image format
 --
 -- -   #VUID-VkImageCreateInfo-flags-04738# If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
@@ -1589,13 +1633,94 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-flags-08331# If @flags@ includes
 --     @VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR@, then @usage@
---     /must/ not include @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@
+--     /must/ not include
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06811# If the @pNext@ chain includes a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@, then
 --     @supportedVideoFormat@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.TRUE'
+--
+-- -   #VUID-VkImageCreateInfo-pNext-10250# If the @pNext@ chain includes a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure and for any element of its @pProfiles@ member
+--     @videoCodecOperation@ is
+--     @VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR@, then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoEncodeAV1 videoEncodeAV1>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkImageCreateInfo-usage-10251# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoEncodeQuantizationMap videoEncodeQuantizationMap>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkImageCreateInfo-usage-10252# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, @imageType@
+--     /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkImageCreateInfo-usage-10253# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, @samples@ /must/
+--     be 'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
+--
+-- -   #VUID-VkImageCreateInfo-usage-10254# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, then the @pNext@
+--     chain /must/ include a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure with @profileCount@ equal to @1@ and @pProfiles@ pointing
+--     to a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure with a @videoCodecOperation@ member specifying an encode
+--     operation
+--
+-- -   #VUID-VkImageCreateInfo-usage-10255# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@, then
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeCapabilitiesKHR VkVideoEncodeCapabilitiesKHR>::@flags@
+--     /must/ include
+--     @VK_VIDEO_ENCODE_CAPABILITY_QUANTIZATION_DELTA_MAP_BIT_KHR@, as
+--     returned by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR>
+--     for the video profile specified in the @pProfiles@ member of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure included in the @pNext@ chain
+--
+-- -   #VUID-VkImageCreateInfo-usage-10256# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, then
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeCapabilitiesKHR VkVideoEncodeCapabilitiesKHR>::@flags@
+--     /must/ include @VK_VIDEO_ENCODE_CAPABILITY_EMPHASIS_MAP_BIT_KHR@, as
+--     returned by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR>
+--     for the video profile specified in the @pProfiles@ member of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure included in the @pNext@ chain
+--
+-- -   #VUID-VkImageCreateInfo-usage-10257# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, @extent.width@
+--     /must/ be less than or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQuantizationMapCapabilitiesKHR VkVideoEncodeQuantizationMapCapabilitiesKHR>::@maxQuantizationMapExtent.width@,
+--     as returned by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR>
+--     for the video profile specified in the @pProfiles@ member of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure included in the @pNext@ chain
+--
+-- -   #VUID-VkImageCreateInfo-usage-10258# If @usage@ includes
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR@ or
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR@, @extent.height@
+--     /must/ be less than or equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeQuantizationMapCapabilitiesKHR VkVideoEncodeQuantizationMapCapabilitiesKHR>::@maxQuantizationMapExtent.height@,
+--     as returned by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR>
+--     for the video profile specified in the @pProfiles@ member of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure included in the @pNext@ chain
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06390# If the
 --     'Vulkan.Core10.Handles.Image' is to be used to import memory from a
@@ -1693,6 +1818,23 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     then @usage@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT'
 --
+-- -   #VUID-VkImageCreateInfo-usage-10245# If @usage@ includes
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT_EXT',
+--     then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-hostImageCopy hostImageCopy>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkImageCreateInfo-pNext-09653# If the @pNext@ chain contains a
+--     'Vulkan.Extensions.VK_MESA_image_alignment_control.ImageAlignmentControlCreateInfoMESA'
+--     structure, @tiling@ /must/ be
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
+--
+-- -   #VUID-VkImageCreateInfo-pNext-09654# If the @pNext@ chain contains a
+--     'Vulkan.Extensions.VK_MESA_image_alignment_control.ImageAlignmentControlCreateInfoMESA'
+--     structure, it /must/ not contain a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
+--     structure
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageCreateInfo-sType-sType# @sType@ /must/ be
@@ -1708,6 +1850,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.ExternalFormatQNX',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo',
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV',
+--     'Vulkan.Extensions.VK_MESA_image_alignment_control.ImageAlignmentControlCreateInfoMESA',
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT',
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT',
@@ -1835,6 +1978,7 @@ instance Extensible ImageCreateInfo where
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImageAlignmentControlCreateInfoMESA = Just f
     | Just Refl <- eqT @e @ExternalFormatQNX = Just f
     | Just Refl <- eqT @e @OpticalFlowImageFormatInfoNV = Just f
     | Just Refl <- eqT @e @ImportMetalIOSurfaceInfoEXT = Just f

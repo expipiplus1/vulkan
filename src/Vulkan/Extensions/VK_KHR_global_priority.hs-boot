@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -56,7 +58,7 @@
 -- enforcement rules.
 --
 -- The driver implementation will attempt to skew hardware resource
--- allocation in favour of the higher-priority task. Therefore,
+-- allocation in favor of the higher-priority task. Therefore,
 -- higher-priority work may retain similar latency and throughput
 -- characteristics even if the system is congested with lower priority
 -- work.
@@ -147,10 +149,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.MAX_GLOBAL_PRIORITY_SIZE_KHR',
--- 'DeviceQueueGlobalPriorityCreateInfoKHR',
--- 'PhysicalDeviceGlobalPriorityQueryFeaturesKHR',
--- 'QueueFamilyGlobalPriorityPropertiesKHR', 'QueueGlobalPriorityKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -127,11 +127,11 @@
 -- Performing the “sRGB degamma” prior to range expansion can introduce
 -- artifacts if the content uses
 -- 'Vulkan.Core11.Enums.SamplerYcbcrRange.SAMPLER_YCBCR_RANGE_ITU_NARROW'
--- encoding. Nevertheless, using sRGB can make sense for certain use-cases
+-- encoding. Nevertheless, using sRGB can make sense for certain use cases
 -- where camera YCbCr images are known to be encoded with sRGB (or a pure
 -- gamma 2.2) transfer function and are known to use full-range encoding.
 --
--- For those use-cases, this extension leverages the GPU ability to enable
+-- For those use cases, this extension leverages the GPU ability to enable
 -- sRGB degamma at little cost, and can improve quality because texture
 -- filtering is able to occur in linear space.
 --
@@ -141,8 +141,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceYcbcrDegammaFeaturesQCOM',
--- 'SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

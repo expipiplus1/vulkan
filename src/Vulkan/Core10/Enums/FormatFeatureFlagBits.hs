@@ -256,8 +256,6 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>.
 --
---     Note
---
 --     Specific
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-profiles video profiles>
 --     /may/ have additional restrictions on the format and other image
@@ -299,8 +297,6 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     when doing
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
 --     builds.
---
--- Note
 --
 -- 'FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' and
 -- 'FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT' are only intended to be

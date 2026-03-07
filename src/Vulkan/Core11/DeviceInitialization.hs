@@ -42,9 +42,7 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
--- The intended behaviour of 'enumerateInstanceVersion' is that an
+-- The intended behavior of 'enumerateInstanceVersion' is that an
 -- implementation /should/ not need to perform memory allocations and
 -- /should/ unconditionally return 'Vulkan.Core10.Enums.Result.SUCCESS'.
 -- The loader, and any enabled layers, /may/ return

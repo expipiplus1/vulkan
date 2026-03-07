@@ -67,9 +67,11 @@
 --
 -- -   'BindPipelineIndirectCommandNV'
 --
--- -   'ComputePipelineIndirectBufferInfoNV'
---
 -- -   'PipelineIndirectDeviceAddressInfoNV'
+--
+-- -   Extending 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo':
+--
+--     -   'ComputePipelineIndirectBufferInfoNV'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -116,12 +118,7 @@
 --
 -- == See Also
 --
--- 'BindPipelineIndirectCommandNV', 'ComputePipelineIndirectBufferInfoNV',
--- 'PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV',
--- 'PipelineIndirectDeviceAddressInfoNV',
--- 'cmdUpdatePipelineIndirectBufferNV',
--- 'getPipelineIndirectDeviceAddressNV',
--- 'getPipelineIndirectMemoryRequirementsNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -524,9 +521,6 @@ getPipelineIndirectDeviceAddressNV device info = liftIO . evalContT $ do
 -- -   #VUID-VkComputePipelineIndirectBufferInfoNV-sType-sType# @sType@
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMPUTE_PIPELINE_INDIRECT_BUFFER_INFO_NV'
---
--- -   #VUID-VkComputePipelineIndirectBufferInfoNV-pNext-pNext# @pNext@
---     /must/ be @NULL@
 --
 -- = See Also
 --
