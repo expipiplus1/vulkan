@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -92,9 +92,7 @@
 --
 -- == See Also
 --
--- 'CalibratedTimestampInfoKHR', 'TimeDomainKHR',
--- 'getCalibratedTimestampsKHR',
--- 'getPhysicalDeviceCalibrateableTimeDomainsKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -197,9 +195,9 @@ foreign import ccall
 -- If @pTimeDomains@ is @NULL@, then the number of calibrateable time
 -- domains supported for the given @physicalDevice@ is returned in
 -- @pTimeDomainCount@. Otherwise, @pTimeDomainCount@ /must/ point to a
--- variable set by the user to the number of elements in the @pTimeDomains@
--- array, and on return the variable is overwritten with the number of
--- values actually written to @pTimeDomains@. If the value of
+-- variable set by the application to the number of elements in the
+-- @pTimeDomains@ array, and on return the variable is overwritten with the
+-- number of values actually written to @pTimeDomains@. If the value of
 -- @pTimeDomainCount@ is less than the number of calibrateable time domains
 -- supported, at most @pTimeDomainCount@ values will be written to
 -- @pTimeDomains@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
@@ -280,8 +278,6 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
 -- The maximum deviation /may/ vary between calls to
 -- 'getCalibratedTimestampsKHR' even for the same set of time domains due
 -- to implementation and platform specific reasons. It is the application’s
@@ -300,9 +296,8 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetCalibratedTimestampsEXT-timeDomain-09246# The
---     @timeDomain@ value of each
---     'Vulkan.Extensions.VK_EXT_calibrated_timestamps.CalibratedTimestampInfoEXT'
---     in @pTimestampInfos@ /must/ be unique
+--     @timeDomain@ value of each 'CalibratedTimestampInfoKHR' in
+--     @pTimestampInfos@ /must/ be unique
 --
 -- == Valid Usage (Implicit)
 --
@@ -434,8 +429,6 @@ instance Zero CalibratedTimestampInfoKHR where
 -- | VkTimeDomainKHR - Supported time domains
 --
 -- = Description
---
--- Note
 --
 -- An implementation supporting @VK_KHR_calibrated_timestamps@ or
 -- @VK_EXT_calibrated_timestamps@ will use the same time domain for all its

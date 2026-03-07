@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -93,11 +95,11 @@
 -- from 'getMemoryWin32HandleKHR' when @handleType@ is
 -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'?
 --
--- __RESOLVED__: Yes, unless it is passed back in to another driver
--- instance to import the object. A successful get call transfers ownership
--- of the handle to the application. Destroying the memory object will not
--- destroy the handle or the handle’s reference to the underlying memory
--- resource.
+-- __RESOLVED__: Yes. A successful get call transfers ownership of the
+-- handle to the application. Destroying the memory object will not destroy
+-- the handle or the handle’s reference to the underlying memory resource.
+-- Unlike file descriptor opaque handles, win32 opaque handle ownership can
+-- not be transferred back to a driver by an import operation.
 --
 -- 2) Should the language regarding KMT\/Windows 7 handles be moved to a
 -- separate extension so that it can be deprecated over time?
@@ -124,9 +126,7 @@
 --
 -- == See Also
 --
--- 'ExportMemoryWin32HandleInfoKHR', 'ImportMemoryWin32HandleInfoKHR',
--- 'MemoryGetWin32HandleInfoKHR', 'MemoryWin32HandlePropertiesKHR',
--- 'getMemoryWin32HandleKHR', 'getMemoryWin32HandlePropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -226,8 +226,6 @@ foreign import ccall
 -- reference to their payload. To avoid leaking resources, the application
 -- /must/ release ownership of them using the @CloseHandle@ system call
 -- when they are no longer needed.
---
--- Note
 --
 -- Non-NT handle types do not add a reference to their associated payload.
 -- If the original object owning the payload is destroyed, all resources
@@ -363,8 +361,6 @@ getMemoryWin32HandlePropertiesKHR device
 -- using the @CloseHandle@ system call when the handle is no longer needed.
 -- For handle types defined as NT handles, the imported memory object holds
 -- a reference to its payload.
---
--- Note
 --
 -- Non-NT handle import operations do not add a reference to their
 -- associated payload. If the original object owning the payload is

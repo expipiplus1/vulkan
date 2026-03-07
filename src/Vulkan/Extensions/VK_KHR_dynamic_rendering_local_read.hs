@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__Contact__]
 --
@@ -136,11 +138,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR',
--- 'RenderingAttachmentLocationInfoKHR',
--- 'RenderingInputAttachmentIndexInfoKHR',
--- 'cmdSetRenderingAttachmentLocationsKHR',
--- 'cmdSetRenderingInputAttachmentIndicesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -200,7 +198,6 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
@@ -225,9 +222,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the attachment location mappings for subsequent
--- drawing commands, and /must/ match the mappings provided to the
--- currently bound pipeline, if one is bound, which /can/ be set by
--- chaining 'RenderingAttachmentLocationInfoKHR' to
+-- drawing commands, and /must/ match the mappings provided to the bound
+-- pipeline, if one is bound, which /can/ be set by chaining
+-- 'RenderingAttachmentLocationInfoKHR' to
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'.
 --
 -- Until this command is called, mappings in the command buffer state are
@@ -339,9 +336,9 @@ foreign import ccall
 -- = Description
 --
 -- This command sets the input attachment index mappings for subsequent
--- drawing commands, and /must/ match the mappings provided to the
--- currently bound pipeline, if one is bound, which /can/ be set by
--- chaining 'RenderingInputAttachmentIndexInfoKHR' to
+-- drawing commands, and /must/ match the mappings provided to the bound
+-- pipeline, if one is bound, which /can/ be set by chaining
+-- 'RenderingInputAttachmentIndexInfoKHR' to
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'.
 --
 -- Until this command is called, mappings in the command buffer state are
@@ -379,8 +376,8 @@ foreign import ccall
 --     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   #VUID-vkCmdSetRenderingInputAttachmentIndicesKHR-pLocationInfo-parameter#
---     @pLocationInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdSetRenderingInputAttachmentIndicesKHR-pInputAttachmentIndexInfo-parameter#
+--     @pInputAttachmentIndexInfo@ /must/ be a valid pointer to a valid
 --     'RenderingInputAttachmentIndexInfoKHR' structure
 --
 -- -   #VUID-vkCmdSetRenderingInputAttachmentIndicesKHR-commandBuffer-recording#
@@ -425,19 +422,20 @@ cmdSetRenderingInputAttachmentIndicesKHR :: forall io
                                          => -- | @commandBuffer@ is the command buffer into which the command will be
                                             -- recorded.
                                             CommandBuffer
-                                         -> -- No documentation found for Nested "vkCmdSetRenderingInputAttachmentIndicesKHR" "pLocationInfo"
-                                            ("locationInfo" ::: RenderingInputAttachmentIndexInfoKHR)
+                                         -> -- | @pInputAttachmentIndexInfo@ is a 'RenderingInputAttachmentIndexInfoKHR'
+                                            -- structure indicating the new mappings.
+                                            RenderingInputAttachmentIndexInfoKHR
                                          -> io ()
 cmdSetRenderingInputAttachmentIndicesKHR commandBuffer
-                                           locationInfo = liftIO . evalContT $ do
+                                           inputAttachmentIndexInfo = liftIO . evalContT $ do
   let vkCmdSetRenderingInputAttachmentIndicesKHRPtr = pVkCmdSetRenderingInputAttachmentIndicesKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetRenderingInputAttachmentIndicesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRenderingInputAttachmentIndicesKHR is null" Nothing Nothing
   let vkCmdSetRenderingInputAttachmentIndicesKHR' = mkVkCmdSetRenderingInputAttachmentIndicesKHR vkCmdSetRenderingInputAttachmentIndicesKHRPtr
-  pLocationInfo <- ContT $ withCStruct (locationInfo)
+  pInputAttachmentIndexInfo <- ContT $ withCStruct (inputAttachmentIndexInfo)
   lift $ traceAroundEvent "vkCmdSetRenderingInputAttachmentIndicesKHR" (vkCmdSetRenderingInputAttachmentIndicesKHR'
                                                                           (commandBufferHandle (commandBuffer))
-                                                                          pLocationInfo)
+                                                                          pInputAttachmentIndexInfo)
   pure $ ()
 
 
@@ -527,24 +525,39 @@ instance Zero PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR where
 -- element of @pColorAttachmentLocations@ set to any other value will map
 -- the specified location value to the color attachment specified in the
 -- render pass at the corresponding index in the
--- @pColorAttachmentLocations@ array. If @pColorAttachmentLocations@ is
--- @NULL@, it is equivalent to setting each element to its index within the
--- array. Any writes to a fragment output location that is not mapped to an
--- attachment /must/ be discarded.
+-- @pColorAttachmentLocations@ array. Any writes to a fragment output
+-- location that is not mapped to an attachment /must/ be discarded.
+--
+-- If @pColorAttachmentLocations@ is @NULL@, it is equivalent to setting
+-- each element to its index within the array.
 --
 -- This structure /can/ be included in the @pNext@ chain of a
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure to set
--- this state for a pipeline. This structure /can/ be included in the
--- @pNext@ chain of a
+-- this state for a pipeline. If this structure is not included in the
+-- @pNext@ chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it
+-- is equivalent to specifying this structure with the following
+-- properties:
+--
+-- -   @colorAttachmentCount@ set to
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@.
+--
+-- -   @pColorAttachmentLocations@ set to @NULL@.
+--
+-- This structure /can/ be included in the @pNext@ chain of a
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' structure to
--- specify inherited state from the primary command buffer. If this
--- structure is not included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
+-- specify inherited state from the primary command buffer. If
+-- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'::renderPass
+-- is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', or
+-- 'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
+-- is not specified in
+-- 'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::flags, members of
+-- this structure are ignored. If this structure is not included in the
+-- @pNext@ chain of
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo', it is
 -- equivalent to specifying this structure with the following properties:
 --
 -- -   @colorAttachmentCount@ set to
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@.
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'::@colorAttachmentCount@.
 --
 -- -   @pColorAttachmentLocations@ set to @NULL@.
 --
@@ -554,8 +567,8 @@ instance Zero PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR where
 --     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
 --     feature is not enabled, and @pColorAttachmentLocations@ is not
---     @NULL@, each element /must/ be set to the value of its index within
---     the array
+--     @NULL@, each element /must/ be the value of its index within the
+--     array
 --
 -- -   #VUID-VkRenderingAttachmentLocationInfoKHR-pColorAttachmentLocations-09513#
 --     Elements of @pColorAttachmentLocations@ that are not
@@ -634,8 +647,10 @@ instance Zero RenderingAttachmentLocationInfoKHR where
 -- corresponding attachment will not be used as an input attachment in this
 -- pipeline. Any other value in each of those elements will map the
 -- corresponding attachment to a @InputAttachmentIndex@ value defined in
--- shader code. If @pColorAttachmentInputIndices@ is @NULL@, it is
--- equivalent to setting each element to its index within the array.
+-- shader code.
+--
+-- If @pColorAttachmentInputIndices@ is @NULL@, it is equivalent to setting
+-- each element to its index within the array.
 --
 -- If @pDepthInputAttachmentIndex@ or @pStencilInputAttachmentIndex@ are
 -- set to @NULL@, they map to input attachments without a
@@ -647,17 +662,29 @@ instance Zero RenderingAttachmentLocationInfoKHR where
 --
 -- This structure /can/ be included in the @pNext@ chain of a
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure to set
--- this state for a pipeline. This structure /can/ be included in the
--- @pNext@ chain of a
+-- this state for a pipeline. If this structure is not included in the
+-- @pNext@ chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it
+-- is equivalent to specifying this structure with the following
+-- properties:
+--
+-- -   @colorAttachmentCount@ set to
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@.
+--
+-- -   @pColorAttachmentInputIndices@ set to @NULL@.
+--
+-- -   @pDepthInputAttachmentIndex@ set to @NULL@.
+--
+-- -   @pStencilInputAttachmentIndex@ set to @NULL@.
+--
+-- This structure /can/ be included in the @pNext@ chain of a
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' structure to
 -- specify inherited state from the primary command buffer. If this
 -- structure is not included in the @pNext@ chain of
--- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo', it is
 -- equivalent to specifying this structure with the following properties:
 --
 -- -   @colorAttachmentCount@ set to
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@.
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'::@colorAttachmentCount@.
 --
 -- -   @pColorAttachmentInputIndices@ set to @NULL@.
 --
@@ -671,7 +698,7 @@ instance Zero RenderingAttachmentLocationInfoKHR where
 --     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-dynamicRenderingLocalRead dynamicRenderingLocalRead>
 --     feature is not enabled, and @pColorAttachmentInputIndices@ is not
---     @NULL@, each element /must/ be set to
+--     @NULL@, each element /must/ be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkRenderingInputAttachmentIndexInfoKHR-dynamicRenderingLocalRead-09520#
@@ -743,11 +770,11 @@ data RenderingInputAttachmentIndexInfoKHR = RenderingInputAttachmentIndexInfoKHR
     colorAttachmentInputIndices :: Vector Word32
   , -- | @pDepthInputAttachmentIndex@ is either @NULL@, or a pointer to a
     -- @uint32_t@ value defining the index for the depth attachment to be used
-    -- an an input attachment.
+    -- as an input attachment.
     depthInputAttachmentIndex :: Maybe Word32
   , -- | @pStencilInputAttachmentIndex@ is either @NULL@, or a pointer to a
     -- @uint32_t@ value defining the index for the stencil attachment to be
-    -- used an an input attachment.
+    -- used as an input attachment.
     stencilInputAttachmentIndex :: Maybe Word32
   }
   deriving (Typeable)

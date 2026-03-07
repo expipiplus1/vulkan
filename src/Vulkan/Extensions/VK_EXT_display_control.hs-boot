@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>
@@ -137,11 +137,7 @@
 --
 -- == See Also
 --
--- 'DeviceEventInfoEXT', 'DeviceEventTypeEXT', 'DisplayEventInfoEXT',
--- 'DisplayEventTypeEXT', 'DisplayPowerInfoEXT', 'DisplayPowerStateEXT',
--- 'SwapchainCounterCreateInfoEXT', 'displayPowerControlEXT',
--- 'getSwapchainCounterEXT', 'registerDeviceEventEXT',
--- 'registerDisplayEventEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

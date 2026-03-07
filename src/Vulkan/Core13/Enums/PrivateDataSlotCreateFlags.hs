@@ -24,6 +24,7 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.PrivateDataSlotCreateInfo'
 newtype PrivateDataSlotCreateFlags = PrivateDataSlotCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

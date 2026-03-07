@@ -21,15 +21,25 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
---     and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--              and
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
---     and
+--              and
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_2
+--
+--     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_EXT_debug_report
 --
@@ -294,6 +304,12 @@
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
 --
+-- -   Extending 'CopyAccelerationStructureModeKHR':
+--
+--     -   'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
+--
+--     -   'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
+--
 -- -   Extending 'Vulkan.Core10.Enums.DescriptorType.DescriptorType':
 --
 --     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
@@ -365,6 +381,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
@@ -1114,48 +1132,7 @@
 --
 -- == See Also
 --
--- 'AabbPositionsKHR', 'AccelerationStructureBuildGeometryInfoKHR',
--- 'AccelerationStructureBuildRangeInfoKHR',
--- 'AccelerationStructureBuildSizesInfoKHR',
--- 'AccelerationStructureBuildTypeKHR',
--- 'AccelerationStructureCompatibilityKHR',
--- 'AccelerationStructureCreateFlagBitsKHR',
--- 'AccelerationStructureCreateFlagsKHR',
--- 'AccelerationStructureCreateInfoKHR',
--- 'AccelerationStructureDeviceAddressInfoKHR',
--- 'AccelerationStructureGeometryAabbsDataKHR',
--- 'AccelerationStructureGeometryDataKHR',
--- 'AccelerationStructureGeometryInstancesDataKHR',
--- 'AccelerationStructureGeometryKHR',
--- 'AccelerationStructureGeometryTrianglesDataKHR',
--- 'AccelerationStructureInstanceKHR',
--- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
--- 'AccelerationStructureTypeKHR', 'AccelerationStructureVersionInfoKHR',
--- 'BuildAccelerationStructureFlagBitsKHR',
--- 'BuildAccelerationStructureFlagsKHR',
--- 'BuildAccelerationStructureModeKHR', 'CopyAccelerationStructureInfoKHR',
--- 'CopyAccelerationStructureModeKHR',
--- 'CopyAccelerationStructureToMemoryInfoKHR',
--- 'CopyMemoryToAccelerationStructureInfoKHR',
--- 'DeviceOrHostAddressConstKHR', 'DeviceOrHostAddressKHR',
--- 'GeometryFlagBitsKHR', 'GeometryFlagsKHR',
--- 'GeometryInstanceFlagBitsKHR', 'GeometryInstanceFlagsKHR',
--- 'GeometryTypeKHR', 'PhysicalDeviceAccelerationStructureFeaturesKHR',
--- 'PhysicalDeviceAccelerationStructurePropertiesKHR',
--- 'TransformMatrixKHR', 'WriteDescriptorSetAccelerationStructureKHR',
--- 'buildAccelerationStructuresKHR',
--- 'cmdBuildAccelerationStructuresIndirectKHR',
--- 'cmdBuildAccelerationStructuresKHR', 'cmdCopyAccelerationStructureKHR',
--- 'cmdCopyAccelerationStructureToMemoryKHR',
--- 'cmdCopyMemoryToAccelerationStructureKHR',
--- 'cmdWriteAccelerationStructuresPropertiesKHR',
--- 'copyAccelerationStructureKHR', 'copyAccelerationStructureToMemoryKHR',
--- 'copyMemoryToAccelerationStructureKHR',
--- 'createAccelerationStructureKHR', 'destroyAccelerationStructureKHR',
--- 'getAccelerationStructureBuildSizesKHR',
--- 'getAccelerationStructureDeviceAddressKHR',
--- 'getDeviceAccelerationStructureCompatibilityKHR',
--- 'writeAccelerationStructuresPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -140,7 +140,7 @@ createDescriptorUpdateTemplate :: forall io
                                -> -- | @pCreateInfo@ is a pointer to a 'DescriptorUpdateTemplateCreateInfo'
                                   -- structure specifying the set of descriptors to update with a single call
                                   -- to
-                                  -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR'
+                                  -- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.cmdPushDescriptorSetWithTemplateKHR'
                                   -- or 'updateDescriptorSetWithTemplate'.
                                   DescriptorUpdateTemplateCreateInfo
                                -> -- | @pAllocator@ controls host memory allocation as described in the
@@ -311,7 +311,7 @@ foreign import ccall
 --     @descriptorUpdateTemplate@ /must/ have been created, allocated, or
 --     retrieved from @device@
 --
--- __API example__
+-- __API Example__
 --
 -- > struct AppBufferView {
 -- >     VkBufferView bufferView;
@@ -322,8 +322,8 @@ foreign import ccall
 -- > {
 -- >     VkDescriptorImageInfo  imageInfo;          // a single image info
 -- >     VkDescriptorBufferInfo bufferInfoArray[3]; // 3 buffer infos in an array
--- >     AppBufferView          bufferView[2];      // An application defined structure containing a bufferView
--- >     // ... some more application related data
+-- >     AppBufferView          bufferView[2];      // An application-defined structure containing a bufferView
+-- >     // ... some more application-related data
 -- > };
 -- >
 -- > const VkDescriptorUpdateTemplateEntry descriptorUpdateTemplateEntries[] =
@@ -442,9 +442,8 @@ updateDescriptorSetWithTemplate device
 --     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     implicitly specified when using a descriptor update template to
---     update descriptors, and all applicable consecutive bindings, as
---     described by
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
+--     update descriptors, and all applicable
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02226# If
 --     @descriptor@ type is

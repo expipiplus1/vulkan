@@ -98,8 +98,6 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
 -- If a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>
 -- command is pending execution, then the value returned by this command

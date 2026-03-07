@@ -18,10 +18,12 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -97,8 +99,7 @@
 --
 -- == See Also
 --
--- 'ImageViewMinLodCreateInfoEXT',
--- 'PhysicalDeviceImageViewMinLodFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -143,7 +144,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT))
 -- | VkPhysicalDeviceImageViewMinLodFeaturesEXT - Structure describing
--- whether clamping the min LOD of a image view is supported by the
+-- whether clamping the min LOD of an image view is supported by the
 -- implementation
 --
 -- = Members

@@ -23,7 +23,11 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_external_memory VK_FUCHSIA_external_memory>
 --     and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
 --
@@ -193,21 +197,7 @@
 --
 -- == See Also
 --
--- 'BufferCollectionBufferCreateInfoFUCHSIA',
--- 'BufferCollectionConstraintsInfoFUCHSIA',
--- 'BufferCollectionCreateInfoFUCHSIA',
--- 'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA',
--- 'BufferCollectionImageCreateInfoFUCHSIA',
--- 'BufferCollectionPropertiesFUCHSIA', 'BufferConstraintsInfoFUCHSIA',
--- 'ImageConstraintsInfoFUCHSIA', 'ImageConstraintsInfoFlagBitsFUCHSIA',
--- 'ImageConstraintsInfoFlagsFUCHSIA',
--- 'ImageFormatConstraintsFlagsFUCHSIA',
--- 'ImageFormatConstraintsInfoFUCHSIA',
--- 'ImportMemoryBufferCollectionFUCHSIA', 'SysmemColorSpaceFUCHSIA',
--- 'createBufferCollectionFUCHSIA', 'destroyBufferCollectionFUCHSIA',
--- 'getBufferCollectionPropertiesFUCHSIA',
--- 'setBufferCollectionBufferConstraintsFUCHSIA',
--- 'setBufferCollectionImageConstraintsFUCHSIA'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -1058,7 +1048,7 @@ instance Zero BufferCollectionCreateInfoFUCHSIA where
 -- spaces provided in the
 -- 'ImageFormatConstraintsInfoFUCHSIA'::@pColorSpaces@ array.
 --
--- The implementation must have @formatFeatures@ with all bits set that
+-- The implementation /must/ have @formatFeatures@ with all bits set that
 -- were set in
 -- 'ImageFormatConstraintsInfoFUCHSIA'::@requiredFormatFeatures@, by the
 -- call to 'setBufferCollectionImageConstraintsFUCHSIA', at
@@ -1707,6 +1697,7 @@ instance Zero BufferCollectionConstraintsInfoFUCHSIA where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection VK_FUCHSIA_buffer_collection>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'ImageFormatConstraintsInfoFUCHSIA'
 newtype ImageFormatConstraintsFlagsFUCHSIA = ImageFormatConstraintsFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

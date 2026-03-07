@@ -88,9 +88,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexingFeatures
   { -- | #extension-features-shaderInputAttachmentArrayDynamicIndexing#
     -- @shaderInputAttachmentArrayDynamicIndexing@ indicates whether arrays of
-    -- input attachments /can/ be indexed by dynamically uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
+    -- input attachments /can/ be indexed by integer expressions that are
+    -- dynamically uniform within either the subgroup or the invocation group
+    -- in shader code. If this feature is not enabled, resources with a
+    -- descriptor type of
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
     -- /must/ be indexed only by constant integral expressions when aggregated
     -- into arrays in shader code. This also indicates whether shader modules
@@ -98,9 +99,10 @@ data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexing
     shaderInputAttachmentArrayDynamicIndexing :: Bool
   , -- | #extension-features-shaderUniformTexelBufferArrayDynamicIndexing#
     -- @shaderUniformTexelBufferArrayDynamicIndexing@ indicates whether arrays
-    -- of uniform texel buffers /can/ be indexed by dynamically uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
+    -- of uniform texel buffers /can/ be indexed by integer expressions that
+    -- are dynamically uniform within either the subgroup or the invocation
+    -- group in shader code. If this feature is not enabled, resources with a
+    -- descriptor type of
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
     -- /must/ be indexed only by constant integral expressions when aggregated
     -- into arrays in shader code. This also indicates whether shader modules
@@ -108,9 +110,10 @@ data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexing
     shaderUniformTexelBufferArrayDynamicIndexing :: Bool
   , -- | #extension-features-shaderStorageTexelBufferArrayDynamicIndexing#
     -- @shaderStorageTexelBufferArrayDynamicIndexing@ indicates whether arrays
-    -- of storage texel buffers /can/ be indexed by dynamically uniform integer
-    -- expressions in shader code. If this feature is not enabled, resources
-    -- with a descriptor type of
+    -- of storage texel buffers /can/ be indexed by integer expressions that
+    -- are dynamically uniform within either the subgroup or the invocation
+    -- group in shader code. If this feature is not enabled, resources with a
+    -- descriptor type of
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
     -- /must/ be indexed only by constant integral expressions when aggregated
     -- into arrays in shader code. This also indicates whether shader modules
@@ -437,40 +440,40 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
   , -- | #extension-limits-shaderUniformBufferArrayNonUniformIndexingNative#
     -- @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether uniform buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of uniform buffers /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderUniformBufferArrayNonUniformIndexingNative :: Bool
   , -- | #extension-limits-shaderSampledImageArrayNonUniformIndexingNative#
     -- @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether sampler and image descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of samplers or images /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderSampledImageArrayNonUniformIndexingNative :: Bool
   , -- | #extension-limits-shaderStorageBufferArrayNonUniformIndexingNative#
     -- @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether storage buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of storage buffers /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderStorageBufferArrayNonUniformIndexingNative :: Bool
   , -- | #extension-limits-shaderStorageImageArrayNonUniformIndexingNative#
     -- @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
-    -- indicating whether storage image descriptors natively support nonuniform
-    -- indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of storage images /may/ execute multiple times in order to access
-    -- all the descriptors.
+    -- indicating whether storage image descriptors natively support
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
+    -- indexes an array of storage images /may/ execute multiple times in order
+    -- to access all the descriptors.
     shaderStorageImageArrayNonUniformIndexingNative :: Bool
   , -- | #extension-limits-shaderInputAttachmentArrayNonUniformIndexingNative#
     -- @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether input attachment descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- then a single dynamic instance of an instruction that nonuniformly
+    -- non-uniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that non-uniformly
     -- indexes an array of input attachments /may/ execute multiple times in
     -- order to access all the descriptors.
     shaderInputAttachmentArrayNonUniformIndexingNative :: Bool
@@ -1047,16 +1050,16 @@ instance Zero DescriptorSetVariableDescriptorCountAllocateInfo where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'::@pCreateInfo@
 -- includes a variable-sized descriptor, then @supported@ is determined
 -- assuming the requested size of the variable-sized descriptor, and
--- @maxVariableDescriptorCount@ is set to the maximum size of that
--- descriptor that /can/ be successfully created (which is greater than or
--- equal to the requested size passed in). If the
+-- @maxVariableDescriptorCount@ is the maximum size of that descriptor that
+-- /can/ be successfully created (which is greater than or equal to the
+-- requested size passed in). If the
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
 -- does not include a variable-sized descriptor, or if the
 -- 'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingVariableDescriptorCount@
--- feature is not enabled, then @maxVariableDescriptorCount@ is set to
--- zero. For the purposes of this command, a variable-sized descriptor
--- binding with a @descriptorCount@ of zero is treated as having a
--- @descriptorCount@ of four if @descriptorType@ is
+-- feature is not enabled, then @maxVariableDescriptorCount@ is zero. For
+-- the purposes of this command, a variable-sized descriptor binding with a
+-- @descriptorCount@ of zero is treated as having a @descriptorCount@ of
+-- four if @descriptorType@ is
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
 -- or one otherwise, and thus the binding is not ignored and the maximum
 -- descriptor count will be returned. If the layout is not supported, then

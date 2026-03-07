@@ -24,7 +24,7 @@
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic VK_EXT_filter_cubic>
 --     and
 --         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --          or
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax VK_EXT_sampler_filter_minmax>
@@ -100,7 +100,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceCubicClampFeaturesQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

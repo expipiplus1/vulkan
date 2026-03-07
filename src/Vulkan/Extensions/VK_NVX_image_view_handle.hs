@@ -15,7 +15,7 @@
 --     31
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-04-03
+--     2024-11-04
 --
 -- [__Contributors__]
 --
@@ -40,6 +40,8 @@
 --     -   Jeff Bolz, NVIDIA
 --
 --     -   Daniel Koch, NVIDIA
+--
+--     -   Liam Middlebrook, NVIDIA
 --
 -- == Description
 --
@@ -50,6 +52,8 @@
 -- == New Commands
 --
 -- -   'getImageViewAddressNVX'
+--
+-- -   'getImageViewHandle64NVX'
 --
 -- -   'getImageViewHandleNVX'
 --
@@ -73,6 +77,10 @@
 --
 -- == Version History
 --
+-- -   Revision 3, 2024-11-04 (Liam Middlebrook)
+--
+--     -   Add 'getImageViewHandle64NVX'
+--
 -- -   Revision 2, 2020-04-03 (Piers Daniell)
 --
 --     -   Add 'getImageViewAddressNVX'
@@ -83,8 +91,7 @@
 --
 -- == See Also
 --
--- 'ImageViewAddressPropertiesNVX', 'ImageViewHandleInfoNVX',
--- 'getImageViewAddressNVX', 'getImageViewHandleNVX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -94,6 +101,7 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandleNVX
+                                                   , getImageViewHandle64NVX
                                                    , getImageViewAddressNVX
                                                    , ImageViewHandleInfoNVX(..)
                                                    , ImageViewAddressPropertiesNVX(..)
@@ -132,6 +140,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
+import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType)
@@ -140,6 +149,7 @@ import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewAddressNVX))
+import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandle64NVX))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandleNVX))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
@@ -198,6 +208,47 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
+  "dynamic" mkVkGetImageViewHandle64NVX
+  :: FunPtr (Ptr Device_T -> Ptr ImageViewHandleInfoNVX -> IO Word64) -> Ptr Device_T -> Ptr ImageViewHandleInfoNVX -> IO Word64
+
+-- | vkGetImageViewHandle64NVX - Get the 64-bit handle for an image view for
+-- a specific descriptor type
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
+-- 'Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'
+getImageViewHandle64NVX :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is the logical device that owns the image view.
+                           --
+                           -- #VUID-vkGetImageViewHandle64NVX-device-parameter# @device@ /must/ be a
+                           -- valid 'Vulkan.Core10.Handles.Device' handle
+                           Device
+                        -> -- | @pInfo@ describes the image view to query and type of handle.
+                           --
+                           -- #VUID-vkGetImageViewHandle64NVX-pInfo-parameter# @pInfo@ /must/ be a
+                           -- valid pointer to a valid 'ImageViewHandleInfoNVX' structure
+                           ImageViewHandleInfoNVX
+                        -> io (Word64)
+getImageViewHandle64NVX device info = liftIO . evalContT $ do
+  let vkGetImageViewHandle64NVXPtr = pVkGetImageViewHandle64NVX (case device of Device{deviceCmds} -> deviceCmds)
+  lift $ unless (vkGetImageViewHandle64NVXPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageViewHandle64NVX is null" Nothing Nothing
+  let vkGetImageViewHandle64NVX' = mkVkGetImageViewHandle64NVX vkGetImageViewHandle64NVXPtr
+  pInfo <- ContT $ withCStruct (info)
+  r <- lift $ traceAroundEvent "vkGetImageViewHandle64NVX" (vkGetImageViewHandle64NVX'
+                                                              (deviceHandle (device))
+                                                              pInfo)
+  pure $ (r)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
   "dynamic" mkVkGetImageViewAddressNVX
   :: FunPtr (Ptr Device_T -> ImageView -> Ptr ImageViewAddressPropertiesNVX -> IO Result) -> Ptr Device_T -> ImageView -> Ptr ImageViewAddressPropertiesNVX -> IO Result
 
@@ -212,8 +263,6 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
 --
 -- = See Also
 --
@@ -312,7 +361,7 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getImageViewHandleNVX'
+-- 'getImageViewHandle64NVX', 'getImageViewHandleNVX'
 data ImageViewHandleInfoNVX = ImageViewHandleInfoNVX
   { -- | @imageView@ is the image view to query.
     imageView :: ImageView
@@ -427,11 +476,11 @@ instance Zero ImageViewAddressPropertiesNVX where
            zero
 
 
-type NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 2
+type NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"
 pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION :: forall a . Integral a => a
-pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 2
+pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 3
 
 
 type NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME = "VK_NVX_image_view_handle"

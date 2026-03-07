@@ -136,8 +136,6 @@ foreign import ccall
 --     contents of data protected memory objects, even if those memory
 --     objects were previously freed.
 --
--- Note
---
 -- The contents of memory allocated by one application /should/ not be a
 -- function of data from protected memory objects of another application,
 -- even if those memory objects were previously freed.
@@ -149,16 +147,12 @@ foreign import ccall
 -- feature describes the number of allocations that /can/ exist
 -- simultaneously before encountering these internal limits.
 --
--- Note
---
 -- For historical reasons, if @maxMemoryAllocationCount@ is exceeded, some
 -- implementations may return
 -- 'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'. Exceeding this
 -- limit will result in undefined behavior, and an application should not
 -- rely on the use of the returned error code in order to identify when the
 -- limit is reached.
---
--- Note
 --
 -- Many protected memory implementations involve complex hardware and
 -- system software support, and often have additional and much lower limits
@@ -216,7 +210,7 @@ foreign import ccall
 --
 -- -   #VUID-vkAllocateMemory-pAllocateInfo-01713#
 --     @pAllocateInfo->allocationSize@ /must/ be less than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[@memindex@].@size@
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[memindex].@size@
 --     where @memindex@ =
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypes@[@pAllocateInfo->memoryTypeIndex@].@heapIndex@
 --     as returned by
@@ -357,8 +351,6 @@ foreign import ccall
 -- If a memory object is mapped at the time it is freed, it is implicitly
 -- unmapped.
 --
--- Note
---
 -- As described
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-unmap-does-not-flush below>,
 -- host writes are not implicitly flushed when the memory object is
@@ -435,12 +427,8 @@ foreign import ccall
 -- After a successful call to 'mapMemory' the memory object @memory@ is
 -- considered to be currently /host mapped/.
 --
--- Note
---
 -- It is an application error to call 'mapMemory' on a memory object that
 -- is already /host mapped/.
---
--- Note
 --
 -- 'mapMemory' will fail if the implementation is unable to allocate an
 -- appropriately sized contiguous virtual address range, e.g. due to
@@ -470,8 +458,6 @@ foreign import ccall
 -- While a range of device memory is host mapped, the application is
 -- responsible for synchronizing both device and host access to that memory
 -- range.
---
--- Note
 --
 -- It is important for the application developer to become meticulously
 -- familiar with all of the mechanisms described in the chapter on
@@ -614,7 +600,7 @@ foreign import ccall
 --
 -- Calling 'unmapMemory' is equivalent to calling
 -- 'Vulkan.Extensions.VK_KHR_map_memory2.unmapMemory2KHR' with an empty
--- @pNext@ chain and the flags parameter set to zero.
+-- @pNext@ chain and @flags@ set to zero.
 --
 -- == Valid Usage
 --
@@ -677,20 +663,49 @@ foreign import ccall
 -- using the 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT'
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>.
 --
--- Within each range described by @pMemoryRanges@, each set of
--- @nonCoherentAtomSize@ bytes in that range is flushed if any byte in that
--- set has been written by the host since it was first host mapped, or the
--- last time it was flushed. If @pMemoryRanges@ includes sets of
--- @nonCoherentAtomSize@ bytes where no bytes have been written by the
--- host, those bytes /must/ not be flushed.
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes all host operations that happened-before it, as defined by the
+-- host memory model.
+--
+-- Note
+--
+-- Some systems allow writes that do not directly integrate with the host
+-- memory model; these have to be synchronized by the application manually.
+-- One example of this is non-temporal store instructions on x86; to ensure
+-- these happen-before submission, applications should call @_mm_sfence()@.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- is empty.
+--
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- includes host writes to the specified memory ranges.
+--
+-- Note
+--
+-- When a host write to a memory location is made available in this way,
+-- each whole aligned set of
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nonCoherentAtomSize nonCoherentAtomSize>
+-- bytes that the memory location exists in will also be made available as
+-- if they were written by the host. For example, with a
+-- @nonCoherentAtomSize@ of 128, if an application writes to the first byte
+-- of a memory object via a host mapping, the first 128 bytes of the memory
+-- object will be made available by this command. While the value of the
+-- following 127 bytes will be unchanged, this does count as an access for
+-- the purpose of synchronization, so care must be taken to avoid data
+-- races.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- is empty.
 --
 -- Unmapping non-coherent memory does not implicitly flush the host mapped
 -- memory, and host writes that have not been flushed /may/ not ever be
 -- visible to the device. However, implementations /must/ ensure that
 -- writes that have not been flushed do not become visible to any other
 -- memory.
---
--- Note
 --
 -- The above guarantee avoids a potential memory corruption in scenarios
 -- where host writes to a mapped memory object have not been flushed before
@@ -764,12 +779,58 @@ foreign import ccall
 -- written by the host and then invalidated without first being flushed,
 -- its contents are undefined.
 --
--- Within each range described by @pMemoryRanges@, each set of
--- @nonCoherentAtomSize@ bytes in that range is invalidated if any byte in
--- that set has been written by the device since it was first host mapped,
--- or the last time it was invalidated.
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes all host operations that happened-before it, as defined by the
+-- host memory model.
 --
 -- Note
+--
+-- This function does not synchronize with device operations directly -
+-- other host
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization synchronization operations>
+-- that depend on device operations such as
+-- 'Vulkan.Core10.Fence.waitForFences' must be executed beforehand. So for
+-- any non-coherent device write to be made visible to the host, there has
+-- to be a dependency chain along the following lines:
+--
+-- 1.  Device write
+--
+-- 2.  Device memory barrier including host reads in its second scope
+--
+-- 3.  Signal on the device (e.g. a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>)
+--
+-- 4.  Wait on the host (e.g. 'Vulkan.Core10.Fence.waitForFences')
+--
+-- 5.  'invalidateMappedMemoryRanges'
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes all host operations that happen-after it, as defined by the
+-- host memory model.
+--
+-- The first
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- is empty.
+--
+-- The second
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- includes host reads to the specified memory ranges.
+--
+-- Note
+--
+-- When a device write to a memory location is made visible to the host in
+-- this way, each whole aligned set of
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-nonCoherentAtomSize nonCoherentAtomSize>
+-- bytes that the memory location exists in will also be made visible as if
+-- they were written by the device. For example, with a
+-- @nonCoherentAtomSize@ of 128, if an application writes to the first byte
+-- of a memory object on the device, the first 128 bytes of the memory
+-- object will be made visible by this command. While the value of the
+-- following 127 bytes will be unchanged, this does count as an access for
+-- the purpose of synchronization, so care must be taken to avoid data
+-- races.
 --
 -- Mapping non-coherent memory does not implicitly invalidate that memory.
 --
@@ -932,8 +993,6 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- Vulkan instance to obtain data from the exporting Vulkan instance or
 -- vice-versa.
 --
--- Note
---
 -- How exported and imported memory is isolated is left to the
 -- implementation, but applications should be aware that such isolation
 -- /may/ prevent implementations from placing multiple exportable memory
@@ -944,7 +1003,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- Importing memory /must/ not increase overall heap usage within a system.
 -- However, it /must/ affect the following per-process values:
 --
--- -   'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationCount@
+-- -   'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxMemoryAllocationCount@
 --
 -- -   'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'::@heapUsage@
 --
@@ -964,8 +1023,8 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- implementations /should/ not strictly follow @memoryTypeIndex@. Instead,
 -- they /should/ modify the allocation internally to use the required
 -- memory type for the application’s given usage. This is because for an
--- export operation, there is currently no way for the client to know the
--- memory type index before allocating.
+-- export operation, there is currently no way for the application to know
+-- the memory type index before allocating.
 --
 -- == Valid Usage
 --
@@ -991,7 +1050,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@collection@
 --     and
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@index@
---     must match
+--     /must/ match
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'::@collection@
 --     and
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'::@index@,
@@ -1008,7 +1067,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@collection@
 --     and
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@index@
---     must match
+--     /must/ match
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'::@collection@
 --     and
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'::@index@,
@@ -1326,7 +1385,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     the QNX Screen’s buffer must be a
+--     the QNX Screen’s buffer /must/ be a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-screen-buffer-validity valid QNX Screen buffer>
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-08945# If the parameters define an
@@ -1350,7 +1409,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', the width, height, and
 --     array layer dimensions of @image@ and the QNX Screen buffer’s
 --     'Vulkan.Extensions.VK_QNX_external_memory_screen_buffer.Screen_buffer'
---     must be identical
+--     /must/ be identical
 --
 -- -   #VUID-VkMemoryAllocateInfo-opaqueCaptureAddress-03329# If
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@

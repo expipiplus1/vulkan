@@ -43,7 +43,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/amd/GL_AMD_shader_fragment_mask.txt GL_AMD_shader_fragment_mask>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/amd/GL_AMD_shader_fragment_mask.txt GL_AMD_shader_fragment_mask>
 --
 -- [__Contributors__]
 --

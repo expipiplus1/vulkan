@@ -21,9 +21,13 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_storage_buffer_storage_class VK_KHR_storage_buffer_storage_class>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -85,7 +89,7 @@
 -- All functionality in this extension is included in core Vulkan 1.1, with
 -- the KHR suffix omitted, however support for the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-variablePointersStorageBuffer variablePointersStorageBuffer>
--- feature is made optional. The original type, enum and command names are
+-- feature is made optional. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Structures
@@ -146,8 +150,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceVariablePointerFeaturesKHR',
--- 'PhysicalDeviceVariablePointersFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -27,8 +27,6 @@ type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 --
 -- = Description
 --
--- Note
---
 -- The peer memory features of a memory heap also apply to any accesses
 -- that /may/ be performed during
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>.

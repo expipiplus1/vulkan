@@ -81,11 +81,11 @@ foreign import ccall
 --
 -- If @pToolProperties@ is @NULL@, then the number of tools currently
 -- active on @physicalDevice@ is returned in @pToolCount@. Otherwise,
--- @pToolCount@ /must/ point to a variable set by the user to the number of
--- elements in the @pToolProperties@ array, and on return the variable is
--- overwritten with the number of structures actually written to
--- @pToolProperties@. If @pToolCount@ is less than the number of currently
--- active tools, at most @pToolCount@ structures will be written.
+-- @pToolCount@ /must/ point to a variable set by the application to the
+-- number of elements in the @pToolProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pToolProperties@. If @pToolCount@ is less than the number of
+-- currently active tools, at most @pToolCount@ structures will be written.
 --
 -- The count and properties of active tools /may/ change in response to
 -- events outside the scope of the specification. An application /should/

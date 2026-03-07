@@ -158,8 +158,7 @@
 --
 -- == See Also
 --
--- 'XcbSurfaceCreateFlagsKHR', 'XcbSurfaceCreateInfoKHR',
--- 'createXcbSurfaceKHR', 'getPhysicalDeviceXcbPresentationSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -469,7 +468,7 @@ instance Zero XcbSurfaceCreateInfoKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xcb_surface VK_KHR_xcb_surface>,
--- 'XcbSurfaceCreateInfoKHR'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'XcbSurfaceCreateInfoKHR'
 newtype XcbSurfaceCreateFlagsKHR = XcbSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

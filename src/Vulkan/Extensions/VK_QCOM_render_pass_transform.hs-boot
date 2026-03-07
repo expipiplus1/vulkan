@@ -174,11 +174,11 @@
 -- > uint32_t  minor = ((driverVersion) >> 12) & 0x3ff);
 -- > uint32_t  patch = ((driverVersion) & 0xfff);
 --
--- If the Adreno major.minor.patch version is greater than or equal to to
+-- If the Adreno major.minor.patch version is greater than or equal to
 -- 512.469.0, then simply use the VK_STRUCTURE_TYPE values as defined in
--- vulkan_core.h. If the version is less than or equal to to 512.468.0,
--- then use the alternate values for the two VK_STRUCTURE_TYPEs in the
--- table below.
+-- vulkan_core.h. If the version is less than or equal to 512.468.0, then
+-- use the alternate values for the two VK_STRUCTURE_TYPEs in the table
+-- below.
 --
 -- +------------------------------------------------------------+------------------+------------------+
 -- |                                                            | Adreno Driver    |                  |
@@ -260,8 +260,7 @@
 --
 -- == See Also
 --
--- 'CommandBufferInheritanceRenderPassTransformInfoQCOM',
--- 'RenderPassTransformBeginInfoQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

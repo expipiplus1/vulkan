@@ -30,7 +30,7 @@ newtype MemoryMapFlagBits = MemoryMapFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'MEMORY_MAP_PLACED_BIT_EXT' requests that the implementation place the
--- memory map at the virtual address specified by the client via
+-- memory map at the virtual address specified by the application via
 -- 'Vulkan.Extensions.VK_EXT_map_memory_placed.MemoryMapPlacedInfoEXT'::@pPlacedAddress@,
 -- replacing any existing mapping at that address. This flag /must/ not be
 -- used with 'Vulkan.Core10.Memory.mapMemory' as there is no way to specify

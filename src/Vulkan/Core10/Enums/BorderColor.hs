@@ -58,14 +58,14 @@ pattern BORDER_COLOR_FLOAT_OPAQUE_WHITE = BorderColor 4
 -- white color.
 pattern BORDER_COLOR_INT_OPAQUE_WHITE = BorderColor 5
 
--- | 'BORDER_COLOR_INT_CUSTOM_EXT' indicates that a
+-- | 'BORDER_COLOR_INT_CUSTOM_EXT' specifies that a
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
 -- structure is included in the
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain containing the
 -- color data in integer format.
 pattern BORDER_COLOR_INT_CUSTOM_EXT = BorderColor 1000287004
 
--- | 'BORDER_COLOR_FLOAT_CUSTOM_EXT' indicates that a
+-- | 'BORDER_COLOR_FLOAT_CUSTOM_EXT' specifies that a
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
 -- structure is included in the
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain containing the

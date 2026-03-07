@@ -161,11 +161,7 @@
 --
 -- == See Also
 --
--- 'FragmentShadingRateNV', 'FragmentShadingRateTypeNV',
--- 'PhysicalDeviceFragmentShadingRateEnumsFeaturesNV',
--- 'PhysicalDeviceFragmentShadingRateEnumsPropertiesNV',
--- 'PipelineFragmentShadingRateEnumStateCreateInfoNV',
--- 'cmdSetFragmentShadingRateEnumNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

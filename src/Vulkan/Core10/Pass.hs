@@ -154,6 +154,10 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCreateFramebuffer-device-10002# @device@ /must/ support at
+--     least one queue family with the
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capability
+--
 -- -   #VUID-vkCreateFramebuffer-pCreateInfo-02777# If @pCreateInfo->flags@
 --     does not include
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
@@ -324,6 +328,12 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr (SomeStruct RenderPassCreateInfo) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct RenderPassCreateInfo) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
 
 -- | vkCreateRenderPass - Create a new render pass object
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCreateRenderPass-device-10000# @device@ /must/ support at
+--     least one queue family with the
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capability
 --
 -- == Valid Usage (Implicit)
 --
@@ -603,8 +613,6 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 -- -   Attachments using views of distinct image subresources which are
 --     bound to overlapping memory ranges.
 --
--- Note
---
 -- Render passes /must/ include subpass dependencies (either directly or
 -- via a subpass dependency chain) between any two subpasses that operate
 -- on the same attachment or aliasing attachments and those subpass
@@ -634,8 +642,6 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
 -- application /can/ assign the same image view to multiple aliasing
 -- attachment indices, which allows that image view to be used multiple
 -- times even if other aliases are used in between.
---
--- Note
 --
 -- Once an attachment needs the
 -- 'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
@@ -1103,7 +1109,7 @@ instance Zero AttachmentReference where
 -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the application /must/
 -- not read from the corresponding input attachment index. Fragment shaders
 -- /can/ use subpass input variables to access the contents of an input
--- attachment at the fragment’s (x, y, layer) framebuffer coordinates.
+-- attachment at the fragment’s (xf,yf) framebuffer coordinates and layer.
 -- Input attachments /must/ not be used by any subpasses within a render
 -- pass that enables
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
@@ -1702,8 +1708,6 @@ instance Zero SubpassDescription where
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-layout-transitions image layout transitions>
 -- within the render pass.
 --
--- Note
---
 -- For non-attachment resources, the memory dependency expressed by subpass
 -- dependency is nearly identical to that of a
 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' (with matching @srcAccessMask@
@@ -1764,11 +1768,11 @@ instance Zero SubpassDescription where
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubpassDependency-srcStageMask-07318# If neither the
+-- -   #VUID-VkSubpassDependency-srcStageMask-07318# If neither of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     or
+--     or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     are enabled, @srcStageMask@ /must/ not contain
+--     features are enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-VkSubpassDependency-srcStageMask-03937# If the
@@ -1777,9 +1781,9 @@ instance Zero SubpassDescription where
 --
 -- -   #VUID-VkSubpassDependency-srcStageMask-07949# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
---     extension or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
---     are enabled, @srcStageMask@ /must/ not contain
+--     extension or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     feature are enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-VkSubpassDependency-dstStageMask-04090# If the
@@ -1819,11 +1823,11 @@ instance Zero SubpassDescription where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubpassDependency-dstStageMask-07318# If neither the
+-- -   #VUID-VkSubpassDependency-dstStageMask-07318# If neither of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     or
+--     or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     are enabled, @dstStageMask@ /must/ not contain
+--     features are enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-VkSubpassDependency-dstStageMask-03937# If the
@@ -1832,9 +1836,9 @@ instance Zero SubpassDescription where
 --
 -- -   #VUID-VkSubpassDependency-dstStageMask-07949# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
---     extension or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
---     are enabled, @dstStageMask@ /must/ not contain
+--     extension or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     feature are enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-VkSubpassDependency-srcSubpass-00864# @srcSubpass@ /must/ be
@@ -2008,8 +2012,6 @@ instance Zero SubpassDependency where
 -- created render pass
 --
 -- = Description
---
--- Note
 --
 -- Care should be taken to avoid a data race here; if any subpasses access
 -- attachments with overlapping memory locations, and one of those accesses
@@ -2476,15 +2478,16 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     by @renderPass@ /must/ have a @layerCount@ that is either @1@, or
 --     greater than @layers@
 --
--- -   #VUID-VkFramebufferCreateInfo-renderPass-08921# If @renderPass@ was
---     specified with non-zero view masks, each element of @pAttachments@
---     that is used as a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
---     /must/ have a @layerCount@ equal to @1@ or greater than the index of
---     the most significant bit set in any of those view masks
---
--- -   #VUID-VkFramebufferCreateInfo-flags-04539# If @flags@ does not
---     include
+-- -   #VUID-VkFramebufferCreateInfo-flags-04539# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, @flags@ does not include
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     an element of @pAttachments@ that is used as a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
@@ -2494,8 +2497,16 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
 --     which references that attachment
 --
--- -   #VUID-VkFramebufferCreateInfo-flags-04540# If @flags@ does not
---     include
+-- -   #VUID-VkFramebufferCreateInfo-flags-04540# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, @flags@ does not include
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     an element of @pAttachments@ that is used as a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
@@ -2603,7 +2614,16 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     in @renderPass@ /must/ be greater than or equal to
 --     \(\left\lceil{\frac{height}{maxFragmentDensityTexelSize_{height}}}\right\rceil\)
 --
--- -   #VUID-VkFramebufferCreateInfo-flags-04543# If @flags@ includes
+-- -   #VUID-VkFramebufferCreateInfo-flags-04543# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, and @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     the @width@ member of any element of the @pAttachmentImageInfos@
 --     member of a
@@ -2616,7 +2636,16 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
 --     which references that attachment
 --
--- -   #VUID-VkFramebufferCreateInfo-flags-04544# If @flags@ includes
+-- -   #VUID-VkFramebufferCreateInfo-flags-04544# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+--     feature is not enabled or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustFragmentShadingRateAttachmentAccess robustFragmentShadingRateAttachmentAccess>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE' or the @imageView@
+--     member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
+--     structure was created with
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
+--     greater than 0, and @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     the @height@ member of any element of the @pAttachmentImageInfos@
 --     member of a
@@ -2640,12 +2669,14 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --
 -- -   #VUID-VkFramebufferCreateInfo-flags-04587# If @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT'
---     and @renderPass@ was specified with non-zero view masks, each
---     element of @pAttachments@ that is used as a
+--     and @renderPass@ was specified with non-zero view masks, the
+--     @layerCount@ member of any element of the @pAttachmentImageInfos@
+--     member of a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'
+--     structure in the @pNext@ chain that is used as a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
---     by @renderPass@ /must/ have a @layerCount@ that is either @1@, or
---     greater than the index of the most significant bit set in any of
---     those view masks
+--     /must/ be either @1@, or greater than the index of the most
+--     significant bit set in any of those view masks
 --
 -- -   #VUID-VkFramebufferCreateInfo-renderPass-03198# If multiview is
 --     enabled for @renderPass@ and @flags@ includes

@@ -25,8 +25,6 @@ type PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlagBits
 --
 -- = Description
 --
--- Note
---
 -- If
 -- 'Vulkan.Extensions.VK_EXT_subgroup_size_control.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 -- and

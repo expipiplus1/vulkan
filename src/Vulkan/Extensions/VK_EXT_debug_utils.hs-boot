@@ -18,7 +18,7 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -212,7 +212,7 @@
 -- @VK_EXT_debug_utils@ allows an application to register multiple
 -- callbacks with any Vulkan component wishing to report debug information.
 -- Some callbacks may log the information to a file, others may cause a
--- debug break point or other application defined behavior. An application
+-- debug break point or other application-defined behavior. An application
 -- /can/ register callbacks even when no validation layers are enabled, but
 -- they will only be called for loader and, if implemented, driver events.
 --
@@ -468,20 +468,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkDebugUtilsMessengerCallbackEXT', 'DebugUtilsLabelEXT',
--- 'DebugUtilsMessageSeverityFlagBitsEXT',
--- 'DebugUtilsMessageSeverityFlagsEXT', 'DebugUtilsMessageTypeFlagBitsEXT',
--- 'DebugUtilsMessageTypeFlagsEXT', 'DebugUtilsMessengerCallbackDataEXT',
--- 'DebugUtilsMessengerCallbackDataFlagsEXT',
--- 'DebugUtilsMessengerCreateFlagsEXT', 'DebugUtilsMessengerCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
--- 'DebugUtilsObjectNameInfoEXT', 'DebugUtilsObjectTagInfoEXT',
--- 'cmdBeginDebugUtilsLabelEXT', 'cmdEndDebugUtilsLabelEXT',
--- 'cmdInsertDebugUtilsLabelEXT', 'createDebugUtilsMessengerEXT',
--- 'destroyDebugUtilsMessengerEXT', 'queueBeginDebugUtilsLabelEXT',
--- 'queueEndDebugUtilsLabelEXT', 'queueInsertDebugUtilsLabelEXT',
--- 'setDebugUtilsObjectNameEXT', 'setDebugUtilsObjectTagEXT',
--- 'submitDebugUtilsMessageEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

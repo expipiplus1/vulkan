@@ -68,7 +68,7 @@ import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (withSomeCStruct)
 import Vulkan.NamedType ((:::))
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (AttachmentSampleCountInfoAMD)
+import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_mixed_attachment_samples (AttachmentSampleCountInfoAMD)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
@@ -100,7 +100,7 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
 import Vulkan.Core10.Handles (Framebuffer)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (MultiviewPerViewAttributesInfoNVX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (MultiviewPerViewAttributesInfoNVX)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -144,8 +144,6 @@ foreign import ccall
 -- implementation /must/ free all successfully allocated command buffer
 -- objects from this command, set all entries of the @pCommandBuffers@
 -- array to @NULL@ and return the error.
---
--- Note
 --
 -- Filling @pCommandBuffers@ with @NULL@ values on failure is an exception
 -- to the default error behavior that output parameters will have undefined
@@ -458,8 +456,6 @@ foreign import ccall
 -- used video compression standard do not adhere to the capabilities of the
 -- video compression standard or the implementation.
 --
--- Note
---
 -- Applications /should/ not rely on the
 -- @VK_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR@ error being returned by any
 -- command as a means to verify Video Std parameters, as implementations
@@ -752,13 +748,13 @@ instance Zero CommandBufferAllocateInfo where
 -- -   #VUID-VkCommandBufferInheritanceInfo-pNext-pNext# Each @pNext@
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD',
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD',
 --     'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
 --     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX',
+--     'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.MultiviewPerViewAttributesInfoNVX',
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfoKHR',
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
@@ -796,8 +792,6 @@ data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
     -- to if it is executed within a render pass instance. It /can/ be
     -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' if the framebuffer is not
     -- known.
-    --
-    -- Note
     --
     -- Specifying the exact framebuffer that the secondary command buffer will
     -- be executed with /may/ result in better performance at command buffer
@@ -947,9 +941,9 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --     the @renderPass@ member of @pInheritanceInfo@ is
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @pNext@ chain of
 --     @pInheritanceInfo@ includes a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
 --     structure, the @colorAttachmentCount@ member of that structure
 --     /must/ be equal to the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'::@colorAttachmentCount@

@@ -40,7 +40,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_invocation_reorder.txt GL_NV_shader_invocation_reorder>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_shader_invocation_reorder.txt GL_NV_shader_invocation_reorder>
 --
 -- [__Contributors__]
 --
@@ -94,7 +94,7 @@
 -- <https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen SPIR-V Intrinsics>.
 --
 -- The codes for shader invocation reorder are obtained from
--- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/NV/SPV_NV_shader_invocation_reorder.html this page>:
 --
 -- > #define ShaderInvocationReorderNV 5383
 -- > #define HitObjectAttributeNV 5385
@@ -222,9 +222,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRayTracingInvocationReorderFeaturesNV',
--- 'PhysicalDeviceRayTracingInvocationReorderPropertiesNV',
--- 'RayTracingInvocationReorderModeNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -350,8 +348,6 @@ instance Zero PhysicalDeviceRayTracingInvocationReorderFeaturesNV where
 --
 -- = Description
 --
--- Note
---
 -- Because the extension changes how hits are managed there is a
 -- compatibility reason to expose the extension even when an implementation
 -- does not have sorting active.
@@ -423,11 +419,11 @@ instance Zero PhysicalDeviceRayTracingInvocationReorderPropertiesNV where
 newtype RayTracingInvocationReorderModeNV = RayTracingInvocationReorderModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV' indicates that the
+-- | 'RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV' specifies that the
 -- implementation is likely to not reorder at reorder calls.
 pattern RAY_TRACING_INVOCATION_REORDER_MODE_NONE_NV = RayTracingInvocationReorderModeNV 0
 
--- | 'RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV' indicates that the
+-- | 'RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV' specifies that the
 -- implementation is likely to reorder at reorder calls.
 pattern RAY_TRACING_INVOCATION_REORDER_MODE_REORDER_NV = RayTracingInvocationReorderModeNV 1
 

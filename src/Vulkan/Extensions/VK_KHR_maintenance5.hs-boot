@@ -21,9 +21,13 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
---     and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__API Interactions__]
 --
@@ -138,8 +142,8 @@
 -- -   Relax VkBufferView creation requirements by allowing subsets of the
 --     associated VkBuffer usage using 'BufferUsageFlags2CreateInfoKHR'
 --
--- -   A new entry point 'cmdBindIndexBuffer2KHR', allowing a range of
---     memory to be bound as an index buffer
+-- -   A new command 'cmdBindIndexBuffer2KHR', allowing a range of memory
+--     to be bound as an index buffer
 --
 -- -   'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr' must return
 --     @NULL@ for supported core functions beyond the version requested by
@@ -187,7 +191,7 @@
 --     algorithm used
 --
 -- -   Two new flags words 'PipelineCreateFlagBits2KHR' and
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR'
+--     'BufferUsageFlagBits2KHR'
 --
 -- -   Physical-device-level functions can now be called with any value in
 --     the valid range for a type beyond the defined enumerants, such that
@@ -245,13 +249,13 @@
 --
 -- == New Enums
 --
--- -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR'
+-- -   'BufferUsageFlagBits2KHR'
 --
 -- -   'PipelineCreateFlagBits2KHR'
 --
 -- == New Bitmasks
 --
--- -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlags2KHR'
+-- -   'BufferUsageFlags2KHR'
 --
 -- -   'PipelineCreateFlags2KHR'
 --
@@ -286,6 +290,30 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_KHR'
 --
 -- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
+-- is supported:
+--
+-- -   Extending 'PipelineCreateFlagBits2KHR':
+--
+--     -   'PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>
+-- is supported:
+--
+-- -   Extending 'PipelineCreateFlagBits2KHR':
+--
+--     -   'PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_attachment_feedback_loop_layout VK_EXT_attachment_feedback_loop_layout>
 -- is supported:
 --
@@ -299,23 +327,21 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT'
+--     -   'BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
+--     -   'BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     -   'BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+--     -   'BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   Extending 'PipelineCreateFlagBits2KHR':
 --
@@ -335,12 +361,11 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
+--     -   'BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT'
+--     -   'BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT'
 --
 -- -   Extending 'PipelineCreateFlagBits2KHR':
 --
@@ -360,43 +385,21 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT'
+--     -   'BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT'
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
+--     -   'BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
+--     -   'BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
--- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
--- is supported:
---
--- -   Extending 'PipelineCreateFlagBits2KHR':
---
---     -   'PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
--- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>
--- is supported:
---
--- -   Extending 'PipelineCreateFlagBits2KHR':
---
---     -   'PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     -   'BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>
@@ -420,10 +423,9 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR'
+--     -   'BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR'
 --
 -- -   Extending 'PipelineCreateFlagBits2KHR':
 --
@@ -445,23 +447,21 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_video_decode_queue VK_KHR_video_decode_queue>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR'
+--     -   'BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR'
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR'
+--     -   'BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_video_encode_queue VK_KHR_video_encode_queue>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR'
+--     -   'BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR'
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR'
+--     -   'BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>
@@ -483,8 +483,7 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
 --     -   'BUFFER_USAGE_2_RAY_TRACING_BIT_NV'
 --
@@ -501,7 +500,7 @@
 --     -   'PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>
 -- is supported:
@@ -513,20 +512,19 @@
 --     -   'PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_buffer_device_address VK_EXT_buffer_device_address>
 -- is supported:
 --
--- -   Extending
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BufferUsageFlagBits2KHR':
+-- -   Extending 'BufferUsageFlagBits2KHR':
 --
---     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR'
+--     -   'BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control VK_EXT_pipeline_creation_cache_control>
 -- is supported:
@@ -549,12 +547,7 @@
 --
 -- == See Also
 --
--- 'DeviceImageSubresourceInfoKHR', 'ImageSubresource2KHR',
--- 'PhysicalDeviceMaintenance5FeaturesKHR',
--- 'PhysicalDeviceMaintenance5PropertiesKHR', 'RenderingAreaInfoKHR',
--- 'SubresourceLayout2KHR', 'cmdBindIndexBuffer2KHR',
--- 'getDeviceImageSubresourceLayoutKHR', 'getImageSubresourceLayout2KHR',
--- 'getRenderingAreaGranularityKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

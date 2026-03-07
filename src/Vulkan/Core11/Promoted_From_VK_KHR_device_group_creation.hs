@@ -88,15 +88,16 @@ foreign import ccall
 --
 -- If @pPhysicalDeviceGroupProperties@ is @NULL@, then the number of device
 -- groups available is returned in @pPhysicalDeviceGroupCount@. Otherwise,
--- @pPhysicalDeviceGroupCount@ /must/ point to a variable set by the user
--- to the number of elements in the @pPhysicalDeviceGroupProperties@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pPhysicalDeviceGroupProperties@. If
--- @pPhysicalDeviceGroupCount@ is less than the number of device groups
--- available, at most @pPhysicalDeviceGroupCount@ structures will be
--- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
--- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
--- all the available device groups were returned.
+-- @pPhysicalDeviceGroupCount@ /must/ point to a variable set by the
+-- application to the number of elements in the
+-- @pPhysicalDeviceGroupProperties@ array, and on return the variable is
+-- overwritten with the number of structures actually written to
+-- @pPhysicalDeviceGroupProperties@. If @pPhysicalDeviceGroupCount@ is less
+-- than the number of device groups available, at most
+-- @pPhysicalDeviceGroupCount@ structures will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available device groups were returned.
 --
 -- Every physical device /must/ be in exactly one device group.
 --

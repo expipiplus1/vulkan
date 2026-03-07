@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -74,7 +76,7 @@
 --
 -- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
 --
---     -   'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_CONTENTS_INLINE_BIT_EXT'
+--     -   'RENDERING_CONTENTS_INLINE_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -84,7 +86,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.SubpassContents.SubpassContents':
 --
---     -   'Vulkan.Core10.Enums.SubpassContents.SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT'
+--     -   'SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_EXT'
 --
 -- == Issues
 --
@@ -109,8 +111,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceNestedCommandBufferFeaturesEXT',
--- 'PhysicalDeviceNestedCommandBufferPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

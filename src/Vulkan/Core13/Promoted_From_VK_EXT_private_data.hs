@@ -307,8 +307,8 @@ setPrivateData :: forall io
                   -- #VUID-vkSetPrivateData-privateDataSlot-parent# @privateDataSlot@ /must/
                   -- have been created, allocated, or retrieved from @device@
                   PrivateDataSlot
-               -> -- | @data@ is user defined data to associate the object with. This data will
-                  -- be stored at @privateDataSlot@.
+               -> -- | @data@ is application-defined data to associate the object with. This
+                  -- data will be stored at @privateDataSlot@.
                   ("data" ::: Word64)
                -> io ()
 setPrivateData device
@@ -339,8 +339,6 @@ foreign import ccall
 -- | vkGetPrivateData - Retrieve data associated with a Vulkan object
 --
 -- = Description
---
--- Note
 --
 -- Due to platform details on Android, implementations might not be able to
 -- reliably return @0@ from calls to 'getPrivateData' for

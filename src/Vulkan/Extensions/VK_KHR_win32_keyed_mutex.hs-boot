@@ -78,7 +78,7 @@
 --
 -- == See Also
 --
--- 'Win32KeyedMutexAcquireReleaseInfoKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

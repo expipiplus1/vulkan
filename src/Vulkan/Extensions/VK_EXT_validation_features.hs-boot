@@ -80,7 +80,9 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
+-- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo',
+--     'Vulkan.Core10.Shader.ShaderModuleCreateInfo',
+--     'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT':
 --
 --     -   'ValidationFeaturesEXT'
 --
@@ -128,8 +130,7 @@
 --
 -- == See Also
 --
--- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT',
--- 'ValidationFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

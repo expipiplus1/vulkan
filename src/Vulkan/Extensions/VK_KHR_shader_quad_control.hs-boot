@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model VK_KHR_vulkan_memory_model>
 --     and
@@ -101,7 +101,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderQuadControlFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

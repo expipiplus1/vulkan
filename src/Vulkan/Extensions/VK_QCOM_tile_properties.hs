@@ -22,8 +22,12 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_KHR_dynamic_rendering
 --
@@ -77,6 +81,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'
@@ -101,9 +107,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceTilePropertiesFeaturesQCOM', 'TilePropertiesQCOM',
--- 'getDynamicRenderingTilePropertiesQCOM',
--- 'getFramebufferTilePropertiesQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -199,9 +203,9 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of tile properties available
 -- is returned in @pPropertiesCount@. Otherwise, @pPropertiesCount@ /must/
--- point to a variable set by the user to the number of elements in the
--- @pProperties@ array, and on return the variable is overwritten with the
--- number of properties actually written to @pProperties@. If
+-- point to a variable set by the application to the number of elements in
+-- the @pProperties@ array, and on return the variable is overwritten with
+-- the number of properties actually written to @pProperties@. If
 -- @pPropertiesCount@ is less than the number of tile properties available,
 -- at most @pPropertiesCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
@@ -244,6 +248,9 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     None
 --
 -- = See Also
 --
@@ -297,6 +304,9 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     None
 --
 -- = See Also
 --
@@ -414,8 +424,6 @@ instance Zero PhysicalDeviceTilePropertiesFeaturesQCOM where
 --
 -- All tiles will be tightly packed around the first tile, with edges being
 -- multiples of tile width and\/or height from the origin.
---
--- Note
 --
 -- Reported value for @apronSize@ will be zero and its functionality will
 -- be described in a future extension.

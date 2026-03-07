@@ -34,8 +34,6 @@ type ExternalSemaphoreHandleTypeFlags = ExternalSemaphoreHandleTypeFlagBits
 --
 -- = Description
 --
--- Note
---
 -- Handles of type 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT' generated
 -- by the implementation may represent either Linux Sync Files or Android
 -- Fences at the implementation’s discretion. Applications /should/ only
@@ -64,7 +62,7 @@ type ExternalSemaphoreHandleTypeFlags = ExternalSemaphoreHandleTypeFlagBits
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA' | No restriction                                                                                             | No restriction                                                                                             |
 -- +-----------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 --
--- External semaphore handle types compatibility
+-- External Semaphore Handle Types Compatibility
 --
 -- = See Also
 --

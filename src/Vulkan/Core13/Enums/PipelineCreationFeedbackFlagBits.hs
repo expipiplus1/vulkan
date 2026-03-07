@@ -49,12 +49,12 @@ type PipelineCreationFeedbackFlags = PipelineCreationFeedbackFlagBits
 newtype PipelineCreationFeedbackFlagBits = PipelineCreationFeedbackFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PIPELINE_CREATION_FEEDBACK_VALID_BIT' indicates that the feedback
+-- | 'PIPELINE_CREATION_FEEDBACK_VALID_BIT' specifies that the feedback
 -- information is valid.
 pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT = PipelineCreationFeedbackFlagBits 0x00000001
 
 -- | 'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT'
--- indicates that a readily usable pipeline or pipeline stage was found in
+-- specifies that a readily usable pipeline or pipeline stage was found in
 -- the @pipelineCache@ specified by the application in the pipeline
 -- creation command.
 --
@@ -69,8 +69,6 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT = PipelineCreationFeedbackFlagBits 
 -- sets this bit for the entire pipeline, it /may/ leave it unset for any
 -- stage.
 --
--- Note
---
 -- Implementations are encouraged to provide a meaningful signal to
 -- applications using this bit. The intention is to communicate to the
 -- application that the pipeline or pipeline stage was created “as fast as
@@ -79,7 +77,7 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT = PipelineCreationFeedbackFlagBits 
 -- this bit as the feedback would be unactionable.
 pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = PipelineCreationFeedbackFlagBits 0x00000002
 
--- | 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT' indicates
+-- | 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT' specifies
 -- that the base pipeline specified by the @basePipelineHandle@ or
 -- @basePipelineIndex@ member of the @Vk*PipelineCreateInfo@ structure was
 -- used to accelerate the creation of the pipeline.
@@ -88,8 +86,6 @@ pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = Pipeline
 -- 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT' bit if it
 -- was able to avoid a significant amount of work by using the base
 -- pipeline.
---
--- Note
 --
 -- While “significant amount of work” is subjective, implementations are
 -- encouraged to provide a meaningful signal to applications using this

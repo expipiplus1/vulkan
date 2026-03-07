@@ -130,7 +130,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetDeviceQueue-flags-01841#
 --     'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@ /must/ have
---     been set to zero when @device@ was created
+--     been zero when @device@ was created
 --
 -- == Valid Usage (Implicit)
 --
@@ -319,9 +319,9 @@ foreign import ccall
 --
 -- -   #VUID-vkQueueSubmit-pSubmits-02207# If any element of
 --     @pSubmits->pCommandBuffers@ includes a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire Queue Family Transfer Acquire Operation>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire Queue Family Ownership Transfer Acquire Operation>,
 --     there /must/ exist a previously submitted
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release Queue Family Transfer Release Operation>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release Queue Family Ownership Transfer Release Operation>
 --     on a queue in the queue family identified by the acquire operation,
 --     with parameters matching the acquire operation as defined in the
 --     definition of such
@@ -659,11 +659,11 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-07318# If neither the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-07318# If neither of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     or
+--     or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     are enabled, @pWaitDstStageMask@ /must/ not contain
+--     features are enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-VkSubmitInfo-pWaitDstStageMask-03937# If the
@@ -672,9 +672,9 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- -   #VUID-VkSubmitInfo-pWaitDstStageMask-07949# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
---     extension or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
---     are enabled, @pWaitDstStageMask@ /must/ not contain
+--     extension or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     feature are enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-VkSubmitInfo-pCommandBuffers-00075# Each element of

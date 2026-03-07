@@ -168,9 +168,7 @@
 --
 -- == See Also
 --
--- 'DedicatedAllocationBufferCreateInfoNV',
--- 'DedicatedAllocationImageCreateInfoNV',
--- 'DedicatedAllocationMemoryAllocateInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

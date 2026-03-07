@@ -23,7 +23,11 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
 --     and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__Contact__]
 --
@@ -142,8 +146,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceInvocationMaskFeaturesHUAWEI',
--- 'cmdBindInvocationMaskHUAWEI'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -311,9 +314,8 @@ cmdBindInvocationMaskHUAWEI :: forall io
                                -- recorded
                                CommandBuffer
                             -> -- | @imageView@ is an image view handle specifying the invocation mask image
-                               -- @imageView@ /may/ be set to 'Vulkan.Core10.APIConstants.NULL_HANDLE',
-                               -- which is equivalent to specifying a view of an image filled with ones
-                               -- value.
+                               -- @imageView@ /may/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE', which is
+                               -- equivalent to specifying a view of an image filled with ones value.
                                ImageView
                             -> -- | @imageLayout@ is the layout that the image subresources accessible from
                                -- @imageView@ will be in when the invocation mask image is accessed

@@ -22,10 +22,18 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_compute_shader_derivatives.html SPV_NV_compute_shader_derivatives>
+--
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_compute_shader_derivatives VK_KHR_compute_shader_derivatives>
+--         extension
 --
 -- [__Contact__]
 --
@@ -43,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_compute_shader_derivatives.txt GL_NV_compute_shader_derivatives>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_compute_shader_derivatives.txt GL_NV_compute_shader_derivatives>
 --
 -- [__Contributors__]
 --
@@ -81,13 +89,13 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV'
 --
 -- == New SPIR-V Capability
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupQuadsNV ComputeDerivativeGroupQuadsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupQuadsKHR ComputeDerivativeGroupQuadsNV>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupLinearNV ComputeDerivativeGroupLinearNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupLinearKHR ComputeDerivativeGroupLinearNV>
 --
 -- == Issues
 --
@@ -109,7 +117,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceComputeShaderDerivativesFeaturesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -118,118 +126,25 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_compute_shader_derivatives  ( PhysicalDeviceComputeShaderDerivativesFeaturesNV(..)
+module Vulkan.Extensions.VK_NV_compute_shader_derivatives  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
+                                                           , PhysicalDeviceComputeShaderDerivativesFeaturesNV
                                                            , NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
                                                            , pattern NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
                                                            , NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
                                                            , pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
+                                                           , PhysicalDeviceComputeShaderDerivativesFeaturesKHR(..)
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV))
--- | VkPhysicalDeviceComputeShaderDerivativesFeaturesNV - Structure
--- describing compute shader derivative features that can be supported by
--- an implementation
---
--- = Members
---
--- This structure describes the following features:
---
--- = Description
---
--- See
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-quad Quad shader scope>
--- for more information.
---
--- If the @VkPhysicalDeviceComputeShaderDerivativesFeaturesNVfeatures@.
--- structure is included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. @VkPhysicalDeviceComputeShaderDerivativesFeaturesNVfeatures@.
--- /can/ also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_compute_shader_derivatives VK_NV_compute_shader_derivatives>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceComputeShaderDerivativesFeaturesNV = PhysicalDeviceComputeShaderDerivativesFeaturesNV
-  { -- | #features-computeDerivativeGroupQuads# @computeDerivativeGroupQuads@
-    -- indicates that the implementation supports the
-    -- @ComputeDerivativeGroupQuadsNV@ SPIR-V capability.
-    computeDerivativeGroupQuads :: Bool
-  , -- | #features-computeDerivativeGroupLinear# @computeDerivativeGroupLinear@
-    -- indicates that the implementation supports the
-    -- @ComputeDerivativeGroupLinearNV@ SPIR-V capability.
-    computeDerivativeGroupLinear :: Bool
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
-#endif
-deriving instance Show PhysicalDeviceComputeShaderDerivativesFeaturesNV
+import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesKHR)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR))
+import Vulkan.Extensions.VK_KHR_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesKHR(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV = STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR
 
-instance ToCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceComputeShaderDerivativesFeaturesNV{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (computeDerivativeGroupQuads))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (computeDerivativeGroupLinear))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV where
-  peekCStruct p = do
-    computeDerivativeGroupQuads <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    computeDerivativeGroupLinear <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
-    pure $ PhysicalDeviceComputeShaderDerivativesFeaturesNV
-             (bool32ToBool computeDerivativeGroupQuads)
-             (bool32ToBool computeDerivativeGroupLinear)
-
-instance Storable PhysicalDeviceComputeShaderDerivativesFeaturesNV where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceComputeShaderDerivativesFeaturesNV where
-  zero = PhysicalDeviceComputeShaderDerivativesFeaturesNV
-           zero
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceComputeShaderDerivativesFeaturesNV"
+type PhysicalDeviceComputeShaderDerivativesFeaturesNV = PhysicalDeviceComputeShaderDerivativesFeaturesKHR
 
 
 type NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION = 1

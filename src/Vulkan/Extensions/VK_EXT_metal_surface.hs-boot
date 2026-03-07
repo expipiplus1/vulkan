@@ -81,8 +81,7 @@
 --
 -- == See Also
 --
--- 'CAMetalLayer', 'MetalSurfaceCreateFlagsEXT',
--- 'MetalSurfaceCreateInfoEXT', 'createMetalSurfaceEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

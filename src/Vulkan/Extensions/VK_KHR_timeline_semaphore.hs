@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -92,7 +94,7 @@
 -- == Promotion to Vulkan 1.2
 --
 -- All functionality in this extension is included in core Vulkan 1.2, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Commands
@@ -190,8 +192,8 @@
 -- signal-before-wait requirement as the existing semaphores do?
 --
 -- __RESOLVED__: No. Timeline semaphores support signaling and waiting
--- entirely asynchronously. It is the responsibility of the client to avoid
--- deadlock.
+-- entirely asynchronously. It is the responsibility of the application to
+-- avoid deadlock.
 --
 -- 4) Does the new synchronization primitive allow resetting its payload?
 --
@@ -242,7 +244,7 @@
 -- ordering requirements of the original 'Vulkan.Core10.Handles.Semaphore'?
 --
 -- __RESOLVED__: Prior to calling any command which /may/ cause a wait
--- operation on a binary semaphore, the client /must/ ensure that the
+-- operation on a binary semaphore, the application /must/ ensure that the
 -- semaphore signal operation that has been submitted for execution and any
 -- semaphore signal operations on which it depends (if any) /must/ have
 -- also been submitted for execution.
@@ -251,8 +253,9 @@
 -- timeline semaphores?
 --
 -- __RESOLVED__: No. The only feature which cannot be supported universally
--- is timeline semaphore import\/export. For import\/export, the client is
--- already required to query available external handle types via
+-- is timeline semaphore import\/export. For import\/export, the
+-- application is already required to query available external handle types
+-- via
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.getPhysicalDeviceExternalSemaphoreProperties'
 -- and provide the semaphore type by adding a 'SemaphoreTypeCreateInfoKHR'
 -- structure to the @pNext@ chain of
@@ -271,12 +274,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceTimelineSemaphoreFeaturesKHR',
--- 'PhysicalDeviceTimelineSemaphorePropertiesKHR',
--- 'SemaphoreSignalInfoKHR', 'SemaphoreTypeCreateInfoKHR',
--- 'SemaphoreTypeKHR', 'SemaphoreWaitFlagBitsKHR', 'SemaphoreWaitFlagsKHR',
--- 'SemaphoreWaitInfoKHR', 'TimelineSemaphoreSubmitInfoKHR',
--- 'getSemaphoreCounterValueKHR', 'signalSemaphoreKHR', 'waitSemaphoresKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

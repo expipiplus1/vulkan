@@ -23,7 +23,11 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 --     and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -47,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_opacity_micromap.txt GLSL_EXT_opacity_micromap>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_opacity_micromap.txt GLSL_EXT_opacity_micromap>
 --
 -- [__Contributors__]
 --
@@ -371,24 +375,7 @@
 --
 -- == See Also
 --
--- 'AccelerationStructureTrianglesOpacityMicromapEXT',
--- 'BuildMicromapFlagBitsEXT', 'BuildMicromapFlagsEXT',
--- 'BuildMicromapModeEXT', 'CopyMemoryToMicromapInfoEXT',
--- 'CopyMicromapInfoEXT', 'CopyMicromapModeEXT',
--- 'CopyMicromapToMemoryInfoEXT', 'MicromapBuildInfoEXT',
--- 'MicromapBuildSizesInfoEXT', 'MicromapCreateFlagBitsEXT',
--- 'MicromapCreateFlagsEXT', 'MicromapCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.MicromapEXT', 'MicromapTriangleEXT',
--- 'MicromapTypeEXT', 'MicromapUsageEXT', 'MicromapVersionInfoEXT',
--- 'OpacityMicromapFormatEXT', 'OpacityMicromapSpecialIndexEXT',
--- 'PhysicalDeviceOpacityMicromapFeaturesEXT',
--- 'PhysicalDeviceOpacityMicromapPropertiesEXT', 'buildMicromapsEXT',
--- 'cmdBuildMicromapsEXT', 'cmdCopyMemoryToMicromapEXT',
--- 'cmdCopyMicromapEXT', 'cmdCopyMicromapToMemoryEXT',
--- 'cmdWriteMicromapsPropertiesEXT', 'copyMemoryToMicromapEXT',
--- 'copyMicromapEXT', 'copyMicromapToMemoryEXT', 'createMicromapEXT',
--- 'destroyMicromapEXT', 'getDeviceMicromapCompatibilityEXT',
--- 'getMicromapBuildSizesEXT', 'writeMicromapsPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -627,8 +614,6 @@ foreign import ccall
 -- commands such as 'cmdBuildMicromapsEXT', 'buildMicromapsEXT',
 -- 'cmdCopyMicromapEXT', and 'copyMicromapEXT'.
 --
--- Note
---
 -- The expected usage for a trace capture\/replay tool is that it will
 -- serialize and later deserialize the micromap data using micromap copy
 -- commands. During capture the tool will use 'copyMicromapToMemoryEXT' or
@@ -754,8 +739,6 @@ foreign import ccall
 -- The 'cmdBuildMicromapsEXT' command provides the ability to initiate
 -- multiple micromaps builds, however there is no ordering or
 -- synchronization implied between any of the individual micromap builds.
---
--- Note
 --
 -- This means that there /cannot/ be any memory aliasing between any
 -- micromap memories or scratch memories being used by any of the builds.
@@ -964,8 +947,6 @@ foreign import ccall
 -- The 'buildMicromapsEXT' command provides the ability to initiate
 -- multiple micromaps builds, however there is no ordering or
 -- synchronization implied between any of the individual micromap builds.
---
--- Note
 --
 -- This means that there /cannot/ be any memory aliasing between any
 -- micromap memories or scratch memories being used by any of the builds.
@@ -1716,7 +1697,7 @@ cmdCopyMemoryToMicromapEXT :: forall io
                            => -- | @commandBuffer@ is the command buffer into which the command will be
                               -- recorded.
                               CommandBuffer
-                           -> -- | @pInfo@ is a pointer to a 'CopyMicromapToMemoryInfoEXT' structure
+                           -> -- | @pInfo@ is a pointer to a 'CopyMemoryToMicromapInfoEXT' structure
                               -- defining the copy operation.
                               CopyMemoryToMicromapInfoEXT
                            -> io ()
@@ -2035,20 +2016,21 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT'
 --
--- -   #VUID-vkWriteMicromapsPropertiesEXT-queryType-07573# If @queryType@
+-- -   #VUID-vkWriteMicromapsPropertiesEXT-queryType-10071# If @queryType@
 --     is
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT',
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT'
 --     then @stride@ /must/ be a multiple of the size of
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
--- -   #VUID-vkWriteMicromapsPropertiesEXT-queryType-07574# If @queryType@
+-- -   #VUID-vkWriteMicromapsPropertiesEXT-queryType-10072# If @queryType@
 --     is
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT',
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT'
 --     then @pData@ /must/ point to a
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
---
--- -   #VUID-vkWriteMicromapsPropertiesEXT-queryType-07575# If @queryType@
---     is
 --
 -- -   #VUID-vkWriteMicromapsPropertiesEXT-dataSize-07576# @dataSize@
 --     /must/ be greater than or equal to @micromapCount@*@stride@
@@ -2120,8 +2102,8 @@ writeMicromapsPropertiesEXT :: forall io
                                QueryType
                             -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
                                ("dataSize" ::: Word64)
-                            -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
-                               -- be written.
+                            -> -- | @pData@ is a pointer to an application-allocated buffer where the
+                               -- results will be written.
                                ("data" ::: Ptr ())
                             -> -- | @stride@ is the stride in bytes between results for individual queries
                                -- within @pData@.
@@ -2508,8 +2490,6 @@ instance Zero MicromapBuildInfoEXT where
 -- 'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 -- errors.
 --
--- Note
---
 -- The expected usage for this is that a trace capture\/replay tool will
 -- add the
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
@@ -2663,8 +2643,6 @@ instance Zero MicromapCreateInfoEXT where
 -- | VkMicromapVersionInfoEXT - Micromap version information
 --
 -- = Description
---
--- Note
 --
 -- @pVersionData@ is a /pointer/ to an array of
 -- 2×'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values instead of two
@@ -3614,11 +3592,11 @@ type BuildMicromapFlagsEXT = BuildMicromapFlagBitsEXT
 newtype BuildMicromapFlagBitsEXT = BuildMicromapFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT' indicates that the given
+-- | 'BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT' specifies that the given
 -- micromap build /should/ prioritize trace performance over build time.
 pattern BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT = BuildMicromapFlagBitsEXT 0x00000001
 
--- | 'BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT' indicates that the given
+-- | 'BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT' specifies that the given
 -- micromap build /should/ prioritize build time over trace performance.
 pattern BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT = BuildMicromapFlagBitsEXT 0x00000002
 
@@ -3835,8 +3813,6 @@ instance Read BuildMicromapModeEXT where
 --
 -- = Description
 --
--- Note
---
 -- For compactness, these values are stored as 16-bit in some structures.
 --
 -- = See Also
@@ -3847,12 +3823,12 @@ newtype OpacityMicromapFormatEXT = OpacityMicromapFormatEXT Int32
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' indicates that the given micromap
+-- | 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' specifies that the given micromap
 -- format has one bit per subtriangle encoding either fully opaque or fully
 -- transparent.
 pattern OPACITY_MICROMAP_FORMAT_2_STATE_EXT = OpacityMicromapFormatEXT 1
 
--- | 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' indicates that the given micromap
+-- | 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' specifies that the given micromap
 -- format has two bits per subtriangle encoding four modes which can be
 -- interpreted as described in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-opacity-micromap ray traversal>.

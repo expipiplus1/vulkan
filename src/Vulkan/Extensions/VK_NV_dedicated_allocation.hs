@@ -168,9 +168,7 @@
 --
 -- == See Also
 --
--- 'DedicatedAllocationBufferCreateInfoNV',
--- 'DedicatedAllocationImageCreateInfoNV',
--- 'DedicatedAllocationMemoryAllocateInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -218,8 +216,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEDICATED
 -- to a dedicated memory resource
 --
 -- = Description
---
--- Note
 --
 -- Using a dedicated allocation for color and depth\/stencil attachments or
 -- other large images /may/ improve performance on some devices.

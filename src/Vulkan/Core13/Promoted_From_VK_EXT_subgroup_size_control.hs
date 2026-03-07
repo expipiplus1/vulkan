@@ -56,8 +56,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
 -- selectively enable these features.
 --
--- Note
---
 -- The
 -- 'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeaturesEXT'
 -- structure was added in version 2 of the @VK_EXT_subgroup_size_control@
@@ -179,7 +177,7 @@ data PhysicalDeviceSubgroupSizeControlProperties = PhysicalDeviceSubgroupSizeCon
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @minSubgroupSize@
     -- is a power-of-two. @minSubgroupSize@ is less than or equal to
     -- @maxSubgroupSize@. @minSubgroupSize@ is less than or equal to
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroupSize subgroupSize>.
     minSubgroupSize :: Word32
   , -- | #extension-limits-maxSubgroupSize# @maxSubgroupSize@ is the maximum
     -- subgroup size supported by this device. @maxSubgroupSize@ is at least
@@ -188,7 +186,7 @@ data PhysicalDeviceSubgroupSizeControlProperties = PhysicalDeviceSubgroupSizeCon
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @maxSubgroupSize@
     -- is a power-of-two. @maxSubgroupSize@ is greater than or equal to
     -- @minSubgroupSize@. @maxSubgroupSize@ is greater than or equal to
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroupSize subgroupSize>.
     maxSubgroupSize :: Word32
   , -- | #extension-limits-maxComputeWorkgroupSubgroups#
     -- @maxComputeWorkgroupSubgroups@ is the maximum number of subgroups

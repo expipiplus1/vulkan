@@ -21,13 +21,25 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--                     
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--                      or
+--                     
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--                  and
+--                 
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
---     and
+--                  and
+--                 
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
+--          and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__API Interactions__]
 --
@@ -275,25 +287,7 @@
 --
 -- == See Also
 --
--- 'BufferCaptureDescriptorDataInfoEXT', 'DescriptorAddressInfoEXT',
--- 'DescriptorBufferBindingInfoEXT',
--- 'DescriptorBufferBindingPushDescriptorBufferHandleEXT',
--- 'DescriptorDataEXT', 'DescriptorGetInfoEXT',
--- 'ImageCaptureDescriptorDataInfoEXT',
--- 'ImageViewCaptureDescriptorDataInfoEXT',
--- 'OpaqueCaptureDescriptorDataCreateInfoEXT',
--- 'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT',
--- 'PhysicalDeviceDescriptorBufferFeaturesEXT',
--- 'PhysicalDeviceDescriptorBufferPropertiesEXT',
--- 'SamplerCaptureDescriptorDataInfoEXT',
--- 'cmdBindDescriptorBufferEmbeddedSamplersEXT',
--- 'cmdBindDescriptorBuffersEXT', 'cmdSetDescriptorBufferOffsetsEXT',
--- 'getBufferOpaqueCaptureDescriptorDataEXT', 'getDescriptorEXT',
--- 'getDescriptorSetLayoutBindingOffsetEXT',
--- 'getDescriptorSetLayoutSizeEXT',
--- 'getImageOpaqueCaptureDescriptorDataEXT',
--- 'getImageViewOpaqueCaptureDescriptorDataEXT',
--- 'getSamplerOpaqueCaptureDescriptorDataEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -791,7 +785,7 @@ getDescriptorEXT :: forall io
                     ("descriptorInfo" ::: DescriptorGetInfoEXT)
                  -> -- | @dataSize@ is the amount of the descriptor data to get in bytes.
                     ("dataSize" ::: Word64)
-                 -> -- | @pDescriptor@ is a pointer to a user-allocated buffer where the
+                 -> -- | @pDescriptor@ is a pointer to an application-allocated buffer where the
                     -- descriptor will be written.
                     ("descriptor" ::: Ptr ())
                  -> io ()
@@ -839,17 +833,21 @@ foreign import ccall
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-maxSamplerDescriptorBufferBindings-08048#
 --     There /must/ be no more than
 --     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@maxSamplerDescriptorBufferBindings@
---     descriptor buffers containing sampler descriptor data bound
+--     elements in @pBindingInfos@ with
+--     'DescriptorBufferBindingInfoEXT'::@usage@ containing
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-maxResourceDescriptorBufferBindings-08049#
 --     There /must/ be no more than
 --     'PhysicalDeviceDescriptorBufferPropertiesEXT'::@maxResourceDescriptorBufferBindings@
---     descriptor buffers containing resource descriptor data bound
+--     elements in @pBindingInfos@ with
+--     'DescriptorBufferBindingInfoEXT'::@usage@ containing
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-None-08050# There /must/ be no
---     more than @1@ descriptor buffer bound that was created with the
+--     more than @1@ element in @pBindingInfos@ with
+--     'DescriptorBufferBindingInfoEXT'::@usage@ containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
---     bit set
 --
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-bufferCount-08051# @bufferCount@
 --     /must/ be less than or equal to
@@ -993,8 +991,6 @@ foreign import ccall
 -- /may/ read /must/ be in-bounds of the underlying descriptor buffer
 -- binding.
 --
--- Note
---
 -- Applications can freely decide how large a variable descriptor buffer
 -- binding is, so it may not be safe to read such descriptor payloads
 -- statically. The intention of these rules is to allow implementations to
@@ -1006,15 +1002,11 @@ foreign import ccall
 -- will result in invalid descriptor data being read, and therefore
 -- undefined behavior.
 --
--- Note
---
 -- For descriptors written by the host, visibility is implied through the
 -- automatic visibility operation on queue submit, and there is no need to
 -- consider @VK_ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT@. Explicit
 -- synchronization for descriptors is only required when descriptors are
 -- updated on the device.
---
--- Note
 --
 -- The requirements above imply that all descriptor bindings have been
 -- defined with the equivalent of
@@ -1335,7 +1327,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetBufferOpaqueCaptureDescriptorDataEXT-None-08072# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetBufferOpaqueCaptureDescriptorDataEXT-pData-08073# @pData@
@@ -1383,8 +1375,8 @@ getBufferOpaqueCaptureDescriptorDataEXT :: forall io
                                         -> -- | @pInfo@ is a pointer to a 'BufferCaptureDescriptorDataInfoEXT' structure
                                            -- specifying the buffer.
                                            BufferCaptureDescriptorDataInfoEXT
-                                        -> -- | @pData@ is a pointer to a user-allocated buffer where the data will be
-                                           -- written.
+                                        -> -- | @pData@ is a pointer to an application-allocated buffer where the data
+                                           -- will be written.
                                            ("data" ::: Ptr ())
                                         -> io ()
 getBufferOpaqueCaptureDescriptorDataEXT device
@@ -1415,7 +1407,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetImageOpaqueCaptureDescriptorDataEXT-None-08076# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetImageOpaqueCaptureDescriptorDataEXT-pData-08077# @pData@
@@ -1463,8 +1455,8 @@ getImageOpaqueCaptureDescriptorDataEXT :: forall io
                                        -> -- | @pInfo@ is a pointer to a 'ImageCaptureDescriptorDataInfoEXT' structure
                                           -- specifying the image.
                                           ImageCaptureDescriptorDataInfoEXT
-                                       -> -- | @pData@ is a pointer to a user-allocated buffer where the data will be
-                                          -- written.
+                                       -> -- | @pData@ is a pointer to an application-allocated buffer where the data
+                                          -- will be written.
                                           ("data" ::: Ptr ())
                                        -> io ()
 getImageOpaqueCaptureDescriptorDataEXT device
@@ -1495,7 +1487,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetImageViewOpaqueCaptureDescriptorDataEXT-None-08080# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetImageViewOpaqueCaptureDescriptorDataEXT-pData-08081#
@@ -1543,8 +1535,8 @@ getImageViewOpaqueCaptureDescriptorDataEXT :: forall io
                                            -> -- | @pInfo@ is a pointer to a 'ImageViewCaptureDescriptorDataInfoEXT'
                                               -- structure specifying the image view.
                                               ImageViewCaptureDescriptorDataInfoEXT
-                                           -> -- | @pData@ is a pointer to a user-allocated buffer where the data will be
-                                              -- written.
+                                           -> -- | @pData@ is a pointer to an application-allocated buffer where the data
+                                              -- will be written.
                                               ("data" ::: Ptr ())
                                            -> io ()
 getImageViewOpaqueCaptureDescriptorDataEXT device
@@ -1575,7 +1567,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetSamplerOpaqueCaptureDescriptorDataEXT-None-08084# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetSamplerOpaqueCaptureDescriptorDataEXT-pData-08085#
@@ -1623,8 +1615,8 @@ getSamplerOpaqueCaptureDescriptorDataEXT :: forall io
                                          -> -- | @pInfo@ is a pointer to a 'SamplerCaptureDescriptorDataInfoEXT'
                                             -- structure specifying the sampler.
                                             SamplerCaptureDescriptorDataInfoEXT
-                                         -> -- | @pData@ is a pointer to a user-allocated buffer where the data will be
-                                            -- written.
+                                         -> -- | @pData@ is a pointer to an application-allocated buffer where the data
+                                            -- will be written.
                                             ("data" ::: Ptr ())
                                          -> io ()
 getSamplerOpaqueCaptureDescriptorDataEXT device
@@ -1656,7 +1648,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT-None-08088#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBufferCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT-pData-08089#
@@ -1708,8 +1700,8 @@ getAccelerationStructureOpaqueCaptureDescriptorDataEXT :: forall io
                                                           -- 'AccelerationStructureCaptureDescriptorDataInfoEXT' structure specifying
                                                           -- the acceleration structure.
                                                           AccelerationStructureCaptureDescriptorDataInfoEXT
-                                                       -> -- | @pData@ is a pointer to a user-allocated buffer where the data will be
-                                                          -- written.
+                                                       -> -- | @pData@ is a pointer to an application-allocated buffer where the data
+                                                          -- will be written.
                                                           ("data" ::: Ptr ())
                                                        -> io ()
 getAccelerationStructureOpaqueCaptureDescriptorDataEXT device
@@ -1850,9 +1842,9 @@ instance Zero PhysicalDeviceDescriptorBufferFeaturesEXT where
 --
 -- As there is no way to request robust and non-robust descriptors
 -- separately, or specify robust\/non-robust descriptors in the set layout,
--- if
+-- if the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
--- is enabled then robust descriptors are always used.
+-- feature is enabled then robust descriptors are always used.
 --
 -- If the 'PhysicalDeviceDescriptorBufferPropertiesEXT' structure is
 -- included in the @pNext@ chain of the
@@ -1902,16 +1894,19 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- bytes when setting offsets into the descriptor buffer.
     descriptorBufferOffsetAlignment :: DeviceSize
   , -- | #limits-maxDescriptorBufferBindings# @maxDescriptorBufferBindings@
-    -- indicates the maximum sum total number of descriptor buffers and
-    -- embedded immutable sampler sets that /can/ be bound.
+    -- indicates the maximum number of descriptor buffer bindings.
     maxDescriptorBufferBindings :: Word32
   , -- | #limits-maxResourceDescriptorBufferBindings#
     -- @maxResourceDescriptorBufferBindings@ indicates the maximum number of
-    -- resource descriptor buffers that /can/ be bound.
+    -- descriptor buffer bindings with
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+    -- that /can/ be used.
     maxResourceDescriptorBufferBindings :: Word32
   , -- | #limits-maxSamplerDescriptorBufferBindings#
     -- @maxSamplerDescriptorBufferBindings@ indicates the maximum number of
-    -- sampler descriptor buffers that /can/ be bound.
+    -- descriptor buffer bindings with
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+    -- that /can/ be used.
     maxSamplerDescriptorBufferBindings :: Word32
   , -- | #limits-maxEmbeddedImmutableSamplerBindings#
     -- @maxEmbeddedImmutableSamplerBindings@ indicates the maximum number of
@@ -2445,9 +2440,9 @@ instance Zero DescriptorAddressInfoEXT where
 --
 -- = Description
 --
--- If a
+-- If the @pNext@ chain includes a
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
--- structure is present in the @pNext@ chain,
+-- structure,
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@
 -- from that structure is used instead of @usage@ from this structure.
 --
@@ -2456,13 +2451,13 @@ instance Zero DescriptorAddressInfoEXT where
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09499# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ must be a valid combination of
+--     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09500# If the @pNext@
 --     chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ must not be 0
+--     structure, @usage@ /must/ not be 0
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-bufferlessPushDescriptors-08056#
 --     If
@@ -3250,8 +3245,8 @@ instance Zero AccelerationStructureCaptureDescriptorDataInfoEXT where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data OpaqueCaptureDescriptorDataCreateInfoEXT = OpaqueCaptureDescriptorDataCreateInfoEXT
-  { -- | @opaqueCaptureDescriptorData@ is a pointer to a user-allocated buffer
-    -- containing opaque capture data retrieved using
+  { -- | @opaqueCaptureDescriptorData@ is a pointer to an application-allocated
+    -- buffer containing opaque capture data retrieved using
     -- 'getBufferOpaqueCaptureDescriptorDataEXT',
     -- 'getImageOpaqueCaptureDescriptorDataEXT',
     -- 'getImageViewOpaqueCaptureDescriptorDataEXT',

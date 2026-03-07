@@ -21,9 +21,13 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
---     and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__Contact__]
 --
@@ -339,7 +343,7 @@
 -- 8) How do we allow re-using already “generated” @indirectCommands@?
 --
 -- Expose a @preprocessBuffer@ to reuse implementation-dependencyFlags
--- data. Set the @isPreprocessed@ to true in
+-- data. Set @isPreprocessed@ to 'Vulkan.Core10.FundamentalTypes.TRUE' in
 -- 'cmdExecuteGeneratedCommandsNV'.
 --
 -- 9) Under which conditions is 'cmdExecuteGeneratedCommandsNV' legal?
@@ -521,23 +525,7 @@
 --
 -- == See Also
 --
--- 'BindIndexBufferIndirectCommandNV', 'BindShaderGroupIndirectCommandNV',
--- 'BindVertexBufferIndirectCommandNV', 'GeneratedCommandsInfoNV',
--- 'GeneratedCommandsMemoryRequirementsInfoNV',
--- 'GraphicsPipelineShaderGroupsCreateInfoNV',
--- 'GraphicsShaderGroupCreateInfoNV', 'IndirectCommandsLayoutCreateInfoNV',
--- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV',
--- 'IndirectCommandsLayoutTokenNV',
--- 'IndirectCommandsLayoutUsageFlagBitsNV',
--- 'IndirectCommandsLayoutUsageFlagsNV', 'IndirectCommandsStreamNV',
--- 'IndirectCommandsTokenTypeNV', 'IndirectStateFlagBitsNV',
--- 'IndirectStateFlagsNV',
--- 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
--- 'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV',
--- 'SetStateFlagsIndirectCommandNV', 'cmdBindPipelineShaderGroupNV',
--- 'cmdExecuteGeneratedCommandsNV', 'cmdPreprocessGeneratedCommandsNV',
--- 'createIndirectCommandsLayoutNV', 'destroyIndirectCommandsLayoutNV',
--- 'getGeneratedCommandsMemoryRequirementsNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -734,23 +722,69 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-magFilter-04553# If a
 --     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
---     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
---     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
---     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-mipmapMode-04770# If a
---     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
---     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
 --     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
 --     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-magFilter-09598# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-mipmapMode-09599# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-unnormalizedCoordinates-09635#
+--     If a 'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @levelCount@ and @layerCount@ /must/ be 1
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-unnormalizedCoordinates-09636#
+--     If a 'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @viewType@ /must/ be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06479# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
@@ -819,7 +853,7 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-cubicRangeClamp-09212# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-cubicRangeClamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ not have a
@@ -837,7 +871,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-selectableCubicWeights-09214#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ have
@@ -908,6 +942,13 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
 --     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-10068# For each array of
+--     resources that is used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     the indices used to access members of the array /must/ be less than
+--     the descriptor count for the identified binding in the descriptor
+--     sets used by this command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
@@ -988,9 +1029,9 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08608# If a pipeline is
 --     bound to the pipeline bind point used by this command, there /must/
 --     not have been any calls to dynamic state setting commands for any
---     state not specified as dynamic in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     state specified statically in the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command, since
+--     that pipeline was bound
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -1030,11 +1071,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08607# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
+--     feature is enabled, either a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command, or a valid combination of
+--     valid and 'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects
+--     /must/ be bound to every supported shader stage corresponding to the
+--     pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-uniformBuffers-06935# If any
 --     stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to the
@@ -1106,7 +1147,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
 --     command, then the image view’s @viewType@ /must/ match the @Dim@
 --     operand of the @OpTypeImage@ as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-image-dimensions ???>
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-format-07753# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
@@ -1260,7 +1301,7 @@ foreign import ccall
 --     If a @OpImageBlockMatchWindow*QCOM@ or
 --     @OpImageBlockMatchGather*QCOM@ instruction is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
---     the image view’s format /must/ be a single-component format.
+--     the image view’s format /must/ be a single-component format
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageBlockMatchWindow-09217#
 --     If a @OpImageBlockMatchWindow*QCOM@ or
@@ -1272,6 +1313,18 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07288# Any shader
 --     invocation executed by this command /must/
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09600# If a descriptor
+--     with type equal to any of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     is accessed as a result of this command, the image subresource
+--     identified by that descriptor /must/ be in the image layout
+--     identified when the descriptor was written
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderPass-02684# The current
 --     render pass /must/ be
@@ -1304,9 +1357,36 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.Format.Format' as the corresponding subpass
 --     definition, and be created with a 'Vulkan.Core10.Handles.ImageView'
 --     that is compatible with the attachment referenced by the subpass\'
---     @pInputAttachments@[@InputAttachmentIndex@] in the currently bound
+--     @pInputAttachments@[@InputAttachmentIndex@] in the bound
 --     'Vulkan.Core10.Handles.Framebuffer' as specified by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compatibility-inputattachment Fragment Input Attachment Compatibility>
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDepthInputAttachmentIndex-09595#
+--     Input attachment views accessed in a dynamic render pass with a
+--     @InputAttachmentIndex@ referenced by
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR',
+--     or no @InputAttachmentIndex@ if
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR':@pDepthInputAttachmentIndex@
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR':@pStencilInputAttachmentIndex@
+--     are @NULL@, /must/ be created with a
+--     'Vulkan.Core10.Handles.ImageView' that is compatible with the
+--     corresponding color, depth, or stencil attachment in
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDepthInputAttachmentIndex-09596#
+--     Input attachment views accessed in a dynamic render pass via a
+--     shader object /must/ have an @InputAttachmentIndex@ if both
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR':@pDepthInputAttachmentIndex@
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR':@pStencilInputAttachmentIndex@
+--     are non-@NULL@
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-InputAttachmentIndex-09597# If
+--     an input attachment view accessed in a dynamic render pass via a
+--     shader object has an @InputAttachmentIndex@, the
+--     @InputAttachmentIndex@ /must/ match an index in
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06537# Memory backing
 --     image subresources used as attachments in the current render pass
@@ -1322,7 +1402,7 @@ foreign import ccall
 --
 --     -   the
 --         'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
---         is set on the currently bound pipeline or
+--         is set on the bound pipeline or
 --
 --     -   the last call to
 --         'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state.cmdSetAttachmentFeedbackLoopEnableEXT'
@@ -1330,12 +1410,13 @@ foreign import ccall
 --         'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --         and
 --
---         -   there is no currently bound graphics pipeline or
+--         -   there is no bound graphics pipeline or
 --
---         -   the currently bound graphics pipeline was created with
+--         -   the bound graphics pipeline was created with
 --             'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
---             it /must/ not be accessed in any way other than as an
---             attachment by this command
+--
+--     it /must/ not be accessed in any way other than as an attachment by
+--     this command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09001# If a depth
 --     attachment is written by any prior command in this subpass or by the
@@ -1346,7 +1427,7 @@ foreign import ccall
 --
 --     -   the
 --         'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
---         is set on the currently bound pipeline or
+--         is set on the bound pipeline or
 --
 --     -   the last call to
 --         'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state.cmdSetAttachmentFeedbackLoopEnableEXT'
@@ -1354,12 +1435,13 @@ foreign import ccall
 --         'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --         and
 --
---         -   there is no currently bound graphics pipeline or
+--         -   there is no bound graphics pipeline or
 --
---         -   the currently bound graphics pipeline was created with
+--         -   the bound graphics pipeline was created with
 --             'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
---             it /must/ not be accessed in any way other than as an
---             attachment by this command
+--
+--     it /must/ not be accessed in any way other than as an attachment by
+--     this command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09002# If a stencil
 --     attachment is written by any prior command in this subpass or by the
@@ -1370,7 +1452,7 @@ foreign import ccall
 --
 --     -   the
 --         'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
---         is set on the currently bound pipeline or
+--         is set on the bound pipeline or
 --
 --     -   the last call to
 --         'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state.cmdSetAttachmentFeedbackLoopEnableEXT'
@@ -1378,12 +1460,13 @@ foreign import ccall
 --         'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --         and
 --
---         -   there is no currently bound graphics pipeline or
+--         -   there is no bound graphics pipeline or
 --
---         -   the currently bound graphics pipeline was created with
+--         -   the bound graphics pipeline was created with
 --             'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
---             it /must/ not be accessed in any way other than as an
---             attachment by this command
+--
+--     it /must/ not be accessed in any way other than as an attachment by
+--     this command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09003# If an attachment
 --     is written by any prior command in this subpass or by the load,
@@ -1415,23 +1498,27 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' dynamic
 --     state enabled then
 --     'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport' /must/ have
---     been called in the current command buffer prior to this drawing
---     command
+--     been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07832# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' dynamic
 --     state enabled then
 --     'Vulkan.Core10.CommandBufferBuilding.cmdSetScissor' /must/ have been
---     called in the current command buffer prior to this drawing command
+--     called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07833# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_WIDTH' dynamic
 --     state enabled then
 --     'Vulkan.Core10.CommandBufferBuilding.cmdSetLineWidth' /must/ have
---     been called in the current command buffer prior to this drawing
---     command
+--     been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08617# If a shader object
 --     is bound to any graphics stage, and the most recent call to
@@ -1442,8 +1529,9 @@ foreign import ccall
 --     in the current command buffer set @polygonMode@ to
 --     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE',
 --     'Vulkan.Core10.CommandBufferBuilding.cmdSetLineWidth' /must/ have
---     been called in the current command buffer prior to this drawing
---     command
+--     been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08618# If a shader object
 --     is bound to any graphics stage, and the most recent call to
@@ -1453,8 +1541,9 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     in the current command buffer set @primitiveTopology@ to any line
 --     topology, 'Vulkan.Core10.CommandBufferBuilding.cmdSetLineWidth'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08619# If a shader object
 --     that outputs line primitives is bound to the
@@ -1466,38 +1555,34 @@ foreign import ccall
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE',
 --     'Vulkan.Core10.CommandBufferBuilding.cmdSetLineWidth' /must/ have
---     been called in the current command buffer prior to this drawing
---     command
+--     been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07834# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07834# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' dynamic
---     state enabled then
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBias' or
+--     state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @depthBiasEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBounds' or
 --     'Vulkan.Extensions.VK_EXT_depth_bias_control.cmdSetDepthBias2EXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08620# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
---     in the current command buffer set @depthBiasEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE',
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBias' or
---     'Vulkan.Extensions.VK_EXT_depth_bias_control.cmdSetDepthBias2EXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07835# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_BLEND_CONSTANTS'
 --     dynamic state enabled then
 --     'Vulkan.Core10.CommandBufferBuilding.cmdSetBlendConstants' /must/
---     have been called in the current command buffer prior to this drawing
---     command
+--     have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08621# If a shader object
 --     is bound to the
@@ -1521,92 +1606,69 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA', or
 --     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA',
 --     'Vulkan.Core10.CommandBufferBuilding.cmdSetBlendConstants' /must/
---     have been called in the current command buffer prior to this drawing
---     command
+--     have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07836# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07836# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS'
---     dynamic state enabled, and if the current @depthBoundsTestEnable@
---     state is 'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBounds' /must/ have
---     been called in the current command buffer prior to this drawing
---     command
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @depthBoundsTestEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBounds' /must/
+--     have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08622# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
---     in the current command buffer set @depthBoundsTestEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBounds' /must/ have
---     been called in the current command buffer prior to this drawing
---     command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07837# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07837# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_COMPARE_MASK'
---     dynamic state enabled, and if the current @stencilTestEnable@ state
---     is 'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilCompareMask'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @stencilTestEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilCompareMask'
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08623# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
---     in the current command buffer set @stencilTestEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE',
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilCompareMask'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07838# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07838# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK'
---     dynamic state enabled, and if the current @stencilTestEnable@ state
---     is 'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilWriteMask' /must/
---     have been called in the current command buffer prior to this drawing
---     command
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @stencilTestEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilWriteMask'
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08624# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
---     in the current command buffer set @stencilTestEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE',
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilWriteMask' /must/
---     have been called in the current command buffer prior to this drawing
---     command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07839# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07839# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE'
---     dynamic state enabled, and if the current @stencilTestEnable@ state
---     is 'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilReference' /must/
---     have been called in the current command buffer prior to this drawing
---     command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08625# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
---     in the current command buffer set @stencilTestEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE',
---     'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilReference' /must/
---     have been called in the current command buffer prior to this drawing
---     command
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of and @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @stencilTestEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilReference'
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-maxMultiviewInstanceIndex-02688#
 --     If the draw is recorded in a render pass instance with multiview
@@ -1622,220 +1684,175 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06666# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08626# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07634# If the
+--     @VK_EXT_sample_locations@ extension is enabled, a shader object is
+--     bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
---     in the current command buffer set @sampleLocationsEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06666# If the
+--     @VK_EXT_sample_locations@ extension is enabled, a shader object is
+--     bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @sampleLocationsEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
 --     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07840# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07840# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE' dynamic
---     state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08627# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetCullMode'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07841# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07841# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRONT_FACE' dynamic
---     state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetFrontFace'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08628# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetFrontFace'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07843# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07843# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE'
---     dynamic state enabled then
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08629# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07844# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07844# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08630# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07845# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07845# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP'
---     dynamic state enabled then
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @depthTestEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08631# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthTestEnable'
---     in the current command buffer set @depthTestEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07846# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08632# If a shader object
---     is bound to any graphics stage, and the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07846# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthBounds depthBounds>
---     feature is enabled, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then the
+--     feature is enabled, a shader object is bound to any graphics stage
+--     or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07847# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07847# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08633# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07848# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07848# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP' dynamic
---     state enabled then
+--     state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @stencilTestEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08634# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilTestEnable'
---     in the current command buffer set @stencilTestEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-03417# If the
---     bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-03417# If a
+--     shader object is bound to any graphics stage or a graphics pipeline
+--     is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
---     dynamic state enabled, but not the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
---     dynamic state enabled, then
+--     dynamic state enabled, and the state is not inherited, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
---     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
---     /must/ match the
---     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
---     of the pipeline
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-scissorCount-03418# If the
---     bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-scissorCount-03418# If a
+--     shader object is bound to any graphics stage or a graphics pipeline
+--     is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
---     dynamic state enabled, but not the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
---     dynamic state enabled, then
+--     dynamic state enabled, and the state is not inherited, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
---     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @scissorCount@ parameter of
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
---     /must/ match the
---     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
---     of the pipeline
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-03419# If the
---     bound graphics pipeline state was created with both the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-03419# If a
+--     shader object is bound to any graphics stage or a graphics pipeline
+--     is bound which was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
---     dynamic states enabled then both
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
---     and
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
---     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
---     /must/ match the @scissorCount@ parameter of
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08635# If a shader object
---     is bound to any graphics stage, then both
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
---     and
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
---     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @viewportCount@ parameter of
+--     dynamic states enabled, and the state is not inherited, then the
+--     @viewportCount@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
@@ -1853,32 +1870,31 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-04138# If the
---     bound graphics pipeline state was created with the
+--     @VK_NV_clip_space_w_scaling@ extension is enabled, and a shader
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
---     dynamic states enabled then the @viewportCount@ parameter in the
---     last call to
---     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
---     /must/ be greater than or equal to the @viewportCount@ parameter in
---     the last call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09232# If the
---     @VK_NV_clip_space_w_scaling@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
---     in the current command buffer set @viewportWScalingEnable@ to
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @viewportWScalingEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08636# If the
 --     @VK_NV_clip_space_w_scaling@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
---     in the current command buffer set @viewportWScalingEnable@ to
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @viewportWScalingEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then the @viewportCount@
 --     parameter in the last call to
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
@@ -1898,52 +1914,52 @@ foreign import ccall
 --     to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewportCount-04140# If the
---     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
---     and
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
---     dynamic states enabled then the @viewportCount@ parameter in the
---     last call to
---     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
---     /must/ be greater than or equal to the @viewportCount@ parameter in
---     the last call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
---
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-shadingRateImage-09233# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV'
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetCoarseSampleOrderNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-shadingRateImage-09234# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
---     in the current command buffer set @shadingRateImageEnable@ to
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @shadingRateImageEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08637# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
---     in the current command buffer set @shadingRateImageEnable@ to
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @shadingRateImageEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then the @viewportCount@
 --     parameter in the last call to
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
@@ -1977,95 +1993,70 @@ foreign import ccall
 --     to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07878# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07878# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage or a graphics pipeline is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV'
---     dynamic state enabled then
+--     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07879# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07879# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
+--     feature is enabled, a shader object is bound to any graphics stage
+--     or a graphics pipeline is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-exclusiveScissor-09235# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
---     feature is enabled, and a shader object is bound to any graphics
---     stage, then
---     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08638# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusiveScissor>
---     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
+--     dynamic state enabled, and the most recent call to
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorEnableNV'
 --     in the current command buffer set any element of
 --     @pExclusiveScissorEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     then
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04876# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04876# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
---     dynamic state enabled then
+--     dynamic state enabled, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08639# If a shader object
---     is bound to any graphics stage, then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04877# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04877# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE'
---     dynamic state enabled then
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08640# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-logicOp-04878# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command and the @logicOp@ /must/ be a valid
---     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08641# If a shader object
---     is bound to the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-logicOp-04878# If a shader
+--     object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
---     set @logicOpEnable@ to 'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @logicOpEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command and the @logicOp@ /must/ be a valid
---     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -2133,9 +2124,9 @@ foreign import ccall
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
 --         feature
 --
---     then @rasterizationSamples@ for the currently bound graphics
---     pipeline /must/ be the same as the current subpass color and\/or
---     depth\/stencil attachments
+--     then @rasterizationSamples@ for the bound graphics pipeline /must/
+--     be the same as the current subpass color and\/or depth\/stencil
+--     attachments
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08644# If a shader object
 --     is bound to any graphics stage, and the most recent call to
@@ -2220,8 +2211,7 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewMask-06178# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound graphics pipeline /must/ have been created with
---     a
+--     the bound graphics pipeline /must/ have been created with a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
 --     equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
@@ -2232,8 +2222,7 @@ foreign import ccall
 --     feature is not enabled and the current render pass instance was
 --     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound graphics pipeline /must/ have been created with
---     a
+--     the bound graphics pipeline /must/ have been created with a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --     equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
@@ -2253,7 +2242,7 @@ foreign import ccall
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
---     used to create the currently bound graphics pipeline
+--     used to create the bound graphics pipeline
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicRenderingUnusedAttachments-08912#
 --     If the
@@ -2269,7 +2258,7 @@ foreign import ccall
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
---     used to create the currently bound pipeline equal to
+--     used to create the bound pipeline equal to
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicRenderingUnusedAttachments-08911#
@@ -2287,8 +2276,8 @@ foreign import ccall
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
---     used to create the currently bound graphics pipeline, or the
---     corresponding element of
+--     used to create the bound graphics pipeline, or the corresponding
+--     element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@,
 --     if it exists, /must/ be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
@@ -2309,7 +2298,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
 --     value equal to the
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
---     value used to create the currently bound graphics pipeline
+--     value used to create the bound graphics pipeline
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09363# If there is no
 --     shader object bound to any graphics stage, the current render pass
@@ -2327,13 +2316,13 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
 --     value equal to the
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
---     value used to create the currently bound graphics pipeline
+--     value used to create the bound graphics pipeline
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09364# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     there is no shader object bound to any graphics stage, and the
---     currently bound graphics pipeline was created with a non-zero
+--     there is no shader object bound to any graphics stage, and the bound
+--     graphics pipeline was created with a non-zero
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
 --     value and with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
@@ -2345,8 +2334,8 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09365# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     there is no shader object bound to any graphics stage, and the
---     currently bound graphics pipeline was created with a non-zero
+--     there is no shader object bound to any graphics stage, and the bound
+--     graphics pipeline was created with a non-zero
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
 --     value and with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
@@ -2378,8 +2367,8 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09368# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     there is no shader object bound to any graphics stage, and the
---     currently bound graphics pipeline was created with a non-zero
+--     there is no shader object bound to any graphics stage, and the bound
+--     graphics pipeline was created with a non-zero
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
 --     value and with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
@@ -2391,8 +2380,8 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09369# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     there is no shader object bound to any graphics stage, and the
---     currently bound graphics pipeline was created with a non-zero
+--     there is no shader object bound to any graphics stage, and the bound
+--     graphics pipeline was created with a non-zero
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'::@externalFormat@
 --     value and with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
@@ -2424,21 +2413,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08646# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
---     feature is enabled on the device, and a shader object is bound to
---     the
+--     feature is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-attachmentCount-07750# If the
 --     bound graphics pipeline state was created with the
@@ -2447,12 +2437,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
 --     /must/ be greater than or equal to the
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
---     of the currently bound graphics pipeline
+--     of the bound graphics pipeline
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08647# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
---     feature is enabled on the device, and a shader object is bound to
---     the
+--     feature is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -2468,17 +2457,42 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command for each discard rectangle in
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command for each
+--     discard rectangle in
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07880# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07880# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, a shader object is
+--     bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT'
---     dynamic state enabled then
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07881# If the
+--     @VK_EXT_discard_rectangles@ extension is enabled, a shader object is
+--     bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @discardRectangleEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-rasterizerDiscardEnable-09236#
 --     If the @VK_EXT_discard_rectangles@ extension is enabled, and a
@@ -2491,39 +2505,9 @@ foreign import ccall
 --     in the current command buffer set @discardRectangleEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08648# If the
---     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
---     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07881# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08649# If the
---     @VK_EXT_discard_rectangles@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEnableEXT'
---     in the current command buffer set @discardRectangleEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicRenderingUnusedAttachments-08913#
 --     If the current render pass instance was begun with
@@ -2534,8 +2518,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--     used to create the bound graphics pipeline /must/ be equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicRenderingUnusedAttachments-08914#
 --     If current render pass instance was begun with
@@ -2546,8 +2530,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     used to create the bound graphics pipeline /must/ be equal to the
+--     'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicRenderingUnusedAttachments-08915#
@@ -2559,8 +2543,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', and the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
---     used to create the currently bound graphics pipeline was not equal
---     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     used to create the bound graphics pipeline was not equal to the
+--     'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@,
 --     the value of the format /must/ be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
@@ -2574,8 +2558,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--     used to create the bound graphics pipeline /must/ be equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicRenderingUnusedAttachments-08917#
 --     If current render pass instance was begun with
@@ -2586,8 +2570,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     used to create the bound graphics pipeline /must/ be equal to the
+--     'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicRenderingUnusedAttachments-08918#
@@ -2599,8 +2583,8 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', and the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
---     used to create the currently bound graphics pipeline was not equal
---     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     used to create the bound graphics pipeline was not equal to the
+--     'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@,
 --     the value of the format /must/ be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
@@ -2609,25 +2593,25 @@ foreign import ccall
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
---     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
---     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the bound graphics
+--     pipeline /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06184# If the
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
---     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
---     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the bound graphics
+--     pipeline /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-colorAttachmentCount-06185# If
---     the currently bound pipeline was created with a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     the bound pipeline was created with a
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
 --     structure, and the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
@@ -2638,52 +2622,52 @@ foreign import ccall
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a sample count equal to the corresponding element of the
 --     @pColorAttachmentSamples@ member of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     used to create the currently bound graphics pipeline
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
+--     used to create the bound graphics pipeline
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDepthAttachment-06186# If the
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound pipeline was created with a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     the bound pipeline was created with a
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
 --     structure, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
+--     used to create the bound graphics pipeline /must/ be equal to the
+--     sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStencilAttachment-06187# If
 --     the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound pipeline was created with a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     the bound pipeline was created with a
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
 --     structure, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     used to create the currently bound graphics pipeline /must/ be equal
---     to the sample count used to create
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
+--     used to create the bound graphics pipeline /must/ be equal to the
+--     sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-multisampledRenderToSingleSampled-07285#
---     If the currently bound pipeline was created without a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     If the bound pipeline was created without a
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
 --     structure, and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
 --     feature is not enabled, and the current render pass instance was
@@ -2696,34 +2680,34 @@ foreign import ccall
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a sample count equal to the value of @rasterizationSamples@ for
---     the currently bound graphics pipeline
+--     the bound graphics pipeline
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-multisampledRenderToSingleSampled-07286#
---     If the currently bound pipeline was created without a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     If the bound pipeline was created without a
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
 --     structure, and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     @rasterizationSamples@ for the currently bound graphics pipeline
---     /must/ be equal to the sample count used to create
+--     @rasterizationSamples@ for the bound graphics pipeline /must/ be
+--     equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-multisampledRenderToSingleSampled-07287#
---     If the currently bound pipeline was created without a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     If the bound pipeline was created without a
+--     'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --     or
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.AttachmentSampleCountInfoNV'
 --     structure, and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
 --     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     @rasterizationSamples@ for the currently bound graphics pipeline
---     /must/ be equal to the sample count used to create
+--     @rasterizationSamples@ for the bound graphics pipeline /must/ be
+--     equal to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pNext-07935# If this command
@@ -2735,14 +2719,14 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
 --     structure with @multisampledRenderToSingleSampledEnable@ equal to
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then the value of
---     @rasterizationSamples@ for the currently bound graphics pipeline
---     /must/ be equal to
+--     @rasterizationSamples@ for the bound graphics pipeline /must/ be
+--     equal to
 --     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderPass-06198# If the
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     the currently bound pipeline /must/ have been created with a
+--     the bound pipeline /must/ have been created with a
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -2798,99 +2782,69 @@ foreign import ccall
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07619# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07620# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09237# If a shader object
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07619# If a shader object
 --     is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
---     stage, then
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
+--     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08650# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07620# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClamp depthClamp>
---     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     feature is enabled, a shader object is bound to any graphics stage
+--     or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07621# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07621# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08651# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07622# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07622# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08652# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07623# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07623# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08653# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07624# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-alphaToCoverageEnable-08919#
 --     If the bound graphics pipeline state was created with the
@@ -2903,15 +2857,6 @@ foreign import ccall
 --     /must/ contain a variable for the alpha @Component@ word in
 --     @Location@ 0 at @Index@ 0
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08654# If a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-alphaToCoverageEnable-08920#
 --     If a shader object is bound to any graphics stage, and the most
 --     recent call to
@@ -2922,71 +2867,78 @@ foreign import ccall
 --     /must/ contain a variable for the alpha @Component@ word in
 --     @Location@ 0 at @Index@ 0
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07625# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07624# If a shader object
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08655# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07625# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
---     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     feature is enabled, a shader object is bound to any graphics stage
+--     or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07626# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08656# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07626# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logicOp>
---     feature is enabled, and a shader object is bound to the
+--     feature is enabled, a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07627# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08657# If a shader object
 --     is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
+--     stage, and both the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core10.FundamentalTypes.FALSE' and there are color
+--     attachments bound, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07628# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08658# If a shader object
 --     is bound to the
@@ -2999,128 +2951,95 @@ foreign import ccall
 --     for any attachment set that attachment’s value in
 --     @pColorBlendEnables@ to 'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07629# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08659# If a shader object
 --     is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
+--     stage, and both the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core10.FundamentalTypes.FALSE' and there are color
+--     attachments bound, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07630# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08660# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07630# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryStreams geometryStreams>
 --     feature is enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
---     stage, then
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07631# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07631# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, a shader
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08661# If the
---     @VK_EXT_conservative_rasterization@ extension is enabled, and a
---     shader object is bound to any graphics stage, and the most recent
---     call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07632# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07632# If the
+--     @VK_EXT_conservative_rasterization@ extension is enabled, a shader
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08662# If the
---     @VK_EXT_conservative_rasterization@ extension is enabled, and a
---     shader object is bound to any graphics stage, and the most recent
---     call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
---     in the current command buffer set @conservativeRasterizationMode@ to
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @conservativeRasterizationMode@ is
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT',
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07633# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08663# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07633# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipEnable depthClipEnable>
 --     feature is enabled, and a shader object is bound to any graphics
---     stage, then
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
+--     dynamic state, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07634# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08664# If the
---     @VK_EXT_sample_locations@ extension is enabled, and a shader object
---     is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07635# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-rasterizerDiscardEnable-09416#
 --     If the @VK_EXT_blend_operation_advanced@ extension is enabled, and a
@@ -3133,41 +3052,41 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07636# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08665# If the
---     @VK_EXT_provoking_vertex@ extension is enabled, and a shader object
---     is bound to the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07636# If the
+--     @VK_EXT_provoking_vertex@ extension is enabled, a shader object is
+--     bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07637# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08666# If the
---     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
---     is enabled, and a shader object is bound to any graphics stage, and
---     the most recent call to
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08666# If any of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     features are enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -3175,12 +3094,16 @@ foreign import ccall
 --     in the current command buffer set @polygonMode@ to
 --     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08667# If the
---     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
---     is enabled, and a shader object is bound to the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08667# If any of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     features are enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -3190,13 +3113,17 @@ foreign import ccall
 --     in the current command buffer set @primitiveTopology@ to any line
 --     topology, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08668# If the
---     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
---     is enabled, and a shader object that outputs line primitives is
---     bound to the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08668# If any of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     features are enabled, and a shader object that outputs line
+--     primitives is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -3205,21 +3132,26 @@ foreign import ccall
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07638# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08669# If the
---     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
---     is enabled, and a shader object is bound to any graphics stage, and
---     the most recent call to
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08669# If any of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     features are enabled, and a shader object is bound to any graphics
+--     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
@@ -3227,12 +3159,16 @@ foreign import ccall
 --     in the current command buffer set @polygonMode@ to
 --     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_LINE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08670# If the
---     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
---     is enabled, and a shader object is bound to the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08670# If any of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     features are enabled, and a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage, and the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
@@ -3242,13 +3178,17 @@ foreign import ccall
 --     in the current command buffer set @primitiveTopology@ to any line
 --     topology, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08671# If the
---     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
---     is enabled, and a shader object that outputs line primitives is
---     bound to the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08671# If any of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     features are enabled, and a shader object that outputs line
+--     primitives is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
@@ -3257,251 +3197,215 @@ foreign import ccall
 --     in the current command buffer set @rasterizerDiscardEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07849# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07849# If any of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     features are enabled and a shader object is bound to any graphics
+--     stage, or a bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_KHR'
---     dynamic state enabled then
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
 --     'Vulkan.Extensions.VK_KHR_line_rasterization.cmdSetLineStippleKHR'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08672# If the
---     @VK_KHR_line_rasterization@ or @VK_EXT_line_rasterization@ extension
---     is enabled, and a shader object is bound to any graphics stage, and
---     the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
---     in the current command buffer set @stippledLineEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07639# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08673# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07639# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClipControl depthClipControl>
 --     feature is enabled, and a shader object is bound to any graphics
---     stage, then
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
+--     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07640# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09650# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClampControl depthClampControl>
+--     feature is enabled, and a shader object is bound to any graphics
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @depthClampEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     'Vulkan.Extensions.VK_EXT_depth_clamp_control.cmdSetDepthClampRangeEXT'
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08674# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07640# If the
 --     @VK_NV_clip_space_w_scaling@ extension is enabled, and a shader
---     object is bound to any graphics stage, then
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
+--     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07641# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08675# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07641# If the
 --     @VK_NV_viewport_swizzle@ extension is enabled, and a shader object
---     is bound to any graphics stage, then
+--     is bound to any graphics stage or a graphics pipeline is bound which
+--     was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07642# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07642# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, a shader
+--     object is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     stage or a graphics pipeline is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08676# If the
---     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
---     shader object is bound to the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07643# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07643# If the
+--     @VK_NV_fragment_coverage_to_color@ extension is enabled, a shader
+--     object is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     stage or a graphics pipeline is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
---     dynamic state enabled then
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08677# If the
---     @VK_NV_fragment_coverage_to_color@ extension is enabled, and a
---     shader object is bound to the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
---     in the current command buffer set @coverageToColorEnable@ to
---     'Vulkan.Core10.FundamentalTypes.TRUE', then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07644# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07644# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, a shader
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08678# If the
---     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07645# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07645# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, a shader
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08679# If the
---     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
---     in the current command buffer set coverageModulationMode to any
---     value other than
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @coverageModulationMode@ is any value other than
 --     'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.COVERAGE_MODULATION_MODE_NONE_NV',
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07646# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07646# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, a shader
+--     object is bound to any graphics stage or a graphics pipeline is
+--     bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08680# If the
---     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and a shader
---     object is bound to any graphics stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', and the most recent call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
---     in the current command buffer set @coverageModulationTableEnable@ to
+--     dynamic state enabled, the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @coverageModulationTableEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07647# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07647# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled, a shader object is bound to any graphics stage
+--     or a graphics pipeline is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
---     dynamic state enabled then
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pipelineFragmentShadingRate-09238#
 --     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
---     feature is enabled, and a shader object is bound to the
+--     feature is enabled, a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set rasterizerDiscardEnable to
+--     stage or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.cmdSetFragmentShadingRateKHR'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08681# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07648# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08682# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07648# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-representativeFragmentTest representativeFragmentTest>
---     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     feature is enabled, a shader object is bound to any graphics stage
+--     or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07649# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
---     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08683# If the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07649# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-coverageReductionMode coverageReductionMode>
---     feature is enabled, and a shader object is bound to any graphics
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
+--     feature is enabled, a shader object is bound to any graphics stage
+--     or a graphics pipeline is bound which was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pColorBlendEnables-07470# If
 --     the bound graphics pipeline state was created with the
@@ -3550,9 +3454,12 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-rasterizationSamples-07474# If
 --     the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     state enabled, and neither the @VK_AMD_mixed_attachment_samples@ nor
---     the @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
---     the @rasterizationSamples@ in the last call to
+--     state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and neither the
+--     @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then the
+--     @rasterizationSamples@ in the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -3612,10 +3519,11 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-rasterizerDiscardEnable-09418#
 --     If a shader object is bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
+--     stage, and both the most recent call to
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     'Vulkan.Core10.FundamentalTypes.FALSE' and there are color
+--     attachments bound, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the attachments specified by the
@@ -3692,8 +3600,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
 --     state enabled and the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     state disabled, then the @sampleLocationsPerPixel@ member of
---     @pSampleLocationsInfo@ in the last call to
+--     state disabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @sampleLocationsEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then the @sampleLocationsPerPixel@ member of @pSampleLocationsInfo@
+--     in the last call to
 --     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
 --     /must/ equal the @rasterizationSamples@ member of the
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
@@ -3704,8 +3615,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
 --     state enabled and the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     state enabled, then the @sampleLocationsPerPixel@ member of
---     @pSampleLocationsInfo@ in the last call to
+--     state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @sampleLocationsEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then the @sampleLocationsPerPixel@ member of @pSampleLocationsInfo@
+--     in the last call to
 --     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
 --     /must/ equal the @rasterizationSamples@ parameter of the last call
 --     to
@@ -3778,14 +3692,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
 --     state disabled and the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     state enabled, the @sampleLocationsEnable@ member of a
---     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     in the bound graphics pipeline is
---     'Vulkan.Core10.FundamentalTypes.TRUE' or
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
---     state enabled, then,
---     @sampleLocationsInfo.sampleLocationGridSize.width@ /must/ evenly
---     divide
+--     state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @sampleLocationsEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then @sampleLocationsInfo.sampleLocationGridSize.width@ /must/
+--     evenly divide
 --     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
 --     as returned by
 --     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
@@ -3798,14 +3709,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
 --     state disabled and the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     state enabled, the @sampleLocationsEnable@ member of a
---     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     in the bound graphics pipeline is
---     'Vulkan.Core10.FundamentalTypes.TRUE' or
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
---     state enabled, then,
---     @sampleLocationsInfo.sampleLocationGridSize.height@ /must/ evenly
---     divide
+--     state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @sampleLocationsEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then @sampleLocationsInfo.sampleLocationGridSize.height@ /must/
+--     evenly divide
 --     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
 --     as returned by
 --     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
@@ -3818,13 +3726,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
 --     state disabled and the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     state enabled, the @sampleLocationsEnable@ member of a
---     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     in the bound graphics pipeline is
---     'Vulkan.Core10.FundamentalTypes.TRUE' or
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
---     state enabled, then, @sampleLocationsInfo.sampleLocationsPerPixel@
---     /must/ equal @rasterizationSamples@ in the last call to
+--     state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @sampleLocationsEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then @sampleLocationsInfo.sampleLocationsPerPixel@ /must/ equal
+--     @rasterizationSamples@ in the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-coverageModulationTableEnable-07488#
@@ -3843,9 +3749,9 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-rasterizationSamples-07489# If
 --     the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and if
 --     current subpass has a depth\/stencil attachment and depth test,
---     stencil test, or depth bounds test are enabled in the currently
---     bound pipeline state, then the current @rasterizationSamples@ /must/
---     be the same as the sample count of the depth\/stencil attachment
+--     stencil test, or depth bounds test are enabled in the bound
+--     pipeline, then the current @rasterizationSamples@ /must/ be the same
+--     as the sample count of the depth\/stencil attachment
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-coverageToColorEnable-07490#
 --     If the bound graphics pipeline state was created with the
@@ -4009,8 +3915,8 @@ foreign import ccall
 --     /must/ be
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-stage-07073# If the currently
---     bound pipeline was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-stage-07073# If the bound
+--     pipeline was created with the
 --     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
 --     member of an element of
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
@@ -4024,13 +3930,19 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-mesh-shader Mesh Shader Queries>
 --     /must/ not be active
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08877# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08877# If a shader object
+--     is bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
+--     stage or a graphics pipeline is bound which was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
---     dynamic state
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @rasterizerDiscardEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then
 --     'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state.cmdSetAttachmentFeedbackLoopEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07850# If dynamic state
 --     was inherited from
@@ -4189,19 +4101,6 @@ foreign import ccall
 --     and a fragment shader is bound, it /must/ not declare the
 --     @DepthReplacing@ or @StencilRefReplacingEXT@ execution modes
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-08880# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFeedbackLoopDynamicState attachmentFeedbackLoopDynamicState>
---     feature is enabled on the device, and a shader object is bound to
---     the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
---     stage, and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
---     in the current command buffer set @rasterizerDiscardEnable@ to
---     'Vulkan.Core10.FundamentalTypes.FALSE', then
---     'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state.cmdSetAttachmentFeedbackLoopEnableEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
---
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDynamicStates-08715# If the
 --     bound graphics pipeline state includes a fragment shader stage, was
 --     created with
@@ -4227,8 +4126,8 @@ foreign import ccall
 --     be @0@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09116# If a shader object
---     is bound to any graphics stage or the currently bound graphics
---     pipeline was created with
+--     is bound to any graphics stage or the bound graphics pipeline was
+--     created with
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT',
 --     and the format of any color attachment is
 --     'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32', the
@@ -4262,15 +4161,32 @@ foreign import ccall
 --     set by
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.cmdSetRenderingAttachmentLocationsKHR'
 --     /must/ match the value set for the corresponding element in the
---     currently bound pipeline
+--     bound pipeline
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09549# If the current
 --     render pass was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     and there is no shader object bound to any graphics stage, input
---     attachment index mappings in the currently bound pipeline /must/
---     match those set for the current render pass instance via
+--     attachment index mappings in the bound pipeline /must/ match those
+--     set for the current render pass instance via
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfoKHR'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09642# If the current
+--     render pass was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     with the
+--     'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT'
+--     flag, the bound graphics pipeline /must/ have been created with
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09643# If the bound
+--     graphics pipeline was created with
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT',
+--     the current render pass /must/ have begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     with the
+--     'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT'
+--     flag
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
@@ -4283,10 +4199,14 @@ foreign import ccall
 --     vertex input variables declared in the vertex shader entry point’s
 --     interface /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02721# For a given vertex
---     buffer binding, any attribute data fetched /must/ be entirely
---     contained within the corresponding vertex buffer binding, as
---     described in
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02721# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, and that pipeline was created without
+--     enabling
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT'
+--     for @vertexInputs@, then for a given vertex buffer binding, any
+--     attribute data fetched /must/ be entirely contained within the
+--     corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-07842# If there is a
@@ -4296,8 +4216,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY'
 --     dynamic state enabled then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-dynamicPrimitiveTopologyUnrestricted-07500#
 --     If the bound graphics pipeline state was created with the
@@ -4313,26 +4234,27 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04912# If the bound
---     graphics pipeline was created with both the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
---     and
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
---     dynamic states enabled, then
---     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
---     /must/ have been called in the current command buffer prior to this
---     draw command
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveTopology-10286# If
+--     there is a shader object bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--     stage, then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
+--     /must/ have set @primitiveTopology@ to
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST'
+--     prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStrides-04913# If the bound
 --     graphics pipeline was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE'
 --     dynamic state enabled, but without the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
---     /must/ have been called in the current command buffer prior to this
---     draw command, and the @pStrides@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this draw command, and the
+--     @pStrides@ parameter of
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
 --     /must/ not be @NULL@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04914# If there is a
@@ -4342,11 +4264,13 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
---     /must/ have been called in the current command buffer prior to this
---     draw command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this draw command
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-Input-07939# If there is a
---     shader object bound to the
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-Input-07939# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-vertexAttributeRobustness vertexAttributeRobustness>
+--     is not enabled and there is a shader object bound to the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage or the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
@@ -4360,9 +4284,14 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     stage or the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
---     dynamic state enabled then the numeric type associated with all
---     @Input@ variables of the corresponding @Location@ in the @Vertex@
---     @Execution@ @Model@ @OpEntryPoint@ /must/ be the same as
+--     dynamic state enabled and either the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-legacyVertexAttributes legacyVertexAttributes>
+--     feature is not enabled or the SPIR-V Type associated with a given
+--     @Input@ variable of the corresponding @Location@ in the @Vertex@
+--     @Execution@ @Model@ @OpEntryPoint@ is 64-bit, then the numeric type
+--     associated with all @Input@ variables of the corresponding
+--     @Location@ in the @Vertex@ @Execution@ @Model@ @OpEntryPoint@ /must/
+--     be the same as
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT'::@format@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-format-08936# If there is a
@@ -4401,17 +4330,18 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04875# If there is a
 --     shader object bound to the
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
---     stage and the most recent call to
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
---     in the current command buffer set @primitiveTopology@ to
---     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST',
---     or the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT'
+--     stage or the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
---     dynamic state enabled then
+--     dynamic state enabled, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
+--     of @primitiveTopology@ is
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST',
+--     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04879# If there is a
 --     shader object bound to the
@@ -4420,13 +4350,31 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
 --     dynamic state enabled then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable'
---     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     /must/ have been called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-09637# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveTopologyListRestart primitiveTopologyListRestart>
+--     feature is not enabled, the topology is
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_POINT_LIST',
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_LINE_LIST',
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST',
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY',
+--     or
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY',
+--     there is a shader object bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
+--     stage or the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
+--     dynamic state enabled then
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-stage-06481# The bound
 --     graphics pipeline /must/ not have been created with the
 --     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
---     member of an element of
+--     member of any element of
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
 --     to
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
@@ -4462,7 +4410,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-deviceGeneratedCommands-02911#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommandsNV ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -4563,7 +4511,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-deviceGeneratedCommands-02928#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommandsNV ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -4661,7 +4609,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindPipelineShaderGroupNV-deviceGeneratedCommands-02896#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommandsNV ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -4759,7 +4707,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-deviceGeneratedCommands-02906#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommandsNV ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-pInfo-09074# If
@@ -4830,7 +4778,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCreateIndirectCommandsLayoutNV-deviceGeneratedCommands-02929#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommandsNV ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -4944,7 +4892,7 @@ foreign import ccall
 --
 -- -   #VUID-vkDestroyIndirectCommandsLayoutNV-deviceGeneratedCommands-02941#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommandsNV ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -5034,7 +4982,7 @@ destroyIndirectCommandsLayoutNV device
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
-  { -- | #features-deviceGeneratedCommands# @deviceGeneratedCommands@ indicates
+  { -- | #features-deviceGeneratedCommandsNV# @deviceGeneratedCommands@ indicates
     -- whether the implementation supports functionality to generate commands
     -- on the device. See
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
@@ -5369,7 +5317,7 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 --
 -- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-deviceGeneratedCommands-02887#
 --     The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommandsNV ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -5542,7 +5490,7 @@ data BindIndexBufferIndirectCommandNV = BindIndexBufferIndirectCommandNV
     size :: Word32
   , -- | @indexType@ is a 'Vulkan.Core10.Enums.IndexType.IndexType' value
     -- specifying how indices are treated. Instead of the Vulkan enum values, a
-    -- custom @uint32_t@ value /can/ be mapped to an
+    -- custom @uint32_t@ value /can/ be mapped to
     -- 'Vulkan.Core10.Enums.IndexType.IndexType' by specifying the
     -- 'IndirectCommandsLayoutTokenNV'::@pIndexTypes@ and
     -- 'IndirectCommandsLayoutTokenNV'::@pIndexTypeValues@ arrays.
@@ -5894,7 +5842,8 @@ instance Zero IndirectCommandsStreamNV where
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data IndirectCommandsLayoutTokenNV = IndirectCommandsLayoutTokenNV
-  { -- | @tokenType@ specifies the token command type.
+  { -- | @tokenType@ is a 'IndirectCommandsTokenTypeNV' specifying the token
+    -- command type.
     tokenType :: IndirectCommandsTokenTypeNV
   , -- | @stream@ is the index of the input stream containing the token argument
     -- data.
@@ -5919,7 +5868,8 @@ data IndirectCommandsLayoutTokenNV = IndirectCommandsLayoutTokenNV
     pushconstantOffset :: Word32
   , -- | @pushconstantSize@ is the size used for the push constant command.
     pushconstantSize :: Word32
-  , -- | @indirectStateFlags@ are the active states for the state flag command.
+  , -- | @indirectStateFlags@ is a 'IndirectStateFlagsNV' bitfield indicating the
+    -- active states for the state flag command.
     indirectStateFlags :: IndirectStateFlagsNV
   , -- | @pIndexTypes@ is the used 'Vulkan.Core10.Enums.IndexType.IndexType' for
     -- the corresponding @uint32_t@ value entry in @pIndexTypeValues@.
@@ -6054,8 +6004,6 @@ instance Zero IndirectCommandsLayoutTokenNV where
 -- 'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minIndirectCommandsBufferOffsetAlignment@,
 -- whichever is lower.
 --
--- Note
---
 -- A @minIndirectCommandsBufferOffsetAlignment@ of 4 allows
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress' to be packed as @uvec2@
 -- with scalar layout instead of @uint64_t@ with 8 byte alignment. This
@@ -6079,13 +6027,19 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --     first element of the array and there /must/ be only a single element
 --     of such token type
 --
+-- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-09585# If
+--     @pTokens@ contains an entry of
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NV' it /must/ be the first
+--     element of the array and there /must/ be only a single element of
+--     such token type
+--
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02933# If
 --     @pTokens@ contains an entry of
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV' there /must/ be only a
 --     single element of such token type
 --
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02934# All state
---     tokens in @pTokens@ /must/ occur before any work provoking tokens
+--     tokens in @pTokens@ /must/ occur before any action command tokens
 --     ('INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV',
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV',
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV',
@@ -6093,7 +6047,7 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NV' )
 --
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02935# The
---     content of @pTokens@ /must/ include one single work provoking token
+--     content of @pTokens@ /must/ include one single action command token
 --     that is compatible with the @pipelineBindPoint@
 --
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-streamCount-02936#
@@ -6101,8 +6055,8 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsStreamCount@
 --
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pStreamStrides-02937#
---     each element of @pStreamStrides@ /must/ be greater than \`0\`and
---     less than or equal to
+--     each element of @pStreamStrides@ /must/ be greater than @0@ and less
+--     than or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsStreamStride@.
 --     Furthermore the alignment of each token input /must/ be ensured
 --
@@ -6257,8 +6211,8 @@ instance Zero IndirectCommandsLayoutCreateInfoNV where
 -- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-02915# If the
 --     @indirectCommandsLayout@ uses a token of
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV', then the
---     @pipeline@\`s 'Vulkan.Core10.Handles.PipelineLayout' /must/ match
---     the 'IndirectCommandsLayoutTokenNV'::@pushconstantPipelineLayout@
+--     @pipeline@’s 'Vulkan.Core10.Handles.PipelineLayout' /must/ match the
+--     'IndirectCommandsLayoutTokenNV'::@pushconstantPipelineLayout@
 --
 -- -   #VUID-VkGeneratedCommandsInfoNV-streamCount-02916# @streamCount@
 --     /must/ match the @indirectCommandsLayout@’s @streamCount@
@@ -6389,8 +6343,9 @@ instance Zero IndirectCommandsLayoutCreateInfoNV where
 --     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
 --
--- -   #VUID-VkGeneratedCommandsInfoNV-pipeline-parameter# @pipeline@
---     /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+-- -   #VUID-VkGeneratedCommandsInfoNV-pipeline-parameter# If @pipeline@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @pipeline@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Pipeline' handle
 --
 -- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-parameter#
 --     @indirectCommandsLayout@ /must/ be a valid
@@ -6457,9 +6412,10 @@ data GeneratedCommandsInfoNV = GeneratedCommandsInfoNV
     -- for preprocessing the input data for execution. If this structure is
     -- used with 'cmdExecuteGeneratedCommandsNV' with its @isPreprocessed@ set
     -- to 'Vulkan.Core10.FundamentalTypes.TRUE', then the preprocessing step is
-    -- skipped and data is only read from this buffer. The contents and the
-    -- layout of this buffer is opaque to applications and /must/ not be
-    -- modified or copied to another buffer for reuse.
+    -- skipped and data in this buffer will not be modified. The contents and
+    -- the layout of this buffer are opaque to applications and /must/ not be
+    -- modified outside functions related to device-generated commands or
+    -- copied to another buffer for reuse.
     preprocessBuffer :: Buffer
   , -- | @preprocessOffset@ is the byte offset into @preprocessBuffer@ where the
     -- preprocessed data is stored.
@@ -6513,7 +6469,6 @@ instance ToCStruct GeneratedCommandsInfoNV where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr PipelineBindPoint)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr Pipeline)) (zero)
     poke ((p `plusPtr` 32 :: Ptr IndirectCommandsLayoutNV)) (zero)
     poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 64 :: Ptr Buffer)) (zero)
@@ -6719,13 +6674,13 @@ pattern INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV = IndirectComm
 
 -- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV' specifies that
 -- the input data for the sequences is not implicitly indexed from
--- 0..sequencesUsed but a user provided 'Vulkan.Core10.Handles.Buffer'
--- encoding the index is provided.
+-- 0..sequencesUsed, but an application-provided
+-- 'Vulkan.Core10.Handles.Buffer' encoding the index is provided.
 pattern INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV = IndirectCommandsLayoutUsageFlagBitsNV 0x00000002
 
 -- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV' specifies
 -- that the processing of sequences /can/ happen at an
--- implementation-dependent order, which is not: guaranteed to be coherent
+-- implementation-dependent order, which is not guaranteed to be coherent
 -- using the same input data. This flag is ignored when the
 -- @pipelineBindPoint@ is
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE' as
@@ -6846,7 +6801,7 @@ instance Read IndirectStateFlagBitsNV where
 -- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NV'        | 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'          |
 -- +---------------------------------------------------+--------------------------------------------------------------------+
 --
--- Supported indirect command tokens
+-- Supported Indirect Command Tokens
 --
 -- = See Also
 --

@@ -127,8 +127,7 @@
 --
 -- == See Also
 --
--- 'MutableDescriptorTypeCreateInfoEXT', 'MutableDescriptorTypeListEXT',
--- 'PhysicalDeviceMutableDescriptorTypeFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -188,31 +187,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
--- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
---     identifying this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to a structure extending this
---     structure.
---
--- -   #features-mutableDescriptorType# @mutableDescriptorType@ indicates
---     that the implementation /must/ support using the
---     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
---     with at least the following descriptor types, where any combination
---     of the types /must/ be supported:
---
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
---
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
---
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
---
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
---
 -- -   Additionally, @mutableDescriptorType@ indicates that:
 --
 --     -   Non-uniform descriptor indexing /must/ be supported if all
@@ -263,7 +237,24 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMutableDescriptorTypeFeaturesEXT = PhysicalDeviceMutableDescriptorTypeFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT" "mutableDescriptorType"
+  { -- | #features-mutableDescriptorType# @mutableDescriptorType@ indicates that
+    -- the implementation /must/ support using the
+    -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT' with at
+    -- least the following descriptor types, where any combination of the types
+    -- /must/ be supported:
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
     mutableDescriptorType :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

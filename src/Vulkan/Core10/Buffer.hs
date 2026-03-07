@@ -105,6 +105,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCreateBuffer-device-09664# @device@ /must/ support at least
+--     one queue family with one of the @VK_QUEUE_VIDEO_ENCODE_BIT_KHR@,
+--     @VK_QUEUE_VIDEO_DECODE_BIT_KHR@,
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_SPARSE_BINDING_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_TRANSFER_BIT',
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
+--
 -- -   #VUID-vkCreateBuffer-flags-00911# If the @flags@ member of
 --     @pCreateInfo@ includes
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
@@ -313,9 +321,9 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- = Description
 --
--- If a
+-- If the @pNext@ chain includes a
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
--- structure is present in the @pNext@ chain,
+-- structure,
 -- 'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'::@usage@
 -- from that structure is used instead of @usage@ from this structure.
 --
@@ -324,13 +332,13 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-None-09499# If the @pNext@ chain does not
 --     include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ must be a valid combination of
+--     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkBufferCreateInfo-None-09500# If the @pNext@ chain does not
 --     include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR'
---     structure, @usage@ must not be 0
+--     structure, @usage@ /must/ not be 0
 --
 -- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
 --     @0@
@@ -457,6 +465,15 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoMaintenance1 videoMaintenance1>
 --     /must/ be enabled
 --
+-- -   #VUID-VkBufferCreateInfo-pNext-10249# If the @pNext@ chain includes
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
+--     structure and for any element of its @pProfiles@ member
+--     @videoCodecOperation@ is
+--     @VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR@, then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoEncodeAV1 videoEncodeAV1>
+--     feature /must/ be enabled
+--
 -- -   #VUID-VkBufferCreateInfo-size-06409# @size@ /must/ be less than or
 --     equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Properties'::@maxBufferSize@
@@ -508,6 +525,32 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     or
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-VkBufferCreateInfo-flags-09641# If @flags@ includes
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT',
+--     then @usage@ /must/ not contain any of the following bits
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
+--
+--     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --

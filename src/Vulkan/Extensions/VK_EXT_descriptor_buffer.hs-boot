@@ -21,13 +21,25 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--                     
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--                      or
+--                     
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--                  and
+--                 
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
---     and
+--                  and
+--                 
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
+--          and
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__API Interactions__]
 --
@@ -275,25 +287,7 @@
 --
 -- == See Also
 --
--- 'BufferCaptureDescriptorDataInfoEXT', 'DescriptorAddressInfoEXT',
--- 'DescriptorBufferBindingInfoEXT',
--- 'DescriptorBufferBindingPushDescriptorBufferHandleEXT',
--- 'DescriptorDataEXT', 'DescriptorGetInfoEXT',
--- 'ImageCaptureDescriptorDataInfoEXT',
--- 'ImageViewCaptureDescriptorDataInfoEXT',
--- 'OpaqueCaptureDescriptorDataCreateInfoEXT',
--- 'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT',
--- 'PhysicalDeviceDescriptorBufferFeaturesEXT',
--- 'PhysicalDeviceDescriptorBufferPropertiesEXT',
--- 'SamplerCaptureDescriptorDataInfoEXT',
--- 'cmdBindDescriptorBufferEmbeddedSamplersEXT',
--- 'cmdBindDescriptorBuffersEXT', 'cmdSetDescriptorBufferOffsetsEXT',
--- 'getBufferOpaqueCaptureDescriptorDataEXT', 'getDescriptorEXT',
--- 'getDescriptorSetLayoutBindingOffsetEXT',
--- 'getDescriptorSetLayoutSizeEXT',
--- 'getImageOpaqueCaptureDescriptorDataEXT',
--- 'getImageViewOpaqueCaptureDescriptorDataEXT',
--- 'getSamplerOpaqueCaptureDescriptorDataEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

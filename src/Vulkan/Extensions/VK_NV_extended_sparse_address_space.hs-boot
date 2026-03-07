@@ -87,8 +87,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV',
--- 'PhysicalDeviceExtendedSparseAddressSpacePropertiesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

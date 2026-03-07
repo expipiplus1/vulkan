@@ -102,8 +102,7 @@
 --
 -- == See Also
 --
--- 'MacOSSurfaceCreateFlagsMVK', 'MacOSSurfaceCreateInfoMVK',
--- 'createMacOSSurfaceMVK'
+-- No cross-references are available
 --
 -- == Document Notes
 --

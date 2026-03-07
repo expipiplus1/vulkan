@@ -49,10 +49,9 @@
 -- == Description
 --
 -- This extension provides extensible versions of the Vulkan memory map and
--- unmap entry points. The new entry points are functionally identical to
--- the core entry points, except that their parameters are specified using
--- extensible structures that can be used to pass extension-specific
--- information.
+-- unmap commands. The new commands are functionally identical to the core
+-- commands, except that their parameters are specified using extensible
+-- structures that can be used to pass extension-specific information.
 --
 -- == New Commands
 --
@@ -98,8 +97,7 @@
 --
 -- == See Also
 --
--- 'MemoryMapInfoKHR', 'MemoryUnmapFlagBitsKHR', 'MemoryUnmapFlagsKHR',
--- 'MemoryUnmapInfoKHR', 'mapMemory2KHR', 'unmapMemory2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -365,7 +363,8 @@ unmapMemory2KHR device memoryUnmapInfo = liftIO . evalContT $ do
 --     set in @flags@ and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-memoryMapRangePlaced memoryMapRangePlaced>
 --     feature is not enabled, @size@ /must/ be
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE'
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE' or
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@
 --
 -- -   #VUID-VkMemoryMapInfoKHR-flags-09573# If
 --     'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT' is
@@ -377,11 +376,17 @@ unmapMemory2KHR device memoryUnmapInfo = liftIO . evalContT $ do
 --
 -- -   #VUID-VkMemoryMapInfoKHR-flags-09574# If
 --     'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT' is
---     set in @flags@ and the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-memoryMapRangePlaced memoryMapRangePlaced>
---     feature is enabled, @size@ /must/ be
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE' or be aligned to an integer
---     multiple of
+--     set in @flags@ and @size@ is not
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be aligned to
+--     an integer multiple of
+--     'Vulkan.Extensions.VK_EXT_map_memory_placed.PhysicalDeviceMapMemoryPlacedPropertiesEXT'::@minPlacedMemoryMapAlignment@
+--
+-- -   #VUID-VkMemoryMapInfoKHR-flags-09651# If
+--     'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT' is
+--     set in @flags@ and @size@ is
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE',
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
+--     be aligned to an integer multiple of
 --     'Vulkan.Extensions.VK_EXT_map_memory_placed.PhysicalDeviceMapMemoryPlacedPropertiesEXT'::@minPlacedMemoryMapAlignment@
 --
 -- -   #VUID-VkMemoryMapInfoKHR-flags-09575# If
@@ -607,8 +612,8 @@ newtype MemoryUnmapFlagBitsKHR = MemoryUnmapFlagBitsKHR Flags
 -- 'unmapMemory2KHR' call completes. Future system memory map operations or
 -- calls to 'Vulkan.Core10.Memory.mapMemory' or 'mapMemory2KHR' will not
 -- return addresses in that range unless the range has since been
--- unreserved by the client or the mapping is explicitly placed in that
--- range by calling 'mapMemory2KHR' with
+-- unreserved by the application or the mapping is explicitly placed in
+-- that range by calling 'mapMemory2KHR' with
 -- 'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT', or
 -- doing the system memory map equivalent. When
 -- 'MEMORY_UNMAP_RESERVE_BIT_EXT' is set, the memory unmap operation /may/

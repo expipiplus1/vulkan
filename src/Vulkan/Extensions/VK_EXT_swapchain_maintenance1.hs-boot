@@ -25,7 +25,11 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_surface_maintenance1 VK_EXT_surface_maintenance1>
 --     and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -166,10 +170,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceSwapchainMaintenance1FeaturesEXT',
--- 'ReleaseSwapchainImagesInfoEXT', 'SwapchainPresentFenceInfoEXT',
--- 'SwapchainPresentModeInfoEXT', 'SwapchainPresentModesCreateInfoEXT',
--- 'SwapchainPresentScalingCreateInfoEXT', 'releaseSwapchainImagesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

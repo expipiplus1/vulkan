@@ -25,6 +25,8 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_VERSION_1_3
+--
 --     -   Interacts with VK_KHR_dynamic_rendering
 --
 -- [__Special Use__]
@@ -113,6 +115,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
@@ -128,9 +132,7 @@
 --
 -- == See Also
 --
--- 'AndroidHardwareBufferFormatResolvePropertiesANDROID',
--- 'PhysicalDeviceExternalFormatResolveFeaturesANDROID',
--- 'PhysicalDeviceExternalFormatResolvePropertiesANDROID'
+-- No cross-references are available
 --
 -- == Document Notes
 --

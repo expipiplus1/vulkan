@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -125,12 +127,7 @@
 --
 -- == See Also
 --
--- 'DeviceFaultAddressInfoEXT', 'DeviceFaultAddressTypeEXT',
--- 'DeviceFaultCountsEXT', 'DeviceFaultInfoEXT',
--- 'DeviceFaultVendorBinaryHeaderVersionEXT',
--- 'DeviceFaultVendorBinaryHeaderVersionOneEXT',
--- 'DeviceFaultVendorInfoEXT', 'PhysicalDeviceFaultFeaturesEXT',
--- 'getDeviceFaultInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -253,9 +250,9 @@ foreign import ccall
 -- If @pFaultInfo@ is not @NULL@, @pFaultCounts@ /must/ point to a
 -- 'DeviceFaultCountsEXT' structure with each structure count or size
 -- member (@addressInfoCount@, @vendorInfoCount@, @vendorBinarySize@) set
--- by the user to the number of elements in the corresponding output array
--- member of @pFaultInfo@ (@pAddressInfos@ and @pVendorInfos@), or to the
--- size of the output buffer in bytes (@pVendorBinaryData@). On return,
+-- by the application to the number of elements in the corresponding output
+-- array member of @pFaultInfo@ (@pAddressInfos@ and @pVendorInfos@), or to
+-- the size of the output buffer in bytes (@pVendorBinaryData@). On return,
 -- each structure count member is overwritten with the number of structures
 -- actually written to the corresponding output array member of
 -- @pFaultInfo@. Similarly, @vendorBinarySize@ is overwritten with the
@@ -471,8 +468,6 @@ instance Zero PhysicalDeviceFaultFeaturesEXT where
 -- > lower_address = (pInfo->reportedAddress & ~(pInfo->addressPrecision-1))
 -- > upper_address = (pInfo->reportedAddress |  (pInfo->addressPrecision-1))
 --
--- Note
---
 -- It is valid for the @reportedAddress@ to contain a more precise address
 -- than indicated by @addressPrecision@. In this case, the value of
 -- @reportedAddress@ should be treated as an additional hint as to the
@@ -683,8 +678,6 @@ instance Zero DeviceFaultCountsEXT where
 -- virtual address space, rather than precise addresses. The precise memory
 -- address accessed or the precise value of the instruction pointer /must/
 -- lie within the region described.
---
--- Note
 --
 -- Each element of @pAddressInfos@ describes either:
 --
@@ -955,8 +948,6 @@ instance Zero DeviceFaultVendorBinaryHeaderVersionOneEXT where
 -- | VkDeviceFaultAddressTypeEXT - Page fault access types
 --
 -- = Description
---
--- Note
 --
 -- The instruction pointer values recorded may not identify the specific
 -- instruction(s) that triggered the fault. The relationship between the

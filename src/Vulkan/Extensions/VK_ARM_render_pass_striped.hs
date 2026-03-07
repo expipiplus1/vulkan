@@ -21,9 +21,16 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     or
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__Contact__]
 --
@@ -115,10 +122,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRenderPassStripedFeaturesARM',
--- 'PhysicalDeviceRenderPassStripedPropertiesARM',
--- 'RenderPassStripeBeginInfoARM', 'RenderPassStripeInfoARM',
--- 'RenderPassStripeSubmitInfoARM'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -475,6 +479,13 @@ instance Zero RenderPassStripeBeginInfoARM where
 -- render pass instance that has multiview enabled, the stripe includes all
 -- views in the view mask. In a render pass instance with @layerCount@
 -- greater than 1, the stripe includes all layers.
+--
+-- Render pass instances that specify the
+-- 'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_RESUMING_BIT' will not
+-- have any elements of @pStripeSemaphoreInfos@ mapped to them. Instead,
+-- for suspending and resuming render pass instances, this mapping is done
+-- for the first suspending render pass instance, and the per-stripe
+-- semaphores are only signaled for the last resuming render pass instance.
 --
 -- == Valid Usage
 --

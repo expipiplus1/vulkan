@@ -107,8 +107,7 @@
 --
 -- == See Also
 --
--- 'FrameBoundaryEXT', 'FrameBoundaryFlagBitsEXT', 'FrameBoundaryFlagsEXT',
--- 'PhysicalDeviceFrameBoundaryFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

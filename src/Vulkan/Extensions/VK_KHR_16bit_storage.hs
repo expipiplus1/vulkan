@@ -21,9 +21,13 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_storage_buffer_storage_class VK_KHR_storage_buffer_storage_class>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -50,7 +54,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_16bit_storage.txt GL_EXT_shader_16bit_storage>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GL_EXT_shader_16bit_storage.txt GL_EXT_shader_16bit_storage>
 --
 -- [__Contributors__]
 --
@@ -87,8 +91,8 @@
 -- All functionality in this extension is included in core Vulkan 1.1, with
 -- the KHR suffix omitted. However, if Vulkan 1.1 is supported and this
 -- extension is not, the @storageBuffer16BitAccess@ capability is optional.
--- The original type, enum and command names are still available as aliases
--- of the core functionality.
+-- The original type, enum, and command names are still available as
+-- aliases of the core functionality.
 --
 -- == New Structures
 --
@@ -126,7 +130,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevice16BitStorageFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

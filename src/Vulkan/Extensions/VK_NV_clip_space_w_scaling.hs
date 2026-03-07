@@ -195,8 +195,7 @@
 --
 -- == See Also
 --
--- 'PipelineViewportWScalingStateCreateInfoNV', 'ViewportWScalingNV',
--- 'cmdSetViewportWScalingNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

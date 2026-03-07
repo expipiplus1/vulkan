@@ -153,7 +153,7 @@
 --
 -- == See Also
 --
--- 'PresentRegionKHR', 'PresentRegionsKHR', 'RectLayerKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

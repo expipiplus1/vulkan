@@ -68,7 +68,7 @@
 -- == Promotion to Vulkan 1.1
 --
 -- All functionality in this extension is included in core Vulkan 1.1, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Commands
@@ -195,17 +195,7 @@
 --
 -- == See Also
 --
--- 'FormatProperties2KHR', 'ImageFormatProperties2KHR',
--- 'PhysicalDeviceFeatures2KHR', 'PhysicalDeviceImageFormatInfo2KHR',
--- 'PhysicalDeviceMemoryProperties2KHR', 'PhysicalDeviceProperties2KHR',
--- 'PhysicalDeviceSparseImageFormatInfo2KHR', 'QueueFamilyProperties2KHR',
--- 'SparseImageFormatProperties2KHR', 'getPhysicalDeviceFeatures2KHR',
--- 'getPhysicalDeviceFormatProperties2KHR',
--- 'getPhysicalDeviceImageFormatProperties2KHR',
--- 'getPhysicalDeviceMemoryProperties2KHR',
--- 'getPhysicalDeviceProperties2KHR',
--- 'getPhysicalDeviceQueueFamilyProperties2KHR',
--- 'getPhysicalDeviceSparseImageFormatProperties2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

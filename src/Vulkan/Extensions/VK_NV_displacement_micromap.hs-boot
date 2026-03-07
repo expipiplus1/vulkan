@@ -148,10 +148,7 @@
 --
 -- == See Also
 --
--- 'AccelerationStructureTrianglesDisplacementMicromapNV',
--- 'DisplacementMicromapFormatNV',
--- 'PhysicalDeviceDisplacementMicromapFeaturesNV',
--- 'PhysicalDeviceDisplacementMicromapPropertiesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -22,6 +22,14 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_synchronization2
 --
 -- [__Contact__]
 --
@@ -61,6 +69,14 @@
 --
 -- -   'getQueueCheckpointDataNV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- is supported:
+--
+-- -   'getQueueCheckpointData2NV'
+--
 -- == New Structures
 --
 -- -   'CheckpointDataNV'
@@ -69,6 +85,19 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2':
 --
 --     -   'QueueFamilyCheckpointPropertiesNV'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- is supported:
+--
+-- -   'CheckpointData2NV'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2':
+--
+--     -   'QueueFamilyCheckpointProperties2NV'
 --
 -- == New Enum Constants
 --
@@ -82,6 +111,18 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV'
+--
 -- == Version History
 --
 -- -   Revision 1, 2018-07-16 (Nuno Subtil)
@@ -94,8 +135,7 @@
 --
 -- == See Also
 --
--- 'CheckpointDataNV', 'QueueFamilyCheckpointPropertiesNV',
--- 'cmdSetCheckpointNV', 'getQueueCheckpointDataNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -104,7 +144,9 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( CheckpointDataNV
+module Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( CheckpointData2NV
+                                                              , CheckpointDataNV
+                                                              , QueueFamilyCheckpointProperties2NV
                                                               , QueueFamilyCheckpointPropertiesNV
                                                               ) where
 
@@ -112,12 +154,28 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 
+data CheckpointData2NV
+
+instance ToCStruct CheckpointData2NV
+instance Show CheckpointData2NV
+
+instance FromCStruct CheckpointData2NV
+
+
 data CheckpointDataNV
 
 instance ToCStruct CheckpointDataNV
 instance Show CheckpointDataNV
 
 instance FromCStruct CheckpointDataNV
+
+
+data QueueFamilyCheckpointProperties2NV
+
+instance ToCStruct QueueFamilyCheckpointProperties2NV
+instance Show QueueFamilyCheckpointProperties2NV
+
+instance FromCStruct QueueFamilyCheckpointProperties2NV
 
 
 data QueueFamilyCheckpointPropertiesNV

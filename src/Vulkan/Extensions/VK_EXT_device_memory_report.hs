@@ -18,10 +18,12 @@
 --     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -146,11 +148,11 @@
 -- interesting cases for tracking how populated that VA region is.
 --
 -- The callbacks are clearly specified as only callable within the context
--- of a call from the app into Vulkan. We believe there are some cases
--- where drivers can allocate device memory asynchronously. This was one of
--- the sticky issues that derailed the internal device memory allocation
--- reporting design (which is essentially what this extension is trying to
--- do) leading up to 1.0.
+-- of a call from the application into Vulkan. We believe there are some
+-- cases where drivers can allocate device memory asynchronously. This was
+-- one of the sticky issues that derailed the internal device memory
+-- allocation reporting design (which is essentially what this extension is
+-- trying to do) leading up to 1.0.
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' is described in
 -- a section called “Host memory” and the intro to it is very explicitly
@@ -207,7 +209,7 @@
 -- __RESOLVED__ Yes. This fits in well with the callback infrastructure
 -- added in this extension, and implementation touches the same code and
 -- has the same overheads as the rest of the extension. It could help
--- debugging things like getting an
+-- debugging things like getting a
 -- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' error when ending
 -- a command buffer. Right now the allocation failure could have happened
 -- anywhere during recording, and a callback would be really useful to
@@ -225,11 +227,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkDeviceMemoryReportCallbackEXT',
--- 'DeviceDeviceMemoryReportCreateInfoEXT',
--- 'DeviceMemoryReportCallbackDataEXT', 'DeviceMemoryReportEventTypeEXT',
--- 'DeviceMemoryReportFlagsEXT',
--- 'PhysicalDeviceDeviceMemoryReportFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -379,8 +377,6 @@ instance Zero PhysicalDeviceDeviceMemoryReportFeaturesEXT where
 -- The callback /must/ be called only once by the implementation when a
 -- 'DeviceMemoryReportEventTypeEXT' event occurs.
 --
--- Note
---
 -- The callback could be called from a background thread other than the
 -- thread calling the Vulkan commands.
 --
@@ -476,8 +472,6 @@ instance Zero DeviceDeviceMemoryReportCreateInfoEXT where
 -- 'Vulkan.Core10.Handles.DeviceMemory' is backed by an imported external
 -- memory object, @memoryObjectId@ /must/ be unique system wide.
 --
--- Note
---
 -- This structure should only be considered valid during the lifetime of
 -- the triggered callback.
 --
@@ -492,6 +486,7 @@ instance Zero DeviceDeviceMemoryReportCreateInfoEXT where
 --
 -- = See Also
 --
+-- 'PFN_vkDeviceMemoryReportCallbackEXT',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceMemoryReportEventTypeEXT', 'DeviceMemoryReportFlagsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
@@ -616,7 +611,8 @@ instance Zero DeviceMemoryReportCallbackDataEXT where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceDeviceMemoryReportCreateInfoEXT',
--- 'DeviceMemoryReportCallbackDataEXT'
+-- 'DeviceMemoryReportCallbackDataEXT',
+-- 'Vulkan.Core10.FundamentalTypes.Flags'
 newtype DeviceMemoryReportFlagsEXT = DeviceMemoryReportFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -746,7 +742,8 @@ type FN_vkDeviceMemoryReportCallbackEXT = ("pCallbackData" ::: Ptr DeviceMemoryR
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
--- 'DeviceDeviceMemoryReportCreateInfoEXT'
+-- 'DeviceDeviceMemoryReportCreateInfoEXT',
+-- 'DeviceMemoryReportCallbackDataEXT'
 type PFN_vkDeviceMemoryReportCallbackEXT = FunPtr FN_vkDeviceMemoryReportCallbackEXT
 
 

@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -118,19 +120,21 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- Functionality in this extension is included in core Vulkan 1.3, with the
--- KHR suffix omitted. The original type, enum and command names are still
--- available as aliases of the core functionality.
+-- Vulkan APIs in this extension are included in core Vulkan 1.3, with the
+-- KHR suffix omitted. External interactions defined by this extension,
+-- such as SPIR-V token names, retain their original names. The original
+-- Vulkan API names are still available as aliases of the core
+-- functionality.
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProductInputAllKHR DotProductInputAllKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProductInputAll DotProductInputAllKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProductInput4x8BitKHR DotProductInput4x8BitKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProductInput4x8Bit DotProductInput4x8BitKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProductInput4x8BitPackedKHR DotProductInput4x8BitPackedKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProductInput4x8BitPacked DotProductInput4x8BitPackedKHR>
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProductKHR DotProductKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DotProduct DotProductKHR>
 --
 -- == Version History
 --
@@ -140,8 +144,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderIntegerDotProductFeaturesKHR',
--- 'PhysicalDeviceShaderIntegerDotProductPropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

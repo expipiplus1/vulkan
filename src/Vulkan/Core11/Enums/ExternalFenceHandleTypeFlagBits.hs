@@ -43,7 +43,7 @@ type ExternalFenceHandleTypeFlags = ExternalFenceHandleTypeFlagBits
 -- | 'EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT'          | No restriction                                                                                             | No restriction                                                                                             |
 -- +---------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 --
--- External fence handle types compatibility
+-- External Fence Handle Types Compatibility
 --
 -- = See Also
 --

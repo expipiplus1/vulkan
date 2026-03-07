@@ -127,8 +127,7 @@
 --
 -- == See Also
 --
--- 'MutableDescriptorTypeCreateInfoEXT', 'MutableDescriptorTypeListEXT',
--- 'PhysicalDeviceMutableDescriptorTypeFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

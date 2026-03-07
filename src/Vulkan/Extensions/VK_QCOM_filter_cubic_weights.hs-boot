@@ -105,9 +105,7 @@
 --
 -- == See Also
 --
--- 'BlitImageCubicWeightsInfoQCOM', 'CubicFilterWeightsQCOM',
--- 'PhysicalDeviceCubicWeightsFeaturesQCOM',
--- 'SamplerCubicWeightsCreateInfoQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

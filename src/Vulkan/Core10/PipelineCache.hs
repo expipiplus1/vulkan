@@ -90,8 +90,6 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
 -- Applications /can/ track and manage the total host memory size of a
 -- pipeline cache object using the @pAllocator@. Applications /can/ limit
 -- the amount of data retrieved from a pipeline cache object in
@@ -115,8 +113,6 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT',
 -- all commands that modify the returned pipeline cache object /must/ be
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
---
--- Note
 --
 -- Implementations /should/ make every effort to limit any critical
 -- sections to the actual accesses to the cache, which is expected to be
@@ -290,13 +286,13 @@ foreign import ccall
 --
 -- If @pData@ is @NULL@, then the maximum size of the data that /can/ be
 -- retrieved from the pipeline cache, in bytes, is returned in @pDataSize@.
--- Otherwise, @pDataSize@ /must/ point to a variable set by the user to the
--- size of the buffer, in bytes, pointed to by @pData@, and on return the
--- variable is overwritten with the amount of data actually written to
--- @pData@. If @pDataSize@ is less than the maximum size that /can/ be
--- retrieved by the pipeline cache, at most @pDataSize@ bytes will be
--- written to @pData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
+-- Otherwise, @pDataSize@ /must/ point to a variable set by the application
+-- to the size of the buffer, in bytes, pointed to by @pData@, and on
+-- return the variable is overwritten with the amount of data actually
+-- written to @pData@. If @pDataSize@ is less than the maximum size that
+-- /can/ be retrieved by the pipeline cache, at most @pDataSize@ bytes will
+-- be written to @pData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will
+-- be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
 -- that not all of the pipeline cache was returned.
 --
 -- Any data written to @pData@ is valid and /can/ be provided as the
@@ -397,8 +393,6 @@ foreign import ccall
 -- | vkMergePipelineCaches - Combine the data stores of pipeline caches
 --
 -- = Description
---
--- Note
 --
 -- The details of the merge operation are implementation-dependent, but
 -- implementations /should/ merge the contents of the specified pipelines

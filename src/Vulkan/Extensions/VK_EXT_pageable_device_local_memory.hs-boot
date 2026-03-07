@@ -125,8 +125,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT',
--- 'setDeviceMemoryPriorityEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

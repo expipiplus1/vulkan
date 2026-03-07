@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -43,7 +45,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_texture_footprint.txt GL_NV_shader_texture_footprint>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_shader_texture_footprint.txt GL_NV_shader_texture_footprint>
 --
 -- [__Contributors__]
 --
@@ -258,7 +260,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderImageFootprintFeaturesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -31,7 +31,9 @@ type FN_vkInternalAllocationNotification = ("pUserData" ::: Ptr ()) -> CSize -> 
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+-- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Vulkan.Core10.Enums.InternalAllocationType.InternalAllocationType',
+-- 'Vulkan.Core10.Enums.SystemAllocationScope.SystemAllocationScope'
 type PFN_vkInternalAllocationNotification = FunPtr FN_vkInternalAllocationNotification
 
 
@@ -46,7 +48,9 @@ type FN_vkInternalFreeNotification = ("pUserData" ::: Ptr ()) -> CSize -> Intern
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+-- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Vulkan.Core10.Enums.InternalAllocationType.InternalAllocationType',
+-- 'Vulkan.Core10.Enums.SystemAllocationScope.SystemAllocationScope'
 type PFN_vkInternalFreeNotification = FunPtr FN_vkInternalFreeNotification
 
 
@@ -85,7 +89,8 @@ type FN_vkReallocationFunction = ("pUserData" ::: Ptr ()) -> ("pOriginal" ::: Pt
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+-- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Vulkan.Core10.Enums.SystemAllocationScope.SystemAllocationScope'
 type PFN_vkReallocationFunction = FunPtr FN_vkReallocationFunction
 
 
@@ -99,8 +104,6 @@ type FN_vkAllocationFunction = ("pUserData" ::: Ptr ()) -> CSize -> ("alignment"
 -- return @NULL@. If the allocation was successful, it /must/ return a
 -- valid pointer to memory allocation containing at least @size@ bytes, and
 -- with the pointer value being a multiple of @alignment@.
---
--- Note
 --
 -- Correct Vulkan operation /cannot/ be assumed if the application does not
 -- follow these rules.
@@ -131,7 +134,8 @@ type FN_vkAllocationFunction = ("pUserData" ::: Ptr ()) -> CSize -> ("alignment"
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+-- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Vulkan.Core10.Enums.SystemAllocationScope.SystemAllocationScope'
 type PFN_vkAllocationFunction = FunPtr FN_vkAllocationFunction
 
 

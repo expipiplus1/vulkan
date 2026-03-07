@@ -103,7 +103,7 @@
 --
 -- == See Also
 --
--- 'ValidationCheckEXT', 'ValidationFlagsEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

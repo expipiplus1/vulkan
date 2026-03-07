@@ -42,10 +42,15 @@
 --     -   This extension provides API support for
 --         <https://registry.khronos.org/OpenGL/extensions/NV/NV_viewport_array2.txt GL_NV_viewport_array2>
 --
---     -   This extension requires the @geometryShader@ and @multiViewport@
+--     -   This extension requires the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--         and
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
 --         features.
 --
---     -   This extension interacts with the @tessellationShader@ feature.
+--     -   This extension interacts with the
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--         feature.
 --
 -- [__Contributors__]
 --
@@ -81,10 +86,8 @@
 -- When using GLSL source-based shading languages, the @gl_ViewportMask@[]
 -- built-in output variable and @viewport_relative@ layout qualifier from
 -- @GL_NV_viewport_array2@ map to the @ViewportMaskNV@ and
--- @ViewportRelativeNV@ decorations, respectively. Behaviour is described
--- in the @GL_NV_viewport_array2@ extension specification.
---
--- Note
+-- @ViewportRelativeNV@ decorations, respectively. Behavior is described in
+-- the @GL_NV_viewport_array2@ extension specification.
 --
 -- The @ShaderViewportIndexLayerNV@ capability is equivalent to the
 -- @ShaderViewportIndexLayerEXT@ capability added by
@@ -116,7 +119,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerNV ShaderViewportIndexLayerNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerEXT ShaderViewportIndexLayerNV>
 --
 -- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportMaskNV ShaderViewportMaskNV>
 --

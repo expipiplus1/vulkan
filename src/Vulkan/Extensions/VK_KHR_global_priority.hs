@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -56,7 +58,7 @@
 -- enforcement rules.
 --
 -- The driver implementation will attempt to skew hardware resource
--- allocation in favour of the higher-priority task. Therefore,
+-- allocation in favor of the higher-priority task. Therefore,
 -- higher-priority work may retain similar latency and throughput
 -- characteristics even if the system is congested with lower priority
 -- work.
@@ -147,10 +149,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.MAX_GLOBAL_PRIORITY_SIZE_KHR',
--- 'DeviceQueueGlobalPriorityCreateInfoKHR',
--- 'PhysicalDeviceGlobalPriorityQueryFeaturesKHR',
--- 'QueueFamilyGlobalPriorityPropertiesKHR', 'QueueGlobalPriorityKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -262,8 +261,7 @@ pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QUEUE_GLOBAL_PRIORITY_REALTIME_KHR
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceQueueGlobalPriorityCreateInfoKHR = DeviceQueueGlobalPriorityCreateInfoKHR
   { -- | @globalPriority@ is the system-wide priority associated to these queues
-    -- as specified by
-    -- 'Vulkan.Extensions.VK_EXT_global_priority.QueueGlobalPriorityEXT'
+    -- as specified by 'QueueGlobalPriorityKHR'
     --
     -- #VUID-VkDeviceQueueGlobalPriorityCreateInfoKHR-globalPriority-parameter#
     -- @globalPriority@ /must/ be a valid 'QueueGlobalPriorityKHR' value
@@ -394,8 +392,6 @@ instance Zero PhysicalDeviceGlobalPriorityQueryFeaturesKHR where
 -- The valid elements of @priorities@ /must/ be a continuous sequence of
 -- 'QueueGlobalPriorityKHR' enums in the ascending order.
 --
--- Note
---
 -- For example, returning @priorityCount@ as 3 with supported @priorities@
 -- as 'QUEUE_GLOBAL_PRIORITY_LOW_KHR', 'QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR'
 -- and 'QUEUE_GLOBAL_PRIORITY_REALTIME_KHR' is not allowed.
@@ -412,10 +408,10 @@ data QueueFamilyGlobalPriorityPropertiesKHR = QueueFamilyGlobalPriorityPropertie
     -- this queue family, and it /must/ be greater than 0.
     priorityCount :: Word32
   , -- | @priorities@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_GLOBAL_PRIORITY_SIZE_EXT'
-    -- 'Vulkan.Extensions.VK_EXT_global_priority.QueueGlobalPriorityEXT' enums
-    -- representing all supported global queue priorities in this queue family.
-    -- The first @priorityCount@ elements of the array will be valid.
+    -- 'Vulkan.Core10.APIConstants.MAX_GLOBAL_PRIORITY_SIZE_KHR'
+    -- 'QueueGlobalPriorityKHR' enums representing all supported global queue
+    -- priorities in this queue family. The first @priorityCount@ elements of
+    -- the array will be valid.
     priorities :: Vector QueueGlobalPriorityKHR
   }
   deriving (Typeable)

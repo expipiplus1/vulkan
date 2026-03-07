@@ -22,8 +22,12 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_KHR_dynamic_rendering
 --
@@ -77,6 +81,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'
@@ -101,9 +107,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceTilePropertiesFeaturesQCOM', 'TilePropertiesQCOM',
--- 'getDynamicRenderingTilePropertiesQCOM',
--- 'getFramebufferTilePropertiesQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

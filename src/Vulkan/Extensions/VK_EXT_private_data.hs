@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -55,7 +57,7 @@
 --
 -- This extension is a device extension which enables attaching arbitrary
 -- payloads to Vulkan objects. It introduces the idea of private data slots
--- as a means of storing a 64-bit unsigned integer of application defined
+-- as a means of storing a 64-bit unsigned integer of application-defined
 -- data. Private data slots can be created or destroyed any time an
 -- associated device is available. Private data slots can be reserved at
 -- device creation time, and limiting use to the amount reserved will allow
@@ -113,9 +115,11 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- Functionality in this extension is included in core Vulkan 1.3, with the
--- EXT suffix omitted. The original type, enum and command names are still
--- available as aliases of the core functionality.
+-- Vulkan APIs in this extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. External interactions defined by this extension,
+-- such as SPIR-V token names, retain their original names. The original
+-- Vulkan API names are still available as aliases of the core
+-- functionality.
 --
 -- == Examples
 --
@@ -152,11 +156,7 @@
 --
 -- == See Also
 --
--- 'DevicePrivateDataCreateInfoEXT',
--- 'PhysicalDevicePrivateDataFeaturesEXT', 'PrivateDataSlotCreateFlagsEXT',
--- 'PrivateDataSlotCreateInfoEXT', 'PrivateDataSlotEXT',
--- 'createPrivateDataSlotEXT', 'destroyPrivateDataSlotEXT',
--- 'getPrivateDataEXT', 'setPrivateDataEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

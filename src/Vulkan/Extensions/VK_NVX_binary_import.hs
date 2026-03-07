@@ -15,7 +15,7 @@
 --     30
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -38,7 +38,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-04-09
+--     2024-11-04
 --
 -- [__Contributors__]
 --
@@ -50,8 +50,6 @@
 --
 -- This extension allows applications to import CuBIN binaries and execute
 -- them.
---
--- Note
 --
 -- There is currently no specification language written for this extension.
 -- The links to APIs defined by the extension are to stubs that only
@@ -84,6 +82,10 @@
 --
 -- -   'CuModuleCreateInfoNVX'
 --
+-- -   Extending 'CuModuleCreateInfoNVX':
+--
+--     -   'CuModuleTexturingModeCreateInfoNVX'
+--
 -- == New Enum Constants
 --
 -- -   'NVX_BINARY_IMPORT_EXTENSION_NAME'
@@ -103,6 +105,8 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
@@ -279,10 +283,32 @@
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
+--     'CuModuleTexturingModeCreateInfoNVX'
+--
+-- -   #VUID-VkCuModuleCreateInfoNVX-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
 --     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@
 --     bytes
+--
+-- There is currently no specification language written for this type. This
+-- section acts only as placeholder and to avoid dead links in the
+-- specification and reference pages.
+--
+-- > // Provided by VK_NVX_binary_import
+-- > typedef struct VkCuModuleTexturingModeCreateInfoNVX {
+-- >     VkStructureType    sType;
+-- >     const void*        pNext;
+-- >     VkBool32           use64bitTexturing;
+-- > } VkCuModuleTexturingModeCreateInfoNVX;
+--
+-- === Valid Usage (Implicit)
+--
+-- -   #VUID-VkCuModuleTexturingModeCreateInfoNVX-sType-sType# @sType@
+--     /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX'
 --
 -- There is currently no specification language written for this command.
 -- This section acts only as placeholder and to avoid dead links in the
@@ -396,17 +422,17 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2024-11-04 (Liam Middlebrook)
+--
+--     -   Add 'CuModuleTexturingModeCreateInfoNVX'
+--
 -- -   Revision 1, 2021-04-09 (Eric Werness)
 --
 --     -   Internal revisions
 --
 -- == See Also
 --
--- 'CuFunctionCreateInfoNVX', 'Vulkan.Extensions.Handles.CuFunctionNVX',
--- 'CuLaunchInfoNVX', 'CuModuleCreateInfoNVX',
--- 'Vulkan.Extensions.Handles.CuModuleNVX', 'cmdCuLaunchKernelNVX',
--- 'createCuFunctionNVX', 'createCuModuleNVX', 'destroyCuFunctionNVX',
--- 'destroyCuModuleNVX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -423,6 +449,7 @@ module Vulkan.Extensions.VK_NVX_binary_import  ( createCuModuleNVX
                                                , destroyCuFunctionNVX
                                                , cmdCuLaunchKernelNVX
                                                , CuModuleCreateInfoNVX(..)
+                                               , CuModuleTexturingModeCreateInfoNVX(..)
                                                , CuFunctionCreateInfoNVX(..)
                                                , CuLaunchInfoNVX(..)
                                                , NVX_BINARY_IMPORT_SPEC_VERSION
@@ -438,11 +465,13 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -461,6 +490,7 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
@@ -482,8 +512,13 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
@@ -501,13 +536,22 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateCuModuleNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyCuFunctionNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyCuModuleNVX))
 import Vulkan.Core10.Handles (Device_T)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CU_FUNCTION_CREATE_INFO_NVX))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (CuFunctionNVX(..))
 import Vulkan.Extensions.Handles (CuModuleNVX(..))
@@ -517,7 +561,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateCuModuleNVX
-  :: FunPtr (Ptr Device_T -> Ptr CuModuleCreateInfoNVX -> Ptr AllocationCallbacks -> Ptr CuModuleNVX -> IO Result) -> Ptr Device_T -> Ptr CuModuleCreateInfoNVX -> Ptr AllocationCallbacks -> Ptr CuModuleNVX -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct CuModuleCreateInfoNVX) -> Ptr AllocationCallbacks -> Ptr CuModuleNVX -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct CuModuleCreateInfoNVX) -> Ptr AllocationCallbacks -> Ptr CuModuleNVX -> IO Result
 
 -- | vkCreateCuModuleNVX - Stub description of vkCreateCuModuleNVX
 --
@@ -555,12 +599,12 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'CuModuleCreateInfoNVX', 'Vulkan.Extensions.Handles.CuModuleNVX',
 -- 'Vulkan.Core10.Handles.Device'
-createCuModuleNVX :: forall io
-                   . (MonadIO io)
+createCuModuleNVX :: forall a io
+                   . (Extendss CuModuleCreateInfoNVX a, PokeChain a, MonadIO io)
                   => -- No documentation found for Nested "vkCreateCuModuleNVX" "device"
                      Device
                   -> -- No documentation found for Nested "vkCreateCuModuleNVX" "pCreateInfo"
-                     CuModuleCreateInfoNVX
+                     (CuModuleCreateInfoNVX a)
                   -> -- No documentation found for Nested "vkCreateCuModuleNVX" "pAllocator"
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (CuModuleNVX)
@@ -576,7 +620,7 @@ createCuModuleNVX device createInfo allocator = liftIO . evalContT $ do
   pPModule <- ContT $ bracket (callocBytes @CuModuleNVX 8) free
   r <- lift $ traceAroundEvent "vkCreateCuModuleNVX" (vkCreateCuModuleNVX'
                                                         (deviceHandle (device))
-                                                        pCreateInfo
+                                                        (forgetExtensions pCreateInfo)
                                                         pAllocator
                                                         (pPModule))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -591,7 +635,7 @@ createCuModuleNVX device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withCuModuleNVX :: forall io r . MonadIO io => Device -> CuModuleCreateInfoNVX -> Maybe AllocationCallbacks -> (io CuModuleNVX -> (CuModuleNVX -> io ()) -> r) -> r
+withCuModuleNVX :: forall a io r . (Extendss CuModuleCreateInfoNVX a, PokeChain a, MonadIO io) => Device -> CuModuleCreateInfoNVX a -> Maybe AllocationCallbacks -> (io CuModuleNVX -> (CuModuleNVX -> io ()) -> r) -> r
 withCuModuleNVX device pCreateInfo pAllocator b =
   b (createCuModuleNVX device pCreateInfo pAllocator)
     (\(o0) -> destroyCuModuleNVX device o0 pAllocator)
@@ -866,6 +910,11 @@ cmdCuLaunchKernelNVX commandBuffer launchInfo = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX'
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
+--     'CuModuleTexturingModeCreateInfoNVX'
+--
+-- -   #VUID-VkCuModuleCreateInfoNVX-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkCuModuleCreateInfoNVX-pData-parameter# If @dataSize@ is not
 --     @0@, @pData@ /must/ be a valid pointer to an array of @dataSize@
@@ -875,50 +924,113 @@ cmdCuLaunchKernelNVX commandBuffer launchInfo = liftIO . evalContT $ do
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createCuModuleNVX'
-data CuModuleCreateInfoNVX = CuModuleCreateInfoNVX
-  { -- No documentation found for Nested "VkCuModuleCreateInfoNVX" "dataSize"
+data CuModuleCreateInfoNVX (es :: [Type]) = CuModuleCreateInfoNVX
+  { -- No documentation found for Nested "VkCuModuleCreateInfoNVX" "pNext"
+    next :: Chain es
+  , -- No documentation found for Nested "VkCuModuleCreateInfoNVX" "dataSize"
     dataSize :: Word64
   , -- No documentation found for Nested "VkCuModuleCreateInfoNVX" "pData"
     data' :: Ptr ()
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (CuModuleCreateInfoNVX)
+deriving instance Generic (CuModuleCreateInfoNVX (es :: [Type]))
 #endif
-deriving instance Show CuModuleCreateInfoNVX
+deriving instance Show (Chain es) => Show (CuModuleCreateInfoNVX es)
 
-instance ToCStruct CuModuleCreateInfoNVX where
+instance Extensible CuModuleCreateInfoNVX where
+  extensibleTypeName = "CuModuleCreateInfoNVX"
+  setNext CuModuleCreateInfoNVX{..} next' = CuModuleCreateInfoNVX{next = next', ..}
+  getNext CuModuleCreateInfoNVX{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends CuModuleCreateInfoNVX e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @CuModuleTexturingModeCreateInfoNVX = Just f
+    | otherwise = Nothing
+
+instance ( Extendss CuModuleCreateInfoNVX es
+         , PokeChain es ) => ToCStruct (CuModuleCreateInfoNVX es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p CuModuleCreateInfoNVX{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (dataSize))
-    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (data')
-    f
+  pokeCStruct p CuModuleCreateInfoNVX{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (dataSize))
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (data')
+    lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
+    lift $ f
 
-instance FromCStruct CuModuleCreateInfoNVX where
+instance ( Extendss CuModuleCreateInfoNVX es
+         , PeekChain es ) => FromCStruct (CuModuleCreateInfoNVX es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     dataSize <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     pData <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
     pure $ CuModuleCreateInfoNVX
-             (coerce @CSize @Word64 dataSize) pData
+             next (coerce @CSize @Word64 dataSize) pData
 
-instance Storable CuModuleCreateInfoNVX where
-  sizeOf ~_ = 32
+instance es ~ '[] => Zero (CuModuleCreateInfoNVX es) where
+  zero = CuModuleCreateInfoNVX
+           ()
+           zero
+           zero
+
+
+-- | VkCuModuleTexturingModeCreateInfoNVX - Stub description of
+-- VkCuModuleTexturingModeCreateInfoNVX
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data CuModuleTexturingModeCreateInfoNVX = CuModuleTexturingModeCreateInfoNVX
+  { -- No documentation found for Nested "VkCuModuleTexturingModeCreateInfoNVX" "use64bitTexturing"
+    use64bitTexturing :: Bool }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CuModuleTexturingModeCreateInfoNVX)
+#endif
+deriving instance Show CuModuleTexturingModeCreateInfoNVX
+
+instance ToCStruct CuModuleTexturingModeCreateInfoNVX where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CuModuleTexturingModeCreateInfoNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (use64bitTexturing))
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
+
+instance FromCStruct CuModuleTexturingModeCreateInfoNVX where
+  peekCStruct p = do
+    use64bitTexturing <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    pure $ CuModuleTexturingModeCreateInfoNVX
+             (bool32ToBool use64bitTexturing)
+
+instance Storable CuModuleTexturingModeCreateInfoNVX where
+  sizeOf ~_ = 24
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero CuModuleCreateInfoNVX where
-  zero = CuModuleCreateInfoNVX
-           zero
+instance Zero CuModuleTexturingModeCreateInfoNVX where
+  zero = CuModuleTexturingModeCreateInfoNVX
            zero
 
 
@@ -1111,11 +1223,11 @@ instance Zero CuLaunchInfoNVX where
            mempty
 
 
-type NVX_BINARY_IMPORT_SPEC_VERSION = 1
+type NVX_BINARY_IMPORT_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_NVX_BINARY_IMPORT_SPEC_VERSION"
 pattern NVX_BINARY_IMPORT_SPEC_VERSION :: forall a . Integral a => a
-pattern NVX_BINARY_IMPORT_SPEC_VERSION = 1
+pattern NVX_BINARY_IMPORT_SPEC_VERSION = 2
 
 
 type NVX_BINARY_IMPORT_EXTENSION_NAME = "VK_NVX_binary_import"

@@ -56,8 +56,6 @@
 -- generated within the render area during rendering, the contents of the
 -- attachment will be undefined inside the render area.
 --
--- Note
---
 -- The 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
 -- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_STORE' /may/
 -- force an implementation to assume that the attachment was written and

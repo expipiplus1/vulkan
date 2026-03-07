@@ -105,9 +105,7 @@
 --
 -- == See Also
 --
--- 'BlitImageCubicWeightsInfoQCOM', 'CubicFilterWeightsQCOM',
--- 'PhysicalDeviceCubicWeightsFeaturesQCOM',
--- 'SamplerCubicWeightsCreateInfoQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -189,9 +187,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCubicWeightsFeaturesQCOM = PhysicalDeviceCubicWeightsFeaturesQCOM
-  { -- | #features-filter-cubic-weight-selection# @selectableCubicWeights@
-    -- indicates that the implementation supports the selection of filter cubic
-    -- weights.
+  { -- | #features-selectableCubicWeights# @selectableCubicWeights@ indicates
+    -- that the implementation supports the selection of filter cubic weights.
     selectableCubicWeights :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

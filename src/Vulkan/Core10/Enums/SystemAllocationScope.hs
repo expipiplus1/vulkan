@@ -86,6 +86,10 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- 'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction',
+-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification',
+-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification',
+-- 'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 newtype SystemAllocationScope = SystemAllocationScope Int32

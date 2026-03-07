@@ -77,9 +77,36 @@
 -- The structure contains an array of 'LayerSettingEXT' structure values
 -- that configure specific features of layers.
 --
+-- The @VK_EXT_layer_settings@ extension subsumes all the functionality
+-- provided in the @VK_EXT_validation_flags@ extension and the
+-- @VK_EXT_validation_features@ extension.
+--
+-- == New Structures
+--
+-- -   'LayerSettingEXT'
+--
+-- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
+--
+--     -   'LayerSettingsCreateInfoEXT'
+--
+-- == New Enums
+--
+-- -   'LayerSettingTypeEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_LAYER_SETTINGS_EXTENSION_NAME'
+--
+-- -   'EXT_LAYER_SETTINGS_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT'
+--
 -- == Example
 --
--- @VK_EXT_layer_settings@ is implemented by the Vulkan Profiles layer.
+-- One example usage of @VK_EXT_layer_settings@ is as implemented by the
+-- Vulkan Profiles layer.
 --
 -- It allows the profiles layer tests used by the profiles layer C.I. to
 -- programmatically configure the layer for each test without affecting the
@@ -122,34 +149,6 @@
 -- > inst_create_info.pNext = &layer_settings_create_info;
 -- > vkCreateInstance(&inst_create_info, nullptr, &_instances);
 --
--- Note
---
--- The @VK_EXT_layer_settings@ extension subsumes all the functionality
--- provided in the @VK_EXT_validation_flags@ extension and the
--- @VK_EXT_validation_features@ extension.
---
--- == New Structures
---
--- -   'LayerSettingEXT'
---
--- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
---
---     -   'LayerSettingsCreateInfoEXT'
---
--- == New Enums
---
--- -   'LayerSettingTypeEXT'
---
--- == New Enum Constants
---
--- -   'EXT_LAYER_SETTINGS_EXTENSION_NAME'
---
--- -   'EXT_LAYER_SETTINGS_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT'
---
 -- == Issues
 --
 -- -   How should application developers figure out the list of available
@@ -171,7 +170,7 @@
 --
 -- == See Also
 --
--- 'LayerSettingEXT', 'LayerSettingTypeEXT', 'LayerSettingsCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -254,7 +253,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_LAYER_SET
 -- 'LayerSettingEXT', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data LayerSettingsCreateInfoEXT = LayerSettingsCreateInfoEXT
   { -- | @pSettings@ is a pointer to an array of @settingCount@ 'LayerSettingEXT'
-    -- values specifying the setting to be configured.
+    -- values specifying the settings to be configured.
     settings :: Vector LayerSettingEXT }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -300,6 +299,12 @@ instance Zero LayerSettingsCreateInfoEXT where
 -- the same @pSettingName@ is referenced for the same @pLayerName@, the
 -- value of the first reference of the layer setting is used.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkLayerSettingEXT-valueCount-10070# If @valueCount@ is not
+--     @0@, @pValues@ /must/ be a valid pointer to an array of @valueCount@
+--     values of the type indicated by @type@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkLayerSettingEXT-pLayerName-parameter# @pLayerName@ /must/ be
@@ -311,10 +316,6 @@ instance Zero LayerSettingsCreateInfoEXT where
 -- -   #VUID-VkLayerSettingEXT-type-parameter# @type@ /must/ be a valid
 --     'LayerSettingTypeEXT' value
 --
--- -   #VUID-VkLayerSettingEXT-pValues-parameter# If @valueCount@ is not
---     @0@, @pValues@ /must/ be a valid pointer to an array of @valueCount@
---     bytes
---
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_layer_settings VK_EXT_layer_settings>,
@@ -324,14 +325,16 @@ data LayerSettingEXT = LayerSettingEXT
     -- layer to configure the setting from.
     layerName :: ByteString
   , -- | @pSettingName@ is a pointer to a null-terminated UTF-8 string naming the
-    -- setting to configure. Unknown @pSettingName@ by the layer are ignored.
+    -- setting to configure. Values of @pSettingName@ that are unknown to the
+    -- layer are ignored.
     settingName :: ByteString
   , -- | @type@ is a 'LayerSettingTypeEXT' value specifying the type of the
     -- @pValues@ values.
     type' :: LayerSettingTypeEXT
-  , -- No documentation found for Nested "VkLayerSettingEXT" "valueCount"
+  , -- | @valueCount@ is the number of values used to configure the layer
+    -- setting.
     valueCount :: Word32
-  , -- | @pValues@ is a pointer to an array of @count@ values of the type
+  , -- | @pValues@ is a pointer to an array of @valueCount@ values of the type
     -- indicated by @type@ to configure the layer setting.
     values :: Ptr ()
   }

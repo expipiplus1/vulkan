@@ -39,7 +39,7 @@ pattern IMAGE_TILING_OPTIMAL = ImageTiling 0
 -- memory in row-major order, possibly with some padding on each row).
 pattern IMAGE_TILING_LINEAR = ImageTiling 1
 
--- | 'IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT' indicates that the image’s tiling
+-- | 'IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT' specifies that the image’s tiling
 -- is defined by a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
 -- The modifier is specified at image creation with

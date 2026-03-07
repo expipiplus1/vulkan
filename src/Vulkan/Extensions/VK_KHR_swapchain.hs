@@ -103,7 +103,7 @@
 -- -   'queuePresentKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'acquireNextImage2KHR'
@@ -121,7 +121,7 @@
 -- -   'SwapchainCreateInfoKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'AcquireNextImageInfoKHR'
@@ -150,7 +150,7 @@
 -- -   'SwapchainCreateFlagBitsKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'DeviceGroupPresentModeFlagBitsKHR'
@@ -160,7 +160,7 @@
 -- -   'SwapchainCreateFlagsKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'DeviceGroupPresentModeFlagsKHR'
@@ -192,7 +192,7 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
@@ -455,10 +455,11 @@
 --
 -- __RESOLVED__: In the advent of UHD and HDR display devices, proper color
 -- space information is vital to the display pipeline represented by the
--- swapchain. The app can discover the supported format\/color-space pairs
--- and select a pair most suited to its rendering needs. Currently only the
--- sRGB color space is supported, future extensions may provide support for
--- more color spaces. See issues 23 and 24.
+-- swapchain. The application can discover the supported
+-- format\/color-space pairs and select a pair most suited to its rendering
+-- needs. Currently only the sRGB color space is supported, future
+-- extensions may provide support for more color spaces. See issues 23 and
+-- 24.
 --
 -- 20) Is there a mechanism to modify or replace an existing swapchain with
 -- one targeting the same surface?
@@ -536,10 +537,11 @@
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' owns the binding of the native
 -- window to the Vulkan driver.
 --
--- 26) How can the client control the way the alpha component of swapchain
--- images is treated by the presentation engine during compositing?
+-- 26) How can the application control the way the alpha component of
+-- swapchain images is treated by the presentation engine during
+-- compositing?
 --
--- __RESOLVED__: We should add new enum values to allow the client to
+-- __RESOLVED__: We should add new enum values to allow the application to
 -- negotiate with the presentation engine on how to treat image alpha
 -- values during the compositing process. Since not all platforms can
 -- practically control this through the Vulkan driver, a value of
@@ -574,14 +576,12 @@
 --
 -- == Examples
 --
--- Note
---
 -- The example code for the @VK_KHR_surface@ and @VK_KHR_swapchain@
 -- extensions was removed from the appendix after revision 1.0.29. This WSI
 -- example code was ported to the cube demo that is shipped with the
 -- official Khronos SDK, and is being kept up-to-date in that location
 -- (see:
--- <https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c>).
+-- <https://github.com/KhronosGroup/Vulkan-Tools/blob/main/cube/cube.c>).
 --
 -- == Version History
 --
@@ -1064,11 +1064,7 @@
 --
 -- == See Also
 --
--- 'PresentInfoKHR', 'SwapchainCreateFlagBitsKHR',
--- 'SwapchainCreateFlagsKHR', 'SwapchainCreateInfoKHR',
--- 'Vulkan.Extensions.Handles.SwapchainKHR', 'acquireNextImageKHR',
--- 'createSwapchainKHR', 'destroySwapchainKHR', 'getSwapchainImagesKHR',
--- 'queuePresentKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -1372,8 +1368,6 @@ foreign import ccall
 -- newly created swapchain will automatically acquire exclusive full-screen
 -- access from @pCreateInfo->oldSwapchain@.
 --
--- Note
---
 -- This implicit transfer is intended to avoid exiting and entering
 -- full-screen exclusive mode, which may otherwise cause unwanted visual
 -- updates to the display.
@@ -1385,12 +1379,10 @@ foreign import ccall
 -- this occurs, 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 -- will be returned.
 --
--- Note
---
 -- In particular, it will fail if the @imageExtent@ member of @pCreateInfo@
 -- does not match the extents of the monitor. Other reasons for failure may
--- include the app not being set as high-dpi aware, or if the physical
--- device and monitor are not compatible in this mode.
+-- include the application not being set as high-dpi aware, or if the
+-- physical device and monitor are not compatible in this mode.
 --
 -- If the @pNext@ chain of 'SwapchainCreateInfoKHR' includes a
 -- 'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV'
@@ -1629,11 +1621,11 @@ foreign import ccall
 --
 -- If @pSwapchainImages@ is @NULL@, then the number of presentable images
 -- for @swapchain@ is returned in @pSwapchainImageCount@. Otherwise,
--- @pSwapchainImageCount@ /must/ point to a variable set by the user to the
--- number of elements in the @pSwapchainImages@ array, and on return the
--- variable is overwritten with the number of structures actually written
--- to @pSwapchainImages@. If the value of @pSwapchainImageCount@ is less
--- than the number of presentable images for @swapchain@, at most
+-- @pSwapchainImageCount@ /must/ point to a variable set by the application
+-- to the number of elements in the @pSwapchainImages@ array, and on return
+-- the variable is overwritten with the number of structures actually
+-- written to @pSwapchainImages@. If the value of @pSwapchainImageCount@ is
+-- less than the number of presentable images for @swapchain@, at most
 -- @pSwapchainImageCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
@@ -1781,16 +1773,20 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 --     be in the retired state
 --
 -- -   #VUID-vkAcquireNextImageKHR-semaphore-01286# If @semaphore@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be unsignaled
 --
 -- -   #VUID-vkAcquireNextImageKHR-semaphore-01779# If @semaphore@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ not have any
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ not have any
 --     uncompleted signal or wait operations pending
 --
 -- -   #VUID-vkAcquireNextImageKHR-fence-01287# If @fence@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled and
---     /must/ not be associated with any other queue command that has not
---     yet completed execution on that queue
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be
+--     unsignaled
+--
+-- -   #VUID-vkAcquireNextImageKHR-fence-10066# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ not be
+--     associated with any other queue command that has not yet completed
+--     execution on that queue
 --
 -- -   #VUID-vkAcquireNextImageKHR-semaphore-01780# @semaphore@ and @fence@
 --     /must/ not both be equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -1798,8 +1794,8 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 -- -   #VUID-vkAcquireNextImageKHR-surface-07783# If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-acquire-forward-progress forward progress>
 --     cannot be guaranteed for the @surface@ used to create the
---     @swapchain@ member of @pAcquireInfo@, the @timeout@ member of
---     @pAcquireInfo@ /must/ not be @UINT64_MAX@
+--     @swapchain@ member of @pAcquireInfo@, @timeout@ /must/ not be
+--     @UINT64_MAX@
 --
 -- -   #VUID-vkAcquireNextImageKHR-semaphore-03265# @semaphore@ /must/ have
 --     a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -1926,13 +1922,9 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
 -- There is no requirement for an application to present images in the same
 -- order that they were acquired - applications can arbitrarily present any
 -- image that is currently acquired.
---
--- Note
 --
 -- The origin of the native orientation of the surface coordinate system is
 -- not specified in the Vulkan specification; it depends on the platform.
@@ -2047,8 +2039,6 @@ foreign import ccall
 -- presented images /must/ not be used again before they have been
 -- reacquired using 'acquireNextImageKHR'.
 --
--- Note
---
 -- The application /can/ continue to present any acquired images from a
 -- retired swapchain as long as the swapchain has not entered a state that
 -- causes 'queuePresentKHR' to return
@@ -2066,6 +2056,12 @@ foreign import ccall
 --     of @pSwapchains@ was created from a display surface, all display
 --     surfaces referenced that refer to the same display /must/ use the
 --     same display mode
+--
+-- -   #VUID-vkQueuePresentKHR-pSwapchains-10285# If more than one member
+--     of @pSwapchains@ was created from a display surface, all display
+--     surfaces referenced that refer to the same display /must/ use the
+--     same
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#wsi-displaySurfaceStereoType stereoType>
 --
 -- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-01294# When a semaphore wait
 --     operation referring to a binary semaphore defined by the elements of
@@ -2435,8 +2431,8 @@ foreign import ccall
 --
 -- If @pRects@ is @NULL@, then the number of rectangles used when
 -- presenting the given @surface@ is returned in @pRectCount@. Otherwise,
--- @pRectCount@ /must/ point to a variable set by the user to the number of
--- elements in the @pRects@ array, and on return the variable is
+-- @pRectCount@ /must/ point to a variable set by the application to the
+-- number of elements in the @pRects@ array, and on return the variable is
 -- overwritten with the number of structures actually written to @pRects@.
 -- If the value of @pRectCount@ is less than the number of rectangles, at
 -- most @pRectCount@ structures will be written, and
@@ -2562,8 +2558,6 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 -- fails. The application /can/ destroy @oldSwapchain@ to free all memory
 -- associated with @oldSwapchain@.
 --
--- Note
---
 -- Multiple retired swapchains /can/ be associated with the same
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' through multiple uses of
 -- @oldSwapchain@ that outnumber calls to 'destroySwapchainKHR'.
@@ -2594,6 +2588,12 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface if the returned @maxImageCount@ is not zero
+--
+-- -   #VUID-VkSwapchainCreateInfoKHR-swapchainMaintenance1-10155# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     feature is not enabled, then the @pNext@ chain /must/ not include a
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT'
+--     structure
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-02839# If @presentMode@
 --     is not
@@ -2646,6 +2646,11 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
 --     for the surface and @presentMode@
 --
+-- -   #VUID-VkSwapchainCreateInfoKHR-swapchainMaintenance1-10157# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     feature is not enabled, then @flags@ /must/ not include
+--     'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT'
+--
 -- -   #VUID-VkSwapchainCreateInfoKHR-imageExtent-01689# @imageExtent@
 --     members @width@ and @height@ /must/ both be non-zero
 --
@@ -2658,7 +2663,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     for the surface
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-presentMode-01427# If @presentMode@
---     is 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
+--     is
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT',
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR',
@@ -2722,6 +2729,12 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR'
 --     for the surface
+--
+-- -   #VUID-VkSwapchainCreateInfoKHR-presentModeFifoLatestReady-10161# If
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentModeFifoLatestReady presentModeFifoLatestReady>
+--     feature is not enabled, @presentMode@ /must/ not be
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-physicalDeviceCount-01429# If the
 --     logical device was created with
@@ -2900,8 +2913,6 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     -- surface’s @currentExtent@ as returned by
     -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'.
     --
-    -- Note
-    --
     -- On some platforms, it is normal that @maxImageExtent@ /may/ become
     -- @(0, 0)@, for example when the window is minimized. In such a case, it
     -- is not possible to create a swapchain due to the Valid Usage
@@ -2945,22 +2956,20 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     -- discard rendering operations that affect regions of the surface that are
     -- not visible.
     --
-    -- -   If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the presentable
-    --     images associated with the swapchain /may/ not own all of their
-    --     pixels. Pixels in the presentable images that correspond to regions
-    --     of the target surface obscured by another window on the desktop, or
-    --     subject to some other clipping mechanism will have undefined content
-    --     when read back. Fragment shaders /may/ not execute for these pixels,
-    --     and thus any side effects they would have had will not occur.
-    --     Setting 'Vulkan.Core10.FundamentalTypes.TRUE' does not guarantee any
-    --     clipping will occur, but allows more efficient presentation methods
-    --     to be used on some platforms.
+    -- -   If @clipped@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
+    --     presentable images associated with the swapchain /may/ not own all
+    --     of their pixels. Pixels in the presentable images that correspond to
+    --     regions of the target surface obscured by another window on the
+    --     desktop, or subject to some other clipping mechanism will have
+    --     undefined content when read back. Fragment shaders /may/ not execute
+    --     for these pixels, and thus any side effects they would have had will
+    --     not occur. Setting 'Vulkan.Core10.FundamentalTypes.TRUE' does not
+    --     guarantee any clipping will occur, but allows more efficient
+    --     presentation methods to be used on some platforms.
     --
-    -- -   If set to 'Vulkan.Core10.FundamentalTypes.FALSE', presentable images
-    --     associated with the swapchain will own all of the pixels they
+    -- -   If @clipped@ is 'Vulkan.Core10.FundamentalTypes.FALSE', presentable
+    --     images associated with the swapchain will own all of the pixels they
     --     contain.
-    --
-    --     Note
     --
     --     Applications /should/ set this value to
     --     'Vulkan.Core10.FundamentalTypes.TRUE' if they do not expect to read
@@ -3119,16 +3128,14 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 -- layout.
 --
--- Note
---
 -- When transitioning the image to
 -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR' or
 -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR', there is
 -- no need to delay subsequent processing, or perform any visibility
 -- operations (as 'queuePresentKHR' performs automatic visibility
 -- operations). To achieve this, the @dstAccessMask@ member of the
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' /should/ be set to @0@,
--- and the @dstStageMask@ parameter /should/ be set to
+-- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' /should/ be @0@, and the
+-- @dstStageMask@ parameter /should/ be
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT'.
 --
 -- == Valid Usage
@@ -3152,6 +3159,12 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentId presentId>
 --     feature is not enabled, each @presentIds@ entry in that structure
 --     /must/ be NULL
+--
+-- -   #VUID-VkPresentInfoKHR-swapchainMaintenance1-10158# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     feature is not enabled, then the @pNext@ chain /must/ not include a
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentFenceInfoEXT'
+--     structure
 --
 -- -   #VUID-VkPresentInfoKHR-pSwapchains-09199# If any element of the
 --     @pSwapchains@ array has been created with
@@ -3567,8 +3580,6 @@ instance Zero BindImageMemorySwapchainInfoKHR where
 -- If 'acquireNextImageKHR' is used, the device mask is considered to
 -- include all physical devices in the logical device.
 --
--- Note
---
 -- 'acquireNextImage2KHR' signals at most one semaphore, even if the
 -- application requests waiting for multiple physical devices to be ready
 -- via the @deviceMask@. However, only a single physical device /can/ wait
@@ -3585,16 +3596,21 @@ instance Zero BindImageMemorySwapchainInfoKHR where
 --     not be in the retired state
 --
 -- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-01288# If @semaphore@ is
---     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be
+--     unsignaled
 --
 -- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-01781# If @semaphore@ is
---     not 'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ not have any
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ not have any
 --     uncompleted signal or wait operations pending
 --
 -- -   #VUID-VkAcquireNextImageInfoKHR-fence-01289# If @fence@ is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be unsignaled and
---     /must/ not be associated with any other queue command that has not
---     yet completed execution on that queue
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be
+--     unsignaled
+--
+-- -   #VUID-VkAcquireNextImageInfoKHR-fence-10067# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ not be
+--     associated with any other queue command that has not yet completed
+--     execution on that queue
 --
 -- -   #VUID-VkAcquireNextImageInfoKHR-semaphore-01782# @semaphore@ and
 --     @fence@ /must/ not both be equal to

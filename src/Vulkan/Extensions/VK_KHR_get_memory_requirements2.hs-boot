@@ -53,7 +53,7 @@
 --
 -- This extension provides new queries for memory requirements of images
 -- and buffers that can be easily extended by other extensions, without
--- introducing any further entry points. The Vulkan 1.0
+-- introducing any additional commands. The Vulkan 1.0
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements' and
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements'
 -- structures do not include @sType@ and @pNext@ members. This extension
@@ -65,7 +65,7 @@
 -- == Promotion to Vulkan 1.1
 --
 -- All functionality in this extension is included in core Vulkan 1.1, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Commands
@@ -114,10 +114,7 @@
 --
 -- == See Also
 --
--- 'BufferMemoryRequirementsInfo2KHR', 'ImageMemoryRequirementsInfo2KHR',
--- 'ImageSparseMemoryRequirementsInfo2KHR', 'MemoryRequirements2KHR',
--- 'SparseImageMemoryRequirements2KHR', 'getBufferMemoryRequirements2KHR',
--- 'getImageMemoryRequirements2KHR', 'getImageSparseMemoryRequirements2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

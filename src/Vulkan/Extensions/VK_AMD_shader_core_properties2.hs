@@ -85,8 +85,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderCoreProperties2AMD',
--- 'ShaderCorePropertiesFlagBitsAMD', 'ShaderCorePropertiesFlagsAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

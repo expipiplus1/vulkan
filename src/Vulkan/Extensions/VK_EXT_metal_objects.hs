@@ -15,10 +15,10 @@
 --     312
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     None
@@ -34,7 +34,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-05-28
+--     2024-04-04
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -183,17 +183,15 @@
 --         mask fields to individual bit fields to simplify Valid Usage
 --         rules.
 --
+-- -   Revision 2, 2024-04-04 (Bill Hollings)
+--
+--     -   Add an @__unsafe_unretained@ ownership qualifier to all Metal
+--         object declarations, to support Automatic Reference Counting
+--         (ARC) on Apple devices.
+--
 -- == See Also
 --
--- 'IOSurfaceRef', 'MTLBuffer_id', 'MTLCommandQueue_id', 'MTLDevice_id',
--- 'MTLSharedEvent_id', 'MTLTexture_id', 'ExportMetalBufferInfoEXT',
--- 'ExportMetalCommandQueueInfoEXT', 'ExportMetalDeviceInfoEXT',
--- 'ExportMetalIOSurfaceInfoEXT', 'ExportMetalObjectCreateInfoEXT',
--- 'ExportMetalObjectTypeFlagBitsEXT', 'ExportMetalObjectTypeFlagsEXT',
--- 'ExportMetalObjectsInfoEXT', 'ExportMetalSharedEventInfoEXT',
--- 'ExportMetalTextureInfoEXT', 'ImportMetalBufferInfoEXT',
--- 'ImportMetalIOSurfaceInfoEXT', 'ImportMetalSharedEventInfoEXT',
--- 'ImportMetalTextureInfoEXT', 'exportMetalObjectsEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -819,8 +817,8 @@ instance Zero ExportMetalBufferInfoEXT where
 --
 -- = Description
 --
--- The app /must/ ensure that the configuration of the @id\<MTLBuffer>@
--- object is compatible with the configuration of the
+-- The application /must/ ensure that the configuration of the
+-- @id\<MTLBuffer>@ object is compatible with the configuration of the
 -- 'Vulkan.Core10.Handles.DeviceMemory'. Failure to do so results in
 -- undefined behavior.
 --
@@ -921,7 +919,7 @@ data ExportMetalTextureInfoEXT = ExportMetalTextureInfoEXT
   , -- | @bufferView@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a
     -- 'Vulkan.Core10.Handles.BufferView'.
     bufferView :: BufferView
-  , -- | @plane@ indicates the plane of a multi-planar
+  , -- | @plane@ specifies the plane of a multi-planar
     -- 'Vulkan.Core10.Handles.Image' or 'Vulkan.Core10.Handles.ImageView'.
     plane :: ImageAspectFlagBits
   , -- | @mtlTexture@ is the Metal @id\<MTLTexture>@ object underlying the
@@ -992,9 +990,9 @@ instance Zero ExportMetalTextureInfoEXT where
 -- = Description
 --
 -- The @pNext@ chain /must/ include one 'ImportMetalTextureInfoEXT'
--- structure for each plane in the 'Vulkan.Core10.Handles.Image'. The app
--- /must/ ensure that the configuration of the Metal @id\<MTLTexture>@
--- objects are compatible with the configuration of the
+-- structure for each plane in the 'Vulkan.Core10.Handles.Image'. The
+-- application /must/ ensure that the configuration of the Metal
+-- @id\<MTLTexture>@ objects are compatible with the configuration of the
 -- 'Vulkan.Core10.Handles.Image'. Failure to do so results in undefined
 -- behavior.
 --
@@ -1006,7 +1004,7 @@ instance Zero ExportMetalTextureInfoEXT where
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMetalTextureInfoEXT = ImportMetalTextureInfoEXT
-  { -- | @plane@ indicates the plane of the 'Vulkan.Core10.Handles.Image' that
+  { -- | @plane@ specifies the plane of the 'Vulkan.Core10.Handles.Image' that
     -- the @id\<MTLTexture>@ object should be attached to.
     --
     -- #VUID-VkImportMetalTextureInfoEXT-plane-parameter# @plane@ /must/ be a
@@ -1134,7 +1132,7 @@ instance Zero ExportMetalIOSurfaceInfoEXT where
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', the implementation will create
 -- a new @IOSurface@ to underlie the 'Vulkan.Core10.Handles.Image'.
 --
--- If provided, the app /must/ ensure that the configuration of the
+-- If provided, the application /must/ ensure that the configuration of the
 -- 'IOSurfaceRef' object is compatible with the configuration of the
 -- 'Vulkan.Core10.Handles.Image'. Failure to do so results in undefined
 -- behavior.
@@ -1286,8 +1284,8 @@ instance Zero ExportMetalSharedEventInfoEXT where
 -- both 'ImportMetalSharedEventInfoEXT' and
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo',
 -- the @signaledValue@ property of the imported @id\<MTLSharedEvent>@
--- object will be set to @initialValue@ of
--- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.
+-- object will be set to
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@initialValue@.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1350,28 +1348,28 @@ type ExportMetalObjectTypeFlagsEXT = ExportMetalObjectTypeFlagBitsEXT
 newtype ExportMetalObjectTypeFlagBitsEXT = ExportMetalObjectTypeFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT' indicates a Metal
+-- | 'EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT' specifies that a Metal
 -- @MTLDevice@ may be exported.
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000001
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT' indicates a Metal
--- @MTLCommandQueue@ may be exported.
+-- | 'EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT' specifies that a
+-- Metal @MTLCommandQueue@ may be exported.
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000002
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT' indicates a Metal
+-- | 'EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT' specifies that a Metal
 -- @MTLBuffer@ may be exported.
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000004
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT' indicates a Metal
+-- | 'EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT' specifies that a Metal
 -- @MTLTexture@ may be exported.
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000008
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT' indicates a Metal
--- @IOSurface@ may be exported.
+-- | 'EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT' specifies that a
+-- Metal @IOSurface@ may be exported.
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000010
 
--- | 'EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT' indicates a Metal
--- @MTLSharedEvent@ may be exported.
+-- | 'EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT' specifies that a
+-- Metal @MTLSharedEvent@ may be exported.
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000020
 
 conNameExportMetalObjectTypeFlagBitsEXT :: String
@@ -1425,11 +1423,11 @@ instance Read ExportMetalObjectTypeFlagBitsEXT where
       conNameExportMetalObjectTypeFlagBitsEXT
       ExportMetalObjectTypeFlagBitsEXT
 
-type EXT_METAL_OBJECTS_SPEC_VERSION = 1
+type EXT_METAL_OBJECTS_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_METAL_OBJECTS_SPEC_VERSION"
 pattern EXT_METAL_OBJECTS_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_METAL_OBJECTS_SPEC_VERSION = 1
+pattern EXT_METAL_OBJECTS_SPEC_VERSION = 2
 
 
 type EXT_METAL_OBJECTS_EXTENSION_NAME = "VK_EXT_metal_objects"

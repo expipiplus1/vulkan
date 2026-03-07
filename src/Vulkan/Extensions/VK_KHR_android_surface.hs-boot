@@ -149,8 +149,7 @@
 --
 -- == See Also
 --
--- 'ANativeWindow', 'AndroidSurfaceCreateFlagsKHR',
--- 'AndroidSurfaceCreateInfoKHR', 'createAndroidSurfaceKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

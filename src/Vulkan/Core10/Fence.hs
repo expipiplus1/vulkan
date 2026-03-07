@@ -501,13 +501,11 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device
 -- time with either 'Vulkan.Core10.Enums.Result.SUCCESS' or
 -- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
 --
--- Note
---
 -- While we guarantee that 'waitForFences' /must/ return in finite time, no
 -- guarantees are made that it returns immediately upon device loss.
--- However, the client can reasonably expect that the delay will be on the
--- order of seconds and that calling 'waitForFences' will not result in a
--- permanently (or seemingly permanently) dead process.
+-- However, the application can reasonably expect that the delay will be on
+-- the order of seconds and that calling 'waitForFences' will not result in
+-- a permanently (or seemingly permanently) dead process.
 --
 -- == Valid Usage (Implicit)
 --

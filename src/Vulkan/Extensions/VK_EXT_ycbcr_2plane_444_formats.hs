@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -101,7 +101,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -184,8 +184,6 @@ pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT = FORMAT_G16_B16R16_2PLANE_444_UN
 -- to selectively enable these features.
 --
 -- == Valid Usage (Implicit)
---
--- Note
 --
 -- Although the formats defined by the @VK_EXT_ycbcr_2plane_444_formats@
 -- were promoted to Vulkan 1.3 as optional formats, the

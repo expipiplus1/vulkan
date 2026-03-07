@@ -21,19 +21,22 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Version 1.2>
---     and
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
@@ -57,7 +60,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_shading_rate.txt GL_EXT_fragment_shading_rate>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_fragment_shading_rate.txt GL_EXT_fragment_shading_rate>
 --
 -- [__Contributors__]
 --
@@ -147,6 +150,17 @@
 --
 --     -   'FragmentShadingRateAttachmentInfoKHR'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
+--
+--     -   'RenderingFragmentShadingRateAttachmentInfoKHR'
+--
 -- == New Enums
 --
 -- -   'FragmentShadingRateCombinerOpKHR'
@@ -198,12 +212,31 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
 --
 --     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+--     -   'PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR'
 --
 -- == Version History
 --
@@ -217,14 +250,7 @@
 --
 -- == See Also
 --
--- 'FragmentShadingRateAttachmentInfoKHR',
--- 'FragmentShadingRateCombinerOpKHR',
--- 'PhysicalDeviceFragmentShadingRateFeaturesKHR',
--- 'PhysicalDeviceFragmentShadingRateKHR',
--- 'PhysicalDeviceFragmentShadingRatePropertiesKHR',
--- 'PipelineFragmentShadingRateStateCreateInfoKHR',
--- 'cmdSetFragmentShadingRateKHR',
--- 'getPhysicalDeviceFragmentShadingRatesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -238,6 +264,7 @@ module Vulkan.Extensions.VK_KHR_fragment_shading_rate  ( FragmentShadingRateAtta
                                                        , PhysicalDeviceFragmentShadingRateKHR
                                                        , PhysicalDeviceFragmentShadingRatePropertiesKHR
                                                        , PipelineFragmentShadingRateStateCreateInfoKHR
+                                                       , RenderingFragmentShadingRateAttachmentInfoKHR
                                                        , FragmentShadingRateCombinerOpKHR
                                                        ) where
 
@@ -283,6 +310,14 @@ instance ToCStruct PipelineFragmentShadingRateStateCreateInfoKHR
 instance Show PipelineFragmentShadingRateStateCreateInfoKHR
 
 instance FromCStruct PipelineFragmentShadingRateStateCreateInfoKHR
+
+
+data RenderingFragmentShadingRateAttachmentInfoKHR
+
+instance ToCStruct RenderingFragmentShadingRateAttachmentInfoKHR
+instance Show RenderingFragmentShadingRateAttachmentInfoKHR
+
+instance FromCStruct RenderingFragmentShadingRateAttachmentInfoKHR
 
 
 data FragmentShadingRateCombinerOpKHR

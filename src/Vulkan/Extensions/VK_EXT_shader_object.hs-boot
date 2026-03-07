@@ -21,17 +21,16 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---         
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__API Interactions__]
 --
@@ -42,6 +41,8 @@
 --     -   Interacts with VK_EXT_blend_operation_advanced
 --
 --     -   Interacts with VK_EXT_conservative_rasterization
+--
+--     -   Interacts with VK_EXT_depth_clamp_control
 --
 --     -   Interacts with VK_EXT_depth_clip_control
 --
@@ -254,6 +255,12 @@
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
 --
 -- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clamp_control VK_EXT_depth_clamp_control>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_depth_clamp_control.cmdSetDepthClampRangeEXT'
+--
+-- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_control VK_EXT_depth_clip_control>
 -- is supported:
 --
@@ -428,7 +435,7 @@
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending 'ShaderCreateFlagBitsEXT':
@@ -440,7 +447,7 @@
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   Extending 'ShaderCreateFlagBitsEXT':
@@ -748,46 +755,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendAdvancedEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendEquationEXT',
--- 'PhysicalDeviceShaderObjectFeaturesEXT',
--- 'PhysicalDeviceShaderObjectPropertiesEXT', 'ShaderCodeTypeEXT',
--- 'ShaderCreateFlagBitsEXT', 'ShaderCreateFlagsEXT',
--- 'ShaderCreateInfoEXT', 'Vulkan.Extensions.Handles.ShaderEXT',
--- 'ShaderRequiredSubgroupSizeCreateInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT',
--- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputBindingDescription2EXT',
--- 'cmdBindShadersEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthTestEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilTestEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT',
--- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT',
--- 'createShadersEXT', 'destroyShaderEXT', 'getShaderBinaryDataEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

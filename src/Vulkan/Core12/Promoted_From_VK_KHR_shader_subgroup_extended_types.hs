@@ -56,7 +56,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSubgroupExtendedTypesFeatures = PhysicalDeviceShaderSubgroupExtendedTypesFeatures
-  { -- | #extension-features-subgroup-extended-types#
+  { -- | #extension-features-shaderSubgroupExtendedTypes#
     -- @shaderSubgroupExtendedTypes@ is a boolean specifying whether subgroup
     -- operations can use 8-bit integer, 16-bit integer, 64-bit integer, 16-bit
     -- floating-point, and vectors of these types in

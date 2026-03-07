@@ -21,15 +21,23 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
---     and
+--              and
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
@@ -119,6 +127,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending 'AndroidHardwareBufferPropertiesANDROID':
@@ -152,6 +162,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
@@ -271,13 +283,7 @@
 --
 -- == See Also
 --
--- 'AHardwareBuffer', 'AndroidHardwareBufferFormatPropertiesANDROID',
--- 'AndroidHardwareBufferPropertiesANDROID',
--- 'AndroidHardwareBufferUsageANDROID', 'ExternalFormatANDROID',
--- 'ImportAndroidHardwareBufferInfoANDROID',
--- 'MemoryGetAndroidHardwareBufferInfoANDROID',
--- 'getAndroidHardwareBufferPropertiesANDROID',
--- 'getMemoryAndroidHardwareBufferANDROID'
+-- No cross-references are available
 --
 -- == Document Notes
 --

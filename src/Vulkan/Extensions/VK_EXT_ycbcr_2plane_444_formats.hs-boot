@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -101,7 +101,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

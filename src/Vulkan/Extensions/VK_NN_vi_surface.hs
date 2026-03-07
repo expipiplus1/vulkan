@@ -100,7 +100,7 @@
 --
 -- == See Also
 --
--- 'ViSurfaceCreateFlagsNN', 'ViSurfaceCreateInfoNN', 'createViSurfaceNN'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -345,7 +345,7 @@ instance Zero ViSurfaceCreateInfoNN where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface VK_NN_vi_surface>,
--- 'ViSurfaceCreateInfoNN'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'ViSurfaceCreateInfoNN'
 newtype ViSurfaceCreateFlagsNN = ViSurfaceCreateFlagsNN Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

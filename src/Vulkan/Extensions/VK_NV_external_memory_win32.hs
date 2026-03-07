@@ -267,8 +267,7 @@
 --
 -- == See Also
 --
--- 'ExportMemoryWin32HandleInfoNV', 'ImportMemoryWin32HandleInfoNV',
--- 'getMemoryWin32HandleNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -498,12 +497,11 @@ instance Zero ImportMemoryWin32HandleInfoNV where
 --
 -- = Description
 --
--- If this structure is not present, or if @pAttributes@ is set to @NULL@,
--- default security descriptor values will be used, and child processes
--- created by the application will not inherit the handle, as described in
--- the MSDN documentation for “Synchronization Object Security and Access
--- Rights”1. Further, if the structure is not present, the access rights
--- will be
+-- If this structure is not present, or if @pAttributes@ is @NULL@, default
+-- security descriptor values will be used, and child processes created by
+-- the application will not inherit the handle, as described in the MSDN
+-- documentation for “Synchronization Object Security and Access Rights”1.
+-- Further, if the structure is not present, the access rights will be
 --
 -- @DXGI_SHARED_RESOURCE_READ@ | @DXGI_SHARED_RESOURCE_WRITE@
 --

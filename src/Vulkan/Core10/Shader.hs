@@ -79,6 +79,7 @@ import Vulkan.Core10.Enums.ShaderModuleCreateFlags (ShaderModuleCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ShaderModuleValidationCacheCreateInfoEXT)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_features (ValidationFeaturesEXT)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
@@ -101,8 +102,6 @@ foreign import ccall
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
 --
--- Note
---
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance5 maintenance5>
 -- feature is enabled, shader module creation can be omitted entirely.
@@ -115,8 +114,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCreateShaderModule-pCreateInfo-06904# If @pCreateInfo@ is
 --     not @NULL@, @pCreateInfo->pNext@ /must/ be @NULL@ or a pointer to a
---     'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT'
---     structure
+--     valid instance of
+--
+--     -   'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT'
+--
+--     -   'Vulkan.Extensions.VK_EXT_validation_features.ValidationFeaturesEXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -385,6 +387,7 @@ instance Extensible ShaderModuleCreateInfo where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ShaderModuleCreateInfo e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @ShaderModuleValidationCacheCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @ValidationFeaturesEXT = Just f
     | otherwise = Nothing
 
 instance ( Extendss ShaderModuleCreateInfo es

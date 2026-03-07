@@ -84,6 +84,13 @@ foreign import ccall
 
 -- | vkCreateBufferView - Create a new buffer view object
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCreateBufferView-device-09665# @device@ /must/ support at
+--     least one queue family with one of the
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateBufferView-device-parameter# @device@ /must/ be a
@@ -358,9 +365,9 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     includes a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlags2CreateInfoKHR',
 --     its @usage@ /must/ not contain any other bit than
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR'
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR'
 --     or
---     'Vulkan.Extensions.VK_AMDX_shader_enqueue.BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR'
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR'
 --
 -- -   #VUID-VkBufferViewCreateInfo-pNext-08781# If the @pNext@ chain
 --     includes a

@@ -39,7 +39,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_ray_tracing_motion_blur.txt GL_NV_ray_tracing_motion_blur>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_ray_tracing_motion_blur.txt GL_NV_ray_tracing_motion_blur>
 --
 -- [__Contributors__]
 --
@@ -161,16 +161,7 @@
 --
 -- == See Also
 --
--- 'AccelerationStructureGeometryMotionTrianglesDataNV',
--- 'AccelerationStructureMatrixMotionInstanceNV',
--- 'AccelerationStructureMotionInfoFlagsNV',
--- 'AccelerationStructureMotionInfoNV',
--- 'AccelerationStructureMotionInstanceDataNV',
--- 'AccelerationStructureMotionInstanceFlagsNV',
--- 'AccelerationStructureMotionInstanceNV',
--- 'AccelerationStructureMotionInstanceTypeNV',
--- 'AccelerationStructureSRTMotionInstanceNV',
--- 'PhysicalDeviceRayTracingMotionBlurFeaturesNV', 'SRTDataNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -699,8 +690,8 @@ data AccelerationStructureSRTMotionInstanceNV = AccelerationStructureSRTMotionIn
   , -- | @transformT1@ is a 'SRTDataNV' structure describing a transformation to
     -- be applied to the acceleration structure at time 1.
     transformT1 :: SRTDataNV
-  , -- | @instanceCustomIndex@ is a 24-bit user-specified index value accessible
-    -- to ray shaders in the @InstanceCustomIndexKHR@ built-in.
+  , -- | @instanceCustomIndex@ is a 24-bit application-specified index value
+    -- accessible to ray shaders in the @InstanceCustomIndexKHR@ built-in.
     --
     -- @instanceCustomIndex@ and @mask@ occupy the same memory as if a single
     -- @uint32_t@ was specified in their place
@@ -847,8 +838,8 @@ data AccelerationStructureMatrixMotionInstanceNV = AccelerationStructureMatrixMo
     -- structure describing a transformation to be applied to the acceleration
     -- structure at time 1.
     transformT1 :: TransformMatrixKHR
-  , -- | @instanceCustomIndex@ is a 24-bit user-specified index value accessible
-    -- to ray shaders in the @InstanceCustomIndexKHR@ built-in.
+  , -- | @instanceCustomIndex@ is a 24-bit application-specified index value
+    -- accessible to ray shaders in the @InstanceCustomIndexKHR@ built-in.
     --
     -- @instanceCustomIndex@ and @mask@ occupy the same memory as if a single
     -- @uint32_t@ was specified in their place
@@ -962,8 +953,6 @@ instance Zero AccelerationStructureMatrixMotionInstanceNV where
 --
 -- = Description
 --
--- Note
---
 -- If writing this other than with a standard C compiler, note that the
 -- final structure should be 152 bytes in size.
 --
@@ -1071,7 +1060,8 @@ instance Zero AccelerationStructureMotionInstanceDataNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
--- 'AccelerationStructureMotionInfoNV'
+-- 'AccelerationStructureMotionInfoNV',
+-- 'Vulkan.Core10.FundamentalTypes.Flags'
 newtype AccelerationStructureMotionInfoFlagsNV = AccelerationStructureMotionInfoFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -1111,7 +1101,8 @@ instance Read AccelerationStructureMotionInfoFlagsNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing_motion_blur VK_NV_ray_tracing_motion_blur>,
--- 'AccelerationStructureMotionInstanceNV'
+-- 'AccelerationStructureMotionInstanceNV',
+-- 'Vulkan.Core10.FundamentalTypes.Flags'
 newtype AccelerationStructureMotionInstanceFlagsNV = AccelerationStructureMotionInstanceFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

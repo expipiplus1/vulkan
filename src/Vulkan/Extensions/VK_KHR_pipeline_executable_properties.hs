@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -159,15 +161,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
--- 'PipelineExecutableInfoKHR',
--- 'PipelineExecutableInternalRepresentationKHR',
--- 'PipelineExecutablePropertiesKHR',
--- 'PipelineExecutableStatisticFormatKHR',
--- 'PipelineExecutableStatisticKHR', 'PipelineExecutableStatisticValueKHR',
--- 'PipelineInfoKHR', 'getPipelineExecutableInternalRepresentationsKHR',
--- 'getPipelineExecutablePropertiesKHR',
--- 'getPipelineExecutableStatisticsKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -299,11 +293,11 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of pipeline executables
 -- associated with the pipeline is returned in @pExecutableCount@.
--- Otherwise, @pExecutableCount@ /must/ point to a variable set by the user
--- to the number of elements in the @pProperties@ array, and on return the
--- variable is overwritten with the number of structures actually written
--- to @pProperties@. If @pExecutableCount@ is less than the number of
--- pipeline executables associated with the pipeline, at most
+-- Otherwise, @pExecutableCount@ /must/ point to a variable set by the
+-- application to the number of elements in the @pProperties@ array, and on
+-- return the variable is overwritten with the number of structures
+-- actually written to @pProperties@. If @pExecutableCount@ is less than
+-- the number of pipeline executables associated with the pipeline, at most
 -- @pExecutableCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
@@ -406,11 +400,11 @@ foreign import ccall
 --
 -- If @pStatistics@ is @NULL@, then the number of statistics associated
 -- with the pipeline executable is returned in @pStatisticCount@.
--- Otherwise, @pStatisticCount@ /must/ point to a variable set by the user
--- to the number of elements in the @pStatistics@ array, and on return the
--- variable is overwritten with the number of structures actually written
--- to @pStatistics@. If @pStatisticCount@ is less than the number of
--- statistics associated with the pipeline executable, at most
+-- Otherwise, @pStatisticCount@ /must/ point to a variable set by the
+-- application to the number of elements in the @pStatistics@ array, and on
+-- return the variable is overwritten with the number of structures
+-- actually written to @pStatistics@. If @pStatisticCount@ is less than the
+-- number of statistics associated with the pipeline executable, at most
 -- @pStatisticCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
@@ -520,9 +514,9 @@ foreign import ccall
 -- representations associated with the pipeline executable is returned in
 -- @pInternalRepresentationCount@. Otherwise,
 -- @pInternalRepresentationCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pInternalRepresentations@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pInternalRepresentations@. If
+-- application to the number of elements in the @pInternalRepresentations@
+-- array, and on return the variable is overwritten with the number of
+-- structures actually written to @pInternalRepresentations@. If
 -- @pInternalRepresentationCount@ is less than the number of internal
 -- representations associated with the pipeline executable, at most
 -- @pInternalRepresentationCount@ structures will be written, and
@@ -993,7 +987,7 @@ instance Zero PipelineExecutableStatisticKHR where
 --
 -- If @pData@ is @NULL@, then the size, in bytes, of the internal
 -- representation data is returned in @dataSize@. Otherwise, @dataSize@
--- must be the size of the buffer, in bytes, pointed to by @pData@ and on
+-- /must/ be the size of the buffer, in bytes, pointed to by @pData@ and on
 -- return @dataSize@ is overwritten with the number of bytes of data
 -- actually written to @pData@ including any trailing null character. If
 -- @dataSize@ is less than the size, in bytes, of the internal

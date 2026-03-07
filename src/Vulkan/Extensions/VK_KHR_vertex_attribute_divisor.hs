@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -97,10 +97,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceVertexAttributeDivisorFeaturesKHR',
--- 'PhysicalDeviceVertexAttributeDivisorPropertiesKHR',
--- 'PipelineVertexInputDivisorStateCreateInfoKHR',
--- 'VertexInputBindingDivisorDescriptionKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -167,12 +164,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
 --
 -- -   #VUID-VkVertexInputBindingDivisorDescriptionKHR-vertexAttributeInstanceRateZeroDivisor-02228#
---     If the @vertexAttributeInstanceRateZeroDivisor@ feature is not
---     enabled, @divisor@ /must/ not be @0@
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
+--     feature is not enabled, @divisor@ /must/ not be @0@
 --
 -- -   #VUID-VkVertexInputBindingDivisorDescriptionKHR-vertexAttributeInstanceRateDivisor-02229#
---     If the @vertexAttributeInstanceRateDivisor@ feature is not enabled,
---     @divisor@ /must/ be @1@
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
+--     feature is not enabled, @divisor@ /must/ be @1@
 --
 -- -   #VUID-VkVertexInputBindingDivisorDescriptionKHR-divisor-01870#
 --     @divisor@ /must/ be a value between @0@ and

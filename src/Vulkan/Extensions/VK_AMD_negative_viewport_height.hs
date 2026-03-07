@@ -67,10 +67,11 @@
 --
 -- == Obsoletion by @VK_KHR_maintenance1@ and Vulkan 1.1
 --
--- Functionality in this extension is included in @VK_KHR_maintenance1@ and
--- subsequently Vulkan 1.1. Due to some slight behavioral differences, this
--- extension /must/ not be enabled alongside @VK_KHR_maintenance1@, or in
--- an instance created with version 1.1 or later requested in
+-- Functionality in this extension is included in the @VK_KHR_maintenance1@
+-- extension and subsequently Vulkan 1.1. Due to some slight behavioral
+-- differences, this extension /must/ not be enabled alongside
+-- @VK_KHR_maintenance1@, or in an instance created with version 1.1 or
+-- later requested in
 -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@.
 --
 -- == New Enum Constants

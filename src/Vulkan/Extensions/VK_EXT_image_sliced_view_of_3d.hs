@@ -21,9 +21,13 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -99,9 +103,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.REMAINING_3D_SLICES_EXT',
--- 'ImageViewSlicedCreateInfoEXT',
--- 'PhysicalDeviceImageSlicedViewOf3DFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -185,7 +187,7 @@ import Vulkan.Core10.APIConstants (pattern REMAINING_3D_SLICES_EXT)
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-sliceCount-07868# If
 --     @sliceCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_3D_SLICES_EXT', it /must/ be
---     be non-zero and @sliceOffset@ + @sliceCount@ /must/ be less than or
+--     non-zero and @sliceOffset@ + @sliceCount@ /must/ be less than or
 --     equal to the effective view depth as specified in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-mip-level-sizing Image Mip Level Sizing>
 --
@@ -201,7 +203,7 @@ import Vulkan.Core10.APIConstants (pattern REMAINING_3D_SLICES_EXT)
 --
 -- -   #VUID-VkImageViewSlicedCreateInfoEXT-None-07871# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageSlicedViewOf3D imageSlicedViewOf3D>
---     feature /must/ be enabled on the device
+--     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --

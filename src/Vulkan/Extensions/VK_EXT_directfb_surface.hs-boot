@@ -80,9 +80,7 @@
 --
 -- == See Also
 --
--- 'DirectFBSurfaceCreateFlagsEXT', 'DirectFBSurfaceCreateInfoEXT',
--- 'createDirectFBSurfaceEXT',
--- 'getPhysicalDeviceDirectFBPresentationSupportEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

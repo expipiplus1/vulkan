@@ -122,10 +122,7 @@
 --
 -- == See Also
 --
--- 'PresentGravityFlagBitsEXT', 'PresentGravityFlagsEXT',
--- 'PresentScalingFlagBitsEXT', 'PresentScalingFlagsEXT',
--- 'SurfacePresentModeCompatibilityEXT', 'SurfacePresentModeEXT',
--- 'SurfacePresentScalingCapabilitiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -211,8 +208,6 @@ import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
 -- mode image counts /may/ be less-than or greater-than the image counts
 -- returned when 'SurfacePresentModeEXT' is not provided.
 --
--- Note
---
 -- If
 -- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT'
 -- is provided to swapchain creation, the requirements for forward progress
@@ -247,7 +242,7 @@ data SurfacePresentModeEXT = SurfacePresentModeEXT
     -- #VUID-VkSurfacePresentModeEXT-presentMode-07780# @presentMode@ /must/ be
     -- a value reported by
     -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR'
-    -- for the specified surface.
+    -- for the specified surface
     --
     -- #VUID-VkSurfacePresentModeEXT-presentMode-parameter# @presentMode@
     -- /must/ be a valid 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
@@ -320,26 +315,14 @@ data SurfacePresentScalingCapabilitiesEXT = SurfacePresentScalingCapabilitiesEXT
   { -- | @supportedPresentScaling@ is a bitmask of 'PresentScalingFlagBitsEXT'
     -- representing the scaling methods supported by the surface, or @0@ if
     -- application-defined scaling is not supported.
-    --
-    -- #VUID-VkSurfacePresentScalingCapabilitiesEXT-supportedPresentScaling-parameter#
-    -- @supportedPresentScaling@ /must/ be a valid combination of
-    -- 'PresentScalingFlagBitsEXT' values
     supportedPresentScaling :: PresentScalingFlagsEXT
   , -- | @supportedPresentGravityX@ is a bitmask of 'PresentGravityFlagBitsEXT'
     -- representing the X-axis pixel gravity supported by the surface, or @0@
     -- if Vulkan-defined pixel gravity is not supported for the X axis.
-    --
-    -- #VUID-VkSurfacePresentScalingCapabilitiesEXT-supportedPresentGravityX-parameter#
-    -- @supportedPresentGravityX@ /must/ be a valid combination of
-    -- 'PresentGravityFlagBitsEXT' values
     supportedPresentGravityX :: PresentGravityFlagsEXT
   , -- | @supportedPresentGravityY@ is a bitmask of 'PresentGravityFlagBitsEXT'
     -- representing the Y-axis pixel gravity supported by the surface, or @0@
     -- if Vulkan-defined pixel gravity is not supported for the Y axis.
-    --
-    -- #VUID-VkSurfacePresentScalingCapabilitiesEXT-supportedPresentGravityY-parameter#
-    -- @supportedPresentGravityY@ /must/ be a valid combination of
-    -- 'PresentGravityFlagBitsEXT' values
     supportedPresentGravityY :: PresentGravityFlagsEXT
   , -- | @minScaledImageExtent@ contains the smallest valid swapchain extent for
     -- the surface on the specified device when one of the scaling methods
@@ -420,15 +403,15 @@ instance Zero SurfacePresentScalingCapabilitiesEXT where
 --
 -- If @pPresentModes@ is @NULL@, then the number of present modes that are
 -- compatible with the one specified in 'SurfacePresentModeEXT' is returned
--- in @presentModeCount@. Otherwise, @presentModeCount@ must be set by the
--- user to the number of elements in the @pPresentModes@ array, and on
--- return the variable is overwritten with the number of values actually
--- written to @pPresentModes@. If the value of @presentModeCount@ is less
--- than the number of compatible present modes that are supported, at most
--- @presentModeCount@ values will be written to @pPresentModes@. The
--- implementation /must/ include the present mode passed to
--- 'SurfacePresentModeEXT' in @pPresentModes@, unless @presentModeCount@ is
--- zero.
+-- in @presentModeCount@. Otherwise, @presentModeCount@ /must/ point to a
+-- variable set by the application to the number of elements in the
+-- @pPresentModes@ array, and on return the variable is overwritten with
+-- the number of values actually written to @pPresentModes@. If the value
+-- of @presentModeCount@ is less than the number of compatible present
+-- modes that are supported, at most @presentModeCount@ values will be
+-- written to @pPresentModes@. The implementation /must/ include the
+-- present mode passed to 'SurfacePresentModeEXT' in @pPresentModes@,
+-- unless @presentModeCount@ is zero.
 --
 -- Before creating a swapchain whose present modes /can/ be modified
 -- through the use of

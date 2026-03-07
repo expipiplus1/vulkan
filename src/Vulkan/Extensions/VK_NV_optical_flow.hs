@@ -21,11 +21,19 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__Contact__]
 --
@@ -52,8 +60,6 @@
 -- Optical flow are fundamental algorithms in computer vision (CV) area.
 -- This extension allows applications to estimate 2D displacement of pixels
 -- between two frames.
---
--- Note
 --
 -- This extension is designed to be used with upcoming NVIDIA Optical Flow
 -- SDK Version 5 which will be available on NVIDIA Developer webpage.
@@ -141,7 +147,9 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Format.Format':
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_R16G16_S10_5_NV'
+--     -   'FORMAT_R16G16_S10_5_NV'
+--
+--     -   'Vulkan.Core10.Enums.Format.FORMAT_R16G16_SFIXED5_NV'
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
@@ -267,21 +275,7 @@
 --
 -- == See Also
 --
--- 'OpticalFlowExecuteFlagBitsNV', 'OpticalFlowExecuteFlagsNV',
--- 'OpticalFlowExecuteInfoNV', 'OpticalFlowGridSizeFlagBitsNV',
--- 'OpticalFlowGridSizeFlagsNV', 'OpticalFlowImageFormatInfoNV',
--- 'OpticalFlowImageFormatPropertiesNV', 'OpticalFlowPerformanceLevelNV',
--- 'OpticalFlowSessionBindingPointNV',
--- 'OpticalFlowSessionCreateFlagBitsNV', 'OpticalFlowSessionCreateFlagsNV',
--- 'OpticalFlowSessionCreateInfoNV',
--- 'OpticalFlowSessionCreatePrivateDataInfoNV',
--- 'Vulkan.Extensions.Handles.OpticalFlowSessionNV',
--- 'OpticalFlowUsageFlagBitsNV', 'OpticalFlowUsageFlagsNV',
--- 'PhysicalDeviceOpticalFlowFeaturesNV',
--- 'PhysicalDeviceOpticalFlowPropertiesNV',
--- 'bindOpticalFlowSessionImageNV', 'cmdOpticalFlowExecuteNV',
--- 'createOpticalFlowSessionNV', 'destroyOpticalFlowSessionNV',
--- 'getPhysicalDeviceOpticalFlowImageFormatsNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -296,6 +290,7 @@ module Vulkan.Extensions.VK_NV_optical_flow  ( getPhysicalDeviceOpticalFlowImage
                                              , destroyOpticalFlowSessionNV
                                              , bindOpticalFlowSessionImageNV
                                              , cmdOpticalFlowExecuteNV
+                                             , pattern FORMAT_R16G16_S10_5_NV
                                              , PhysicalDeviceOpticalFlowFeaturesNV(..)
                                              , PhysicalDeviceOpticalFlowPropertiesNV(..)
                                              , OpticalFlowImageFormatInfoNV(..)
@@ -454,6 +449,7 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_R16G16_SFIXED5_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_OPTICAL_FLOW_EXECUTE_INFO_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_OPTICAL_FLOW_IMAGE_FORMAT_INFO_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_OPTICAL_FLOW_IMAGE_FORMAT_PROPERTIES_NV))
@@ -477,17 +473,18 @@ foreign import ccall
 --
 -- If @pImageFormatProperties@ is @NULL@, then the number of optical flow
 -- properties supported for the given @physicalDevice@ is returned in
--- @pFormatCount@. Otherwise, @pFormatCount@ must point to a variable set
--- by the user to the number of elements in the @pImageFormatProperties@
--- array, and on return the variable is overwritten with the number of
--- values actually written to @pImageFormatProperties@. If the value of
--- @pFormatCount@ is less than the number of optical flow properties
--- supported, at most @pFormatCount@ values will be written to
--- @pImageFormatProperties@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
--- will be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to
--- indicate that not all the available values were returned.
+-- @pFormatCount@. Otherwise, @pFormatCount@ /must/ point to a variable set
+-- by the application to the number of elements in the
+-- @pImageFormatProperties@ array, and on return the variable is
+-- overwritten with the number of values actually written to
+-- @pImageFormatProperties@. If the value of @pFormatCount@ is less than
+-- the number of optical flow properties supported, at most @pFormatCount@
+-- values will be written to @pImageFormatProperties@, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available values were returned.
 --
--- Before creating an image to be used as a optical flow frame, obtain the
+-- Before creating an image to be used as an optical flow frame, obtain the
 -- supported image creation parameters by querying with
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
 -- and
@@ -537,8 +534,6 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'
 --
--- Note
---
 -- 'Vulkan.Core10.Enums.Format.FORMAT_B8G8R8A8_UNORM',
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R8_UNORM' and
 -- 'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_420_UNORM' are
@@ -546,7 +541,7 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical usage>
 -- 'OPTICAL_FLOW_USAGE_INPUT_BIT_NV'.
 --
--- 'Vulkan.Core10.Enums.Format.FORMAT_R16G16_S10_5_NV' is initially
+-- 'Vulkan.Core10.Enums.Format.FORMAT_R16G16_SFIXED5_NV' is initially
 -- supported for images with
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical flow usage>
 -- 'OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV', 'OPTICAL_FLOW_USAGE_HINT_BIT_NV' and
@@ -947,6 +942,10 @@ cmdOpticalFlowExecuteNV commandBuffer
                                                          (session)
                                                          pExecuteInfo)
   pure $ ()
+
+
+-- No documentation found for TopLevel "VK_FORMAT_R16G16_S10_5_NV"
+pattern FORMAT_R16G16_S10_5_NV = FORMAT_R16G16_SFIXED5_NV
 
 
 -- | VkPhysicalDeviceOpticalFlowFeaturesNV - Structure describing the optical
@@ -1595,7 +1594,7 @@ instance Zero OpticalFlowSessionCreatePrivateDataInfoNV where
            zero
 
 
--- | VkOpticalFlowExecuteInfoNV - Structure specifying parameters of a
+-- | VkOpticalFlowExecuteInfoNV - Structure specifying parameters of an
 -- optical flow vector calculation
 --
 -- == Valid Usage
@@ -2127,7 +2126,7 @@ instance Read OpticalFlowSessionCreateFlagBitsNV where
 
 type OpticalFlowExecuteFlagsNV = OpticalFlowExecuteFlagBitsNV
 
--- | VkOpticalFlowExecuteFlagBitsNV - Bits specifying flags for a optical
+-- | VkOpticalFlowExecuteFlagBitsNV - Bits specifying flags for an optical
 -- flow vector calculation
 --
 -- = See Also

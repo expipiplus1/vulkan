@@ -21,9 +21,22 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1 VK_KHR_maintenance1>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_2
+--
+--     -   Interacts with VK_EXT_descriptor_indexing
+--
+--     -   Interacts with
+--         VkPhysicalDeviceVulkan12Features::descriptorIndexing
 --
 -- [__Deprecation State__]
 --
@@ -105,9 +118,11 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- Functionality in this extension is included in core Vulkan 1.3, with the
--- EXT suffix omitted. The original type, enum and command names are still
--- available as aliases of the core functionality.
+-- Vulkan APIs in this extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. External interactions defined by this extension,
+-- such as SPIR-V token names, retain their original names. The original
+-- Vulkan API names are still available as aliases of the core
+-- functionality.
 --
 -- Vulkan 1.3 adds
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.3-new-features additional functionality related to this extension>
@@ -159,8 +174,10 @@
 -- features\/properties about the level of support for update-after-bind
 -- inline uniform blocks.
 --
--- 5) Is the @descriptorBindingVariableDescriptorCount@ feature introduced
--- by @VK_EXT_descriptor_indexing@ supported for inline uniform blocks?
+-- 5) Is the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBindingVariableDescriptorCount descriptorBindingVariableDescriptorCount>
+-- feature introduced by @VK_EXT_descriptor_indexing@ supported for inline
+-- uniform blocks?
 --
 -- __RESOLVED__: Yes, as long as other inline uniform block specific limits
 -- are respected.
@@ -179,10 +196,7 @@
 --
 -- == See Also
 --
--- 'DescriptorPoolInlineUniformBlockCreateInfoEXT',
--- 'PhysicalDeviceInlineUniformBlockFeaturesEXT',
--- 'PhysicalDeviceInlineUniformBlockPropertiesEXT',
--- 'WriteDescriptorSetInlineUniformBlockEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

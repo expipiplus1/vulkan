@@ -75,7 +75,7 @@
 --
 -- == See Also
 --
--- 'QueryLowLatencySupportNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

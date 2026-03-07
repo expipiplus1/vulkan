@@ -213,8 +213,7 @@ instance es ~ '[] => Zero (PhysicalDeviceExternalSemaphoreInfo es) where
 -- = Description
 --
 -- If @handleType@ is not supported by the implementation, then
--- 'ExternalSemaphoreProperties'::@externalSemaphoreFeatures@ will be set
--- to zero.
+-- 'ExternalSemaphoreProperties'::@externalSemaphoreFeatures@ will be zero.
 --
 -- == Valid Usage (Implicit)
 --

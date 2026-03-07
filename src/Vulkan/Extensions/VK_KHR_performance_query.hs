@@ -23,7 +23,7 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -454,20 +454,7 @@
 --
 -- == See Also
 --
--- 'AcquireProfilingLockFlagBitsKHR', 'AcquireProfilingLockFlagsKHR',
--- 'AcquireProfilingLockInfoKHR',
--- 'PerformanceCounterDescriptionFlagBitsKHR',
--- 'PerformanceCounterDescriptionFlagsKHR',
--- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
--- 'PerformanceCounterResultKHR', 'PerformanceCounterScopeKHR',
--- 'PerformanceCounterStorageKHR', 'PerformanceCounterUnitKHR',
--- 'PerformanceQuerySubmitInfoKHR',
--- 'PhysicalDevicePerformanceQueryFeaturesKHR',
--- 'PhysicalDevicePerformanceQueryPropertiesKHR',
--- 'QueryPoolPerformanceCreateInfoKHR', 'acquireProfilingLockKHR',
--- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR',
--- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR',
--- 'releaseProfilingLockKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -645,14 +632,14 @@ foreign import ccall
 --
 -- If @pCounters@ is @NULL@ and @pCounterDescriptions@ is @NULL@, then the
 -- number of counters available is returned in @pCounterCount@. Otherwise,
--- @pCounterCount@ /must/ point to a variable set by the user to the number
--- of elements in the @pCounters@, @pCounterDescriptions@, or both arrays
--- and on return the variable is overwritten with the number of structures
--- actually written out. If @pCounterCount@ is less than the number of
--- counters available, at most @pCounterCount@ structures will be written,
--- and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available counters were returned.
+-- @pCounterCount@ /must/ point to a variable set by the application to the
+-- number of elements in the @pCounters@, @pCounterDescriptions@, or both
+-- arrays and on return the variable is overwritten with the number of
+-- structures actually written out. If @pCounterCount@ is less than the
+-- number of counters available, at most @pCounterCount@ structures will be
+-- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
+-- all the available counters were returned.
 --
 -- == Valid Usage (Implicit)
 --

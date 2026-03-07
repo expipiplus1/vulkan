@@ -37,6 +37,7 @@ import Vulkan.Core10.Handles (Semaphore(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.createPrivateDataSlot',

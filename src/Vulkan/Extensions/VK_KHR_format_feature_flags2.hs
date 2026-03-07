@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -68,8 +70,8 @@
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2'
 -- is already defined to extend the Vulkan 1.0
 -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
--- entry point, this extension defines a new 'FormatProperties3KHR' to
--- extend the 'Vulkan.Core10.DeviceInitialization.FormatProperties'.
+-- command, this extension defines a new 'FormatProperties3KHR' to extend
+-- the 'Vulkan.Core10.DeviceInitialization.FormatProperties'.
 --
 -- On top of replicating all the bits from
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits',
@@ -78,12 +80,12 @@
 -- -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
 --     and
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
---     indicate that an implementation supports respectively reading and
---     writing a given 'Vulkan.Core10.Enums.Format.Format' through storage
---     operations without specifying the format in the shader.
+--     specify that an implementation supports reading and writing,
+--     respectively, a given 'Vulkan.Core10.Enums.Format.Format' through
+--     storage operations without specifying the format in the shader.
 --
 -- -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
---     indicates that an implementation supports depth comparison performed
+--     specifies that an implementation supports depth comparison performed
 --     by @OpImage*Dref*@ instructions on a given
 --     'Vulkan.Core10.Enums.Format.Format'. Previously the result of
 --     executing a @OpImage*Dref*@ instruction on an image view, where the
@@ -129,9 +131,11 @@
 --
 -- == Promotion to Vulkan 1.3
 --
--- Functionality in this extension is included in core Vulkan 1.3, with the
--- KHR suffix omitted. The original type, enum and command names are still
--- available as aliases of the core functionality.
+-- Vulkan APIs in this extension are included in core Vulkan 1.3, with the
+-- KHR suffix omitted. External interactions defined by this extension,
+-- such as SPIR-V token names, retain their original names. The original
+-- Vulkan API names are still available as aliases of the core
+-- functionality.
 --
 -- == Version History
 --
@@ -147,8 +151,7 @@
 --
 -- == See Also
 --
--- 'FormatFeatureFlagBits2KHR', 'FormatFeatureFlags2KHR',
--- 'FormatProperties3KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

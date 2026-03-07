@@ -69,7 +69,7 @@
 -- == Promotion to Vulkan 1.1
 --
 -- All functionality in this extension is included in core Vulkan 1.1, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Structures
@@ -130,8 +130,7 @@
 --
 -- == See Also
 --
--- 'ExportSemaphoreCreateInfoKHR', 'SemaphoreImportFlagBitsKHR',
--- 'SemaphoreImportFlagsKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

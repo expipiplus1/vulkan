@@ -127,7 +127,7 @@
 --
 -- == See Also
 --
--- 'ExportMemoryAllocateInfoNV', 'ExternalMemoryImageCreateInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -82,14 +82,14 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of extensions properties
 -- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of extension properties
--- available, at most @pPropertyCount@ structures will be written, and
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available properties were returned.
+-- /must/ point to a variable set by the application to the number of
+-- elements in the @pProperties@ array, and on return the variable is
+-- overwritten with the number of structures actually written to
+-- @pProperties@. If @pPropertyCount@ is less than the number of extension
+-- properties available, at most @pPropertyCount@ structures will be
+-- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
+-- all the available properties were returned.
 --
 -- Because the list of available layers may change externally between calls
 -- to 'enumerateInstanceExtensionProperties', two calls may retrieve
@@ -190,6 +190,10 @@ foreign import ccall
 -- be enabled together due to behavioral differences, or any extension that
 -- cannot be enabled against the advertised version.
 --
+-- If the @VK_KHR_ray_tracing_pipeline@ extension is advertised as
+-- supported by this query, the @VK_KHR_pipeline_library@ extension /must/
+-- also be supported.
+--
 -- Implementations claiming support for the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2022 Roadmap 2022>
 -- profile /must/ advertise the @VK_KHR_global_priority@ extension in
@@ -227,12 +231,10 @@ foreign import ccall
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor VK_KHR_push_descriptor>
 --
--- Note
---
 -- Due to platform details on Android, 'enumerateDeviceExtensionProperties'
 -- may be called with @physicalDevice@ equal to @NULL@ during layer
--- discovery. This behaviour will only be observed by layer
--- implementations, and not the underlying Vulkan driver.
+-- discovery. This behavior will only be observed by layer implementations,
+-- and not the underlying Vulkan driver.
 --
 -- == Valid Usage (Implicit)
 --

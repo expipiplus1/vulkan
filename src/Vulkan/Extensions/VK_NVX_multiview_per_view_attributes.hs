@@ -22,6 +22,14 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview VK_KHR_multiview>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_dynamic_rendering
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -43,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nvx/GL_NVX_multiview_per_view_attributes.txt GL_NVX_multiview_per_view_attributes>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nvx/GL_NVX_multiview_per_view_attributes.txt GL_NVX_multiview_per_view_attributes>
 --
 --     -   This extension interacts with @VK_NV_viewport_array2@.
 --
@@ -85,8 +93,8 @@
 -- subpass. Implementations are free to either use the per-view outputs or
 -- the non-per-view outputs, whichever would be more efficient.
 --
--- If @VK_NV_viewport_array2@ is not also supported and enabled, the
--- per-view viewport mask /must/ not be used.
+-- If the @VK_NV_viewport_array2@ extension is not also supported and
+-- enabled, the per-view viewport mask /must/ not be used.
 --
 -- == New Structures
 --
@@ -94,6 +102,19 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
 --
 --     -   'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
+--
+--     -   'MultiviewPerViewAttributesInfoNVX'
 --
 -- == New Enum Constants
 --
@@ -111,6 +132,16 @@
 --     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
 --
 --     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX'
 --
 -- == New Built-In Variables
 --
@@ -149,7 +180,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -159,6 +190,7 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NVX_multiview_per_view_attributes  ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX(..)
+                                                               , MultiviewPerViewAttributesInfoNVX(..)
                                                                , NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION
                                                                , pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION
                                                                , NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME
@@ -186,6 +218,7 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX))
 -- | VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX - Structure
 -- describing multiview limits that can be supported by an implementation
@@ -248,6 +281,92 @@ instance Storable PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
 
 instance Zero PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
   zero = PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
+           zero
+
+
+-- | VkMultiviewPerViewAttributesInfoNVX - Structure specifying the multiview
+-- per-attribute properties
+--
+-- = Description
+--
+-- When dynamic render pass instances are being used, instead of specifying
+-- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
+-- or
+-- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX'
+-- in the subpass description flags, the per-attribute properties of the
+-- render pass instance /must/ be specified by the
+-- 'MultiviewPerViewAttributesInfoNVX' structure Include the
+-- 'MultiviewPerViewAttributesInfoNVX' structure in the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' when creating a
+-- graphics pipeline for dynamic rendering,
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
+-- when starting a dynamic render pass instance, and
+-- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' when
+-- specifying the dynamic render pass instance parameters for secondary
+-- command buffers.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_multiview_per_view_attributes VK_NVX_multiview_per_view_attributes>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data MultiviewPerViewAttributesInfoNVX = MultiviewPerViewAttributesInfoNVX
+  { -- | @perViewAttributes@ specifies that shaders compiled for this pipeline
+    -- write the attributes for all views in a single invocation of each vertex
+    -- processing stage. All pipelines executed within a render pass instance
+    -- that includes this bit /must/ write per-view attributes to the
+    -- @*PerViewNV[]@ shader outputs, in addition to the non-per-view (e.g.
+    -- @Position@) outputs.
+    perViewAttributes :: Bool
+  , -- | @perViewAttributesPositionXOnly@ specifies that shaders compiled for
+    -- this pipeline use per-view positions which only differ in value in the x
+    -- component. Per-view viewport mask /can/ also be used.
+    perViewAttributesPositionXOnly :: Bool
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MultiviewPerViewAttributesInfoNVX)
+#endif
+deriving instance Show MultiviewPerViewAttributesInfoNVX
+
+instance ToCStruct MultiviewPerViewAttributesInfoNVX where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p MultiviewPerViewAttributesInfoNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (perViewAttributes))
+    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (perViewAttributesPositionXOnly))
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
+
+instance FromCStruct MultiviewPerViewAttributesInfoNVX where
+  peekCStruct p = do
+    perViewAttributes <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    perViewAttributesPositionXOnly <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
+    pure $ MultiviewPerViewAttributesInfoNVX
+             (bool32ToBool perViewAttributes)
+             (bool32ToBool perViewAttributesPositionXOnly)
+
+instance Storable MultiviewPerViewAttributesInfoNVX where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero MultiviewPerViewAttributesInfoNVX where
+  zero = MultiviewPerViewAttributesInfoNVX
+           zero
            zero
 
 

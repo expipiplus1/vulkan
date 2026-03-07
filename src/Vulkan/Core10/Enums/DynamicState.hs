@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_STENCIL_COMPARE_MASK
                                                       , DYNAMIC_STATE_STENCIL_WRITE_MASK
                                                       , DYNAMIC_STATE_STENCIL_REFERENCE
+                                                      , DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT
                                                       , DYNAMIC_STATE_LINE_STIPPLE_KHR
                                                       , DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
                                                       , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
@@ -180,6 +181,14 @@ pattern DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
 -- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
+
+-- | 'DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT' specifies that the
+-- @depthClampMode@ and @pDepthClampRange@ state in
+-- 'Vulkan.Extensions.VK_EXT_depth_clamp_control.PipelineViewportDepthClampControlCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_depth_clamp_control.cmdSetDepthClampRangeEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT = DynamicState 1000582000
 
 -- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_LINE_STIPPLE_KHR"
 pattern DYNAMIC_STATE_LINE_STIPPLE_KHR = DynamicState 1000259000
@@ -699,6 +708,7 @@ pattern DYNAMIC_STATE_CULL_MODE = DynamicState 1000267000
   , DYNAMIC_STATE_STENCIL_COMPARE_MASK
   , DYNAMIC_STATE_STENCIL_WRITE_MASK
   , DYNAMIC_STATE_STENCIL_REFERENCE
+  , DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT
   , DYNAMIC_STATE_LINE_STIPPLE_KHR
   , DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
   , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
@@ -788,6 +798,10 @@ showTableDynamicState =
     , "STENCIL_WRITE_MASK"
     )
   , (DYNAMIC_STATE_STENCIL_REFERENCE, "STENCIL_REFERENCE")
+  ,
+    ( DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT
+    , "DEPTH_CLAMP_RANGE_EXT"
+    )
   , (DYNAMIC_STATE_LINE_STIPPLE_KHR, "LINE_STIPPLE_KHR")
   ,
     ( DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT

@@ -267,8 +267,7 @@
 --
 -- == See Also
 --
--- 'ExportMemoryWin32HandleInfoNV', 'ImportMemoryWin32HandleInfoNV',
--- 'getMemoryWin32HandleNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

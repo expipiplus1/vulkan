@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineStageFlags2"
-module Vulkan.Core13.Enums.PipelineStageFlags2  ( pattern PIPELINE_STAGE_2_NONE_KHR
+module Vulkan.Core13.Enums.PipelineStageFlags2  ( pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT
+                                                , pattern PIPELINE_STAGE_2_NONE_KHR
                                                 , pattern PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR
                                                 , pattern PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR
                                                 , pattern PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR
@@ -83,6 +84,10 @@ import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags64)
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT"
+pattern PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT = PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV
+
+
 -- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_NONE_KHR"
 pattern PIPELINE_STAGE_2_NONE_KHR = PIPELINE_STAGE_2_NONE
 
@@ -198,13 +203,9 @@ type PipelineStageFlags2 = PipelineStageFlagBits2
 --
 -- = Description
 --
--- Note
---
 -- The @TOP@ and @BOTTOM@ pipeline stages are deprecated, and applications
 -- should prefer 'PIPELINE_STAGE_2_ALL_COMMANDS_BIT' and
 -- 'PIPELINE_STAGE_2_NONE'.
---
--- Note
 --
 -- The 'PipelineStageFlags2' bitmask goes beyond the 31 individual bit
 -- flags allowable within a C99 enum, which is how
@@ -215,7 +216,8 @@ type PipelineStageFlags2 = PipelineStageFlagBits2
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'PipelineStageFlags2'
 newtype PipelineStageFlagBits2 = PipelineStageFlagBits2 Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -233,6 +235,8 @@ pattern PIPELINE_STAGE_2_TOP_OF_PIPE_BIT = PipelineStageFlagBits2 0x000000000000
 -- where indirect command parameters are consumed. This stage also includes
 -- reading commands written by
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'.
+-- This stage also includes reading commands written by
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.cmdPreprocessGeneratedCommandsEXT'.
 pattern PIPELINE_STAGE_2_DRAW_INDIRECT_BIT = PipelineStageFlagBits2 0x0000000000000002
 
 -- | 'PIPELINE_STAGE_2_VERTEX_INPUT_BIT' is equivalent to the logical OR of:

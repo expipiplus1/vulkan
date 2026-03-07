@@ -82,8 +82,7 @@
 --
 -- == See Also
 --
--- 'DeviceMemoryOverallocationCreateInfoAMD',
--- 'MemoryOverallocationBehaviorAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

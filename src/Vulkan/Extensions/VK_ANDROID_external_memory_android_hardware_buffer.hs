@@ -21,15 +21,23 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>
---     and
+--              and
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_queue_family_foreign VK_EXT_queue_family_foreign>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
@@ -119,6 +127,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending 'AndroidHardwareBufferPropertiesANDROID':
@@ -152,6 +162,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
@@ -271,13 +283,7 @@
 --
 -- == See Also
 --
--- 'AHardwareBuffer', 'AndroidHardwareBufferFormatPropertiesANDROID',
--- 'AndroidHardwareBufferPropertiesANDROID',
--- 'AndroidHardwareBufferUsageANDROID', 'ExternalFormatANDROID',
--- 'ImportAndroidHardwareBufferInfoANDROID',
--- 'MemoryGetAndroidHardwareBufferInfoANDROID',
--- 'getAndroidHardwareBufferPropertiesANDROID',
--- 'getMemoryAndroidHardwareBufferANDROID'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -608,8 +614,6 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 -- (@AHARDWAREBUFFER_USAGE_GPU_*@), even if none of the corresponding
 -- Vulkan usages or flags are requested.
 --
--- Note
---
 -- Requiring at least one GPU usage flag ensures that Android hardware
 -- buffer memory will be allocated in a memory pool accessible to the
 -- Vulkan implementation, and that specializing the memory layout based on
@@ -858,8 +862,6 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- and
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'.
 --
--- Note
---
 -- The @formatFeatures@ member only indicates the features available when
 -- using an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external-format image>
@@ -913,8 +915,6 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- similar sampled values as would be obtained by sampling the same
 -- external image via @samplerExternalOES@ in OpenGL ES using equivalent
 -- sampler parameters.
---
--- Note
 --
 -- Since
 -- <https://registry.khronos.org/OpenGL/extensions/OES/OES_EGL_image_external.txt GL_OES_EGL_image_external>
@@ -1116,6 +1116,7 @@ instance Zero ExternalFormatANDROID where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer VK_ANDROID_external_memory_android_hardware_buffer>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation',
 -- 'Vulkan.Core10.ImageView.ComponentMapping',
 -- 'Vulkan.Core10.Enums.Format.Format',

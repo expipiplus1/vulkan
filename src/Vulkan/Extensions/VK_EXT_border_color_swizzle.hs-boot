@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color VK_EXT_custom_border_color>
@@ -108,8 +108,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceBorderColorSwizzleFeaturesEXT',
--- 'SamplerBorderColorComponentMappingCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

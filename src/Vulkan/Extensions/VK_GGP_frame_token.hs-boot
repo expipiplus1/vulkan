@@ -75,7 +75,7 @@
 --
 -- == See Also
 --
--- 'PresentFrameTokenGGP'
+-- No cross-references are available
 --
 -- == Document Notes
 --

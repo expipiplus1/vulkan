@@ -67,9 +67,11 @@
 --
 -- -   'BindPipelineIndirectCommandNV'
 --
--- -   'ComputePipelineIndirectBufferInfoNV'
---
 -- -   'PipelineIndirectDeviceAddressInfoNV'
+--
+-- -   Extending 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo':
+--
+--     -   'ComputePipelineIndirectBufferInfoNV'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -116,12 +118,7 @@
 --
 -- == See Also
 --
--- 'BindPipelineIndirectCommandNV', 'ComputePipelineIndirectBufferInfoNV',
--- 'PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV',
--- 'PipelineIndirectDeviceAddressInfoNV',
--- 'cmdUpdatePipelineIndirectBufferNV',
--- 'getPipelineIndirectDeviceAddressNV',
--- 'getPipelineIndirectMemoryRequirementsNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --

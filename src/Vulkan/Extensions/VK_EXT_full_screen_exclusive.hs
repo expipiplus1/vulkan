@@ -18,10 +18,14 @@
 --     4
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
 --     and
@@ -101,12 +105,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>
--- is supported:
---
--- -   'getDeviceGroupSurfacePresentModes2EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'getDeviceGroupSurfacePresentModes2EXT'
@@ -250,11 +250,7 @@
 --
 -- == See Also
 --
--- 'FullScreenExclusiveEXT', 'SurfaceCapabilitiesFullScreenExclusiveEXT',
--- 'SurfaceFullScreenExclusiveInfoEXT',
--- 'acquireFullScreenExclusiveModeEXT',
--- 'getPhysicalDeviceSurfacePresentModes2EXT',
--- 'releaseFullScreenExclusiveModeEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -667,11 +663,9 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
 -- Applications will not be able to present to @swapchain@ after this call
 -- until exclusive full-screen access is reacquired. This is usually useful
--- to handle when an application is minimised or otherwise intends to stop
+-- to handle when an application is minimized or otherwise intends to stop
 -- presenting for a time.
 --
 -- == Return Codes
@@ -795,14 +789,10 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 --
 -- = Description
 --
--- Note
---
 -- If @hmonitor@ is invalidated (e.g. the monitor is unplugged) during the
 -- lifetime of a swapchain created with this structure, operations on that
 -- swapchain will return
 -- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'.
---
--- Note
 --
 -- It is the responsibility of the application to change the display
 -- settings of the targeted Win32 display using the appropriate platform
@@ -936,25 +926,25 @@ instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
 newtype FullScreenExclusiveEXT = FullScreenExclusiveEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT' indicates the implementation
+-- | 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT' specifies that the implementation
 -- /should/ determine the appropriate full-screen method by whatever means
 -- it deems appropriate.
 pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = FullScreenExclusiveEXT 0
 
--- | 'FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT' indicates the implementation /may/
--- use full-screen exclusive mechanisms when available. Such mechanisms
--- /may/ result in better performance and\/or the availability of different
--- presentation capabilities, but /may/ require a more disruptive
--- transition during swapchain initialization, first presentation and\/or
--- destruction.
+-- | 'FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT' specifies that the implementation
+-- /may/ use full-screen exclusive mechanisms when available. Such
+-- mechanisms /may/ result in better performance and\/or the availability
+-- of different presentation capabilities, but /may/ require a more
+-- disruptive transition during swapchain initialization, first
+-- presentation and\/or destruction.
 pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = FullScreenExclusiveEXT 1
 
--- | 'FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT' indicates the implementation
+-- | 'FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT' specifies that the implementation
 -- /should/ avoid using full-screen mechanisms which rely on disruptive
 -- transitions.
 pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = FullScreenExclusiveEXT 2
 
--- | 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' indicates the
+-- | 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' specifies that the
 -- application will manage full-screen exclusive mode by using the
 -- 'acquireFullScreenExclusiveModeEXT' and
 -- 'releaseFullScreenExclusiveModeEXT' commands.

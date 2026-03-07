@@ -149,8 +149,7 @@
 --
 -- == See Also
 --
--- 'MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM',
--- 'PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

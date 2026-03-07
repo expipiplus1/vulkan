@@ -21,9 +21,13 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3 VK_KHR_maintenance3>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -47,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt GL_EXT_nonuniform_qualifier>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GL_EXT_nonuniform_qualifier.txt GL_EXT_nonuniform_qualifier>
 --
 -- [__Contributors__]
 --
@@ -184,11 +188,12 @@
 --
 -- == Promotion to Vulkan 1.2
 --
--- Functionality in this extension is included in core Vulkan 1.2, with the
+-- Vulkan APIs in this extension are included in core Vulkan 1.2, with the
 -- EXT suffix omitted. However, if Vulkan 1.2 is supported and this
--- extension is not, the @descriptorIndexing@ capability is optional. The
--- original type, enum and command names are still available as aliases of
--- the core functionality.
+-- extension is not, the @descriptorIndexing@ capability is optional.
+-- External interactions defined by this extension, such as SPIR-V token
+-- names, retain their original names. The original Vulkan API names are
+-- still available as aliases of the core functionality.
 --
 -- == Version History
 --
@@ -202,12 +207,7 @@
 --
 -- == See Also
 --
--- 'DescriptorBindingFlagBitsEXT', 'DescriptorBindingFlagsEXT',
--- 'DescriptorSetLayoutBindingFlagsCreateInfoEXT',
--- 'DescriptorSetVariableDescriptorCountAllocateInfoEXT',
--- 'DescriptorSetVariableDescriptorCountLayoutSupportEXT',
--- 'PhysicalDeviceDescriptorIndexingFeaturesEXT',
--- 'PhysicalDeviceDescriptorIndexingPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Deprecation State__]
 --
@@ -61,7 +63,7 @@
 -- == Promotion to Vulkan 1.1
 --
 -- All functionality in this extension is included in core Vulkan 1.1, with
--- the KHR suffix omitted. The original type, enum and command names are
+-- the KHR suffix omitted. The original type, enum, and command names are
 -- still available as aliases of the core functionality.
 --
 -- == New Commands
@@ -135,14 +137,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.LUID_SIZE_KHR',
--- 'ExternalSemaphoreFeatureFlagBitsKHR',
--- 'ExternalSemaphoreFeatureFlagsKHR',
--- 'ExternalSemaphoreHandleTypeFlagBitsKHR',
--- 'ExternalSemaphoreHandleTypeFlagsKHR', 'ExternalSemaphorePropertiesKHR',
--- 'PhysicalDeviceExternalSemaphoreInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.PhysicalDeviceIDPropertiesKHR',
--- 'getPhysicalDeviceExternalSemaphorePropertiesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

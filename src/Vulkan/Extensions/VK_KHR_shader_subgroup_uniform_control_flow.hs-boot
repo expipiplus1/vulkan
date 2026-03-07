@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -45,7 +45,7 @@
 --     -   Requires SPIR-V 1.3.
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroupuniform_qualifier.txt GL_EXT_subgroupuniform_qualifier>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GL_EXT_subgroupuniform_qualifier.txt GL_EXT_subgroupuniform_qualifier>
 --
 -- [__Contributors__]
 --
@@ -92,7 +92,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

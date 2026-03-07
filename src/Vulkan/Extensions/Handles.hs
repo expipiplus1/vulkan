@@ -1,6 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "Handles"
-module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
+module Vulkan.Extensions.Handles  ( PipelineBinaryKHR(..)
+                                  , IndirectCommandsLayoutNV(..)
+                                  , IndirectCommandsLayoutEXT(..)
+                                  , IndirectExecutionSetEXT(..)
                                   , ValidationCacheEXT(..)
                                   , AccelerationStructureKHR(..)
                                   , AccelerationStructureNV(..)
@@ -68,10 +71,13 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_UTILS_MESSEN
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_MODE_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_MICROMAP_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PIPELINE_BINARY_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SHADER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
@@ -103,11 +109,32 @@ import Vulkan.Core10.Handles (Sampler(..))
 import Vulkan.Core11.Handles (SamplerYcbcrConversion(..))
 import Vulkan.Core10.Handles (Semaphore(..))
 import Vulkan.Core10.Handles (ShaderModule(..))
+-- | VkPipelineBinaryKHR - Opaque handle to a pipeline binary object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_binary VK_KHR_pipeline_binary>,
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryDataInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryHandlesInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_pipeline_binary.destroyPipelineBinaryKHR'
+newtype PipelineBinaryKHR = PipelineBinaryKHR Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType PipelineBinaryKHR where
+  objectTypeAndHandle (PipelineBinaryKHR h) = ( OBJECT_TYPE_PIPELINE_BINARY_KHR
+                                              , h )
+instance Show PipelineBinaryKHR where
+  showsPrec p (PipelineBinaryKHR x) = showParen (p >= 11) (showString "PipelineBinaryKHR 0x" . showHex x)
+
+
 -- | VkIndirectCommandsLayoutNV - Opaque handle to an indirect commands
 -- layout object
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
@@ -123,10 +150,61 @@ instance Show IndirectCommandsLayoutNV where
   showsPrec p (IndirectCommandsLayoutNV x) = showParen (p >= 11) (showString "IndirectCommandsLayoutNV 0x" . showHex x)
 
 
+-- | VkIndirectCommandsLayoutEXT - Opaque handle to an indirect commands
+-- layout object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_generated_commands VK_EXT_device_generated_commands>,
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.GeneratedCommandsInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.createIndirectCommandsLayoutEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.destroyIndirectCommandsLayoutEXT'
+newtype IndirectCommandsLayoutEXT = IndirectCommandsLayoutEXT Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType IndirectCommandsLayoutEXT where
+  objectTypeAndHandle (IndirectCommandsLayoutEXT h) = ( OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT
+                                                      , h )
+instance Show IndirectCommandsLayoutEXT where
+  showsPrec p (IndirectCommandsLayoutEXT x) = showParen (p >= 11) (showString "IndirectCommandsLayoutEXT 0x" . showHex x)
+
+
+-- | VkIndirectExecutionSetEXT - Opaque handle to an indirect execution set
+-- object
+--
+-- = Description
+--
+-- Indirect Execution Sets allow the device to bind different shaders and
+-- pipeline states using
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_generated_commands VK_EXT_device_generated_commands>,
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.GeneratedCommandsInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.createIndirectExecutionSetEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.destroyIndirectExecutionSetEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.updateIndirectExecutionSetPipelineEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.updateIndirectExecutionSetShaderEXT'
+newtype IndirectExecutionSetEXT = IndirectExecutionSetEXT Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType IndirectExecutionSetEXT where
+  objectTypeAndHandle (IndirectExecutionSetEXT h) = ( OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT
+                                                    , h )
+instance Show IndirectExecutionSetEXT where
+  showsPrec p (IndirectExecutionSetEXT x) = showParen (p >= 11) (showString "IndirectExecutionSetEXT 0x" . showHex x)
+
+
 -- | VkValidationCacheEXT - Opaque handle to a validation cache object
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.createValidationCacheEXT',
@@ -148,6 +226,7 @@ instance Show ValidationCacheEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.AccelerationStructureCaptureDescriptorDataInfoEXT',
@@ -175,6 +254,7 @@ instance Show AccelerationStructureKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.AccelerationStructureCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
@@ -201,6 +281,7 @@ instance Show AccelerationStructureNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.acquirePerformanceConfigurationINTEL',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.queueSetPerformanceConfigurationINTEL',
@@ -219,6 +300,7 @@ instance Show PerformanceConfigurationINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection VK_FUCHSIA_buffer_collection>,
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA',
@@ -247,6 +329,7 @@ instance Show BufferCollectionFUCHSIA where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.buildAccelerationStructuresKHR',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.buildMicromapsEXT',
@@ -276,6 +359,7 @@ instance Show DeferredOperationKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuFunctionCreateInfoNVX',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.createCuModuleNVX',
@@ -293,6 +377,7 @@ instance Show CuModuleNVX where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
 -- 'Vulkan.Extensions.VK_NVX_binary_import.CuLaunchInfoNVX',
 -- 'Vulkan.Extensions.VK_NVX_binary_import.createCuFunctionNVX',
@@ -310,6 +395,7 @@ instance Show CuFunctionNVX where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
 -- 'Vulkan.Extensions.VK_NV_optical_flow.bindOpticalFlowSessionImageNV',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.cmdOpticalFlowExecuteNV',
@@ -329,6 +415,7 @@ instance Show OpticalFlowSessionNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
 -- 'Vulkan.Extensions.VK_NV_displacement_micromap.AccelerationStructureTrianglesDisplacementMicromapNV',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT',
@@ -353,7 +440,11 @@ instance Show MicromapEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_object VK_EXT_shader_object>,
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.GeneratedCommandsShaderInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectExecutionSetShaderInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_generated_commands.WriteIndirectExecutionSetShaderEXT',
 -- 'Vulkan.Extensions.VK_EXT_shader_object.cmdBindShadersEXT',
 -- 'Vulkan.Extensions.VK_EXT_shader_object.createShadersEXT',
 -- 'Vulkan.Extensions.VK_EXT_shader_object.destroyShaderEXT',
@@ -371,6 +462,7 @@ instance Show ShaderEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
@@ -400,6 +492,7 @@ instance Show DisplayKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneInfo2KHR',
@@ -428,6 +521,7 @@ instance Show DisplayModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
@@ -480,8 +574,6 @@ instance Show SurfaceKHR where
 -- windows that have a non-Vulkan graphics API surface associated with
 -- them.
 --
--- Note
---
 -- The presentation engine is an abstraction for the platform’s compositor
 -- or display engine.
 --
@@ -516,8 +608,6 @@ instance Show SurfaceKHR where
 -- The presentation engine controls the order in which presentable images
 -- are acquired for use by the application.
 --
--- Note
---
 -- This allows the platform to handle situations which require out-of-order
 -- return of images after presentation. At the same time, it allows the
 -- application to generate command buffers referencing all of the images in
@@ -525,6 +615,7 @@ instance Show SurfaceKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
@@ -565,6 +656,7 @@ instance Show SwapchainKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_report.destroyDebugReportCallbackEXT'
@@ -592,6 +684,7 @@ instance Show DebugReportCallbackEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.destroyDebugUtilsMessengerEXT'
@@ -609,6 +702,7 @@ instance Show DebugUtilsMessengerEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cuda_kernel_launch VK_NV_cuda_kernel_launch>,
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaFunctionCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.createCudaModuleNV',
@@ -627,6 +721,7 @@ instance Show CudaModuleNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cuda_kernel_launch VK_NV_cuda_kernel_launch>,
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.CudaLaunchInfoNV',
 -- 'Vulkan.Extensions.VK_NV_cuda_kernel_launch.createCudaFunctionNV',

@@ -103,7 +103,7 @@
 -- -   'queuePresentKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'acquireNextImage2KHR'
@@ -121,7 +121,7 @@
 -- -   'SwapchainCreateInfoKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'AcquireNextImageInfoKHR'
@@ -150,7 +150,7 @@
 -- -   'SwapchainCreateFlagBitsKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'DeviceGroupPresentModeFlagBitsKHR'
@@ -160,7 +160,7 @@
 -- -   'SwapchainCreateFlagsKHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'DeviceGroupPresentModeFlagsKHR'
@@ -192,7 +192,7 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
@@ -455,10 +455,11 @@
 --
 -- __RESOLVED__: In the advent of UHD and HDR display devices, proper color
 -- space information is vital to the display pipeline represented by the
--- swapchain. The app can discover the supported format\/color-space pairs
--- and select a pair most suited to its rendering needs. Currently only the
--- sRGB color space is supported, future extensions may provide support for
--- more color spaces. See issues 23 and 24.
+-- swapchain. The application can discover the supported
+-- format\/color-space pairs and select a pair most suited to its rendering
+-- needs. Currently only the sRGB color space is supported, future
+-- extensions may provide support for more color spaces. See issues 23 and
+-- 24.
 --
 -- 20) Is there a mechanism to modify or replace an existing swapchain with
 -- one targeting the same surface?
@@ -536,10 +537,11 @@
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' owns the binding of the native
 -- window to the Vulkan driver.
 --
--- 26) How can the client control the way the alpha component of swapchain
--- images is treated by the presentation engine during compositing?
+-- 26) How can the application control the way the alpha component of
+-- swapchain images is treated by the presentation engine during
+-- compositing?
 --
--- __RESOLVED__: We should add new enum values to allow the client to
+-- __RESOLVED__: We should add new enum values to allow the application to
 -- negotiate with the presentation engine on how to treat image alpha
 -- values during the compositing process. Since not all platforms can
 -- practically control this through the Vulkan driver, a value of
@@ -574,14 +576,12 @@
 --
 -- == Examples
 --
--- Note
---
 -- The example code for the @VK_KHR_surface@ and @VK_KHR_swapchain@
 -- extensions was removed from the appendix after revision 1.0.29. This WSI
 -- example code was ported to the cube demo that is shipped with the
 -- official Khronos SDK, and is being kept up-to-date in that location
 -- (see:
--- <https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c>).
+-- <https://github.com/KhronosGroup/Vulkan-Tools/blob/main/cube/cube.c>).
 --
 -- == Version History
 --
@@ -1064,11 +1064,7 @@
 --
 -- == See Also
 --
--- 'PresentInfoKHR', 'SwapchainCreateFlagBitsKHR',
--- 'SwapchainCreateFlagsKHR', 'SwapchainCreateInfoKHR',
--- 'Vulkan.Extensions.Handles.SwapchainKHR', 'acquireNextImageKHR',
--- 'createSwapchainKHR', 'destroySwapchainKHR', 'getSwapchainImagesKHR',
--- 'queuePresentKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

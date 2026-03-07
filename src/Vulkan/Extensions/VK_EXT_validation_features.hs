@@ -80,7 +80,9 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
+-- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo',
+--     'Vulkan.Core10.Shader.ShaderModuleCreateInfo',
+--     'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT':
 --
 --     -   'ValidationFeaturesEXT'
 --
@@ -128,8 +130,7 @@
 --
 -- == See Also
 --
--- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT',
--- 'ValidationFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -205,12 +206,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --     the @pEnabledValidationFeatures@ array contains
 --     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT',
 --     then it /must/ also contain
---     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
---
--- -   #VUID-VkValidationFeaturesEXT-pEnabledValidationFeatures-02968# If
---     the @pEnabledValidationFeatures@ array contains
---     'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT', then it /must/ not
---     contain 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
+--     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT' or
+--     'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -403,7 +400,11 @@ newtype ValidationFeatureDisableEXT = ValidationFeatureDisableEXT Int32
 pattern VALIDATION_FEATURE_DISABLE_ALL_EXT = ValidationFeatureDisableEXT 0
 
 -- | 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
--- validation is disabled. This feature is enabled by default.
+-- validation, both runtime and standalone, is disabled. This validation
+-- occurs inside
+-- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT' and
+-- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo'. This feature is enabled
+-- by default.
 pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT = ValidationFeatureDisableEXT 1
 
 -- | 'VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
@@ -420,8 +421,8 @@ pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = ValidationFeatureDisab
 
 -- | 'VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
 -- validation checks are disabled. This feature is enabled by default. If
--- this feature is disabled, the shader validation and GPU-assisted
--- validation features are also disabled.
+-- this feature is disabled, 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' is
+-- implied.
 pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = ValidationFeatureDisableEXT 5
 
 -- | 'VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that

@@ -23,6 +23,12 @@
 -- [__Extension and Version Dependencies__]
 --     None
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_KHR_synchronization2
+--
 -- [__Special Use__]
 --
 --     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse Developer tools>
@@ -61,6 +67,14 @@
 --
 -- -   'cmdWriteBufferMarkerAMD'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- is supported:
+--
+-- -   'cmdWriteBufferMarker2AMD'
+--
 -- == New Enum Constants
 --
 -- -   'AMD_BUFFER_MARKER_EXTENSION_NAME'
@@ -79,7 +93,7 @@
 --
 -- == See Also
 --
--- 'cmdWriteBufferMarkerAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -89,6 +103,7 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_AMD_buffer_marker  ( cmdWriteBufferMarkerAMD
+                                               , cmdWriteBufferMarker2AMD
                                                , AMD_BUFFER_MARKER_SPEC_VERSION
                                                , pattern AMD_BUFFER_MARKER_SPEC_VERSION
                                                , AMD_BUFFER_MARKER_EXTENSION_NAME
@@ -114,10 +129,13 @@ import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
+import Vulkan.Dynamic (DeviceCmds(pVkCmdWriteBufferMarker2AMD))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdWriteBufferMarkerAMD))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(..))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(..))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -140,20 +158,16 @@ foreign import ccall
 -- While consecutive buffer marker writes with the same @pipelineStage@
 -- parameter are implicitly complete in submission order, memory and
 -- execution dependencies between buffer marker writes and other operations
--- must still be explicitly ordered using synchronization commands. The
+-- /must/ still be explicitly ordered using synchronization commands. The
 -- access scope for buffer marker writes falls under the
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT', and the
 -- pipeline stages for identifying the synchronization scope /must/ include
 -- both @pipelineStage@ and
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'.
 --
--- Note
---
 -- Similar to 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp', if
 -- an implementation is unable to write a marker at any specific pipeline
 -- stage, it /may/ instead do so at any logically later stage.
---
--- Note
 --
 -- Implementations /may/ only support a limited number of pipelined marker
 -- write operations in flight at a given time, thus excessive number of
@@ -205,11 +219,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-shadingRateImage-07314# If neither
---     the
+--     of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
---     or
+--     or the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
---     are enabled, @pipelineStage@ /must/ not be
+--     features are enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-synchronization2-06489# If the
@@ -218,11 +232,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE'
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-rayTracingPipeline-07943# If neither
---     the
+--     of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
---     extension or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline feature>
---     are enabled, @pipelineStage@ /must/ not be
+--     extension or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     feature are enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-dstOffset-01798# @dstOffset@ /must/
@@ -328,6 +342,224 @@ cmdWriteBufferMarkerAMD commandBuffer
                                                   (dstBuffer)
                                                   (dstOffset)
                                                   (marker))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdWriteBufferMarker2AMD
+  :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags2 -> Buffer -> DeviceSize -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> PipelineStageFlags2 -> Buffer -> DeviceSize -> Word32 -> IO ()
+
+-- | vkCmdWriteBufferMarker2AMD - Execute a pipelined write of a marker value
+-- into a buffer
+--
+-- = Description
+--
+-- The command will write the 32-bit marker value into the buffer only
+-- after all preceding commands have finished executing up to at least the
+-- specified pipeline stage. This includes the completion of other
+-- preceding 'cmdWriteBufferMarker2AMD' commands so long as their specified
+-- pipeline stages occur either at the same time or earlier than this
+-- command’s specified @stage@.
+--
+-- While consecutive buffer marker writes with the same @stage@ parameter
+-- implicitly complete in submission order, memory and execution
+-- dependencies between buffer marker writes and other operations /must/
+-- still be explicitly ordered using synchronization commands. The access
+-- scope for buffer marker writes falls under the
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT', and the
+-- pipeline stages for identifying the synchronization scope /must/ include
+-- both @stage@ and
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'.
+--
+-- Similar to
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2',
+-- if an implementation is unable to write a marker at any specific
+-- pipeline stage, it /may/ instead do so at any logically later stage.
+--
+-- Implementations /may/ only support a limited number of pipelined marker
+-- write operations in flight at a given time. Thus an excessive number of
+-- marker write operations /may/ degrade command execution performance.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03929# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03930# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03931# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditionalRendering>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03932# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03933# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transformFeedback>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03934# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03935# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-07316# If neither of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     features are enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04957# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04995# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
+--     feature is not enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-07946# If neither the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
+--     extension or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     feature are enabled, @stage@ /must/ not contain
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR'
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-synchronization2-03893# The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03894# @stage@ /must/ include
+--     only a single pipeline stage
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03895# @stage@ /must/ include
+--     only stages that are valid for the queue family that was used to
+--     create the command pool that @commandBuffer@ was allocated from
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-dstOffset-03896# @dstOffset@ /must/
+--     be less than or equal to the size of @dstBuffer@ minus @4@
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-dstBuffer-03897# @dstBuffer@ /must/
+--     have been created with the
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
+--     usage flag
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-dstBuffer-03898# If @dstBuffer@ is
+--     non-sparse then it /must/ be bound completely and contiguously to a
+--     single 'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-dstOffset-03899# @dstOffset@ /must/
+--     be a multiple of @4@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.CommandBuffer' handle
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-parameter# @stage@ /must/ be
+--     a valid combination of
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2'
+--     values
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-dstBuffer-parameter# @dstBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support transfer, graphics, or compute
+--     operations
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-commonparent# Both of
+--     @commandBuffer@, and @dstBuffer@ /must/ have been created,
+--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Transfer                                                                                                              | Action                                                                                                                                 |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |                                                                                                                                        |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_buffer_marker VK_AMD_buffer_marker>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
+-- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2'
+cmdWriteBufferMarker2AMD :: forall io
+                          . (MonadIO io)
+                         => -- | @commandBuffer@ is the command buffer into which the command will be
+                            -- recorded.
+                            CommandBuffer
+                         -> -- | @stage@ specifies the pipeline stage whose completion triggers the
+                            -- marker write.
+                            PipelineStageFlags2
+                         -> -- | @dstBuffer@ is the buffer where the marker will be written.
+                            ("dstBuffer" ::: Buffer)
+                         -> -- | @dstOffset@ is the byte offset into the buffer where the marker will be
+                            -- written.
+                            ("dstOffset" ::: DeviceSize)
+                         -> -- | @marker@ is the 32-bit value of the marker.
+                            ("marker" ::: Word32)
+                         -> io ()
+cmdWriteBufferMarker2AMD commandBuffer
+                           stage
+                           dstBuffer
+                           dstOffset
+                           marker = liftIO $ do
+  let vkCmdWriteBufferMarker2AMDPtr = pVkCmdWriteBufferMarker2AMD (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
+  unless (vkCmdWriteBufferMarker2AMDPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteBufferMarker2AMD is null" Nothing Nothing
+  let vkCmdWriteBufferMarker2AMD' = mkVkCmdWriteBufferMarker2AMD vkCmdWriteBufferMarker2AMDPtr
+  traceAroundEvent "vkCmdWriteBufferMarker2AMD" (vkCmdWriteBufferMarker2AMD'
+                                                   (commandBufferHandle (commandBuffer))
+                                                   (stage)
+                                                   (dstBuffer)
+                                                   (dstOffset)
+                                                   (marker))
   pure $ ()
 
 

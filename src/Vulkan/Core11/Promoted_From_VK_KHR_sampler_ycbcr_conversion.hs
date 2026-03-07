@@ -354,8 +354,6 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- = Description
 --
--- Note
---
 -- Setting @forceExplicitReconstruction@ to
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' /may/ have a performance penalty
 -- on implementations where explicit reconstruction is not the default mode
@@ -363,7 +361,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- If @format@ supports
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
--- the @forceExplicitReconstruction@ value behaves as if it was set to
+-- the @forceExplicitReconstruction@ value behaves as if it were
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- If the @pNext@ chain includes a
@@ -480,7 +478,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     chain includes a
 --     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
 --     structure, and if the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-ycbcr-degamma ycbcrDegamma>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-ycbcrDegamma ycbcrDegamma>
 --     feature is not enabled, then
 --     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'::@enableYDegamma@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
@@ -489,7 +487,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     chain includes a
 --     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
 --     structure, and if the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-ycbcr-degamma ycbcrDegamma>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-ycbcrDegamma ycbcrDegamma>
 --     feature is not enabled, then
 --     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'::@enableCbCrDegamma@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
@@ -498,7 +496,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     chain includes a
 --     'Vulkan.Extensions.VK_QCOM_ycbcr_degamma.SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM'
 --     structure, @format@ /must/ be a format with 8-bit R, G, and B
---     components.
+--     components
 --
 -- == Valid Usage (Implicit)
 --

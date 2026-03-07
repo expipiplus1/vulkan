@@ -81,8 +81,7 @@
 --
 -- == See Also
 --
--- 'CAMetalLayer', 'MetalSurfaceCreateFlagsEXT',
--- 'MetalSurfaceCreateInfoEXT', 'createMetalSurfaceEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -311,7 +310,7 @@ instance Zero MetalSurfaceCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_surface VK_EXT_metal_surface>,
--- 'MetalSurfaceCreateInfoEXT'
+-- 'Vulkan.Core10.FundamentalTypes.Flags', 'MetalSurfaceCreateInfoEXT'
 newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

@@ -144,8 +144,7 @@
 --
 -- == See Also
 --
--- 'ShaderInfoTypeAMD', 'ShaderResourceUsageAMD',
--- 'ShaderStatisticsInfoAMD', 'getShaderInfoAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

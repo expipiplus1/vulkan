@@ -114,7 +114,7 @@
 -- by @VK_KHR_swapchain@.
 --
 -- The base functionality in this extension is included in core Vulkan 1.1,
--- with the KHR suffix omitted. The original type, enum and command names
+-- with the KHR suffix omitted. The original type, enum, and command names
 -- are still available as aliases of the core functionality.
 --
 -- == New Commands
@@ -172,12 +172,12 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo':
 --
---     -   'BindBufferMemoryDeviceGroupInfoKHR'
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfoKHR'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo':
 --
---     -   'BindImageMemoryDeviceGroupInfoKHR'
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfoKHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
@@ -286,13 +286,13 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
 --
---     -   'IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR'
+--     -   'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR'
 --
---     -   'STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>
@@ -356,12 +356,7 @@
 --
 -- == See Also
 --
--- 'DeviceGroupBindSparseInfoKHR', 'DeviceGroupCommandBufferBeginInfoKHR',
--- 'DeviceGroupRenderPassBeginInfoKHR', 'DeviceGroupSubmitInfoKHR',
--- 'MemoryAllocateFlagBitsKHR', 'MemoryAllocateFlagsInfoKHR',
--- 'MemoryAllocateFlagsKHR', 'PeerMemoryFeatureFlagBitsKHR',
--- 'PeerMemoryFeatureFlagsKHR', 'cmdDispatchBaseKHR',
--- 'cmdSetDeviceMaskKHR', 'getDeviceGroupPeerMemoryFeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -383,9 +378,6 @@ module Vulkan.Extensions.VK_KHR_device_group  ( pattern STRUCTURE_TYPE_MEMORY_AL
                                               , pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR
                                               , pattern PIPELINE_CREATE_DISPATCH_BASE_KHR
                                               , pattern DEPENDENCY_DEVICE_GROUP_BIT_KHR
-                                              , pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR
-                                              , pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR
-                                              , pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
                                               , getDeviceGroupPeerMemoryFeaturesKHR
                                               , cmdSetDeviceMaskKHR
                                               , cmdDispatchBaseKHR
@@ -394,8 +386,6 @@ module Vulkan.Extensions.VK_KHR_device_group  ( pattern STRUCTURE_TYPE_MEMORY_AL
                                               , PeerMemoryFeatureFlagBitsKHR
                                               , MemoryAllocateFlagBitsKHR
                                               , MemoryAllocateFlagsInfoKHR
-                                              , BindBufferMemoryDeviceGroupInfoKHR
-                                              , BindImageMemoryDeviceGroupInfoKHR
                                               , DeviceGroupRenderPassBeginInfoKHR
                                               , DeviceGroupCommandBufferBeginInfoKHR
                                               , DeviceGroupSubmitInfoKHR
@@ -421,14 +411,17 @@ module Vulkan.Extensions.VK_KHR_device_group  ( pattern STRUCTURE_TYPE_MEMORY_AL
                                               , DeviceGroupPresentModeFlagsKHR
                                               , SwapchainCreateFlagBitsKHR(..)
                                               , SwapchainCreateFlagsKHR
+                                              , BindBufferMemoryDeviceGroupInfoKHR
+                                              , BindImageMemoryDeviceGroupInfoKHR
+                                              , pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR
+                                              , pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR
+                                              , pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
                                               ) where
 
 import Data.String (IsString)
 import Vulkan.Core11.Promoted_From_VK_KHR_device_group (cmdDispatchBase)
 import Vulkan.Core11.Promoted_From_VK_KHR_device_group (cmdSetDeviceMask)
 import Vulkan.Core11.Promoted_From_VK_KHR_device_group (getDeviceGroupPeerMemoryFeatures)
-import Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindBufferMemoryDeviceGroupInfo)
-import Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindImageMemoryDeviceGroupInfo)
 import Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupBindSparseInfo)
 import Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupCommandBufferBeginInfo)
 import Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupRenderPassBeginInfo)
@@ -440,8 +433,6 @@ import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlagBits)
 import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlagBits(DEPENDENCY_DEVICE_GROUP_BIT))
-import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
-import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT))
 import Vulkan.Core11.Enums.MemoryAllocateFlagBits (MemoryAllocateFlags)
 import Vulkan.Core11.Enums.MemoryAllocateFlagBits (MemoryAllocateFlagBits(MEMORY_ALLOCATE_DEVICE_MASK_BIT))
 import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
@@ -455,8 +446,6 @@ import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlagBits(
 import Vulkan.Core11.Promoted_From_VK_KHR_device_group (pattern PIPELINE_CREATE_DISPATCH_BASE)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO))
@@ -468,6 +457,8 @@ import Vulkan.Extensions.VK_KHR_swapchain (getDeviceGroupPresentCapabilitiesKHR)
 import Vulkan.Extensions.VK_KHR_swapchain (getDeviceGroupSurfacePresentModesKHR)
 import Vulkan.Extensions.VK_KHR_swapchain (getPhysicalDevicePresentRectanglesKHR)
 import Vulkan.Extensions.VK_KHR_swapchain (AcquireNextImageInfoKHR(..))
+import Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindBufferMemoryDeviceGroupInfoKHR)
+import Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindImageMemoryDeviceGroupInfoKHR)
 import Vulkan.Extensions.VK_KHR_swapchain (BindImageMemorySwapchainInfoKHR(..))
 import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentCapabilitiesKHR(..))
 import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentInfoKHR(..))
@@ -479,6 +470,9 @@ import Vulkan.Extensions.Handles (SurfaceKHR(..))
 import Vulkan.Extensions.VK_KHR_swapchain (SwapchainCreateFlagBitsKHR(..))
 import Vulkan.Extensions.VK_KHR_swapchain (SwapchainCreateFlagsKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
+import Vulkan.Core10.Enums.ImageCreateFlagBits (pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR)
+import Vulkan.Core10.Enums.StructureType (pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR)
+import Vulkan.Core10.Enums.StructureType (pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR)
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO_KHR"
 pattern STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO_KHR = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
 
@@ -531,18 +525,6 @@ pattern PIPELINE_CREATE_DISPATCH_BASE_KHR = PIPELINE_CREATE_DISPATCH_BASE
 pattern DEPENDENCY_DEVICE_GROUP_BIT_KHR = DEPENDENCY_DEVICE_GROUP_BIT
 
 
--- No documentation found for TopLevel "VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR"
-pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
-
-
--- No documentation found for TopLevel "VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR"
-pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
-
-
--- No documentation found for TopLevel "VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"
-pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
-
-
 -- No documentation found for TopLevel "vkGetDeviceGroupPeerMemoryFeaturesKHR"
 getDeviceGroupPeerMemoryFeaturesKHR = getDeviceGroupPeerMemoryFeatures
 
@@ -573,14 +555,6 @@ type MemoryAllocateFlagBitsKHR = MemoryAllocateFlagBits
 
 -- No documentation found for TopLevel "VkMemoryAllocateFlagsInfoKHR"
 type MemoryAllocateFlagsInfoKHR = MemoryAllocateFlagsInfo
-
-
--- No documentation found for TopLevel "VkBindBufferMemoryDeviceGroupInfoKHR"
-type BindBufferMemoryDeviceGroupInfoKHR = BindBufferMemoryDeviceGroupInfo
-
-
--- No documentation found for TopLevel "VkBindImageMemoryDeviceGroupInfoKHR"
-type BindImageMemoryDeviceGroupInfoKHR = BindImageMemoryDeviceGroupInfo
 
 
 -- No documentation found for TopLevel "VkDeviceGroupRenderPassBeginInfoKHR"

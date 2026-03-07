@@ -21,9 +21,13 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities VK_KHR_external_memory_capabilities>
---     and
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -103,10 +107,7 @@
 --
 -- == See Also
 --
--- 'ImportMemoryZirconHandleInfoFUCHSIA',
--- 'MemoryGetZirconHandleInfoFUCHSIA',
--- 'MemoryZirconHandlePropertiesFUCHSIA', 'getMemoryZirconHandleFUCHSIA',
--- 'getMemoryZirconHandlePropertiesFUCHSIA'
+-- No cross-references are available
 --
 -- == Document Notes
 --

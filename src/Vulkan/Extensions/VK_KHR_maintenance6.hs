@@ -21,7 +21,7 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
 --
@@ -213,10 +213,7 @@
 --
 -- == See Also
 --
--- 'BindDescriptorSetsInfoKHR', 'BindMemoryStatusKHR',
--- 'PhysicalDeviceMaintenance6FeaturesKHR',
--- 'PhysicalDeviceMaintenance6PropertiesKHR', 'PushConstantsInfoKHR',
--- 'cmdBindDescriptorSets2KHR', 'cmdPushConstants2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -1147,10 +1144,10 @@ instance Zero BindMemoryStatusKHR where
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --     flag set
 --
--- -   #VUID-VkBindDescriptorSetsInfoKHR-pDescriptorSets-06563# If
+-- -   #VUID-VkBindDescriptorSetsInfoKHR-pDescriptorSets-06563# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
---     is not enabled, each element of @pDescriptorSets@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorSet'
+--     feature is not enabled, each element of @pDescriptorSets@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.DescriptorSet'
 --
 -- -   #VUID-VkBindDescriptorSetsInfoKHR-pDescriptorSets-08010# Each
 --     element of @pDescriptorSets@ /must/ have been allocated with a

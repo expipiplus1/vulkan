@@ -191,7 +191,7 @@
 -- >     {
 -- >     case VK_SUCCESS:
 -- >         {
--- >             // deferred operation has finished.  Query its result
+-- >             // deferred operation has finished.  Query its result.
 -- >             result = vkGetDeferredOperationResultKHR(device, hOp);
 -- >         }
 -- >         break;
@@ -256,10 +256,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
--- 'createDeferredOperationKHR', 'deferredOperationJoinKHR',
--- 'destroyDeferredOperationKHR', 'getDeferredOperationMaxConcurrencyKHR',
--- 'getDeferredOperationResultKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -517,8 +514,6 @@ foreign import ccall
 -- host CPU. In these situations, an application /should/ clamp the return
 -- value rather than oversubscribing the machine.
 --
--- Note
---
 -- The recommended usage pattern for applications is to query this value
 -- once, after deferral, and schedule no more than the specified number of
 -- threads to join the operation. Each time a joined thread receives
@@ -593,6 +588,9 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
 --     -   'Vulkan.Core10.Enums.Result.NOT_READY'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     None
 --
 -- = See Also
 --

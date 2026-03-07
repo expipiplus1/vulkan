@@ -18,17 +18,17 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory VK_KHR_external_memory>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
 --     -   Lina Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @versalinyaa%0A*Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @linyaa-kiwi%0A*Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension* >
 --
 -- == Other Extension Metadata
 --
@@ -95,7 +95,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_FOREIGN_EXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

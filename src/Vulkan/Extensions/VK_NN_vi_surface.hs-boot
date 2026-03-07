@@ -100,7 +100,7 @@
 --
 -- == See Also
 --
--- 'ViSurfaceCreateFlagsNN', 'ViSurfaceCreateInfoNN', 'createViSurfaceNN'
+-- No cross-references are available
 --
 -- == Document Notes
 --

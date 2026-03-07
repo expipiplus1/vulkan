@@ -25,6 +25,10 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_VERSION_1_3
+--
+--     -   Interacts with VK_EXT_device_generated_commands
+--
 --     -   Interacts with VK_KHR_ray_tracing_pipeline
 --
 --     -   Interacts with VK_KHR_synchronization2
@@ -46,7 +50,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_cull_mask.txt GLSL_EXT_ray_cull_mask>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_ray_cull_mask.txt GLSL_EXT_ray_cull_mask>
 --
 --     -   Interacts with @VK_KHR_ray_tracing_pipeline@
 --
@@ -91,7 +95,7 @@
 --     Vulkan. This extension provides access to built-in @CullMaskKHR@
 --     shader variable which contains the value of the @OpTrace*@
 --     @Cull Mask@ parameter. This new shader variable is accessible in the
---     intersection, any-hit, closest-hit and miss shader stages.
+--     intersection, any-hit, closest hit and miss shader stages.
 --
 -- -   Adds support for a new pipeline stage and access mask built on top
 --     of @VK_KHR_synchronization2@:
@@ -160,15 +164,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
--- is supported:
---
--- -   Extending
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
---
---     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
 -- is supported:
@@ -176,6 +173,26 @@
 -- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
 --     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_generated_commands VK_EXT_device_generated_commands>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsTokenTypeEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_device_generated_commands.INDIRECT_COMMANDS_TOKEN_TYPE_TRACE_RAYS2_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
+--
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 --
 -- == New Built-In Variables
 --
@@ -197,7 +214,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRayTracingMaintenance1FeaturesKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

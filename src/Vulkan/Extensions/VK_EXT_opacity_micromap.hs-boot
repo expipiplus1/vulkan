@@ -23,7 +23,11 @@
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 --     and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -47,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_opacity_micromap.txt GLSL_EXT_opacity_micromap>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_opacity_micromap.txt GLSL_EXT_opacity_micromap>
 --
 -- [__Contributors__]
 --
@@ -371,24 +375,7 @@
 --
 -- == See Also
 --
--- 'AccelerationStructureTrianglesOpacityMicromapEXT',
--- 'BuildMicromapFlagBitsEXT', 'BuildMicromapFlagsEXT',
--- 'BuildMicromapModeEXT', 'CopyMemoryToMicromapInfoEXT',
--- 'CopyMicromapInfoEXT', 'CopyMicromapModeEXT',
--- 'CopyMicromapToMemoryInfoEXT', 'MicromapBuildInfoEXT',
--- 'MicromapBuildSizesInfoEXT', 'MicromapCreateFlagBitsEXT',
--- 'MicromapCreateFlagsEXT', 'MicromapCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.MicromapEXT', 'MicromapTriangleEXT',
--- 'MicromapTypeEXT', 'MicromapUsageEXT', 'MicromapVersionInfoEXT',
--- 'OpacityMicromapFormatEXT', 'OpacityMicromapSpecialIndexEXT',
--- 'PhysicalDeviceOpacityMicromapFeaturesEXT',
--- 'PhysicalDeviceOpacityMicromapPropertiesEXT', 'buildMicromapsEXT',
--- 'cmdBuildMicromapsEXT', 'cmdCopyMemoryToMicromapEXT',
--- 'cmdCopyMicromapEXT', 'cmdCopyMicromapToMemoryEXT',
--- 'cmdWriteMicromapsPropertiesEXT', 'copyMemoryToMicromapEXT',
--- 'copyMicromapEXT', 'copyMicromapToMemoryEXT', 'createMicromapEXT',
--- 'destroyMicromapEXT', 'getDeviceMicromapCompatibilityEXT',
--- 'getMicromapBuildSizesEXT', 'writeMicromapsPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -22,8 +22,12 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_KHR_format_feature_flags2
 --
@@ -47,7 +51,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/qcom/GLSL_QCOM_image_processing.txt GL_QCOM_image_processing>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/qcom/GLSL_QCOM_image_processing.txt GL_QCOM_image_processing>
 --
 -- [__Contributors__]
 --
@@ -76,7 +80,7 @@
 --
 -- -   The @OpImageBoxFilterQCOM@ instruction takes 3 operands: /sampled
 --     image/, /box size/, and texture coordinates. Note that /box size/
---     specifies a floating point width and height in texels. The
+--     specifies a floating-point width and height in texels. The
 --     instruction computes a weighted average of all texels in the
 --     /sampled image/ that are covered (either partially or fully) by a
 --     box with the specified size and centered at the specified texture
@@ -97,7 +101,7 @@
 -- multi-layer, multi-sampled, or depth\/stencil images. The instructions
 -- can be used in any shader stage.
 --
--- Implementations of this this extension should support these operations
+-- Implementations of this extension should support these operations
 -- natively at the HW instruction level, offering potential performance
 -- gains as well as ease of development.
 --
@@ -152,6 +156,8 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending
@@ -171,9 +177,7 @@
 --
 -- == See Also
 --
--- 'ImageViewSampleWeightCreateInfoQCOM',
--- 'PhysicalDeviceImageProcessingFeaturesQCOM',
--- 'PhysicalDeviceImageProcessingPropertiesQCOM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -21,17 +21,16 @@
 --     Ratified
 --
 -- [__Extension and Version Dependencies__]
---         
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
---          or
---         
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
 -- [__API Interactions__]
 --
@@ -42,6 +41,8 @@
 --     -   Interacts with VK_EXT_blend_operation_advanced
 --
 --     -   Interacts with VK_EXT_conservative_rasterization
+--
+--     -   Interacts with VK_EXT_depth_clamp_control
 --
 --     -   Interacts with VK_EXT_depth_clip_control
 --
@@ -254,6 +255,12 @@
 -- -   'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
 --
 -- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clamp_control VK_EXT_depth_clamp_control>
+-- is supported:
+--
+-- -   'Vulkan.Extensions.VK_EXT_depth_clamp_control.cmdSetDepthClampRangeEXT'
+--
+-- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_clip_control VK_EXT_depth_clip_control>
 -- is supported:
 --
@@ -428,7 +435,7 @@
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 -- is supported:
 --
 -- -   Extending 'ShaderCreateFlagBitsEXT':
@@ -440,7 +447,7 @@
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   Extending 'ShaderCreateFlagBitsEXT':
@@ -748,46 +755,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendAdvancedEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendEquationEXT',
--- 'PhysicalDeviceShaderObjectFeaturesEXT',
--- 'PhysicalDeviceShaderObjectPropertiesEXT', 'ShaderCodeTypeEXT',
--- 'ShaderCreateFlagBitsEXT', 'ShaderCreateFlagsEXT',
--- 'ShaderCreateInfoEXT', 'Vulkan.Extensions.Handles.ShaderEXT',
--- 'ShaderRequiredSubgroupSizeCreateInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT',
--- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputBindingDescription2EXT',
--- 'cmdBindShadersEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthTestEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilTestEnableEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT',
--- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT',
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT',
--- 'createShadersEXT', 'destroyShaderEXT', 'getShaderBinaryDataEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -808,6 +776,7 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , ShaderCreateInfoEXT(..)
                                                , ShaderCreateFlagsEXT
                                                , ShaderCreateFlagBitsEXT( SHADER_CREATE_LINK_STAGE_BIT_EXT
+                                                                        , SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT
                                                                         , SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
                                                                         , SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT
                                                                         , SHADER_CREATE_DISPATCH_BASE_BIT_EXT
@@ -831,6 +800,7 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , ColorBlendAdvancedEXT(..)
                                                , VertexInputBindingDescription2EXT(..)
                                                , VertexInputAttributeDescription2EXT(..)
+                                               , DepthClampRangeEXT(..)
                                                , cmdSetPatchControlPointsEXT
                                                , cmdSetLogicOpEXT
                                                , cmdSetTessellationDomainOriginEXT
@@ -865,6 +835,7 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , cmdSetCoverageReductionModeNV
                                                , cmdSetRepresentativeFragmentTestEnableNV
                                                , cmdSetVertexInputEXT
+                                               , cmdSetDepthClampRangeEXT
                                                , ViewportCoordinateSwizzleNV(..)
                                                , BlendOverlapEXT(..)
                                                , CoverageModulationModeNV(..)
@@ -872,6 +843,7 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , ConservativeRasterizationModeEXT(..)
                                                , LineRasterizationModeKHR(..)
                                                , ProvokingVertexModeEXT(..)
+                                               , DepthClampModeEXT(..)
                                                , LineRasterizationModeEXT
                                                , cmdSetCullModeEXT
                                                , cmdSetFrontFaceEXT
@@ -1004,6 +976,7 @@ import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Pipeline (SpecializationInfo)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_features (ValidationFeaturesEXT)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.Result (Result(INCOMPATIBLE_SHADER_BINARY_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT))
@@ -1029,6 +1002,7 @@ import Vulkan.Extensions.VK_EXT_extended_dynamic_state (cmdSetCullModeEXT)
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state2 (cmdSetDepthBiasEnableEXT)
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state (cmdSetDepthBoundsTestEnableEXT)
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (cmdSetDepthClampEnableEXT)
+import Vulkan.Extensions.VK_EXT_depth_clamp_control (cmdSetDepthClampRangeEXT)
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (cmdSetDepthClipEnableEXT)
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (cmdSetDepthClipNegativeOneToOneEXT)
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state (cmdSetDepthCompareOpEXT)
@@ -1066,6 +1040,8 @@ import Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (ColorBlendEquationEXT(.
 import Vulkan.Extensions.VK_EXT_conservative_rasterization (ConservativeRasterizationModeEXT(..))
 import Vulkan.Extensions.VK_NV_framebuffer_mixed_samples (CoverageModulationModeNV(..))
 import Vulkan.Extensions.VK_NV_coverage_reduction_mode (CoverageReductionModeNV(..))
+import Vulkan.Extensions.VK_EXT_depth_clamp_control (DepthClampModeEXT(..))
+import Vulkan.Extensions.VK_EXT_depth_clamp_control (DepthClampRangeEXT(..))
 import Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT)
 import Vulkan.Extensions.VK_KHR_line_rasterization (LineRasterizationModeKHR(..))
 import Vulkan.Extensions.VK_EXT_provoking_vertex (ProvokingVertexModeEXT(..))
@@ -1098,6 +1074,25 @@ foreign import ccall
 -- that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkCreateShadersEXT-stage-09670# If the @stage@ member of any
+--     element of @pCreateInfos@ is
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT',
+--     @device@ /must/ support at least one queue family with the
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' capability
+--
+-- -   #VUID-vkCreateShadersEXT-stage-09671# If the @stage@ member of any
+--     element of @pCreateInfos@ is
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT',
+--     @device@ /must/ support at least one queue family with the
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capability
 --
 -- -   #VUID-vkCreateShadersEXT-None-08400# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderObject shaderObject>
@@ -1231,6 +1226,14 @@ foreign import ccall
 --     specified in the
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --     stage
+--
+-- -   #VUID-vkCreateShadersEXT-pCreateInfos-09632# If @pCreateInfos@
+--     contains a
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--     with @codeType@ of 'SHADER_CODE_TYPE_SPIRV_EXT' and
+--     'SHADER_CREATE_NO_TASK_SHADER_BIT_EXT' is not set, then the mesh
+--     shader’s entry point /must/ not declare a variable with a
+--     @DrawIndex@ @BuiltIn@ decoration
 --
 -- == Valid Usage (Implicit)
 --
@@ -1422,20 +1425,19 @@ foreign import ccall
 --
 -- If @pData@ is @NULL@, then the size of the binary shader code of the
 -- shader object, in bytes, is returned in @pDataSize@. Otherwise,
--- @pDataSize@ /must/ point to a variable set by the user to the size of
--- the buffer, in bytes, pointed to by @pData@, and on return the variable
--- is overwritten with the amount of data actually written to @pData@. If
--- @pDataSize@ is less than the size of the binary shader code, nothing is
--- written to @pData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS'.
---
--- Note
+-- @pDataSize@ /must/ point to a variable set by the application to the
+-- size of the buffer, in bytes, pointed to by @pData@, and on return the
+-- variable is overwritten with the amount of data actually written to
+-- @pData@. If @pDataSize@ is less than the size of the binary shader code,
+-- nothing is written to @pData@, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
 -- The behavior of this command when @pDataSize@ is too small differs from
 -- how some other getter-type commands work in Vulkan. Because shader
 -- binary data is only usable in its entirety, it would never be useful for
 -- the implementation to return partial data. Because of this, nothing is
--- written to @pData@ unless @pDataSize@ is large enough to fit the data it
+-- written to @pData@ unless @pDataSize@ is large enough to fit the data in
 -- its entirety.
 --
 -- Binary shader code retrieved using 'getShaderBinaryDataEXT' /can/ be
@@ -2007,6 +2009,15 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-computeFullSubgroups computeFullSubgroups>
 --     feature /must/ be enabled
 --
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11005# If @flags@ includes
+--     'SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT', then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkShaderCreateInfoEXT-flags-11006# If @flags@ includes
+--     'SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT', then the identified entry
+--     point /must/ not specify @Xfb@ execution mode
+--
 -- -   #VUID-VkShaderCreateInfoEXT-flags-08992# If @flags@ includes
 --     'SHADER_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT', @stage@ /must/ be
 --     one of
@@ -2035,7 +2046,7 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     'ShaderRequiredSubgroupSizeCreateInfoEXT' structure is included in
 --     the @pNext@ chain, the local workgroup size in the X dimension of
 --     the shader /must/ be a multiple of
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroupSize subgroupSize>
 --
 -- -   #VUID-VkShaderCreateInfoEXT-stage-08418# @stage@ /must/ not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ALL_GRAPHICS'
@@ -2255,14 +2266,31 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     @pCode@ /must/ contain an @OpExecutionMode@ instruction specifying
 --     the output patch size
 --
+-- -   #VUID-VkShaderCreateInfoEXT-pPushConstantRanges-10063# Any two
+--     elements of @pPushConstantRanges@ /must/ not include the same stage
+--     in @stageFlags@
+--
+-- -   #VUID-VkShaderCreateInfoEXT-codeType-10064# If @codeType@ is
+--     'SHADER_CODE_TYPE_SPIRV_EXT', and if a push constant block is
+--     declared in a shader, then an element of
+--     @pPushConstantRanges@::@stageFlags@ /must/ match @stage@
+--
+-- -   #VUID-VkShaderCreateInfoEXT-codeType-10065# If @codeType@ is
+--     'SHADER_CODE_TYPE_SPIRV_EXT', and if a push constant block is
+--     declared in a shader, the block must be contained inside the element
+--     of @pPushConstantRanges@ that matches the stage
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkShaderCreateInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SHADER_CREATE_INFO_EXT'
 --
--- -   #VUID-VkShaderCreateInfoEXT-pNext-pNext# @pNext@ /must/ be @NULL@ or
---     a pointer to a valid instance of
+-- -   #VUID-VkShaderCreateInfoEXT-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfo'
+--     or
+--     'Vulkan.Extensions.VK_EXT_validation_features.ValidationFeaturesEXT'
 --
 -- -   #VUID-VkShaderCreateInfoEXT-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -2376,6 +2404,7 @@ instance Extensible ShaderCreateInfoEXT where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ShaderCreateInfoEXT e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @PipelineShaderStageRequiredSubgroupSizeCreateInfo = Just f
+    | Just Refl <- eqT @e @ValidationFeaturesEXT = Just f
     | otherwise = Nothing
 
 instance ( Extendss ShaderCreateInfoEXT es
@@ -2515,6 +2544,11 @@ newtype ShaderCreateFlagBitsEXT = ShaderCreateFlagBitsEXT Flags
 -- 'SHADER_CREATE_LINK_STAGE_BIT_EXT'.
 pattern SHADER_CREATE_LINK_STAGE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000001
 
+-- | 'SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT' specifies that the shader
+-- /can/ be used in combination with
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
+pattern SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000080
+
 -- | 'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT' specifies that a
 -- fragment shader /can/ be used with a fragment density map attachment.
 pattern SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000040
@@ -2555,6 +2589,10 @@ showTableShaderCreateFlagBitsEXT =
   [
     ( SHADER_CREATE_LINK_STAGE_BIT_EXT
     , "LINK_STAGE_BIT_EXT"
+    )
+  ,
+    ( SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT
+    , "INDIRECT_BINDABLE_BIT_EXT"
     )
   ,
     ( SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT

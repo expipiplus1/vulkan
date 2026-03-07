@@ -142,19 +142,17 @@ foreign import ccall
 -- memory requirements available is returned in
 -- @pSparseMemoryRequirementCount@. Otherwise,
 -- @pSparseMemoryRequirementCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pSparseMemoryRequirements@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pSparseMemoryRequirements@. If
+-- application to the number of elements in the @pSparseMemoryRequirements@
+-- array, and on return the variable is overwritten with the number of
+-- structures actually written to @pSparseMemoryRequirements@. If
 -- @pSparseMemoryRequirementCount@ is less than the number of sparse memory
 -- requirements available, at most @pSparseMemoryRequirementCount@
 -- structures will be written.
 --
 -- If the image was not created with
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
--- then @pSparseMemoryRequirementCount@ will be set to zero and
+-- then @pSparseMemoryRequirementCount@ will be zero and
 -- @pSparseMemoryRequirements@ will not be written to.
---
--- Note
 --
 -- It is legal for an implementation to report a larger value in
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ than would
@@ -238,16 +236,17 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of sparse format properties
 -- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of sparse format properties
--- available, at most @pPropertyCount@ structures will be written.
+-- /must/ point to a variable set by the application to the number of
+-- elements in the @pProperties@ array, and on return the variable is
+-- overwritten with the number of structures actually written to
+-- @pProperties@. If @pPropertyCount@ is less than the number of sparse
+-- format properties available, at most @pPropertyCount@ structures will be
+-- written.
 --
 -- If
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
--- is not supported for the given arguments, @pPropertyCount@ will be set
--- to zero upon return, and no data will be written to @pProperties@.
+-- is not supported for the given arguments, @pPropertyCount@ will be zero
+-- upon return, and no data will be written to @pProperties@.
 --
 -- Multiple aspects are returned for depth\/stencil images that are
 -- implemented as separate planes by the implementation. The depth and
@@ -780,9 +779,10 @@ instance Zero ImageSubresource where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association>
 --
 -- -   #VUID-VkSparseMemoryBind-resourceOffset-09491# If the resource being
---     bound is a 'Vulkan.Core10.Handles.Buffer', @resourceOffset@ and
---     @memoryOffset@ /must/ be an integer multiple of the @alignment@ of
---     the 'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
+--     bound is a 'Vulkan.Core10.Handles.Buffer', @resourceOffset@,
+--     @memoryOffset@ and @size@ /must/ be an integer multiple of the
+--     @alignment@ of the
+--     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
 --     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' with
 --     the buffer resource
@@ -932,10 +932,6 @@ instance Zero SparseMemoryBind where
 --     @memoryOffset@ /must/ match the memory requirements of the calling
 --     command’s @image@, as described in section
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association>
---
--- -   #VUID-VkSparseImageMemoryBind-subresource-01106# @subresource@
---     /must/ be a valid image subresource for @image@ (see
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views>)
 --
 -- -   #VUID-VkSparseImageMemoryBind-offset-01107# @offset.x@ /must/ be a
 --     multiple of the sparse image block width
@@ -1150,6 +1146,34 @@ instance Zero SparseBufferMemoryBindInfo where
 -- | VkSparseImageOpaqueMemoryBindInfo - Structure specifying sparse image
 -- opaque memory bind information
 --
+-- = Description
+--
+-- This structure is normally used to bind memory to fully-resident sparse
+-- images or for mip tail regions of partially resident images. However, it
+-- /can/ also be used to bind memory for the entire binding range of
+-- partially resident images.
+--
+-- If the @pBinds@[i].flags of an element /i/ of @pBinds@ does not contain
+-- 'Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SPARSE_MEMORY_BIND_METADATA_BIT',
+-- the @resourceOffset@ is in the range [0,
+-- 'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@), This range
+-- includes data from all aspects of the image, including metadata. For
+-- most implementations this will probably mean that the @resourceOffset@
+-- is a simple device address offset within the resource. It is possible
+-- for an application to bind a range of memory that includes both resource
+-- data and metadata. However, the application would not know what part of
+-- the image the memory is used for, or if any range is being used for
+-- metadata.
+--
+-- If the @pBinds@[i].flags of an element /i/ of @pBinds@ contains
+-- 'Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SPARSE_MEMORY_BIND_METADATA_BIT',
+-- the binding range specified /must/ be within the mip tail region of the
+-- metadata aspect. In this case the @resourceOffset@ is not /required/ to
+-- be a simple device address offset within the resource. However, it /is/
+-- defined to be within [@imageMipTailOffset@, @imageMipTailOffset@ +
+-- @imageMipTailSize@) for the metadata aspect. See 'SparseMemoryBind' for
+-- the full constraints on binding region with this flag present.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkSparseImageOpaqueMemoryBindInfo-pBinds-01103# If the @flags@
@@ -1229,6 +1253,11 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 -- -   #VUID-VkSparseImageMemoryBindInfo-subresource-01723# The
 --     @subresource.arrayLayer@ member of each element of @pBinds@ /must/
 --     be less than the @arrayLayers@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
+--
+-- -   #VUID-VkSparseImageMemoryBindInfo-subresource-01106# The
+--     @subresource.aspectMask@ member of each element of @pBinds@ /must/
+--     be valid for the @format@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
 -- -   #VUID-VkSparseImageMemoryBindInfo-image-02901# @image@ /must/ have

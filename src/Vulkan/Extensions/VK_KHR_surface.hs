@@ -132,14 +132,12 @@
 --
 -- == Examples
 --
--- Note
---
 -- The example code for the @VK_KHR_surface@ and @VK_KHR_swapchain@
 -- extensions was removed from the appendix after revision 1.0.29. This WSI
 -- example code was ported to the cube demo that is shipped with the
 -- official Khronos SDK, and is being kept up-to-date in that location
 -- (see:
--- <https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c>).
+-- <https://github.com/KhronosGroup/Vulkan-Tools/blob/main/cube/cube.c>).
 --
 -- == Issues
 --
@@ -358,13 +356,7 @@
 --
 -- == See Also
 --
--- 'ColorSpaceKHR', 'CompositeAlphaFlagBitsKHR', 'CompositeAlphaFlagsKHR',
--- 'PresentModeKHR', 'SurfaceCapabilitiesKHR', 'SurfaceFormatKHR',
--- 'Vulkan.Extensions.Handles.SurfaceKHR', 'SurfaceTransformFlagBitsKHR',
--- 'destroySurfaceKHR', 'getPhysicalDeviceSurfaceCapabilitiesKHR',
--- 'getPhysicalDeviceSurfaceFormatsKHR',
--- 'getPhysicalDeviceSurfacePresentModesKHR',
--- 'getPhysicalDeviceSurfaceSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -385,6 +377,7 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                          , PRESENT_MODE_MAILBOX_KHR
                                                          , PRESENT_MODE_FIFO_KHR
                                                          , PRESENT_MODE_FIFO_RELAXED_KHR
+                                                         , PRESENT_MODE_FIFO_LATEST_READY_EXT
                                                          , PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
                                                          , PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
                                                          , ..
@@ -773,8 +766,8 @@ foreign import ccall
 -- If @pSurfaceFormats@ is @NULL@, then the number of format pairs
 -- supported for the given @surface@ is returned in @pSurfaceFormatCount@.
 -- Otherwise, @pSurfaceFormatCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pSurfaceFormats@ array, and on
--- return the variable is overwritten with the number of structures
+-- application to the number of elements in the @pSurfaceFormats@ array,
+-- and on return the variable is overwritten with the number of structures
 -- actually written to @pSurfaceFormats@. If the value of
 -- @pSurfaceFormatCount@ is less than the number of format pairs supported,
 -- at most @pSurfaceFormatCount@ structures will be written, and
@@ -910,8 +903,8 @@ foreign import ccall
 -- If @pPresentModes@ is @NULL@, then the number of presentation modes
 -- supported for the given @surface@ is returned in @pPresentModeCount@.
 -- Otherwise, @pPresentModeCount@ /must/ point to a variable set by the
--- user to the number of elements in the @pPresentModes@ array, and on
--- return the variable is overwritten with the number of values actually
+-- application to the number of elements in the @pPresentModes@ array, and
+-- on return the variable is overwritten with the number of values actually
 -- written to @pPresentModes@. If the value of @pPresentModeCount@ is less
 -- than the number of presentation modes supported, at most
 -- @pPresentModeCount@ values will be written, and
@@ -1029,15 +1022,11 @@ pattern COLORSPACE_SRGB_NONLINEAR_KHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
 --
 -- = Description
 --
--- Note
---
 -- Supported usage flags of a presentable image when using
 -- 'PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR' or
 -- 'PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' presentation mode are
 -- provided by
 -- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@.
---
--- Note
 --
 -- Formulas such as min(N, @maxImageCount@) are not correct, since
 -- @maxImageCount@ /may/ be zero.
@@ -1102,7 +1091,8 @@ data SurfaceCapabilitiesKHR = SurfaceCapabilitiesKHR
   , -- | @supportedUsageFlags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' representing
     -- the ways the application /can/ use the presentable images of a swapchain
-    -- created with 'PresentModeKHR' set to 'PRESENT_MODE_IMMEDIATE_KHR',
+    -- created with 'PresentModeKHR' set to
+    -- 'PRESENT_MODE_FIFO_LATEST_READY_EXT', 'PRESENT_MODE_IMMEDIATE_KHR',
     -- 'PRESENT_MODE_MAILBOX_KHR', 'PRESENT_MODE_FIFO_KHR' or
     -- 'PRESENT_MODE_FIFO_RELAXED_KHR' for the surface on the specified device.
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
@@ -1265,14 +1255,14 @@ instance Zero SurfaceFormatKHR where
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 -- | 'PRESENT_MODE_FIFO_RELAXED_KHR'              | 'SurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                             |
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+-- | 'PRESENT_MODE_FIFO_LATEST_READY_EXT'         | 'SurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                             |
+-- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 -- | 'PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'     | 'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@ |
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 -- | 'PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' | 'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@ |
 -- +----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 --
--- Presentable image usage queries
---
--- Note
+-- Presentable Image Usage Queries
 --
 -- For reference, the mode indicated by 'PRESENT_MODE_FIFO_KHR' is
 -- equivalent to the behavior of {wgl|glX|egl}SwapBuffers with a swap
@@ -1339,6 +1329,20 @@ pattern PRESENT_MODE_FIFO_KHR = PresentModeKHR 2
 -- queue is non-empty.
 pattern PRESENT_MODE_FIFO_RELAXED_KHR = PresentModeKHR 3
 
+-- | 'PRESENT_MODE_FIFO_LATEST_READY_EXT' specifies that the presentation
+-- engine waits for the next vertical blanking period to update the current
+-- image. Tearing /cannot/ be observed. An internal queue is used to hold
+-- pending presentation requests. New requests are appended to the end of
+-- the queue. At each vertical blanking period, the presentation engine
+-- dequeues all successive requests that are ready to be presented from the
+-- beginning of the queue. If using @VK_GOOGLE_display_timing@ to provide a
+-- target present time, the presentation engine will check the specified
+-- time for each image. If the target present time is less-than or equal-to
+-- the current time, the presentation engine will dequeue the image and
+-- check the next one. The image of the last dequeued request will be
+-- presented. The other dequeued requests will be dropped.
+pattern PRESENT_MODE_FIFO_LATEST_READY_EXT = PresentModeKHR 1000361000
+
 -- | 'PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' specifies that the
 -- presentation engine and application have concurrent access to a single
 -- image, which is referred to as a /shared presentable image/. The
@@ -1367,6 +1371,7 @@ pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = PresentModeKHR 1000111000
   , PRESENT_MODE_MAILBOX_KHR
   , PRESENT_MODE_FIFO_KHR
   , PRESENT_MODE_FIFO_RELAXED_KHR
+  , PRESENT_MODE_FIFO_LATEST_READY_EXT
   , PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
   , PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR ::
     PresentModeKHR
@@ -1384,6 +1389,10 @@ showTablePresentModeKHR =
   , (PRESENT_MODE_MAILBOX_KHR, "MAILBOX_KHR")
   , (PRESENT_MODE_FIFO_KHR, "FIFO_KHR")
   , (PRESENT_MODE_FIFO_RELAXED_KHR, "FIFO_RELAXED_KHR")
+  ,
+    ( PRESENT_MODE_FIFO_LATEST_READY_EXT
+    , "FIFO_LATEST_READY_EXT"
+    )
   ,
     ( PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
     , "SHARED_CONTINUOUS_REFRESH_KHR"
@@ -1415,16 +1424,12 @@ instance Read PresentModeKHR where
 --
 -- = Description
 --
--- Note
---
 -- In the initial release of the @VK_KHR_surface@ and @VK_KHR_swapchain@
 -- extensions, the token 'COLORSPACE_SRGB_NONLINEAR_KHR' was used. Starting
 -- in the 2016-05-13 updates to the extension branches, matching release
 -- 1.0.13 of the core API specification, 'COLOR_SPACE_SRGB_NONLINEAR_KHR'
 -- is used instead for consistency with Vulkan naming rules. The older enum
 -- is still available for backwards compatibility.
---
--- Note
 --
 -- In older versions of this extension 'COLOR_SPACE_DISPLAY_P3_LINEAR_EXT'
 -- was misnamed
@@ -1433,19 +1438,35 @@ instance Read PresentModeKHR where
 -- XYZ. The old name is deprecated but is maintained for backwards
 -- compatibility.
 --
+-- In older versions of the @VK_EXT_swapchain_colorspace@ extension,
+-- 'COLOR_SPACE_DOLBYVISION_EXT' was exposed. The intent was to indicate
+-- the presentation engine shall decode an image using the SMPTE ST 2084
+-- Perceptual Quantizer (PQ) EOTF, and then apply a proprietary OOTF to
+-- process the image. However, Dolby Vision profile 8.4 describes an
+-- encoding using the Hybrid Log Gamma (HLG) OETF, and there is no
+-- swapchain extension for signaling Dolby Vision metadata to be used by a
+-- proprietary OOTF. This enum is deprecated but is maintained for
+-- backwards compatibility.
+--
 -- Note
 --
 -- For a traditional “Linear” or non-gamma transfer function color space
 -- use 'COLOR_SPACE_PASS_THROUGH_EXT'.
 --
--- The color components of non-linear color space swapchain images /must/
--- have had the appropriate transfer function applied. The color space
--- selected for the swapchain image will not affect the processing of data
--- written into the image by the implementation. Vulkan requires that all
--- implementations support the sRGB transfer function by use of an SRGB
--- pixel format. Other transfer functions, such as SMPTE 170M or SMPTE2084,
--- /can/ be performed by the application shader. This extension defines
--- enums for 'ColorSpaceKHR' that correspond to the following color spaces:
+-- The presentation engine interprets the pixel values of the R, G, and B
+-- components as having been encoded using an appropriate transfer
+-- function. Applications /should/ ensure that the appropriate transfer
+-- function has been applied.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-output-format-conversion Textures Output Format Conversion>
+-- requires that all implementations implicitly apply the sRGB EOTF-1 on R,
+-- G, and B components when shaders write to an sRGB pixel format image,
+-- which is useful for sRGB color spaces. For sRGB color spaces with other
+-- pixel formats, or other non-linear color spaces, applications /can/
+-- apply the transfer function explicitly in a shader. The A channel is
+-- always interpreted as linearly encoded.
+--
+-- This extension defines enums for 'ColorSpaceKHR' that correspond to the
+-- following color spaces:
 --
 -- +--------------+----------+----------+----------+-------------+------------+
 -- | Name         | Red      | Green    | Blue     | White-point | Transfer   |
@@ -1458,23 +1479,19 @@ instance Read PresentModeKHR where
 -- |              | 0.320    | 0.690    | 0.060    | 0.3290      |            |
 -- |              |          |          |          | (D65)       |            |
 -- +--------------+----------+----------+----------+-------------+------------+
--- | BT709        | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | ITU (SMPTE |
--- |              | 0.330    | 0.600    | 0.060    | 0.3290      | 170M)      |
+-- | BT709        | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | BT709      |
+-- |              | 0.330    | 0.600    | 0.060    | 0.3290      |            |
 -- |              |          |          |          | (D65)       |            |
 -- +--------------+----------+----------+----------+-------------+------------+
 -- | sRGB         | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | sRGB       |
 -- |              | 0.330    | 0.600    | 0.060    | 0.3290      |            |
 -- |              |          |          |          | (D65)       |            |
 -- +--------------+----------+----------+----------+-------------+------------+
--- | extended     | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | extended   |
--- | sRGB         | 0.330    | 0.600    | 0.060    | 0.3290      | sRGB       |
+-- | extended     | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | scRGB      |
+-- | sRGB         | 0.330    | 0.600    | 0.060    | 0.3290      |            |
 -- |              |          |          |          | (D65)       |            |
 -- +--------------+----------+----------+----------+-------------+------------+
 -- | HDR10_ST2084 | 0.708,   | 0.170,   | 0.131,   | 0.3127,     | ST2084 PQ  |
--- |              | 0.292    | 0.797    | 0.046    | 0.3290      |            |
--- |              |          |          |          | (D65)       |            |
--- +--------------+----------+----------+----------+-------------+------------+
--- | DOLBYVISION  | 0.708,   | 0.170,   | 0.131,   | 0.3127,     | ST2084 PQ  |
 -- |              | 0.292    | 0.797    | 0.046    | 0.3290      |            |
 -- |              |          |          |          | (D65)       |            |
 -- +--------------+----------+----------+----------+-------------+------------+
@@ -1482,7 +1499,7 @@ instance Read PresentModeKHR where
 -- |              | 0.292    | 0.797    | 0.046    | 0.3290      |            |
 -- |              |          |          |          | (D65)       |            |
 -- +--------------+----------+----------+----------+-------------+------------+
--- | AdobeRGB     | 0.640,   | 0.210,   | 0.150,   | 0.3127,     | AdobeRGB   |
+-- | Adobe RGB    | 0.640,   | 0.210,   | 0.150,   | 0.3127,     | Adobe RGB  |
 -- |              | 0.330    | 0.710    | 0.060    | 0.3290      |            |
 -- |              |          |          |          | (D65)       |            |
 -- +--------------+----------+----------+----------+-------------+------------+
@@ -1506,8 +1523,6 @@ instance Read PresentModeKHR where
 -- where L is the linear value of a color component and E is the encoded
 -- value (as stored in the image in memory).
 --
--- Note
---
 -- For most uses, the sRGB OETF is equivalent.
 --
 -- = See Also
@@ -1518,8 +1533,8 @@ instance Read PresentModeKHR where
 newtype ColorSpaceKHR = ColorSpaceKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COLOR_SPACE_SRGB_NONLINEAR_KHR' specifies support for the sRGB color
--- space.
+-- | 'COLOR_SPACE_SRGB_NONLINEAR_KHR' specifies support for the images in
+-- sRGB color space, encoded according to the sRGB specification.
 pattern COLOR_SPACE_SRGB_NONLINEAR_KHR = ColorSpaceKHR 0
 
 -- | 'COLOR_SPACE_DISPLAY_NATIVE_AMD' specifies support for the display’s
@@ -1528,7 +1543,8 @@ pattern COLOR_SPACE_SRGB_NONLINEAR_KHR = ColorSpaceKHR 0
 pattern COLOR_SPACE_DISPLAY_NATIVE_AMD = ColorSpaceKHR 1000213000
 
 -- | 'COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT' specifies support for the
--- extended sRGB color space to be displayed using an sRGB EOTF.
+-- images in extended sRGB color space, encoded according to the scRGB
+-- specification.
 pattern COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = ColorSpaceKHR 1000104014
 
 -- | 'COLOR_SPACE_PASS_THROUGH_EXT' specifies that color components are used
@@ -1536,57 +1552,56 @@ pattern COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = ColorSpaceKHR 1000104014
 -- spaces not described here.
 pattern COLOR_SPACE_PASS_THROUGH_EXT = ColorSpaceKHR 1000104013
 
--- | 'COLOR_SPACE_ADOBERGB_NONLINEAR_EXT' specifies support for the AdobeRGB
--- color space to be displayed using the Gamma 2.2 EOTF.
+-- | 'COLOR_SPACE_ADOBERGB_NONLINEAR_EXT' specifies support for the images in
+-- Adobe RGB color space, encoded according to the Adobe RGB specification
+-- (approximately Gamma 2.2).
 pattern COLOR_SPACE_ADOBERGB_NONLINEAR_EXT = ColorSpaceKHR 1000104012
 
--- | 'COLOR_SPACE_ADOBERGB_LINEAR_EXT' specifies support for the AdobeRGB
--- color space to be displayed using a linear EOTF.
+-- | 'COLOR_SPACE_ADOBERGB_LINEAR_EXT' specifies support for images in Adobe
+-- RGB color space, encoded using a linear transfer function.
 pattern COLOR_SPACE_ADOBERGB_LINEAR_EXT = ColorSpaceKHR 1000104011
 
--- | 'COLOR_SPACE_HDR10_HLG_EXT' specifies support for the HDR10 (BT2020
--- color space) to be displayed using the Hybrid Log Gamma (HLG) EOTF.
+-- | 'COLOR_SPACE_HDR10_HLG_EXT' specifies support for the images in HDR10
+-- (BT2020) color space, encoded according to the Hybrid Log Gamma (HLG)
+-- specification.
 pattern COLOR_SPACE_HDR10_HLG_EXT = ColorSpaceKHR 1000104010
 
--- | 'COLOR_SPACE_DOLBYVISION_EXT' specifies support for the Dolby Vision
--- (BT2020 color space), proprietary encoding, to be displayed using the
--- SMPTE ST2084 EOTF.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DOLBYVISION_EXT"
 pattern COLOR_SPACE_DOLBYVISION_EXT = ColorSpaceKHR 1000104009
 
--- | 'COLOR_SPACE_HDR10_ST2084_EXT' specifies support for the HDR10 (BT2020
--- color) space to be displayed using the SMPTE ST2084 Perceptual Quantizer
--- (PQ) EOTF.
+-- | 'COLOR_SPACE_HDR10_ST2084_EXT' specifies support for the images in HDR10
+-- (BT2020) color space, encoded according to SMPTE ST2084 Perceptual
+-- Quantizer (PQ) specification.
 pattern COLOR_SPACE_HDR10_ST2084_EXT = ColorSpaceKHR 1000104008
 
--- | 'COLOR_SPACE_BT2020_LINEAR_EXT' specifies support for the BT2020 color
--- space to be displayed using a linear EOTF.
+-- | 'COLOR_SPACE_BT2020_LINEAR_EXT' specifies support for the images in
+-- BT2020 color space, encoded using a linear transfer function.
 pattern COLOR_SPACE_BT2020_LINEAR_EXT = ColorSpaceKHR 1000104007
 
--- | 'COLOR_SPACE_BT709_NONLINEAR_EXT' specifies support for the BT709 color
--- space to be displayed using the SMPTE 170M EOTF.
+-- | 'COLOR_SPACE_BT709_NONLINEAR_EXT' specifies support for the images in
+-- BT709 color space, encoded according to the BT709 specification.
 pattern COLOR_SPACE_BT709_NONLINEAR_EXT = ColorSpaceKHR 1000104006
 
--- | 'COLOR_SPACE_BT709_LINEAR_EXT' specifies support for the BT709 color
--- space to be displayed using a linear EOTF.
+-- | 'COLOR_SPACE_BT709_LINEAR_EXT' specifies support for the images in BT709
+-- color space, encoded using a linear transfer function.
 pattern COLOR_SPACE_BT709_LINEAR_EXT = ColorSpaceKHR 1000104005
 
--- | 'COLOR_SPACE_DCI_P3_NONLINEAR_EXT' specifies support for the DCI-P3
--- color space to be displayed using the DCI-P3 EOTF. Note that values in
--- such an image are interpreted as XYZ encoded color data by the
--- presentation engine.
+-- | 'COLOR_SPACE_DCI_P3_NONLINEAR_EXT' specifies support for the images in
+-- DCI-P3 color space, encoded according to the DCI-P3 specification. Note
+-- that values in such an image are interpreted as XYZ encoded color data
+-- by the presentation engine.
 pattern COLOR_SPACE_DCI_P3_NONLINEAR_EXT = ColorSpaceKHR 1000104004
 
--- | 'COLOR_SPACE_DISPLAY_P3_LINEAR_EXT' specifies support for the Display-P3
--- color space to be displayed using a linear EOTF.
+-- | 'COLOR_SPACE_DISPLAY_P3_LINEAR_EXT' specifies support for the images in
+-- Display-P3 color space, encoded using a linear transfer function.
 pattern COLOR_SPACE_DISPLAY_P3_LINEAR_EXT = ColorSpaceKHR 1000104003
 
--- | 'COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT' specifies support for the
--- extended sRGB color space to be displayed using a linear EOTF.
+-- | 'COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT' specifies support for the images
+-- in extended sRGB color space, encoded using a linear transfer function.
 pattern COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT = ColorSpaceKHR 1000104002
 
--- | 'COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT' specifies support for the
--- Display-P3 color space to be displayed using an sRGB-like EOTF (defined
--- below).
+-- | 'COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT' specifies support for the images
+-- in Display-P3 color space, encoded using a Display-P3 transfer function.
 pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = ColorSpaceKHR 1000104001
 
 {-# COMPLETE

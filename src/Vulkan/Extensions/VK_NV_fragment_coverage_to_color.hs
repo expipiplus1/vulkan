@@ -82,8 +82,7 @@
 --
 -- == See Also
 --
--- 'PipelineCoverageToColorStateCreateFlagsNV',
--- 'PipelineCoverageToColorStateCreateInfoNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -255,6 +254,7 @@ instance Zero PipelineCoverageToColorStateCreateInfoNV where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>,
+-- 'Vulkan.Core10.FundamentalTypes.Flags',
 -- 'PipelineCoverageToColorStateCreateInfoNV'
 newtype PipelineCoverageToColorStateCreateFlagsNV = PipelineCoverageToColorStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

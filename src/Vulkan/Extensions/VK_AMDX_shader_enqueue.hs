@@ -15,19 +15,27 @@
 --     135
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 VK_KHR_synchronization2>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 VK_KHR_spirv_1_4>
+--              and
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state VK_EXT_extended_dynamic_state>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_library VK_KHR_pipeline_library>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 VK_KHR_spirv_1_4>
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
@@ -36,6 +44,8 @@
 --         details.__
 --
 -- [__API Interactions__]
+--
+--     -   Interacts with VK_EXT_mesh_shader
 --
 --     -   Interacts with VK_KHR_maintenance5
 --
@@ -54,7 +64,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-07-22
+--     2024-07-17
 --
 -- [__Provisional__]
 --     __This extension is /provisional/ and /should/ not be used in
@@ -86,8 +96,8 @@
 --
 -- == Description
 --
--- This extension adds the ability for developers to enqueue compute shader
--- workgroups from other compute shaders.
+-- This extension adds the ability for developers to enqueue mesh and
+-- compute shader workgroups from other compute shaders.
 --
 -- == New Commands
 --
@@ -167,11 +177,21 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
 -- is supported:
 --
--- -   Extending 'BufferUsageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BufferUsageFlagBits2KHR':
 --
---     -   'BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--     -   'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX'
 --
 -- == Version History
+--
+-- -   Revision 2, 2024-07-17 (Tobias Hector)
+--
+--     -   Add mesh nodes
 --
 -- -   Revision 1, 2021-07-22 (Tobias Hector)
 --
@@ -179,18 +199,7 @@
 --
 -- == See Also
 --
--- 'Vulkan.Core10.APIConstants.SHADER_INDEX_UNUSED_AMDX',
--- 'DeviceOrHostAddressConstAMDX', 'DispatchGraphCountInfoAMDX',
--- 'DispatchGraphInfoAMDX', 'ExecutionGraphPipelineCreateInfoAMDX',
--- 'ExecutionGraphPipelineScratchSizeAMDX',
--- 'PhysicalDeviceShaderEnqueueFeaturesAMDX',
--- 'PhysicalDeviceShaderEnqueuePropertiesAMDX',
--- 'PipelineShaderStageNodeCreateInfoAMDX', 'cmdDispatchGraphAMDX',
--- 'cmdDispatchGraphIndirectAMDX', 'cmdDispatchGraphIndirectCountAMDX',
--- 'cmdInitializeGraphScratchMemoryAMDX',
--- 'createExecutionGraphPipelinesAMDX',
--- 'getExecutionGraphPipelineNodeIndexAMDX',
--- 'getExecutionGraphPipelineScratchSizeAMDX'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -214,48 +223,20 @@ module Vulkan.Extensions.VK_AMDX_shader_enqueue  ( getExecutionGraphPipelineScra
                                                  , DispatchGraphInfoAMDX(..)
                                                  , DispatchGraphCountInfoAMDX(..)
                                                  , DeviceOrHostAddressConstAMDX(..)
-                                                 , BufferUsageFlags2KHR
-                                                 , BufferUsageFlagBits2KHR( BUFFER_USAGE_2_TRANSFER_SRC_BIT_KHR
-                                                                          , BUFFER_USAGE_2_TRANSFER_DST_BIT_KHR
-                                                                          , BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR
-                                                                          , BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR
-                                                                          , BUFFER_USAGE_2_UNIFORM_BUFFER_BIT_KHR
-                                                                          , BUFFER_USAGE_2_STORAGE_BUFFER_BIT_KHR
-                                                                          , BUFFER_USAGE_2_INDEX_BUFFER_BIT_KHR
-                                                                          , BUFFER_USAGE_2_VERTEX_BUFFER_BIT_KHR
-                                                                          , BUFFER_USAGE_2_INDIRECT_BUFFER_BIT_KHR
-                                                                          , BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
-                                                                          , BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
-                                                                          , BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT
-                                                                          , BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT
-                                                                          , BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT
-                                                                          , BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
-                                                                          , BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
-                                                                          , BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR
-                                                                          , BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR
-                                                                          , BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR
-                                                                          , BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR
-                                                                          , BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR
-                                                                          , BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
-                                                                          , BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
-                                                                          , BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR
-                                                                          , BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT
-                                                                          , BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX
-                                                                          , ..
-                                                                          )
                                                  , AMDX_SHADER_ENQUEUE_SPEC_VERSION
                                                  , pattern AMDX_SHADER_ENQUEUE_SPEC_VERSION
                                                  , AMDX_SHADER_ENQUEUE_EXTENSION_NAME
                                                  , pattern AMDX_SHADER_ENQUEUE_EXTENSION_NAME
                                                  , PipelineLibraryCreateInfoKHR(..)
+                                                 , BufferUsageFlagBits2KHR(..)
+                                                 , BufferUsageFlags2KHR
+                                                 , PipelineCreateFlagBits2KHR(..)
+                                                 , PipelineCreateFlags2KHR
                                                  , SHADER_INDEX_UNUSED_AMDX
                                                  , pattern SHADER_INDEX_UNUSED_AMDX
                                                  ) where
 
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
-import Vulkan.Internal.Utils (enumReadPrec)
-import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
@@ -271,8 +252,6 @@ import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Show (showString)
-import Numeric (showHex)
 import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
@@ -286,7 +265,6 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
@@ -303,8 +281,6 @@ import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
-import GHC.Read (Read(readPrec))
-import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.ByteString (ByteString)
@@ -315,6 +291,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
+import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
@@ -341,7 +318,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.FundamentalTypes (Flags64)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (Pipeline)
@@ -367,6 +343,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_PROPERTIES_AMDX))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlagBits2KHR(..))
+import Vulkan.Extensions.VK_KHR_maintenance5 (BufferUsageFlags2KHR)
+import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlagBits2KHR(..))
+import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
 import Vulkan.Extensions.VK_KHR_pipeline_library (PipelineLibraryCreateInfoKHR(..))
 import Vulkan.Core10.APIConstants (SHADER_INDEX_UNUSED_AMDX)
 import Vulkan.Core10.APIConstants (pattern SHADER_INDEX_UNUSED_AMDX)
@@ -402,7 +382,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Pipeline'
 getExecutionGraphPipelineScratchSizeAMDX :: forall io
                                           . (MonadIO io)
-                                         => -- | @device@ is the that @executionGraph@ was created on.
+                                         => -- | @device@ is the logical device that @executionGraph@ was created on.
                                             --
                                             -- #VUID-vkGetExecutionGraphPipelineScratchSizeAMDX-device-parameter#
                                             -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -500,7 +480,7 @@ foreign import ccall
 -- 'PipelineShaderStageNodeCreateInfoAMDX'
 getExecutionGraphPipelineNodeIndexAMDX :: forall io
                                         . (MonadIO io)
-                                       => -- | @device@ is the that @executionGraph@ was created on.
+                                       => -- | @device@ is the logical device that @executionGraph@ was created on.
                                           Device
                                        -> -- | @executionGraph@ is the execution graph pipeline to query the internal
                                           -- node index for.
@@ -546,8 +526,8 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateExecutionGraphPipelinesAMDX-shaderEnqueue-09124# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderEnqueue shaderEnqueue feature>
---     /must/ be enabled
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderEnqueue shaderEnqueue>
+--     feature /must/ be enabled
 --
 -- -   #VUID-vkCreateExecutionGraphPipelinesAMDX-flags-09125# If the
 --     @flags@ member of any element of @pCreateInfos@ contains the
@@ -568,6 +548,37 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT',
 --     host access to @pipelineCache@ /must/ be
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
+--
+-- -   #VUID-vkCreateExecutionGraphPipelinesAMDX-pNext-09616# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@, @pipelineCache@ /must/
+--     be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCreateExecutionGraphPipelinesAMDX-pNext-09617# If a
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
+--     structure with the
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR'
+--     flag set is included in the @pNext@ chain of any element of
+--     @pCreateInfos@, @pipelineCache@ /must/ be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCreateExecutionGraphPipelinesAMDX-binaryCount-09620# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@,
+--     'Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits.PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT'
+--     /must/ not be set in the @flags@ of that element
+--
+-- -   #VUID-vkCreateExecutionGraphPipelinesAMDX-binaryCount-09621# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@,
+--     'Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits.PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT'
+--     /must/ not be set in the @flags@ of that element
+--
+-- -   #VUID-vkCreateExecutionGraphPipelinesAMDX-binaryCount-09622# If
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR'::@binaryCount@
+--     is not @0@ for any element of @pCreateInfos@,
+--     'Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     /must/ not be set in the @flags@ of that element
 --
 -- == Valid Usage (Implicit)
 --
@@ -670,7 +681,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdInitializeGraphScratchMemoryAMDX
-  :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Pipeline -> DeviceAddress -> DeviceSize -> IO ()) -> Ptr CommandBuffer_T -> Pipeline -> DeviceAddress -> DeviceSize -> IO ()
 
 -- | vkCmdInitializeGraphScratchMemoryAMDX - Initialize scratch memory for an
 -- execution graph
@@ -678,14 +689,11 @@ foreign import ccall
 -- = Description
 --
 -- This command /must/ be called before using @scratch@ to dispatch the
--- currently bound execution graph pipeline.
+-- bound execution graph pipeline.
 --
 -- Execution of this command /may/ modify any memory locations in the range
--- [@scratch@,@scratch@ + @size@), where @size@ is the value returned in
--- 'ExecutionGraphPipelineScratchSizeAMDX'::@size@ by
--- 'ExecutionGraphPipelineScratchSizeAMDX' for the currently bound
--- execution graph pipeline. Accesses to this memory range are performed in
--- the
+-- [@scratch@,@scratch@ + @scratchSize@). Accesses to this memory range are
+-- performed in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMPUTE_SHADER_BIT'
 -- pipeline stage with the
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_STORAGE_READ_BIT' and
@@ -701,12 +709,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-scratch-09143# @scratch@
+-- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-scratch-10185# @scratch@
 --     /must/ be the device address of an allocated memory range at least
---     as large as the value of
---     'ExecutionGraphPipelineScratchSizeAMDX'::@size@ returned by
---     'ExecutionGraphPipelineScratchSizeAMDX' for the currently bound
---     execution graph pipeline.
+--     as large as @scratchSize@
+--
+-- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-scratchSize-10186#
+--     @scratchSize@ /must/ be greater than or equal to
+--     'ExecutionGraphPipelineScratchSizeAMDX'::@minSize@ returned by
+--     'getExecutionGraphPipelineScratchSizeAMDX' for the bound execution
+--     graph pipeline
 --
 -- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-scratch-09144# @scratch@
 --     /must/ be a multiple of 64
@@ -717,6 +728,10 @@ foreign import ccall
 --     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
+-- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-executionGraph-parameter#
+--     @executionGraph@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline'
+--     handle
+--
 -- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-commandBuffer-recording#
 --     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -725,15 +740,16 @@ foreign import ccall
 --     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-renderpass# This command
---     /must/ only be called outside of a render pass instance
---
 -- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-videocoding# This
 --     command /must/ only be called outside of a video coding scope
 --
 -- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-bufferlevel#
 --     @commandBuffer@ /must/ be a primary
 --     'Vulkan.Core10.Handles.CommandBuffer'
+--
+-- -   #VUID-vkCmdInitializeGraphScratchMemoryAMDX-commonparent# Both of
+--     @commandBuffer@, and @executionGraph@ /must/ have been created,
+--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -747,7 +763,7 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
 -- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
@@ -755,23 +771,35 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_shader_enqueue VK_AMDX_shader_enqueue>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.FundamentalTypes.DeviceAddress'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core10.Handles.Pipeline'
 cmdInitializeGraphScratchMemoryAMDX :: forall io
                                      . (MonadIO io)
                                     => -- | @commandBuffer@ is the command buffer into which the command will be
                                        -- recorded.
                                        CommandBuffer
-                                    -> -- | @scratch@ is a pointer to the scratch memory to be initialized.
+                                    -> -- | @executionGraph@ is the execution graph pipeline to initialize the
+                                       -- scratch memory for.
+                                       ("executionGraph" ::: Pipeline)
+                                    -> -- | @scratch@ is the address of scratch memory to be initialized.
                                        ("scratch" ::: DeviceAddress)
+                                    -> -- | @scratchSize@ is a range in bytes of scratch memory to be initialized.
+                                       ("scratchSize" ::: DeviceSize)
                                     -> io ()
-cmdInitializeGraphScratchMemoryAMDX commandBuffer scratch = liftIO $ do
+cmdInitializeGraphScratchMemoryAMDX commandBuffer
+                                      executionGraph
+                                      scratch
+                                      scratchSize = liftIO $ do
   let vkCmdInitializeGraphScratchMemoryAMDXPtr = pVkCmdInitializeGraphScratchMemoryAMDX (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdInitializeGraphScratchMemoryAMDXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdInitializeGraphScratchMemoryAMDX is null" Nothing Nothing
   let vkCmdInitializeGraphScratchMemoryAMDX' = mkVkCmdInitializeGraphScratchMemoryAMDX vkCmdInitializeGraphScratchMemoryAMDXPtr
   traceAroundEvent "vkCmdInitializeGraphScratchMemoryAMDX" (vkCmdInitializeGraphScratchMemoryAMDX'
                                                               (commandBufferHandle (commandBuffer))
-                                                              (scratch))
+                                                              (executionGraph)
+                                                              (scratch)
+                                                              (scratchSize))
   pure $ ()
 
 
@@ -780,7 +808,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdDispatchGraphAMDX
-  :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> Ptr DispatchGraphCountInfoAMDX -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> Ptr DispatchGraphCountInfoAMDX -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> DeviceSize -> Ptr DispatchGraphCountInfoAMDX -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> DeviceSize -> Ptr DispatchGraphCountInfoAMDX -> IO ()
 
 -- | vkCmdDispatchGraphAMDX - Dispatch an execution graph
 --
@@ -789,6 +817,11 @@ foreign import ccall
 -- When this command is executed, the nodes specified in @pCountInfo@ are
 -- executed. Nodes executed as part of this command are not implicitly
 -- synchronized in any way against each other once they are dispatched.
+-- There are no rasterization order guarantees between separately
+-- dispatched graphics nodes, though individual primitives within a single
+-- dispatch do adhere to rasterization order. Draw calls executed before or
+-- after the execution graph also execute relative to each graphics node
+-- with respect to rasterization order.
 --
 -- For this command, all device\/host pointers in substructures are treated
 -- as host pointers and read only during host execution of this command.
@@ -796,38 +829,85 @@ foreign import ccall
 -- retained.
 --
 -- Execution of this command /may/ modify any memory locations in the range
--- [@scratch@,@scratch@ + @size@), where @size@ is the value returned in
--- 'ExecutionGraphPipelineScratchSizeAMDX'::@size@ by
--- 'ExecutionGraphPipelineScratchSizeAMDX' for the currently bound
--- execution graph pipeline Accesses to this memory range are performed in
--- the
+-- [@scratch@,@scratch@ + @scratchSize@). Accesses to this memory range are
+-- performed in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMPUTE_SHADER_BIT'
 -- pipeline stage with the
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_STORAGE_READ_BIT' and
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_STORAGE_WRITE_BIT'
 -- access flags.
 --
+-- This command
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#executiongraphs-meshnodes-statecapture captures command buffer state>
+-- for mesh nodes similarly to draw commands.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-magFilter-04553# If a
 --     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
---     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
---     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
---     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
---
--- -   #VUID-vkCmdDispatchGraphAMDX-mipmapMode-04770# If a
---     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
---     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
 --     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
 --     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-magFilter-09598# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-mipmapMode-09599# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-unnormalizedCoordinates-09635# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @levelCount@ and @layerCount@ /must/ be 1
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-unnormalizedCoordinates-09636# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @viewType@ /must/ be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-None-06479# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
@@ -896,7 +976,7 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-cubicRangeClamp-09212# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-cubicRangeClamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ not have a
@@ -913,7 +993,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT'
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-selectableCubicWeights-09214# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ have
@@ -984,6 +1064,13 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
 --     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-None-10068# For each array of resources
+--     that is used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     the indices used to access members of the array /must/ be less than
+--     the descriptor count for the identified binding in the descriptor
+--     sets used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
@@ -1063,8 +1150,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-None-08608# If a pipeline is bound to
 --     the pipeline bind point used by this command, there /must/ not have
---     been any calls to dynamic state setting commands for any state not
---     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
+--     been any calls to dynamic state setting commands for any state
+--     specified statically in the 'Vulkan.Core10.Handles.Pipeline' object
 --     bound to the pipeline bind point used by this command, since that
 --     pipeline was bound
 --
@@ -1106,11 +1193,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-None-08607# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
+--     feature is enabled, either a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command, or a valid combination of
+--     valid and 'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects
+--     /must/ be bound to every supported shader stage corresponding to the
+--     pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-uniformBuffers-06935# If any stage of
 --     the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
@@ -1182,7 +1269,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
 --     command, then the image view’s @viewType@ /must/ match the @Dim@
 --     operand of the @OpTypeImage@ as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-image-dimensions ???>
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-format-07753# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
@@ -1334,7 +1421,7 @@ foreign import ccall
 --     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
 --     instruction is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
---     the image view’s format /must/ be a single-component format.
+--     the image view’s format /must/ be a single-component format
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-OpImageBlockMatchWindow-09217# If a
 --     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
@@ -1346,30 +1433,48 @@ foreign import ccall
 --     executed by this command /must/
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
 --
+-- -   #VUID-vkCmdDispatchGraphAMDX-None-09600# If a descriptor with type
+--     equal to any of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     is accessed as a result of this command, the image subresource
+--     identified by that descriptor /must/ be in the image layout
+--     identified when the descriptor was written
+--
 -- -   #VUID-vkCmdDispatchGraphAMDX-commandBuffer-09181# @commandBuffer@
 --     /must/ not be a protected command buffer
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-commandBuffer-09182# @commandBuffer@
 --     /must/ be a primary command buffer
 --
--- -   #VUID-vkCmdDispatchGraphAMDX-scratch-09183# @scratch@ /must/ be the
---     device address of an allocated memory range at least as large as the
---     value of 'ExecutionGraphPipelineScratchSizeAMDX'::@size@ returned by
---     'ExecutionGraphPipelineScratchSizeAMDX' for the currently bound
---     execution graph pipeline
+-- -   #VUID-vkCmdDispatchGraphAMDX-scratch-10192# @scratch@ /must/ be the
+--     device address of an allocated memory range at least as large as
+--     @scratchSize@
+--
+-- -   #VUID-vkCmdDispatchGraphAMDX-scratchSize-10193# @scratchSize@ /must/
+--     be greater than or equal to
+--     'ExecutionGraphPipelineScratchSizeAMDX'::@minSize@ returned by
+--     'getExecutionGraphPipelineScratchSizeAMDX' for the bound execution
+--     graph pipeline
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-scratch-09184# @scratch@ /must/ be a
 --     device address within a 'Vulkan.Core10.Handles.Buffer' created with
 --     the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
---     or 'BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX' flag
+--     or
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--     flag
 --
--- -   #VUID-vkCmdDispatchGraphAMDX-scratch-09185# Device memory in the
---     range [@scratch@,@scratch@
---     'ExecutionGraphPipelineScratchSizeAMDX'::@size@) /must/ have been
---     initialized with 'cmdInitializeGraphScratchMemoryAMDX' using the
---     currently bound execution graph pipeline, and not modified after
---     that by anything other than another execution graph dispatch command
+-- -   #VUID-vkCmdDispatchGraphAMDX-scratch-10194# The device memory range
+--     [@scratch@,@scratch@
+--     @scratchSize@] /must/ have been initialized with
+--     'cmdInitializeGraphScratchMemoryAMDX' using the bound execution
+--     graph pipeline, and not modified after that by anything other than
+--     another execution graph dispatch command
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-maxComputeWorkGroupCount-09186#
 --     Execution of this command /must/ not cause a node to be dispatched
@@ -1390,6 +1495,11 @@ foreign import ccall
 --     requirement applies to each @NodeMaxPayloadsAMDX@ decoration
 --     separately
 --
+-- -   #VUID-vkCmdDispatchGraphAMDX-None-10195# If the bound execution
+--     graph pipeline includes draw nodes, this command /must/ be called
+--     within a render pass instance that is compatible with the graphics
+--     pipeline used to create each of those nodes
+--
 -- -   #VUID-vkCmdDispatchGraphAMDX-pCountInfo-09145# @pCountInfo->infos@
 --     /must/ be a host pointer to a memory allocation at least as large as
 --     the product of @count@ and @stride@
@@ -1406,8 +1516,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-pCountInfo-09148# For each
 --     'DispatchGraphInfoAMDX' structure in @pCountInfo->infos@,
---     @nodeIndex@ /must/ be a valid node index in the currently bound
---     execution graph pipeline, as returned by
+--     @nodeIndex@ /must/ be a valid node index in the bound execution
+--     graph pipeline, as returned by
 --     'getExecutionGraphPipelineNodeIndexAMDX'
 --
 -- -   #VUID-vkCmdDispatchGraphAMDX-pCountInfo-09149# For each
@@ -1435,9 +1545,6 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   #VUID-vkCmdDispatchGraphAMDX-renderpass# This command /must/ only be
---     called outside of a render pass instance
---
 -- -   #VUID-vkCmdDispatchGraphAMDX-videocoding# This command /must/ only
 --     be called outside of a video coding scope
 --
@@ -1456,7 +1563,7 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
 -- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
@@ -1465,19 +1572,25 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_shader_enqueue VK_AMDX_shader_enqueue>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'DispatchGraphCountInfoAMDX'
 cmdDispatchGraphAMDX :: forall io
                       . (MonadIO io)
                      => -- | @commandBuffer@ is the command buffer into which the command will be
                         -- recorded.
                         CommandBuffer
-                     -> -- | @scratch@ is a pointer to the scratch memory to be used.
+                     -> -- | @scratch@ is the address of scratch memory to be used.
                         ("scratch" ::: DeviceAddress)
+                     -> -- | @scratchSize@ is a range in bytes of scratch memory to be used.
+                        ("scratchSize" ::: DeviceSize)
                      -> -- | @pCountInfo@ is a host pointer to a 'DispatchGraphCountInfoAMDX'
                         -- structure defining the nodes which will be initially executed.
                         DispatchGraphCountInfoAMDX
                      -> io ()
-cmdDispatchGraphAMDX commandBuffer scratch countInfo = liftIO . evalContT $ do
+cmdDispatchGraphAMDX commandBuffer
+                       scratch
+                       scratchSize
+                       countInfo = liftIO . evalContT $ do
   let vkCmdDispatchGraphAMDXPtr = pVkCmdDispatchGraphAMDX (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDispatchGraphAMDXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchGraphAMDX is null" Nothing Nothing
@@ -1486,6 +1599,7 @@ cmdDispatchGraphAMDX commandBuffer scratch countInfo = liftIO . evalContT $ do
   lift $ traceAroundEvent "vkCmdDispatchGraphAMDX" (vkCmdDispatchGraphAMDX'
                                                       (commandBufferHandle (commandBuffer))
                                                       (scratch)
+                                                      (scratchSize)
                                                       pCountInfo)
   pure $ ()
 
@@ -1495,7 +1609,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdDispatchGraphIndirectAMDX
-  :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> Ptr DispatchGraphCountInfoAMDX -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> Ptr DispatchGraphCountInfoAMDX -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> DeviceSize -> Ptr DispatchGraphCountInfoAMDX -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> DeviceSize -> Ptr DispatchGraphCountInfoAMDX -> IO ()
 
 -- | vkCmdDispatchGraphIndirectAMDX - Dispatch an execution graph with node
 -- and payload parameters read on the device
@@ -1505,6 +1619,11 @@ foreign import ccall
 -- When this command is executed, the nodes specified in @pCountInfo@ are
 -- executed. Nodes executed as part of this command are not implicitly
 -- synchronized in any way against each other once they are dispatched.
+-- There are no rasterization order guarantees between separately
+-- dispatched graphics nodes, though individual primitives within a single
+-- dispatch do adhere to rasterization order. Draw calls executed before or
+-- after the execution graph also execute relative to each graphics node
+-- with respect to rasterization order.
 --
 -- For this command, all device\/host pointers in substructures are treated
 -- as device pointers and read during device execution of this command. The
@@ -1516,38 +1635,85 @@ foreign import ccall
 -- access flag.
 --
 -- Execution of this command /may/ modify any memory locations in the range
--- [@scratch@,@scratch@ + @size@), where @size@ is the value returned in
--- 'ExecutionGraphPipelineScratchSizeAMDX'::@size@ by
--- 'ExecutionGraphPipelineScratchSizeAMDX' for the currently bound
--- execution graph pipeline. Accesses to this memory range are performed in
--- the
+-- [@scratch@,@scratch@ + @scratchSize@). Accesses to this memory range are
+-- performed in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMPUTE_SHADER_BIT'
 -- pipeline stage with the
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_STORAGE_READ_BIT' and
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_STORAGE_WRITE_BIT'
 -- access flags.
 --
+-- This command
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#executiongraphs-meshnodes-statecapture captures command buffer state>
+-- for mesh nodes similarly to draw commands.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-magFilter-04553# If a
 --     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
---     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
---     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
---     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
---
--- -   #VUID-vkCmdDispatchGraphIndirectAMDX-mipmapMode-04770# If a
---     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
---     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
 --     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
 --     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-magFilter-09598# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-mipmapMode-09599# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-unnormalizedCoordinates-09635#
+--     If a 'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @levelCount@ and @layerCount@ /must/ be 1
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-unnormalizedCoordinates-09636#
+--     If a 'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @viewType@ /must/ be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-06479# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
@@ -1616,7 +1782,7 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-cubicRangeClamp-09212# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-cubicRangeClamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ not have a
@@ -1634,7 +1800,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-selectableCubicWeights-09214#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ have
@@ -1705,6 +1871,13 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
 --     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-10068# For each array of
+--     resources that is used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     the indices used to access members of the array /must/ be less than
+--     the descriptor count for the identified binding in the descriptor
+--     sets used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
@@ -1785,9 +1958,9 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08608# If a pipeline is
 --     bound to the pipeline bind point used by this command, there /must/
 --     not have been any calls to dynamic state setting commands for any
---     state not specified as dynamic in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command, since that pipeline was bound
+--     state specified statically in the 'Vulkan.Core10.Handles.Pipeline'
+--     object bound to the pipeline bind point used by this command, since
+--     that pipeline was bound
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -1827,11 +2000,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-08607# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
+--     feature is enabled, either a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command, or a valid combination of
+--     valid and 'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects
+--     /must/ be bound to every supported shader stage corresponding to the
+--     pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-uniformBuffers-06935# If any
 --     stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to the
@@ -1903,7 +2076,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
 --     command, then the image view’s @viewType@ /must/ match the @Dim@
 --     operand of the @OpTypeImage@ as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-image-dimensions ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-format-07753# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
@@ -2057,7 +2230,7 @@ foreign import ccall
 --     If a @OpImageBlockMatchWindow*QCOM@ or
 --     @OpImageBlockMatchGather*QCOM@ instruction is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
---     the image view’s format /must/ be a single-component format.
+--     the image view’s format /must/ be a single-component format
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-OpImageBlockMatchWindow-09217#
 --     If a @OpImageBlockMatchWindow*QCOM@ or
@@ -2070,30 +2243,48 @@ foreign import ccall
 --     invocation executed by this command /must/
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
 --
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-09600# If a descriptor
+--     with type equal to any of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     is accessed as a result of this command, the image subresource
+--     identified by that descriptor /must/ be in the image layout
+--     identified when the descriptor was written
+--
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-commandBuffer-09181#
 --     @commandBuffer@ /must/ not be a protected command buffer
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-commandBuffer-09182#
 --     @commandBuffer@ /must/ be a primary command buffer
 --
--- -   #VUID-vkCmdDispatchGraphIndirectAMDX-scratch-09183# @scratch@ /must/
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-scratch-10192# @scratch@ /must/
 --     be the device address of an allocated memory range at least as large
---     as the value of 'ExecutionGraphPipelineScratchSizeAMDX'::@size@
---     returned by 'ExecutionGraphPipelineScratchSizeAMDX' for the
---     currently bound execution graph pipeline
+--     as @scratchSize@
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-scratchSize-10193#
+--     @scratchSize@ /must/ be greater than or equal to
+--     'ExecutionGraphPipelineScratchSizeAMDX'::@minSize@ returned by
+--     'getExecutionGraphPipelineScratchSizeAMDX' for the bound execution
+--     graph pipeline
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-scratch-09184# @scratch@ /must/
 --     be a device address within a 'Vulkan.Core10.Handles.Buffer' created
 --     with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
---     or 'BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX' flag
+--     or
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--     flag
 --
--- -   #VUID-vkCmdDispatchGraphIndirectAMDX-scratch-09185# Device memory in
---     the range [@scratch@,@scratch@
---     'ExecutionGraphPipelineScratchSizeAMDX'::@size@) /must/ have been
---     initialized with 'cmdInitializeGraphScratchMemoryAMDX' using the
---     currently bound execution graph pipeline, and not modified after
---     that by anything other than another execution graph dispatch command
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-scratch-10194# The device
+--     memory range [@scratch@,@scratch@
+--     @scratchSize@] /must/ have been initialized with
+--     'cmdInitializeGraphScratchMemoryAMDX' using the bound execution
+--     graph pipeline, and not modified after that by anything other than
+--     another execution graph dispatch command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-maxComputeWorkGroupCount-09186#
 --     Execution of this command /must/ not cause a node to be dispatched
@@ -2113,6 +2304,11 @@ foreign import ccall
 --     specified by the max number of payloads for that decoration. This
 --     requirement applies to each @NodeMaxPayloadsAMDX@ decoration
 --     separately
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectAMDX-None-10195# If the bound
+--     execution graph pipeline includes draw nodes, this command /must/ be
+--     called within a render pass instance that is compatible with the
+--     graphics pipeline used to create each of those nodes
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-pCountInfo-09150#
 --     @pCountInfo->infos@ /must/ be a device pointer to a memory
@@ -2155,8 +2351,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-pCountInfo-09157# For each
 --     'DispatchGraphInfoAMDX' structure in @pCountInfo->infos@,
---     @nodeIndex@ /must/ be a valid node index in the currently bound
---     execution graph pipeline, as returned by
+--     @nodeIndex@ /must/ be a valid node index in the bound execution
+--     graph pipeline, as returned by
 --     'getExecutionGraphPipelineNodeIndexAMDX' when this command is
 --     executed on the device
 --
@@ -2186,9 +2382,6 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   #VUID-vkCmdDispatchGraphIndirectAMDX-renderpass# This command /must/
---     only be called outside of a render pass instance
---
 -- -   #VUID-vkCmdDispatchGraphIndirectAMDX-videocoding# This command
 --     /must/ only be called outside of a video coding scope
 --
@@ -2207,7 +2400,7 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
 -- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
@@ -2216,20 +2409,24 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_shader_enqueue VK_AMDX_shader_enqueue>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'DispatchGraphCountInfoAMDX'
 cmdDispatchGraphIndirectAMDX :: forall io
                               . (MonadIO io)
                              => -- | @commandBuffer@ is the command buffer into which the command will be
                                 -- recorded.
                                 CommandBuffer
-                             -> -- | @scratch@ is a pointer to the scratch memory to be used.
+                             -> -- | @scratch@ is the address of scratch memory to be used.
                                 ("scratch" ::: DeviceAddress)
+                             -> -- | @scratchSize@ is a range in bytes of scratch memory to be used.
+                                ("scratchSize" ::: DeviceSize)
                              -> -- | @pCountInfo@ is a host pointer to a 'DispatchGraphCountInfoAMDX'
                                 -- structure defining the nodes which will be initially executed.
                                 DispatchGraphCountInfoAMDX
                              -> io ()
 cmdDispatchGraphIndirectAMDX commandBuffer
                                scratch
+                               scratchSize
                                countInfo = liftIO . evalContT $ do
   let vkCmdDispatchGraphIndirectAMDXPtr = pVkCmdDispatchGraphIndirectAMDX (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDispatchGraphIndirectAMDXPtr /= nullFunPtr) $
@@ -2239,6 +2436,7 @@ cmdDispatchGraphIndirectAMDX commandBuffer
   lift $ traceAroundEvent "vkCmdDispatchGraphIndirectAMDX" (vkCmdDispatchGraphIndirectAMDX'
                                                               (commandBufferHandle (commandBuffer))
                                                               (scratch)
+                                                              (scratchSize)
                                                               pCountInfo)
   pure $ ()
 
@@ -2248,7 +2446,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdDispatchGraphIndirectCountAMDX
-  :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> DeviceAddress -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> DeviceAddress -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> DeviceAddress -> DeviceSize -> DeviceAddress -> IO ()) -> Ptr CommandBuffer_T -> DeviceAddress -> DeviceSize -> DeviceAddress -> IO ()
 
 -- | vkCmdDispatchGraphIndirectCountAMDX - Dispatch an execution graph with
 -- all parameters read on the device
@@ -2269,11 +2467,8 @@ foreign import ccall
 -- access flag.
 --
 -- Execution of this command /may/ modify any memory locations in the range
--- [@scratch@,@scratch@ + @size@), where @size@ is the value returned in
--- 'ExecutionGraphPipelineScratchSizeAMDX'::@size@ by
--- 'ExecutionGraphPipelineScratchSizeAMDX' for the currently bound
--- execution graph pipeline. Accesses to this memory range are performed in
--- the
+-- [@scratch@,@scratch@ + @scratchSize@). Accesses to this memory range are
+-- performed in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMPUTE_SHADER_BIT'
 -- pipeline stage with the
 -- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_STORAGE_READ_BIT' and
@@ -2284,23 +2479,69 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-magFilter-04553# If a
 --     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
---     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
---     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
---     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
---
--- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-mipmapMode-04770# If a
---     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
---     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
 --     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
 --     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-magFilter-09598# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-mipmapMode-09599# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-unnormalizedCoordinates-09635#
+--     If a 'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @levelCount@ and @layerCount@ /must/ be 1
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-unnormalizedCoordinates-09636#
+--     If a 'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @viewType@ /must/ be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-06479# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
@@ -2370,7 +2611,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-cubicRangeClamp-09212# If
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-cubicRangeClamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ not have a
@@ -2388,7 +2629,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-selectableCubicWeights-09214#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ have
@@ -2459,6 +2700,13 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
 --     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-10068# For each array
+--     of resources that is used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     the indices used to access members of the array /must/ be less than
+--     the descriptor count for the identified binding in the descriptor
+--     sets used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
@@ -2539,7 +2787,7 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08608# If a pipeline
 --     is bound to the pipeline bind point used by this command, there
 --     /must/ not have been any calls to dynamic state setting commands for
---     any state not specified as dynamic in the
+--     any state specified statically in the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command, since that pipeline was bound
 --
@@ -2581,11 +2829,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-08607# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
+--     feature is enabled, either a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command, or a valid combination of
+--     valid and 'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects
+--     /must/ be bound to every supported shader stage corresponding to the
+--     pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-uniformBuffers-06935# If
 --     any stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to
@@ -2657,7 +2905,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
 --     command, then the image view’s @viewType@ /must/ match the @Dim@
 --     operand of the @OpTypeImage@ as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-image-dimensions ???>
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-format-07753# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
@@ -2811,7 +3059,7 @@ foreign import ccall
 --     If a @OpImageBlockMatchWindow*QCOM@ or
 --     @OpImageBlockMatchGather*QCOM@ instruction is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
---     the image view’s format /must/ be a single-component format.
+--     the image view’s format /must/ be a single-component format
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-OpImageBlockMatchWindow-09217#
 --     If a @OpImageBlockMatchWindow*QCOM@ or
@@ -2824,31 +3072,48 @@ foreign import ccall
 --     invocation executed by this command /must/
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
 --
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-09600# If a
+--     descriptor with type equal to any of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     is accessed as a result of this command, the image subresource
+--     identified by that descriptor /must/ be in the image layout
+--     identified when the descriptor was written
+--
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-commandBuffer-09181#
 --     @commandBuffer@ /must/ not be a protected command buffer
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-commandBuffer-09182#
 --     @commandBuffer@ /must/ be a primary command buffer
 --
--- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-scratch-09183# @scratch@
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-scratch-10192# @scratch@
 --     /must/ be the device address of an allocated memory range at least
---     as large as the value of
---     'ExecutionGraphPipelineScratchSizeAMDX'::@size@ returned by
---     'ExecutionGraphPipelineScratchSizeAMDX' for the currently bound
---     execution graph pipeline
+--     as large as @scratchSize@
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-scratchSize-10193#
+--     @scratchSize@ /must/ be greater than or equal to
+--     'ExecutionGraphPipelineScratchSizeAMDX'::@minSize@ returned by
+--     'getExecutionGraphPipelineScratchSizeAMDX' for the bound execution
+--     graph pipeline
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-scratch-09184# @scratch@
 --     /must/ be a device address within a 'Vulkan.Core10.Handles.Buffer'
 --     created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
---     or 'BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX' flag
+--     or
+--     'Vulkan.Extensions.VK_KHR_maintenance5.BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX'
+--     flag
 --
--- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-scratch-09185# Device
---     memory in the range [@scratch@,@scratch@
---     'ExecutionGraphPipelineScratchSizeAMDX'::@size@) /must/ have been
---     initialized with 'cmdInitializeGraphScratchMemoryAMDX' using the
---     currently bound execution graph pipeline, and not modified after
---     that by anything other than another execution graph dispatch command
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-scratch-10194# The device
+--     memory range [@scratch@,@scratch@
+--     @scratchSize@] /must/ have been initialized with
+--     'cmdInitializeGraphScratchMemoryAMDX' using the bound execution
+--     graph pipeline, and not modified after that by anything other than
+--     another execution graph dispatch command
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-maxComputeWorkGroupCount-09186#
 --     Execution of this command /must/ not cause a node to be dispatched
@@ -2868,6 +3133,11 @@ foreign import ccall
 --     specified by the max number of payloads for that decoration. This
 --     requirement applies to each @NodeMaxPayloadsAMDX@ decoration
 --     separately
+--
+-- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-None-10195# If the bound
+--     execution graph pipeline includes draw nodes, this command /must/ be
+--     called within a render pass instance that is compatible with the
+--     graphics pipeline used to create each of those nodes
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-countInfo-09159#
 --     @countInfo@ /must/ be a device pointer to a memory allocation
@@ -2925,9 +3195,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-countInfo-09169# For each
 --     'DispatchGraphInfoAMDX' structure in @countInfo->infos@, @nodeIndex@
---     /must/ be a valid node index in the currently bound execution graph
---     pipeline, as returned by 'getExecutionGraphPipelineNodeIndexAMDX'
---     when this command is executed on the device
+--     /must/ be a valid node index in the bound execution graph pipeline,
+--     as returned by 'getExecutionGraphPipelineNodeIndexAMDX' when this
+--     command is executed on the device
 --
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-countInfo-09170# For each
 --     'DispatchGraphInfoAMDX' structure in @countInfo->infos@, device
@@ -2951,9 +3221,6 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
--- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-renderpass# This command
---     /must/ only be called outside of a render pass instance
---
 -- -   #VUID-vkCmdDispatchGraphIndirectCountAMDX-videocoding# This command
 --     /must/ only be called outside of a video coding scope
 --
@@ -2973,7 +3240,7 @@ foreign import ccall
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 -- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
 -- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              | Action                                                                                                                                 |
 -- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |                                                                                                                                        |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 --
@@ -2981,19 +3248,25 @@ foreign import ccall
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMDX_shader_enqueue VK_AMDX_shader_enqueue>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.FundamentalTypes.DeviceAddress'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDispatchGraphIndirectCountAMDX :: forall io
                                    . (MonadIO io)
                                   => -- | @commandBuffer@ is the command buffer into which the command will be
                                      -- recorded.
                                      CommandBuffer
-                                  -> -- | @scratch@ is a pointer to the scratch memory to be used.
+                                  -> -- | @scratch@ is the address of scratch memory to be used.
                                      ("scratch" ::: DeviceAddress)
+                                  -> -- | @scratchSize@ is a range in bytes of scratch memory to be used.
+                                     ("scratchSize" ::: DeviceSize)
                                   -> -- | @countInfo@ is a device address of a 'DispatchGraphCountInfoAMDX'
                                      -- structure defining the nodes which will be initially executed.
                                      ("countInfo" ::: DeviceAddress)
                                   -> io ()
-cmdDispatchGraphIndirectCountAMDX commandBuffer scratch countInfo = liftIO $ do
+cmdDispatchGraphIndirectCountAMDX commandBuffer
+                                    scratch
+                                    scratchSize
+                                    countInfo = liftIO $ do
   let vkCmdDispatchGraphIndirectCountAMDXPtr = pVkCmdDispatchGraphIndirectCountAMDX (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDispatchGraphIndirectCountAMDXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchGraphIndirectCountAMDX is null" Nothing Nothing
@@ -3001,6 +3274,7 @@ cmdDispatchGraphIndirectCountAMDX commandBuffer scratch countInfo = liftIO $ do
   traceAroundEvent "vkCmdDispatchGraphIndirectCountAMDX" (vkCmdDispatchGraphIndirectCountAMDX'
                                                             (commandBufferHandle (commandBuffer))
                                                             (scratch)
+                                                            (scratchSize)
                                                             (countInfo))
   pure $ ()
 
@@ -3037,8 +3311,8 @@ data PhysicalDeviceShaderEnqueuePropertiesAMDX = PhysicalDeviceShaderEnqueueProp
     maxExecutionGraphDepth :: Word32
   , -- | #limits-maxExecutionGraphShaderOutputNodes#
     -- @maxExecutionGraphShaderOutputNodes@ specifies the maximum number of
-    -- unique nodes that can be dispatched from a single shader, and must be at
-    -- least 256.
+    -- unique nodes that can be dispatched from a single shader, and /must/ be
+    -- at least 256.
     maxExecutionGraphShaderOutputNodes :: Word32
   , -- | #limits-maxExecutionGraphShaderPayloadSize#
     -- @maxExecutionGraphShaderPayloadSize@ specifies the maximum total size of
@@ -3057,6 +3331,15 @@ data PhysicalDeviceShaderEnqueuePropertiesAMDX = PhysicalDeviceShaderEnqueueProp
     -- non-scratch 'Vulkan.Core10.FundamentalTypes.DeviceAddress' arguments
     -- consumed by graph dispatch commands.
     executionGraphDispatchAddressAlignment :: Word32
+  , -- | #limits-maxExecutionGraphWorkgroupCount#
+    -- @maxExecutionGraphWorkgroupCount@[3] is the maximum number of local
+    -- workgroups that a shader /can/ be dispatched with in X, Y, and Z
+    -- dimensions, respectively.
+    maxExecutionGraphWorkgroupCount :: (Word32, Word32, Word32)
+  , -- | #limits-maxExecutionGraphWorkgroups# @maxExecutionGraphWorkgroups@ is
+    -- the total number of local workgroups that a shader /can/ be dispatched
+    -- with.
+    maxExecutionGraphWorkgroups :: Word32
   }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -3065,7 +3348,7 @@ deriving instance Generic (PhysicalDeviceShaderEnqueuePropertiesAMDX)
 deriving instance Show PhysicalDeviceShaderEnqueuePropertiesAMDX
 
 instance ToCStruct PhysicalDeviceShaderEnqueuePropertiesAMDX where
-  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderEnqueuePropertiesAMDX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_PROPERTIES_AMDX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3074,8 +3357,15 @@ instance ToCStruct PhysicalDeviceShaderEnqueuePropertiesAMDX where
     poke ((p `plusPtr` 24 :: Ptr Word32)) (maxExecutionGraphShaderPayloadSize)
     poke ((p `plusPtr` 28 :: Ptr Word32)) (maxExecutionGraphShaderPayloadCount)
     poke ((p `plusPtr` 32 :: Ptr Word32)) (executionGraphDispatchAddressAlignment)
+    let pMaxExecutionGraphWorkgroupCount' = lowerArrayPtr ((p `plusPtr` 36 :: Ptr (FixedArray 3 Word32)))
+    case (maxExecutionGraphWorkgroupCount) of
+      (e0, e1, e2) -> do
+        poke (pMaxExecutionGraphWorkgroupCount' :: Ptr Word32) (e0)
+        poke (pMaxExecutionGraphWorkgroupCount' `plusPtr` 4 :: Ptr Word32) (e1)
+        poke (pMaxExecutionGraphWorkgroupCount' `plusPtr` 8 :: Ptr Word32) (e2)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (maxExecutionGraphWorkgroups)
     f
-  cStructSize = 40
+  cStructSize = 56
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_PROPERTIES_AMDX)
@@ -3085,6 +3375,13 @@ instance ToCStruct PhysicalDeviceShaderEnqueuePropertiesAMDX where
     poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    let pMaxExecutionGraphWorkgroupCount' = lowerArrayPtr ((p `plusPtr` 36 :: Ptr (FixedArray 3 Word32)))
+    case ((zero, zero, zero)) of
+      (e0, e1, e2) -> do
+        poke (pMaxExecutionGraphWorkgroupCount' :: Ptr Word32) (e0)
+        poke (pMaxExecutionGraphWorkgroupCount' `plusPtr` 4 :: Ptr Word32) (e1)
+        poke (pMaxExecutionGraphWorkgroupCount' `plusPtr` 8 :: Ptr Word32) (e2)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct PhysicalDeviceShaderEnqueuePropertiesAMDX where
@@ -3094,15 +3391,24 @@ instance FromCStruct PhysicalDeviceShaderEnqueuePropertiesAMDX where
     maxExecutionGraphShaderPayloadSize <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     maxExecutionGraphShaderPayloadCount <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     executionGraphDispatchAddressAlignment <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    let pmaxExecutionGraphWorkgroupCount = lowerArrayPtr @Word32 ((p `plusPtr` 36 :: Ptr (FixedArray 3 Word32)))
+    maxExecutionGraphWorkgroupCount0 <- peek @Word32 ((pmaxExecutionGraphWorkgroupCount `advancePtrBytes` 0 :: Ptr Word32))
+    maxExecutionGraphWorkgroupCount1 <- peek @Word32 ((pmaxExecutionGraphWorkgroupCount `advancePtrBytes` 4 :: Ptr Word32))
+    maxExecutionGraphWorkgroupCount2 <- peek @Word32 ((pmaxExecutionGraphWorkgroupCount `advancePtrBytes` 8 :: Ptr Word32))
+    maxExecutionGraphWorkgroups <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pure $ PhysicalDeviceShaderEnqueuePropertiesAMDX
              maxExecutionGraphDepth
              maxExecutionGraphShaderOutputNodes
              maxExecutionGraphShaderPayloadSize
              maxExecutionGraphShaderPayloadCount
              executionGraphDispatchAddressAlignment
+             (( maxExecutionGraphWorkgroupCount0
+              , maxExecutionGraphWorkgroupCount1
+              , maxExecutionGraphWorkgroupCount2 ))
+             maxExecutionGraphWorkgroups
 
 instance Storable PhysicalDeviceShaderEnqueuePropertiesAMDX where
-  sizeOf ~_ = 40
+  sizeOf ~_ = 56
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -3113,6 +3419,8 @@ instance Zero PhysicalDeviceShaderEnqueuePropertiesAMDX where
            zero
            zero
            zero
+           zero
+           (zero, zero, zero)
            zero
 
 
@@ -3147,7 +3455,12 @@ data PhysicalDeviceShaderEnqueueFeaturesAMDX = PhysicalDeviceShaderEnqueueFeatur
   { -- | #features-shaderEnqueue# @shaderEnqueue@ indicates whether the
     -- implementation supports
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#executiongraphs execution graphs>.
-    shaderEnqueue :: Bool }
+    shaderEnqueue :: Bool
+  , -- | #features-shaderMeshEnqueue# @shaderMeshEnqueue@ indicates whether the
+    -- implementation supports
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#executiongraphs-meshnodes mesh nodes in execution graphs>.
+    shaderMeshEnqueue :: Bool
+  }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (PhysicalDeviceShaderEnqueueFeaturesAMDX)
@@ -3160,6 +3473,7 @@ instance ToCStruct PhysicalDeviceShaderEnqueueFeaturesAMDX where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shaderEnqueue))
+    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (shaderMeshEnqueue))
     f
   cStructSize = 24
   cStructAlignment = 8
@@ -3167,13 +3481,15 @@ instance ToCStruct PhysicalDeviceShaderEnqueueFeaturesAMDX where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
     f
 
 instance FromCStruct PhysicalDeviceShaderEnqueueFeaturesAMDX where
   peekCStruct p = do
     shaderEnqueue <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    shaderMeshEnqueue <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderEnqueueFeaturesAMDX
-             (bool32ToBool shaderEnqueue)
+             (bool32ToBool shaderEnqueue) (bool32ToBool shaderMeshEnqueue)
 
 instance Storable PhysicalDeviceShaderEnqueueFeaturesAMDX where
   sizeOf ~_ = 24
@@ -3183,6 +3499,7 @@ instance Storable PhysicalDeviceShaderEnqueueFeaturesAMDX where
 
 instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
   zero = PhysicalDeviceShaderEnqueueFeaturesAMDX
+           zero
            zero
 
 
@@ -3199,6 +3516,11 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 -- (including those in libraries) is associated with a name and an index,
 -- determined by the inclusion or omission of a
 -- 'PipelineShaderStageNodeCreateInfoAMDX' structure in its @pNext@ chain.
+-- For any graphics pipeline libraries, only the name and index of the
+-- vertex or mesh shader stage is linked directly to the graph as a node -
+-- other shader stages in the pipeline will be executed after those shader
+-- stages as normal. Task shaders cannot be included in a graphics pipeline
+-- used for a draw node.
 --
 -- In addition to the shader name and index, an internal \"node index\" is
 -- also generated for each node, which can be queried with
@@ -3210,7 +3532,7 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-None-09497# If the
 --     @pNext@ chain does not include a
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'
---     structure, @flags@ must be a valid combination of
+--     structure, @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
@@ -3235,7 +3557,11 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-layout-07987# If a push
 --     constant block is declared in a shader, a push constant range in
---     @layout@ /must/ match both the shader stage and range
+--     @layout@ /must/ match the shader stage
+--
+-- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-layout-10069# If a push
+--     constant block is declared in a shader, the block must be contained
+--     inside the push constant range in @layout@ that matches the stage
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-layout-07988# If a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources resource variables>
@@ -3287,7 +3613,7 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-09007# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedComputePipelines ::deviceGeneratedComputePipelines>
---     is not enabled, @flags@ /must/ not include
+--     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-09008# If @flags@
@@ -3297,6 +3623,13 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --     of
 --     'Vulkan.Extensions.VK_NV_device_generated_commands_compute.ComputePipelineIndirectBufferInfoNV'
 --     specifying the address where the pipeline’s metadata will be saved
+--
+-- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-11007# If @flags@
+--     includes
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     feature /must/ be enabled
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-pipelineCreationCacheControl-02875#
 --     If the
@@ -3334,8 +3667,27 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-pLibraryInfo-09133# If
 --     @pLibraryInfo@ is not @NULL@, each element of
---     @pLibraryInfo->libraries@ /must/ be either a compute pipeline or an
---     execution graph pipeline
+--     @pLibraryInfo->pLibraries@ /must/ be either a compute pipeline, an
+--     execution graph pipeline, or a graphics pipeline
+--
+-- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-pLibraryInfo-10181# If
+--     @pLibraryInfo@ is not @NULL@, each element of
+--     @pLibraryInfo->pLibraries@ that is a compute pipeline or a graphics
+--     pipeline /must/ have been created with
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX'
+--     set
+--
+-- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-shaderMeshEnqueue-10182#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderMeshEnqueue shaderMeshEnqueue>
+--     feature is not enabled, and @pLibraryInfo->pLibraries@ is not
+--     @NULL@, @pLibraryInfo->pLibraries@ /must/ not contain any graphics
+--     pipelines
+--
+-- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-pLibraryInfo-10183# Any
+--     element of @pLibraryInfo->pLibraries@ identifying a graphics
+--     pipeline /must/ have been created with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete all possible state subsets>
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-None-09134# There
 --     /must/ be no two nodes in the pipeline that share both the same
@@ -3366,6 +3718,14 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --     the shader name of any other node in the graph, the size of the
 --     output payload /must/ match the size of the input payload in the
 --     matching node
+--
+-- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-flags-10184# If @flags@
+--     does not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR',
+--     and an output payload declared in any shader in the pipeline does
+--     not have a @PayloadNodeSparseArrayAMDX@ decoration, there /must/ be
+--     a node in the graph corresponding to every index from 0 to its
+--     @PayloadNodeArraySizeAMDX@ decoration
 --
 -- == Valid Usage (Implicit)
 --
@@ -3552,6 +3912,10 @@ instance es ~ '[] => Zero (ExecutionGraphPipelineCreateInfoAMDX es) where
 -- applications can dynamically select different nodes to execute.
 -- Applications /must/ ensure each node has a unique name and index.
 --
+-- Shaders with the same name /must/ be of the same type - e.g. a compute
+-- and graphics shader, or even two compute shaders where one is coalescing
+-- and the other is not, cannot share the same name.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineShaderStageNodeCreateInfoAMDX-sType-sType# @sType@
@@ -3621,6 +3985,14 @@ instance Zero PipelineShaderStageNodeCreateInfoAMDX where
 -- | VkExecutionGraphPipelineScratchSizeAMDX - Structure describing the
 -- scratch space required to dispatch an execution graph
 --
+-- = Description
+--
+-- Applications /can/ use any amount of scratch memory greater than
+-- @minSize@ for dispatching a graph, however only the values equal to
+-- @minSize@ + an integer multiple of @sizeGranularity@ will be used.
+-- Greater values /may/ result in higher performance, up to @maxSize@ which
+-- indicates the most memory that an implementation can use effectively.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -3630,9 +4002,16 @@ instance Zero PipelineShaderStageNodeCreateInfoAMDX where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getExecutionGraphPipelineScratchSizeAMDX'
 data ExecutionGraphPipelineScratchSizeAMDX = ExecutionGraphPipelineScratchSizeAMDX
-  { -- | @size@ indicates the scratch space required for dispatch the queried
-    -- execution graph.
-    size :: DeviceSize }
+  { -- | @minSize@ indicates the minimum scratch space required for dispatching
+    -- the queried execution graph.
+    minSize :: DeviceSize
+  , -- | @maxSize@ indicates the maximum scratch space that can be used for
+    -- dispatching the queried execution graph.
+    maxSize :: DeviceSize
+  , -- | @sizeGranularity@ indicates the granularity at which the scratch space
+    -- can be increased from @minSize@.
+    sizeGranularity :: DeviceSize
+  }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (ExecutionGraphPipelineScratchSizeAMDX)
@@ -3640,34 +4019,42 @@ deriving instance Generic (ExecutionGraphPipelineScratchSizeAMDX)
 deriving instance Show ExecutionGraphPipelineScratchSizeAMDX
 
 instance ToCStruct ExecutionGraphPipelineScratchSizeAMDX where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExecutionGraphPipelineScratchSizeAMDX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_SCRATCH_SIZE_AMDX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (size)
+    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (minSize)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (maxSize)
+    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (sizeGranularity)
     f
-  cStructSize = 24
+  cStructSize = 40
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_SCRATCH_SIZE_AMDX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
     f
 
 instance FromCStruct ExecutionGraphPipelineScratchSizeAMDX where
   peekCStruct p = do
-    size <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
+    minSize <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
+    maxSize <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
+    sizeGranularity <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
     pure $ ExecutionGraphPipelineScratchSizeAMDX
-             size
+             minSize maxSize sizeGranularity
 
 instance Storable ExecutionGraphPipelineScratchSizeAMDX where
-  sizeOf ~_ = 24
+  sizeOf ~_ = 40
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ExecutionGraphPipelineScratchSizeAMDX where
   zero = ExecutionGraphPipelineScratchSizeAMDX
+           zero
+           zero
            zero
 
 
@@ -3804,301 +4191,11 @@ instance Zero DeviceOrHostAddressConstAMDX where
   zero = DeviceAddressConstAMDX zero
 
 
-type BufferUsageFlags2KHR = BufferUsageFlagBits2KHR
-
--- | VkBufferUsageFlagBits2KHR - Bitmask controlling how a pipeline is
--- created
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
-newtype BufferUsageFlagBits2KHR = BufferUsageFlagBits2KHR Flags64
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
--- | 'BUFFER_USAGE_2_TRANSFER_SRC_BIT_KHR' specifies that the buffer /can/ be
--- used as the source of a /transfer command/ (see the definition of
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer >).
-pattern BUFFER_USAGE_2_TRANSFER_SRC_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000001
-
--- | 'BUFFER_USAGE_2_TRANSFER_DST_BIT_KHR' specifies that the buffer /can/ be
--- used as the destination of a transfer command.
-pattern BUFFER_USAGE_2_TRANSFER_DST_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000002
-
--- | 'BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR' specifies that the buffer
--- /can/ be used to create a 'Vulkan.Core10.Handles.BufferView' suitable
--- for occupying a 'Vulkan.Core10.Handles.DescriptorSet' slot of type
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'.
-pattern BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000004
-
--- | 'BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR' specifies that the buffer
--- /can/ be used to create a 'Vulkan.Core10.Handles.BufferView' suitable
--- for occupying a 'Vulkan.Core10.Handles.DescriptorSet' slot of type
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'.
-pattern BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000008
-
--- | 'BUFFER_USAGE_2_UNIFORM_BUFFER_BIT_KHR' specifies that the buffer /can/
--- be used in a 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' suitable
--- for occupying a 'Vulkan.Core10.Handles.DescriptorSet' slot either of
--- type 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
--- or
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'.
-pattern BUFFER_USAGE_2_UNIFORM_BUFFER_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000010
-
--- | 'BUFFER_USAGE_2_STORAGE_BUFFER_BIT_KHR' specifies that the buffer /can/
--- be used in a 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' suitable
--- for occupying a 'Vulkan.Core10.Handles.DescriptorSet' slot either of
--- type 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
--- or
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'.
-pattern BUFFER_USAGE_2_STORAGE_BUFFER_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000020
-
--- | 'BUFFER_USAGE_2_INDEX_BUFFER_BIT_KHR' specifies that the buffer is
--- suitable for passing as the @buffer@ parameter to
--- 'Vulkan.Extensions.VK_KHR_maintenance5.cmdBindIndexBuffer2KHR' and
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
-pattern BUFFER_USAGE_2_INDEX_BUFFER_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000040
-
--- | 'BUFFER_USAGE_2_VERTEX_BUFFER_BIT_KHR' specifies that the buffer is
--- suitable for passing as an element of the @pBuffers@ array to
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers'.
-pattern BUFFER_USAGE_2_VERTEX_BUFFER_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000080
-
--- | 'BUFFER_USAGE_2_INDIRECT_BUFFER_BIT_KHR' specifies that the buffer is
--- suitable for passing as the @buffer@ parameter to
--- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndirect',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect',
--- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
--- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
--- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectEXT',
--- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectCountEXT',
--- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.cmdDrawClusterIndirectHUAWEI',
--- or 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'. It is also
--- suitable for passing as the @buffer@ member of
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsStreamNV',
--- or @sequencesCountBuffer@ or @sequencesIndexBuffer@ or
--- @preprocessedBuffer@ member of
--- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV'
-pattern BUFFER_USAGE_2_INDIRECT_BUFFER_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000100
-
--- No documentation found for Nested "VkBufferUsageFlagBits2KHR" "VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT"
-pattern BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000001000000
-
--- No documentation found for Nested "VkBufferUsageFlagBits2KHR" "VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
-pattern BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000000800000
-
--- | 'BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT' specifies
--- that the buffer, when bound, /can/ be used by the implementation to
--- support push descriptors when using descriptor buffers.
-pattern BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000004000000
-
--- | 'BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT' specifies that the
--- buffer is suitable to contain resource descriptors when bound as a
--- descriptor buffer.
-pattern BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000000400000
-
--- | 'BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT' specifies that the
--- buffer is suitable to contain sampler and combined image sampler
--- descriptors when bound as a descriptor buffer. Buffers containing
--- combined image sampler descriptors /must/ also specify
--- 'BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'.
-pattern BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000000200000
-
--- | 'BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR' specifies that
--- the buffer is suitable for storage space for a
--- 'Vulkan.Extensions.Handles.AccelerationStructureKHR'.
-pattern BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000100000
-
--- | 'BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
--- specifies that the buffer is suitable for use as a read-only input to an
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-building acceleration structure build>.
-pattern BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000080000
-
--- | 'BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR' specifies that the buffer
--- /can/ be used to retrieve a buffer device address via
--- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress'
--- and use that address to access the buffer’s memory from a shader.
-pattern BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000020000
-
--- | 'BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR' is reserved for future use.
-pattern BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000010000
-
--- | 'BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR' specifies that the buffer
--- /can/ be used as the destination video bitstream buffer in a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operation>.
-pattern BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000008000
-
--- | 'BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR' is reserved for future use.
-pattern BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000004000
-
--- | 'BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR' specifies that the buffer
--- /can/ be used as the source video bitstream buffer in a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-decode-operations video decode operation>.
-pattern BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000002000
-
--- | 'BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT' specifies
--- that the buffer is suitable for using as a counter buffer with
--- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBeginTransformFeedbackEXT'
--- and
--- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT'.
-pattern BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000000001000
-
--- | 'BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT' specifies that the
--- buffer is suitable for using for binding as a transform feedback buffer
--- with
--- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBindTransformFeedbackBuffersEXT'.
-pattern BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000000000800
-
--- | 'BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR' specifies that the buffer
--- is suitable for use as a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table Shader Binding Table>.
-pattern BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR = BufferUsageFlagBits2KHR 0x0000000000000400
-
--- | 'BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT' specifies that the buffer
--- is suitable for passing as the @buffer@ parameter to
--- 'Vulkan.Extensions.VK_EXT_conditional_rendering.cmdBeginConditionalRenderingEXT'.
-pattern BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT = BufferUsageFlagBits2KHR 0x0000000000000200
-
--- | 'BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX' specifies that the
--- buffer /can/ be used for as scratch memory for
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#executiongraphs execution graph dispatch>.
-pattern BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX = BufferUsageFlagBits2KHR 0x0000000002000000
-
-conNameBufferUsageFlagBits2KHR :: String
-conNameBufferUsageFlagBits2KHR = "BufferUsageFlagBits2KHR"
-
-enumPrefixBufferUsageFlagBits2KHR :: String
-enumPrefixBufferUsageFlagBits2KHR = "BUFFER_USAGE_2_"
-
-showTableBufferUsageFlagBits2KHR :: [(BufferUsageFlagBits2KHR, String)]
-showTableBufferUsageFlagBits2KHR =
-  [
-    ( BUFFER_USAGE_2_TRANSFER_SRC_BIT_KHR
-    , "TRANSFER_SRC_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_TRANSFER_DST_BIT_KHR
-    , "TRANSFER_DST_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR
-    , "UNIFORM_TEXEL_BUFFER_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR
-    , "STORAGE_TEXEL_BUFFER_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_UNIFORM_BUFFER_BIT_KHR
-    , "UNIFORM_BUFFER_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_STORAGE_BUFFER_BIT_KHR
-    , "STORAGE_BUFFER_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_INDEX_BUFFER_BIT_KHR
-    , "INDEX_BUFFER_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_VERTEX_BUFFER_BIT_KHR
-    , "VERTEX_BUFFER_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_INDIRECT_BUFFER_BIT_KHR
-    , "INDIRECT_BUFFER_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
-    , "MICROMAP_STORAGE_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
-    , "MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT
-    , "PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT
-    , "RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT
-    , "SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
-    , "ACCELERATION_STRUCTURE_STORAGE_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
-    , "ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR
-    , "SHADER_DEVICE_ADDRESS_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR
-    , "VIDEO_ENCODE_SRC_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR
-    , "VIDEO_ENCODE_DST_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR
-    , "VIDEO_DECODE_DST_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR
-    , "VIDEO_DECODE_SRC_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
-    , "TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
-    , "TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR
-    , "SHADER_BINDING_TABLE_BIT_KHR"
-    )
-  ,
-    ( BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT
-    , "CONDITIONAL_RENDERING_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX
-    , "EXECUTION_GRAPH_SCRATCH_BIT_AMDX"
-    )
-  ]
-
-instance Show BufferUsageFlagBits2KHR where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixBufferUsageFlagBits2KHR
-      showTableBufferUsageFlagBits2KHR
-      conNameBufferUsageFlagBits2KHR
-      (\(BufferUsageFlagBits2KHR x) -> x)
-      (\x -> showString "0x" . showHex x)
-
-instance Read BufferUsageFlagBits2KHR where
-  readPrec =
-    enumReadPrec
-      enumPrefixBufferUsageFlagBits2KHR
-      showTableBufferUsageFlagBits2KHR
-      conNameBufferUsageFlagBits2KHR
-      BufferUsageFlagBits2KHR
-
-type AMDX_SHADER_ENQUEUE_SPEC_VERSION = 1
+type AMDX_SHADER_ENQUEUE_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_AMDX_SHADER_ENQUEUE_SPEC_VERSION"
 pattern AMDX_SHADER_ENQUEUE_SPEC_VERSION :: forall a . Integral a => a
-pattern AMDX_SHADER_ENQUEUE_SPEC_VERSION = 1
+pattern AMDX_SHADER_ENQUEUE_SPEC_VERSION = 2
 
 
 type AMDX_SHADER_ENQUEUE_EXTENSION_NAME = "VK_AMDX_shader_enqueue"

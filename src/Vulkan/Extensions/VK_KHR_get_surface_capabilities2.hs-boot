@@ -129,9 +129,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceSurfaceInfo2KHR', 'SurfaceCapabilities2KHR',
--- 'SurfaceFormat2KHR', 'getPhysicalDeviceSurfaceCapabilities2KHR',
--- 'getPhysicalDeviceSurfaceFormats2KHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

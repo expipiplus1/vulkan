@@ -272,23 +272,69 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchBase-magFilter-04553# If a
 --     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
---     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
---     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
---     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
---
--- -   #VUID-vkCmdDispatchBase-mipmapMode-04770# If a
---     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
---     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
 --     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
 --     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
 --     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchBase-magFilter-09598# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchBase-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR',
+--     @reductionMode@ equal to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE',
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchBase-mipmapMode-09599# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @reductionMode@ equal to either
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
+--     or
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
+--
+-- -   #VUID-vkCmdDispatchBase-unnormalizedCoordinates-09635# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @levelCount@ and @layerCount@ /must/ be 1
+--
+-- -   #VUID-vkCmdDispatchBase-unnormalizedCoordinates-09636# If a
+--     'Vulkan.Core10.Handles.Sampler' created with
+--     @unnormalizedCoordinates@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE' is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s @viewType@ /must/ be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
 --
 -- -   #VUID-vkCmdDispatchBase-None-06479# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
@@ -357,7 +403,7 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   #VUID-vkCmdDispatchBase-cubicRangeClamp-09212# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-range-clamp cubicRangeClamp>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-cubicRangeClamp cubicRangeClamp>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ not have a
@@ -374,7 +420,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT'
 --
 -- -   #VUID-vkCmdDispatchBase-selectableCubicWeights-09214# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled, then any 'Vulkan.Core10.Handles.ImageView'
 --     being sampled with 'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as
 --     a result of this command /must/ have
@@ -445,6 +491,13 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
 --     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   #VUID-vkCmdDispatchBase-None-10068# For each array of resources that
+--     is used by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>,
+--     the indices used to access members of the array /must/ be less than
+--     the descriptor count for the identified binding in the descriptor
+--     sets used by this command
 --
 -- -   #VUID-vkCmdDispatchBase-maintenance4-08602# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
@@ -522,10 +575,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchBase-None-08608# If a pipeline is bound to the
 --     pipeline bind point used by this command, there /must/ not have been
---     any calls to dynamic state setting commands for any state not
---     specified as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object
---     bound to the pipeline bind point used by this command, since that
---     pipeline was bound
+--     any calls to dynamic state setting commands for any state specified
+--     statically in the 'Vulkan.Core10.Handles.Pipeline' object bound to
+--     the pipeline bind point used by this command, since that pipeline
+--     was bound
 --
 -- -   #VUID-vkCmdDispatchBase-None-08609# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -565,11 +618,11 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchBase-None-08607# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
---     is enabled, either a valid pipeline /must/ be bound to the pipeline
---     bind point used by this command, or a valid combination of valid and
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects /must/ be
---     bound to every supported shader stage corresponding to the pipeline
---     bind point used by this command
+--     feature is enabled, either a valid pipeline /must/ be bound to the
+--     pipeline bind point used by this command, or a valid combination of
+--     valid and 'Vulkan.Core10.APIConstants.NULL_HANDLE' shader objects
+--     /must/ be bound to every supported shader stage corresponding to the
+--     pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchBase-uniformBuffers-06935# If any stage of the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
@@ -641,7 +694,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
 --     command, then the image view’s @viewType@ /must/ match the @Dim@
 --     operand of the @OpTypeImage@ as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-image-dimensions ???>
 --
 -- -   #VUID-vkCmdDispatchBase-format-07753# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
@@ -793,7 +846,7 @@ foreign import ccall
 --     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
 --     instruction is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
---     the image view’s format /must/ be a single-component format.
+--     the image view’s format /must/ be a single-component format
 --
 -- -   #VUID-vkCmdDispatchBase-OpImageBlockMatchWindow-09217# If a
 --     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
@@ -804,6 +857,18 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchBase-None-07288# Any shader invocation executed
 --     by this command /must/
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
+-- -   #VUID-vkCmdDispatchBase-None-09600# If a descriptor with type equal
+--     to any of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     is accessed as a result of this command, the image subresource
+--     identified by that descriptor /must/ be in the image layout
+--     identified when the descriptor was written
 --
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
@@ -857,7 +922,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchBase-baseGroupX-00427# If any of @baseGroupX@,
 --     @baseGroupY@, or @baseGroupZ@ are not zero, then the bound compute
 --     pipeline /must/ have been created with the
---     'PIPELINE_CREATE_DISPATCH_BASE' flag
+--     'PIPELINE_CREATE_DISPATCH_BASE' flag or the bound compute shader
+--     object /must/ have been created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DISPATCH_BASE_BIT_EXT'
+--     flag
 --
 -- == Valid Usage (Implicit)
 --
@@ -971,8 +1039,6 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.PhysicalDeviceGroupProperties'::@subsetAllocation@
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE', then memory is only consumed
 -- for the devices in the device mask.
---
--- Note
 --
 -- In practice, most allocations on a multi-instance heap will be allocated
 -- across all physical devices. Unicast allocation support is an optional
@@ -1206,8 +1272,8 @@ instance Zero DeviceGroupRenderPassBeginInfo where
 -- devices that /can/ ever be in the device mask in the command buffer.
 --
 -- If this structure is not present, the initial value of a command
--- buffer’s device mask is set to include all physical devices in the
--- logical device when the command buffer begins recording.
+-- buffer’s device mask includes all physical devices in the logical device
+-- when the command buffer begins recording.
 --
 -- == Valid Usage (Implicit)
 --

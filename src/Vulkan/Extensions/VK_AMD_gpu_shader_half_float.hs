@@ -74,10 +74,10 @@
 --
 -- == Deprecation by @VK_KHR_shader_float16_int8@
 --
--- Functionality in this extension was included in
--- @VK_KHR_shader_float16_int8@ extension, when
--- 'Vulkan.Extensions.VK_KHR_shader_float16_int8.PhysicalDeviceShaderFloat16Int8FeaturesKHR'::@shaderFloat16@
--- is enabled.
+-- Functionality in this extension is included in the
+-- @VK_KHR_shader_float16_int8@ extension, when the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderFloat16 shaderFloat16>
+-- feature is enabled.
 --
 -- == New Enum Constants
 --

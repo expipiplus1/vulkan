@@ -50,7 +50,7 @@
 -- == Description
 --
 -- This extension exposes a collection of controls to modify the scheduling
--- behaviour of Arm Mali devices.
+-- behavior of Arm Mali devices.
 --
 -- == New Structures
 --
@@ -108,11 +108,7 @@
 --
 -- == See Also
 --
--- 'DeviceQueueShaderCoreControlCreateInfoARM',
--- 'PhysicalDeviceSchedulingControlsFeaturesARM',
--- 'PhysicalDeviceSchedulingControlsFlagBitsARM',
--- 'PhysicalDeviceSchedulingControlsFlagsARM',
--- 'PhysicalDeviceSchedulingControlsPropertiesARM'
+-- No cross-references are available
 --
 -- == Document Notes
 --

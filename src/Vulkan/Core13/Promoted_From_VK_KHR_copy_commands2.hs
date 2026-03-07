@@ -1713,9 +1713,9 @@ instance Zero CopyBufferInfo2 where
 --     of @pRegions@, @extent.depth@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageInfo2-srcImage-07743# If @srcImage@ and @dstImage@
---     have a different 'Vulkan.Core10.Enums.ImageType.ImageType', and
+--     have a different 'Vulkan.Core10.Enums.ImageType.ImageType', and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance5 maintenance5>
---     is not enabled, one /must/ be
+--     feature is not enabled, one /must/ be
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the other /must/
 --     be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
@@ -2275,7 +2275,7 @@ instance Zero CopyImageInfo2 where
 --
 -- -   #VUID-VkBlitImageInfo2-filter-09204# If @filter@ is
 --     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' and if the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-filter-cubic-weight-selection selectableCubicWeights>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-selectableCubicWeights selectableCubicWeights>
 --     feature is not enabled then the cubic weights /must/ be
 --     'Vulkan.Extensions.VK_QCOM_filter_cubic_weights.CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM'
 --
@@ -2439,8 +2439,8 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04554# If the image
 --     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, the rotated destination region as described in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
+--     in its @pNext@ chain, the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing rotated destination region>
 --     /must/ be contained within @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04555# If any element of
@@ -2551,12 +2551,50 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     /must/ be @1@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07274# For each element of
---     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR',
+--     @imageOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10051# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     and @imageOffset.x@ does not equal the width of the subresource
+--     specified by @imageSubresource@, @imageOffset.x@ /must/ be a
+--     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-07275# For each element of
---     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     @imageOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10052# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     and @imageOffset.y@ does not equal the height of the subresource
+--     specified by @imageSubresource@, @imageOffset.y@ /must/ be a
+--     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
@@ -2566,16 +2604,86 @@ instance es ~ '[] => Zero (BlitImageInfo2 es) where
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-00207# For each element of
---     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
---     not equal the width of the subresource specified by
---     @srcSubresource@, @extent.width@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+--     the sum of @imageOffset.x@ and @extent.width@ does not equal the
+--     width of the subresource specified by @imageSubresource@,
+--     @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10053# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     the difference of @imageOffset.x@ and @extent.height@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10054# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     the difference of @imageOffset.x@ and @extent.width@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10055# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR',
+--     the sum of @imageOffset.x@ and @extent.height@ does not equal the
+--     width of the subresource specified by @imageSubresource@,
+--     @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-00208# For each element of
---     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
---     not equal the height of the subresource specified by
---     @srcSubresource@, @extent.height@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+--     and the sum of @imageOffset.y@ and @extent.height@ does not equal
+--     the height of the subresource specified by @imageSubresource@,
+--     @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10056# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     the sum of @imageOffset.y@ and @extent.width@ does not equal the
+--     height of the subresource specified by @imageSubresource@,
+--     @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10057# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     the difference of @imageOffset.y@ and @extent.height@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-10058# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR',
+--     the difference of @imageOffset.y@ and @extent.width@ /must/ be a
+--     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
@@ -2765,8 +2873,8 @@ instance Zero CopyBufferToImageInfo2 where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04557# If the image
 --     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, the rotated source region as described in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
+--     in its @pNext@ chain, the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing rotated source region>
 --     /must/ be contained within @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04558# If any element of
@@ -2871,12 +2979,50 @@ instance Zero CopyBufferToImageInfo2 where
 --     /must/ be @1@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07274# For each element of
---     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR',
+--     @imageOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10051# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     and @imageOffset.x@ does not equal the width of the subresource
+--     specified by @imageSubresource@, @imageOffset.x@ /must/ be a
+--     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-07275# For each element of
---     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     @imageOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10052# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     and @imageOffset.y@ does not equal the height of the subresource
+--     specified by @imageSubresource@, @imageOffset.y@ /must/ be a
+--     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
@@ -2886,16 +3032,86 @@ instance Zero CopyBufferToImageInfo2 where
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-00207# For each element of
---     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
---     not equal the width of the subresource specified by
---     @srcSubresource@, @extent.width@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+--     the sum of @imageOffset.x@ and @extent.width@ does not equal the
+--     width of the subresource specified by @imageSubresource@,
+--     @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10053# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     the difference of @imageOffset.x@ and @extent.height@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10054# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     the difference of @imageOffset.x@ and @extent.width@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10055# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR',
+--     the sum of @imageOffset.x@ and @extent.height@ does not equal the
+--     width of the subresource specified by @imageSubresource@,
+--     @extent.height@ /must/ be a multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-00208# For each element of
---     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
---     not equal the height of the subresource specified by
---     @srcSubresource@, @extent.height@ /must/ be a multiple of the
+--     @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+--     and the sum of @imageOffset.y@ and @extent.height@ does not equal
+--     the height of the subresource specified by @imageSubresource@,
+--     @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10056# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     the sum of @imageOffset.y@ and @extent.width@ does not equal the
+--     height of the subresource specified by @imageSubresource@,
+--     @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10057# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     the difference of @imageOffset.y@ and @extent.height@ /must/ be a
+--     multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-10058# For each element
+--     of @pRegions@, if
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'::@transform@
+--     is equal to
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR',
+--     the difference of @imageOffset.y@ and @extent.width@ /must/ be a
+--     multiple of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --

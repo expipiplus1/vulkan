@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -159,15 +161,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
--- 'PipelineExecutableInfoKHR',
--- 'PipelineExecutableInternalRepresentationKHR',
--- 'PipelineExecutablePropertiesKHR',
--- 'PipelineExecutableStatisticFormatKHR',
--- 'PipelineExecutableStatisticKHR', 'PipelineExecutableStatisticValueKHR',
--- 'PipelineInfoKHR', 'getPipelineExecutableInternalRepresentationsKHR',
--- 'getPipelineExecutablePropertiesKHR',
--- 'getPipelineExecutableStatisticsKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

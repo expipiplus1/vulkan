@@ -21,9 +21,16 @@
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
+--             
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
---     and
+--              or
+--             
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--          and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan Version 1.2>
 --
 -- [__Contact__]
 --
@@ -99,11 +106,7 @@
 --
 -- == See Also
 --
--- 'DecompressMemoryRegionNV', 'MemoryDecompressionMethodFlagBitsNV',
--- 'MemoryDecompressionMethodFlagsNV',
--- 'PhysicalDeviceMemoryDecompressionFeaturesNV',
--- 'PhysicalDeviceMemoryDecompressionPropertiesNV',
--- 'cmdDecompressMemoryIndirectCountNV', 'cmdDecompressMemoryNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -695,7 +698,8 @@ type MemoryDecompressionMethodFlagsNV = MemoryDecompressionMethodFlagBitsNV
 --
 -- = See Also
 --
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_memory_decompression VK_NV_memory_decompression>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_memory_decompression VK_NV_memory_decompression>,
+-- 'MemoryDecompressionMethodFlagsNV'
 newtype MemoryDecompressionMethodFlagBitsNV = MemoryDecompressionMethodFlagBitsNV Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 

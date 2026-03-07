@@ -88,9 +88,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkGetInstanceProcAddrLUNARG', 'DirectDriverLoadingFlagsLUNARG',
--- 'DirectDriverLoadingInfoLUNARG', 'DirectDriverLoadingListLUNARG',
--- 'DirectDriverLoadingModeLUNARG'
+-- No cross-references are available
 --
 -- == Document Notes
 --

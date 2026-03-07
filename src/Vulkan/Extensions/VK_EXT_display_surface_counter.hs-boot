@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>
@@ -90,8 +90,7 @@
 --
 -- == See Also
 --
--- 'SurfaceCapabilities2EXT', 'SurfaceCounterFlagBitsEXT',
--- 'SurfaceCounterFlagsEXT', 'getPhysicalDeviceSurfaceCapabilities2EXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

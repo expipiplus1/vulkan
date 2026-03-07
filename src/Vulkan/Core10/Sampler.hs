@@ -110,6 +110,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkCreateSampler-device-09668# @device@ /must/ support at least
+--     one queue family with one of the
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
+--
 -- -   #VUID-vkCreateSampler-maxSamplerAllocationCount-04110# There /must/
 --     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerAllocationCount@
@@ -276,7 +281,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- = Description
 --
--- Mapping of OpenGL to Vulkan filter modes
+-- Mapping of OpenGL to Vulkan Filter Modes
 --
 -- @magFilter@ values of 'Vulkan.Core10.Enums.Filter.FILTER_NEAREST' and
 -- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' directly correspond to
@@ -310,8 +315,6 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSamplerAllocationCount maxSamplerAllocationCount>
 -- member of the 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
 -- structure.
---
--- Note
 --
 -- For historical reasons, if @maxSamplerAllocationCount@ is exceeded, some
 -- implementations may return
@@ -407,21 +410,21 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
---     structure, then the sampler reduction mode /must/ be set to
+--     structure, then the sampler reduction mode /must/ be
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --
--- -   #VUID-VkSamplerCreateInfo-pNext-06726# If
+-- -   #VUID-VkSamplerCreateInfo-pNext-06726# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerFilterMinmax samplerFilterMinmax>
---     is not enabled and the @pNext@ chain includes a
+--     feature is not enabled and the @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
---     structure, then the sampler reduction mode /must/ be set to
+--     structure, then the sampler reduction mode /must/ be
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --
--- -   #VUID-VkSamplerCreateInfo-addressModeU-01079# If
+-- -   #VUID-VkSamplerCreateInfo-addressModeU-01079# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
---     is not enabled, and if the @VK_KHR_sampler_mirror_clamp_to_edge@
---     extension is not enabled, @addressModeU@, @addressModeV@ and
---     @addressModeW@ /must/ not be
+--     feature is not enabled, and if the
+--     @VK_KHR_sampler_mirror_clamp_to_edge@ extension is not enabled,
+--     @addressModeU@, @addressModeV@ and @addressModeW@ /must/ not be
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
 --
 -- -   #VUID-VkSamplerCreateInfo-compareEnable-01080# If @compareEnable@ is
@@ -435,8 +438,8 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSamplerCreateInfo-magFilter-07911# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic VK_EXT_filter_cubic>
 --     extension is not enabled and either @magFilter@ or @minFilter@ is
---     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT', the @reductionMode@
---     member of
+--     'Vulkan.Extensions.VK_IMG_filter_cubic.FILTER_CUBIC_IMG', the
+--     @reductionMode@ member of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     /must/ be
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
@@ -697,11 +700,12 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     borderColor :: BorderColor
   , -- | #samplers-unnormalizedCoordinates# @unnormalizedCoordinates@ controls
     -- whether to use unnormalized or normalized texel coordinates to address
-    -- texels of the image. When set to 'Vulkan.Core10.FundamentalTypes.TRUE',
-    -- the range of the image coordinates used to lookup the texel is in the
-    -- range of zero to the image size in each dimension. When set to
-    -- 'Vulkan.Core10.FundamentalTypes.FALSE' the range of image coordinates is
-    -- zero to one.
+    -- texels of the image. When @unnormalizedCoordinates@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', the range of the image
+    -- coordinates used to lookup the texel is in the range of zero to the
+    -- image size in each dimension. When @unnormalizedCoordinates@ is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', the range of image coordinates
+    -- is zero to one.
     --
     -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- images the sampler is used with in the shader have the following

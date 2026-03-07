@@ -80,9 +80,7 @@
 --
 -- == See Also
 --
--- 'ScreenSurfaceCreateFlagsQNX', 'ScreenSurfaceCreateInfoQNX',
--- 'createScreenSurfaceQNX',
--- 'getPhysicalDeviceScreenPresentationSupportQNX'
+-- No cross-references are available
 --
 -- == Document Notes
 --

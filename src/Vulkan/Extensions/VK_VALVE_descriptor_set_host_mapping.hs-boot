@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Special Use__]
 --
@@ -52,14 +54,10 @@
 -- Memory offsets and sizes for descriptors /can/ be queried from a
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout' as well.
 --
--- Note
---
 -- There is currently no specification language written for this extension.
 -- The links to APIs defined by the extension are to stubs that only
 -- include generated content such as API declarations and implicit valid
 -- usage statements.
---
--- Note
 --
 -- This extension is only intended for use in specific embedded
 -- environments with known implementation details, and is therefore
@@ -219,11 +217,7 @@
 --
 -- == See Also
 --
--- 'DescriptorSetBindingReferenceVALVE',
--- 'DescriptorSetLayoutHostMappingInfoVALVE',
--- 'PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE',
--- 'getDescriptorSetHostMappingVALVE',
--- 'getDescriptorSetLayoutHostMappingInfoVALVE'
+-- No cross-references are available
 --
 -- == Document Notes
 --

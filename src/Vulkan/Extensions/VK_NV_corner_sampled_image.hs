@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -143,7 +145,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceCornerSampledImageFeaturesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -208,7 +210,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledImageFeaturesNV
-  { -- | #features-cornersampledimage# @cornerSampledImage@ specifies whether
+  { -- | #features-cornerSampledImage# @cornerSampledImage@ specifies whether
     -- images can be created with a
     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
     -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'.

@@ -58,6 +58,34 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo' structure (see
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates>).
 --
+-- 'IMAGE_LAYOUT_GENERAL' can be a useful catch-all image layout, but there
+-- are situations where a dedicated image layout must be used instead. Some
+-- examples include:
+--
+-- -   'IMAGE_LAYOUT_PRESENT_SRC_KHR'
+--
+-- -   @VK_IMAGE_LAYOUT_VIDEO_DECODE_SRC_KHR@
+--
+-- -   @VK_IMAGE_LAYOUT_VIDEO_DECODE_DST_KHR@
+--
+-- -   @VK_IMAGE_LAYOUT_VIDEO_DECODE_DPB_KHR@
+--
+-- -   @VK_IMAGE_LAYOUT_VIDEO_ENCODE_SRC_KHR@
+--
+-- -   @VK_IMAGE_LAYOUT_VIDEO_ENCODE_DST_KHR@
+--
+-- -   @VK_IMAGE_LAYOUT_VIDEO_ENCODE_DPB_KHR@
+--
+-- While 'IMAGE_LAYOUT_GENERAL' suggests that all types of device access is
+-- possible, it does not mean that all patterns of memory accesses are safe
+-- in all situations.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#common-render-pass-data-races Common Render Pass Data Races>
+-- outlines some situations where data races are unavoidable. For example,
+-- when a subresource is used as both an attachment and a sampled image
+-- (i.e., not an input attachment),
+-- 'IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT' adds extra
+-- guarantees which 'IMAGE_LAYOUT_GENERAL' does not.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -81,8 +109,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
 -- 'Vulkan.Extensions.VK_EXT_host_image_copy.PhysicalDeviceHostImageCopyPropertiesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingAttachmentInfo',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ResolveImageInfo2',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.bindOpticalFlowSessionImageNV',
 -- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.cmdBindInvocationMaskHUAWEI',
@@ -106,7 +134,8 @@ newtype ImageLayout = ImageLayout Int32
 -- will cause the contents of the image’s memory to be undefined.
 pattern IMAGE_LAYOUT_UNDEFINED = ImageLayout 0
 
--- | 'IMAGE_LAYOUT_GENERAL' supports all types of device access.
+-- | 'IMAGE_LAYOUT_GENERAL' supports all types of device access, unless
+-- specified otherwise.
 pattern IMAGE_LAYOUT_GENERAL = ImageLayout 1
 
 -- | 'IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL' /must/ only be used as a color

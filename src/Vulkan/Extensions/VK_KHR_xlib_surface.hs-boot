@@ -158,8 +158,7 @@
 --
 -- == See Also
 --
--- 'XlibSurfaceCreateFlagsKHR', 'XlibSurfaceCreateInfoKHR',
--- 'createXlibSurfaceKHR', 'getPhysicalDeviceXlibPresentationSupportKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

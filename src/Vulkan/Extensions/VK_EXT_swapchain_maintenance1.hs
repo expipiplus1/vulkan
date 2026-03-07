@@ -25,7 +25,11 @@
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_surface_maintenance1 VK_EXT_surface_maintenance1>
 --     and
+--         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--          or
+--         
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__Contact__]
 --
@@ -166,10 +170,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceSwapchainMaintenance1FeaturesEXT',
--- 'ReleaseSwapchainImagesInfoEXT', 'SwapchainPresentFenceInfoEXT',
--- 'SwapchainPresentModeInfoEXT', 'SwapchainPresentModesCreateInfoEXT',
--- 'SwapchainPresentScalingCreateInfoEXT', 'releaseSwapchainImagesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -289,10 +290,24 @@ foreign import ccall
 -- platform window associated with the swapchain, the content of all
 -- presentable images in the swapchain becomes undefined.
 --
--- Note
---
 -- This functionality is useful during swapchain recreation, where acquired
 -- images from the old swapchain can be released instead of presented.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkReleaseSwapchainImagesEXT-swapchainMaintenance1-10159#
+--     Feature
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     /must/ be enabled
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkReleaseSwapchainImagesEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkReleaseSwapchainImagesEXT-pReleaseInfo-parameter#
+--     @pReleaseInfo@ /must/ be a valid pointer to a valid
+--     'ReleaseSwapchainImagesInfoEXT' structure
 --
 -- == Return Codes
 --
@@ -312,16 +327,9 @@ releaseSwapchainImagesEXT :: forall io
                            . (MonadIO io)
                           => -- | @device@ is the device associated with
                              -- 'ReleaseSwapchainImagesInfoEXT'::@swapchain@.
-                             --
-                             -- #VUID-vkReleaseSwapchainImagesEXT-device-parameter# @device@ /must/ be a
-                             -- valid 'Vulkan.Core10.Handles.Device' handle
                              Device
                           -> -- | @pReleaseInfo@ is a pointer to a 'ReleaseSwapchainImagesInfoEXT'
                              -- structure containing parameters of the release.
-                             --
-                             -- #VUID-vkReleaseSwapchainImagesEXT-pReleaseInfo-parameter# @pReleaseInfo@
-                             -- /must/ be a valid pointer to a valid 'ReleaseSwapchainImagesInfoEXT'
-                             -- structure
                              ("releaseInfo" ::: ReleaseSwapchainImagesInfoEXT)
                           -> io ()
 releaseSwapchainImagesEXT device releaseInfo = liftIO . evalContT $ do
@@ -470,11 +478,13 @@ instance Zero PhysicalDeviceSwapchainMaintenance1FeaturesEXT where
 --     'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@swapchainCount@
 --
 -- -   #VUID-VkSwapchainPresentFenceInfoEXT-pFences-07758# Each element of
---     @pFences@ /must/ be unsignaled
+--     @pFences@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     /must/ be unsignaled
 --
 -- -   #VUID-VkSwapchainPresentFenceInfoEXT-pFences-07759# Each element of
---     @pFences@ /must/ not be associated with any other queue command that
---     has not yet completed execution on that queue
+--     @pFences@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     /must/ not be associated with any other queue command that has not
+--     yet completed execution on that queue
 --
 -- == Valid Usage (Implicit)
 --
@@ -482,7 +492,8 @@ instance Zero PhysicalDeviceSwapchainMaintenance1FeaturesEXT where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT'
 --
 -- -   #VUID-VkSwapchainPresentFenceInfoEXT-pFences-parameter# @pFences@
---     /must/ be a valid pointer to an array of @swapchainCount@ valid
+--     /must/ be a valid pointer to an array of @swapchainCount@ valid or
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --     'Vulkan.Core10.Handles.Fence' handles
 --
 -- -   #VUID-VkSwapchainPresentFenceInfoEXT-swapchainCount-arraylength#
@@ -545,6 +556,12 @@ instance Zero SwapchainPresentFenceInfoEXT where
 --     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR'
 --     for the surface
+--
+-- -   #VUID-VkSwapchainPresentModesCreateInfoEXT-presentModeFifoLatestReady-10160#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentModeFifoLatestReady presentModeFifoLatestReady>
+--     feature is not enabled, pPresentModes /must/ not contain
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
 --
 -- -   #VUID-VkSwapchainPresentModesCreateInfoEXT-pPresentModes-07763# The
 --     entries in pPresentModes /must/ be a subset of the present modes
@@ -664,8 +681,9 @@ instance Zero SwapchainPresentModesCreateInfoEXT where
 -- -   Transition from
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR' to
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
---     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR': As
---     all prior present requests in the
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR' or
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
+--     : As all prior present requests in the
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR' mode
 --     are applied immediately, there are no outstanding present operations
 --     in this mode, and current and subsequent images are appended to the
@@ -674,8 +692,9 @@ instance Zero SwapchainPresentModesCreateInfoEXT where
 -- -   Transition from
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR' to
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
---     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR':
---     Presentation in both modes require waiting for the next vertical
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR' or
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
+--     : Presentation in FIFO modes require waiting for the next vertical
 --     blanking period, with
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR' allowing
 --     the pending present operation to be replaced by a new one. In this
@@ -684,14 +703,25 @@ instance Zero SwapchainPresentModesCreateInfoEXT where
 --
 -- -   Transition from
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
---     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR' to
---     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR' or
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR' or
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT'
+--     to 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR' or
 --     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR': If the
 --     FIFO queue is empty, presentation is done according to the behavior
 --     of the new mode. If there are present operations in the FIFO queue,
 --     once the last present operation is performed based on the respective
 --     vertical blanking period, the current and subsequent updates are
 --     applied according to the new mode.
+--
+-- -   Transition between
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR',
+--     and
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT':
+--     Images continue to be appended to the same FIFO queue, and the
+--     behavior with respect to waiting for vertical blanking period and
+--     dequeuing requests will follow the new mode for current and
+--     subsequent images.
 --
 -- -   The behavior during transition between any other present modes, if
 --     possible, is implementation defined.
@@ -703,7 +733,7 @@ instance Zero SwapchainPresentModesCreateInfoEXT where
 --     'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@swapchainCount@
 --
 -- -   #VUID-VkSwapchainPresentModeInfoEXT-pPresentModes-07761# Each entry
---     in @pPresentModes@ must be a presentation mode specified in
+--     in @pPresentModes@ /must/ be a presentation mode specified in
 --     'SwapchainPresentModesCreateInfoEXT'::@pPresentModes@ when creating
 --     the entry’s corresponding swapchain
 --
@@ -795,8 +825,8 @@ instance Zero SwapchainPresentModeInfoEXT where
 --     @presentGravityY@ /must/ not have more than one bit set
 --
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-scalingBehavior-07770#
---     @scalingBehavior@ /must/ be a valid scaling method for the surface
---     as returned in
+--     @scalingBehavior@ /must/ be @0@ or a valid scaling method for the
+--     surface as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentScaling@,
 --     given
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@presentMode@
@@ -805,16 +835,16 @@ instance Zero SwapchainPresentModeInfoEXT where
 --
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-scalingBehavior-07771#
 --     If the swapchain is created with
---     'SwapchainPresentModesCreateInfoEXT', @scalingBehavior@ /must/ be a
---     valid scaling method for the surface as returned in
+--     'SwapchainPresentModesCreateInfoEXT', @scalingBehavior@ /must/ be
+--     @0@ or a valid scaling method for the surface as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentScaling@,
 --     given each present mode in
 --     'SwapchainPresentModesCreateInfoEXT'::@pPresentModes@ in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
 --
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentGravityX-07772#
---     @presentGravityX@ /must/ be a valid x-axis present gravity for the
---     surface as returned in
+--     @presentGravityX@ /must/ be @0@ or a valid x-axis present gravity
+--     for the surface as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentGravityX@,
 --     given
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@presentMode@
@@ -823,16 +853,16 @@ instance Zero SwapchainPresentModeInfoEXT where
 --
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentGravityX-07773#
 --     If the swapchain is created with
---     'SwapchainPresentModesCreateInfoEXT', @presentGravityX@ /must/ be a
---     valid x-axis present gravity for the surface as returned in
+--     'SwapchainPresentModesCreateInfoEXT', @presentGravityX@ /must/ be
+--     @0@ or a valid x-axis present gravity for the surface as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentGravityX@,
 --     given each present mode in
 --     'SwapchainPresentModesCreateInfoEXT'::@pPresentModes@ in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
 --
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentGravityY-07774#
---     @presentGravityY@ /must/ be a valid y-axis present gravity for the
---     surface as returned in
+--     @presentGravityY@ /must/ be @0@ or a valid y-axis present gravity
+--     for the surface as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentGravityY@,
 --     given
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@presentMode@
@@ -841,12 +871,18 @@ instance Zero SwapchainPresentModeInfoEXT where
 --
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentGravityY-07775#
 --     If the swapchain is created with
---     'SwapchainPresentModesCreateInfoEXT', @presentGravityY@ /must/ be a
---     valid y-axis present gravity for the surface as returned in
+--     'SwapchainPresentModesCreateInfoEXT', @presentGravityY@ /must/ be
+--     @0@ or a valid y-axis present gravity for the surface as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentGravityY@,
 --     given each present mode in
 --     'SwapchainPresentModesCreateInfoEXT'::@pPresentModes@ in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
+--
+-- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-swapchainMaintenance1-10154#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-swapchainMaintenance1 swapchainMaintenance1>
+--     feature is not enabled, then @presentScaling@, @presentGravityX@,
+--     and @presentGravityY@ /must/ be @0@
 --
 -- == Valid Usage (Implicit)
 --

@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
 --
@@ -58,6 +60,24 @@
 --     -   Interacts with VK_NV_shading_rate_image
 --
 --     -   Interacts with VK_NV_viewport_swizzle
+--
+--     -   Interacts with
+--         VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3AlphaToOneEnable
+--
+--     -   Interacts with
+--         VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3DepthClampEnable
+--
+--     -   Interacts with
+--         VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3LogicOpEnable
+--
+--     -   Interacts with
+--         VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3PolygonMode
+--
+--     -   Interacts with
+--         VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3RasterizationStream
+--
+--     -   Interacts with
+--         VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3TessellationDomainOrigin
 --
 -- [__Contact__]
 --
@@ -180,7 +200,7 @@
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   'cmdSetTessellationDomainOriginEXT'
@@ -355,7 +375,7 @@
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 VK_KHR_maintenance2>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
@@ -449,14 +469,7 @@
 --
 -- == See Also
 --
--- 'ColorBlendAdvancedEXT', 'ColorBlendEquationEXT',
--- 'PhysicalDeviceExtendedDynamicState3FeaturesEXT',
--- 'PhysicalDeviceExtendedDynamicState3PropertiesEXT',
--- 'cmdSetAlphaToCoverageEnableEXT', 'cmdSetAlphaToOneEnableEXT',
--- 'cmdSetColorBlendEnableEXT', 'cmdSetColorBlendEquationEXT',
--- 'cmdSetColorWriteMaskEXT', 'cmdSetDepthClampEnableEXT',
--- 'cmdSetLogicOpEnableEXT', 'cmdSetPolygonModeEXT',
--- 'cmdSetRasterizationSamplesEXT', 'cmdSetSampleMaskEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -773,7 +786,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetDepthClampEnableEXT-depthClamp-07449# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthClamp depthClamp>
---     feature is not enabled, @depthClampEnable@ must be
+--     feature is not enabled, @depthClampEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
@@ -1710,8 +1723,6 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'::@colorWriteMask@
 -- values used to create the currently active pipeline.
 --
--- Note
---
 -- Formats with bits that are shared between components specified by
 -- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlagBits',
 -- such as 'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32',
@@ -2151,8 +2162,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'::@depthClipEnable@
--- value used to create the currently active pipeline, or is set to the
--- inverse of
+-- value used to create the currently active pipeline, or by the inverse of
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
 -- if
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'
@@ -4636,9 +4646,9 @@ data ColorBlendAdvancedEXT = ColorBlendAdvancedEXT
     -- value specifying how the source and destination sample’s coverage is
     -- correlated.
     blendOverlap :: BlendOverlapEXT
-  , -- | @clampResults@ specifies the results must be clamped to the [0,1] range
-    -- before writing to the attachment, which is useful when the attachment
-    -- format is not normalized fixed-point.
+  , -- | @clampResults@ specifies that results /must/ be clamped to the [0,1]
+    -- range before writing to the attachment, which is useful when the
+    -- attachment format is not normalized fixed-point.
     clampResults :: Bool
   }
   deriving (Typeable, Eq)

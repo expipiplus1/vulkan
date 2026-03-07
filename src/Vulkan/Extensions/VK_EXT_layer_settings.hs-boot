@@ -77,9 +77,36 @@
 -- The structure contains an array of 'LayerSettingEXT' structure values
 -- that configure specific features of layers.
 --
+-- The @VK_EXT_layer_settings@ extension subsumes all the functionality
+-- provided in the @VK_EXT_validation_flags@ extension and the
+-- @VK_EXT_validation_features@ extension.
+--
+-- == New Structures
+--
+-- -   'LayerSettingEXT'
+--
+-- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
+--
+--     -   'LayerSettingsCreateInfoEXT'
+--
+-- == New Enums
+--
+-- -   'LayerSettingTypeEXT'
+--
+-- == New Enum Constants
+--
+-- -   'EXT_LAYER_SETTINGS_EXTENSION_NAME'
+--
+-- -   'EXT_LAYER_SETTINGS_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT'
+--
 -- == Example
 --
--- @VK_EXT_layer_settings@ is implemented by the Vulkan Profiles layer.
+-- One example usage of @VK_EXT_layer_settings@ is as implemented by the
+-- Vulkan Profiles layer.
 --
 -- It allows the profiles layer tests used by the profiles layer C.I. to
 -- programmatically configure the layer for each test without affecting the
@@ -122,34 +149,6 @@
 -- > inst_create_info.pNext = &layer_settings_create_info;
 -- > vkCreateInstance(&inst_create_info, nullptr, &_instances);
 --
--- Note
---
--- The @VK_EXT_layer_settings@ extension subsumes all the functionality
--- provided in the @VK_EXT_validation_flags@ extension and the
--- @VK_EXT_validation_features@ extension.
---
--- == New Structures
---
--- -   'LayerSettingEXT'
---
--- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
---
---     -   'LayerSettingsCreateInfoEXT'
---
--- == New Enums
---
--- -   'LayerSettingTypeEXT'
---
--- == New Enum Constants
---
--- -   'EXT_LAYER_SETTINGS_EXTENSION_NAME'
---
--- -   'EXT_LAYER_SETTINGS_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT'
---
 -- == Issues
 --
 -- -   How should application developers figure out the list of available
@@ -171,7 +170,7 @@
 --
 -- == See Also
 --
--- 'LayerSettingEXT', 'LayerSettingTypeEXT', 'LayerSettingsCreateInfoEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

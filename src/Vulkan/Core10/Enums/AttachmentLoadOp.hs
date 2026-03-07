@@ -16,8 +16,8 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 
--- | VkAttachmentLoadOp - Specify how contents of an attachment are
--- initialized at the beginning of a subpass
+-- | VkAttachmentLoadOp - Specify how contents of an attachment are treated
+-- at the beginning of the subpass where it is first used
 --
 -- = See Also
 --

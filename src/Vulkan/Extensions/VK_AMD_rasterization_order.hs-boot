@@ -156,8 +156,7 @@
 --
 -- == See Also
 --
--- 'PipelineRasterizationStateRasterizationOrderAMD',
--- 'RasterizationOrderAMD'
+-- No cross-references are available
 --
 -- == Document Notes
 --

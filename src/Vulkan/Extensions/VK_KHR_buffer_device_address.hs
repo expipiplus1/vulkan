@@ -27,7 +27,7 @@
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -54,11 +54,11 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference.txt GL_EXT_buffer_reference>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_buffer_reference.txt GL_EXT_buffer_reference>
 --         and
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference2.txt GL_EXT_buffer_reference2>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_buffer_reference2.txt GL_EXT_buffer_reference2>
 --         and
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference_uvec2.txt GL_EXT_buffer_reference_uvec2>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_buffer_reference_uvec2.txt GL_EXT_buffer_reference_uvec2>
 --
 -- [__Contributors__]
 --
@@ -79,7 +79,7 @@
 -- This extension allows the application to query a 64-bit buffer device
 -- address value for a buffer, which can be used to access the buffer
 -- memory via the @PhysicalStorageBuffer@ storage class in the
--- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference.txt GL_EXT_buffer_reference>
+-- <https://github.com/KhronosGroup/GLSL/blob/main/extensions/ext/GLSL_EXT_buffer_reference.txt GL_EXT_buffer_reference>
 -- GLSL extension and
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_physical_storage_buffer.html SPV_KHR_physical_storage_buffer>
 -- SPIR-V extension.
@@ -109,7 +109,7 @@
 -- All functionality in this extension is included in core Vulkan 1.2, with
 -- the KHR suffix omitted. However, if Vulkan 1.2 is supported and this
 -- extension is not, the @bufferDeviceAddress@ feature is optional. The
--- original type, enum and command names are still available as aliases of
+-- original type, enum, and command names are still available as aliases of
 -- the core functionality.
 --
 -- == Promotion to Vulkan 1.3
@@ -196,12 +196,7 @@
 --
 -- == See Also
 --
--- 'BufferDeviceAddressInfoKHR', 'BufferOpaqueCaptureAddressCreateInfoKHR',
--- 'DeviceMemoryOpaqueCaptureAddressInfoKHR',
--- 'MemoryOpaqueCaptureAddressAllocateInfoKHR',
--- 'PhysicalDeviceBufferDeviceAddressFeaturesKHR',
--- 'getBufferDeviceAddressKHR', 'getBufferOpaqueCaptureAddressKHR',
--- 'getDeviceMemoryOpaqueCaptureAddressKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --

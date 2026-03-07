@@ -12,10 +12,13 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , DeferredOperationKHR
                                   , DisplayKHR
                                   , DisplayModeKHR
+                                  , IndirectCommandsLayoutEXT
                                   , IndirectCommandsLayoutNV
+                                  , IndirectExecutionSetEXT
                                   , MicromapEXT
                                   , OpticalFlowSessionNV
                                   , PerformanceConfigurationINTEL
+                                  , PipelineBinaryKHR
                                   , ShaderEXT
                                   , SurfaceKHR
                                   , SwapchainKHR
@@ -60,7 +63,13 @@ data DisplayKHR
 data DisplayModeKHR
 
 
+data IndirectCommandsLayoutEXT
+
+
 data IndirectCommandsLayoutNV
+
+
+data IndirectExecutionSetEXT
 
 
 data MicromapEXT
@@ -70,6 +79,9 @@ data OpticalFlowSessionNV
 
 
 data PerformanceConfigurationINTEL
+
+
+data PipelineBinaryKHR
 
 
 data ShaderEXT

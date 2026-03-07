@@ -32,8 +32,6 @@ type ResolveModeFlags = ResolveModeFlagBits
 -- If no resolve mode is otherwise specified, 'RESOLVE_MODE_AVERAGE_BIT' is
 -- used.
 --
--- Note
---
 -- No range compression or Y′CBCR model conversion is performed by
 -- 'RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID'; applications have to
 -- do these conversions themselves. Value outputs are expected to match
@@ -52,26 +50,26 @@ type ResolveModeFlags = ResolveModeFlagBits
 newtype ResolveModeFlagBits = ResolveModeFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'RESOLVE_MODE_NONE' indicates that no resolve operation is done.
+-- | 'RESOLVE_MODE_NONE' specifies that no resolve operation is done.
 pattern RESOLVE_MODE_NONE = ResolveModeFlagBits 0x00000000
 
--- | 'RESOLVE_MODE_SAMPLE_ZERO_BIT' indicates that result of the resolve
+-- | 'RESOLVE_MODE_SAMPLE_ZERO_BIT' specifies that result of the resolve
 -- operation is equal to the value of sample 0.
 pattern RESOLVE_MODE_SAMPLE_ZERO_BIT = ResolveModeFlagBits 0x00000001
 
--- | 'RESOLVE_MODE_AVERAGE_BIT' indicates that result of the resolve
+-- | 'RESOLVE_MODE_AVERAGE_BIT' specifies that result of the resolve
 -- operation is the average of the sample values.
 pattern RESOLVE_MODE_AVERAGE_BIT = ResolveModeFlagBits 0x00000002
 
--- | 'RESOLVE_MODE_MIN_BIT' indicates that result of the resolve operation is
+-- | 'RESOLVE_MODE_MIN_BIT' specifies that result of the resolve operation is
 -- the minimum of the sample values.
 pattern RESOLVE_MODE_MIN_BIT = ResolveModeFlagBits 0x00000004
 
--- | 'RESOLVE_MODE_MAX_BIT' indicates that result of the resolve operation is
+-- | 'RESOLVE_MODE_MAX_BIT' specifies that result of the resolve operation is
 -- the maximum of the sample values.
 pattern RESOLVE_MODE_MAX_BIT = ResolveModeFlagBits 0x00000008
 
--- | 'RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID' indicates that rather
+-- | 'RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID' specifies that rather
 -- than a multisample resolve, a single sampled color attachment will be
 -- downsampled into a Y′CBCR format image specified by an external Android
 -- format. Unlike other resolve modes, implementations can resolve multiple

@@ -75,6 +75,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (DeviceDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (DeviceDiagnosticsConfigCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (DeviceGroupDeviceCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_memory_overallocation_behavior (DeviceMemoryOverallocationCreateInfoAMD)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_binary (DevicePipelineBinaryInternalCacheControlKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (DevicePrivateDataCreateInfo)
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (DeviceQueueGlobalPriorityCreateInfoKHR)
@@ -96,6 +97,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_astc_decode_mode (PhysicalDeviceA
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (PhysicalDeviceAccelerationStructureFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_address_binding_report (PhysicalDeviceAddressBindingReportFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_SEC_amigo_profiling (PhysicalDeviceAmigoProfilingFeaturesSEC)
+import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_anti_lag (PhysicalDeviceAntiLagFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state (PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout (PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_blend_operation_advanced (PhysicalDeviceBlendOperationAdvancedFeaturesEXT)
@@ -105,8 +107,10 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDe
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_device_coherent_memory (PhysicalDeviceCoherentMemoryFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_color_write_enable (PhysicalDeviceColorWriteEnableFeaturesEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_command_buffer_inheritance (PhysicalDeviceCommandBufferInheritanceFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (PhysicalDeviceConditionalRenderingFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cooperative_matrix2 (PhysicalDeviceCooperativeMatrix2FeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_copy_memory_indirect (PhysicalDeviceCopyMemoryIndirectFeaturesNV)
@@ -118,6 +122,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cuda_kernel_launch (PhysicalDevice
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_bias_control (PhysicalDeviceDepthBiasControlFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clamp_control (PhysicalDeviceDepthClampControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clamp_zero_one (PhysicalDeviceDepthClampZeroOneFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PhysicalDeviceDepthClipControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDeviceDepthClipEnableFeaturesEXT)
@@ -126,6 +131,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (Ph
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_descriptor_pool_overallocation (PhysicalDeviceDescriptorPoolOverallocationFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands_compute (PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (PhysicalDeviceDeviceMemoryReportFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (PhysicalDeviceDiagnosticsConfigFeaturesNV)
@@ -154,9 +160,11 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDe
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_frame_boundary (PhysicalDeviceFrameBoundaryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (PhysicalDeviceGlobalPriorityQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_hdr_vivid (PhysicalDeviceHdrVividFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_host_image_copy (PhysicalDeviceHostImageCopyFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_2d_view_of_3d (PhysicalDeviceImage2DViewOf3DFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_MESA_image_alignment_control (PhysicalDeviceImageAlignmentControlFeaturesMESA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (PhysicalDeviceImageCompressionControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control_swapchain (PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_image_processing2 (PhysicalDeviceImageProcessing2FeaturesQCOM)
@@ -170,11 +178,13 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (Physic
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_invocation_mask (PhysicalDeviceInvocationMaskFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_legacy_dithering (PhysicalDeviceLegacyDitheringFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_legacy_vertex_attributes (PhysicalDeviceLegacyVertexAttributesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_linear_color_attachment (PhysicalDeviceLinearColorAttachmentFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance5 (PhysicalDeviceMaintenance5FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance6 (PhysicalDeviceMaintenance6FeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance7 (PhysicalDeviceMaintenance7FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_map_memory_placed (PhysicalDeviceMapMemoryPlacedFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (PhysicalDeviceMemoryPriorityFeaturesEXT)
@@ -193,6 +203,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (PhysicalDeviceOptica
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pageable_device_local_memory (PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_per_stage_descriptor_set (PhysicalDevicePerStageDescriptorSetFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_binary (PhysicalDevicePipelineBinaryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_library_group_handles (PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT)
@@ -202,6 +213,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_robustness (PhysicalDevi
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (PhysicalDevicePresentBarrierFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PhysicalDevicePresentIdFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready (PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_wait (PhysicalDevicePresentWaitFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_primitive_topology_list_restart (PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_primitives_generated_query (PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT)
@@ -210,12 +222,14 @@ import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory 
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rgba10x6_formats (PhysicalDeviceRGBA10X6FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_raw_access_chains (PhysicalDeviceRawAccessChainsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder (PhysicalDeviceRayTracingInvocationReorderFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch (PhysicalDeviceRayTracingPositionFetchFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_validation (PhysicalDeviceRayTracingValidationFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_IMG_relaxed_line_rasterization (PhysicalDeviceRelaxedLineRasterizationFeaturesIMG)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_render_pass_striped (PhysicalDeviceRenderPassStripedFeaturesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
@@ -245,6 +259,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_maximal_reconvergence (Phy
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_module_identifier (PhysicalDeviceShaderModuleIdentifierFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_object (PhysicalDeviceShaderObjectFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_quad_control (PhysicalDeviceShaderQuadControlFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_relaxed_extended_instruction (PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_replicated_composites (PhysicalDeviceShaderReplicatedCompositesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types (PhysicalDeviceShaderSubgroupExtendedTypesFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeaturesKHR)
@@ -265,6 +281,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout (PhysicalDeviceUniformBufferStandardLayoutFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_robustness (PhysicalDeviceVertexAttributeRobustnessFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (PhysicalDeviceVertexInputDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan11Features)
 import {-# SOURCE #-} Vulkan.Core12 (PhysicalDeviceVulkan12Features)
@@ -441,8 +458,6 @@ foreign import ccall
 -- created using that device as the first parameter of the corresponding
 -- @vkCreate*@ or @vkAllocate*@ command.
 --
--- Note
---
 -- The lifetime of each of these objects is bound by the lifetime of the
 -- 'Vulkan.Core10.Handles.Device' object. Therefore, to avoid resource
 -- leaks, it is critical that an application explicitly free all of these
@@ -544,7 +559,7 @@ destroyDevice device allocator = liftIO . evalContT $ do
 --     structure then
 --     'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsPropertiesARM'::@schedulingControlsFlags@
 --     /must/ contain
---     'Vulkan.Extensions.VK_ARM_scheduling_controls.PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM'.
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM'
 --
 -- == Valid Usage (Implicit)
 --
@@ -591,7 +606,7 @@ data DeviceQueueCreateInfo (es :: [Type]) = DeviceQueueCreateInfo
     -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'.
     queueFamilyIndex :: Word32
   , -- | @pQueuePriorities@ is a pointer to an array of @queueCount@ normalized
-    -- floating point values, specifying priorities of work that will be
+    -- floating-point values, specifying priorities of work that will be
     -- submitted to each created queue. See
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-priority Queue Priority>
     -- for more information.
@@ -850,41 +865,53 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
 --     feature /must/ not be enabled
 --
--- -   #VUID-VkDeviceCreateInfo-None-04896# If
+-- -   #VUID-VkDeviceCreateInfo-None-04896# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
---     is enabled,
+--     feature is enabled,
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderImageInt64Atomics shaderImageInt64Atomics>
 --     /must/ be enabled
 --
--- -   #VUID-VkDeviceCreateInfo-None-04897# If
+-- -   #VUID-VkDeviceCreateInfo-None-04897# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseImageFloat32Atomics sparseImageFloat32Atomics>
---     is enabled,
+--     feature is enabled,
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderImageFloat32Atomics shaderImageFloat32Atomics>
 --     /must/ be enabled
 --
--- -   #VUID-VkDeviceCreateInfo-None-04898# If
+-- -   #VUID-VkDeviceCreateInfo-None-04898# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseImageFloat32AtomicAdd sparseImageFloat32AtomicAdd>
---     is enabled,
+--     feature is enabled,
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderImageFloat32AtomicAdd shaderImageFloat32AtomicAdd>
 --     /must/ be enabled
 --
 -- -   #VUID-VkDeviceCreateInfo-sparseImageFloat32AtomicMinMax-04975# If
+--     the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseImageFloat32AtomicMinMax sparseImageFloat32AtomicMinMax>
---     is enabled,
+--     feature is enabled,
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderImageFloat32AtomicMinMax shaderImageFloat32AtomicMinMax>
 --     /must/ be enabled
 --
--- -   #VUID-VkDeviceCreateInfo-None-08095# If
+-- -   #VUID-VkDeviceCreateInfo-robustBufferAccess-10247# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is enabled, and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind robustBufferAccessUpdateAfterBind>
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBindingUniformBufferUpdateAfterBind descriptorBindingUniformBufferUpdateAfterBind>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBindingStorageBufferUpdateAfterBind descriptorBindingStorageBufferUpdateAfterBind>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBindingUniformTexelBufferUpdateAfterBind descriptorBindingUniformTexelBufferUpdateAfterBind>,
+--     and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBindingStorageTexelBufferUpdateAfterBind descriptorBindingStorageTexelBufferUpdateAfterBind>
+--     /must/ not be enabled
+--
+-- -   #VUID-VkDeviceCreateInfo-None-08095# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
---     is enabled, @ppEnabledExtensionNames@ /must/ not contain
+--     feature is enabled, @ppEnabledExtensionNames@ /must/ not contain
 --     @VK_AMD_shader_fragment_mask@
 --
 -- -   #VUID-VkDeviceCreateInfo-pNext-09396# If the @pNext@ chain includes
 --     a
 --     'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM'
 --     structure, then it /must/ not be included in the @pNext@ chain of
---     any of the 'DeviceQueueCreateInfo' structures in
---     @pQueueCreateInfos@.
+--     any of the 'DeviceQueueCreateInfo' structures in @pQueueCreateInfos@
 --
 -- -   #VUID-VkDeviceCreateInfo-pNext-09397# If the @pNext@ chain includes
 --     a
@@ -892,7 +919,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     structure then
 --     'Vulkan.Extensions.VK_ARM_scheduling_controls.PhysicalDeviceSchedulingControlsPropertiesARM'::@schedulingControlsFlags@
 --     /must/ contain
---     'Vulkan.Extensions.VK_ARM_scheduling_controls.PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM'.
+--     'Vulkan.Extensions.VK_ARM_scheduling_controls.PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM'
 --
 -- == Valid Usage (Implicit)
 --
@@ -906,6 +933,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_device_diagnostics_config.DeviceDiagnosticsConfigCreateInfoNV',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 --     'Vulkan.Extensions.VK_AMD_memory_overallocation_behavior.DeviceMemoryOverallocationCreateInfoAMD',
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.DevicePipelineBinaryInternalCacheControlKHR',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_private_data.DevicePrivateDataCreateInfo',
 --     'Vulkan.Extensions.VK_ARM_scheduling_controls.DeviceQueueShaderCoreControlCreateInfoARM',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage.PhysicalDevice16BitStorageFeatures',
@@ -915,6 +943,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructureFeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_device_address_binding_report.PhysicalDeviceAddressBindingReportFeaturesEXT',
 --     'Vulkan.Extensions.VK_SEC_amigo_profiling.PhysicalDeviceAmigoProfilingFeaturesSEC',
+--     'Vulkan.Extensions.VK_AMD_anti_lag.PhysicalDeviceAntiLagFeaturesAMD',
 --     'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_dynamic_state.PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout.PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedFeaturesEXT',
@@ -924,8 +953,10 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderFeaturesHUAWEI',
 --     'Vulkan.Extensions.VK_AMD_device_coherent_memory.PhysicalDeviceCoherentMemoryFeaturesAMD',
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.PhysicalDeviceColorWriteEnableFeaturesEXT',
---     'Vulkan.Extensions.VK_NV_compute_shader_derivatives.PhysicalDeviceComputeShaderDerivativesFeaturesNV',
+--     'Vulkan.Extensions.VK_NV_command_buffer_inheritance.PhysicalDeviceCommandBufferInheritanceFeaturesNV',
+--     'Vulkan.Extensions.VK_KHR_compute_shader_derivatives.PhysicalDeviceComputeShaderDerivativesFeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_conditional_rendering.PhysicalDeviceConditionalRenderingFeaturesEXT',
+--     'Vulkan.Extensions.VK_NV_cooperative_matrix2.PhysicalDeviceCooperativeMatrix2FeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_cooperative_matrix.PhysicalDeviceCooperativeMatrixFeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixFeaturesNV',
 --     'Vulkan.Extensions.VK_NV_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectFeaturesNV',
@@ -937,6 +968,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_depth_bias_control.PhysicalDeviceDepthBiasControlFeaturesEXT',
+--     'Vulkan.Extensions.VK_EXT_depth_clamp_control.PhysicalDeviceDepthClampControlFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clamp_zero_one.PhysicalDeviceDepthClampZeroOneFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clip_control.PhysicalDeviceDepthClipControlFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
@@ -945,6 +977,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_descriptor_pool_overallocation.PhysicalDeviceDescriptorPoolOverallocationFeaturesNV',
 --     'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE',
 --     'Vulkan.Extensions.VK_NV_device_generated_commands_compute.PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV',
+--     'Vulkan.Extensions.VK_EXT_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_device_memory_report.PhysicalDeviceDeviceMemoryReportFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_device_diagnostics_config.PhysicalDeviceDiagnosticsConfigFeaturesNV',
@@ -972,9 +1005,11 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_frame_boundary.PhysicalDeviceFrameBoundaryFeaturesEXT',
 --     'Vulkan.Extensions.VK_KHR_global_priority.PhysicalDeviceGlobalPriorityQueryFeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT',
+--     'Vulkan.Extensions.VK_HUAWEI_hdr_vivid.PhysicalDeviceHdrVividFeaturesHUAWEI',
 --     'Vulkan.Extensions.VK_EXT_host_image_copy.PhysicalDeviceHostImageCopyFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.PhysicalDeviceHostQueryResetFeatures',
 --     'Vulkan.Extensions.VK_EXT_image_2d_view_of_3d.PhysicalDeviceImage2DViewOf3DFeaturesEXT',
+--     'Vulkan.Extensions.VK_MESA_image_alignment_control.PhysicalDeviceImageAlignmentControlFeaturesMESA',
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.PhysicalDeviceImageCompressionControlFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_image_compression_control_swapchain.PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT',
 --     'Vulkan.Extensions.VK_QCOM_image_processing2.PhysicalDeviceImageProcessing2FeaturesQCOM',
@@ -988,11 +1023,13 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeatures',
 --     'Vulkan.Extensions.VK_HUAWEI_invocation_mask.PhysicalDeviceInvocationMaskFeaturesHUAWEI',
 --     'Vulkan.Extensions.VK_EXT_legacy_dithering.PhysicalDeviceLegacyDitheringFeaturesEXT',
+--     'Vulkan.Extensions.VK_EXT_legacy_vertex_attributes.PhysicalDeviceLegacyVertexAttributesFeaturesEXT',
 --     'Vulkan.Extensions.VK_KHR_line_rasterization.PhysicalDeviceLineRasterizationFeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_linear_color_attachment.PhysicalDeviceLinearColorAttachmentFeaturesNV',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Features',
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PhysicalDeviceMaintenance5FeaturesKHR',
 --     'Vulkan.Extensions.VK_KHR_maintenance6.PhysicalDeviceMaintenance6FeaturesKHR',
+--     'Vulkan.Extensions.VK_KHR_maintenance7.PhysicalDeviceMaintenance7FeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_map_memory_placed.PhysicalDeviceMapMemoryPlacedFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_memory_priority.PhysicalDeviceMemoryPriorityFeaturesEXT',
@@ -1011,6 +1048,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_per_stage_descriptor_set.PhysicalDevicePerStageDescriptorSetFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
+--     'Vulkan.Extensions.VK_KHR_pipeline_binary.PhysicalDevicePipelineBinaryFeaturesKHR',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeatures',
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_pipeline_library_group_handles.PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT',
@@ -1020,6 +1058,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_present_barrier.PhysicalDevicePresentBarrierFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_present_id.PhysicalDevicePresentIdFeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready.PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT',
 --     'Vulkan.Extensions.VK_KHR_present_wait.PhysicalDevicePresentWaitFeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_primitive_topology_list_restart.PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_primitives_generated_query.PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT',
@@ -1028,12 +1067,14 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_rgba10x6_formats.PhysicalDeviceRGBA10X6FormatsFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access.PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT',
+--     'Vulkan.Extensions.VK_NV_raw_access_chains.PhysicalDeviceRawAccessChainsFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_ray_query.PhysicalDeviceRayQueryFeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.PhysicalDeviceRayTracingMaintenance1FeaturesKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.PhysicalDeviceRayTracingMotionBlurFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelineFeaturesKHR',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_position_fetch.PhysicalDeviceRayTracingPositionFetchFeaturesKHR',
+--     'Vulkan.Extensions.VK_NV_ray_tracing_validation.PhysicalDeviceRayTracingValidationFeaturesNV',
 --     'Vulkan.Extensions.VK_IMG_relaxed_line_rasterization.PhysicalDeviceRelaxedLineRasterizationFeaturesIMG',
 --     'Vulkan.Extensions.VK_ARM_render_pass_striped.PhysicalDeviceRenderPassStripedFeaturesARM',
 --     'Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
@@ -1063,6 +1104,8 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_shader_module_identifier.PhysicalDeviceShaderModuleIdentifierFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_shader_object.PhysicalDeviceShaderObjectFeaturesEXT',
 --     'Vulkan.Extensions.VK_KHR_shader_quad_control.PhysicalDeviceShaderQuadControlFeaturesKHR',
+--     'Vulkan.Extensions.VK_KHR_shader_relaxed_extended_instruction.PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_shader_replicated_composites.PhysicalDeviceShaderReplicatedCompositesFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_shader_sm_builtins.PhysicalDeviceShaderSMBuiltinsFeaturesNV',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types.PhysicalDeviceShaderSubgroupExtendedTypesFeatures',
 --     'Vulkan.Extensions.VK_KHR_shader_subgroup_rotate.PhysicalDeviceShaderSubgroupRotateFeaturesKHR',
@@ -1083,7 +1126,10 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout.PhysicalDeviceUniformBufferStandardLayoutFeatures',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers.PhysicalDeviceVariablePointersFeatures',
 --     'Vulkan.Extensions.VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorFeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_vertex_attribute_robustness.PhysicalDeviceVertexAttributeRobustnessFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.PhysicalDeviceVertexInputDynamicStateFeaturesEXT',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeAV1FeaturesKHR VkPhysicalDeviceVideoEncodeAV1FeaturesKHR>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVideoMaintenance1FeaturesKHR VkPhysicalDeviceVideoMaintenance1FeaturesKHR>,
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Features',
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features',
@@ -1175,6 +1221,14 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceVertexAttributeRobustnessFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceHdrVividFeaturesHUAWEI = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceCooperativeMatrix2FeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceShaderReplicatedCompositesFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceImageAlignmentControlFeaturesMESA = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceCommandBufferInheritanceFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceRawAccessChainsFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMapMemoryPlacedFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderQuadControlFeaturesKHR = Just f
@@ -1195,6 +1249,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceCubicWeightsFeaturesQCOM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceYcbcrDegammaFeaturesQCOM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCubicClampFeaturesQCOM = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceAntiLagFeaturesAMD = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderEnqueueFeaturesAMDX = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCooperativeMatrixFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX = Just f
@@ -1231,12 +1286,15 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceShaderModuleIdentifierFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceNestedCommandBufferFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE = Just f
+    | Just Refl <- eqT @e @DevicePipelineBinaryInternalCacheControlKHR = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePipelineBinaryFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLinearColorAttachmentFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageViewMinLodFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDynamicRenderingFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRGBA10X6FormatsFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceRayTracingValidationFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRayTracingMotionBlurFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShaderBarycentricFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderIntegerDotProductFeatures = Just f
@@ -1251,10 +1309,14 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceHostImageCopyFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSynchronization2Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceColorWriteEnableFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryRDMAFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVertexInputDynamicStateFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDepthClampControlFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDepthClipControlFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMutableDescriptorTypeFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceLegacyVertexAttributesFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageSlicedViewOf3DFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImage2DViewOf3DFeaturesEXT = Just f
@@ -1325,7 +1387,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceCopyMemoryIndirectFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageFootprintFeaturesNV = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceComputeShaderDerivativesFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceComputeShaderDerivativesFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCornerSampledImageFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExclusiveScissorFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRepresentativeFragmentTestFeaturesNV = Just f
@@ -1346,6 +1408,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceHostQueryResetFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderFloat16Int8Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderDrawParametersFeatures = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMaintenance7FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance6FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance5FeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMaintenance4Features = Just f

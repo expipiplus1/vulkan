@@ -53,12 +53,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
--- -   @sType@ is a 'Vulkan.Core10.Enums.StructureType.StructureType' value
---     identifying this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to a structure extending this
---     structure.
---
 -- -   #extension-features-multiview# @multiview@ specifies whether the
 --     implementation supports multiview rendering within a render pass. If
 --     this feature is not enabled, the view mask of each subpass /must/
@@ -260,7 +254,7 @@ instance Zero PhysicalDeviceMultiviewProperties where
 -- additional broadcasting.
 --
 -- Some implementations /may/ not support multiview in conjunction with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-mesh mesh shaders>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiviewMeshShader mesh shaders>,
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-gs geometry shaders>
 -- or
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-tess tessellation shaders>.
@@ -300,16 +294,16 @@ instance Zero PhysicalDeviceMultiviewProperties where
 -- bit in the subpass description. The only supported per-view attributes
 -- are position and viewport mask, and per-view position and viewport masks
 -- are written to output array variables decorated with @PositionPerViewNV@
--- and @ViewportMaskPerViewNV@, respectively. If @VK_NV_viewport_array2@ is
--- not supported and enabled, @ViewportMaskPerViewNV@ /must/ not be used.
--- Values written to elements of @PositionPerViewNV@ and
--- @ViewportMaskPerViewNV@ /must/ not depend on the @ViewIndex@. The shader
--- /must/ also write to an output variable decorated with @Position@, and
--- the value written to @Position@ /must/ equal the value written to
--- @PositionPerViewNV@[@ViewIndex@]. Similarly, if @ViewportMaskPerViewNV@
--- is written to then the shader /must/ also write to an output variable
--- decorated with @ViewportMaskNV@, and the value written to
--- @ViewportMaskNV@ /must/ equal the value written to
+-- and @ViewportMaskPerViewNV@, respectively. If the
+-- @VK_NV_viewport_array2@ extension is not supported and enabled,
+-- @ViewportMaskPerViewNV@ /must/ not be used. Values written to elements
+-- of @PositionPerViewNV@ and @ViewportMaskPerViewNV@ /must/ not depend on
+-- the @ViewIndex@. The shader /must/ also write to an output variable
+-- decorated with @Position@, and the value written to @Position@ /must/
+-- equal the value written to @PositionPerViewNV@[@ViewIndex@]. Similarly,
+-- if @ViewportMaskPerViewNV@ is written to then the shader /must/ also
+-- write to an output variable decorated with @ViewportMaskNV@, and the
+-- value written to @ViewportMaskNV@ /must/ equal the value written to
 -- @ViewportMaskPerViewNV@[@ViewIndex@]. Implementations will either use
 -- values taken from @Position@ and @ViewportMaskNV@ and invoke the shader
 -- once for each view, or will use values taken from @PositionPerViewNV@

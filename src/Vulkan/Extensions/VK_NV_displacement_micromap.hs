@@ -148,10 +148,7 @@
 --
 -- == See Also
 --
--- 'AccelerationStructureTrianglesDisplacementMicromapNV',
--- 'DisplacementMicromapFormatNV',
--- 'PhysicalDeviceDisplacementMicromapFeaturesNV',
--- 'PhysicalDeviceDisplacementMicromapPropertiesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -558,8 +555,6 @@ instance Zero AccelerationStructureTrianglesDisplacementMicromapNV where
 --
 -- = Description
 --
--- Note
---
 -- For compactness, these values are stored as 16-bit in some structures.
 --
 -- = See Also
@@ -570,19 +565,19 @@ newtype DisplacementMicromapFormatNV = DisplacementMicromapFormatNV Int32
 
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- | 'DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV' indicates that
+-- | 'DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV' specifies that
 -- the given micromap format encodes 64 micro-triangles worth of
 -- displacements in 64 bytes as described in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
 pattern DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV = DisplacementMicromapFormatNV 1
 
--- | 'DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV' indicates that
+-- | 'DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV' specifies that
 -- the given micromap format encodes 256 micro-triangles worth of
 -- displacements in 128 bytes as described in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.
 pattern DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV = DisplacementMicromapFormatNV 2
 
--- | 'DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV' indicates
+-- | 'DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV' specifies
 -- that the given micromap format encodes 1024 micro-triangles worth of
 -- displacements in 128 bytes as described in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#displacement-micromap-encoding Displacement Micromap Encoding>.

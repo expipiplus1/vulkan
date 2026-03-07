@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_map_memory2 VK_KHR_map_memory2>
@@ -59,7 +59,7 @@
 --
 -- == Description
 --
--- This extension allows a client to request that
+-- This extension allows an application to request that
 -- 'Vulkan.Extensions.VK_KHR_map_memory2.mapMemory2KHR' attempt to place
 -- the memory map at a particular virtual address.
 --
@@ -111,8 +111,7 @@
 --
 -- == See Also
 --
--- 'MemoryMapPlacedInfoEXT', 'PhysicalDeviceMapMemoryPlacedFeaturesEXT',
--- 'PhysicalDeviceMapMemoryPlacedPropertiesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -187,12 +186,12 @@ import Vulkan.Extensions.VK_KHR_map_memory2 (MemoryUnmapFlagsKHR)
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMapMemoryPlacedFeaturesEXT = PhysicalDeviceMapMemoryPlacedFeaturesEXT
   { -- | #features-memoryMapPlaced# @memoryMapPlaced@ indicates that the
-    -- implementation supports placing memory maps at client-specified virtual
-    -- addresses.
+    -- implementation supports placing memory maps at application-specified
+    -- virtual addresses.
     memoryMapPlaced :: Bool
   , -- | #features-memoryMapRangePlaced# @memoryMapRangePlaced@ indicates that
     -- the implementation supports placing memory maps of a subrange of a
-    -- memory object at client-specified virtual addresses.
+    -- memory object at application-specified virtual addresses.
     memoryMapRangePlaced :: Bool
   , -- | #features-memoryUnmapReserve# @memoryUnmapReserve@ indicates that the
     -- implementation supports leaving the memory range reserved when unmapping
@@ -333,7 +332,7 @@ instance Zero PhysicalDeviceMapMemoryPlacedPropertiesEXT where
 -- -   #VUID-VkMemoryMapPlacedInfoEXT-pPlacedAddress-09578# The address
 --     range specified by @pPlacedAddress@ and
 --     'Vulkan.Extensions.VK_KHR_map_memory2.MemoryMapInfoKHR'::@size@
---     /must/ not overlap any existing Vulkan memory object mapping.
+--     /must/ not overlap any existing Vulkan memory object mapping
 --
 -- == Valid Usage (Implicit)
 --

@@ -93,11 +93,12 @@
 -- from 'getSemaphoreWin32HandleKHR' when @handleType@ is
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_capabilities.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'?
 --
--- __RESOLVED__: Yes, unless it is passed back in to another driver
--- instance to import the object. A successful get call transfers ownership
--- of the handle to the application. Destroying the semaphore object will
--- not destroy the handle or the handle’s reference to the underlying
--- semaphore resource.
+-- __RESOLVED__: Yes. A successful get call transfers ownership of the
+-- handle to the application. Destroying the semaphore object will not
+-- destroy the handle or the handle’s reference to the underlying semaphore
+-- resource. Unlike file descriptor opaque handles, win32 opaque handle
+-- ownership can not be transferred back to a driver by an import
+-- operation.
 --
 -- 2) Should the language regarding KMT\/Windows 7 handles be moved to a
 -- separate extension so that it can be deprecated over time?
@@ -135,9 +136,7 @@
 --
 -- == See Also
 --
--- 'D3D12FenceSubmitInfoKHR', 'ExportSemaphoreWin32HandleInfoKHR',
--- 'ImportSemaphoreWin32HandleInfoKHR', 'SemaphoreGetWin32HandleInfoKHR',
--- 'getSemaphoreWin32HandleKHR', 'importSemaphoreWin32HandleKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -561,11 +560,11 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 -- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo' with a Windows
 -- @handleType@, but either 'ExportSemaphoreWin32HandleInfoKHR' is not
 -- included in the @pNext@ chain, or it is included but @pAttributes@ is
--- set to @NULL@, default security descriptor values will be used, and
--- child processes created by the application will not inherit the handle,
--- as described in the MSDN documentation for “Synchronization Object
--- Security and Access Rights”1. Further, if the structure is not present,
--- the access rights used depend on the handle type.
+-- @NULL@, default security descriptor values will be used, and child
+-- processes created by the application will not inherit the handle, as
+-- described in the MSDN documentation for “Synchronization Object Security
+-- and Access Rights”1. Further, if the structure is not present, the
+-- access rights used depend on the handle type.
 --
 -- For handles of the following types:
 --
@@ -682,8 +681,6 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-payloads payload>
 -- referring to a Direct3D 12 fence, the implementation /must/ ignore the
 -- value in the @pWaitSemaphoreValues@ or @pSignalSemaphoreValues@ entry.
---
--- Note
 --
 -- As the introduction of the external semaphore handle type
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT'

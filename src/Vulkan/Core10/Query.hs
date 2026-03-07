@@ -103,6 +103,14 @@ foreign import ccall
 
 -- | vkCreateQueryPool - Create a new query pool object
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkCreateQueryPool-device-09663# @device@ /must/ support at
+--     least one queue family with one of the
+--     @VK_QUEUE_VIDEO_ENCODE_BIT_KHR@, @VK_QUEUE_VIDEO_DECODE_BIT_KHR@,
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' capabilities
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateQueryPool-device-parameter# @device@ /must/ be a valid
@@ -203,8 +211,6 @@ foreign import ccall
 -- -   #VUID-vkDestroyQueryPool-queryPool-00795# If no
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @queryPool@ was created, @pAllocator@ /must/ be @NULL@
---
--- Note
 --
 -- Applications /can/ verify that @queryPool@ /can/ be destroyed by
 -- checking that 'getQueryPoolResults'() without the
@@ -314,8 +320,6 @@ foreign import ccall
 -- written by this command are undefined unless otherwise specified for any
 -- of the results of the used query type.
 --
--- Note
---
 -- If
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
 -- or @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@ is set, the layout of data in
@@ -338,9 +342,13 @@ foreign import ccall
 -- for the counter being queried. Otherwise, results and availability or
 -- status values are written as an array of 32-bit values. If an unsigned
 -- integer query’s value overflows the result type, the value /may/ either
--- wrap or saturate. If a signed integer query’s value overflows the result
--- type, the value is undefined. If a floating point query’s value is not
--- representable as the result type, the value is undefined.
+-- wrap or saturate. If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-maintenance7 maintenance7>
+-- feature is enabled, for an unsigned integer query, the 32-bit result
+-- value /must/ be equal to the 32 least significant bits of the equivalent
+-- 64-bit result value. If a signed integer query’s value overflows the
+-- result type, the value is undefined. If a floating-point query’s value
+-- is not representable as the result type, the value is undefined.
 --
 -- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
 -- set, this command defines an execution dependency with any earlier
@@ -360,8 +368,6 @@ foreign import ccall
 -- not set, 'getQueryPoolResults' /may/ return
 -- 'Vulkan.Core10.Enums.Result.NOT_READY' if there are queries in the
 -- unavailable state.
---
--- Note
 --
 -- Applications /must/ take care to ensure that use of the
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' bit has
@@ -392,8 +398,6 @@ foreign import ccall
 --
 -- A similar situation can arise with the
 -- @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@ flag.
---
--- Note
 --
 -- Applications /can/ double-buffer query pool usage, with a pool per
 -- frame, and reset queries at the end of the frame in which they are read.
@@ -458,7 +462,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
 --     is set, @stride@ /must/ be large enough to contain the unsigned
 --     integer representing availability or status in addition to the query
---     result.
+--     result
 --
 -- -   #VUID-vkGetQueryPoolResults-queryType-03229# If the @queryType@ used
 --     to create @queryPool@ was
@@ -535,8 +539,8 @@ getQueryPoolResults :: forall io
                        ("queryCount" ::: Word32)
                     -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
                        ("dataSize" ::: Word64)
-                    -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
-                       -- be written
+                    -> -- | @pData@ is a pointer to an application-allocated buffer where the
+                       -- results will be written
                        ("data" ::: Ptr ())
                     -> -- | @stride@ is the stride in bytes between results for individual queries
                        -- within @pData@.
@@ -649,6 +653,14 @@ getQueryPoolResults device
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
 --     and its @pNext@ chain
 --
+-- -   #VUID-VkQueryPoolCreateInfo-pNext-10248# If the @pNext@ chain
+--     includes a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure and its @videoCodecOperation@ member is
+--     @VK_VIDEO_CODEC_OPERATION_ENCODE_AV1_BIT_KHR@, then the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-videoEncodeAV1 videoEncodeAV1>
+--     feature /must/ be enabled
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkQueryPoolCreateInfo-sType-sType# @sType@ /must/ be
@@ -664,6 +676,7 @@ getQueryPoolResults device
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoKHR VkVideoDecodeH264ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoKHR VkVideoDecodeH265ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeUsageInfoKHR VkVideoDecodeUsageInfoKHR>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeAV1ProfileInfoKHR VkVideoEncodeAV1ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileInfoKHR VkVideoEncodeH264ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileInfoKHR VkVideoEncodeH265ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeUsageInfoKHR VkVideoEncodeUsageInfoKHR>,

@@ -18,7 +18,7 @@
 --     1
 --
 -- [__Ratification Status__]
---     Not ratified
+--     Ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>
@@ -90,8 +90,7 @@
 --
 -- == See Also
 --
--- 'SurfaceCapabilities2EXT', 'SurfaceCounterFlagBitsEXT',
--- 'SurfaceCounterFlagsEXT', 'getPhysicalDeviceSurfaceCapabilities2EXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -353,6 +352,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' representing
     -- the ways the application /can/ use the presentable images of a swapchain
     -- created with 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' set to
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_LATEST_READY_EXT',
     -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or

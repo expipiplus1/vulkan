@@ -15,19 +15,23 @@
 --     466
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__API Interactions__]
 --
 --     -   Interacts with VK_VERSION_1_3
 --
 --     -   Interacts with VK_KHR_dynamic_rendering
+--
+--     -   Interacts with VK_KHR_maintenance5
 --
 -- [__Special Use__]
 --
@@ -44,7 +48,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-03-31
+--     2024-02-22
 --
 -- [__Contributors__]
 --
@@ -87,15 +91,16 @@
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
+-- and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
 -- is supported:
 --
--- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR':
 --
---     -   'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
--- is supported:
+--     -   'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
 --
@@ -106,6 +111,10 @@
 -- -   Revision 1, 2022-03-31 (Shahbaz Youssefi)
 --
 --     -   Internal revisions
+--
+-- -   Revision 2, 2024-02-22 (Shahbaz Youssefi)
+--
+--     -   Added pipeline create flag to support dynamic rendering
 --
 -- == Issues
 --
@@ -124,7 +133,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceLegacyDitheringFeaturesEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -138,6 +147,8 @@ module Vulkan.Extensions.VK_EXT_legacy_dithering  ( PhysicalDeviceLegacyDitherin
                                                   , pattern EXT_LEGACY_DITHERING_SPEC_VERSION
                                                   , EXT_LEGACY_DITHERING_EXTENSION_NAME
                                                   , pattern EXT_LEGACY_DITHERING_EXTENSION_NAME
+                                                  , PipelineCreateFlagBits2KHR(..)
+                                                  , PipelineCreateFlags2KHR
                                                   ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -162,6 +173,8 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT))
+import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlagBits2KHR(..))
+import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
 -- | VkPhysicalDeviceLegacyDitheringFeaturesEXT - Structure describing
 -- support for legacy dithering
 --
@@ -231,11 +244,11 @@ instance Zero PhysicalDeviceLegacyDitheringFeaturesEXT where
            zero
 
 
-type EXT_LEGACY_DITHERING_SPEC_VERSION = 1
+type EXT_LEGACY_DITHERING_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_LEGACY_DITHERING_SPEC_VERSION"
 pattern EXT_LEGACY_DITHERING_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_LEGACY_DITHERING_SPEC_VERSION = 1
+pattern EXT_LEGACY_DITHERING_SPEC_VERSION = 2
 
 
 type EXT_LEGACY_DITHERING_EXTENSION_NAME = "VK_EXT_legacy_dithering"

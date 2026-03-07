@@ -123,7 +123,7 @@
 --     -   'STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT'
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 -- is supported:
 --
 -- -   Extending 'DebugReportObjectTypeEXT':
@@ -137,7 +137,7 @@
 -- @VK_EXT_debug_report@ allows an application to register multiple
 -- callbacks with the validation layers. Some callbacks may log the
 -- information to a file, others may cause a debug break point or other
--- application defined behavior. An application /can/ register callbacks
+-- application-defined behavior. An application /can/ register callbacks
 -- even when no validation layers are enabled, but they will only be called
 -- for loader and, if implemented, driver events.
 --
@@ -192,16 +192,12 @@
 -- >     vkDestroyDebugReportCallbackEXT(instance, cb2);
 -- >     vkDestroyDebugReportCallbackEXT(instance, cb3);
 --
--- Note
---
 -- In the initial release of the @VK_EXT_debug_report@ extension, the token
 -- 'STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT' was used. Starting in
 -- version 2 of the extension branch,
 -- 'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT'
 -- is used instead for consistency with Vulkan naming rules. The older enum
 -- is still available for backwards compatibility.
---
--- Note
 --
 -- In the initial release of the @VK_EXT_debug_report@ extension, the token
 -- 'DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT' was used. Starting in
@@ -263,8 +259,8 @@
 -- > reinterpret_cast<uint64_t &>(dispatchableHandle)
 -- > (uint64_t)(nondispatchableHandle)
 --
--- + This does require that the app treat dispatchable and nondispatchable
--- handles differently.
+-- + This does require that the application treat dispatchable and
+-- nondispatchable handles differently.
 --
 -- == Version History
 --
@@ -321,11 +317,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkDebugReportCallbackEXT', 'DebugReportCallbackCreateInfoEXT',
--- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
--- 'DebugReportFlagBitsEXT', 'DebugReportFlagsEXT',
--- 'DebugReportObjectTypeEXT', 'createDebugReportCallbackEXT',
--- 'debugReportMessageEXT', 'destroyDebugReportCallbackEXT'
+-- No cross-references are available
 --
 -- == Document Notes
 --

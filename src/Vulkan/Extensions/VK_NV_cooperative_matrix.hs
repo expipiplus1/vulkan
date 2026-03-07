@@ -22,6 +22,8 @@
 --
 -- [__Extension and Version Dependencies__]
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
 -- [__SPIR-V Dependencies__]
 --
@@ -40,7 +42,7 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_cooperative_matrix.txt GL_NV_cooperative_matrix>
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_cooperative_matrix.txt GL_NV_cooperative_matrix>
 --
 -- [__Contributors__]
 --
@@ -61,7 +63,7 @@
 -- Cooperative matrix types are defined by the
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_cooperative_matrix.html SPV_NV_cooperative_matrix>
 -- SPIR-V extension and can be used with the
--- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_cooperative_matrix.txt GL_NV_cooperative_matrix>
+-- <https://github.com/KhronosGroup/GLSL/blob/main/extensions/nv/GLSL_NV_cooperative_matrix.txt GL_NV_cooperative_matrix>
 -- GLSL extension.
 --
 -- This extension includes support for enumerating the matrix types and
@@ -171,10 +173,7 @@
 --
 -- == See Also
 --
--- 'ComponentTypeNV', 'CooperativeMatrixPropertiesNV',
--- 'PhysicalDeviceCooperativeMatrixFeaturesNV',
--- 'PhysicalDeviceCooperativeMatrixPropertiesNV', 'ScopeNV',
--- 'getPhysicalDeviceCooperativeMatrixPropertiesNV'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -300,8 +299,8 @@ foreign import ccall
 --
 -- If @pProperties@ is @NULL@, then the number of cooperative matrix
 -- properties available is returned in @pPropertyCount@. Otherwise,
--- @pPropertyCount@ /must/ point to a variable set by the user to the
--- number of elements in the @pProperties@ array, and on return the
+-- @pPropertyCount@ /must/ point to a variable set by the application to
+-- the number of elements in the @pProperties@ array, and on return the
 -- variable is overwritten with the number of structures actually written
 -- to @pProperties@. If @pPropertyCount@ is less than the number of
 -- cooperative matrix properties available, at most @pPropertyCount@
@@ -460,10 +459,10 @@ pattern COMPONENT_TYPE_UINT64_NV = COMPONENT_TYPE_UINT64_KHR
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
-  { -- | #features-cooperativeMatrix-NV# @cooperativeMatrix@ indicates that the
+  { -- | #features-cooperativeMatrixNV# @cooperativeMatrix@ indicates that the
     -- implementation supports the @CooperativeMatrixNV@ SPIR-V capability.
     cooperativeMatrix :: Bool
-  , -- | #features-cooperativeMatrixRobustBufferAccess-NV#
+  , -- | #features-cooperativeMatrixRobustBufferAccessNV#
     -- @cooperativeMatrixRobustBufferAccess@ indicates that the implementation
     -- supports robust buffer access for SPIR-V @OpCooperativeMatrixLoadNV@ and
     -- @OpCooperativeMatrixStoreNV@ instructions.

@@ -2,6 +2,8 @@
 -- No documentation found for Chapter "Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2"
 module Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2  ( BindBufferMemoryDeviceGroupInfo(..)
                                                                               , BindImageMemoryDeviceGroupInfo(..)
+                                                                              , BindBufferMemoryDeviceGroupInfoKHR
+                                                                              , BindImageMemoryDeviceGroupInfoKHR
                                                                               , StructureType(..)
                                                                               , ImageCreateFlagBits(..)
                                                                               , ImageCreateFlags
@@ -288,4 +290,12 @@ instance Zero BindImageMemoryDeviceGroupInfo where
   zero = BindImageMemoryDeviceGroupInfo
            mempty
            mempty
+
+
+-- No documentation found for TopLevel "VkBindBufferMemoryDeviceGroupInfoKHR"
+type BindBufferMemoryDeviceGroupInfoKHR = BindBufferMemoryDeviceGroupInfo
+
+
+-- No documentation found for TopLevel "VkBindImageMemoryDeviceGroupInfoKHR"
+type BindImageMemoryDeviceGroupInfoKHR = BindImageMemoryDeviceGroupInfo
 

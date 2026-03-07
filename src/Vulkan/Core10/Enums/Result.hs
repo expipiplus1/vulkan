@@ -19,6 +19,8 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , ERROR_FORMAT_NOT_SUPPORTED
                                           , ERROR_FRAGMENTED_POOL
                                           , ERROR_UNKNOWN
+                                          , ERROR_NOT_ENOUGH_SPACE_KHR
+                                          , PIPELINE_BINARY_MISSING_KHR
                                           , INCOMPATIBLE_SHADER_BINARY_EXT
                                           , ERROR_COMPRESSION_EXHAUSTED_EXT
                                           , OPERATION_NOT_DEFERRED_KHR
@@ -70,8 +72,6 @@ import GHC.Show (Show(showsPrec))
 -- Vulkan objects. Objects that have already been successfully created
 -- /can/ still be used by the application.
 --
--- Note
---
 -- As a general rule, @Free@, @Release@, and @Reset@ commands do not return
 -- 'ERROR_OUT_OF_HOST_MEMORY', while any other command with a return code
 -- /may/ return it. Any exceptions from this rule are described for those
@@ -81,8 +81,6 @@ import GHC.Show (Show(showsPrec))
 -- error occurs that cannot be attributed to valid behavior of the
 -- application and implementation. Under these conditions, it /may/ be
 -- returned from any command returning a 'Result'.
---
--- Note
 --
 -- 'ERROR_UNKNOWN' is not expected to ever be returned if the application
 -- behavior is valid, and if the implementation is bug-free. If
@@ -180,10 +178,17 @@ pattern ERROR_FRAGMENTED_POOL = Result (-12)
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN = Result (-13)
 
+-- | 'ERROR_NOT_ENOUGH_SPACE_KHR' The application did not provide enough
+-- space to return all the required data.
+pattern ERROR_NOT_ENOUGH_SPACE_KHR = Result (-1000483000)
+
+-- | 'PIPELINE_BINARY_MISSING_KHR' The application attempted to create a
+-- pipeline binary by querying an internal cache, but the internal cache
+-- entry did not exist.
+pattern PIPELINE_BINARY_MISSING_KHR = Result 1000483000
+
 -- | 'INCOMPATIBLE_SHADER_BINARY_EXT' The provided binary shader code is not
 -- compatible with this device.
---
--- Note
 --
 -- In the initial version of the @VK_EXT_shader_object@ extension, this
 -- return code was named
@@ -222,7 +227,10 @@ pattern THREAD_IDLE_KHR = Result 1000268000
 -- control.
 pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = Result (-1000255000)
 
--- No documentation found for Nested "VkResult" "VK_ERROR_NOT_PERMITTED_KHR"
+-- | 'ERROR_NOT_PERMITTED_KHR' The driver implementation has denied a request
+-- to acquire a priority above the default priority
+-- ('Vulkan.Extensions.VK_KHR_global_priority.QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT')
+-- because the application does not have sufficient privileges.
 pattern ERROR_NOT_PERMITTED_KHR = Result (-1000174001)
 
 -- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"
@@ -316,6 +324,8 @@ pattern ERROR_OUT_OF_POOL_MEMORY = Result (-1000069000)
   , ERROR_FORMAT_NOT_SUPPORTED
   , ERROR_FRAGMENTED_POOL
   , ERROR_UNKNOWN
+  , ERROR_NOT_ENOUGH_SPACE_KHR
+  , PIPELINE_BINARY_MISSING_KHR
   , INCOMPATIBLE_SHADER_BINARY_EXT
   , ERROR_COMPRESSION_EXHAUSTED_EXT
   , OPERATION_NOT_DEFERRED_KHR
@@ -370,6 +380,8 @@ showTableResult =
   , (ERROR_FORMAT_NOT_SUPPORTED, "ERROR_FORMAT_NOT_SUPPORTED")
   , (ERROR_FRAGMENTED_POOL, "ERROR_FRAGMENTED_POOL")
   , (ERROR_UNKNOWN, "ERROR_UNKNOWN")
+  , (ERROR_NOT_ENOUGH_SPACE_KHR, "ERROR_NOT_ENOUGH_SPACE_KHR")
+  , (PIPELINE_BINARY_MISSING_KHR, "PIPELINE_BINARY_MISSING_KHR")
   ,
     ( INCOMPATIBLE_SHADER_BINARY_EXT
     , "INCOMPATIBLE_SHADER_BINARY_EXT"

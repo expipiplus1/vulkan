@@ -15,7 +15,7 @@
 --     31
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-04-03
+--     2024-11-04
 --
 -- [__Contributors__]
 --
@@ -40,6 +40,8 @@
 --     -   Jeff Bolz, NVIDIA
 --
 --     -   Daniel Koch, NVIDIA
+--
+--     -   Liam Middlebrook, NVIDIA
 --
 -- == Description
 --
@@ -50,6 +52,8 @@
 -- == New Commands
 --
 -- -   'getImageViewAddressNVX'
+--
+-- -   'getImageViewHandle64NVX'
 --
 -- -   'getImageViewHandleNVX'
 --
@@ -73,6 +77,10 @@
 --
 -- == Version History
 --
+-- -   Revision 3, 2024-11-04 (Liam Middlebrook)
+--
+--     -   Add 'getImageViewHandle64NVX'
+--
 -- -   Revision 2, 2020-04-03 (Piers Daniell)
 --
 --     -   Add 'getImageViewAddressNVX'
@@ -83,8 +91,7 @@
 --
 -- == See Also
 --
--- 'ImageViewAddressPropertiesNVX', 'ImageViewHandleInfoNVX',
--- 'getImageViewAddressNVX', 'getImageViewHandleNVX'
+-- No cross-references are available
 --
 -- == Document Notes
 --

@@ -111,9 +111,7 @@
 --
 -- == See Also
 --
--- 'ExportFenceWin32HandleInfoKHR', 'FenceGetWin32HandleInfoKHR',
--- 'ImportFenceWin32HandleInfoKHR', 'getFenceWin32HandleKHR',
--- 'importFenceWin32HandleKHR'
+-- No cross-references are available
 --
 -- == Document Notes
 --
@@ -486,9 +484,9 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 -- is included in the @pNext@ chain of
 -- 'Vulkan.Core10.Fence.FenceCreateInfo' with a Windows @handleType@, but
 -- either 'ExportFenceWin32HandleInfoKHR' is not included in the @pNext@
--- chain, or it is included but @pAttributes@ is set to @NULL@, default
--- security descriptor values will be used, and child processes created by
--- the application will not inherit the handle, as described in the MSDN
+-- chain, or it is included but @pAttributes@ is @NULL@, default security
+-- descriptor values will be used, and child processes created by the
+-- application will not inherit the handle, as described in the MSDN
 -- documentation for “Synchronization Object Security and Access Rights”1.
 -- Further, if the structure is not present, the access rights will be
 --
