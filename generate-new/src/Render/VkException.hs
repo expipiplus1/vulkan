@@ -37,9 +37,9 @@ vkExceptionRenderElement getDocumentation vkResultEnum =
     vkResultTyDoc <- renderType =<< cToHsType DoNotPreserve successCodeType
     tellImportWithAll (mkTyName (eName vkResultEnum))
     tellExport (EData exceptionTypeName)
-    let resultPatterns = evName <$> eValues vkResultEnum
+    let resultValues = (\ev -> (evName ev, evComment ev)) <$> eValues vkResultEnum
     cases <- V.mapMaybe id
-      <$> forV resultPatterns (displayExceptionCase getDocumentation)
+      <$> forV resultValues (uncurry (displayExceptionCase getDocumentation))
     tellDoc [qci|
         -- | This exception is thrown from calls to marshalled Vulkan commands
         -- which return a negative VkResult.
@@ -60,13 +60,16 @@ displayExceptionCase
   :: HasRenderParams r
   => (Documentee -> Maybe Documentation)
   -> CName
+  -> Maybe Text
   -> Sem r (Maybe (Doc ()))
-displayExceptionCase getDocumentation pat = do
+displayExceptionCase getDocumentation pat comment = do
   RenderParams {..} <- input
-  let pat' = mkPatternName pat
+  let pat'        = mkPatternName pat
+      fromDoc     = documentationToString =<< getDocumentation (Nested "VkResult" pat)
+      fromComment = viaShow <$> comment
   pure $ fmap
     ((pretty pat' <+> "->") <+>)
-    (documentationToString =<< getDocumentation (Nested "VkResult" pat))
+    (fromDoc <|> fromComment)
 
 -- | Get a string expression from some documentation
 documentationToString :: Documentation -> Maybe (Doc ())
