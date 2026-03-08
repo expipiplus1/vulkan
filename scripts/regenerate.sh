@@ -4,7 +4,7 @@ set -x
 set -e
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-NIX_DOC_DEPS=(python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp)
+NIX_DOC_DEPS=(python3 python3Packages.pyparsing asciidoctor gnumake nodejs)
 GENERATE=""
 
 usage() {
