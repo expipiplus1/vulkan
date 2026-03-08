@@ -9,6 +9,7 @@ import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import qualified Data.Vector.Algorithms.Intro  as V
 import           Language.C.Analysis.AstAnalysis
+import           Language.C.Analysis.Builtins    ( builtins )
 import           Language.C.Analysis.ConstEval
 import           Language.C.Analysis.SemRep
 import           Language.C.Analysis.TravMonad
@@ -582,7 +583,7 @@ fileDecls iw incs f = do
   transUnit <- fromEitherShow $ parseC (toStrict preprocessed) (initPos f)
   (GlobalDecls objs tags typedefs, state) <- runTrav' iw
                                                       (initTravState ())
-                                                      (analyseAST transUnit)
+                                                      (withDefTable (const ((), builtins)) >> analyseAST transUnit)
   let isLocalIdent (Ident _ _ i) =
         isSourcePos (posOfNode i) && f == posFile (posOfNode i)
   pure
