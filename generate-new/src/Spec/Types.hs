@@ -256,6 +256,7 @@ data EnumValue = EnumValue
   { evName        :: CName
   , evValue       :: Int64
   , evIsExtension :: Bool
+  , evComment     :: Maybe Text
   }
   deriving (Show, Eq, Ord)
 

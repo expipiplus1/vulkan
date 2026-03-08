@@ -234,6 +234,7 @@ unitEnums state ds = do
         fmap fromList . forV es $ \(Enumerator (Ident n _ _) expr _ _) -> do
           let evName        = CName (T.pack n)
               evIsExtension = False
+              evComment     = Nothing
           expr' <- runTrav_' DoNotIgnoreWarnings
                              state
                              (constEval x86_64 mempty expr)

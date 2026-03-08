@@ -13,7 +13,7 @@ import           Data.Char
 import           Data.List                      ( dropWhileEnd
                                                 , lookup
                                                 )
-import           Data.List.Extra                ( nubOrd )
+import           Data.List.Extra                ( nubOrd, nubOrdOn )
 import qualified Data.Map                      as Map
 import qualified Data.Set                      as S
 import qualified Data.Text                     as T
@@ -1003,6 +1003,7 @@ parseEnums types es = do
       evValue <- case getAttr "value" v of
         Just b  -> readP b
         Nothing -> (0x1 `shiftL`) <$> readAttr "bitpos" v
+      evComment <- traverse decode (getAttr "comment" v)
       pure EnumValue { .. }
 
 parseEnumExtensions
@@ -1045,6 +1046,7 @@ parseEnumExtensions rs =
                 Nothing -> throw "couldn't find extension number"
             pure $ enumExtensionValue extNum offset sign
       let evIsExtension = True
+      evComment <- traverse decode (getAttr "comment" ee)
       pure EnumValue { .. }
 
   enumExtensionValue
@@ -1076,7 +1078,7 @@ appendEnumExtensions extensions =
     extensionMap =
       Map.fromListWith (<>) (toList (fmap V.singleton <$> extensions))
     getExtensions n = Map.findWithDefault V.empty n extensionMap
-    vNubOrd = V.fromList . nubOrd . V.toList
+    vNubOrd = V.fromList . nubOrdOn evName . V.toList
   in
     fmap
       (\e@Enum {..} -> e { eValues = vNubOrd $ eValues <> getExtensions eName })
@@ -1314,13 +1316,13 @@ extraEnums = case sSpecFlavor @t of
   SSpecVk -> V.singleton Enum
     { eName   = "VkBool32"
     , eValues = V.fromList
-                  [EnumValue "VK_FALSE" 0 False, EnumValue "VK_TRUE" 1 False]
+                  [EnumValue "VK_FALSE" 0 False Nothing, EnumValue "VK_TRUE" 1 False Nothing]
     , eType   = AnEnum
     }
   SSpecXr -> V.singleton Enum
     { eName   = "XrBool32"
     , eValues = V.fromList
-                  [EnumValue "XR_FALSE" 0 False, EnumValue "XR_TRUE" 1 False]
+                  [EnumValue "XR_FALSE" 0 False Nothing, EnumValue "XR_TRUE" 1 False Nothing]
     , eType   = AnEnum
     }
 
