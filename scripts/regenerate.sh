@@ -4,7 +4,7 @@ set -x
 set -e
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-NIX_DOC_DEPS="python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp"
+NIX_DOC_DEPS=(python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp)
 GENERATE=""
 
 usage() {
@@ -54,7 +54,7 @@ vk_docs() {
 
   echo "Generating Vulkan-Docs documentation"
   (cd "$REPO_ROOT/generate-new/Vulkan-Docs" &&
-    nix-shell -p $NIX_DOC_DEPS \
+    nix-shell -p "${NIX_DOC_DEPS[@]}" \
       --run "./makeAllExts refpages generated")
 }
 
@@ -103,7 +103,7 @@ vma_docs() {
 
   echo "Generating Vulkan-Docs headers"
   (cd "$REPO_ROOT/generate-new/Vulkan-Docs/xml" &&
-    nix-shell -p $NIX_DOC_DEPS \
+    nix-shell -p "${NIX_DOC_DEPS[@]}" \
       --run "make clean install codec_headers")
 }
 
@@ -141,7 +141,7 @@ xr_docs() {
 
   echo "Generating OpenXR-Docs documentation"
   (cd "$REPO_ROOT/generate-new/OpenXR-Docs/specification" &&
-    nix-shell -p $NIX_DOC_DEPS \
+    nix-shell -p "${NIX_DOC_DEPS[@]}" \
       --run "./makeAllExts man/apispec.txt generated")
 }
 
