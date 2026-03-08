@@ -8,11 +8,12 @@ import           Data.List.Extra                ( groupOn
                                                 , nubOrd
                                                 , nubOrdOn
                                                 )
+import qualified Data.ByteString               as BS
 import qualified Data.Map                      as Map
 import qualified Data.Set                      as Set
 import           Data.Set                       ( unions )
 import           Data.Text                     as T
-import           Data.Text.IO                  as T
+import           Data.Text.Encoding            as T
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( Vector )
 import           Foreign.Ptr
@@ -456,11 +457,11 @@ nubOrdOnV p = fromList . nubOrdOn p . toList
 writeIfChanged :: MonadIO m => FilePath -> Text -> m ()
 writeIfChanged f t' = liftIO $ do
   t <- readFileMaybe f
-  when (t /= Just t') $ T.writeFile f t'
+  when (t /= Just t') $ BS.writeFile f $ T.encodeUtf8 t'
 
 readFileMaybe :: FilePath -> IO (Maybe Text)
 readFileMaybe f =
-  (Just <$> T.readFile f) `catch` (\(_ :: IOException) -> pure Nothing)
+  (Just . T.decodeUtf8 <$> BS.readFile f) `catch` (\(_ :: IOException) -> pure Nothing)
 
 -- If we don't put PatternSynonyms here the fourmolu eatst he comments on them
 ormoluConfig :: Ormolu.Config Ormolu.RegionIndices
