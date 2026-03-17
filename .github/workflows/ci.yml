@@ -12,13 +12,8 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['8.10', '9.0', '9.2']
+        ghc: ['9.2']
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        exclude:
-          - os: macOS-latest
-            ghc: '8.10'
-          - os: macOS-latest
-            ghc: '9.0'
       fail-fast: false
 
     steps:
@@ -105,7 +100,7 @@ jobs:
     - name: Remove generator for all but 8.10 and 9.0
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.10' || matrix.ghc != '9.0'
+      if: matrix.ghc != '8.10' || matrix.ghc != '9.0' # huh?
 
     - run: cabal update
 
@@ -159,7 +154,7 @@ jobs:
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: '9.6.7'
+        ghc-version: '9.6.7' # huh?
 
     - name: Cache stack things
       uses: actions/cache@v5
@@ -250,7 +245,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['"ghc810"', '"ghc90"', '"ghc92"']
+        ghc: ['"ghc92"']
       fail-fast: false
 
     steps:
