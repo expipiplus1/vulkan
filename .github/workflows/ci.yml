@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['9.2']
+        ghc: ['9.2', '9.6', '9.14']
         os: [ubuntu-latest, macOS-latest, windows-latest]
       fail-fast: false
 
@@ -245,7 +245,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['"ghc92"']
+        ghc: ['"ghc92"'] # TODO: nixpkgs need bumping to get more than ghc94
       fail-fast: false
 
     steps:
