@@ -3,7 +3,7 @@
 Slightly high level Haskell bindings to the Vulkan graphics API.
 
 Join us on Matrix at
-[#vulkan:monoid.al](https://matrix.to/#/#vulkan:monoid.al?via=monoid.al&via=matrix.org&via=nordgedanken.dev)
+[#haskell-vulkan:matrix.org](https://matrix.to/#/#haskell-vulkan:matrix.org)
 
 These bindings present an interface to Vulkan which looks like more idiomatic
 Haskell and which is much less verbose than the C API. Nevertheless, it retains
