@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.36.1.
+-- This file has been generated from package.yaml by hpack version 0.39.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -757,42 +757,29 @@ library
       DataKinds
       DefaultSignatures
       DeriveAnyClass
-      DeriveGeneric
       DerivingStrategies
       DuplicateRecordFields
-      FlexibleContexts
-      FlexibleInstances
       GADTs
-      GeneralizedNewtypeDeriving
-      InstanceSigs
       LambdaCase
       MagicHash
-      NamedFieldPuns
       NoMonomorphismRestriction
       OverloadedStrings
       PartialTypeSignatures
       PatternSynonyms
-      PolyKinds
       QuantifiedConstraints
-      RankNTypes
       RecordWildCards
       RoleAnnotations
-      ScopedTypeVariables
-      StandaloneDeriving
       Strict
-      TypeApplications
       TypeFamilyDependencies
-      TypeOperators
-      TypeSynonymInstances
       UndecidableInstances
       ViewPatterns
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   build-depends:
-      base <5
+      base >=4.16 && <5
     , bytestring
     , transformers
     , vector
-  default-language: Haskell2010
+  default-language: GHC2021
   if os(windows)
     extra-libraries:
         vulkan-1
@@ -826,33 +813,20 @@ test-suite test
       DataKinds
       DefaultSignatures
       DeriveAnyClass
-      DeriveGeneric
       DerivingStrategies
       DuplicateRecordFields
-      FlexibleContexts
-      FlexibleInstances
       GADTs
-      GeneralizedNewtypeDeriving
-      InstanceSigs
       LambdaCase
       MagicHash
-      NamedFieldPuns
       NoMonomorphismRestriction
       OverloadedStrings
       PartialTypeSignatures
       PatternSynonyms
-      PolyKinds
       QuantifiedConstraints
-      RankNTypes
       RecordWildCards
       RoleAnnotations
-      ScopedTypeVariables
-      StandaloneDeriving
       Strict
-      TypeApplications
       TypeFamilyDependencies
-      TypeOperators
-      TypeSynonymInstances
       UndecidableInstances
       ViewPatterns
   build-tool-depends:
@@ -865,4 +839,4 @@ test-suite test
     , tasty-hunit
     , template-haskell
     , vulkan
-  default-language: Haskell2010
+  default-language: GHC2021

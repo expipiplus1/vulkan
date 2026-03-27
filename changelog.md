@@ -1,6 +1,6 @@
 # Change Log
 
-## WIP
+## [3.27] - 2026-03-17
 
 Bump API version to v1.4.343 — first Vulkan 1.4 release, covering spec versions
 1.4.303 through 1.4.343.
@@ -26,7 +26,7 @@ New `Vulkan.Core14` module. The following 15 extensions are promoted to core:
 - `VK_KHR_vertex_attribute_divisor`
 
 Types like `BindDescriptorSetsInfoKHR` now have unprefixed core aliases
-(`BindDescriptorSetsInfo`). Old extension modules still exist and re-export.
+(`BindDescriptorSetsInfo`).
 
 ### Breaking Changes
 

@@ -35,7 +35,6 @@ type family Extends (p :: [Type] -> Type) (x :: Type) :: Constraint where ..
 type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
   Extendss p '[]      = ()
   Extendss p (x : xs) = (Extends p x, Extendss p xs)
-type family Chain (xs :: [a]) = (r :: a) | r -> xs where
+type family Chain (xs :: [Type]) = (r :: Type) | r -> xs where
   Chain '[]    = ()
   Chain (x:xs) = (x, Chain xs)
-
