@@ -1,5 +1,17 @@
-{-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE
+    DataKinds
+  , DefaultSignatures
+  , DuplicateRecordFields
+  , FlexibleContexts
+  , QuasiQuotes
+  , GADTs
+  , LambdaCase
+  , NamedFieldPuns
+  , NoMonomorphismRestriction
+  , OverloadedStrings
+  , OverloadedLists
+  , RecordWildCards
+  #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Main where
