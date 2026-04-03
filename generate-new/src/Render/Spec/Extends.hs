@@ -190,7 +190,7 @@ classes Spec {..} = do
       type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
         Extendss p '[]      = ()
         Extendss p (x : xs) = (Extends p x, Extendss p xs)
-      type family Chain (xs :: [a]) = (r :: a) | r -> xs where
+      type family Chain (xs :: [Type]) = (r :: Type) | r -> xs where
         Chain '[]    = ()
         Chain (x:xs) = (x, Chain xs)
     |]
@@ -328,7 +328,7 @@ classes Spec {..} = do
       setNext :: a ds -> Chain es -> a es
       extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b
 
-    type family Chain (xs :: [a]) = (r :: a) | r -> xs where
+    type family Chain (xs :: [Type]) = (r :: Type) | r -> xs where
       Chain '[]    = ()
       Chain (x:xs) = (x, Chain xs)
 

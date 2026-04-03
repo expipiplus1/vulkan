@@ -18,7 +18,7 @@ library:
   verbatim:
     other-modules:
   dependencies:
-  - base <5
+  - base >= 4.16 && <5
   - bytestring
   - transformers
   - vector
@@ -90,38 +90,26 @@ tests:
     - condition: false
       other-modules: Paths_vulkan
 
+language: GHC2021
 default-extensions:
 - AllowAmbiguousTypes
 - CPP
 - DataKinds
 - DefaultSignatures
 - DeriveAnyClass
-- DeriveGeneric
 - DerivingStrategies
 - DuplicateRecordFields
-- FlexibleContexts
-- FlexibleInstances
 - GADTs
-- GeneralizedNewtypeDeriving
-- InstanceSigs
 - LambdaCase
 - MagicHash
-- NamedFieldPuns
 - NoMonomorphismRestriction
 - OverloadedStrings
 - PartialTypeSignatures
 - PatternSynonyms
-- PolyKinds
 - QuantifiedConstraints
-- RankNTypes
 - RecordWildCards
 - RoleAnnotations
-- ScopedTypeVariables
-- StandaloneDeriving
 - Strict
-- TypeApplications
 - TypeFamilyDependencies
-- TypeOperators
-- TypeSynonymInstances
 - UndecidableInstances
 - ViewPatterns

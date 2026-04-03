@@ -3128,7 +3128,7 @@ class Extensible (a :: [Type] -> Type) where
   setNext :: a ds -> Chain es -> a es
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b
 
-type family Chain (xs :: [a]) = (r :: a) | r -> xs where
+type family Chain (xs :: [Type]) = (r :: Type) | r -> xs where
   Chain '[]    = ()
   Chain (x:xs) = (x, Chain xs)
 
