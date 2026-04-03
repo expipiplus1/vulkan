@@ -11,12 +11,27 @@ license: BSD-3-Clause
 
 library:
   source-dirs: lib
+  exposed-modules:
+  - AutoApply
+  - Camera
+  - Framebuffer
+  - HasVulkan
+  - InstrumentDecs
+  - Orphans
+  - RefCounted
+  - Swapchain
+  - Utils
+  - Window
   verbatim:
     ghc-options: -Wall
   dependencies:
   - VulkanMemoryAllocator
-  - autoapply
   - base <5
+  - logict
+  - mtl
+  - template-haskell
+  - th-desugar < 2
+  - unification-fd
   - bytestring
   - derive-storable >= 0.3
   - derive-storable-plugin >= 0.2.3.3
@@ -25,7 +40,7 @@ library:
   - nothunks >= 0.1.2
   - opentelemetry
   - resourcet >= 1.2.4
-  - sdl2 >= 2.5.2.0
+  - sdl2 >= 2.5.0
   - template-haskell
   - text
   - transformers
@@ -52,7 +67,7 @@ executables:
     - extra
     - resourcet
     - say
-    - sdl2 >= 2.5.2.0
+    - sdl2
     - text
     - transformers
     - vector
@@ -66,7 +81,7 @@ executables:
     dependencies:
     - JuicyPixels
     - VulkanMemoryAllocator
-    - autoapply >= 0.4
+    - vulkan-examples
     - base <5
     - bytestring
     - resourcet
@@ -91,7 +106,7 @@ executables:
     dependencies:
     - JuicyPixels
     - VulkanMemoryAllocator
-    - autoapply >= 0.4
+    - vulkan-examples
     - base <5
     - bytestring
     - resourcet
@@ -108,7 +123,7 @@ executables:
     source-dirs: resize
     dependencies:
     - VulkanMemoryAllocator
-    - autoapply >= 0.4
+    - vulkan-examples
     - base <5
     - bytestring
     - extra
@@ -116,7 +131,7 @@ executables:
     - linear
     - resourcet >= 1.2.4
     - say
-    - sdl2 >= 2.5.2.0
+    - sdl2
     - text
     - transformers
     - unliftio
@@ -129,6 +144,7 @@ executables:
     main: Main.hs
     source-dirs: timeline-semaphore
     dependencies:
+    - vulkan-examples
     - base <5
     - resourcet
     - say
@@ -143,14 +159,14 @@ executables:
     source-dirs: hlsl
     dependencies:
     - VulkanMemoryAllocator
-    - autoapply >= 0.4
+    - vulkan-examples
     - base <5
     - bytestring
     - containers
     - opentelemetry
     - resourcet >= 1.2.4
     - say
-    - sdl2 >= 2.5.2.0
+    - sdl2
     - template-haskell
     - text
     - transformers
@@ -170,7 +186,7 @@ executables:
     source-dirs: rays
     dependencies:
     - VulkanMemoryAllocator
-    - autoapply >= 0.4
+    - vulkan-examples
     - base <5
     - bytestring
     - colour
@@ -184,7 +200,7 @@ executables:
     - random
     - resourcet >= 1.2.4
     - say
-    - sdl2 >= 2.5.2.0
+    - sdl2
     - template-haskell
     - text
     - transformers
@@ -205,7 +221,7 @@ executables:
     dependencies:
     - VulkanMemoryAllocator
     - openxr
-    - autoapply >= 0.4
+    - vulkan-examples
     - base <5
     - bytestring
     - colour
@@ -219,7 +235,7 @@ executables:
     - random
     - resourcet >= 1.2.4
     - say
-    - sdl2 >= 2.5.2.0
+    - sdl2
     - template-haskell
     - text
     - transformers
