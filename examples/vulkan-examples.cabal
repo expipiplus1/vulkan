@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.39.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -43,6 +43,7 @@ flag vr
 
 library
   exposed-modules:
+      AutoApply
       Camera
       Framebuffer
       HasVulkan
@@ -95,20 +96,23 @@ library
   ghc-options: -Wall
   build-depends:
       VulkanMemoryAllocator
-    , autoapply
     , base <5
     , bytestring
     , derive-storable >=0.3
     , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
+    , logict
+    , mtl
     , nothunks >=0.1.2
     , opentelemetry
     , resourcet >=1.2.4
-    , sdl2 >=2.5.2.0
+    , sdl2 >=2.5.0
     , template-haskell
     , text
+    , th-desugar <2
     , transformers
+    , unification-fd
     , unliftio
     , vector
     , vulkan
@@ -163,7 +167,6 @@ executable compute
   build-depends:
       JuicyPixels
     , VulkanMemoryAllocator
-    , autoapply >=0.4
     , base <5
     , bytestring
     , resourcet
@@ -173,6 +176,7 @@ executable compute
     , transformers
     , vector
     , vulkan
+    , vulkan-examples
     , vulkan-utils
   default-language: Haskell2010
   if os(windows)
@@ -230,14 +234,13 @@ executable hlsl
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
   build-depends:
       VulkanMemoryAllocator
-    , autoapply >=0.4
     , base <5
     , bytestring
     , containers
     , opentelemetry
     , resourcet >=1.2.4
     , say
-    , sdl2 >=2.5.2.0
+    , sdl2
     , template-haskell
     , text
     , transformers
@@ -350,7 +353,6 @@ executable offscreen
   build-depends:
       JuicyPixels
     , VulkanMemoryAllocator
-    , autoapply >=0.4
     , base <5
     , bytestring
     , resourcet
@@ -360,6 +362,7 @@ executable offscreen
     , transformers
     , vector
     , vulkan
+    , vulkan-examples
     , vulkan-utils
   default-language: Haskell2010
   if os(windows)
@@ -426,7 +429,6 @@ executable rays
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
   build-depends:
       VulkanMemoryAllocator
-    , autoapply >=0.4
     , base <5
     , bytestring
     , colour
@@ -440,7 +442,7 @@ executable rays
     , random
     , resourcet >=1.2.4
     , say
-    , sdl2 >=2.5.2.0
+    , sdl2
     , template-haskell
     , text
     , transformers
@@ -508,7 +510,6 @@ executable resize
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       VulkanMemoryAllocator
-    , autoapply >=0.4
     , base <5
     , bytestring
     , extra
@@ -516,7 +517,7 @@ executable resize
     , linear
     , resourcet >=1.2.4
     , say
-    , sdl2 >=2.5.2.0
+    , sdl2
     , text
     , transformers
     , unliftio
@@ -577,7 +578,7 @@ executable sdl-triangle
     , extra
     , resourcet
     , say
-    , sdl2 >=2.5.2.0
+    , sdl2
     , text
     , transformers
     , vector
@@ -639,6 +640,7 @@ executable timeline-semaphore
     , unliftio
     , vector
     , vulkan
+    , vulkan-examples
     , vulkan-utils >=0.3
   default-language: Haskell2010
   if os(windows)
@@ -689,7 +691,6 @@ executable vrcube
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
   build-depends:
       VulkanMemoryAllocator
-    , autoapply >=0.4
     , base <5
     , bytestring
     , colour
@@ -704,7 +705,7 @@ executable vrcube
     , random
     , resourcet >=1.2.4
     , say
-    , sdl2 >=2.5.2.0
+    , sdl2
     , template-haskell
     , text
     , transformers

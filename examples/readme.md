@@ -19,8 +19,7 @@ It renders a Julia set according the mouse position in the window.
 The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
 used to ensure resources are deallocated.
 
-The [`autoapply` package](https://hackage.haskell.org/package/autoapply) is
-used to write the boilerplate of passing some global handles to vulkan
+An internal `AutoApply` module is used to write the boilerplate of passing some global handles to vulkan
 functions.
 
 ### `hlsl`
@@ -39,8 +38,7 @@ It renders a triangle.
 The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
 used to ensure resources are deallocated.
 
-The [`autoapply` package](https://hackage.haskell.org/package/autoapply) is
-used to write the boilerplate of passing some global handles to vulkan
+An internal `AutoApply` module is used to write the boilerplate of passing some global handles to vulkan
 functions.
 
 ### `rays`
@@ -60,7 +58,7 @@ It is a pretty minimal example of rendering something.
 
 Like the `resize` example,
 [`resourcet`](https://hackage.haskell.org/package/resourcet) and
-[`autoapply`](https://hackage.haskell.org/package/autoapply) are used to make
+an internal `AutoApply` module are used to make
 resource and global management less painful.
 
 ### `compute`
@@ -79,7 +77,7 @@ This program includes examples of:
 
 Like the `resize` example,
 [`resourcet`](https://hackage.haskell.org/package/resourcet) and
-[`autoapply`](https://hackage.haskell.org/package/autoapply) are used to make
+an internal `AutoApply` module are used to make
 resource and global management less painful.
 
 ### `sdl-triangle`

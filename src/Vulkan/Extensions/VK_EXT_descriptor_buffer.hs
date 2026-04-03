@@ -3678,6 +3678,7 @@ peekDescriptorDataEXT tag p = case tag of
     pStorageBuffer <- peek @(Ptr DescriptorAddressInfoEXT) (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p)
     maybePeek (\j -> peekCStruct @DescriptorAddressInfoEXT (j)) pStorageBuffer)
   DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR -> AnAccelerationStructure <$> (peek @DeviceAddress (castPtr @_ @DeviceAddress p))
+  _ -> error "peekDescriptorDataEXT: unhandled DescriptorType"
 
 
 type EXT_DESCRIPTOR_BUFFER_SPEC_VERSION = 1
