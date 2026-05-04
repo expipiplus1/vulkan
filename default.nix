@@ -21,7 +21,7 @@ let
       (pkgs.haskell.lib.dontCheck vulkan)
       (pkgs.haskell.lib.dontCheck VulkanMemoryAllocator)
     ] else
-      [ vulkan vulkan-utils VulkanMemoryAllocator vulkan-examples openxr ]
+      [ vulkan vulkan-utils vulkan-init-sdl2 vulkan-init-glfw VulkanMemoryAllocator vulkan-examples openxr ]
       ++ pkgs.lib.optional (p.ghc.version == generator-ghc-version) generate-new;
 
 in if forShell then

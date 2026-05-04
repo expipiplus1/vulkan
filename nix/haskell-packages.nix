@@ -53,6 +53,18 @@ let
         modifier = drv: addExtraLibrary pkgs.vulkan-headers (mod drv);
         returnShellEnv = false;
       };
+      vulkan-init-sdl2 = self.developPackage {
+        name = "vulkan-init-sdl2";
+        root = gitignore ../utils-init/vulkan-init-sdl2;
+        modifier = mod;
+        returnShellEnv = false;
+      };
+      vulkan-init-glfw = self.developPackage {
+        name = "vulkan-init-glfw";
+        root = gitignore ../utils-init/vulkan-init-glfw;
+        modifier = mod;
+        returnShellEnv = false;
+      };
       VulkanMemoryAllocator = self.developPackage {
         name = "VukanMemoryAllocator";
         root = gitignore ../VulkanMemoryAllocator;
