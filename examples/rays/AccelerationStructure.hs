@@ -231,8 +231,8 @@ oneShotComputeCommands
   -> m ()
 oneShotComputeCommands vr cmds = do
   let dev = vrDevice vr
-      Queues (QueueFamilyIndex graphicsQueueFamilyIndex, graphicsQueue) =
-        vrQueues vr
+      (QueueFamilyIndex graphicsQueueFamilyIndex, graphicsQueue) =
+        qGraphics (vrQueues vr)
   (poolKey, commandPool) <- withCommandPool
     dev
     zero { queueFamilyIndex = graphicsQueueFamilyIndex }

@@ -113,7 +113,7 @@ drawTriangle vr renderPass pipeline framebuffers f = do
   let RecycledResources {..} = fRecycled f
       sc                     = fSwapchain f
       dev                    = vrDevice vr
-      Queues (_, gQ)         = vrQueues vr
+      gQ                     = snd (qGraphics (vrQueues vr))
       oneSecond              = 1e9
 
   (acquireResult, imageIndex) <-

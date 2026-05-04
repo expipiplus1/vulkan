@@ -7,14 +7,12 @@ import           Control.Monad.Trans.Resource
 import qualified Data.Text                     as Text
 import           Data.String                    ( IsString )
 import           Data.Text.Encoding             ( decodeUtf8 )
-import           InitDevice                     ( withGraphicsPresentDevice )
+import           InitDevice                     ( withDevice )
 import           Say
 import qualified Triangle
 import qualified Vma
-import           VkResources                    ( Queues(..)
-                                                , mkVkResources
-                                                )
-import           Vulkan.Core10
+import           VkResources                    ( mkVkResources )
+import           Vulkan.Core10           hiding ( withDevice )
 import           Vulkan.Requirement             ( DeviceRequirement(..) )
 import           Vulkan.Zero                    ( zero )
 import qualified Vulkan.Utils.Init.GLFW        as Init
@@ -33,18 +31,16 @@ main = runResourceT $ do
     (Just zero { applicationName = Just appName, apiVersion = API_VERSION_1_0 })
     frameInstanceRequirements
     []
-  surface              <- Init.withSurface inst window
+  surface     <- Init.withSurface inst window
   let deviceReqs =
         [ RequireDeviceExtension Nothing e minBound
         | e <- Init.getRequiredDeviceExtensions
         ] ++ frameDeviceRequirements
-  (phys, dev, qfi, gQueue) <-
-    withGraphicsPresentDevice inst surface deviceReqs
-  vma                  <- Vma.createVMA zero API_VERSION_1_0 inst phys dev
-  props                <- getPhysicalDeviceProperties phys
+  (phys, dev, qs) <- withDevice inst surface deviceReqs
+  vma   <- Vma.createVMA zero API_VERSION_1_0 inst phys dev
+  props <- getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
 
-  let qs = Queues (qfi, gQueue)
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   initialSize <- Window.drawableSize window

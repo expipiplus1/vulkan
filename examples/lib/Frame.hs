@@ -237,7 +237,7 @@ withTimelineSemaphore dev initial =
 mkRecycledResources :: MonadResource m => VkResources -> m RecycledResources
 mkRecycledResources vr = do
   let dev = vrDevice vr
-      QueueFamilyIndex qfi = fst (graphicsQueue (vrQueues vr))
+      QueueFamilyIndex qfi = fst (qGraphics (vrQueues vr))
   (_, rrImageAvailable) <- withSemaphore
     dev
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())

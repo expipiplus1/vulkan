@@ -28,7 +28,7 @@ import           Init                           ( createVMA
                                                 , deviceRequirements
                                                 , myApiVersion
                                                 )
-import           InitDevice                     ( withGraphicsPresentDevice )
+import           InitDevice                     ( withDevice )
 import           Data.Text.Encoding             ( decodeUtf8 )
 import           Julia                          ( JuliaPipeline(..)
                                                 , createJuliaDescriptorSets
@@ -77,6 +77,7 @@ import           Vulkan.Core10                 as Vk
                                                 , createImageView
                                                 , createInstance
                                                 , withBuffer
+                                                , withDevice
                                                 , withImage
                                                 )
 import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
@@ -111,14 +112,12 @@ main = prettyError . runResourceT $ do
     (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
     frameInstanceRequirements
     []
-  (_, surface) <- createSurface inst sdlWindow
-  (phys, dev, qfi, graphicsQueue) <-
-    withGraphicsPresentDevice inst surface deviceRequirements
+  (_, surface)    <- createSurface inst sdlWindow
+  (phys, dev, qs) <- withDevice inst surface deviceRequirements
   vma   <- createVMA inst phys dev
   props <- getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
 
-  let qs = Queues (qfi, graphicsQueue)
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   -- Initial swapchain at the requested size.
@@ -231,7 +230,7 @@ renderJulia
 renderJulia vr jp bindings f = do
   let RecycledResources {..} = fRecycled f
       sc                     = fSwapchain f
-      Queues (_, gQ)         = vrQueues vr
+      gQ                     = snd (qGraphics (vrQueues vr))
       dev                    = vrDevice vr
       oneSecond              = 1e9
       Extent2D imageWidth imageHeight = sExtent sc

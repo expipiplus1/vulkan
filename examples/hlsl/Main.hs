@@ -5,19 +5,23 @@ module Main where
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.IORef
+import           Data.Text.Encoding             ( decodeUtf8 )
 import           Frame                          ( Frame(..)
                                                 , advanceFrame
+                                                , frameInstanceRequirements
                                                 , initialFrame
                                                 , runFrame
                                                 )
 import qualified Framebuffer
-import           Init                           ( createDevice
-                                                , createInstance
-                                                , createVMA
+import           Init                           ( createVMA
+                                                , deviceRequirements
+                                                , myApiVersion
                                                 )
+import           InitDevice                     ( withDevice )
 import           RefCounted                     ( releaseRefCounted )
 import           Render                         ( renderFrame )
 import qualified RenderPass
+import           Say                            ( sayErr )
 import           SDL                            ( showWindow
                                                 , time
                                                 )
@@ -29,10 +33,13 @@ import           Swapchain                      ( Swapchain(..)
 import           Utils                          ( loopJust )
 import           VkResources                    ( mkVkResources )
 import qualified Pipeline
-import           Vulkan.Core10                  ( pattern NULL_HANDLE )
+import           Vulkan.Core10           hiding ( withDevice )
 import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
                                                 ( SurfaceFormatKHR(..) )
+import qualified Vulkan.Utils.Init.SDL2        as VkInit
+import           Vulkan.Zero                    ( zero )
 import           Window.SDL2                    ( RefreshLimit(..)
+                                                , createSurface
                                                 , createWindow
                                                 , drawableSize
                                                 , shouldQuit
@@ -45,11 +52,18 @@ main = runResourceT $ do
   -- Initialization
   --
   withSDL
-  win <- createWindow "Vulkan 🚀 Haskell" 1280 720
-  inst                  <- Init.createInstance win
-  (phys, dev, qs, surf) <- Init.createDevice inst win
-  vma                   <- createVMA inst phys dev
-  vr                    <- liftIO $ mkVkResources inst phys dev vma qs
+  win  <- createWindow "Vulkan 🚀 Haskell" 1280 720
+  inst <- VkInit.withInstance
+    win
+    (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
+    frameInstanceRequirements
+    []
+  (_, surf)       <- createSurface inst win
+  (phys, dev, qs) <- withDevice inst surf deviceRequirements
+  vma             <- createVMA inst phys dev
+  props           <- getPhysicalDeviceProperties phys
+  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
+  vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   -- Initial swapchain
   initialSize          <- liftIO $ drawableSize win

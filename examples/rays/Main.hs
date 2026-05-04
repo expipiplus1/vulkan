@@ -8,6 +8,7 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Foldable                  ( for_ )
 import           Data.IORef
+import           Data.Text.Encoding             ( decodeUtf8 )
 import           Data.Word                      ( Word64 )
 import           Foreign.Ptr                    ( castPtr )
 import           Foreign.Storable               ( sizeOf )
@@ -17,15 +18,18 @@ import           Frame                          ( Frame(..)
                                                 , numConcurrentFrames
                                                 , runFrame
                                                 )
-import           Init                           ( PhysicalDeviceInfo(..)
-                                                , createDevice
-                                                , createInstance
-                                                , createVMA
+import           Init                           ( createVMA
+                                                , deviceRequirements
+                                                , getDeviceRTProps
+                                                , instanceRequirements
+                                                , myApiVersion
                                                 )
+import           InitDevice                     ( withDevice )
 import qualified Pipeline
 import           Render                         ( RenderState(..)
                                                 , renderFrame
                                                 )
+import           Say                            ( sayErr )
 import qualified SDL
 import           Scene                          ( makeSceneBuffers )
 import           Swapchain                      ( allocSwapchain
@@ -34,15 +38,17 @@ import           Swapchain                      ( allocSwapchain
                                                 )
 import           Utils                          ( loopJust )
 import           VkResources                    ( mkVkResources )
-import           Vulkan.Core10
+import           Vulkan.Core10           hiding ( withDevice )
 import           Vulkan.Zero                    ( zero )
 import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
                                                 ( BufferDeviceAddressInfo(..)
                                                 , getBufferDeviceAddress
                                                 )
+import qualified Vulkan.Utils.Init.SDL2        as VkInit
 import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
 import           Window.SDL2                    ( RefreshLimit(..)
+                                                , createSurface
                                                 , createWindow
                                                 , drawableSize
                                                 , shouldQuit
@@ -52,11 +58,18 @@ import           Window.SDL2                    ( RefreshLimit(..)
 main :: IO ()
 main = runResourceT $ do
   withSDL
-  win                        <- createWindow "Vulkan ⚡ Haskell" 1280 720
-  inst                       <- Init.createInstance win
-  (phys, pdi, dev, qs, surf) <- Init.createDevice inst win
-  vma                        <- createVMA inst phys dev
-  vr                         <- liftIO $ mkVkResources inst phys dev vma qs
+  win  <- createWindow "Vulkan ⚡ Haskell" 1280 720
+  inst <- VkInit.withInstance
+    win
+    (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
+    instanceRequirements
+    []
+  (_, surf)       <- createSurface inst win
+  (phys, dev, qs) <- withDevice inst surf deviceRequirements
+  vma             <- createVMA inst phys dev
+  props           <- getPhysicalDeviceProperties phys
+  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
+  vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   -- Initial swapchain
   initialSize <- liftIO $ drawableSize win
@@ -67,7 +80,7 @@ main = runResourceT $ do
   (_, tlas)    <- createTLAS vr sceneBuffers
 
   -- RT pipeline + descriptor sets
-  let rtInfo = pdiRTInfo pdi
+  rtInfo <- getDeviceRTProps phys
   (_, descSetLayout)         <- Pipeline.createRTDescriptorSetLayout dev
   (_, pipelineLayout)        <- Pipeline.createRTPipelineLayout dev descSetLayout
   (_, pipeline, numGroups)   <- Pipeline.createPipeline dev pipelineLayout
