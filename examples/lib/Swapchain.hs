@@ -2,55 +2,60 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
--- | Swapchain creation, recreation, and the small helper for catching
--- swapchain-out-of-date exceptions thrown elsewhere.
+{-| Swapchain creation, recreation, and the small helper for catching
+swapchain-out-of-date exceptions thrown elsewhere.
+-}
 module Swapchain
-  ( Swapchain(..)
+  ( Swapchain (..)
   , allocSwapchain
   , recreateSwapchain
   , threwSwapchainError
   ) where
 
-import           Control.Monad
-import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Resource
-import           Data.Bits
-import           Data.Either
-import           Data.Foldable                  ( for_
-                                                , traverse_
-                                                )
-import qualified Data.Vector                   as V
-import           Data.Vector                    ( Vector )
+import Control.Monad
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Resource
+import Data.Bits
+import Data.Either
+import Data.Foldable
+  ( for_
+  , traverse_
+  )
+import Data.Vector (Vector)
+import qualified Data.Vector as V
 import qualified Framebuffer
-import           GHC.Generics                   ( Generic )
-import           NoThunks.Class
-import           Orphans                        ( )
-import           RefCounted
-import           UnliftIO.Exception             ( throwString
-                                                , tryJust
-                                                )
-import           VkResources                    ( VkResources(..) )
-import           Vulkan.Core10
-import           Vulkan.Exception
-import           Vulkan.Extensions.VK_KHR_surface
-import           Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR
-                                                ( SurfaceCapabilitiesKHR(..) )
-import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
-                                                ( SurfaceFormatKHR(..) )
-import           Vulkan.Extensions.VK_KHR_swapchain
-import           Vulkan.Utils.Misc              ( (.&&.) )
-import           Vulkan.Zero
+import GHC.Generics (Generic)
+import NoThunks.Class
+import Orphans ()
+import RefCounted
+import UnliftIO.Exception
+  ( throwString
+  , tryJust
+  )
+import VkResources (VkResources (..))
+import Vulkan.Core10
+import Vulkan.Exception
+import Vulkan.Extensions.VK_KHR_surface
+import Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR
+  ( SurfaceCapabilitiesKHR (..)
+  )
+import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
+  ( SurfaceFormatKHR (..)
+  )
+import Vulkan.Extensions.VK_KHR_swapchain
+import Vulkan.Utils.Misc ((.&&.))
+import Vulkan.Zero
 
 data Swapchain = Swapchain
-  { sSwapchain    :: SwapchainKHR
-  , sSurface      :: SurfaceKHR
-  , sFormat       :: SurfaceFormatKHR
-  , sExtent       :: Extent2D
-  , sPresentMode  :: PresentModeKHR
-  , sImages       :: Vector Image
-  , sImageViews   :: Vector ImageView
-  , sRelease      :: RefCounted
-    -- ^ Held until no in-flight frame still uses this swapchain.
+  { sSwapchain :: SwapchainKHR
+  , sSurface :: SurfaceKHR
+  , sFormat :: SurfaceFormatKHR
+  , sExtent :: Extent2D
+  , sPresentMode :: PresentModeKHR
+  , sImages :: Vector Image
+  , sImageViews :: Vector ImageView
+  , sRelease :: RefCounted
+  -- ^ Held until no in-flight frame still uses this swapchain.
   }
   deriving (Generic, NoThunks)
 
@@ -62,8 +67,10 @@ data Swapchain = Swapchain
 allocSwapchain
   :: (MonadUnliftIO m, MonadResource m)
   => VkResources
-  -> SwapchainKHR        -- ^ Previous swapchain ('NULL_HANDLE' for first)
-  -> Extent2D            -- ^ Fallback size when the surface lets us pick
+  -> SwapchainKHR
+  -- ^ Previous swapchain ('NULL_HANDLE' for first)
+  -> Extent2D
+  -- ^ Fallback size when the surface lets us pick
   -> SurfaceKHR
   -> m Swapchain
 allocSwapchain vr oldSwapchain windowSize surface = do
@@ -73,23 +80,26 @@ allocSwapchain vr oldSwapchain windowSize surface = do
   (_, sImages) <- getSwapchainImagesKHR (vrDevice vr) sSwapchain
   (imageViewKeys, sImageViews) <-
     fmap V.unzip . V.forM sImages $ \image ->
-      Framebuffer.createImageView (vrDevice vr)
-                                  (SurfaceFormatKHR.format sFormat)
-                                  image
+      Framebuffer.createImageView
+        (vrDevice vr)
+        (SurfaceFormatKHR.format sFormat)
+        image
 
   -- Released by the next 'recreateSwapchain' (when frames stop using it).
   sRelease <- newRefCounted $ do
     traverse_ release imageViewKeys
     release swapchainKey
 
-  pure Swapchain { sSurface = surface, .. }
+  pure Swapchain{sSurface = surface, ..}
 
--- | Build a new swapchain at a new size, dropping the reference to the old
--- one so its resources can be released once in-flight frames complete.
+{- | Build a new swapchain at a new size, dropping the reference to the old
+one so its resources can be released once in-flight frames complete.
+-}
 recreateSwapchain
   :: (MonadUnliftIO m, MonadResource m)
   => VkResources
-  -> Extent2D            -- ^ New window size
+  -> Extent2D
+  -- ^ New window size
   -> Swapchain
   -> m Swapchain
 recreateSwapchain vr newSize old = do
@@ -109,21 +119,22 @@ createSwapchain
   -> SurfaceKHR
   -> m (SwapchainKHR, SurfaceFormatKHR, Extent2D, PresentModeKHR, ReleaseKey)
 createSwapchain vr oldSwapchain explicitSize surf = do
-  let phys = vrPhysicalDevice vr
-      dev  = vrDevice vr
+  let
+    phys = vrPhysicalDevice vr
+    dev = vrDevice vr
 
   surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR phys surf
 
   -- Sanity-check that the surface advertises the usages we need.
   for_ requiredUsageFlags $ \f ->
-    unless (supportedUsageFlags surfaceCaps .&&. f)
-      $ throwString ("Surface images do not support " <> show f)
+    unless (supportedUsageFlags surfaceCaps .&&. f) $
+      throwString ("Surface images do not support " <> show f)
 
   -- Pick a present mode in our preference order.
   (_, availablePresentModes) <- getPhysicalDeviceSurfacePresentModesKHR phys surf
   presentMode <-
     case filter (`V.elem` availablePresentModes) desiredPresentModes of
-      []    -> throwString "Unable to find a suitable present mode for swapchain"
+      [] -> throwString "Unable to find a suitable present mode for swapchain"
       x : _ -> pure x
 
   -- Pick a surface format. Vulkan guarantees at least one.
@@ -141,7 +152,7 @@ createSwapchain vr oldSwapchain explicitSize surf = do
           limit = case maxImageCount (surfaceCaps :: SurfaceCapabilitiesKHR) of
             0 -> maxBound
             n -> n
-          buffer  = 1 -- request one extra to avoid waiting on the driver
+          buffer = 1 -- request one extra to avoid waiting on the driver
           desired = buffer + SurfaceCapabilitiesKHR.minImageCount surfaceCaps
         in
           min limit desired
@@ -151,24 +162,25 @@ createSwapchain vr oldSwapchain explicitSize surf = do
       then pure COMPOSITE_ALPHA_OPAQUE_BIT_KHR
       else throwString "Surface doesn't support COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
 
-  let swapchainCreateInfo = SwapchainCreateInfoKHR
-        { surface            = surf
-        , next               = ()
-        , flags              = zero
-        , queueFamilyIndices = mempty
-        , minImageCount      = imageCount
-        , imageFormat        = SurfaceFormatKHR.format surfaceFormat
-        , imageColorSpace    = colorSpace surfaceFormat
-        , imageExtent        = imageExtent
-        , imageArrayLayers   = 1
-        , imageUsage         = foldr (.|.) zero requiredUsageFlags
-        , imageSharingMode   = SHARING_MODE_EXCLUSIVE
-        , preTransform       = SurfaceCapabilitiesKHR.currentTransform surfaceCaps
-        , compositeAlpha     = compositeAlphaMode
-        , presentMode        = presentMode
-        , clipped            = True
-        , oldSwapchain       = oldSwapchain
-        }
+  let swapchainCreateInfo =
+        SwapchainCreateInfoKHR
+          { surface = surf
+          , next = ()
+          , flags = zero
+          , queueFamilyIndices = mempty
+          , minImageCount = imageCount
+          , imageFormat = SurfaceFormatKHR.format surfaceFormat
+          , imageColorSpace = colorSpace surfaceFormat
+          , imageExtent = imageExtent
+          , imageArrayLayers = 1
+          , imageUsage = foldr (.|.) zero requiredUsageFlags
+          , imageSharingMode = SHARING_MODE_EXCLUSIVE
+          , preTransform = SurfaceCapabilitiesKHR.currentTransform surfaceCaps
+          , compositeAlpha = compositeAlphaMode
+          , presentMode = presentMode
+          , clipped = True
+          , oldSwapchain = oldSwapchain
+          }
 
   (key, swapchain) <- withSwapchainKHR dev swapchainCreateInfo Nothing allocate
 
@@ -178,16 +190,19 @@ createSwapchain vr oldSwapchain explicitSize surf = do
 -- Format selection
 ----------------------------------------------------------------
 
--- | Prefer formats whose 'optimalTilingFeatures' satisfy
--- 'requiredFormatFeatures'; SRGB formats typically omit
--- 'FORMAT_FEATURE_STORAGE_IMAGE_BIT' and would otherwise cause
--- @vkCreateSwapchainKHR@ to fail.
+{- | Prefer formats whose 'optimalTilingFeatures' satisfy
+'requiredFormatFeatures'; SRGB formats typically omit
+'FORMAT_FEATURE_STORAGE_IMAGE_BIT' and would otherwise cause
+@vkCreateSwapchainKHR@ to fail.
+-}
 selectSurfaceFormat
-  :: MonadIO m => PhysicalDevice -> Vector SurfaceFormatKHR -> m SurfaceFormatKHR
+  :: (MonadIO m) => PhysicalDevice -> Vector SurfaceFormatKHR -> m SurfaceFormatKHR
 selectSurfaceFormat phys fmts = do
   let suitable f = do
-        props <- getPhysicalDeviceFormatProperties phys
-                                                   (SurfaceFormatKHR.format f)
+        props <-
+          getPhysicalDeviceFormatProperties
+            phys
+            (SurfaceFormatKHR.format f)
         pure $ all (optimalTilingFeatures props .&&.) requiredFormatFeatures
   good <- V.filterM suitable fmts
   pure $ if V.null good then V.head fmts else V.head good
@@ -197,13 +212,13 @@ selectSurfaceFormat phys fmts = do
 ----------------------------------------------------------------
 
 -- | Catch an 'ERROR_OUT_OF_DATE_KHR' exception and return 'True' when caught.
-threwSwapchainError :: MonadUnliftIO f => f b -> f Bool
+threwSwapchainError :: (MonadUnliftIO f) => f b -> f Bool
 threwSwapchainError = fmap isLeft . tryJust swapchainError
- where
-  swapchainError = \case
-    VulkanException e@ERROR_OUT_OF_DATE_KHR -> Just e
-    -- TODO: handle ERROR_SURFACE_LOST_KHR too
-    VulkanException _                       -> Nothing
+  where
+    swapchainError = \case
+      VulkanException e@ERROR_OUT_OF_DATE_KHR -> Just e
+      -- TODO: handle ERROR_SURFACE_LOST_KHR too
+      VulkanException _ -> Nothing
 
 -- | Present-mode preference, best first.
 desiredPresentModes :: [PresentModeKHR]

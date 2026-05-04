@@ -6,28 +6,31 @@ module Init
   , createVMA
   ) where
 
-import           Control.Monad.Trans.Resource
-import           Data.Word
+import Control.Monad.Trans.Resource
+import Data.Word
 
-import           Frame                          ( frameDeviceRequirements )
+import Frame (frameDeviceRequirements)
 import qualified Vma
-import           Vulkan.Core10
-import           Vulkan.Requirement             ( DeviceRequirement )
-import qualified Vulkan.Utils.Requirements.TH  as U
-import           Vulkan.Zero
-import           VulkanMemoryAllocator          ( Allocator )
+import Vulkan.Core10
+import Vulkan.Requirement (DeviceRequirement)
+import qualified Vulkan.Utils.Requirements.TH as U
+import Vulkan.Zero
+import VulkanMemoryAllocator (Allocator)
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
 
--- | Device requirements: API version, swapchain, plus the timeline-semaphore
--- bits the recycling 'Frame' machinery needs.
+{- | Device requirements: API version, swapchain, plus the timeline-semaphore
+bits the recycling 'Frame' machinery needs.
+-}
 deviceRequirements :: [DeviceRequirement]
-deviceRequirements = [U.reqs|
+deviceRequirements =
+  [U.reqs|
     1.0
     VK_KHR_swapchain
-  |] ++ frameDeviceRequirements
+  |]
+    ++ frameDeviceRequirements
 
 createVMA
-  :: MonadResource m => Instance -> PhysicalDevice -> Device -> m Allocator
+  :: (MonadResource m) => Instance -> PhysicalDevice -> Device -> m Allocator
 createVMA = Vma.createVMA zero myApiVersion

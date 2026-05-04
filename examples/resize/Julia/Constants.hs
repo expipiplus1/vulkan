@@ -1,7 +1,7 @@
 module Julia.Constants
-  where
+where
 
-import           Data.Word
+import Data.Word
 
 juliaWorkgroupX, juliaWorkgroupY :: Word32
 juliaWorkgroupX = 8
