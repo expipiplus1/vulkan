@@ -29,7 +29,7 @@ import           Vulkan.Extensions.VK_KHR_surface ( SurfaceKHR(..)
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                   ( pattern KHR_SWAPCHAIN_EXTENSION_NAME )
 import           Vulkan.Requirement               ( InstanceRequirement )
-import           Vulkan.Utils.Init                ( withVulkanInstance )
+import           Vulkan.Utils.Initialization      ( withVulkanInstance )
 
 -- | Vulkan instance extensions the SDL2 window requires for presentation.
 getRequiredInstanceExtensions :: MonadIO m => SDL.Window -> m (Vector ByteString)

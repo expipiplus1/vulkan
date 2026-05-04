@@ -7,7 +7,7 @@ module Vulkan.Utils.Init.Headless
 import           Control.Monad.Trans.Resource ( MonadResource )
 import           Vulkan.Core10                ( ApplicationInfo, Instance )
 import           Vulkan.Requirement           ( InstanceRequirement )
-import           Vulkan.Utils.Init            ( withVulkanInstance )
+import           Vulkan.Utils.Initialization  ( withVulkanInstance )
 
 -- | Build a Vulkan 'Instance' for a headless application. Equivalent to
 -- @'withVulkanInstance' 'mempty'@.

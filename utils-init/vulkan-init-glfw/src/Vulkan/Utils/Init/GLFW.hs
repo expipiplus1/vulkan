@@ -35,7 +35,7 @@ import           Vulkan.Extensions.VK_KHR_surface ( SurfaceKHR(..)
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                   ( pattern KHR_SWAPCHAIN_EXTENSION_NAME )
 import           Vulkan.Requirement               ( InstanceRequirement )
-import           Vulkan.Utils.Init                ( withVulkanInstance )
+import           Vulkan.Utils.Initialization      ( withVulkanInstance )
 
 -- | Vulkan instance extensions GLFW requires. The window argument is unused
 -- (GLFW's API is global) but kept for symmetry with the SDL2 module.

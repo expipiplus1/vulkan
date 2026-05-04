@@ -35,7 +35,6 @@ library
       Vulkan.Utils.CommandCheck
       Vulkan.Utils.Debug
       Vulkan.Utils.FromGL
-      Vulkan.Utils.Init
       Vulkan.Utils.Init.Headless
       Vulkan.Utils.Initialization
       Vulkan.Utils.Misc
