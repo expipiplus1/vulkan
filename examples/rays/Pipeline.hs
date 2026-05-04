@@ -25,8 +25,9 @@ import           Foreign.Marshal.Utils               ( moveBytes )
 import           Foreign.Ptr                         ( Ptr
                                                      , plusPtr
                                                      )
-import           MonadVulkan
+import           Init                                ( RTInfo(..) )
 import           Say
+import           Scene                               ( SceneBuffers(..) )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                      as Vk
                                               hiding ( withBuffer
@@ -34,27 +35,31 @@ import           Vulkan.Core10                      as Vk
                                                      )
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
-
-import           Vulkan.Utils.ShaderQQ.GLSL.Glslang ( glsl
-                                                    , compileShaderQ )
+import           Vulkan.Utils.Debug                  ( nameObject )
+import           Vulkan.Utils.ShaderQQ.GLSL.Glslang  ( compileShaderQ
+                                                     , glsl
+                                                     )
 import           Vulkan.Zero
-import           VulkanMemoryAllocator
-import Scene
+import           VulkanMemoryAllocator              as VMA
+                                              hiding ( getPhysicalDeviceProperties )
 
--- Create the most vanilla ray tracing pipeline, returns the number of shader
--- groups
-createPipeline :: PipelineLayout -> V (ReleaseKey, Pipeline, Word32)
-createPipeline pipelineLayout = do
+-- | Create the RT pipeline; returns the number of shader groups.
+createPipeline
+  :: (MonadResource m, MonadFail m)
+  => Device
+  -> PipelineLayout
+  -> m (ReleaseKey, Pipeline, Word32)
+createPipeline dev pipelineLayout = do
   (shaderKeys, shaderStages) <- V.unzip <$> sequence
-    [ createRayGenerationShader
-    , createRayIntShader
-    , createRayMissShader
-    , createRayHitShader
+    [ createRayGenerationShader dev
+    , createRayIntShader        dev
+    , createRayMissShader       dev
+    , createRayHitShader        dev
     ]
 
   let genGroup = RayTracingShaderGroupCreateInfoKHR
         RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR
-        0 -- The index of our general shader
+        0
         SHADER_UNUSED_KHR
         SHADER_UNUSED_KHR
         SHADER_UNUSED_KHR
@@ -62,9 +67,9 @@ createPipeline pipelineLayout = do
       intGroup = RayTracingShaderGroupCreateInfoKHR
         RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR
         SHADER_UNUSED_KHR
-        3 -- closest hit
+        3
         SHADER_UNUSED_KHR
-        1 -- intersection
+        1
         nullPtr
       missGroup = RayTracingShaderGroupCreateInfoKHR
         RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR
@@ -82,85 +87,101 @@ createPipeline pipelineLayout = do
                                 , maxPipelineRayRecursionDepth = 1
                                 , layout                       = pipelineLayout
                                 }
-  (key, (_, ~[rtPipeline])) <- withRayTracingPipelinesKHR'
-    zero
+  (key, (_, ~[rtPipeline])) <- withRayTracingPipelinesKHR
+    dev
+    NULL_HANDLE
+    NULL_HANDLE
     [SomeStruct pipelineCreateInfo]
+    Nothing
+    allocate
 
   traverse_ release shaderKeys
 
   pure (key, rtPipeline, fromIntegral (V.length shaderGroups))
 
-createRTPipelineLayout :: DescriptorSetLayout -> V (ReleaseKey, PipelineLayout)
-createRTPipelineLayout descriptorSetLayout =
-  withPipelineLayout' zero { setLayouts = [descriptorSetLayout] }
+createRTPipelineLayout
+  :: MonadResource m => Device -> DescriptorSetLayout -> m (ReleaseKey, PipelineLayout)
+createRTPipelineLayout dev descriptorSetLayout = withPipelineLayout
+  dev
+  zero { setLayouts = [descriptorSetLayout] }
+  Nothing
+  allocate
 
-createRTDescriptorSetLayout :: V (ReleaseKey, DescriptorSetLayout)
-createRTDescriptorSetLayout = withDescriptorSetLayout' zero
-  { bindings = [ zero
-                 { binding         = 0
-                 , descriptorType  = DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
-                 , descriptorCount = 1
-                 , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
-                 }
-               , zero { binding         = 1
-                      , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
-                      , descriptorCount = 1
-                      , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
-                      }
-               , zero
-                 { binding         = 2
-                 , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
-                 , descriptorCount = 1
-                 , stageFlags      = SHADER_STAGE_INTERSECTION_BIT_KHR
-                                       .|. SHADER_STAGE_CLOSEST_HIT_BIT_KHR
-                 }
-               , zero { binding         = 3
-                      , descriptorType  = DESCRIPTOR_TYPE_UNIFORM_BUFFER
-                      , descriptorCount = 1
-                      , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
-                      }
-               ]
-  }
+createRTDescriptorSetLayout
+  :: MonadResource m => Device -> m (ReleaseKey, DescriptorSetLayout)
+createRTDescriptorSetLayout dev = withDescriptorSetLayout
+  dev
+  zero
+    { bindings = [ zero
+                   { binding         = 0
+                   , descriptorType  = DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
+                   , descriptorCount = 1
+                   , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
+                   }
+                 , zero { binding         = 1
+                        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
+                        , descriptorCount = 1
+                        , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
+                        }
+                 , zero
+                   { binding         = 2
+                   , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
+                   , descriptorCount = 1
+                   , stageFlags      = SHADER_STAGE_INTERSECTION_BIT_KHR
+                                         .|. SHADER_STAGE_CLOSEST_HIT_BIT_KHR
+                   }
+                 , zero { binding         = 3
+                        , descriptorType  = DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                        , descriptorCount = 1
+                        , stageFlags      = SHADER_STAGE_RAYGEN_BIT_KHR
+                        }
+                 ]
+    }
+  Nothing
+  allocate
 
 createRTDescriptorSets
-  :: DescriptorSetLayout
+  :: MonadResource m
+  => Device
+  -> DescriptorSetLayout
   -> AccelerationStructureKHR
   -> SceneBuffers
   -> Word32
-  -> V (Vector DescriptorSet)
-createRTDescriptorSets descriptorSetLayout tlas SceneBuffers {..} numDescriptorSets
+  -> m (Vector DescriptorSet)
+createRTDescriptorSets dev descriptorSetLayout tlas SceneBuffers {..} numDescriptorSets
   = do
     let numImagesPerSet                 = 1
         numAccelerationStructuresPerSet = 1
         numStorageBuffersPerSet         = 1
         numUniformBuffersPerSet         = 1
-    -- Create a descriptor pool
-    (_, descriptorPool) <- withDescriptorPool' zero
-      { maxSets   = numDescriptorSets
-      , poolSizes =
-        [ DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_IMAGE
-                             (numDescriptorSets * numImagesPerSet)
-        , DescriptorPoolSize
-          DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
-          (numDescriptorSets * numAccelerationStructuresPerSet)
-        , DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_BUFFER
-                             (numDescriptorSets * numStorageBuffersPerSet)
-        , DescriptorPoolSize DESCRIPTOR_TYPE_UNIFORM_BUFFER
-                             (numDescriptorSets * numUniformBuffersPerSet)
-        ]
-      }
+    (_, descriptorPool) <- withDescriptorPool
+      dev
+      zero
+        { maxSets   = numDescriptorSets
+        , poolSizes =
+          [ DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_IMAGE
+                               (numDescriptorSets * numImagesPerSet)
+          , DescriptorPoolSize
+            DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
+            (numDescriptorSets * numAccelerationStructuresPerSet)
+          , DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_BUFFER
+                               (numDescriptorSets * numStorageBuffersPerSet)
+          , DescriptorPoolSize DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                               (numDescriptorSets * numUniformBuffersPerSet)
+          ]
+        }
+      Nothing
+      allocate
 
-    -- Allocate a descriptor set from the pool with that layout
-    -- Don't use `withDescriptorSets` here as the set will be cleaned up when
-    -- the pool is destroyed.
-    sets <- allocateDescriptorSets' zero
-      { descriptorPool = descriptorPool
-      , setLayouts     = V.replicate (fromIntegral numDescriptorSets)
-                                     descriptorSetLayout
-      }
+    sets <- allocateDescriptorSets
+      dev
+      zero { descriptorPool = descriptorPool
+           , setLayouts = V.replicate (fromIntegral numDescriptorSets)
+                                       descriptorSetLayout
+           }
 
-    -- Put the static accelerationStructure into the set
-    for_ sets $ \set -> updateDescriptorSets'
+    for_ sets $ \set -> updateDescriptorSets
+      dev
       [ SomeStruct
       $   zero { dstSet          = set
                , dstBinding      = 0
@@ -186,8 +207,8 @@ createRTDescriptorSets descriptorSetLayout tlas SceneBuffers {..} numDescriptorS
     pure sets
 
 createRayGenerationShader
-  :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
-createRayGenerationShader = do
+  :: MonadResource m => Device -> m (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
+createRayGenerationShader dev = do
   let code = $(compileShaderQ (Just "spirv1.4") "rgen" Nothing [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
@@ -233,13 +254,14 @@ createRayGenerationShader = do
         }
       |])
 
-  (key, module') <- withShaderModule' zero { code }
+  (key, module') <- withShaderModule dev zero { code } Nothing allocate
   let shaderStageCreateInfo =
         zero { stage = SHADER_STAGE_RAYGEN_BIT_KHR, module', name = "main" }
   pure (key, SomeStruct shaderStageCreateInfo)
 
-createRayHitShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
-createRayHitShader = do
+createRayHitShader
+  :: MonadResource m => Device -> m (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
+createRayHitShader dev = do
   let code = $(compileShaderQ (Just "spirv1.4") "rchit" Nothing [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
@@ -264,13 +286,14 @@ createRayHitShader = do
         }
       |])
 
-  (key, module') <- withShaderModule' zero { code }
+  (key, module') <- withShaderModule dev zero { code } Nothing allocate
   let shaderStageCreateInfo =
         zero { stage = SHADER_STAGE_CLOSEST_HIT_BIT_KHR, module', name = "main" }
   pure (key, SomeStruct shaderStageCreateInfo)
 
-createRayIntShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
-createRayIntShader = do
+createRayIntShader
+  :: MonadResource m => Device -> m (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
+createRayIntShader dev = do
   let code = $(compileShaderQ (Just "spirv1.4") "rint" Nothing [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
@@ -306,13 +329,14 @@ createRayIntShader = do
         }
       |])
 
-  (key, module') <- withShaderModule' zero { code }
+  (key, module') <- withShaderModule dev zero { code } Nothing allocate
   let shaderStageCreateInfo =
         zero { stage = SHADER_STAGE_INTERSECTION_BIT_KHR, module', name = "main" }
   pure (key, SomeStruct shaderStageCreateInfo)
 
-createRayMissShader :: V (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
-createRayMissShader = do
+createRayMissShader
+  :: MonadResource m => Device -> m (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
+createRayMissShader dev = do
   let code = $(compileShaderQ (Just "spirv1.4") "rmiss" Nothing [glsl|
         #version 460
         #extension GL_EXT_ray_tracing : require
@@ -325,52 +349,53 @@ createRayMissShader = do
         }
       |])
 
-  (key, module') <- withShaderModule' zero { code }
+  (key, module') <- withShaderModule dev zero { code } Nothing allocate
   let shaderStageCreateInfo =
         zero { stage = SHADER_STAGE_MISS_BIT_KHR, module', name = "main" }
   pure (key, SomeStruct shaderStageCreateInfo)
+
 ----------------------------------------------------------------
 -- Shader binding table
 ----------------------------------------------------------------
 
-createShaderBindingTable :: Pipeline -> Word32 -> V (ReleaseKey, Buffer)
-createShaderBindingTable pipeline numGroups = do
-  RTInfo {..} <- getRTInfo
+createShaderBindingTable
+  :: MonadResource m
+  => Device
+  -> Allocator
+  -> RTInfo
+  -> Pipeline
+  -> Word32
+  -> m (ReleaseKey, Buffer)
+createShaderBindingTable dev vma RTInfo {..} pipeline numGroups = do
   let handleSize    = rtiShaderGroupHandleSize
       baseAlignment = rtiShaderGroupBaseAlignment
       handleStride  = max handleSize baseAlignment
-      -- Make the buffer big enough for all the groups, with spacing between
-      -- them equal to their alignment
       sbtSize       = fromIntegral $ handleStride * (numGroups - 1) + handleSize
 
-  sayErrShow (handleStride, rtiShaderGroupBaseAlignment)
+  sayErrShow (handleStride, baseAlignment)
 
-  (bufferReleaseKey, (sbtBuffer, sbtAllocation, _sbtAllocationInfo)) <-
-    withBuffer'
-      zero { usage = BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, size = sbtSize }
-      zero
-        { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
-                            .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
-        }
-  nameObject' sbtBuffer "SBT"
+  (bufferReleaseKey, (sbtBuffer, sbtAllocation, _)) <- VMA.withBuffer
+    vma
+    zero { usage = BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, size = sbtSize }
+    zero
+      { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
+                          .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
+      }
+    allocate
+  nameObject dev sbtBuffer "SBT"
 
-  (memKey, mem) <- withMappedMemory' sbtAllocation
-  getRayTracingShaderGroupHandlesKHR' pipeline 0 numGroups sbtSize mem
+  (memKey, mem) <- VMA.withMappedMemory vma sbtAllocation allocate
+  getRayTracingShaderGroupHandlesKHR dev pipeline 0 numGroups sbtSize mem
   unpackObjects numGroups handleSize handleStride mem
   release memKey
   pure (bufferReleaseKey, sbtBuffer)
 
--- | Move densely packed objects so that they have a desired stride
 unpackObjects
   :: MonadIO m
   => Word32
-  -- ^ Num objects
   -> Word32
-  -- ^ Object size, the initial stride
   -> Word32
-  -- ^ Desired stride
   -> Ptr ()
-  -- ^ Initial, packed data, in a buffer big enough for the unpacked data
   -> m ()
 unpackObjects numObjs size desiredStride buf = do
   let
@@ -379,6 +404,5 @@ unpackObjects numObjs size desiredStride buf = do
     moveObject n = moveBytes (objectFinalPosition n)
                              (objectInitalPosition n)
                              (fromIntegral size)
-    -- Move the object last to first
     indicesToMove = drop 1 [numObjs, numObjs - 1 .. 1]
   liftIO $ traverse_ moveObject indicesToMove

@@ -4,8 +4,7 @@
 {-# OPTIONS_GHC -fplugin=Foreign.Storable.Generic.Plugin #-}
 {-# OPTIONS_GHC -fplugin-opt=Foreign.Storable.Generic.Plugin:-v0 #-}
 
-module Scene
-  where
+module Scene where
 
 import           Control.Lens
 import           Control.Monad.IO.Class
@@ -20,12 +19,12 @@ import           Foreign.Storable.Generic
 import           GHC.Generics                   ( Generic )
 import           Linear.V3
 import           Linear.V4
-import           MonadVulkan
 import           System.Random
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Zero
-import           VulkanMemoryAllocator
+import           VulkanMemoryAllocator         as VMA
+                                         hiding ( getPhysicalDeviceProperties )
 
 scene :: [Sphere]
 scene =
@@ -60,15 +59,15 @@ data SceneBuffers = SceneBuffers
   , sceneSize    :: Word32
   }
 
-makeSceneBuffers :: V SceneBuffers
-makeSceneBuffers = do
-  sceneAabbs <- initBuffer
+makeSceneBuffers :: MonadResource m => Allocator -> m SceneBuffers
+makeSceneBuffers vma = do
+  sceneAabbs <- initBuffer vma
     (   BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
     .|. BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
     )
     (sphereAABB <$> scene)
 
-  sceneSpheres <- initBuffer BUFFER_USAGE_STORAGE_BUFFER_BIT scene
+  sceneSpheres <- initBuffer vma BUFFER_USAGE_STORAGE_BUFFER_BIT scene
 
   let sceneSize = fromIntegral (length scene)
 
@@ -78,17 +77,20 @@ makeSceneBuffers = do
 -- Buffer tools
 ----------------------------------------------------------------
 
-initBuffer :: forall a . Storable a => BufferUsageFlags -> [a] -> V Buffer
-initBuffer usage xs = do
+initBuffer :: forall a m . (Storable a, MonadResource m)
+           => Allocator -> BufferUsageFlags -> [a] -> m Buffer
+initBuffer vma usage xs = do
   let bufferSize = sizeOf (head xs) * length xs
 
-  (_, (buf, allocation, _)) <- withBuffer'
+  (_, (buf, allocation, _)) <- VMA.withBuffer
+    vma
     zero { flags = zero, size = fromIntegral bufferSize, usage }
     zero
       { requiredFlags = MEMORY_PROPERTY_HOST_VISIBLE_BIT
                           .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
       }
-  (unmapKey, p) <- withMappedMemory' allocation
+    allocate
+  (unmapKey, p) <- VMA.withMappedMemory vma allocation allocate
   liftIO $ pokeArray (castPtr @() @a p) xs
   release unmapKey
 

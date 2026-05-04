@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Init
   ( Init.createDevice
@@ -12,12 +13,13 @@ import           Control.Monad                  ( guard )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
-import           Data.Bits
 import           Data.Text                      ( Text )
 import qualified Data.Vector                   as V
 import           Data.Word
 import           UnliftIO.Exception
 
+import           Frame                          ( frameDeviceRequirements )
+import qualified Vma
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -26,26 +28,14 @@ import           Vulkan.Core10                 as Vk
 import qualified Vulkan.Core10                 as MemoryHeap (MemoryHeap(..))
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
-import           Vulkan.Utils.Initialization    ( physicalDeviceName
+import           Vulkan.Utils.Initialization    ( createDeviceFromRequirements
+                                                , physicalDeviceName
                                                 , pickPhysicalDevice
                                                 )
+import           Vulkan.Utils.Misc              ( (.&&.) )
+import qualified Vulkan.Utils.Requirements.TH  as U
 import           Vulkan.Zero
-import           VulkanMemoryAllocator          ( Allocator
-                                                , AllocatorCreateInfo(..)
-                                                , VulkanFunctions(..)
-                                                , withAllocator
-                                                )
-
-import           Foreign.Ptr                    ( castFunPtr )
-import           Vulkan.Dynamic                 ( DeviceCmds
-                                                  ( DeviceCmds
-                                                  , pVkGetDeviceProcAddr
-                                                  )
-                                                , InstanceCmds
-                                                  ( InstanceCmds
-                                                  , pVkGetInstanceProcAddr
-                                                  )
-                                                )
+import           VulkanMemoryAllocator          ( Allocator )
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
@@ -82,14 +72,17 @@ createDevice inst surf = do
   --
   let graphicsQueueFamilyIndex = pdiGraphicsQueueFamilyIndex pdi
       deviceCreateInfo         = zero
-        { queueCreateInfos      = [ SomeStruct zero
-                                      { queueFamilyIndex = graphicsQueueFamilyIndex
-                                      , queuePriorities = [1]
-                                      }
-                                  ]
-        , enabledExtensionNames = [KHR_SWAPCHAIN_EXTENSION_NAME]
+        { queueCreateInfos = [ SomeStruct zero
+                                 { queueFamilyIndex = graphicsQueueFamilyIndex
+                                 , queuePriorities  = [1]
+                                 }
+                             ]
         }
-  (_, dev)      <- withDevice phys deviceCreateInfo Nothing allocate
+      deviceReqs = [U.reqs|
+          1.0
+          VK_KHR_swapchain
+        |] ++ frameDeviceRequirements
+  dev           <- createDeviceFromRequirements deviceReqs [] phys deviceCreateInfo
   graphicsQueue <- getDeviceQueue dev graphicsQueueFamilyIndex 0
 
   pure $ DeviceParams devName phys dev graphicsQueue graphicsQueueFamilyIndex
@@ -144,27 +137,4 @@ deviceHasSwapchain dev = do
 
 createVMA
   :: MonadResource m => Instance -> PhysicalDevice -> Device -> m Allocator
-createVMA inst phys dev =
-  snd
-    <$> withAllocator
-          zero
-            { flags            = zero
-            , physicalDevice   = physicalDeviceHandle phys
-            , device           = deviceHandle dev
-            , instance'        = instanceHandle inst
-            , vulkanApiVersion = myApiVersion
-            , vulkanFunctions  = Just $ case inst of
-              Instance _ InstanceCmds {..} -> case dev of
-                Device _ DeviceCmds {..} -> zero
-                  { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
-                  , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
-                  }
-            }
-          allocate
-----------------------------------------------------------------
--- Bit utils
-----------------------------------------------------------------
-
-infixl 4 .&&.
-(.&&.) :: Bits a => a -> a -> Bool
-x .&&. y = (/= zeroBits) (x .&. y)
+createVMA = Vma.createVMA zero myApiVersion

@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE TypeApplications #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Main
@@ -8,19 +9,51 @@ module Main
 
 import           Control.Exception              ( handle )
 import           Control.Lens.Getter
-import           Control.Monad.Extra            ( unlessM
-                                                , when
-                                                )
+import           Control.Monad                  ( when )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
-import           Data.Bool                      ( bool )
+import           Data.Bits                      ( (.|.) )
+import           Data.Foldable                  ( traverse_ )
+import           Data.IORef
 import qualified Data.Vector                   as V
+import           Data.Vector                    ( Vector )
+import           Frame                          ( Frame(..)
+                                                , advanceFrame
+                                                , frameInstanceRequirements
+                                                , initialFrame
+                                                , queueSubmitFrame
+                                                , runFrame
+                                                )
+import qualified Framebuffer
 import           GHC.Clock                      ( getMonotonicTimeNSec )
+import           Init                           ( DeviceParams(..)
+                                                , createDevice
+                                                , createVMA
+                                                , myApiVersion
+                                                )
+import           Julia                          ( JuliaPipeline(..)
+                                                , createJuliaDescriptorSets
+                                                , createJuliaPipeline
+                                                , juliaWorkgroupX
+                                                , juliaWorkgroupY
+                                                )
 import           Linear.Affine                  ( Point(..) )
 import           Linear.Metric                  ( norm )
 import           Linear.V2
+import qualified Pipeline
+import           RefCounted                     ( RefCounted
+                                                , newRefCounted
+                                                , releaseRefCounted
+                                                )
 import qualified SDL
+import qualified SDL.Video.Vulkan              as SDL
 import           Say
+import           Data.Word                      ( Word64 )
+import           Swapchain                      ( Swapchain(..)
+                                                , allocSwapchain
+                                                , recreateSwapchain
+                                                , threwSwapchainError
+                                                )
 import           UnliftIO.Exception             ( displayException
                                                 , throwIO
                                                 , throwString
@@ -29,11 +62,17 @@ import           UnliftIO.Foreign               ( allocaBytes
                                                 , plusPtr
                                                 , poke
                                                 )
-import           UnliftIO.IORef
-import           UnliftIO.MVar
-import           Utils
+import           Utils                          ( loopJust )
+import           VkResources                    ( Queues(..)
+                                                , RecycledResources(..)
+                                                , VkResources(..)
+                                                , mkVkResources
+                                                )
 
-import           Vulkan.CStruct.Extends         ( SomeStruct(..) )
+import           Vulkan.CStruct.Extends         ( SomeStruct(..)
+                                                , pattern (:&)
+                                                , pattern (::&)
+                                                )
 import           Vulkan.Core10                 as Vk
                                          hiding ( createDevice
                                                 , createFramebuffer
@@ -43,27 +82,23 @@ import           Vulkan.Core10                 as Vk
                                                 , withImage
                                                 )
 import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
-import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
+import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Exception
-import           Vulkan.Extensions.VK_KHR_surface
+import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR(..))
 import           Vulkan.Extensions.VK_KHR_swapchain
+                                               as Swap
+import           Vulkan.Utils.QueueAssignment   ( QueueFamilyIndex(..) )
 import           Vulkan.Zero
-
-import           Frame
-import           HasVulkan
-import           Init
-import           Julia
-import           MonadVulkan
-import           Pipeline
-import           Swapchain
 import qualified Vulkan.Utils.Init.SDL2        as Init
-import           Window.SDL2
+import           Window.SDL2                    ( RefreshLimit(..)
+                                                , createSurface
+                                                , createWindow
+                                                , shouldQuit
+                                                , withSDL
+                                                )
 
 ----------------------------------------------------------------
--- Main performs some one time initialization of the windowing system and
--- Vulkan, then it loops generating frames
---
--- It's bound to an OS thread so SDL.pumpEvents can work properly.
+-- Main
 ----------------------------------------------------------------
 main :: IO ()
 main = prettyError . runResourceT $ do
@@ -72,216 +107,171 @@ main = prettyError . runResourceT $ do
   let initWidth  = 1280
       initHeight = 720
 
-  -- Create everything up to the device
-  sdlWindow  <- createWindow "Haskell ❤️ Vulkan" initWidth initHeight
-  inst       <- Init.withInstance
+  sdlWindow <- createWindow "Haskell ❤️ Vulkan" initWidth initHeight
+  inst      <- Init.withInstance
     sdlWindow
     (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
+    frameInstanceRequirements
     []
-    []
-  surface <- createSurface inst sdlWindow
+  (_, surface) <- createSurface inst sdlWindow
   DeviceParams devName phys dev graphicsQueue graphicsQueueFamilyIndex <-
-    createDevice inst (snd surface)
-  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex }
-  commandPools <- V.replicateM
-    numConcurrentFrames
-    (snd <$> withCommandPool dev commandPoolCreateInfo Nothing allocate)
-
-  allocator <- createVMA inst phys dev
-
+    createDevice inst surface
+  vma       <- createVMA inst phys dev
   sayErr $ "Using device: " <> devName
 
-  -- Now all the globals are initialized
-  runV inst
-       phys
-       dev
-       graphicsQueue
-       graphicsQueueFamilyIndex
-       commandPools
-       allocator
-    $ do
-        i <- initialFrame sdlWindow
-                          (Just surface)
-                          (Extent2D initWidth initHeight)
+  let qs = Queues (QueueFamilyIndex graphicsQueueFamilyIndex, graphicsQueue)
+  vr <- liftIO $ mkVkResources inst phys dev vma qs
 
-        SDL.showWindow sdlWindow
-        loopJust frame i
+  -- Initial swapchain at the requested size.
+  let initialSize = Extent2D initWidth initHeight
+  initialSC <- allocSwapchain vr NULL_HANDLE initialSize surface
+
+  -- Long-lived render setup. Both the graphics pipeline (currently dormant)
+  -- and the Julia compute pipeline are created up front.
+  (_, renderPass) <- Pipeline.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
+  (_, pipeline)   <- Pipeline.createPipeline dev renderPass
+  juliaPL         <- createJuliaPipeline dev
+
+  -- Per-swapchain bindings: framebuffers + Julia descriptor sets, both pinned
+  -- to the current swapchain images.
+  initialBindings <- createBindings dev renderPass juliaPL initialSC
+
+  scRef       <- liftIO $ newIORef initialSC
+  bindingsRef <- liftIO $ newIORef initialBindings
+
+  initial <- initialFrame vr initialSC
+  SDL.showWindow sdlWindow
+
+  let
+    perFrame f = do
+      currentSC <- liftIO $ readIORef scRef
+      bindings  <- liftIO $ readIORef bindingsRef
+      let f' = f { fSwapchain = currentSC }
+      startNs <- liftIO getMonotonicTimeNSec
+      needsNew <- threwSwapchainError $ liftIO $ runFrame vr f' $
+        renderJulia vr juliaPL bindings f'
+      sc' <- if needsNew
+        then do
+          newSize <- liftIO $ drawableSize sdlWindow
+          sc'     <- recreateSwapchain vr newSize currentSC
+          newBindings <- createBindings dev renderPass juliaPL sc'
+          liftIO $ writeIORef scRef sc'
+          dropBindings =<< liftIO (readIORef bindingsRef)
+          liftIO $ writeIORef bindingsRef newBindings
+          pure sc'
+        else pure currentSC
+      endNs <- liftIO getMonotonicTimeNSec
+      reportFrameTime (endNs - startNs)
+      advanceFrame vr sc' f'
+
+    loop f = shouldQuit (TimeLimit 6) >>= \case
+      True  -> pure Nothing
+      False -> Just <$> perFrame f
+
+  loopJust loop initial
 
 prettyError :: IO () -> IO ()
 prettyError =
   handle (\e@(VulkanException _) -> sayErrString (displayException e))
 
-initialFrame
-  :: SDL.Window
-  -> Maybe (ReleaseKey, SurfaceKHR)
-  -- ^ existing surface for window
-  -> Extent2D
-  -> V Frame
-initialFrame window surfaceM windowSize = do
-  inst                     <- getInstance
-  (_, surface)             <- maybe (createSurface inst window) pure surfaceM
+----------------------------------------------------------------
+-- Per-swapchain bindings
+----------------------------------------------------------------
 
-  graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
-  phys                     <- getPhysicalDevice
-  unlessM
-      (getPhysicalDeviceSurfaceSupportKHR phys graphicsQueueFamilyIndex surface)
-    $ throwString "Device isn't able to present to the new surface"
+data Bindings = Bindings
+  { bFramebuffers         :: Vector Framebuffer
+  , bReleaseFramebuffers  :: RefCounted
+  , bJuliaDescriptorSets  :: Vector DescriptorSet
+  , bReleaseJuliaDescSets :: RefCounted
+  }
 
-  (swapchain, imageExtent, framebuffers, imageViews, images, swapchainFormat, releaseSwapchain) <-
-    allocSwapchainResources windowSize NULL_HANDLE surface
+createBindings
+  :: MonadResource m
+  => Device
+  -> RenderPass
+  -> JuliaPipeline
+  -> Swapchain
+  -> m Bindings
+createBindings dev renderPass jp sc = do
+  -- Framebuffers (one per swapchain image) for the dormant graphics pipeline.
+  (fbKeys, framebuffers) <- fmap V.unzip . V.forM (sImageViews sc) $ \iv ->
+    Framebuffer.createFramebuffer dev renderPass iv (sExtent sc)
+  fbRel <- newRefCounted (traverse_ release fbKeys)
 
-  renderPass <- snd <$> Pipeline.createRenderPass swapchainFormat
-  pipeline                     <- snd <$> createPipeline renderPass
-  (juliaPipeline, juliaPipelineLayout, juliaDSets) <- juliaPipeline imageViews
+  -- Julia descriptor sets (one per swapchain image).
+  juliaSets <- createJuliaDescriptorSets
+    dev
+    (jpDescriptorSetLayout jp)
+    (sImageViews sc)
+  -- The whole pool is freed when its allocate-frame closes; mirror that with
+  -- a dummy refcount so swapping bindings releases the previous pool.
+  (poolKey, _) <- allocate (pure ()) (\_ -> pure ())
+  poolRel      <- newRefCounted (release poolKey)
 
-  (_, imageAvailableSemaphore) <- withSemaphore' zero
-  (_, renderFinishedSemaphore) <- withSemaphore' zero
+  pure Bindings
+    { bFramebuffers         = framebuffers
+    , bReleaseFramebuffers  = fbRel
+    , bJuliaDescriptorSets  = juliaSets
+    , bReleaseJuliaDescSets = poolRel
+    }
 
-  currentPresented             <- newEmptyMVar
-  lastPresented                <- newMVar ()
-  secondLastPresented          <- newMVar ()
-  thirdLastPresented           <- newMVar ()
+dropBindings :: MonadIO m => Bindings -> m ()
+dropBindings b = do
+  releaseRefCounted (bReleaseFramebuffers b)
+  releaseRefCounted (bReleaseJuliaDescSets b)
 
-  start                        <- liftIO getMonotonicTimeNSec
+----------------------------------------------------------------
+-- Per-frame rendering
+----------------------------------------------------------------
 
-  frameResources <- allocate createInternalState closeInternalState
-  fences                       <- newIORef mempty
-
-  pure
-    (Frame 0
-           window
-           surface
-           swapchain
-           swapchainFormat
-           renderPass
-           imageExtent
-           imageAvailableSemaphore
-           renderFinishedSemaphore
-           pipeline
-           juliaPipeline
-           juliaPipelineLayout
-           ((juliaDSets V.!) . fromIntegral)
-           ((images V.!) . fromIntegral)
-           ((imageViews V.!) . fromIntegral)
-           ((framebuffers V.!) . fromIntegral)
-           releaseSwapchain
-           currentPresented
-           lastPresented
-           secondLastPresented
-           thirdLastPresented
-           start
-           frameResources
-           fences
-    )
-
--- | Process a single frame, returning Nothing if we should exit.
-frame :: Frame -> V (Maybe Frame)
-frame f = shouldQuit (TimeLimit 6) >>= \case
-  True  -> pure Nothing
-  False -> do
-    -- Wait for the second previous frame to have finished presenting so the
-    -- CPU doesn't get too far ahead.
-    readMVar (fSecondLastPresented f)
-
-    f                 <- startFrame f
-
-    -- Render this frame
-    needsNewSwapchain <- threwSwapchainError $ runFrame f draw
-
-    -- Advance the frame, recreating the swapchain if necessary
-    f' <- advanceFrame =<< bool pure recreateSwapchain needsNewSwapchain f
-
-      -- Print out frame timing info
-    endTime           <- liftIO getMonotonicTimeNSec
-    let
-      frameTimeNSec       = realToFrac (endTime - fStartTime f) :: Double
-      targetHz            = 60
-      frameTimeBudgetMSec = recip targetHz * 1e3
-      frameTimeMSec       = frameTimeNSec / 1e6
-      frameBudgetPercent =
-        ceiling (100 * frameTimeMSec / frameTimeBudgetMSec) :: Int
-    when (frameBudgetPercent > 50) $ sayErrString
-      (show frameTimeMSec <> "ms \t" <> show frameBudgetPercent <> "%")
-
-    pure $ Just f'
-
--- | Set the frame start time
-startFrame :: Frame -> V Frame
-startFrame f = do
-  start <- liftIO getMonotonicTimeNSec
-  pure f { fStartTime = start }
-
--- | Shuffle along previous frames's info and make per-frame resources
-advanceFrame :: Frame -> V Frame
-advanceFrame f = do
-  nextPresented <- newEmptyMVar
-  resources     <- allocate createInternalState closeInternalState
-  fences        <- newIORef mempty
-  pure f { fIndex               = succ (fIndex f)
-         , fCurrentPresented    = nextPresented
-         , fLastPresented       = fCurrentPresented f
-         , fSecondLastPresented = fLastPresented f
-         , fThirdLastPresented  = fSecondLastPresented f
-         , fResources           = resources
-         , fGPUWork             = fences
-         }
-
--- | Submit GPU commands for a frame
-draw :: F (Fence, ())
-draw = do
-  Frame {..} <- askFrame
-
-  (acquireResult, imageIndex) <-
-    acquireNextImageKHR' fSwapchain 1e9 fImageAvailableSemaphore zero >>= \case
-      r@(SUCCESS, _) -> pure r
-      r@(SUBOPTIMAL_KHR, _) -> pure r
-      (TIMEOUT, _) -> throwString "Couldn't acquire next image after 1 second"
-      _ -> throwString "Unexpected Result from acquireNextImageKHR"
-
-  let image = fImages imageIndex
-  let imageSubresourceRange = ImageSubresourceRange
+renderJulia
+  :: VkResources
+  -> JuliaPipeline
+  -> Bindings
+  -> Frame
+  -> ResourceT IO ()
+renderJulia vr jp bindings f = do
+  let RecycledResources {..} = fRecycled f
+      sc                     = fSwapchain f
+      Queues (_, gQ)         = vrQueues vr
+      dev                    = vrDevice vr
+      oneSecond              = 1e9
+      Extent2D imageWidth imageHeight = sExtent sc
+      imageSubresourceRange  = ImageSubresourceRange
         { aspectMask     = IMAGE_ASPECT_COLOR_BIT
         , baseMipLevel   = 0
         , levelCount     = 1
         , baseArrayLayer = 0
         , layerCount     = 1
         }
-  let Extent2D imageWidth imageHeight = fImageExtent
 
-  -- Make sure we don't destroy the swapchain until at least this frame has
-  -- finished GPU execution.
-  frameRefCount fReleaseSwapchain
+  (acquireResult, imageIndex) <-
+    acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable NULL_HANDLE
+      >>= \case
+            r@(SUCCESS,        _) -> pure r
+            r@(SUBOPTIMAL_KHR, _) -> pure r
+            (TIMEOUT, _) -> throwString "Couldn't acquire next image after 1 second"
+            _ -> throwString "Unexpected Result from acquireNextImageKHR"
 
-  commandPool <- frameCommandPool
-  let commandBufferAllocateInfo = zero { commandPool = commandPool
-                                       , level = COMMAND_BUFFER_LEVEL_PRIMARY
-                                       , commandBufferCount = 1
-                                       }
+  let image = sImages sc V.! fromIntegral imageIndex
+      descriptorSet = bJuliaDescriptorSets bindings V.! fromIntegral imageIndex
 
-  -- The command buffer will be freed when the frame is retired
-  (_, [commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
-
-  updateDescriptorSets'
-    [ SomeStruct zero
-        { dstSet          = fJuliaDescriptorSets imageIndex
-        , dstBinding      = 0
-        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
-        , descriptorCount = 1
-        , imageInfo = [ DescriptorImageInfo { sampler = NULL_HANDLE
-                                            , imageView = fImageViews imageIndex
-                                            , imageLayout = IMAGE_LAYOUT_GENERAL
-                                            }
-                      ]
-        }
-    ]
-    []
+  -- Allocate a per-frame command buffer from the recycled pool.
+  (_, ~[commandBuffer]) <- withCommandBuffers
+    dev
+    zero { commandPool        = rrCommandPool
+         , level              = COMMAND_BUFFER_LEVEL_PRIMARY
+         , commandBufferCount = 1
+         }
+    allocate
 
   let julia = True
-  useCommandBuffer' commandBuffer
-                    zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+  useCommandBuffer
+      commandBuffer
+      zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ if julia
         then do
-          -- Transition image to general, to write from the compute shader
+          -- Transition image to general (compute write target).
           cmdPipelineBarrier
             commandBuffer
             PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
@@ -298,10 +288,9 @@ draw = do
                               }
             ]
 
-          cmdBindPipeline' PIPELINE_BIND_POINT_COMPUTE fJuliaPipeline
+          cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_COMPUTE (jpPipeline jp)
 
-          -- Get the mouse position in the window (in [-1..1]) and send it as a
-          -- push constant.
+          -- Mouse-driven push constants.
           P m <- SDL.getAbsoluteMouseLocation
           let m' :: V2 Float
               m' = fmap realToFrac m
@@ -320,27 +309,28 @@ draw = do
             liftIO $ poke (p `plusPtr` 8) frameOffset
             liftIO $ poke (p `plusPtr` 16) c
             liftIO $ poke (p `plusPtr` 24) escapeRadius
-            cmdPushConstants' fJuliaPipelineLayout
-                              SHADER_STAGE_COMPUTE_BIT
-                              0
-                              constantBytes
-                              p
-          cmdBindDescriptorSets' PIPELINE_BIND_POINT_COMPUTE
-                                 fJuliaPipelineLayout
-                                 0
-                                 [fJuliaDescriptorSets imageIndex]
-                                 []
-          cmdDispatch'
+            cmdPushConstants commandBuffer
+                             (jpPipelineLayout jp)
+                             SHADER_STAGE_COMPUTE_BIT
+                             0
+                             (fromIntegral constantBytes)
+                             p
+          cmdBindDescriptorSets commandBuffer
+                                PIPELINE_BIND_POINT_COMPUTE
+                                (jpPipelineLayout jp)
+                                0
+                                [descriptorSet]
+                                []
+          cmdDispatch
+            commandBuffer
             ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)
             ((imageHeight + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
             1
 
-          -- Transition image back to present
+          -- Transition image back to present.
           cmdPipelineBarrier
             commandBuffer
             PIPELINE_STAGE_COMPUTE_SHADER_BIT
-            -- No need to get anything to wait because we're synchronizing with
-            -- the semaphore
             PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
             zero
             []
@@ -354,14 +344,14 @@ draw = do
                               }
             ]
         else do
+          -- Dormant graphics pipeline path; preserved for reference.
           let renderPassBeginInfo = zero
-                { renderPass  = fRenderPass
-                , framebuffer = fFramebuffers imageIndex
-                , renderArea  = Rect2D zero fImageExtent
+                { renderPass  = NULL_HANDLE -- intentionally invalid; see note
+                , framebuffer = bFramebuffers bindings V.! fromIntegral imageIndex
+                , renderArea  = Rect2D zero (sExtent sc)
                 , clearValues = [Color (Float32 0.1 0.1 0.1 1)]
                 }
-          cmdSetViewport'
-            0
+          cmdSetViewport commandBuffer 0
             [ Viewport { x        = 0
                        , y        = 0
                        , width    = realToFrac imageWidth
@@ -370,51 +360,60 @@ draw = do
                        , maxDepth = 1
                        }
             ]
-          cmdSetScissor'
-            0
-            [Rect2D { offset = Offset2D 0 0, extent = fImageExtent }]
-          cmdUseRenderPass' renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
-            cmdBindPipeline' PIPELINE_BIND_POINT_GRAPHICS fPipeline
-            cmdDraw' 3 1 0 0
+          cmdSetScissor commandBuffer 0
+            [Rect2D { offset = Offset2D 0 0, extent = sExtent sc }]
+          cmdUseRenderPass commandBuffer renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
+            cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_GRAPHICS NULL_HANDLE
+            cmdDraw commandBuffer 3 1 0 0
 
-  let submitInfo = zero
-        { waitSemaphores   = [fImageAvailableSemaphore]
-        , waitDstStageMask = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-        , commandBuffers   = [commandBufferHandle commandBuffer]
-        , signalSemaphores = [fRenderFinishedSemaphore]
-        }
-  graphicsQueue    <- getGraphicsQueue
-  (_, renderFence) <- withFence' zero
-  queueSubmitFrame graphicsQueue [SomeStruct submitInfo] renderFence
+  -- Submit (and record GPU work for the wait thread).
+  let submitInfo =
+        zero { Vk.waitSemaphores     = [rrImageAvailable]
+             , waitDstStageMask      = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+             , commandBuffers        = [commandBufferHandle commandBuffer]
+             , signalSemaphores      = [rrRenderFinished, fHostTimeline f]
+             }
+          ::& zero { waitSemaphoreValues   = [1]
+                   , signalSemaphoreValues = [1, fIndex f]
+                   }
+          :&  ()
+  liftIO $ queueSubmitFrame gQ
+                            f
+                            [SomeStruct submitInfo]
+                            (fHostTimeline f)
+                            (fIndex f)
 
-  let presentInfo = zero { waitSemaphores = [fRenderFinishedSemaphore]
-                         , swapchains     = [fSwapchain]
-                         , imageIndices   = [imageIndex]
-                         }
-  presentResult <- queuePresentKHR graphicsQueue presentInfo
+  presentResult <- queuePresentKHR
+    gQ
+    zero { Swap.waitSemaphores = [rrRenderFinished]
+         , swapchains          = [sSwapchain sc]
+         , imageIndices        = [imageIndex]
+         }
 
-  -- A SUBOPTIMAL_KHR from either acquire or present means the swapchain no
-  -- longer matches the surface (typically because the window was resized).
-  -- Re-throw it as ERROR_OUT_OF_DATE_KHR so 'threwSwapchainError' in the
-  -- frame loop triggers 'recreateSwapchain'.
   case (acquireResult, presentResult) of
-    (SUBOPTIMAL_KHR, _) -> throwIO (VulkanException ERROR_OUT_OF_DATE_KHR)
-    (_, SUBOPTIMAL_KHR) -> throwIO (VulkanException ERROR_OUT_OF_DATE_KHR)
+    (SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
+    (_, SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
     _                   -> pure ()
 
-  pure (renderFence, ())
-
 ----------------------------------------------------------------
--- Utils
+-- Frame timing
 ----------------------------------------------------------------
 
--- | Print a string if something is slow
-_time :: MonadIO m => String -> m a -> m a
-_time n a = do
-  t1 <- liftIO getMonotonicTimeNSec
-  r  <- a
-  t2 <- liftIO getMonotonicTimeNSec
-  let d = t2 - t1
-      t = 3e6
-  when (d >= t) $ sayErrString (n <> ": " <> show (realToFrac d / 1e6 :: Float))
-  pure r
+reportFrameTime :: MonadIO m => Word64 -> m ()
+reportFrameTime nsec = do
+  let frameTimeNSec       = realToFrac nsec :: Double
+      targetHz            = 60
+      frameTimeBudgetMSec = recip targetHz * 1e3
+      frameTimeMSec       = frameTimeNSec / 1e6
+      frameBudgetPercent  = ceiling (100 * frameTimeMSec / frameTimeBudgetMSec) :: Int
+  when (frameBudgetPercent > 50) $
+    sayErrString (show frameTimeMSec <> "ms \t" <> show frameBudgetPercent <> "%")
+
+----------------------------------------------------------------
+-- Helpers
+----------------------------------------------------------------
+
+drawableSize :: SDL.Window -> IO Extent2D
+drawableSize win = do
+  SDL.V2 w h <- SDL.vkGetDrawableSize win
+  pure $ Extent2D (fromIntegral w) (fromIntegral h)

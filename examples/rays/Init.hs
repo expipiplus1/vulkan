@@ -4,51 +4,34 @@ module Init
   ( Init.createInstance
   , Init.createDevice
   , PhysicalDeviceInfo(..)
+  , RTInfo(..)
   , createVMA
-  , createCommandPools
   ) where
 
-import           Control.Applicative
+import           Control.Applicative            ( empty )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
-import           Data.Foldable                  ( for_
-                                                , traverse_
-                                                )
-import qualified Data.Vector                   as V
+import           Data.Foldable                  ( traverse_ )
 import           Data.Vector                    ( Vector )
 import           Data.Word
-import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
-                                                , IOException(IOError)
-                                                )
-import           HasVulkan
-import           MonadVulkan                    ( Queues(..)
-                                                , RTInfo(..)
-                                                , checkCommands
-                                                )
 import qualified SDL.Video                     as SDL
 import           Say
-import           UnliftIO.Exception
+import           Utils                          ( noSuchThing
+                                                , (<&&>)
+                                                )
+import           VkResources                    ( Queues(..) )
+import qualified Vma
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
 import qualified Vulkan.Core10                 as MemoryHeap (MemoryHeap(..))
-import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import           Vulkan.Core11                  ( pattern API_VERSION_1_1 )
 import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                 ( PhysicalDeviceTimelineSemaphoreFeatures(..)
-                                                )
-import           Vulkan.Dynamic                 ( DeviceCmds
-                                                  ( DeviceCmds
-                                                  , pVkGetDeviceProcAddr
-                                                  )
-                                                , InstanceCmds
-                                                  ( InstanceCmds
-                                                  , pVkGetInstanceProcAddr
-                                                  )
                                                 )
 import           Vulkan.Extensions.VK_EXT_debug_utils
                                                 ( pattern EXT_DEBUG_UTILS_EXTENSION_NAME )
@@ -65,13 +48,8 @@ import           Vulkan.Utils.Requirements.TH   ( reqs )
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateFlagBits(..)
-                                                , AllocatorCreateInfo(..)
-                                                , VulkanFunctions(..)
-                                                , vkGetInstanceProcAddr
-                                                , withAllocator
                                                 )
 import           Window.SDL2
-import Foreign.Ptr (castFunPtr)
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_1
@@ -98,7 +76,12 @@ createInstance win = VkInit.withInstance
 -- Device creation
 ----------------------------------------------------------------
 
--- TODO: check VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddress.
+-- | Information for ray tracing (queried from device properties).
+data RTInfo = RTInfo
+  { rtiShaderGroupHandleSize    :: Word32
+  , rtiShaderGroupBaseAlignment :: Word32
+  }
+
 createDevice
   :: forall m
    . (MonadResource m)
@@ -120,8 +103,6 @@ createDevice inst win = do
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
 
   (_, dev) <- withDevice phys dci Nothing allocate
-
-  requireCommands inst dev
 
   queues <- liftIO $ pdiGetQueues pdi dev
 
@@ -156,7 +137,6 @@ deviceRequirements = [reqs|
 data PhysicalDeviceInfo = PhysicalDeviceInfo
   { pdiTotalMemory      :: Word64
   , pdiRTInfo           :: RTInfo
-    -- ^ The relevant information from PhysicalDeviceProperties2KHR
   , pdiQueueCreateInfos :: Vector (DeviceQueueCreateInfo '[])
   , pdiGetQueues        :: Device -> IO (Queues (QueueFamilyIndex, Queue))
   }
@@ -170,39 +150,23 @@ physicalDeviceInfo
   -> PhysicalDevice
   -> m (Maybe (PhysicalDeviceInfo, SomeStruct DeviceCreateInfo))
 physicalDeviceInfo surf phys = runMaybeT $ do
-  --
-  -- Check device requirements
-  --
-  (mbDCI, rs, os) <- checkDeviceRequirements deviceRequirements [] phys zero
-  -- Report any missing features
+  (mbDCI, rs, os)                     <- checkDeviceRequirements deviceRequirements [] phys zero
   traverse_ sayErrString (requirementReport rs os)
-  -- Fail if we didn't meet requirements
   SomeStruct dciNoQueues              <- maybe empty pure mbDCI
 
-  --
-  -- Assign queues
-  --
   (pdiQueueCreateInfos, pdiGetQueues) <- MaybeT
     $ assignQueues phys (queueRequirements phys surf)
   let dci =
         dciNoQueues { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos }
 
-  --
-  -- Query properties
-  --
   pdiRTInfo      <- getDeviceRTProps phys
 
-  --
-  -- We'll use the amount of memory to pick the "best" device
-  --
   pdiTotalMemory <- do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
     pure $ sum (MemoryHeap.size <$> heaps)
 
   pure (PhysicalDeviceInfo { .. }, SomeStruct dci)
 
--- | Requirements for a 'Queue' which has graphics suppor and can present to
--- the specified surface.
 queueRequirements
   :: MonadIO m => PhysicalDevice -> SurfaceKHR -> Queues (QueueSpec m)
 queueRequirements phys surf = Queues (QueueSpec 1 isGraphicsPresentQueue)
@@ -210,10 +174,6 @@ queueRequirements phys surf = Queues (QueueSpec 1 isGraphicsPresentQueue)
   isGraphicsPresentQueue queueFamilyIndex queueFamilyProperties =
     pure (isGraphicsQueueFamily queueFamilyProperties)
       <&&> isPresentQueueFamily phys surf queueFamilyIndex
-
-----------------------------------------------------------------
--- Physical device tools
-----------------------------------------------------------------
 
 getDeviceRTProps :: MonadIO m => PhysicalDevice -> m RTInfo
 getDeviceRTProps phys = do
@@ -229,62 +189,4 @@ getDeviceRTProps phys = do
 
 createVMA
   :: MonadResource m => Instance -> PhysicalDevice -> Device -> m Allocator
-createVMA inst phys dev =
-  snd
-    <$> withAllocator
-          zero
-            { flags            = ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
-            , physicalDevice   = physicalDeviceHandle phys
-            , device           = deviceHandle dev
-            , instance'        = instanceHandle inst
-            , vulkanApiVersion = myApiVersion
-            , vulkanFunctions  = Just $ case inst of
-              Instance _ InstanceCmds {..} -> case dev of
-                Device _ DeviceCmds {..} -> zero
-                  { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
-                  , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
-                  }
-            }
-          allocate
-
-----------------------------------------------------------------
--- Command pools
-----------------------------------------------------------------
-
--- | Create several command pools for a queue family
-createCommandPools
-  :: MonadResource m
-  => Device
-  -> Int
-  -- ^ Number of pools to create
-  -> QueueFamilyIndex
-  -- ^ Queue family for the pools
-  -> m (Vector CommandPool)
-createCommandPools dev n (QueueFamilyIndex queueFamilyIndex) = do
-  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = queueFamilyIndex }
-  V.replicateM
-    n
-    (   snd
-    <$> withCommandPool dev
-                        commandPoolCreateInfo
-                        noAllocationCallbacks
-                        allocate
-    )
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-requireCommands :: MonadIO f => Instance -> Device -> f ()
-requireCommands inst dev = case checkCommands inst dev of
-  [] -> pure ()
-  xs -> do
-    for_ xs $ \n -> sayErr ("Failed to load function pointer for: " <> n)
-    noSuchThing "Missing commands"
-
-noSuchThing :: MonadIO m => String -> m a
-noSuchThing message =
-  liftIO . throwIO $ IOError Nothing NoSuchThing "" message Nothing Nothing
-
-(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<&&>) = liftA2 (&&)
+createVMA = Vma.createVMA ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT myApiVersion
