@@ -128,7 +128,7 @@ main = prettyError . runResourceT $ do
   -- Long-lived render setup. Both the graphics pipeline (currently dormant)
   -- and the Julia compute pipeline are created up front.
   (_, renderPass) <- Pipeline.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
-  (_, pipeline)   <- Pipeline.createPipeline dev renderPass
+  -- (_, pipeline)   <- Pipeline.createPipeline dev renderPass
   juliaPL         <- createJuliaPipeline dev
 
   -- Per-swapchain bindings: framebuffers + Julia descriptor sets, both pinned
@@ -406,4 +406,3 @@ reportFrameTime nsec = do
       frameBudgetPercent  = ceiling (100 * frameTimeMSec / frameTimeBudgetMSec) :: Int
   when (frameBudgetPercent > 50) $
     sayErrString (show frameTimeMSec <> "ms \t" <> show frameBudgetPercent <> "%")
-

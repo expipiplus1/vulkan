@@ -230,7 +230,7 @@ executable hlsl
       TypeOperators
       TypeSynonymInstances
       ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       VulkanMemoryAllocator
     , base <5
@@ -352,7 +352,7 @@ executable rays
       TypeOperators
       TypeSynonymInstances
       ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       VulkanMemoryAllocator
     , base <5
@@ -678,7 +678,7 @@ executable vrcube
       TypeOperators
       TypeSynonymInstances
       ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -eventlog
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       VulkanMemoryAllocator
     , base <5

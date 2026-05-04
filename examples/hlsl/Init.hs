@@ -18,7 +18,7 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_timeline_semaphore
 
 import qualified SDL.Video                     as SDL
-import           Utils                          ( noSuchThing, (<&&>) )
+import           Utils                          ( noSuchThing )
 import           VkResources                    ( Queues(..) )
 import qualified Vma
 import           Vulkan.CStruct.Extends
@@ -141,8 +141,8 @@ queueRequirements
 queueRequirements phys surf = Queues (QueueSpec 1 isGraphicsPresentQueue)
  where
   isGraphicsPresentQueue queueFamilyIndex queueFamilyProperties =
-    pure (isGraphicsQueueFamily queueFamilyProperties)
-      <&&> isPresentQueueFamily phys surf queueFamilyIndex
+    (&& isGraphicsQueueFamily queueFamilyProperties)
+      <$> isPresentQueueFamily phys surf queueFamilyIndex
 
 deviceHasSwapchain :: MonadIO m => PhysicalDevice -> m Bool
 deviceHasSwapchain dev = do
@@ -164,7 +164,7 @@ deviceHasTimelineSemaphores phys = do
             = feats
       pure hasTimelineSemaphores
 
-  hasExt <&&> hasFeat
+  (&&) <$> hasExt <*> hasFeat
 
 ----------------------------------------------------------------
 -- VulkanMemoryAllocator

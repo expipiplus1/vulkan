@@ -2,7 +2,6 @@ module Utils
   ( loopJust
   , loopUntilM
   , noSuchThing
-  , (<&&>)
   ) where
 
 import           Control.Concurrent     ( )
@@ -28,9 +27,3 @@ loopUntilM m = do
 noSuchThing :: MonadIO m => String -> m a
 noSuchThing message =
   liftIO . throwIO $ IOError Nothing NoSuchThing "" message Nothing Nothing
-
--- | Short-circuiting applicative @&&@ — evaluates the right action only if
--- the left one yielded 'True'… well, actually 'liftA2' evaluates both, but
--- this matches the original pre-existing helper used in hlsl/rays.
-(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<&&>) = liftA2 (&&)

@@ -166,7 +166,6 @@ executables:
     when:
     - condition: '!flag(have-shaderc)'
       buildable: false
-    ghc-options: -eventlog
 
   rays:
     main: Main.hs
@@ -196,7 +195,6 @@ executables:
     when:
     - condition: '!flag(raytracing)'
       buildable: false
-    ghc-options: -eventlog
 
   vrcube:
     main: Main.hs
@@ -231,7 +229,6 @@ executables:
     when:
     - condition: '!flag(vr)'
       buildable: false
-    ghc-options: -eventlog
 
 when:
 - condition: os(windows)

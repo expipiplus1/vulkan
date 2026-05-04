@@ -18,7 +18,6 @@ import           Data.Word
 import qualified SDL.Video                     as SDL
 import           Say
 import           Utils                          ( noSuchThing
-                                                , (<&&>)
                                                 )
 import           VkResources                    ( Queues(..) )
 import qualified Vma
@@ -172,8 +171,8 @@ queueRequirements
 queueRequirements phys surf = Queues (QueueSpec 1 isGraphicsPresentQueue)
  where
   isGraphicsPresentQueue queueFamilyIndex queueFamilyProperties =
-    pure (isGraphicsQueueFamily queueFamilyProperties)
-      <&&> isPresentQueueFamily phys surf queueFamilyIndex
+    (&& isGraphicsQueueFamily queueFamilyProperties)
+      <$> isPresentQueueFamily phys surf queueFamilyIndex
 
 getDeviceRTProps :: MonadIO m => PhysicalDevice -> m RTInfo
 getDeviceRTProps phys = do
