@@ -4,11 +4,12 @@ module Window.GLFW
   ( withGLFW
   , createWindow
   , showWindow
+  , drawableSize
   , shouldQuit
   ) where
 
 import           Control.Monad                  ( unless, void )
-import           Control.Monad.IO.Class         ( liftIO )
+import           Control.Monad.IO.Class         ( MonadIO, liftIO )
 import           Control.Monad.Trans.Resource   ( MonadResource
                                                 , allocate
                                                 , allocate_
@@ -16,6 +17,7 @@ import           Control.Monad.Trans.Resource   ( MonadResource
 import qualified Data.Text                     as T
 import           Data.Text                      ( Text )
 import qualified Graphics.UI.GLFW              as GLFW
+import           Vulkan.Core10                  ( Extent2D(..) )
 
 -- | Initialise GLFW and tear it down with the resource scope.
 withGLFW :: MonadResource m => m ()
@@ -48,6 +50,12 @@ createWindow title width height = do
 
 showWindow :: GLFW.Window -> IO ()
 showWindow = GLFW.showWindow
+
+-- | Current framebuffer size, suitable as the swapchain extent fallback.
+drawableSize :: MonadIO m => GLFW.Window -> m Extent2D
+drawableSize win = do
+  (w, h) <- liftIO $ GLFW.getFramebufferSize win
+  pure $ Extent2D (fromIntegral w) (fromIntegral h)
 
 -- | Poll events and report whether the user requested to close the window
 -- (X button, Q, or Escape).

@@ -5,12 +5,18 @@
 module Framebuffer
   ( Framebuffer.createFramebuffer
   , Framebuffer.createImageView
+  , Framebuffer.createFramebuffers
   ) where
 
 import           Control.Monad.Trans.Resource   ( MonadResource
                                                 , ReleaseKey
                                                 , allocate
+                                                , release
                                                 )
+import           Data.Foldable                  ( traverse_ )
+import qualified Data.Vector                   as V
+import           Data.Vector                    ( Vector )
+import           RefCounted                     ( RefCounted, newRefCounted )
 import           Vulkan.Core10                 as Vk
                                          hiding ( withImage )
 import           Vulkan.Core10                 as Extent2D (Extent2D(..))
@@ -35,6 +41,22 @@ createFramebuffer dev renderPass imageView imageSize =
                                    , layers      = 1
                                    }
   in  withFramebuffer dev framebufferCreateInfo Nothing allocate
+
+-- | Build one framebuffer per image view at the given extent. The returned
+-- 'RefCounted' frees them all when no in-flight frame still uses them — call
+-- 'releaseRefCounted' after a swapchain swap.
+createFramebuffers
+  :: MonadResource m
+  => Device
+  -> RenderPass
+  -> Vector ImageView
+  -> Extent2D
+  -> m (Vector Framebuffer, RefCounted)
+createFramebuffers dev rp ivs imageSize = do
+  (keys, fbs) <- fmap V.unzip . V.forM ivs $ \iv ->
+    Framebuffer.createFramebuffer dev rp iv imageSize
+  rel <- newRefCounted (traverse_ release keys)
+  pure (fbs, rel)
 
 -- | Vanilla 2D color image view covering the whole image.
 createImageView

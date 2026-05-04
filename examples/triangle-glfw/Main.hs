@@ -1,40 +1,23 @@
 {-# LANGUAGE OverloadedLists #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Main where
 
 import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Maybe
 import           Control.Monad.Trans.Resource
 import qualified Data.Text                     as Text
-import           Data.Functor.Identity          ( Identity(..) )
 import           Data.String                    ( IsString )
-import           Data.Word                      ( Word32 )
 import           Data.Text.Encoding             ( decodeUtf8 )
-import qualified Data.Vector                   as V
-import qualified Graphics.UI.GLFW              as GLFW
+import           InitDevice                     ( withGraphicsPresentDevice )
 import           Say
 import qualified Triangle
 import qualified Vma
 import           VkResources                    ( Queues(..)
                                                 , mkVkResources
                                                 )
-import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
-import qualified Vulkan.Core10.DeviceInitialization as DI
-import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Requirement             ( DeviceRequirement(..) )
+import           Vulkan.Zero                    ( zero )
 import qualified Vulkan.Utils.Init.GLFW        as Init
-import           Vulkan.Utils.Initialization    ( createDeviceFromRequirements
-                                                , pickPhysicalDevice
-                                                )
-import           Vulkan.Utils.QueueAssignment   ( QueueFamilyIndex(..)
-                                                , QueueSpec(..)
-                                                , assignQueues
-                                                , isGraphicsQueueFamily
-                                                , isPresentQueueFamily
-                                                )
-import           Vulkan.Zero
 import           Frame                          ( frameDeviceRequirements
                                                 , frameInstanceRequirements
                                                 )
@@ -50,20 +33,25 @@ main = runResourceT $ do
     (Just zero { applicationName = Just appName, apiVersion = API_VERSION_1_0 })
     frameInstanceRequirements
     []
-  surface                  <- Init.withSurface inst window
-  (phys, dev, qfi, gQueue) <- createGraphicalDevice inst surface
-  vma                      <- Vma.createVMA zero API_VERSION_1_0 inst phys dev
-  props                    <- getPhysicalDeviceProperties phys
+  surface              <- Init.withSurface inst window
+  let deviceReqs =
+        [ RequireDeviceExtension Nothing e minBound
+        | e <- Init.getRequiredDeviceExtensions
+        ] ++ frameDeviceRequirements
+  (phys, dev, qfi, gQueue) <-
+    withGraphicsPresentDevice inst surface deviceReqs
+  vma                  <- Vma.createVMA zero API_VERSION_1_0 inst phys dev
+  props                <- getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
 
-  let qs = Queues (QueueFamilyIndex qfi, gQueue)
+  let qs = Queues (qfi, gQueue)
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
-  initialSize <- liftIO $ drawableSize window
+  initialSize <- Window.drawableSize window
   initialSC   <- allocSwapchain vr NULL_HANDLE initialSize surface
 
   liftIO $ Window.showWindow window
-  Triangle.runTriangle vr initialSC (drawableSize window) (Window.shouldQuit window)
+  Triangle.runTriangle vr initialSC (Window.drawableSize window) (Window.shouldQuit window)
 
 appName :: IsString a => a
 appName = "Haskell Vulkan triangle example (GLFW)"
@@ -71,48 +59,3 @@ appName = "Haskell Vulkan triangle example (GLFW)"
 windowWidth, windowHeight :: Int
 windowWidth = 800
 windowHeight = 600
-
-drawableSize :: GLFW.Window -> IO Extent2D
-drawableSize win = do
-  (w, h) <- GLFW.getFramebufferSize win
-  pure $ Extent2D (fromIntegral w) (fromIntegral h)
-
-----------------------------------------------------------------
--- Pick a device with a unified graphics+present queue.
-----------------------------------------------------------------
-
-createGraphicalDevice
-  :: (MonadResource m, MonadFail m)
-  => Instance
-  -> SurfaceKHR
-  -> m (PhysicalDevice, Device, Word32, Queue)
-createGraphicalDevice inst surface = do
-  mPd <- pickPhysicalDevice inst suitable id
-  (_, phys) <- maybe (sayErr "No suitable devices found" >> error "no GPU") pure mPd
-
-  let queueSpec = QueueSpec 1 $ \i q ->
-        if isGraphicsQueueFamily q
-          then isPresentQueueFamily phys surface i
-          else pure False
-  Just (qInfos, getQs) <- assignQueues phys (Identity queueSpec)
-
-  let deviceReqs =
-        [ RequireDeviceExtension Nothing e minBound
-        | e <- Init.getRequiredDeviceExtensions
-        ] ++ frameDeviceRequirements
-  dev <- createDeviceFromRequirements deviceReqs [] phys
-    zero { queueCreateInfos = SomeStruct <$> qInfos }
-  Identity (QueueFamilyIndex familyIdx, queue) <- liftIO (getQs dev)
-  pure (phys, dev, familyIdx, queue)
- where
-  suitable phys = runMaybeT $ do
-    (_, exts) <- enumerateDeviceExtensionProperties phys Nothing
-    True <- pure $ V.any ((Init.getRequiredDeviceExtensions !! 0 ==) . extensionName) exts
-    qProps <- getPhysicalDeviceQueueFamilyProperties phys
-    True <- pure $ V.any isGraphicsQueueFamily qProps
-    let presentSupport i =
-          isPresentQueueFamily phys surface (QueueFamilyIndex (fromIntegral i))
-    hasPresent <- V.or <$> V.imapM (\i _ -> presentSupport i) qProps
-    True <- pure hasPresent
-    heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
-    pure (sum $ DI.size <$> heaps)

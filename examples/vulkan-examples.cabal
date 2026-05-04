@@ -46,6 +46,7 @@ library
       Camera
       Frame
       Framebuffer
+      InitDevice
       Orphans
       RefCounted
       Swapchain
@@ -53,7 +54,6 @@ library
       Utils
       VkResources
       Vma
-      Window
       Window.GLFW
       Window.SDL2
   other-modules:

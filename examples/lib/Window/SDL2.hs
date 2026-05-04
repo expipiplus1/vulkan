@@ -2,6 +2,8 @@ module Window.SDL2
   ( withSDL
   , createWindow
   , createSurface
+  , drawableSize
+  , showWindow
   , RefreshLimit(..)
   , shouldQuit
   ) where
@@ -54,6 +56,17 @@ createSurface
 createSurface inst window = allocate
   (SurfaceKHR <$> SDL.vkCreateSurface window (castPtr (instanceHandle inst)))
   (\s -> destroySurfaceKHR inst s Nothing)
+
+-- | Current drawable size, suitable as the swapchain extent fallback.
+drawableSize :: MonadIO m => SDL.Window -> m Extent2D
+drawableSize win = do
+  SDL.V2 w h <- SDL.vkGetDrawableSize win
+  pure $ Extent2D (fromIntegral w) (fromIntegral h)
+
+-- | Make the window visible. The window is created hidden so the swapchain
+-- can be brought up first.
+showWindow :: MonadIO m => SDL.Window -> m ()
+showWindow = SDL.showWindow
 
 ----------------------------------------------------------------
 -- SDL helpers

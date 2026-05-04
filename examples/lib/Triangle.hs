@@ -27,10 +27,7 @@ import           Frame                          ( Frame(..)
                                                 )
 import qualified Framebuffer
 import           Data.IORef
-import           RefCounted                     ( RefCounted
-                                                , newRefCounted
-                                                , releaseRefCounted
-                                                )
+import           RefCounted                     ( releaseRefCounted )
 import           Swapchain                      ( Swapchain(..)
                                                 , recreateSwapchain
                                                 , threwSwapchainError
@@ -67,7 +64,7 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
   let dev = vrDevice vr
   (_, renderPass) <- createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
   (_, pipeline)   <- createGraphicsPipeline dev renderPass
-  initialFBs      <- createFramebuffers dev renderPass initialSC
+  initialFBs      <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
 
   scRef  <- liftIO $ newIORef initialSC
   fbsRef <- liftIO $ newIORef initialFBs
@@ -84,7 +81,7 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
           then do
             newSize           <- liftIO getDrawableSize
             sc'               <- recreateSwapchain vr newSize currentSC
-            newFBs            <- createFramebuffers dev renderPass sc'
+            newFBs            <- Framebuffer.createFramebuffers dev renderPass (sImageViews sc') (sExtent sc')
             (_oldFbs, oldRel) <- liftIO $ readIORef fbsRef
             releaseRefCounted oldRel
             liftIO $ writeIORef scRef  sc'
@@ -353,18 +350,3 @@ createShaders dev = do
     , (fragKey, SomeStruct fragShaderStageCreateInfo)
     ]
 
-----------------------------------------------------------------
--- Framebuffers
-----------------------------------------------------------------
-
-createFramebuffers
-  :: MonadResource m
-  => Device
-  -> RenderPass
-  -> Swapchain
-  -> m (Vector Framebuffer, RefCounted)
-createFramebuffers dev rp sc = do
-  (keys, fbs) <- fmap V.unzip . V.forM (sImageViews sc) $ \iv ->
-    Framebuffer.createFramebuffer dev rp iv (sExtent sc)
-  rel <- newRefCounted (traverse_ release keys)
-  pure (fbs, rel)

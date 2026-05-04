@@ -9,7 +9,6 @@ import           Control.Monad.Trans.Resource
 import           Data.Foldable                  ( for_ )
 import           Data.IORef
 import           Data.Word                      ( Word64 )
-import qualified Data.Vector                   as V
 import           Foreign.Ptr                    ( castPtr )
 import           Foreign.Storable               ( sizeOf )
 import           Frame                          ( Frame(..)
@@ -28,10 +27,8 @@ import           Render                         ( RenderState(..)
                                                 , renderFrame
                                                 )
 import qualified SDL
-import qualified SDL.Video.Vulkan              as SDL
 import           Scene                          ( makeSceneBuffers )
-import           Swapchain                      ( Swapchain(..)
-                                                , allocSwapchain
+import           Swapchain                      ( allocSwapchain
                                                 , recreateSwapchain
                                                 , threwSwapchainError
                                                 )
@@ -47,6 +44,7 @@ import           VulkanMemoryAllocator         as VMA
                                          hiding ( getPhysicalDeviceProperties )
 import           Window.SDL2                    ( RefreshLimit(..)
                                                 , createWindow
+                                                , drawableSize
                                                 , shouldQuit
                                                 , withSDL
                                                 )
@@ -142,8 +140,3 @@ main = runResourceT $ do
       False -> Just <$> perFrame f
 
   loopJust loop initial
-
-drawableSize :: SDL.Window -> IO Extent2D
-drawableSize win = do
-  SDL.V2 w h <- SDL.vkGetDrawableSize win
-  pure $ Extent2D (fromIntegral w) (fromIntegral h)

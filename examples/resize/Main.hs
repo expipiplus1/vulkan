@@ -12,8 +12,6 @@ import           Control.Lens.Getter
 import           Control.Monad                  ( when )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
-import           Data.Bits                      ( (.|.) )
-import           Data.Foldable                  ( traverse_ )
 import           Data.IORef
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
@@ -26,11 +24,12 @@ import           Frame                          ( Frame(..)
                                                 )
 import qualified Framebuffer
 import           GHC.Clock                      ( getMonotonicTimeNSec )
-import           Init                           ( DeviceParams(..)
-                                                , createDevice
-                                                , createVMA
+import           Init                           ( createVMA
+                                                , deviceRequirements
                                                 , myApiVersion
                                                 )
+import           InitDevice                     ( withGraphicsPresentDevice )
+import           Data.Text.Encoding             ( decodeUtf8 )
 import           Julia                          ( JuliaPipeline(..)
                                                 , createJuliaDescriptorSets
                                                 , createJuliaPipeline
@@ -46,7 +45,6 @@ import           RefCounted                     ( RefCounted
                                                 , releaseRefCounted
                                                 )
 import qualified SDL
-import qualified SDL.Video.Vulkan              as SDL
 import           Say
 import           Data.Word                      ( Word64 )
 import           Swapchain                      ( Swapchain(..)
@@ -87,12 +85,12 @@ import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR(..))
 import           Vulkan.Extensions.VK_KHR_swapchain
                                                as Swap
-import           Vulkan.Utils.QueueAssignment   ( QueueFamilyIndex(..) )
 import           Vulkan.Zero
 import qualified Vulkan.Utils.Init.SDL2        as Init
 import           Window.SDL2                    ( RefreshLimit(..)
                                                 , createSurface
                                                 , createWindow
+                                                , drawableSize
                                                 , shouldQuit
                                                 , withSDL
                                                 )
@@ -114,12 +112,13 @@ main = prettyError . runResourceT $ do
     frameInstanceRequirements
     []
   (_, surface) <- createSurface inst sdlWindow
-  DeviceParams devName phys dev graphicsQueue graphicsQueueFamilyIndex <-
-    createDevice inst surface
-  vma       <- createVMA inst phys dev
-  sayErr $ "Using device: " <> devName
+  (phys, dev, qfi, graphicsQueue) <-
+    withGraphicsPresentDevice inst surface deviceRequirements
+  vma   <- createVMA inst phys dev
+  props <- getPhysicalDeviceProperties phys
+  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
 
-  let qs = Queues (QueueFamilyIndex graphicsQueueFamilyIndex, graphicsQueue)
+  let qs = Queues (qfi, graphicsQueue)
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   -- Initial swapchain at the requested size.
@@ -194,9 +193,8 @@ createBindings
   -> m Bindings
 createBindings dev renderPass jp sc = do
   -- Framebuffers (one per swapchain image) for the dormant graphics pipeline.
-  (fbKeys, framebuffers) <- fmap V.unzip . V.forM (sImageViews sc) $ \iv ->
-    Framebuffer.createFramebuffer dev renderPass iv (sExtent sc)
-  fbRel <- newRefCounted (traverse_ release fbKeys)
+  (framebuffers, fbRel) <-
+    Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
 
   -- Julia descriptor sets (one per swapchain image).
   juliaSets <- createJuliaDescriptorSets
@@ -409,11 +407,3 @@ reportFrameTime nsec = do
   when (frameBudgetPercent > 50) $
     sayErrString (show frameTimeMSec <> "ms \t" <> show frameBudgetPercent <> "%")
 
-----------------------------------------------------------------
--- Helpers
-----------------------------------------------------------------
-
-drawableSize :: SDL.Window -> IO Extent2D
-drawableSize win = do
-  SDL.V2 w h <- SDL.vkGetDrawableSize win
-  pure $ Extent2D (fromIntegral w) (fromIntegral h)

@@ -4,10 +4,7 @@ module Main where
 
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
-import           Data.Foldable                  ( traverse_ )
 import           Data.IORef
-import qualified Data.Vector                   as V
-import           Data.Vector                    ( Vector )
 import           Frame                          ( Frame(..)
                                                 , advanceFrame
                                                 , initialFrame
@@ -18,17 +15,12 @@ import           Init                           ( createDevice
                                                 , createInstance
                                                 , createVMA
                                                 )
-import           RefCounted                     ( RefCounted
-                                                , newRefCounted
-                                                , releaseRefCounted
-                                                )
+import           RefCounted                     ( releaseRefCounted )
 import           Render                         ( renderFrame )
 import qualified RenderPass
 import           SDL                            ( showWindow
                                                 , time
                                                 )
-import qualified SDL
-import qualified SDL.Video.Vulkan              as SDL
 import           Swapchain                      ( Swapchain(..)
                                                 , allocSwapchain
                                                 , recreateSwapchain
@@ -37,16 +29,12 @@ import           Swapchain                      ( Swapchain(..)
 import           Utils                          ( loopJust )
 import           VkResources                    ( mkVkResources )
 import qualified Pipeline
-import           Vulkan.Core10                  ( Device
-                                                , Extent2D(..)
-                                                , Framebuffer
-                                                , RenderPass
-                                                , pattern NULL_HANDLE
-                                                )
+import           Vulkan.Core10                  ( pattern NULL_HANDLE )
 import           Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
                                                 ( SurfaceFormatKHR(..) )
 import           Window.SDL2                    ( RefreshLimit(..)
                                                 , createWindow
+                                                , drawableSize
                                                 , shouldQuit
                                                 , withSDL
                                                 )
@@ -68,7 +56,7 @@ main = runResourceT $ do
   initialSC            <- allocSwapchain vr NULL_HANDLE initialSize surf
   (_, renderPass)      <- RenderPass.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
   (_, pipeline)        <- Pipeline.createPipeline dev renderPass
-  initialFBs           <- createFramebuffers dev renderPass initialSC
+  initialFBs           <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
 
   scRef                <- liftIO $ newIORef initialSC
   fbsRef               <- liftIO $ newIORef initialFBs
@@ -89,7 +77,7 @@ main = runResourceT $ do
         then do
           newSize           <- liftIO $ drawableSize win
           sc'               <- recreateSwapchain vr newSize currentSC
-          newFBs            <- createFramebuffers dev renderPass sc'
+          newFBs            <- Framebuffer.createFramebuffers dev renderPass (sImageViews sc') (sExtent sc')
           (_oldFbs, oldRel) <- liftIO $ readIORef fbsRef
           releaseRefCounted oldRel
           liftIO $ writeIORef scRef  sc'
@@ -107,22 +95,3 @@ main = runResourceT $ do
       False -> Just <$> perFrame f
 
   loopJust loop initial
-
-drawableSize :: SDL.Window -> IO Extent2D
-drawableSize win = do
-  SDL.V2 w h <- SDL.vkGetDrawableSize win
-  pure $ Extent2D (fromIntegral w) (fromIntegral h)
-
--- | Build a framebuffer per swapchain image; bundle a 'RefCounted' that
--- frees them all when no in-flight frame still uses them.
-createFramebuffers
-  :: MonadResource m
-  => Device
-  -> RenderPass
-  -> Swapchain
-  -> m (Vector Framebuffer, RefCounted)
-createFramebuffers dev rp sc = do
-  (keys, fbs) <- fmap V.unzip . V.forM (sImageViews sc) $ \iv ->
-    Framebuffer.createFramebuffer dev rp iv (sExtent sc)
-  rel <- newRefCounted (traverse_ release keys)
-  pure (fbs, rel)
