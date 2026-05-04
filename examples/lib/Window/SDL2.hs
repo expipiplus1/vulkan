@@ -1,4 +1,4 @@
-module Window
+module Window.SDL2
   ( withSDL
   , createWindow
   , createSurface

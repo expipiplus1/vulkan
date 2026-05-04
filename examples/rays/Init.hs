@@ -69,7 +69,7 @@ import           VulkanMemoryAllocator          ( Allocator
                                                 , vkGetInstanceProcAddr
                                                 , withAllocator
                                                 )
-import           Window
+import           Window.SDL2
 import Foreign.Ptr (castFunPtr)
 
 myApiVersion :: Word32

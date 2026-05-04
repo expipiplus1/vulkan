@@ -7,13 +7,14 @@ import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Maybe
 import Control.Monad.Trans.Resource
+import qualified Data.Text as Text
 import Data.String (IsString)
 import Data.Text.Encoding
 import Data.Traversable
 import Data.Functor.Identity (Identity (..))
 import qualified Data.Vector as V
 import Data.Word
-import qualified SDL
+import qualified Graphics.UI.GLFW as GLFW
 import Say
 import System.Exit
 import Vulkan.CStruct.Extends
@@ -24,7 +25,7 @@ import qualified Vulkan.Extensions.VK_KHR_surface as SF
 import Vulkan.Extensions.VK_KHR_swapchain
 import qualified Vulkan.Extensions.VK_KHR_swapchain as SW
 import Vulkan.Requirement (DeviceRequirement (..))
-import qualified Vulkan.Utils.Init.SDL2 as Init
+import qualified Vulkan.Utils.Init.GLFW as Init
 import Vulkan.Utils.Initialization (createDeviceFromRequirements, pickPhysicalDevice)
 import Vulkan.Utils.QueueAssignment
   ( QueueFamilyIndex (..)
@@ -35,13 +36,13 @@ import Vulkan.Utils.QueueAssignment
   )
 import Vulkan.Zero
 import qualified Triangle
-import qualified Window.SDL2 as Window
+import qualified Window.GLFW as Window
 
 main :: IO ()
 main = runResourceT $ do
-  Window.withSDL
+  Window.withGLFW
   VulkanWindow{..} <- withVulkanWindow windowWidth windowHeight
-  SDL.showWindow vwSdlWindow
+  liftIO $ Window.showWindow vwGlfwWindow
   Triangle.runTriangle
     vwDevice
     vwSwapchain
@@ -51,10 +52,10 @@ main = runResourceT $ do
     vwGraphicsQueueFamilyIndex
     vwGraphicsQueue
     vwPresentQueue
-    (Window.shouldQuit Window.NoLimit)
+    (Window.shouldQuit vwGlfwWindow)
 
 data VulkanWindow = VulkanWindow
-  { vwSdlWindow :: SDL.Window
+  { vwGlfwWindow :: GLFW.Window
   , vwDevice :: Device
   , vwSurface :: SurfaceKHR
   , vwSwapchain :: SwapchainKHR
@@ -68,7 +69,7 @@ data VulkanWindow = VulkanWindow
 
 withVulkanWindow :: Int -> Int -> ResourceT IO VulkanWindow
 withVulkanWindow width height = do
-  window <- Window.createWindow appName width height
+  window <- Window.createWindow (Text.pack appName) width height
   inst <- Init.withInstance
     window
     (Just zero{applicationName = Just appName, apiVersion = API_VERSION_1_0})
@@ -106,7 +107,7 @@ withVulkanWindow width height = do
     graphicsQueue graphicsQueueFamilyIndex presentQueue
 
 appName :: (IsString a) => a
-appName = "Haskell Vulkan triangle example"
+appName = "Haskell Vulkan triangle example (GLFW)"
 
 windowWidth, windowHeight :: Int
 windowWidth = 800
@@ -189,9 +190,6 @@ pickGraphicalPhysicalDevice inst surface desiredFormat = do
   bestFormat <- getFormat phys
   presentMode <- getPresentMode phys
   surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR phys surface
-  -- Ask for one queue that can do both graphics and present. Most drivers
-  -- expose a universal queue family; this avoids issues when graphics-only
-  -- families have queueCount = 1.
   let queueSpec = QueueSpec 1 $ \i q ->
         if isGraphicsQueueFamily q
           then isPresentQueueFamily phys surface i
@@ -249,8 +247,6 @@ pickGraphicalPhysicalDevice inst surface desiredFormat = do
             desiredFormat
       _ -> V.head formats
 
-  -- Returns the first preferred present mode the driver supports, falling
-  -- back to whatever it offers (FIFO_KHR is guaranteed by the spec).
   getPresentMode :: (MonadIO m) => PhysicalDevice -> m PresentModeKHR
   getPresentMode dev = do
     (_, presentModes) <- getPhysicalDeviceSurfacePresentModesKHR dev surface

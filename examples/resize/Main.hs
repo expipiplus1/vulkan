@@ -57,7 +57,7 @@ import           MonadVulkan
 import           Pipeline
 import qualified SDL.Video.Vulkan              as SDL
 import           Swapchain
-import           Window
+import           Window.SDL2
 
 ----------------------------------------------------------------
 -- Main performs some one time initialization of the windowing system and

@@ -11,17 +11,6 @@ license: BSD-3-Clause
 
 library:
   source-dirs: lib
-  exposed-modules:
-  - AutoApply
-  - Camera
-  - Framebuffer
-  - HasVulkan
-  - InstrumentDecs
-  - Orphans
-  - RefCounted
-  - Swapchain
-  - Utils
-  - Window
   verbatim:
     ghc-options: -Wall
   dependencies:
@@ -35,6 +24,7 @@ library:
   - bytestring
   - derive-storable >= 0.3
   - derive-storable-plugin >= 0.2.3.3
+  - GLFW-b
   - lens
   - linear
   - nothunks >= 0.1.2
@@ -63,8 +53,6 @@ executables:
     source-dirs: sdl-triangle
     dependencies:
     - base <5
-    - bytestring
-    - extra
     - resourcet
     - say
     - sdl2
@@ -73,6 +61,23 @@ executables:
     - vector
     - vulkan
     - vulkan-examples
+    - vulkan-init-sdl2
+    - vulkan-utils
+
+  glfw:
+    main: Main.hs
+    source-dirs: glfw
+    dependencies:
+    - base <5
+    - GLFW-b
+    - resourcet
+    - say
+    - text
+    - transformers
+    - vector
+    - vulkan
+    - vulkan-examples
+    - vulkan-init-glfw
     - vulkan-utils
 
   offscreen:

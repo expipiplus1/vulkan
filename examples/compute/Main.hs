@@ -14,18 +14,11 @@ import           AutoApply
 import qualified Codec.Picture                 as JP
 import           Control.Exception.Safe
 import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
 import           Data.Bits
 import qualified Data.ByteString.Lazy          as BSL
-import           Data.Foldable
-import           Data.List                      ( partition )
-import           Data.Maybe                     ( catMaybes )
-import           Data.Ord                       ( comparing )
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as T
-import           Data.Text.Encoding             ( decodeUtf8 )
+import           Data.Functor.Identity          ( Identity(..) )
 import qualified Data.Vector                   as V
 import           Data.Word
 import           Foreign.Marshal.Array          ( peekArray )
@@ -55,8 +48,18 @@ import           Vulkan.Dynamic                 ( DeviceCmds
                                                   )
                                                 )
 import           Vulkan.Extensions.VK_EXT_debug_utils
-import           Vulkan.Extensions.VK_EXT_validation_features
-import           Vulkan.Utils.Debug
+import           Vulkan.Requirement              ( InstanceRequirement(..) )
+import           Vulkan.Utils.Debug              ( debugCallbackPtr )
+import qualified Vulkan.Utils.Init.Headless    as Init
+import           Vulkan.Utils.Initialization    ( createDeviceFromRequirements
+                                                , physicalDeviceName
+                                                , pickPhysicalDevice
+                                                )
+import           Vulkan.Utils.QueueAssignment   ( QueueFamilyIndex(..)
+                                                , QueueSpec(..)
+                                                , assignQueues
+                                                , isComputeQueueFamily
+                                                )
 import           Vulkan.Utils.ShaderQQ.GLSL.Glslang
 import           Vulkan.Zero
 import           VulkanMemoryAllocator         as VMA
@@ -146,7 +149,6 @@ autoapplyDecs
   , 'withCommandPool
   , 'withFence
   , 'withComputePipelines
-  , 'withInstance
   , 'withPipelineLayout
   , 'withShaderModule
   , 'withDescriptorPool
@@ -405,31 +407,22 @@ createShader = do
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
 
--- | Create an instance with a debug messenger
+-- | Create an instance with a debug messenger and validation layer.
 createInstance :: MonadResource m => m Instance
 createInstance = do
-  availableExtensionNames <-
-    toList
-    .   fmap extensionName
-    .   snd
-    <$> enumerateInstanceExtensionProperties Nothing
-  availableLayerNames <-
-    toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
-
-  let requiredLayers     = []
-      optionalLayers     = ["VK_LAYER_KHRONOS_validation"]
-      requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME]
-      optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
-
-  extensions <- partitionOptReq "extension"
-                                availableExtensionNames
-                                optionalExtensions
-                                requiredExtensions
-  layers <- partitionOptReq "layer"
-                            availableLayerNames
-                            optionalLayers
-                            requiredLayers
-
+  inst <- Init.withInstance
+    (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
+    [ RequireInstanceExtension
+        { instanceExtensionLayerName  = Nothing
+        , instanceExtensionName       = EXT_DEBUG_UTILS_EXTENSION_NAME
+        , instanceExtensionMinVersion = minBound
+        }
+    ]
+    [ RequireInstanceLayer
+        { instanceLayerName       = "VK_LAYER_KHRONOS_validation"
+        , instanceLayerMinVersion = minBound
+        }
+    ]
   let debugMessengerCreateInfo = zero
         { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                               .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
@@ -438,20 +431,6 @@ createInstance = do
                             .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
         , pfnUserCallback = debugCallbackPtr
         }
-      instanceCreateInfo =
-        zero
-            { applicationInfo       = Just zero { applicationName = Nothing
-                                                , apiVersion      = myApiVersion
-                                                }
-            , enabledLayerNames     = V.fromList layers
-            , enabledExtensionNames = V.fromList extensions
-            }
-          ::& debugMessengerCreateInfo
-          :&  ValidationFeaturesEXT
-                [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT]
-                []
-          :&  ()
-  (_, inst) <- withInstance' instanceCreateInfo
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   pure inst
 
@@ -460,89 +439,38 @@ createDevice
   => Instance
   -> m (PhysicalDevice, PhysicalDeviceInfo, Device)
 createDevice inst = do
-  (pdi, phys) <- pickPhysicalDevice inst physicalDeviceInfo
+  mPd <- pickPhysicalDevice inst hasComputeQueue id
+  (_, phys) <- maybe (throwString "Unable to find appropriate PhysicalDevice")
+                     pure
+                     mPd
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
 
-  let deviceCreateInfo = zero
-        { queueCreateInfos =
-          [ SomeStruct zero { queueFamilyIndex = pdiComputeQueueFamilyIndex pdi
-                            , queuePriorities  = [1]
-                            }
-          ]
-        }
+  mAssign <- assignQueues
+    phys
+    (Identity (QueueSpec 1 (\_ q -> pure (isComputeQueueFamily q))))
+  (qInfos, getQs) <- maybe (throwString "Unable to assign compute queue")
+                           pure
+                           mAssign
+  dev <- createDeviceFromRequirements
+    []
+    []
+    phys
+    zero { queueCreateInfos = SomeStruct <$> qInfos }
+  Identity (QueueFamilyIndex computeFamilyIdx, _q) <- liftIO (getQs dev)
+  pure (phys, PhysicalDeviceInfo computeFamilyIdx, dev)
+ where
+  hasComputeQueue :: MonadIO m => PhysicalDevice -> m (Maybe Word64)
+  hasComputeQueue phys = do
+    qProps <- getPhysicalDeviceQueueFamilyProperties phys
+    if V.any isComputeQueueFamily qProps
+      then do
+        heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
+        pure (Just (sum (DI.size <$> heaps)))
+      else pure Nothing
 
-  (_, dev) <- withDevice phys deviceCreateInfo Nothing allocate
-  pure (phys, pdi, dev)
-
-----------------------------------------------------------------
--- Physical device tools
-----------------------------------------------------------------
-
--- | Get a single PhysicalDevice deciding with a scoring function
-pickPhysicalDevice
-  :: (MonadIO m, MonadThrow m, Ord a)
-  => Instance
-  -> (PhysicalDevice -> m (Maybe a))
-  -- ^ Some "score" for a PhysicalDevice, Nothing if it is not to be chosen.
-  -> m (a, PhysicalDevice)
-pickPhysicalDevice inst devScore = do
-  (_, devs) <- enumeratePhysicalDevices inst
-  scores    <- catMaybes
-    <$> sequence [ fmap (, d) <$> devScore d | d <- toList devs ]
-  case scores of
-    [] -> throwString "Unable to find appropriate PhysicalDevice"
-    _  -> pure (maximumBy (comparing fst) scores)
-
--- | The Ord instance prioritises devices with more memory
-data PhysicalDeviceInfo = PhysicalDeviceInfo
-  { pdiTotalMemory             :: Word64
-  , pdiComputeQueueFamilyIndex :: Word32
+newtype PhysicalDeviceInfo = PhysicalDeviceInfo
+  { pdiComputeQueueFamilyIndex :: Word32
     -- ^ The queue family index of the first compute queue
   }
   deriving (Eq, Ord)
 
-physicalDeviceInfo
-  :: MonadIO m => PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
-physicalDeviceInfo phys = runMaybeT $ do
-  pdiTotalMemory <- do
-    heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
-    pure $ sum (DI.size <$> heaps)
-  pdiComputeQueueFamilyIndex <- do
-    queueFamilyProperties <- getPhysicalDeviceQueueFamilyProperties phys
-    let isComputeQueue q =
-          (QUEUE_COMPUTE_BIT .&&. queueFlags q) && (queueCount q > 0)
-        computeQueueIndices = fromIntegral . fst <$> V.filter
-          (isComputeQueue . snd)
-          (V.indexed queueFamilyProperties)
-    MaybeT (pure $ computeQueueIndices V.!? 0)
-  pure PhysicalDeviceInfo { .. }
-
-physicalDeviceName :: MonadIO m => PhysicalDevice -> m Text
-physicalDeviceName phys = do
-  props <- getPhysicalDeviceProperties phys
-  pure $ decodeUtf8 (deviceName props)
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-partitionOptReq
-  :: (Show a, Eq a, MonadIO m) => Text -> [a] -> [a] -> [a] -> m [a]
-partitionOptReq type' available optional required = do
-  let (optHave, optMissing) = partition (`elem` available) optional
-      (reqHave, reqMissing) = partition (`elem` available) required
-      tShow                 = T.pack . show
-  for_ optMissing
-    $ \n -> sayErr $ "Missing optional " <> type' <> ": " <> tShow n
-  case reqMissing of
-    []  -> pure ()
-    [x] -> sayErr $ "Missing required " <> type' <> ": " <> tShow x
-    xs  -> sayErr $ "Missing required " <> type' <> "s: " <> tShow xs
-  pure (reqHave <> optHave)
-
-----------------------------------------------------------------
--- Bit utils
-----------------------------------------------------------------
-
-(.&&.) :: Bits a => a -> a -> Bool
-x .&&. y = (/= zeroBits) (x .&. y)
