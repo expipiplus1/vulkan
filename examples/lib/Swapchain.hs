@@ -13,13 +13,13 @@ module Swapchain
 
 import           AutoApply
 import           Control.Monad
+import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
 import           Data.Either
 import           Data.Foldable                  ( for_
                                                 , traverse_
                                                 )
-import           Data.Ord                       ( comparing )
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import           Framebuffer
@@ -158,7 +158,7 @@ createSwapchain oldSwapchain explicitSize surf = do
   -- Select a surface format
   -- getPhysicalDeviceSurfaceFormatsKHR doesn't return an empty list
   (_, availableFormats) <- getPhysicalDeviceSurfaceFormatsKHR' surf
-  let surfaceFormat = selectSurfaceFormat availableFormats
+  surfaceFormat <- selectSurfaceFormat availableFormats
 
   -- Calculate the extent
   let imageExtent =
@@ -227,15 +227,21 @@ threwSwapchainError = fmap isLeft . tryJust swapchainError
 -- Specifications
 ----------------------------------------------------------------
 
--- The vector passed will have at least one element
-selectSurfaceFormat :: Vector SurfaceFormatKHR -> SurfaceFormatKHR
-selectSurfaceFormat = V.maximumBy (comparing surfaceFormatScore)
- where
-  -- An ordered list of formats to choose for the swapchain images, if none
-  -- match then the first available format will be chosen.
-  surfaceFormatScore :: SurfaceFormatKHR -> Int
-  surfaceFormatScore = \case
-    _ -> 0
+-- The vector passed will have at least one element. Prefer formats whose
+-- 'optimalTilingFeatures' satisfy 'requiredFormatFeatures'; SRGB formats
+-- typically omit 'FORMAT_FEATURE_STORAGE_IMAGE_BIT' and would otherwise
+-- cause @vkCreateSwapchainKHR@ to fail.
+selectSurfaceFormat
+  :: (MonadIO m, HasVulkan m) => Vector SurfaceFormatKHR -> m SurfaceFormatKHR
+selectSurfaceFormat fmts = do
+  phys <- getPhysicalDevice
+  let suitable f = do
+        props <- getPhysicalDeviceFormatProperties
+          phys
+          (SurfaceFormatKHR.format f)
+        pure $ all (optimalTilingFeatures props .&&.) requiredFormatFeatures
+  good <- V.filterM suitable fmts
+  pure $ if V.null good then V.head fmts else V.head good
 
 -- | An ordered list of the present mode to be chosen for the swapchain.
 desiredPresentModes :: [PresentModeKHR]
@@ -249,3 +255,10 @@ desiredPresentModes =
 requiredUsageFlags :: [ImageUsageFlagBits]
 requiredUsageFlags =
   [IMAGE_USAGE_COLOR_ATTACHMENT_BIT, IMAGE_USAGE_STORAGE_BIT]
+
+-- | Format features the swapchain image's format must report. Used by
+-- 'selectSurfaceFormat' to skip formats (notably SRGB) that don't support
+-- the usages in 'requiredUsageFlags'.
+requiredFormatFeatures :: [FormatFeatureFlagBits]
+requiredFormatFeatures =
+  [FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, FORMAT_FEATURE_STORAGE_IMAGE_BIT]

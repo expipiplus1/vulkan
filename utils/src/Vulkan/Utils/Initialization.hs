@@ -174,8 +174,13 @@ pickPhysicalDevice
   -- ^ The score and the device
 pickPhysicalDevice inst devInfo score = do
   (_, devs) <- enumeratePhysicalDevices inst
-  infos     <- catMaybes
-    <$> sequence [ fmap (, d) <$> devInfo d | d <- toList devs ]
+  infos     <- catMaybes <$> sequence
+    [ do
+        isCPU <- (PHYSICAL_DEVICE_TYPE_CPU ==) . deviceType
+          <$> getPhysicalDeviceProperties d
+        if isCPU then pure Nothing else fmap (, d) <$> devInfo d
+    | d <- toList devs
+    ]
   pure $ maximumByMay (comparing (score . fst)) infos
 
 -- | Extract the name of a 'PhysicalDevice' with 'getPhysicalDeviceProperties'

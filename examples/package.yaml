@@ -143,6 +143,7 @@ executables:
     - vector
     - vulkan
     - vulkan-examples
+    - vulkan-init-sdl2
     - vulkan-utils
 
   timeline-semaphore:
@@ -180,6 +181,7 @@ executables:
     - vector
     - vulkan
     - vulkan-examples
+    - vulkan-init-sdl2
     - vulkan-utils >= 0.3
     when:
     - condition: '!flag(have-shaderc)'
@@ -214,6 +216,7 @@ executables:
     - vector
     - vulkan >= 3.7
     - vulkan-examples
+    - vulkan-init-sdl2
     - vulkan-utils >= 0.3
     when:
     - condition: '!flag(raytracing)'

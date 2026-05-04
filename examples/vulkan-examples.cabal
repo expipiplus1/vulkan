@@ -253,6 +253,7 @@ executable hlsl
     , vector
     , vulkan
     , vulkan-examples
+    , vulkan-init-sdl2
     , vulkan-utils >=0.3
   default-language: Haskell2010
   if os(windows)
@@ -387,6 +388,7 @@ executable rays
     , vector
     , vulkan >=3.7
     , vulkan-examples
+    , vulkan-init-sdl2
     , vulkan-utils >=0.3
   default-language: Haskell2010
   if os(windows)
@@ -460,6 +462,7 @@ executable resize
     , vector
     , vulkan
     , vulkan-examples
+    , vulkan-init-sdl2
     , vulkan-utils
   default-language: Haskell2010
   if os(windows)

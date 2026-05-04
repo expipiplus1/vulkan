@@ -22,6 +22,7 @@ import           Linear.V2
 import qualified SDL
 import           Say
 import           UnliftIO.Exception             ( displayException
+                                                , throwIO
                                                 , throwString
                                                 )
 import           UnliftIO.Foreign               ( allocaBytes
@@ -48,15 +49,14 @@ import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
 
-import qualified Data.ByteString               as BS
 import           Frame
 import           HasVulkan
 import           Init
 import           Julia
 import           MonadVulkan
 import           Pipeline
-import qualified SDL.Video.Vulkan              as SDL
 import           Swapchain
+import qualified Vulkan.Utils.Init.SDL2        as Init
 import           Window.SDL2
 
 ----------------------------------------------------------------
@@ -67,17 +67,18 @@ import           Window.SDL2
 ----------------------------------------------------------------
 main :: IO ()
 main = prettyError . runResourceT $ do
-  -- Start SDL
-  _ <- allocate_ (SDL.initialize @[] [SDL.InitEvents]) SDL.quit
+  withSDL
 
   let initWidth  = 1280
       initHeight = 720
 
   -- Create everything up to the device
   sdlWindow  <- createWindow "Haskell ❤️ Vulkan" initWidth initHeight
-  windowExts <-
-    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions sdlWindow
-  inst    <- createInstance windowExts
+  inst       <- Init.withInstance
+    sdlWindow
+    (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
+    []
+    []
   surface <- createSurface inst sdlWindow
   DeviceParams devName phys dev graphicsQueue graphicsQueueFamilyIndex <-
     createDevice inst (snd surface)
@@ -230,9 +231,10 @@ draw :: F (Fence, ())
 draw = do
   Frame {..} <- askFrame
 
-  imageIndex <-
+  (acquireResult, imageIndex) <-
     acquireNextImageKHR' fSwapchain 1e9 fImageAvailableSemaphore zero >>= \case
-      (SUCCESS, imageIndex) -> pure imageIndex
+      r@(SUCCESS, _) -> pure r
+      r@(SUBOPTIMAL_KHR, _) -> pure r
       (TIMEOUT, _) -> throwString "Couldn't acquire next image after 1 second"
       _ -> throwString "Unexpected Result from acquireNextImageKHR"
 
@@ -389,7 +391,16 @@ draw = do
                          , swapchains     = [fSwapchain]
                          , imageIndices   = [imageIndex]
                          }
-  _ <- queuePresentKHR graphicsQueue presentInfo
+  presentResult <- queuePresentKHR graphicsQueue presentInfo
+
+  -- A SUBOPTIMAL_KHR from either acquire or present means the swapchain no
+  -- longer matches the surface (typically because the window was resized).
+  -- Re-throw it as ERROR_OUT_OF_DATE_KHR so 'threwSwapchainError' in the
+  -- frame loop triggers 'recreateSwapchain'.
+  case (acquireResult, presentResult) of
+    (SUBOPTIMAL_KHR, _) -> throwIO (VulkanException ERROR_OUT_OF_DATE_KHR)
+    (_, SUBOPTIMAL_KHR) -> throwIO (VulkanException ERROR_OUT_OF_DATE_KHR)
+    _                   -> pure ()
 
   pure (renderFence, ())
 
