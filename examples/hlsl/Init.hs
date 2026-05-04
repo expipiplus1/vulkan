@@ -19,7 +19,6 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Extensions.VK_KHR_timeline_semaphore
 
 import           Control.Applicative
-import qualified Data.ByteString               as BS
 import           Data.Foldable                  ( for_ )
 import           Data.Vector                    ( Vector )
 import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
@@ -29,7 +28,6 @@ import           MonadVulkan                    ( Queues(..)
                                                 , checkCommands
                                                 )
 import qualified SDL.Video                     as SDL
-import qualified SDL.Video.Vulkan              as SDL
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -44,6 +42,7 @@ import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Requirement
+import qualified Vulkan.Utils.Init.SDL2        as VkInit
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
 import qualified Vulkan.Utils.Requirements.TH  as U
@@ -53,7 +52,7 @@ import           VulkanMemoryAllocator          ( Allocator
                                                 , VulkanFunctions(..)
                                                 , withAllocator
                                                 )
-import           Window
+import           Window.SDL2
 import Foreign.Ptr (castFunPtr)
 
 myApiVersion :: Word32
@@ -63,22 +62,16 @@ myApiVersion = API_VERSION_1_0
 -- Instance Creation
 ----------------------------------------------------------------
 
--- | Create an instance with a debug messenger
 createInstance :: MonadResource m => SDL.Window -> m Instance
-createInstance win = do
-  windowExtensions <-
-    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions win
-  let createInfo = zero
-        { applicationInfo = Just zero { applicationName = Nothing
-                                      , apiVersion      = myApiVersion
-                                      }
-        }
-      reqs =
-        (\n -> RequireInstanceExtension Nothing n minBound)
-          <$> ( KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-              : windowExtensions
-              )
-  createDebugInstanceFromRequirements reqs [] createInfo
+createInstance win = VkInit.withInstance
+  win
+  (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
+  [ RequireInstanceExtension
+      Nothing
+      KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+      minBound
+  ]
+  []
 
 ----------------------------------------------------------------
 -- Device creation

@@ -2,9 +2,9 @@
 {-# LANGUAGE OverloadedLists #-}
 
 module Init
-  ( Init.createInstance
-  , Init.createDevice
+  ( Init.createDevice
   , DeviceParams(..)
+  , myApiVersion
   , createVMA
   ) where
 
@@ -13,12 +13,7 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
 import           Data.Bits
-import           Data.ByteString                ( ByteString )
-import           Data.Foldable
-import           Data.Maybe                     ( catMaybes )
-import           Data.Ord                       ( comparing )
 import           Data.Text                      ( Text )
-import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
 import           Data.Word
 import           UnliftIO.Exception
@@ -31,6 +26,9 @@ import           Vulkan.Core10                 as Vk
 import qualified Vulkan.Core10                 as MemoryHeap (MemoryHeap(..))
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
+import           Vulkan.Utils.Initialization    ( physicalDeviceName
+                                                , pickPhysicalDevice
+                                                )
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
@@ -48,28 +46,9 @@ import           Vulkan.Dynamic                 ( DeviceCmds
                                                   , pVkGetInstanceProcAddr
                                                   )
                                                 )
-import           Vulkan.Requirement
-import           Vulkan.Utils.Initialization    ( createDebugInstanceFromRequirements
-                                                )
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
-
-----------------------------------------------------------------
--- Instance Creation
-----------------------------------------------------------------
-
--- | Create an instance with a debug messenger and validation
-createInstance :: forall m . MonadResource m => [ByteString] -> m Instance
-createInstance extraExtensions = do
-  createDebugInstanceFromRequirements
-    [ RequireInstanceExtension Nothing n minBound | n <- extraExtensions ]
-    []
-    zero
-      { applicationInfo = Just zero { applicationName = Nothing
-                                    , apiVersion      = myApiVersion
-                                    }
-      }
 
 ----------------------------------------------------------------
 -- Device Creation
@@ -93,7 +72,7 @@ createDevice inst surf = do
   --
   -- Get a physical device
   --
-  (pdi, phys) <- pickPhysicalDevice inst (physicalDeviceInfo surf) >>= \case
+  (pdi, phys) <- pickPhysicalDevice inst (physicalDeviceInfo surf) id >>= \case
     Nothing -> throwString "Unable to find suitable physical device"
     Just x  -> pure x
   devName <- physicalDeviceName phys
@@ -118,21 +97,6 @@ createDevice inst surf = do
 ----------------------------------------------------------------
 -- Physical device tools
 ----------------------------------------------------------------
-
--- | Get a single PhysicalDevice deciding with a scoring function
-pickPhysicalDevice
-  :: (MonadIO m, MonadThrow m, Ord a)
-  => Instance
-  -> (PhysicalDevice -> m (Maybe a))
-  -- ^ Some "score" for a PhysicalDevice, Nothing if it is not to be chosen.
-  -> m (Maybe (a, PhysicalDevice))
-  -- ^ Throws if no device could be found
-pickPhysicalDevice inst devScore = do
-  (_, devs) <- enumeratePhysicalDevices inst
-  scores    <- catMaybes
-    <$> sequence [ fmap (, d) <$> devScore d | d <- toList devs ]
-  pure
-    $ if null scores then Nothing else Just $ maximumBy (comparing fst) scores
 
 -- | The Ord instance prioritises devices with more memory
 data PhysicalDeviceInfo = PhysicalDeviceInfo
@@ -173,12 +137,6 @@ deviceHasSwapchain :: MonadIO m => PhysicalDevice -> m Bool
 deviceHasSwapchain dev = do
   (_, extensions) <- enumerateDeviceExtensionProperties dev Nothing
   pure $ V.any ((KHR_SWAPCHAIN_EXTENSION_NAME ==) . extensionName) extensions
-
-physicalDeviceName :: MonadIO m => PhysicalDevice -> m Text
-physicalDeviceName phys = do
-  props <- getPhysicalDeviceProperties phys
-  pure $ decodeUtf8 (deviceName props)
-
 
 ----------------------------------------------------------------
 -- VulkanMemoryAllocator

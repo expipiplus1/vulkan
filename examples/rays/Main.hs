@@ -12,7 +12,7 @@ import           SDL                            ( showWindow
                                                 )
 import           Swapchain                      ( threwSwapchainError )
 import           Utils
-import           Window
+import           Window.SDL2
 
 main :: IO ()
 main = runResourceT $ do

@@ -11,7 +11,7 @@ devices.
 ### `resize`
 
 A nice example of rendering into a window which can be resized. It's not a
-single file `triangle` like `sdl-triangle`, but rather builds a couple of nice
+single file `triangle` like `triangle-sdl2`, but rather builds a couple of nice
 abstractions to make the code a little nicer.
 
 It renders a Julia set according the mouse position in the window.
@@ -46,7 +46,7 @@ functions.
 An example of using the `VK_KHR_ray_tracing_pipeline` extension. Needs quite a
 new driver to run!
 
-### `offscreen`
+### `triangle-headless`
 
 This example:
 
@@ -80,9 +80,17 @@ Like the `resize` example,
 an internal `AutoApply` module are used to make
 resource and global management less painful.
 
-### `sdl-triangle`
+### `triangle-sdl2`
 
 This opens a window using SDL and renders a triangle.
+
+The `managed` package is used for ensuring resources are deallocated.
+
+Exit with `q`, `escape` or the window exit button.
+
+### `triangle-glfw`
+
+This opens a window using GLFW and renders a triangle.
 
 The `managed` package is used for ensuring resources are deallocated.
 
@@ -127,7 +135,7 @@ If you run into
 
 ```
 error: XDG_RUNTIME_DIR not set in the environment.
-sdl-triangle: SDLCallFailed {sdlExceptionCaller = "SDL.Init.init", sdlFunction = "SDL_Init", sdlExceptionError = "No available video device"}
+triangle-sdl2: SDLCallFailed {sdlExceptionCaller = "SDL.Init.init", sdlFunction = "SDL_Init", sdlExceptionError = "No available video device"}
 ```
 
 It's because the pure shell instantiated by `stack --nix` doesn't include the
@@ -135,7 +143,7 @@ It's because the pure shell instantiated by `stack --nix` doesn't include the
 fix this pass the `--no-nix-pure` flag to stack thusly:
 
 ```bash
-stack --system-ghc --nix --no-nix-pure run sdl-triangle
+stack --system-ghc --nix --no-nix-pure run triangle-sdl2
 ```
 
 ### Running the examples with SwiftShader
@@ -152,11 +160,11 @@ cabal run hlsl
 
 ### Troubleshooting
 
-For the examples using SDL (`resize`, `sdl-triangle`):
+For the examples using SDL (`resize`, `triangle-sdl2`):
 
 - If SDL is unable to find `libvulkan.so`, you can set either `LD_LIBRARY_PATH`
   or `SDL_VULKAN_LIBRARY`, it must find the same `libvulkan.so` that the
-  `sdl-triangle` binary was compiled against.
+  `triangle-sdl2` binary was compiled against.
 
 - If you run into the exception `DLCallFailed {sdlExceptionCaller =
   "SDL.Video.Vulkan.vkLoadLibrary", sdlFunction = "SDL_Vulkan_LoadLibrary",

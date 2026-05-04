@@ -11,17 +11,6 @@ license: BSD-3-Clause
 
 library:
   source-dirs: lib
-  exposed-modules:
-  - AutoApply
-  - Camera
-  - Framebuffer
-  - HasVulkan
-  - InstrumentDecs
-  - Orphans
-  - RefCounted
-  - Swapchain
-  - Utils
-  - Window
   verbatim:
     ghc-options: -Wall
   dependencies:
@@ -35,6 +24,7 @@ library:
   - bytestring
   - derive-storable >= 0.3
   - derive-storable-plugin >= 0.2.3.3
+  - GLFW-b
   - lens
   - linear
   - nothunks >= 0.1.2
@@ -58,13 +48,11 @@ executables:
     - vulkan
     - pretty-simple >= 3.3
 
-  sdl-triangle:
+  triangle-sdl2:
     main: Main.hs
-    source-dirs: sdl-triangle
+    source-dirs: triangle-sdl2
     dependencies:
     - base <5
-    - bytestring
-    - extra
     - resourcet
     - say
     - sdl2
@@ -73,11 +61,28 @@ executables:
     - vector
     - vulkan
     - vulkan-examples
+    - vulkan-init-sdl2
     - vulkan-utils
 
-  offscreen:
+  triangle-glfw:
     main: Main.hs
-    source-dirs: offscreen
+    source-dirs: triangle-glfw
+    dependencies:
+    - base <5
+    - GLFW-b
+    - resourcet
+    - say
+    - text
+    - transformers
+    - vector
+    - vulkan
+    - vulkan-examples
+    - vulkan-init-glfw
+    - vulkan-utils
+
+  triangle-headless:
+    main: Main.hs
+    source-dirs: triangle-headless
     dependencies:
     - JuicyPixels
     - VulkanMemoryAllocator
@@ -138,6 +143,7 @@ executables:
     - vector
     - vulkan
     - vulkan-examples
+    - vulkan-init-sdl2
     - vulkan-utils
 
   timeline-semaphore:
@@ -175,6 +181,7 @@ executables:
     - vector
     - vulkan
     - vulkan-examples
+    - vulkan-init-sdl2
     - vulkan-utils >= 0.3
     when:
     - condition: '!flag(have-shaderc)'
@@ -209,6 +216,7 @@ executables:
     - vector
     - vulkan >= 3.7
     - vulkan-examples
+    - vulkan-init-sdl2
     - vulkan-utils >= 0.3
     when:
     - condition: '!flag(raytracing)'

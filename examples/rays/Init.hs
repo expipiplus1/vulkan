@@ -12,7 +12,6 @@ import           Control.Applicative
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
-import qualified Data.ByteString               as BS
 import           Data.Foldable                  ( for_
                                                 , traverse_
                                                 )
@@ -28,7 +27,6 @@ import           MonadVulkan                    ( Queues(..)
                                                 , checkCommands
                                                 )
 import qualified SDL.Video                     as SDL
-import qualified SDL.Video.Vulkan              as SDL
 import           Say
 import           UnliftIO.Exception
 import           Vulkan.CStruct.Extends
@@ -52,11 +50,14 @@ import           Vulkan.Dynamic                 ( DeviceCmds
                                                   , pVkGetInstanceProcAddr
                                                   )
                                                 )
+import           Vulkan.Extensions.VK_EXT_debug_utils
+                                                ( pattern EXT_DEBUG_UTILS_EXTENSION_NAME )
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Requirement
+import qualified Vulkan.Utils.Init.SDL2        as VkInit
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
 import           Vulkan.Utils.Requirements
@@ -69,7 +70,7 @@ import           VulkanMemoryAllocator          ( Allocator
                                                 , vkGetInstanceProcAddr
                                                 , withAllocator
                                                 )
-import           Window
+import           Window.SDL2
 import Foreign.Ptr (castFunPtr)
 
 myApiVersion :: Word32
@@ -79,22 +80,19 @@ myApiVersion = API_VERSION_1_1
 -- Instance Creation
 ----------------------------------------------------------------
 
--- | Create an instance with a debug messenger
 createInstance :: MonadResource m => SDL.Window -> m Instance
-createInstance win = do
-  windowExtensions <-
-    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions win
-  let createInfo = zero
-        { applicationInfo = Just zero { applicationName = Nothing
-                                      , apiVersion      = myApiVersion
-                                      }
-        }
-      requirements =
-        (\n -> RequireInstanceExtension Nothing n minBound)
-          <$> ( KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-              : windowExtensions
-              )
-  createInstanceFromRequirements requirements [] createInfo
+createInstance win = VkInit.withInstance
+  win
+  (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
+  [ RequireInstanceExtension
+      Nothing
+      KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+      minBound
+  -- Required so the @nameObject@ calls scattered through the example can load
+  -- their function pointer; we don't enable the messenger though.
+  , RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME minBound
+  ]
+  []
 
 ----------------------------------------------------------------
 -- Device creation

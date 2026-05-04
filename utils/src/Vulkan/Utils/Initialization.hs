@@ -1,9 +1,14 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedLists #-}
 
 module Vulkan.Utils.Initialization
   ( -- * Instance creation
     createInstanceFromRequirements
   , createDebugInstanceFromRequirements
+  , withVulkanInstance
+    -- * macOS portability
+  , portabilityRequirements
+  , portabilityFlags
     -- * Device creation
   , createDeviceFromRequirements
   , -- * Physical device selection
@@ -14,11 +19,13 @@ module Vulkan.Utils.Initialization
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import           Data.Bits
+import           Data.ByteString                ( ByteString )
 import           Data.Foldable
 import           Data.Maybe
 import           Data.Ord
 import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
+import           Data.Vector                    ( Vector )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import qualified Vulkan.Core10 as Instance      ( InstanceCreateInfo(..) )
@@ -29,6 +36,13 @@ import           Vulkan.Utils.Debug
 import           Vulkan.Utils.Internal
 import           Vulkan.Utils.Requirements
 import           Vulkan.Zero
+
+#if defined(darwin_HOST_OS)
+import           Vulkan.Core10.Enums.InstanceCreateFlagBits
+                                                ( pattern INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR )
+import           Vulkan.Extensions.VK_KHR_portability_enumeration
+                                                ( pattern KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME )
+#endif
 
 ----------------------------------------------------------------
 -- Instance
@@ -115,6 +129,61 @@ createInstanceFromRequirements required optional baseCreateInfo = do
     Just ici -> snd <$> withInstance ici Nothing allocate
 
 ----------------------------------------------------------------
+-- macOS portability + windowing-friendly instance creation
+----------------------------------------------------------------
+
+-- | Instance requirements needed on macOS to enumerate non-conformant drivers
+-- such as MoltenVK. Empty on every other platform.
+portabilityRequirements :: [InstanceRequirement]
+
+-- | Instance create flag bits that pair with 'portabilityRequirements'.
+-- 'zero' on every non-macOS platform.
+portabilityFlags :: InstanceCreateFlags
+
+#if defined(darwin_HOST_OS)
+portabilityRequirements =
+  [ RequireInstanceExtension
+      { instanceExtensionLayerName  = Nothing
+      , instanceExtensionName       = KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
+      , instanceExtensionMinVersion = minBound
+      }
+  ]
+portabilityFlags = INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
+#else
+portabilityRequirements = []
+portabilityFlags        = zero
+#endif
+
+-- | Build a Vulkan 'Instance' from a backend-supplied extension list plus
+-- caller-supplied requirements. Automatically merges 'portabilityRequirements'
+-- into the required list and 'portabilityFlags' into the create flags so
+-- macOS apps work without per-call plumbing.
+--
+-- Pass 'mempty' for the extension list when running headless; or call
+-- 'Vulkan.Utils.Init.Headless.withInstance' which does so.
+withVulkanInstance
+  :: MonadResource m
+  => Vector ByteString
+     -- ^ Backend-required instance extensions (e.g. from
+     -- @Vulkan.Utils.Init.SDL2.getRequiredInstanceExtensions@). 'mempty' for
+     -- headless.
+  -> Maybe ApplicationInfo
+  -> [InstanceRequirement]
+     -- ^ Caller's required requirements
+  -> [InstanceRequirement]
+     -- ^ Caller's optional requirements
+  -> m Instance
+withVulkanInstance exts appInfo reqs optReqs =
+  createInstanceFromRequirements
+    (portabilityRequirements <> reqs)
+    optReqs
+    zero
+      { applicationInfo       = appInfo
+      , enabledExtensionNames = exts
+      , flags                 = portabilityFlags
+      }
+
+----------------------------------------------------------------
 -- * Device creation
 ----------------------------------------------------------------
 
@@ -174,8 +243,13 @@ pickPhysicalDevice
   -- ^ The score and the device
 pickPhysicalDevice inst devInfo score = do
   (_, devs) <- enumeratePhysicalDevices inst
-  infos     <- catMaybes
-    <$> sequence [ fmap (, d) <$> devInfo d | d <- toList devs ]
+  infos     <- catMaybes <$> sequence
+    [ do
+        isCPU <- (PHYSICAL_DEVICE_TYPE_CPU ==) . deviceType
+          <$> getPhysicalDeviceProperties d
+        if isCPU then pure Nothing else fmap (, d) <$> devInfo d
+    | d <- toList devs
+    ]
   pure $ maximumByMay (comparing (score . fst)) infos
 
 -- | Extract the name of a 'PhysicalDevice' with 'getPhysicalDeviceProperties'

@@ -31,6 +31,7 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Requirement
+import qualified Vulkan.Utils.Init.Headless    as Init
 import           Vulkan.Utils.Initialization
 import           Vulkan.Utils.QueueAssignment
 import qualified Vulkan.Utils.Requirements.TH  as U
@@ -80,21 +81,15 @@ timelineTest dev computeQueue = do
 -- Vulkan utils
 ----------------------------------------------------------------
 
--- | Create an instance with a debug messenger
 createInstance :: MonadResource m => m Instance
-createInstance =
-  let createInfo = zero
-        { applicationInfo = Just zero { applicationName = Nothing
-                                      , apiVersion      = API_VERSION_1_0
-                                      }
-        }
-      reqs =
-        [ RequireInstanceExtension
-            Nothing
-            KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-            minBound
-        ]
-  in  createDebugInstanceFromRequirements reqs [] createInfo
+createInstance = Init.withInstance
+  (Just zero { applicationName = Nothing, apiVersion = API_VERSION_1_0 })
+  [ RequireInstanceExtension
+      Nothing
+      KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+      minBound
+  ]
+  []
 
 createDevice
   :: forall m

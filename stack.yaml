@@ -2,6 +2,8 @@ resolver: lts-22.44
 packages:
 - .
 - utils
+- utils-init/vulkan-init-sdl2
+- utils-init/vulkan-init-glfw
 - examples
 - VulkanMemoryAllocator
 - openxr

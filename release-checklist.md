@@ -37,7 +37,7 @@
   - `cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source"`
 - sdist
 - unpack sdist elsewhere
-- build sdl-triangle
+- build triangle-sdl2
   - Observe it running
 
 ## VulkanMemoryAllocator

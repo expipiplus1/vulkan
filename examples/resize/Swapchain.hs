@@ -30,6 +30,7 @@ import           Vulkan.Zero
 
 import           Frame
 import           Framebuffer
+import           HasVulkan                      ( getPhysicalDevice )
 import           MonadVulkan
 import           Pipeline
 
@@ -63,11 +64,16 @@ createSwapchain oldSwapchain explicitSize surf = do
   sayErrString $ "Using present mode " <> show presentMode
 
   (_, availableFormats) <- getPhysicalDeviceSurfaceFormatsKHR' surf
-  let desiredFormats = []
-      surfaceFormat  = case filter (`V.elem` availableFormats) desiredFormats of
-        -- Use the first available format if we don't have our desired one
-        []    -> V.head availableFormats
-        x : _ -> x
+  -- Pick the first format whose 'optimalTilingFeatures' supports the usages
+  -- we'll need on the swapchain images (notably 'IMAGE_USAGE_STORAGE_BIT'),
+  -- falling back to the first one offered. SRGB formats normally lack
+  -- storage support and would crash @vkCreateSwapchainKHR@.
+  phys <- getPhysicalDevice
+  let suitable f = do
+        props <- getPhysicalDeviceFormatProperties phys (SurfaceFormatKHR.format f)
+        pure $ all (optimalTilingFeatures props .&&.) requiredFormatFeatures
+  good <- V.filterM suitable availableFormats
+  let surfaceFormat = if V.null good then V.head availableFormats else V.head good
   sayErrString $ "Using surface format " <> show surfaceFormat
 
   let imageExtent =
@@ -187,3 +193,7 @@ allocSwapchainResources windowSize oldSwapchain surface = do
 infixl 4 .&&.
 (.&&.) :: Bits a => a -> a -> Bool
 x .&&. y = (/= zeroBits) (x .&. y)
+
+requiredFormatFeatures :: [FormatFeatureFlagBits]
+requiredFormatFeatures =
+  [FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, FORMAT_FEATURE_STORAGE_IMAGE_BIT]
