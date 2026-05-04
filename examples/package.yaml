@@ -48,9 +48,9 @@ executables:
     - vulkan
     - pretty-simple >= 3.3
 
-  sdl-triangle:
+  triangle-sdl2:
     main: Main.hs
-    source-dirs: sdl-triangle
+    source-dirs: triangle-sdl2
     dependencies:
     - base <5
     - resourcet
@@ -64,9 +64,9 @@ executables:
     - vulkan-init-sdl2
     - vulkan-utils
 
-  glfw:
+  triangle-glfw:
     main: Main.hs
-    source-dirs: glfw
+    source-dirs: triangle-glfw
     dependencies:
     - base <5
     - GLFW-b
@@ -80,9 +80,9 @@ executables:
     - vulkan-init-glfw
     - vulkan-utils
 
-  offscreen:
+  triangle-headless:
     main: Main.hs
-    source-dirs: offscreen
+    source-dirs: triangle-headless
     dependencies:
     - JuicyPixels
     - VulkanMemoryAllocator

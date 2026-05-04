@@ -27,28 +27,23 @@ import           Vulkan.Utils.ShaderQQ.GLSL.Glslang
                                                 ( frag, vert )
 import           Vulkan.Zero                    ( zero )
 
--- | Render a static triangle into the given swapchain images until
--- @shouldQuit@ reports 'True'. Drives present on the supplied queues.
+import           Window                         ( VulkanWindow(..) )
+
+-- | Render a static triangle into the swapchain inside the given
+-- 'VulkanWindow' until @shouldQuit@ reports 'True'.
 runTriangle
-  :: Device
-  -> SwapchainKHR
-  -> Format
-  -> Extent2D
-  -> V.Vector ImageView
-  -> Word32              -- ^ Graphics queue family index
-  -> Queue               -- ^ Graphics queue
-  -> Queue               -- ^ Present queue
+  :: VulkanWindow w
   -> IO Bool             -- ^ Per-frame poller; 'True' = exit
   -> ResourceT IO ()
-runTriangle dev swapchain fmt extent imageViews graphicsFamilyIdx graphicsQueue presentQueue shouldQuit = do
-  renderPass       <- createRenderPass dev fmt
-  graphicsPipeline <- createGraphicsPipeline dev renderPass extent
-  framebuffers     <- createFramebuffers dev imageViews renderPass extent
-  commandBuffers   <- createCommandBuffers dev renderPass graphicsPipeline graphicsFamilyIdx framebuffers extent
-  (imageAvailableSemaphore, renderFinishedSemaphore) <- createSemaphores dev
+runTriangle VulkanWindow{..} shouldQuit = do
+  renderPass       <- createRenderPass vwDevice vwFormat
+  graphicsPipeline <- createGraphicsPipeline vwDevice renderPass vwExtent
+  framebuffers     <- createFramebuffers vwDevice vwImageViews renderPass vwExtent
+  commandBuffers   <- createCommandBuffers vwDevice renderPass graphicsPipeline vwGraphicsQueueFamilyIndex framebuffers vwExtent
+  (imageAvailableSemaphore, renderFinishedSemaphore) <- createSemaphores vwDevice
   liftIO $ mainLoop $
-    drawFrame dev swapchain graphicsQueue presentQueue imageAvailableSemaphore renderFinishedSemaphore commandBuffers
-  deviceWaitIdle dev
+    drawFrame vwDevice vwSwapchain vwGraphicsQueue vwPresentQueue imageAvailableSemaphore renderFinishedSemaphore commandBuffers
+  deviceWaitIdle vwDevice
  where
   mainLoop draw = do
     quit <- shouldQuit

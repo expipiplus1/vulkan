@@ -6,11 +6,14 @@ cradle:
     - path: "./info/"
       component: "exe:info"
 
-    - path: "./sdl-triangle/"
-      component: "exe:sdl-triangle"
+    - path: "./triangle-sdl2/"
+      component: "exe:triangle-sdl2"
 
-    - path: "./offscreen/"
-      component: "exe:offscreen"
+    - path: "./triangle-glfw/"
+      component: "exe:triangle-glfw"
+
+    - path: "./triangle-headless/"
+      component: "exe:triangle-headless"
 
     - path: "./compute/"
       component: "exe:compute"

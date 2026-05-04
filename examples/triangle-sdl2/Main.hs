@@ -35,38 +35,17 @@ import Vulkan.Utils.QueueAssignment
   )
 import Vulkan.Zero
 import qualified Triangle
-import qualified Window.SDL2 as Window
+import           Window                         ( VulkanWindow(..) )
+import qualified Window.SDL2                   as Window
 
 main :: IO ()
 main = runResourceT $ do
   Window.withSDL
-  VulkanWindow{..} <- withVulkanWindow windowWidth windowHeight
-  SDL.showWindow vwSdlWindow
-  Triangle.runTriangle
-    vwDevice
-    vwSwapchain
-    vwFormat
-    vwExtent
-    vwImageViews
-    vwGraphicsQueueFamilyIndex
-    vwGraphicsQueue
-    vwPresentQueue
-    (Window.shouldQuit Window.NoLimit)
+  vw <- withVulkanWindow windowWidth windowHeight
+  SDL.showWindow (vwWindow vw)
+  Triangle.runTriangle vw (Window.shouldQuit Window.NoLimit)
 
-data VulkanWindow = VulkanWindow
-  { vwSdlWindow :: SDL.Window
-  , vwDevice :: Device
-  , vwSurface :: SurfaceKHR
-  , vwSwapchain :: SwapchainKHR
-  , vwExtent :: Extent2D
-  , vwFormat :: Format
-  , vwImageViews :: V.Vector ImageView
-  , vwGraphicsQueue :: Queue
-  , vwGraphicsQueueFamilyIndex :: Word32
-  , vwPresentQueue :: Queue
-  }
-
-withVulkanWindow :: Int -> Int -> ResourceT IO VulkanWindow
+withVulkanWindow :: Int -> Int -> ResourceT IO (VulkanWindow SDL.Window)
 withVulkanWindow width height = do
   window <- Window.createWindow appName width height
   inst <- Init.withInstance

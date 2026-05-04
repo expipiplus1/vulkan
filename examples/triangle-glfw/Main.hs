@@ -36,38 +36,17 @@ import Vulkan.Utils.QueueAssignment
   )
 import Vulkan.Zero
 import qualified Triangle
-import qualified Window.GLFW as Window
+import           Window                         ( VulkanWindow(..) )
+import qualified Window.GLFW                   as Window
 
 main :: IO ()
 main = runResourceT $ do
   Window.withGLFW
-  VulkanWindow{..} <- withVulkanWindow windowWidth windowHeight
-  liftIO $ Window.showWindow vwGlfwWindow
-  Triangle.runTriangle
-    vwDevice
-    vwSwapchain
-    vwFormat
-    vwExtent
-    vwImageViews
-    vwGraphicsQueueFamilyIndex
-    vwGraphicsQueue
-    vwPresentQueue
-    (Window.shouldQuit vwGlfwWindow)
+  vw <- withVulkanWindow windowWidth windowHeight
+  liftIO $ Window.showWindow (vwWindow vw)
+  Triangle.runTriangle vw (Window.shouldQuit (vwWindow vw))
 
-data VulkanWindow = VulkanWindow
-  { vwGlfwWindow :: GLFW.Window
-  , vwDevice :: Device
-  , vwSurface :: SurfaceKHR
-  , vwSwapchain :: SwapchainKHR
-  , vwExtent :: Extent2D
-  , vwFormat :: Format
-  , vwImageViews :: V.Vector ImageView
-  , vwGraphicsQueue :: Queue
-  , vwGraphicsQueueFamilyIndex :: Word32
-  , vwPresentQueue :: Queue
-  }
-
-withVulkanWindow :: Int -> Int -> ResourceT IO VulkanWindow
+withVulkanWindow :: Int -> Int -> ResourceT IO (VulkanWindow GLFW.Window)
 withVulkanWindow width height = do
   window <- Window.createWindow (Text.pack appName) width height
   inst <- Init.withInstance
