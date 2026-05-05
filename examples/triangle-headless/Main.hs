@@ -1,4 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
@@ -10,19 +9,17 @@ module Main
   )
 where
 
-import           AutoApply
 import qualified Codec.Picture                 as JP
 import qualified Codec.Picture.Types           as JP
 import           Control.Exception.Safe
 import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
 import           Data.Bits
 import qualified Data.ByteString.Lazy          as BSL
 import           Data.Functor.Identity          ( Identity(..) )
 import qualified Data.Vector                   as V
 import           Data.Word
-import           Foreign.Ptr
+import           Foreign.Ptr                    ( Ptr, plusPtr )
 import           Foreign.Storable               ( peek
                                                 , sizeOf
                                                 )
@@ -30,28 +27,21 @@ import           Say
 
 #if defined(RENDERDOC)
 import           Control.Monad                  ( when )
+import           Foreign.Ptr                    ( nullPtr )
 import qualified Data.Map.Strict               as Map
 import qualified Language.C.Inline             as C
 import qualified Language.C.Inline.Context     as C
 import qualified Language.C.Types              as C
 #endif
 
+import qualified Vma
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withImage )
 import qualified Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
-import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
+import qualified Vulkan.Core10                 as CommandPoolCreateInfo  (CommandPoolCreateInfo(..))
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import qualified Vulkan.Core10.Image           as SL
-import           Vulkan.Dynamic                 ( DeviceCmds
-                                                  ( DeviceCmds
-                                                  , pVkGetDeviceProcAddr
-                                                  )
-                                                , InstanceCmds
-                                                  ( InstanceCmds
-                                                  , pVkGetInstanceProcAddr
-                                                  )
-                                                )
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Requirement              ( InstanceRequirement(..) )
 import           Vulkan.Utils.Debug              ( debugCallbackPtr
@@ -89,119 +79,14 @@ C.include "<stddef.h>"
 #endif
 
 ----------------------------------------------------------------
--- Define the monad in which most of the program will run
-----------------------------------------------------------------
-
--- | @V@ keeps track of a bunch of "global" handles and performs resource
--- management.
-newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
-  deriving newtype ( Functor
-                   , Applicative
-                   , Monad
-                   , MonadFail
-                   , MonadThrow
-                   , MonadCatch
-                   , MonadMask
-                   , MonadIO
-                   , MonadResource
-                   )
-
-runV
-  :: Instance
-  -> PhysicalDevice
-  -> Word32
-  -> Device
-  -> Allocator
-  -> V a
-  -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghGraphicsQueueFamilyIndex ghDevice ghAllocator
-  = flip runReaderT GlobalHandles { .. } . unV
-
-data GlobalHandles = GlobalHandles
-  { ghInstance                 :: Instance
-  , ghPhysicalDevice           :: PhysicalDevice
-  , ghDevice                   :: Device
-  , ghAllocator                :: Allocator
-  , ghGraphicsQueueFamilyIndex :: Word32
-  }
-
--- Getters for global handles
-
-getInstance :: V Instance
-getInstance = V (asks ghInstance)
-
-getGraphicsQueueFamilyIndex :: V Word32
-getGraphicsQueueFamilyIndex = V (asks ghGraphicsQueueFamilyIndex)
-
-getPhysicalDevice :: V PhysicalDevice
-getPhysicalDevice = V (asks ghPhysicalDevice)
-
-getDevice :: V Device
-getDevice = V (asks ghDevice)
-
-getAllocator :: V Allocator
-getAllocator = V (asks ghAllocator)
-
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
-
---
--- Wrap a bunch of Vulkan commands so that they automatically pull global
--- handles from 'V'
---
--- Wrapped functions are suffixed with "'"
---
-autoapplyDecs
-  (<> "'")
-  [ 'getDevice
-  , 'getPhysicalDevice
-  , 'getInstance
-  , 'getAllocator
-  , 'noAllocationCallbacks
-  ]
-  ['allocate]
-  [ 'invalidateAllocation
-  , 'withImage
-  , 'deviceWaitIdle
-  , 'getDeviceQueue
-  , 'getImageSubresourceLayout
-  , 'waitForFences
-  , 'withCommandBuffers
-  , 'withCommandPool
-  , 'withFence
-  , 'withFramebuffer
-  , 'withGraphicsPipelines
-  , 'withImageView
-  , 'withPipelineLayout
-  , 'withRenderPass
-  , 'withShaderModule
-  , 'nameObject
-  ]
-
-----------------------------------------------------------------
 -- The program
 ----------------------------------------------------------------
 
 main :: IO ()
 main = runResourceT $ do
-  -- Create Instance, PhysicalDevice, Device and Allocator
-  inst             <- Main.createInstance
-  (phys, pdi, dev) <- Main.createDevice inst
-  (_, allocator)   <- withAllocator
-    zero
-      { flags            = zero
-      , physicalDevice   = physicalDeviceHandle phys
-      , device           = deviceHandle dev
-      , instance'        = instanceHandle inst
-      , vulkanApiVersion = myApiVersion
-      , vulkanFunctions  = Just $ case inst of
-        Instance _ InstanceCmds {..} -> case dev of
-          Device _ DeviceCmds {..} -> zero
-            { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
-            , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
-            }
-      }
-    allocate
+  inst <- Main.createInstance
+  (phys, graphicsQueueFamilyIndex, dev) <- Main.createDevice inst
+  allocator <- Vma.createVMA zero myApiVersion inst phys dev
 
 #if defined(RENDERDOC)
   -- We need to mark the beginning and end of the capture explicitly as this
@@ -224,18 +109,15 @@ main = runResourceT $ do
     sayErr "Running under RenderDoc"
 
   let rdBegin = liftIO [C.exp| void { if($(RENDERDOC_API_1_1_2* rdoc_api)) $(RENDERDOC_API_1_1_2* rdoc_api)->StartFrameCapture(NULL, NULL); } |]
-      rdEnd = liftIO [C.exp| void { if($(RENDERDOC_API_1_1_2* rdoc_api)) $(RENDERDOC_API_1_1_2* rdoc_api)->EndFrameCapture(NULL, NULL); } |]
+      rdEnd   = liftIO [C.exp| void { if($(RENDERDOC_API_1_1_2* rdoc_api)) $(RENDERDOC_API_1_1_2* rdoc_api)->EndFrameCapture(NULL, NULL); } |]
   _ <- allocate rdBegin (const rdEnd)
 #endif
 
-  -- Run our application
-  runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator
-    . (`finally` deviceWaitIdle')
-    $ do
-        image <- render
-        let filename = "triangle.png"
-        sayErr $ "Writing " <> filename
-        liftIO $ BSL.writeFile filename (JP.encodePng image)
+  image <- render allocator dev graphicsQueueFamilyIndex
+             `finally` deviceWaitIdle dev
+  let filename = "triangle.png"
+  sayErr $ "Writing " <> filename
+  liftIO $ BSL.writeFile filename (JP.encodePng image)
 
 -- | This function renders a triangle and reads the image on the CPU
 --
@@ -255,52 +137,61 @@ main = runResourceT $ do
 -- - Submits and waits for the command buffer to finish executing
 -- - Invalidates the CPU image allocation (if it isn't HOST_COHERENT)
 -- - Copies the data from the CPU image and returns it
-render :: V (JP.Image JP.PixelRGBA8)
-render = do
-  -- Some things to reuse
+render
+  :: Allocator
+  -> Device
+  -> Word32
+  -> ResourceT IO (JP.Image JP.PixelRGBA8)
+render allocator dev graphicsQueueFamilyIndex = do
   let imageFormat = FORMAT_R8G8B8A8_UNORM
       width       = 256
       height      = 256
 
   -- Create an image to be our render target
-  let
-    imageCreateInfo = zero
-      { imageType     = IMAGE_TYPE_2D
-      , format        = imageFormat
-      , extent        = Extent3D width height 1
-      , mipLevels     = 1
-      , arrayLayers   = 1
-      , samples       = SAMPLE_COUNT_1_BIT
-      , tiling        = IMAGE_TILING_OPTIMAL
-      , usage         = IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-                          .|. IMAGE_USAGE_TRANSFER_SRC_BIT
-      , initialLayout = IMAGE_LAYOUT_UNDEFINED
-      }
-    allocationCreateInfo = zero { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
-                                , usage = MEMORY_USAGE_GPU_ONLY
-                                }
-  -- Allocate the image with VMA
-  (_, (image, _, _)) <- withImage' imageCreateInfo allocationCreateInfo
-  nameObject' image "GPU side image"
+  let imageCreateInfo = zero
+        { imageType     = IMAGE_TYPE_2D
+        , format        = imageFormat
+        , extent        = Extent3D width height 1
+        , mipLevels     = 1
+        , arrayLayers   = 1
+        , samples       = SAMPLE_COUNT_1_BIT
+        , tiling        = IMAGE_TILING_OPTIMAL
+        , usage         = IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+                            .|. IMAGE_USAGE_TRANSFER_SRC_BIT
+        , initialLayout = IMAGE_LAYOUT_UNDEFINED
+        }
+      allocationCreateInfo = zero
+        { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
+        , usage                      = MEMORY_USAGE_GPU_ONLY
+        }
+  (_, (image, _, _)) <- VMA.withImage allocator
+                                      imageCreateInfo
+                                      allocationCreateInfo
+                                      allocate
+  nameObject dev image "GPU side image"
 
   -- Create an image to read on the CPU
-  let cpuImageCreateInfo = zero { imageType     = IMAGE_TYPE_2D
-                                , format        = imageFormat
-                                , extent        = Extent3D width height 1
-                                , mipLevels     = 1
-                                , arrayLayers   = 1
-                                , samples       = SAMPLE_COUNT_1_BIT
-                                , tiling        = IMAGE_TILING_LINEAR
-                                , usage         = IMAGE_USAGE_TRANSFER_DST_BIT
-                                , initialLayout = IMAGE_LAYOUT_UNDEFINED
-                                }
-      cpuAllocationCreateInfo = zero { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
-                                     , usage = MEMORY_USAGE_GPU_TO_CPU
-                                     }
-  (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage'
+  let cpuImageCreateInfo = zero
+        { imageType     = IMAGE_TYPE_2D
+        , format        = imageFormat
+        , extent        = Extent3D width height 1
+        , mipLevels     = 1
+        , arrayLayers   = 1
+        , samples       = SAMPLE_COUNT_1_BIT
+        , tiling        = IMAGE_TILING_LINEAR
+        , usage         = IMAGE_USAGE_TRANSFER_DST_BIT
+        , initialLayout = IMAGE_LAYOUT_UNDEFINED
+        }
+      cpuAllocationCreateInfo = zero
+        { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
+        , usage                      = MEMORY_USAGE_GPU_TO_CPU
+        }
+  (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- VMA.withImage
+    allocator
     cpuImageCreateInfo
     cpuAllocationCreateInfo
-  nameObject' cpuImage "CPU side image"
+    allocate
+  nameObject dev cpuImage "CPU side image"
 
   -- Create an image view
   let imageSubresourceRange = ImageSubresourceRange
@@ -320,7 +211,7 @@ render = do
                                               COMPONENT_SWIZZLE_IDENTITY
         , subresourceRange = imageSubresourceRange
         }
-  (_, imageView) <- withImageView' imageViewCreateInfo
+  (_, imageView) <- withImageView dev imageViewCreateInfo Nothing allocate
 
   -- Create a renderpass with a single subpass
   let
@@ -354,11 +245,14 @@ render = do
       , dstAccessMask = ACCESS_COLOR_ATTACHMENT_READ_BIT
                           .|. ACCESS_COLOR_ATTACHMENT_WRITE_BIT
       }
-  (_, renderPass) <- withRenderPass' zero
-    { attachments  = [attachmentDescription]
-    , subpasses    = [subpass]
-    , dependencies = [subpassDependency]
-    }
+  (_, renderPass) <- withRenderPass
+    dev
+    zero { attachments  = [attachmentDescription]
+         , subpasses    = [subpass]
+         , dependencies = [subpassDependency]
+         }
+    Nothing
+    allocate
 
   -- Create a framebuffer
   let framebufferCreateInfo :: FramebufferCreateInfo '[]
@@ -368,34 +262,35 @@ render = do
                                    , height      = height
                                    , layers      = 1
                                    }
-  (_, framebuffer)    <- withFramebuffer' framebufferCreateInfo
+  (_, framebuffer) <- withFramebuffer dev framebufferCreateInfo Nothing allocate
 
   -- Create the most vanilla rendering pipeline
-  shaderStages        <- createShaders
-  (_, pipelineLayout) <- withPipelineLayout' zero
+  shaderStages        <- createShaders dev
+  (_, pipelineLayout) <- withPipelineLayout dev zero Nothing allocate
   let
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo = zero
       { stages             = shaderStages
       , vertexInputState   = Just zero
       , inputAssemblyState = Just zero
-                               { topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+                               { topology               = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
                                , primitiveRestartEnable = False
                                }
       , viewportState      = Just . SomeStruct $ zero
-                               { viewports =
-                                 [ Viewport { x = 0
-                                            , y = 0
-                                            , width = realToFrac (width :: Word32)
-                                            , height = realToFrac (height :: Word32)
-                                            , minDepth = 0
-                                            , maxDepth = 1
-                                            }
-                                 ]
-                               , scissors = [ Rect2D { offset = Offset2D 0 0
-                                                     , extent = Extent2D width height
-                                                     }
-                                            ]
+                               { viewports = [ Viewport
+                                                 { x        = 0
+                                                 , y        = 0
+                                                 , width    = realToFrac (width :: Word32)
+                                                 , height   = realToFrac (height :: Word32)
+                                                 , minDepth = 0
+                                                 , maxDepth = 1
+                                                 }
+                                             ]
+                               , scissors  = [ Rect2D
+                                                 { offset = Offset2D 0 0
+                                                 , extent = Extent2D width height
+                                                 }
+                                             ]
                                }
       , rasterizationState = Just . SomeStruct $ zero
                                { depthClampEnable        = False
@@ -417,10 +312,10 @@ render = do
                                { logicOpEnable = False
                                , attachments   = [ zero
                                                      { colorWriteMask =
-                                                       COLOR_COMPONENT_R_BIT
-                                                       .|. COLOR_COMPONENT_G_BIT
-                                                       .|. COLOR_COMPONENT_B_BIT
-                                                       .|. COLOR_COMPONENT_A_BIT
+                                                         COLOR_COMPONENT_R_BIT
+                                                           .|. COLOR_COMPONENT_G_BIT
+                                                           .|. COLOR_COMPONENT_B_BIT
+                                                           .|. COLOR_COMPONENT_A_BIT
                                                      , blendEnable    = False
                                                      }
                                                  ]
@@ -431,27 +326,33 @@ render = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  (_, (_, [graphicsPipeline])) <- withGraphicsPipelines'
+  (_, (_, [graphicsPipeline])) <- withGraphicsPipelines
+    dev
     zero
     [SomeStruct pipelineCreateInfo]
+    Nothing
+    allocate
 
   -- Create a command buffer
-  graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
-  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex }
-  (_, commandPool) <- withCommandPool' commandPoolCreateInfo
-  let commandBufferAllocateInfo = zero { commandPool = commandPool
-                                       , level = COMMAND_BUFFER_LEVEL_PRIMARY
-                                       , commandBufferCount = 1
-                                       }
-  (_, [commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
+  let commandPoolCreateInfo = zero
+        { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex
+        }
+  (_, commandPool) <- withCommandPool dev commandPoolCreateInfo Nothing allocate
+  let commandBufferAllocateInfo = zero
+        { commandPool        = commandPool
+        , level              = COMMAND_BUFFER_LEVEL_PRIMARY
+        , commandBufferCount = 1
+        }
+  (_, [commandBuffer]) <- withCommandBuffers dev commandBufferAllocateInfo allocate
 
   -- Fill command buffer
   --
   -- - Execute the renderpass
   -- - Transition the images to be able to perform the copy
   -- - Copy the image to CPU mapped memory
-  useCommandBuffer commandBuffer
-                   zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+  useCommandBuffer
+      commandBuffer
+      zero { CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
     $ do
         let renderPassBeginInfo = zero
               { renderPass  = renderPass
@@ -476,11 +377,11 @@ render = do
           zero
           []
           []
-          [ SomeStruct zero { srcAccessMask = ACCESS_COLOR_ATTACHMENT_WRITE_BIT
-                            , dstAccessMask = ACCESS_TRANSFER_READ_BIT
-                            , oldLayout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-                            , newLayout = IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-                            , image = image
+          [ SomeStruct zero { srcAccessMask    = ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+                            , dstAccessMask    = ACCESS_TRANSFER_READ_BIT
+                            , oldLayout        = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+                            , newLayout        = IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+                            , image            = image
                             , subresourceRange = imageSubresourceRange
                             }
           ]
@@ -496,7 +397,7 @@ render = do
           [ SomeStruct zero { srcAccessMask    = zero
                             , dstAccessMask    = ACCESS_TRANSFER_WRITE_BIT
                             , oldLayout        = IMAGE_LAYOUT_UNDEFINED
-                            , newLayout = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+                            , newLayout        = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
                             , image            = cpuImage
                             , subresourceRange = imageSubresourceRange
                             }
@@ -538,7 +439,7 @@ render = do
           []
           [ SomeStruct zero { srcAccessMask    = ACCESS_TRANSFER_WRITE_BIT
                             , dstAccessMask    = ACCESS_HOST_READ_BIT
-                            , oldLayout = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+                            , oldLayout        = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
                             , newLayout        = IMAGE_LAYOUT_GENERAL
                             , image            = cpuImage
                             , subresourceRange = imageSubresourceRange
@@ -546,7 +447,7 @@ render = do
           ]
 
   -- Create a fence so we can know when render is finished
-  (_, fence) <- withFence' zero
+  (_, fence) <- withFence dev zero Nothing allocate
 
   -- Submit the command buffer and wait for it to execute
   let submitInfo = zero { waitSemaphores   = []
@@ -554,19 +455,20 @@ render = do
                         , commandBuffers   = [commandBufferHandle commandBuffer]
                         , signalSemaphores = []
                         }
-  graphicsQueue <- getDeviceQueue' graphicsQueueFamilyIndex 0
+  graphicsQueue <- getDeviceQueue dev graphicsQueueFamilyIndex 0
   queueSubmit graphicsQueue [SomeStruct submitInfo] fence
   let fenceTimeout = 1e9 -- 1 second
-  waitForFences' [fence] True fenceTimeout >>= \case
+  waitForFences dev [fence] True fenceTimeout >>= \case
     TIMEOUT -> throwString "Timed out waiting for image render and copy"
     _       -> pure ()
 
   -- If the cpu image allocation is not HOST_COHERENT this will ensure the
   -- changes are present on the CPU.
-  invalidateAllocation' cpuImageAllocation 0 WHOLE_SIZE
+  invalidateAllocation allocator cpuImageAllocation 0 WHOLE_SIZE
 
   -- Find the image layout and read it into a JuicyPixels Image
-  cpuImageLayout <- getImageSubresourceLayout'
+  cpuImageLayout <- getImageSubresourceLayout
+    dev
     cpuImage
     ImageSubresource { aspectMask = IMAGE_ASPECT_COLOR_BIT
                      , mipLevel   = 0
@@ -586,8 +488,10 @@ render = do
     (\x y -> JP.unpackPixel @JP.PixelRGBA8 <$> peek (pixelAddr x y))
 
 -- | Create a vertex and fragment shader which render a colored triangle
-createShaders :: V (V.Vector (SomeStruct PipelineShaderStageCreateInfo))
-createShaders = do
+createShaders
+  :: Device
+  -> ResourceT IO (V.Vector (SomeStruct PipelineShaderStageCreateInfo))
+createShaders dev = do
   let fragCode = [frag|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
@@ -622,8 +526,8 @@ createShaders = do
           fragColor = colors[gl_VertexIndex];
         }
       |]
-  (_, fragModule) <- withShaderModule' zero { code = fragCode }
-  (_, vertModule) <- withShaderModule' zero { code = vertCode }
+  (_, fragModule) <- withShaderModule dev zero { code = fragCode } Nothing allocate
+  (_, vertModule) <- withShaderModule dev zero { code = vertCode } Nothing allocate
   let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
                                        , module' = vertModule
                                        , name    = "main"
@@ -663,8 +567,8 @@ createInstance = do
         { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                               .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
         , messageType     = DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                            .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                            .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+                              .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+                              .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
         , pfnUserCallback = debugCallbackPtr
         }
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
@@ -673,9 +577,9 @@ createInstance = do
 createDevice
   :: (MonadResource m, MonadThrow m)
   => Instance
-  -> m (PhysicalDevice, PhysicalDeviceInfo, Device)
+  -> m (PhysicalDevice, Word32, Device)
 createDevice inst = do
-  mPd <- pickPhysicalDevice inst hasGraphicsQueue id
+  mPd       <- pickPhysicalDevice inst hasGraphicsQueue id
   (_, phys) <- maybe (throwString "Unable to find appropriate PhysicalDevice")
                      pure
                      mPd
@@ -693,7 +597,7 @@ createDevice inst = do
     phys
     zero { queueCreateInfos = SomeStruct <$> qInfos }
   Identity (QueueFamilyIndex graphicsFamilyIdx, _q) <- liftIO (getQs dev)
-  pure (phys, PhysicalDeviceInfo graphicsFamilyIdx, dev)
+  pure (phys, graphicsFamilyIdx, dev)
  where
   hasGraphicsQueue :: MonadIO m => PhysicalDevice -> m (Maybe Word64)
   hasGraphicsQueue phys = do
@@ -703,8 +607,3 @@ createDevice inst = do
         heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
         pure (Just (sum (DI.size <$> heaps)))
       else pure Nothing
-
-newtype PhysicalDeviceInfo = PhysicalDeviceInfo
-  { pdiGraphicsQueueFamilyIndex :: Word32
-  }
-  deriving (Eq, Ord)

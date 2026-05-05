@@ -16,24 +16,21 @@ library:
   dependencies:
   - VulkanMemoryAllocator
   - base <5
-  - logict
-  - mtl
-  - template-haskell
-  - th-desugar < 2
-  - unification-fd
   - bytestring
   - derive-storable >= 0.3
   - derive-storable-plugin >= 0.2.3.3
   - GLFW-b
   - lens
   - linear
+  - mtl
   - nothunks >= 0.1.2
-  - opentelemetry
   - resourcet >= 1.2.4
+  - say
   - sdl2 >= 2.5.0
   - template-haskell
   - text
   - transformers
+  - unagi-chan
   - unliftio
   - vector
   - vulkan
@@ -146,20 +143,6 @@ executables:
     - vulkan-init-sdl2
     - vulkan-utils
 
-  timeline-semaphore:
-    main: Main.hs
-    source-dirs: timeline-semaphore
-    dependencies:
-    - vulkan-examples
-    - base <5
-    - resourcet
-    - say
-    - transformers
-    - unliftio
-    - vector
-    - vulkan
-    - vulkan-utils >= 0.3
-
   hlsl:
     main: Main.hs
     source-dirs: hlsl
@@ -169,24 +152,20 @@ executables:
     - base <5
     - bytestring
     - containers
-    - opentelemetry
     - resourcet >= 1.2.4
     - say
     - sdl2
     - template-haskell
     - text
     - transformers
-    - unagi-chan
     - unliftio
     - vector
     - vulkan
-    - vulkan-examples
     - vulkan-init-sdl2
     - vulkan-utils >= 0.3
     when:
     - condition: '!flag(have-shaderc)'
       buildable: false
-    ghc-options: -eventlog
 
   rays:
     main: Main.hs
@@ -197,13 +176,10 @@ executables:
     - base <5
     - bytestring
     - colour
-    - containers
     - derive-storable >= 0.3
     - derive-storable-plugin >= 0.2.3.3
     - lens
     - linear
-    - nothunks >= 0.1.2
-    - opentelemetry
     - random
     - resourcet >= 1.2.4
     - say
@@ -211,17 +187,14 @@ executables:
     - template-haskell
     - text
     - transformers
-    - unagi-chan
     - unliftio
     - vector
     - vulkan >= 3.7
-    - vulkan-examples
     - vulkan-init-sdl2
     - vulkan-utils >= 0.3
     when:
     - condition: '!flag(raytracing)'
       buildable: false
-    ghc-options: -eventlog
 
   vrcube:
     main: Main.hs
@@ -256,7 +229,6 @@ executables:
     when:
     - condition: '!flag(vr)'
       buildable: false
-    ghc-options: -eventlog
 
 when:
 - condition: os(windows)

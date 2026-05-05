@@ -1,290 +1,108 @@
 {-# LANGUAGE QuasiQuotes #-}
 
 module Init
-  ( Init.createInstance
-  , Init.createDevice
-  , PhysicalDeviceInfo(..)
+  ( myApiVersion
+  , instanceRequirements
+  , deviceRequirements
+  , RTInfo (..)
+  , getDeviceRTProps
   , createVMA
-  , createCommandPools
   ) where
 
-import           Control.Applicative
-import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
-import           Control.Monad.Trans.Resource
-import           Data.Foldable                  ( for_
-                                                , traverse_
-                                                )
-import qualified Data.Vector                   as V
-import           Data.Vector                    ( Vector )
-import           Data.Word
-import           GHC.IO.Exception               ( IOErrorType(NoSuchThing)
-                                                , IOException(IOError)
-                                                )
-import           HasVulkan
-import           MonadVulkan                    ( Queues(..)
-                                                , RTInfo(..)
-                                                , checkCommands
-                                                )
-import qualified SDL.Video                     as SDL
-import           Say
-import           UnliftIO.Exception
-import           Vulkan.CStruct.Extends
-import           Vulkan.Core10                 as Vk
-                                         hiding ( withBuffer
-                                                , withImage
-                                                )
-import qualified Vulkan.Core10                 as MemoryHeap (MemoryHeap(..))
-import qualified Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
-import           Vulkan.Core11                  ( pattern API_VERSION_1_1 )
-import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
-import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
-                                                ( PhysicalDeviceTimelineSemaphoreFeatures(..)
-                                                )
-import           Vulkan.Dynamic                 ( DeviceCmds
-                                                  ( DeviceCmds
-                                                  , pVkGetDeviceProcAddr
-                                                  )
-                                                , InstanceCmds
-                                                  ( InstanceCmds
-                                                  , pVkGetInstanceProcAddr
-                                                  )
-                                                )
-import           Vulkan.Extensions.VK_EXT_debug_utils
-                                                ( pattern EXT_DEBUG_UTILS_EXTENSION_NAME )
-import           Vulkan.Extensions.VK_KHR_acceleration_structure
-import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
-import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
-import           Vulkan.Extensions.VK_KHR_surface
-import           Vulkan.Requirement
-import qualified Vulkan.Utils.Init.SDL2        as VkInit
-import           Vulkan.Utils.Initialization
-import           Vulkan.Utils.QueueAssignment
-import           Vulkan.Utils.Requirements
-import           Vulkan.Utils.Requirements.TH   ( reqs )
-import           Vulkan.Zero
-import           VulkanMemoryAllocator          ( Allocator
-                                                , AllocatorCreateFlagBits(..)
-                                                , AllocatorCreateInfo(..)
-                                                , VulkanFunctions(..)
-                                                , vkGetInstanceProcAddr
-                                                , withAllocator
-                                                )
-import           Window.SDL2
-import Foreign.Ptr (castFunPtr)
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Resource
+import Data.Word
+
+import Frame
+  ( frameDeviceRequirements
+  , frameInstanceRequirements
+  )
+import qualified Vma
+import Vulkan.CStruct.Extends
+  ( pattern (:&)
+  , pattern (::&)
+  )
+import Vulkan.Core10
+import Vulkan.Core11 (pattern API_VERSION_1_1)
+import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
+  ( PhysicalDeviceBufferDeviceAddressFeatures (..)
+  )
+import Vulkan.Extensions.VK_EXT_debug_utils
+  ( pattern EXT_DEBUG_UTILS_EXTENSION_NAME
+  )
+import Vulkan.Extensions.VK_KHR_acceleration_structure
+  ( PhysicalDeviceAccelerationStructureFeaturesKHR (..)
+  )
+import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
+  ( getPhysicalDeviceProperties2KHR
+  )
+import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
+  ( PhysicalDeviceRayTracingPipelineFeaturesKHR (..)
+  , PhysicalDeviceRayTracingPipelinePropertiesKHR (..)
+  )
+import Vulkan.Requirement
+  ( DeviceRequirement
+  , InstanceRequirement (..)
+  )
+import qualified Vulkan.Utils.Requirements.TH as U
+import VulkanMemoryAllocator
+  ( Allocator
+  , AllocatorCreateFlagBits (..)
+  )
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_1
 
-----------------------------------------------------------------
--- Instance Creation
-----------------------------------------------------------------
+{- | Instance requirements: Frame's bits plus debug-utils so the @nameObject@
+calls scattered through the example can load their function pointer (we
+don't enable the messenger though).
+-}
+instanceRequirements :: [InstanceRequirement]
+instanceRequirements =
+  frameInstanceRequirements
+    ++ [RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME minBound]
 
-createInstance :: MonadResource m => SDL.Window -> m Instance
-createInstance win = VkInit.withInstance
-  win
-  (Just zero { applicationName = Nothing, apiVersion = myApiVersion })
-  [ RequireInstanceExtension
-      Nothing
-      KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-      minBound
-  -- Required so the @nameObject@ calls scattered through the example can load
-  -- their function pointer; we don't enable the messenger though.
-  , RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME minBound
-  ]
-  []
-
-----------------------------------------------------------------
--- Device creation
-----------------------------------------------------------------
-
--- TODO: check VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddress.
-createDevice
-  :: forall m
-   . (MonadResource m)
-  => Instance
-  -> SDL.Window
-  -> m
-       ( PhysicalDevice
-       , PhysicalDeviceInfo
-       , Device
-       , Queues (QueueFamilyIndex, Queue)
-       , SurfaceKHR
-       )
-createDevice inst win = do
-  (_                    , surf) <- createSurface inst win
-
-  ((pdi, SomeStruct dci), phys) <-
-    maybe (noSuchThing "Unable to find appropriate PhysicalDevice") pure
-      =<< pickPhysicalDevice inst (physicalDeviceInfo surf) (pdiScore . fst)
-  sayErr . ("Using device: " <>) =<< physicalDeviceName phys
-
-  (_, dev) <- withDevice phys dci Nothing allocate
-
-  requireCommands inst dev
-
-  queues <- liftIO $ pdiGetQueues pdi dev
-
-  pure (phys, pdi, dev, queues, surf)
-
+{- | Device requirements: API version, swapchain, Frame's timeline-semaphore
+bits, plus the full ray-tracing extension family.
+-}
 deviceRequirements :: [DeviceRequirement]
-deviceRequirements = [reqs|
-    VK_KHR_swapchain
+deviceRequirements =
+  [U.reqs|
+      1.0
+      VK_KHR_swapchain
 
-    VK_KHR_timeline_semaphore
-    PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+      -- Ray tracing
+      1.2.162
+      PhysicalDeviceRayTracingPipelineFeaturesKHR.rayTracingPipeline
+      PhysicalDeviceAccelerationStructureFeaturesKHR.accelerationStructure
+      PhysicalDeviceBufferDeviceAddressFeatures.bufferDeviceAddress
+      VK_KHR_ray_tracing_pipeline
+      VK_KHR_acceleration_structure
+      VK_EXT_descriptor_indexing
+      VK_KHR_buffer_device_address
+      VK_KHR_deferred_host_operations
+      VK_KHR_get_memory_requirements2
+      VK_KHR_maintenance3
+      VK_KHR_pipeline_library
+  |]
+    ++ frameDeviceRequirements
 
-    -- Ray tracing
-    1.2.162
-    PhysicalDeviceRayTracingPipelineFeaturesKHR.rayTracingPipeline
-    PhysicalDeviceAccelerationStructureFeaturesKHR.accelerationStructure
-    PhysicalDeviceBufferDeviceAddressFeatures.bufferDeviceAddress
-    VK_KHR_ray_tracing_pipeline
-    VK_KHR_acceleration_structure
-    VK_EXT_descriptor_indexing
-    VK_KHR_buffer_device_address
-    VK_KHR_deferred_host_operations
-    VK_KHR_get_memory_requirements2
-    VK_KHR_maintenance3
-    VK_KHR_pipeline_library
-|]
-
-----------------------------------------------------------------
--- Physical device tools
-----------------------------------------------------------------
-
-data PhysicalDeviceInfo = PhysicalDeviceInfo
-  { pdiTotalMemory      :: Word64
-  , pdiRTInfo           :: RTInfo
-    -- ^ The relevant information from PhysicalDeviceProperties2KHR
-  , pdiQueueCreateInfos :: Vector (DeviceQueueCreateInfo '[])
-  , pdiGetQueues        :: Device -> IO (Queues (QueueFamilyIndex, Queue))
+-- | Information for ray tracing (queried from device properties).
+data RTInfo = RTInfo
+  { rtiShaderGroupHandleSize :: Word32
+  , rtiShaderGroupBaseAlignment :: Word32
   }
 
-pdiScore :: PhysicalDeviceInfo -> Word64
-pdiScore = pdiTotalMemory
-
-physicalDeviceInfo
-  :: MonadIO m
-  => SurfaceKHR
-  -> PhysicalDevice
-  -> m (Maybe (PhysicalDeviceInfo, SomeStruct DeviceCreateInfo))
-physicalDeviceInfo surf phys = runMaybeT $ do
-  --
-  -- Check device requirements
-  --
-  (mbDCI, rs, os) <- checkDeviceRequirements deviceRequirements [] phys zero
-  -- Report any missing features
-  traverse_ sayErrString (requirementReport rs os)
-  -- Fail if we didn't meet requirements
-  SomeStruct dciNoQueues              <- maybe empty pure mbDCI
-
-  --
-  -- Assign queues
-  --
-  (pdiQueueCreateInfos, pdiGetQueues) <- MaybeT
-    $ assignQueues phys (queueRequirements phys surf)
-  let dci =
-        dciNoQueues { queueCreateInfos = SomeStruct <$> pdiQueueCreateInfos }
-
-  --
-  -- Query properties
-  --
-  pdiRTInfo      <- getDeviceRTProps phys
-
-  --
-  -- We'll use the amount of memory to pick the "best" device
-  --
-  pdiTotalMemory <- do
-    heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
-    pure $ sum (MemoryHeap.size <$> heaps)
-
-  pure (PhysicalDeviceInfo { .. }, SomeStruct dci)
-
--- | Requirements for a 'Queue' which has graphics suppor and can present to
--- the specified surface.
-queueRequirements
-  :: MonadIO m => PhysicalDevice -> SurfaceKHR -> Queues (QueueSpec m)
-queueRequirements phys surf = Queues (QueueSpec 1 isGraphicsPresentQueue)
- where
-  isGraphicsPresentQueue queueFamilyIndex queueFamilyProperties =
-    pure (isGraphicsQueueFamily queueFamilyProperties)
-      <&&> isPresentQueueFamily phys surf queueFamilyIndex
-
-----------------------------------------------------------------
--- Physical device tools
-----------------------------------------------------------------
-
-getDeviceRTProps :: MonadIO m => PhysicalDevice -> m RTInfo
+getDeviceRTProps :: (MonadIO m) => PhysicalDevice -> m RTInfo
 getDeviceRTProps phys = do
   props <- getPhysicalDeviceProperties2KHR phys
-  let _ ::& PhysicalDeviceRayTracingPipelinePropertiesKHR {..} :& () = props
-  pure RTInfo { rtiShaderGroupHandleSize    = shaderGroupHandleSize
-              , rtiShaderGroupBaseAlignment = shaderGroupBaseAlignment
-              }
-
-----------------------------------------------------------------
--- VulkanMemoryAllocator
-----------------------------------------------------------------
+  let _ ::& PhysicalDeviceRayTracingPipelinePropertiesKHR{..} :& () = props
+  pure
+    RTInfo
+      { rtiShaderGroupHandleSize = shaderGroupHandleSize
+      , rtiShaderGroupBaseAlignment = shaderGroupBaseAlignment
+      }
 
 createVMA
-  :: MonadResource m => Instance -> PhysicalDevice -> Device -> m Allocator
-createVMA inst phys dev =
-  snd
-    <$> withAllocator
-          zero
-            { flags            = ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
-            , physicalDevice   = physicalDeviceHandle phys
-            , device           = deviceHandle dev
-            , instance'        = instanceHandle inst
-            , vulkanApiVersion = myApiVersion
-            , vulkanFunctions  = Just $ case inst of
-              Instance _ InstanceCmds {..} -> case dev of
-                Device _ DeviceCmds {..} -> zero
-                  { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
-                  , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
-                  }
-            }
-          allocate
-
-----------------------------------------------------------------
--- Command pools
-----------------------------------------------------------------
-
--- | Create several command pools for a queue family
-createCommandPools
-  :: MonadResource m
-  => Device
-  -> Int
-  -- ^ Number of pools to create
-  -> QueueFamilyIndex
-  -- ^ Queue family for the pools
-  -> m (Vector CommandPool)
-createCommandPools dev n (QueueFamilyIndex queueFamilyIndex) = do
-  let commandPoolCreateInfo = zero { CommandPoolCreateInfo.queueFamilyIndex = queueFamilyIndex }
-  V.replicateM
-    n
-    (   snd
-    <$> withCommandPool dev
-                        commandPoolCreateInfo
-                        noAllocationCallbacks
-                        allocate
-    )
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-requireCommands :: MonadIO f => Instance -> Device -> f ()
-requireCommands inst dev = case checkCommands inst dev of
-  [] -> pure ()
-  xs -> do
-    for_ xs $ \n -> sayErr ("Failed to load function pointer for: " <> n)
-    noSuchThing "Missing commands"
-
-noSuchThing :: MonadIO m => String -> m a
-noSuchThing message =
-  liftIO . throwIO $ IOError Nothing NoSuchThing "" message Nothing Nothing
-
-(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<&&>) = liftA2 (&&)
+  :: (MonadResource m) => Instance -> PhysicalDevice -> Device -> m Allocator
+createVMA = Vma.createVMA ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT myApiVersion

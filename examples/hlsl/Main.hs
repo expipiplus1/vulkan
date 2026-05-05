@@ -1,18 +1,56 @@
+{-# LANGUAGE TypeApplications #-}
+
 module Main where
 
-import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Resource
-import           Frame
-import           Init
-import           MonadFrame
-import           MonadVulkan
-import           Render
-import           SDL                            ( showWindow
-                                                , time
-                                                )
-import           Swapchain                      ( threwSwapchainError )
-import           Utils
-import           Window.SDL2
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Resource
+import Data.IORef
+import Data.Text.Encoding (decodeUtf8)
+import Frame
+  ( Frame (..)
+  , advanceFrame
+  , frameInstanceRequirements
+  , initialFrame
+  , runFrame
+  )
+import qualified Framebuffer
+import Init
+  ( createVMA
+  , deviceRequirements
+  , myApiVersion
+  )
+import InitDevice (withDevice)
+import qualified Pipeline
+import RefCounted (releaseRefCounted)
+import Render (renderFrame)
+import qualified RenderPass
+import SDL
+  ( showWindow
+  , time
+  )
+import Say (sayErr)
+import Swapchain
+  ( Swapchain (..)
+  , allocSwapchain
+  , recreateSwapchain
+  , threwSwapchainError
+  )
+import Utils (loopJust)
+import VkResources (mkVkResources)
+import Vulkan.Core10 hiding (withDevice)
+import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
+  ( SurfaceFormatKHR (..)
+  )
+import qualified Vulkan.Utils.Init.SDL2 as VkInit
+import Vulkan.Zero (zero)
+import Window.SDL2
+  ( RefreshLimit (..)
+  , createSurface
+  , createWindow
+  , drawableSize
+  , shouldQuit
+  , withSDL
+  )
 
 main :: IO ()
 main = runResourceT $ do
@@ -20,31 +58,66 @@ main = runResourceT $ do
   -- Initialization
   --
   withSDL
-  win                   <- createWindow "Vulkan 🚀 Haskell" 1280 720
-  inst                  <- Init.createInstance win
-  (phys, dev, qs, surf) <- Init.createDevice inst win
-  vma                   <- createVMA inst phys dev
+  win <- createWindow "Vulkan 🚀 Haskell" 1280 720
+  inst <-
+    VkInit.withInstance
+      win
+      (Just zero{applicationName = Nothing, apiVersion = myApiVersion})
+      frameInstanceRequirements
+      []
+  (_, surf) <- createSurface inst win
+  (phys, dev, qs) <- withDevice inst surf deviceRequirements
+  vma <- createVMA inst phys dev
+  props <- getPhysicalDeviceProperties phys
+  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
+  vr <- liftIO $ mkVkResources inst phys dev vma qs
 
-  --
-  -- Go
-  --
-  start                 <- SDL.time @Double
-  let reportFPS f = do
-        end <- SDL.time
-        let frames = fIndex f
-            mean   = realToFrac frames / (end - start)
-        liftIO $ putStrLn $ "Average: " <> show mean
+  -- Initial swapchain
+  initialSize <- liftIO $ drawableSize win
+  initialSC <- allocSwapchain vr NULL_HANDLE initialSize surf
+  (_, renderPass) <- RenderPass.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
+  (_, pipeline) <- Pipeline.createPipeline dev renderPass
+  initialFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
 
-  let frame f = do
-        shouldQuit (TimeLimit 6) >>= \case
-          True -> do
-            reportFPS f
-            pure Nothing
-          False -> Just <$> do
-            needsNewSwapchain <- threwSwapchainError (runFrame f renderFrame)
-            advanceFrame needsNewSwapchain f
+  scRef <- liftIO $ newIORef initialSC
+  fbsRef <- liftIO $ newIORef initialFBs
 
-  runV inst phys dev qs vma $ do
-    initial <- initialFrame win surf
-    showWindow win
-    loopJust frame initial
+  initial <- initialFrame vr initialSC
+
+  showWindow win
+  start <- SDL.time @Double
+
+  let
+    perFrame f = do
+      currentSC <- liftIO $ readIORef scRef
+      (currentFBs, _rel) <- liftIO $ readIORef fbsRef
+      let f' = f{fSwapchain = currentSC}
+      needsNew <-
+        threwSwapchainError $
+          liftIO $
+            runFrame vr f' $
+              renderFrame vr renderPass pipeline currentFBs f'
+      sc' <-
+        if needsNew
+          then do
+            newSize <- liftIO $ drawableSize win
+            sc' <- recreateSwapchain vr newSize currentSC
+            newFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews sc') (sExtent sc')
+            (_oldFbs, oldRel) <- liftIO $ readIORef fbsRef
+            releaseRefCounted oldRel
+            liftIO $ writeIORef scRef sc'
+            liftIO $ writeIORef fbsRef newFBs
+            pure sc'
+          else pure currentSC
+      advanceFrame vr sc' f'
+
+    loop f =
+      shouldQuit (TimeLimit 6) >>= \case
+        True -> do
+          end <- SDL.time
+          let fps = realToFrac (fIndex f) / (end - start) :: Double
+          liftIO $ putStrLn $ "Average: " <> show fps
+          pure Nothing
+        False -> Just <$> perFrame f
+
+  loopJust loop initial

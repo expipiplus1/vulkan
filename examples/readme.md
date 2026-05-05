@@ -10,17 +10,14 @@ devices.
 
 ### `resize`
 
-A nice example of rendering into a window which can be resized. It's not a
-single file `triangle` like `triangle-sdl2`, but rather builds a couple of nice
-abstractions to make the code a little nicer.
+A nice example of rendering into a window which can be resized. It uses the
+recycling `Frame` machinery from `lib/` (timeline semaphores + a recycle
+channel for binary semaphores and command pools).
 
 It renders a Julia set according the mouse position in the window.
 
 The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
 used to ensure resources are deallocated.
-
-An internal `AutoApply` module is used to write the boilerplate of passing some global handles to vulkan
-functions.
 
 ### `hlsl`
 
@@ -31,15 +28,8 @@ are written in HLSL and compiled with the `glslc` tool from
 If you don't have this tool installed then you might want to turn off the Cabal
 flag `have-shaderc` to stop this example from building.
 
-It's very similar to *resize* but has been tidied up in a few places.
-
-It renders a triangle.
-
-The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
-used to ensure resources are deallocated.
-
-An internal `AutoApply` module is used to write the boilerplate of passing some global handles to vulkan
-functions.
+It renders a triangle, sharing the `lib/` recycling `Frame` infrastructure
+with `resize`, `rays`, `triangle-sdl2`, and `triangle-glfw`.
 
 ### `rays`
 
@@ -54,12 +44,9 @@ This example:
 - Copies the image contents to a CPU-mapped image
 - Writes that image to "triangle.png"
 
-It is a pretty minimal example of rendering something.
-
-Like the `resize` example,
-[`resourcet`](https://hackage.haskell.org/package/resourcet) and
-an internal `AutoApply` module are used to make
-resource and global management less painful.
+It is a pretty minimal example of rendering something. Single-shot, no
+recycling Frame needed — just plain `ResourceT IO` with handles threaded as
+explicit args.
 
 ### `compute`
 
@@ -75,10 +62,7 @@ This program includes examples of:
 - Compute shader dipatch
 - Convenient shader creation using the `Vulkan.Utils.ShaderQQ.comp` QuasiQuoter
 
-Like the `resize` example,
-[`resourcet`](https://hackage.haskell.org/package/resourcet) and
-an internal `AutoApply` module are used to make
-resource and global management less painful.
+Single-shot like `triangle-headless`; uses plain `ResourceT IO`.
 
 ### `triangle-sdl2`
 
