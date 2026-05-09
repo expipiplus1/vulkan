@@ -16,7 +16,7 @@ import Swapchain (allocSwapchain)
 import qualified Triangle
 import VkResources (mkVkResources)
 import qualified Vma
-import Vulkan.Core10 hiding (withDevice)
+import qualified Vulkan.Core10 as Vk
 import Vulkan.Requirement (DeviceRequirement (..))
 import qualified Vulkan.Utils.Init.SDL2 as Init
 import Vulkan.Zero (zero)
@@ -29,7 +29,7 @@ main = runResourceT $ do
   inst <-
     Init.withInstance
       window
-      (Just zero{applicationName = Just appName, apiVersion = API_VERSION_1_0})
+      (Just zero{Vk.applicationName = Just appName, Vk.apiVersion = Vk.API_VERSION_1_0})
       frameInstanceRequirements
       []
   surface <- Init.withSurface inst window
@@ -39,14 +39,14 @@ main = runResourceT $ do
         ]
           ++ frameDeviceRequirements
   (phys, dev, qs) <- withDevice inst surface deviceReqs
-  vma <- Vma.createVMA zero API_VERSION_1_0 inst phys dev
-  props <- getPhysicalDeviceProperties phys
-  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
+  vma <- Vma.createVMA zero Vk.API_VERSION_1_0 inst phys dev
+  props <- Vk.getPhysicalDeviceProperties phys
+  sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
 
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   initialSize <- Window.drawableSize window
-  initialSC <- allocSwapchain vr NULL_HANDLE initialSize surface
+  initialSC <- allocSwapchain vr Vk.NULL_HANDLE initialSize surface
 
   Window.showWindow window
   Triangle.runTriangle vr initialSC (Window.drawableSize window) (Window.shouldQuit Window.NoLimit)

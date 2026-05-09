@@ -9,54 +9,35 @@ module Main
 where
 
 import qualified Codec.Picture as JP
-import Control.Exception.Safe
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Resource
-import Data.Bits
+import Control.Exception.Safe (MonadThrow, throwString)
+import Control.Monad.IO.Class (MonadIO (..))
+import Control.Monad.Trans.Resource (MonadResource, ResourceT, allocate, runResourceT)
+import Data.Bits ((.|.))
 import qualified Data.ByteString.Lazy as BSL
 import Data.Functor.Identity (Identity (..))
 import qualified Data.Vector as V
-import Data.Word
+import Data.Word (Word32, Word64)
 import Foreign.Marshal.Array (peekArray)
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (sizeOf)
-import Say
-
+import Say (sayErr)
 import qualified Vma
-import Vulkan.CStruct.Extends
-import Vulkan.CStruct.Utils
-  ( FixedArray
-  , lowerArrayPtr
-  )
-import Vulkan.Core10 as Vk hiding
-  ( withBuffer
-  , withImage
-  )
+import Vulkan.CStruct.Extends (SomeStruct (..))
+import Vulkan.CStruct.Utils (FixedArray, lowerArrayPtr)
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo (..))
+import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Requirement (InstanceRequirement (..))
 import Vulkan.Utils.Debug (debugCallbackPtr)
 import qualified Vulkan.Utils.Init.Headless as Init
-import Vulkan.Utils.Initialization
-  ( createDeviceFromRequirements
-  , physicalDeviceName
-  , pickPhysicalDevice
-  )
-import Vulkan.Utils.QueueAssignment
-  ( QueueFamilyIndex (..)
-  , QueueSpec (..)
-  , assignQueues
-  , isComputeQueueFamily
-  )
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang
-import Vulkan.Zero
-import VulkanMemoryAllocator as VMA hiding
-  ( getPhysicalDeviceProperties
-  )
-import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
+import Vulkan.Utils.Initialization (createDeviceFromRequirements, physicalDeviceName, pickPhysicalDevice)
+import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..), QueueSpec (..), assignQueues, isComputeQueueFamily)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
+import Vulkan.Zero (zero)
+import qualified VulkanMemoryAllocator as VMA
 
 ----------------------------------------------------------------
 -- The program
@@ -68,17 +49,16 @@ main = runResourceT $ do
   (phys, computeQueueFamilyIndex, dev) <- Main.createDevice inst
   allocator <- Vma.createVMA zero myApiVersion inst phys dev
 
-  image <-
-    render allocator dev computeQueueFamilyIndex
-      `finally` deviceWaitIdle dev
+  image <- render allocator dev computeQueueFamilyIndex
+  Vk.deviceWaitIdle dev
   let filename = "julia.png"
   sayErr $ "Writing " <> filename
   liftIO $ BSL.writeFile filename (JP.encodePng image)
 
 -- | Render the Julia set
 render
-  :: Allocator
-  -> Device
+  :: VMA.Allocator
+  -> Vk.Device
   -> Word32
   -> ResourceT IO (JP.Image JP.PixelRGBA8)
 render allocator dev computeQueueFamilyIndex = do
@@ -95,37 +75,37 @@ render allocator dev computeQueueFamilyIndex = do
     VMA.withBuffer
       allocator
       zero
-        { size = fromIntegral $ width * height * 4 * sizeOf (0 :: Float)
-        , usage = BUFFER_USAGE_STORAGE_BUFFER_BIT
+        { Vk.size = fromIntegral $ width * height * 4 * sizeOf (0 :: Float)
+        , Vk.usage = Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT
         }
       zero
-        { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
-        , usage = MEMORY_USAGE_GPU_TO_CPU
+        { VMA.flags = VMA.ALLOCATION_CREATE_MAPPED_BIT
+        , VMA.usage = VMA.MEMORY_USAGE_GPU_TO_CPU
         }
       allocate
 
   -- Create a descriptor set and layout for this buffer
   (descriptorSet, descriptorSetLayout) <- do
     (_, descriptorPool) <-
-      withDescriptorPool
+      Vk.withDescriptorPool
         dev
         zero
-          { maxSets = 1
-          , poolSizes = [DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_BUFFER 1]
+          { Vk.maxSets = 1
+          , Vk.poolSizes = [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 1]
           }
         Nothing
         allocate
 
     (_, descriptorSetLayout) <-
-      withDescriptorSetLayout
+      Vk.withDescriptorSetLayout
         dev
         zero
-          { bindings =
+          { Vk.bindings =
               [ zero
-                  { binding = 0
-                  , descriptorType = DESCRIPTOR_TYPE_STORAGE_BUFFER
-                  , descriptorCount = 1
-                  , stageFlags = SHADER_STAGE_COMPUTE_BIT
+                  { Vk.binding = 0
+                  , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER
+                  , Vk.descriptorCount = 1
+                  , Vk.stageFlags = Vk.SHADER_STAGE_COMPUTE_BIT
                   }
               ]
           }
@@ -134,23 +114,23 @@ render allocator dev computeQueueFamilyIndex = do
 
     -- Don't use `withDescriptorSets`: the set is freed when the pool is.
     [descriptorSet] <-
-      allocateDescriptorSets
+      Vk.allocateDescriptorSets
         dev
         zero
-          { descriptorPool = descriptorPool
-          , setLayouts = [descriptorSetLayout]
+          { Vk.descriptorPool = descriptorPool
+          , Vk.setLayouts = [descriptorSetLayout]
           }
     pure (descriptorSet, descriptorSetLayout)
 
-  updateDescriptorSets
+  Vk.updateDescriptorSets
     dev
     [ SomeStruct
         zero
-          { dstSet = descriptorSet
-          , dstBinding = 0
-          , descriptorType = DESCRIPTOR_TYPE_STORAGE_BUFFER
-          , descriptorCount = 1
-          , bufferInfo = [DescriptorBufferInfo buffer 0 WHOLE_SIZE]
+          { Vk.dstSet = descriptorSet
+          , Vk.dstBinding = 0
+          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER
+          , Vk.descriptorCount = 1
+          , Vk.bufferInfo = [Vk.DescriptorBufferInfo buffer 0 Vk.WHOLE_SIZE]
           }
     ]
     []
@@ -158,21 +138,21 @@ render allocator dev computeQueueFamilyIndex = do
   -- Create our shader and compute pipeline
   shader <- createShader dev
   (_, pipelineLayout) <-
-    withPipelineLayout
+    Vk.withPipelineLayout
       dev
       zero{PipelineLayoutCreateInfo.setLayouts = [descriptorSetLayout]}
       Nothing
       allocate
   let
-    pipelineCreateInfo :: ComputePipelineCreateInfo '[]
+    pipelineCreateInfo :: Vk.ComputePipelineCreateInfo '[]
     pipelineCreateInfo =
       zero
-        { layout = pipelineLayout
-        , stage = shader
-        , basePipelineHandle = zero
+        { Vk.layout = pipelineLayout
+        , Vk.stage = shader
+        , Vk.basePipelineHandle = zero
         }
   (_, (_, [computePipeline])) <-
-    withComputePipelines
+    Vk.withComputePipelines
       dev
       zero
       [SomeStruct pipelineCreateInfo]
@@ -184,57 +164,57 @@ render allocator dev computeQueueFamilyIndex = do
         zero
           { CommandPoolCreateInfo.queueFamilyIndex = computeQueueFamilyIndex
           }
-  (_, commandPool) <- withCommandPool dev commandPoolCreateInfo Nothing allocate
+  (_, commandPool) <- Vk.withCommandPool dev commandPoolCreateInfo Nothing allocate
   let commandBufferAllocateInfo =
         zero
-          { commandPool = commandPool
-          , level = COMMAND_BUFFER_LEVEL_PRIMARY
-          , commandBufferCount = 1
+          { Vk.commandPool = commandPool
+          , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
+          , Vk.commandBufferCount = 1
           }
-  (_, [commandBuffer]) <- withCommandBuffers dev commandBufferAllocateInfo allocate
+  (_, [commandBuffer]) <- Vk.withCommandBuffers dev commandBufferAllocateInfo allocate
 
   -- Fill command buffer
-  useCommandBuffer
+  Vk.useCommandBuffer
     commandBuffer
-    zero{CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-    $ do
-      cmdBindPipeline
+    zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
+    do
+      Vk.cmdBindPipeline
         commandBuffer
-        PIPELINE_BIND_POINT_COMPUTE
+        Vk.PIPELINE_BIND_POINT_COMPUTE
         computePipeline
-      cmdBindDescriptorSets
+      Vk.cmdBindDescriptorSets
         commandBuffer
-        PIPELINE_BIND_POINT_COMPUTE
+        Vk.PIPELINE_BIND_POINT_COMPUTE
         pipelineLayout
         0
         [descriptorSet]
         []
-      cmdDispatch
+      Vk.cmdDispatch
         commandBuffer
         (ceiling (realToFrac width / realToFrac @_ @Float workgroupX))
         (ceiling (realToFrac height / realToFrac @_ @Float workgroupY))
         1
 
   -- Create a fence so we can know when render is finished
-  (_, fence) <- withFence dev zero Nothing allocate
-  let submitInfo = zero{commandBuffers = [commandBufferHandle commandBuffer]}
-  computeQueue <- getDeviceQueue dev computeQueueFamilyIndex 0
-  queueSubmit computeQueue [SomeStruct submitInfo] fence
+  (_, fence) <- Vk.withFence dev zero Nothing allocate
+  let submitInfo = zero{Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]}
+  computeQueue <- Vk.getDeviceQueue dev computeQueueFamilyIndex 0
+  Vk.queueSubmit computeQueue [SomeStruct submitInfo] fence
   let fenceTimeout = 1e9 -- 1 second
-  waitForFences dev [fence] True fenceTimeout >>= \case
-    TIMEOUT -> throwString "Timed out waiting for compute"
+  Vk.waitForFences dev [fence] True fenceTimeout >>= \case
+    Vk.TIMEOUT -> throwString "Timed out waiting for compute"
     _ -> pure ()
 
   -- If the buffer allocation is not HOST_COHERENT this will ensure the changes
   -- are present on the CPU.
-  invalidateAllocation allocator bufferAllocation 0 WHOLE_SIZE
+  VMA.invalidateAllocation allocator bufferAllocation 0 Vk.WHOLE_SIZE
 
   -- TODO: speed this bit up, it's hopelessly slow
   let
     pixelAddr :: Int -> Int -> Ptr (FixedArray 4 Float)
     pixelAddr x y =
       plusPtr
-        (mappedData bufferAllocationInfo)
+        (VMA.mappedData bufferAllocationInfo)
         (((y * width) + x) * 4 * sizeOf (0 :: Float))
   liftIO $
     JP.withImage
@@ -250,11 +230,20 @@ render allocator dev computeQueueFamilyIndex = do
 
 -- | Create a compute shader
 createShader
-  :: Device
-  -> ResourceT IO (SomeStruct PipelineShaderStageCreateInfo)
+  :: Vk.Device
+  -> ResourceT IO (SomeStruct Vk.PipelineShaderStageCreateInfo)
 createShader dev = do
-  let compCode =
-        [comp|
+  (_, compModule) <- Vk.withShaderModule dev zero{Vk.code = compCode} Nothing allocate
+  let compShaderStageCreateInfo =
+        zero
+          { Vk.stage = Vk.SHADER_STAGE_COMPUTE_BIT
+          , Vk.module' = compModule
+          , Vk.name = "main"
+          }
+  pure $ SomeStruct compShaderStageCreateInfo
+  where
+    compCode =
+      [comp|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
 
@@ -317,28 +306,20 @@ createShader dev = do
           }
         }
       |]
-  (_, compModule) <- withShaderModule dev zero{code = compCode} Nothing allocate
-  let compShaderStageCreateInfo =
-        zero
-          { stage = SHADER_STAGE_COMPUTE_BIT
-          , module' = compModule
-          , name = "main"
-          }
-  pure $ SomeStruct compShaderStageCreateInfo
 
 ----------------------------------------------------------------
 -- Initialization
 ----------------------------------------------------------------
 
 myApiVersion :: Word32
-myApiVersion = API_VERSION_1_0
+myApiVersion = Vk.API_VERSION_1_0
 
 -- | Create an instance with a debug messenger and validation layer.
-createInstance :: (MonadResource m) => m Instance
+createInstance :: (MonadResource m) => m Vk.Instance
 createInstance = do
   inst <-
     Init.withInstance
-      (Just zero{applicationName = Nothing, apiVersion = myApiVersion})
+      (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion})
       [ RequireInstanceExtension
           { instanceExtensionLayerName = Nothing
           , instanceExtensionName = EXT_DEBUG_UTILS_EXTENSION_NAME
@@ -366,8 +347,8 @@ createInstance = do
 
 createDevice
   :: (MonadResource m, MonadThrow m)
-  => Instance
-  -> m (PhysicalDevice, Word32, Device)
+  => Vk.Instance
+  -> m (Vk.PhysicalDevice, Word32, Vk.Device)
 createDevice inst = do
   mPd <- pickPhysicalDevice inst hasComputeQueue id
   (_, phys) <-
@@ -391,15 +372,15 @@ createDevice inst = do
       []
       []
       phys
-      zero{queueCreateInfos = SomeStruct <$> qInfos}
+      zero{Vk.queueCreateInfos = SomeStruct <$> qInfos}
   Identity (QueueFamilyIndex computeFamilyIdx, _q) <- liftIO (getQs dev)
   pure (phys, computeFamilyIdx, dev)
   where
-    hasComputeQueue :: (MonadIO m) => PhysicalDevice -> m (Maybe Word64)
+    hasComputeQueue :: (MonadIO m) => Vk.PhysicalDevice -> m (Maybe Word64)
     hasComputeQueue phys = do
-      qProps <- getPhysicalDeviceQueueFamilyProperties phys
+      qProps <- Vk.getPhysicalDeviceQueueFamilyProperties phys
       if V.any isComputeQueueFamily qProps
         then do
-          heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
+          heaps <- Vk.memoryHeaps <$> Vk.getPhysicalDeviceMemoryProperties phys
           pure (Just (sum (DI.size <$> heaps)))
         else pure Nothing

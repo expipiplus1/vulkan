@@ -4,7 +4,6 @@ module Utils
   , noSuchThing
   ) where
 
-import Control.Concurrent ()
 import Control.Monad (unless)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import GHC.IO.Exception

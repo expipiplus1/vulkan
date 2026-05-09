@@ -13,63 +13,42 @@ module Triangle
   ) where
 
 import Control.Exception (throwIO)
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Resource
+import Control.Monad.IO.Class (MonadIO (..))
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate, release)
 import Data.Bits ((.|.))
 import Data.Foldable (traverse_)
+import Data.IORef
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-
-import Data.IORef
-import Frame
-  ( Frame (..)
-  , advanceFrame
-  , initialFrame
-  , queueSubmitFrame
-  , runFrame
-  )
+import Frame (Frame (..), advanceFrame, initialFrame, queueSubmitFrame, runFrame)
 import qualified Framebuffer
 import RefCounted (releaseRefCounted)
-import Swapchain
-  ( Swapchain (..)
-  , recreateSwapchain
-  , threwSwapchainError
-  )
+import Swapchain (Swapchain (..), recreateSwapchain, threwSwapchainError)
 import Utils (loopJust)
-import VkResources
-  ( Queues (..)
-  , RecycledResources (..)
-  , VkResources (..)
-  )
-
-import Vulkan.CStruct.Extends
-import Vulkan.Core10 as Vk hiding
-  ( createRenderPass
-  , withImage
-  )
+import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
-import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
+import qualified Vulkan.Core10 as Vk
+import qualified Vulkan.Core12 as Vk12
 import Vulkan.Exception (VulkanException (..))
-import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
-  ( SurfaceFormatKHR (..)
-  )
-import Vulkan.Extensions.VK_KHR_swapchain as Swap
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang
-import Vulkan.Zero
+import qualified Vulkan.Extensions.VK_KHR_surface as KHR
+import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
+import Vulkan.Zero (zero)
 
 -- | Drive a recycling-Frame render loop drawing the colored triangle.
 runTriangle
   :: VkResources
   -> Swapchain
   -- ^ Initial swapchain
-  -> IO Extent2D
+  -> IO Vk.Extent2D
   -- ^ Get current drawable size (for resize)
   -> IO Bool
   -- ^ Per-frame poller; 'True' means quit
   -> ResourceT IO ()
 runTriangle vr initialSC getDrawableSize shouldQuit = do
   let dev = vrDevice vr
-  (_, renderPass) <- createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
+  (_, renderPass) <- createRenderPass dev (KHR.format (sFormat initialSC))
   (_, pipeline) <- createGraphicsPipeline dev renderPass
   initialFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
 
@@ -105,7 +84,7 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
     loop f =
       liftIO shouldQuit >>= \case
         True -> do
-          deviceWaitIdle dev
+          Vk.deviceWaitIdle dev
           pure Nothing
         False -> Just <$> perFrame f
 
@@ -117,9 +96,9 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
 
 drawTriangle
   :: VkResources
-  -> RenderPass
-  -> Pipeline
-  -> Vector Framebuffer
+  -> Vk.RenderPass
+  -> Vk.Pipeline
+  -> Vector Vk.Framebuffer
   -> Frame
   -> ResourceT IO ()
 drawTriangle vr renderPass pipeline framebuffers f = do
@@ -131,66 +110,65 @@ drawTriangle vr renderPass pipeline framebuffers f = do
     oneSecond = 1e9
 
   (acquireResult, imageIndex) <-
-    acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable NULL_HANDLE
-      >>= \case
-        r@(SUCCESS, _) -> pure r
-        r@(SUBOPTIMAL_KHR, _) -> pure r
-        (TIMEOUT, _) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
-        _ -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
+    KHR.acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable Vk.NULL_HANDLE >>= \case
+      r@(Vk.SUCCESS, _) -> pure r
+      r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
+      (Vk.TIMEOUT, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
+      _ -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
 
-  (_, ~[commandBuffer]) <-
-    withCommandBuffers
+  (_, [commandBuffer]) <-
+    Vk.withCommandBuffers
       dev
       zero
-        { commandPool = rrCommandPool
-        , level = COMMAND_BUFFER_LEVEL_PRIMARY
-        , commandBufferCount = 1
+        { Vk.commandPool = rrCommandPool
+        , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
+        , Vk.commandBufferCount = 1
         }
       allocate
 
   let renderPassBeginInfo =
         zero
-          { renderPass = renderPass
-          , framebuffer = framebuffers V.! fromIntegral imageIndex
-          , renderArea = Rect2D{offset = zero, extent = sExtent sc}
-          , clearValues = [Color (Float32 0.1 0.1 0.1 0)]
+          { Vk.renderPass = renderPass
+          , Vk.framebuffer = framebuffers V.! fromIntegral imageIndex
+          , Vk.renderArea = Vk.Rect2D{Vk.offset = zero, Vk.extent = sExtent sc}
+          , Vk.clearValues = [Vk.Color (Vk.Float32 0.1 0.1 0.1 0)]
           }
 
-  useCommandBuffer
+  Vk.useCommandBuffer
     commandBuffer
-    zero{CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-    $ do
-      cmdUseRenderPass commandBuffer renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
-        let Extent2D w h = sExtent sc
-        cmdSetViewport
+    zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
+    do
+      Vk.cmdUseRenderPass commandBuffer renderPassBeginInfo Vk.SUBPASS_CONTENTS_INLINE do
+        let Vk.Extent2D w h = sExtent sc
+        Vk.cmdSetViewport
           commandBuffer
           0
-          [ Viewport
-              { x = 0
-              , y = 0
-              , width = realToFrac w
-              , height = realToFrac h
-              , minDepth = 0
-              , maxDepth = 1
+          [ Vk.Viewport
+              { Vk.x = 0
+              , Vk.y = 0
+              , Vk.width = realToFrac w
+              , Vk.height = realToFrac h
+              , Vk.minDepth = 0
+              , Vk.maxDepth = 1
               }
           ]
-        cmdSetScissor
+        Vk.cmdSetScissor
           commandBuffer
           0
-          [Rect2D{offset = Offset2D 0 0, extent = sExtent sc}]
-        cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_GRAPHICS pipeline
-        cmdDraw commandBuffer 3 1 0 0
+          [Vk.Rect2D{Vk.offset = Vk.Offset2D 0 0, Vk.extent = sExtent sc}]
+        Vk.cmdBindPipeline commandBuffer Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
+        Vk.cmdDraw commandBuffer 3 1 0 0
 
   let submitInfo =
         zero
           { Vk.waitSemaphores = [rrImageAvailable]
-          , waitDstStageMask = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-          , commandBuffers = [commandBufferHandle commandBuffer]
-          , signalSemaphores = [rrRenderFinished, fHostTimeline f]
+          , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
+          , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline f]
           }
           ::& zero
-            { waitSemaphoreValues = [1]
-            , signalSemaphoreValues = [1, fIndex f]
+            { Vk12.waitSemaphoreValues = [1]
+            , Vk12.signalSemaphoreValues = [1, fIndex f]
             }
             :& ()
   liftIO $
@@ -202,17 +180,17 @@ drawTriangle vr renderPass pipeline framebuffers f = do
       (fIndex f)
 
   presentResult <-
-    queuePresentKHR
+    KHR.queuePresentKHR
       gQ
       zero
-        { Swap.waitSemaphores = [rrRenderFinished]
-        , swapchains = [sSwapchain sc]
-        , imageIndices = [imageIndex]
+        { KHR.waitSemaphores = [rrRenderFinished]
+        , KHR.swapchains = [sSwapchain sc]
+        , KHR.imageIndices = [imageIndex]
         }
 
   case (acquireResult, presentResult) of
-    (SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
-    (_, SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
+    (Vk.SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
+    (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
     _ -> pure ()
 
 ----------------------------------------------------------------
@@ -220,123 +198,134 @@ drawTriangle vr renderPass pipeline framebuffers f = do
 ----------------------------------------------------------------
 
 createRenderPass
-  :: (MonadResource m) => Device -> Format -> m (ReleaseKey, RenderPass)
+  :: (MonadResource m) => Vk.Device -> Vk.Format -> m (ReleaseKey, Vk.RenderPass)
 createRenderPass dev imageFormat =
-  withRenderPass
+  Vk.withRenderPass
     dev
     zero
-      { attachments = [attachmentDescription]
-      , subpasses = [subpass]
-      , dependencies = [subpassDependency]
+      { Vk.attachments = [attachmentDescription]
+      , Vk.subpasses = [subpass]
+      , Vk.dependencies = [subpassDependency]
       }
     Nothing
     allocate
   where
-    attachmentDescription :: AttachmentDescription
+    attachmentDescription :: Vk.AttachmentDescription
     attachmentDescription =
       zero
-        { format = imageFormat
-        , samples = SAMPLE_COUNT_1_BIT
-        , loadOp = ATTACHMENT_LOAD_OP_CLEAR
-        , storeOp = ATTACHMENT_STORE_OP_STORE
-        , stencilLoadOp = ATTACHMENT_LOAD_OP_DONT_CARE
-        , stencilStoreOp = ATTACHMENT_STORE_OP_DONT_CARE
-        , initialLayout = IMAGE_LAYOUT_UNDEFINED
-        , finalLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR
+        { Vk.format = imageFormat
+        , Vk.samples = Vk.SAMPLE_COUNT_1_BIT
+        , Vk.loadOp = Vk.ATTACHMENT_LOAD_OP_CLEAR
+        , Vk.storeOp = Vk.ATTACHMENT_STORE_OP_STORE
+        , Vk.stencilLoadOp = Vk.ATTACHMENT_LOAD_OP_DONT_CARE
+        , Vk.stencilStoreOp = Vk.ATTACHMENT_STORE_OP_DONT_CARE
+        , Vk.initialLayout = Vk.IMAGE_LAYOUT_UNDEFINED
+        , Vk.finalLayout = Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
         }
-    subpass :: SubpassDescription
+    subpass :: Vk.SubpassDescription
     subpass =
       zero
-        { pipelineBindPoint = PIPELINE_BIND_POINT_GRAPHICS
-        , colorAttachments =
-            [zero{attachment = 0, layout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL}]
+        { Vk.pipelineBindPoint = Vk.PIPELINE_BIND_POINT_GRAPHICS
+        , Vk.colorAttachments =
+            [ zero
+                { Vk.attachment = 0
+                , Vk.layout = Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+                }
+            ]
         }
-    subpassDependency :: SubpassDependency
+    subpassDependency :: Vk.SubpassDependency
     subpassDependency =
       zero
-        { srcSubpass = SUBPASS_EXTERNAL
-        , dstSubpass = 0
-        , srcStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-        , srcAccessMask = zero
-        , dstStageMask = PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-        , dstAccessMask =
-            ACCESS_COLOR_ATTACHMENT_READ_BIT
-              .|. ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+        { Vk.srcSubpass = Vk.SUBPASS_EXTERNAL
+        , Vk.dstSubpass = 0
+        , Vk.srcStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+        , Vk.srcAccessMask = zero
+        , Vk.dstStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+        , Vk.dstAccessMask =
+            Vk.ACCESS_COLOR_ATTACHMENT_READ_BIT
+              .|. Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT
         }
 
 createGraphicsPipeline
   :: (MonadResource m, MonadFail m)
-  => Device
-  -> RenderPass
-  -> m (ReleaseKey, Pipeline)
+  => Vk.Device
+  -> Vk.RenderPass
+  -> m (ReleaseKey, Vk.Pipeline)
 createGraphicsPipeline dev renderPass = do
   (shaderKeys, shaderStages) <- V.unzip <$> createShaders dev
-  (layoutKey, pipelineLayout) <- withPipelineLayout dev zero Nothing allocate
+  (layoutKey, pipelineLayout) <- Vk.withPipelineLayout dev zero Nothing allocate
   let
-    pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
+    pipelineCreateInfo :: Vk.GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo =
       zero
-        { stages = shaderStages
-        , vertexInputState = Just zero
-        , inputAssemblyState =
+        { Vk.stages = shaderStages
+        , Vk.vertexInputState = Just zero
+        , Vk.inputAssemblyState =
             Just
               zero
-                { topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-                , primitiveRestartEnable = False
+                { Vk.topology = Vk.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+                , Vk.primitiveRestartEnable = False
                 }
-        , viewportState =
+        , Vk.viewportState =
             Just $
-              SomeStruct zero{viewportCount = 1, scissorCount = 1}
-        , rasterizationState =
-            Just . SomeStruct $
-              zero
-                { depthClampEnable = False
-                , rasterizerDiscardEnable = False
-                , lineWidth = 1
-                , polygonMode = POLYGON_MODE_FILL
-                , cullMode = CULL_MODE_NONE
-                , frontFace = FRONT_FACE_CLOCKWISE
-                , depthBiasEnable = False
-                }
-        , multisampleState =
-            Just . SomeStruct $
-              zero
-                { sampleShadingEnable = False
-                , rasterizationSamples = SAMPLE_COUNT_1_BIT
-                , minSampleShading = 1
-                , sampleMask = [maxBound]
-                }
-        , depthStencilState = Nothing
-        , colorBlendState =
-            Just . SomeStruct $
-              zero
-                { logicOpEnable = False
-                , attachments =
-                    [ zero
-                        { colorWriteMask =
-                            COLOR_COMPONENT_R_BIT
-                              .|. COLOR_COMPONENT_G_BIT
-                              .|. COLOR_COMPONENT_B_BIT
-                              .|. COLOR_COMPONENT_A_BIT
-                        , blendEnable = False
-                        }
-                    ]
-                }
-        , dynamicState =
+              SomeStruct
+                zero
+                  { Vk.viewportCount = 1
+                  , Vk.scissorCount = 1
+                  }
+        , Vk.rasterizationState =
+            Just $
+              SomeStruct
+                zero
+                  { Vk.depthClampEnable = False
+                  , Vk.rasterizerDiscardEnable = False
+                  , Vk.lineWidth = 1
+                  , Vk.polygonMode = Vk.POLYGON_MODE_FILL
+                  , Vk.cullMode = Vk.CULL_MODE_NONE
+                  , Vk.frontFace = Vk.FRONT_FACE_CLOCKWISE
+                  , Vk.depthBiasEnable = False
+                  }
+        , Vk.multisampleState =
+            Just $
+              SomeStruct
+                zero
+                  { Vk.sampleShadingEnable = False
+                  , Vk.rasterizationSamples = Vk.SAMPLE_COUNT_1_BIT
+                  , Vk.minSampleShading = 1
+                  , Vk.sampleMask = [maxBound]
+                  }
+        , Vk.depthStencilState = Nothing
+        , Vk.colorBlendState =
+            Just $
+              SomeStruct
+                zero
+                  { Vk.logicOpEnable = False
+                  , Vk.attachments =
+                      [ zero
+                          { Vk.colorWriteMask =
+                              Vk.COLOR_COMPONENT_R_BIT
+                                .|. Vk.COLOR_COMPONENT_G_BIT
+                                .|. Vk.COLOR_COMPONENT_B_BIT
+                                .|. Vk.COLOR_COMPONENT_A_BIT
+                          , Vk.blendEnable = False
+                          }
+                      ]
+                  }
+        , Vk.dynamicState =
             Just
               zero
-                { dynamicStates =
-                    [ DYNAMIC_STATE_VIEWPORT
-                    , DYNAMIC_STATE_SCISSOR
+                { Vk.dynamicStates =
+                    [ Vk.DYNAMIC_STATE_VIEWPORT
+                    , Vk.DYNAMIC_STATE_SCISSOR
                     ]
                 }
-        , layout = pipelineLayout
-        , renderPass = renderPass
-        , subpass = 0
-        , basePipelineHandle = zero
+        , Vk.layout = pipelineLayout
+        , Vk.renderPass = renderPass
+        , Vk.subpass = 0
+        , Vk.basePipelineHandle = zero
         }
   (key, (_, [graphicsPipeline])) <-
-    withGraphicsPipelines
+    Vk.withGraphicsPipelines
       dev
       zero
       [SomeStruct pipelineCreateInfo]
@@ -348,22 +337,29 @@ createGraphicsPipeline dev renderPass = do
 
 createShaders
   :: (MonadResource m)
-  => Device
-  -> m (V.Vector (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo))
+  => Vk.Device
+  -> m (V.Vector (ReleaseKey, SomeStruct Vk.PipelineShaderStageCreateInfo))
 createShaders dev = do
+  (fragKey, fragModule) <- Vk.withShaderModule dev zero{Vk.code = fragCode} Nothing allocate
+  (vertKey, vertModule) <- Vk.withShaderModule dev zero{Vk.code = vertCode} Nothing allocate
   let
-    fragCode =
-      [frag|
-        #version 450
-        #extension GL_ARB_separate_shader_objects : enable
-
-        layout(location = 0) in vec3 fragColor;
-        layout(location = 0) out vec4 outColor;
-
-        void main() {
-            outColor = vec4(fragColor, 1.0);
+    vertShaderStageCreateInfo =
+      zero
+        { Vk.stage = Vk.SHADER_STAGE_VERTEX_BIT
+        , Vk.module' = vertModule
+        , Vk.name = "main"
         }
-      |]
+    fragShaderStageCreateInfo =
+      zero
+        { Vk.stage = Vk.SHADER_STAGE_FRAGMENT_BIT
+        , Vk.module' = fragModule
+        , Vk.name = "main"
+        }
+  pure
+    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
+    , (fragKey, SomeStruct fragShaderStageCreateInfo)
+    ]
+  where
     vertCode =
       [vert|
         #version 450
@@ -387,22 +383,15 @@ createShaders dev = do
           fragColor   = colors[gl_VertexIndex];
         }
       |]
-  (fragKey, fragModule) <- withShaderModule dev zero{code = fragCode} Nothing allocate
-  (vertKey, vertModule) <- withShaderModule dev zero{code = vertCode} Nothing allocate
-  let
-    vertShaderStageCreateInfo =
-      zero
-        { stage = SHADER_STAGE_VERTEX_BIT
-        , module' = vertModule
-        , name = "main"
+    fragCode =
+      [frag|
+        #version 450
+        #extension GL_ARB_separate_shader_objects : enable
+
+        layout(location = 0) in vec3 fragColor;
+        layout(location = 0) out vec4 outColor;
+
+        void main() {
+            outColor = vec4(fragColor, 1.0);
         }
-    fragShaderStageCreateInfo =
-      zero
-        { stage = SHADER_STAGE_FRAGMENT_BIT
-        , module' = fragModule
-        , name = "main"
-        }
-  pure
-    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
-    , (fragKey, SomeStruct fragShaderStageCreateInfo)
-    ]
+      |]

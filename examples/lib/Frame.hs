@@ -13,7 +13,6 @@ waits on it inside the spawned wait-and-recycle thread.
 -}
 module Frame
   ( Frame (..)
-  , numConcurrentFrames
   , initialFrame
   , advanceFrame
   , runFrame
@@ -104,15 +103,10 @@ when calling 'createDeviceFromRequirements'.
 frameDeviceRequirements :: [DeviceRequirement]
 frameDeviceRequirements =
   [U.reqs|
+    VK_KHR_swapchain
     VK_KHR_timeline_semaphore
     PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
   |]
-
-{- | How many frames to keep in flight. Determines how many spare
-'RecycledResources' get pre-populated into the recycle channel at startup.
--}
-numConcurrentFrames :: Int
-numConcurrentFrames = 3
 
 -- | Per-frame state.
 data Frame = Frame
@@ -146,11 +140,11 @@ data Frame = Frame
 ----------------------------------------------------------------
 
 {- | Build the initial frame and pre-populate the recycle channel with
-@'numConcurrentFrames' - 1@ spare 'RecycledResources'.
+2 spare 'RecycledResources'.
 -}
 initialFrame :: (MonadResource m) => VkResources -> Swapchain -> m Frame
 initialFrame vr fSwapchain = do
-  replicateM_ (numConcurrentFrames - 1) $ do
+  replicateM_ 2 $ do
     rr <- mkRecycledResources vr
     liftIO (vrRecycleBin vr rr)
   fRecycled <- mkRecycledResources vr

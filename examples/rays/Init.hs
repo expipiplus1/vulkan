@@ -6,52 +6,24 @@ module Init
   , deviceRequirements
   , RTInfo (..)
   , getDeviceRTProps
-  , createVMA
   ) where
 
 import Control.Monad.IO.Class
-import Control.Monad.Trans.Resource
 import Data.Word
-
-import Frame
-  ( frameDeviceRequirements
-  , frameInstanceRequirements
-  )
-import qualified Vma
-import Vulkan.CStruct.Extends
-  ( pattern (:&)
-  , pattern (::&)
-  )
-import Vulkan.Core10
-import Vulkan.Core11 (pattern API_VERSION_1_1)
-import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
-  ( PhysicalDeviceBufferDeviceAddressFeatures (..)
-  )
-import Vulkan.Extensions.VK_EXT_debug_utils
-  ( pattern EXT_DEBUG_UTILS_EXTENSION_NAME
-  )
-import Vulkan.Extensions.VK_KHR_acceleration_structure
-  ( PhysicalDeviceAccelerationStructureFeaturesKHR (..)
-  )
-import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
-  ( getPhysicalDeviceProperties2KHR
-  )
-import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
-  ( PhysicalDeviceRayTracingPipelineFeaturesKHR (..)
-  , PhysicalDeviceRayTracingPipelinePropertiesKHR (..)
-  )
-import Vulkan.Requirement
-  ( DeviceRequirement
-  , InstanceRequirement (..)
-  )
-import qualified Vulkan.Utils.Requirements.TH as U
-import VulkanMemoryAllocator
-  ( Allocator
-  , AllocatorCreateFlagBits (..)
-  )
+import Frame (frameDeviceRequirements, frameInstanceRequirements)
+import Vulkan.CStruct.Extends (pattern (:&), pattern (::&))
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Core12 (pattern API_VERSION_1_2)
+import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeatures (..))
+import Vulkan.Extensions.VK_EXT_debug_utils (pattern EXT_DEBUG_UTILS_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (PhysicalDeviceAccelerationStructureFeaturesKHR (..))
+import Vulkan.Extensions.VK_KHR_get_physical_device_properties2 (getPhysicalDeviceProperties2KHR)
+import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR (..), PhysicalDeviceRayTracingPipelinePropertiesKHR (..))
+import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
+import Vulkan.Utils.Requirements.TH (reqs)
 
 myApiVersion :: Word32
-myApiVersion = API_VERSION_1_1
+myApiVersion = API_VERSION_1_2
 
 {- | Instance requirements: Frame's bits plus debug-utils so the @nameObject@
 calls scattered through the example can load their function pointer (we
@@ -67,12 +39,9 @@ bits, plus the full ray-tracing extension family.
 -}
 deviceRequirements :: [DeviceRequirement]
 deviceRequirements =
-  [U.reqs|
-      1.0
-      VK_KHR_swapchain
-
-      -- Ray tracing
+  [reqs|
       1.2.162
+
       PhysicalDeviceRayTracingPipelineFeaturesKHR.rayTracingPipeline
       PhysicalDeviceAccelerationStructureFeaturesKHR.accelerationStructure
       PhysicalDeviceBufferDeviceAddressFeatures.bufferDeviceAddress
@@ -93,7 +62,7 @@ data RTInfo = RTInfo
   , rtiShaderGroupBaseAlignment :: Word32
   }
 
-getDeviceRTProps :: (MonadIO m) => PhysicalDevice -> m RTInfo
+getDeviceRTProps :: (MonadIO m) => Vk.PhysicalDevice -> m RTInfo
 getDeviceRTProps phys = do
   props <- getPhysicalDeviceProperties2KHR phys
   let _ ::& PhysicalDeviceRayTracingPipelinePropertiesKHR{..} :& () = props
@@ -102,7 +71,3 @@ getDeviceRTProps phys = do
       { rtiShaderGroupHandleSize = shaderGroupHandleSize
       , rtiShaderGroupBaseAlignment = shaderGroupBaseAlignment
       }
-
-createVMA
-  :: (MonadResource m) => Instance -> PhysicalDevice -> Device -> m Allocator
-createVMA = Vma.createVMA ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT myApiVersion

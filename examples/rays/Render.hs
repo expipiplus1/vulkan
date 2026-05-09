@@ -12,56 +12,40 @@ import Control.Monad.Trans.Resource
 import Data.Vector ((!))
 import qualified Data.Vector as V
 import Data.Word
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
+import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable
-import Frame
-  ( Frame (..)
-  , numConcurrentFrames
-  , queueSubmitFrame
-  )
+import Frame (Frame (..), queueSubmitFrame)
 import GHC.Clock (getMonotonicTime)
-import GHC.IO.Exception
-  ( IOErrorType (TimeExpired)
-  , IOException (IOError)
-  )
+import GHC.IO.Exception (IOErrorType (TimeExpired), IOException (IOError))
 import Init (RTInfo (..))
 import Linear.Matrix
 import Linear.Quaternion
 import Linear.V3
 import Swapchain (Swapchain (..))
 import UnliftIO.Exception (throwString)
-import VkResources
-  ( Queues (..)
-  , RecycledResources (..)
-  , VkResources (..)
-  )
-import Vulkan.CStruct.Extends
-import Vulkan.Core10 as Core10
+import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
+import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception (VulkanException (..))
-import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
-import Vulkan.Extensions.VK_KHR_swapchain as Swap
-import Vulkan.Zero
-import VulkanMemoryAllocator as VMA hiding
-  ( getPhysicalDeviceProperties
-  )
+import qualified Vulkan.Extensions.VK_KHR_ray_tracing_pipeline as RT
+import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
+import Vulkan.Zero (zero)
+import qualified VulkanMemoryAllocator as VMA
 
 {- | Long-lived per-app render state. Built once during setup; threaded into
 'renderFrame' each frame.
 -}
 data RenderState = RenderState
-  { rsPipeline :: Pipeline
-  , rsPipelineLayout :: PipelineLayout
-  , rsDescriptorSets :: V.Vector DescriptorSet
-  -- ^ One per concurrent-frame slot. Picked by @fIndex `mod` numConcurrentFrames@.
-  , rsShaderBindingTableAddress :: DeviceAddress
-  , rsCameraMatricesBuffer :: Buffer
-  , rsCameraMatricesAllocation :: Allocation
+  { rsPipeline :: Vk.Pipeline
+  , rsPipelineLayout :: Vk.PipelineLayout
+  , rsDescriptorSets :: V.Vector Vk.DescriptorSet
+  -- ^ One per concurrent-frame slot.
+  , rsShaderBindingTableAddress :: Vk.DeviceAddress
+  , rsCameraMatricesBuffer :: Vk.Buffer
+  , rsCameraMatricesAllocation :: VMA.Allocation
   , rsCameraMatricesBufferData :: Ptr CameraMatrices
   , rsRTInfo :: RTInfo
   }
@@ -77,53 +61,48 @@ renderFrame vr rs f = do
     sc = fSwapchain f
     dev = vrDevice vr
     gQ = snd (qGraphics (vrQueues vr))
-    RTInfo{..} = rsRTInfo rs
-    slot = fromIntegral (fIndex f) `mod` numConcurrentFrames
+    -- RTInfo{..} = rsRTInfo rs
+    slot = fromIntegral (fIndex f) `mod` 2
     descriptorSet = rsDescriptorSets rs ! slot
-    cameraMatricesOffset =
-      fromIntegral slot
-        * fromIntegral (sizeOf (undefined :: CameraMatrices))
+    cameraMatricesOffset = fromIntegral slot * fromIntegral (sizeOf (undefined :: CameraMatrices))
     oneSecond = 1e9
 
   -- Acquire next image
   (acquireResult, imageIndex) <-
-    acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable NULL_HANDLE
-      >>= \case
-        r@(SUCCESS, _) -> pure r
-        r@(SUBOPTIMAL_KHR, _) -> pure r
-        (TIMEOUT, _) -> timeoutError "Timed out (1s) acquiring next image"
-        _ -> throwString "Unexpected Result from acquireNextImageKHR"
+    KHR.acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable Vk.NULL_HANDLE >>= \case
+      r@(Vk.SUCCESS, _) -> pure r
+      r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
+      (Vk.TIMEOUT, _) -> timeoutError "Timed out (1s) acquiring next image"
+      _ -> throwString "Unexpected Result from acquireNextImageKHR"
 
   -- Bind the per-slot descriptor set's image view + camera buffer slot.
-  updateDescriptorSets
+  Vk.updateDescriptorSets
     dev
     [ SomeStruct
         zero
-          { dstSet = descriptorSet
-          , dstBinding = 1
-          , descriptorType = DESCRIPTOR_TYPE_STORAGE_IMAGE
-          , descriptorCount = 1
-          , imageInfo =
-              [ DescriptorImageInfo
-                  { sampler = NULL_HANDLE
-                  , imageView = sImageViews sc ! fromIntegral imageIndex
-                  , imageLayout = IMAGE_LAYOUT_GENERAL
+          { Vk.dstSet = descriptorSet
+          , Vk.dstBinding = 1
+          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
+          , Vk.descriptorCount = 1
+          , Vk.imageInfo =
+              [ Vk.DescriptorImageInfo
+                  { Vk.sampler = Vk.NULL_HANDLE
+                  , Vk.imageView = sImageViews sc ! fromIntegral imageIndex
+                  , Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL
                   }
               ]
           }
     , SomeStruct
         zero
-          { dstSet = descriptorSet
-          , dstBinding = 3
-          , descriptorType = DESCRIPTOR_TYPE_UNIFORM_BUFFER
-          , descriptorCount = 1
-          , bufferInfo =
-              [ DescriptorBufferInfo
-                  { buffer = rsCameraMatricesBuffer rs
-                  , offset = cameraMatricesOffset
-                  , range =
-                      fromIntegral
-                        (sizeOf (undefined :: CameraMatrices))
+          { Vk.dstSet = descriptorSet
+          , Vk.dstBinding = 3
+          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_UNIFORM_BUFFER
+          , Vk.descriptorCount = 1
+          , Vk.bufferInfo =
+              [ Vk.DescriptorBufferInfo
+                  { Vk.buffer = rsCameraMatricesBuffer rs
+                  , Vk.offset = cameraMatricesOffset
+                  , Vk.range = fromIntegral (sizeOf (undefined :: CameraMatrices))
                   }
               ]
           }
@@ -145,7 +124,7 @@ renderFrame vr rs f = do
     poke
       (rsCameraMatricesBufferData rs `plusPtr` fromIntegral cameraMatricesOffset)
       cameraMats
-  flushAllocation
+  VMA.flushAllocation
     (vrAllocator vr)
     (rsCameraMatricesAllocation rs)
     cameraMatricesOffset
@@ -154,16 +133,14 @@ renderFrame vr rs f = do
   -- Allocate per-frame command buffer from the recycled pool.
   let commandBufferAllocateInfo =
         zero
-          { commandPool = rrCommandPool
-          , level = COMMAND_BUFFER_LEVEL_PRIMARY
-          , commandBufferCount = 1
+          { Vk.commandPool = rrCommandPool
+          , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
+          , Vk.commandBufferCount = 1
           }
-  (_, ~[commandBuffer]) <- withCommandBuffers dev commandBufferAllocateInfo allocate
+  (_, [commandBuffer]) <- Vk.withCommandBuffers dev commandBufferAllocateInfo allocate
 
-  useCommandBuffer
-    commandBuffer
-    zero{CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-    $ recordCommandBuffer
+  Vk.useCommandBuffer commandBuffer zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} $
+    recordCommandBuffer
       commandBuffer
       rs
       sc
@@ -173,10 +150,10 @@ renderFrame vr rs f = do
   -- Submit and record GPU work for the frame's wait thread.
   let submitInfo =
         zero
-          { Core10.waitSemaphores = [rrImageAvailable]
-          , waitDstStageMask = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-          , commandBuffers = [commandBufferHandle commandBuffer]
-          , signalSemaphores = [rrRenderFinished, fHostTimeline f]
+          { Vk.waitSemaphores = [rrImageAvailable]
+          , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
+          , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline f]
           }
           ::& zero
             { waitSemaphoreValues = [1]
@@ -192,17 +169,17 @@ renderFrame vr rs f = do
       (fIndex f)
 
   presentResult <-
-    queuePresentKHR
+    KHR.queuePresentKHR
       gQ
       zero
-        { Swap.waitSemaphores = [rrRenderFinished]
-        , swapchains = [sSwapchain sc]
-        , imageIndices = [imageIndex]
+        { KHR.waitSemaphores = [rrRenderFinished]
+        , KHR.swapchains = [sSwapchain sc]
+        , KHR.imageIndices = [imageIndex]
         }
 
   case (acquireResult, presentResult) of
-    (SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
-    (_, SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
+    (Vk.SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
+    (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
     _ -> pure ()
 
 ----------------------------------------------------------------
@@ -211,10 +188,10 @@ renderFrame vr rs f = do
 
 recordCommandBuffer
   :: (MonadIO m)
-  => CommandBuffer
+  => Vk.CommandBuffer
   -> RenderState
   -> Swapchain
-  -> DescriptorSet
+  -> Vk.DescriptorSet
   -> Word32
   -> m ()
 recordCommandBuffer commandBuffer rs sc descriptorSet imageIndex = do
@@ -224,34 +201,34 @@ recordCommandBuffer commandBuffer rs sc descriptorSet imageIndex = do
     imageWidth = Extent2D.width (sExtent sc)
     imageHeight = Extent2D.height (sExtent sc)
     imageSubresourceRange =
-      ImageSubresourceRange
-        { aspectMask = IMAGE_ASPECT_COLOR_BIT
-        , baseMipLevel = 0
-        , levelCount = 1
-        , baseArrayLayer = 0
-        , layerCount = 1
+      Vk.ImageSubresourceRange
+        { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
+        , Vk.baseMipLevel = 0
+        , Vk.levelCount = 1
+        , Vk.baseArrayLayer = 0
+        , Vk.layerCount = 1
         }
     numRayGenShaderGroups = 1
     rayGenRegion =
-      StridedDeviceAddressRegionKHR
-        { deviceAddress = rsShaderBindingTableAddress rs
-        , stride = fromIntegral rtiShaderGroupBaseAlignment
-        , size =
+      RT.StridedDeviceAddressRegionKHR
+        { RT.deviceAddress = rsShaderBindingTableAddress rs
+        , RT.stride = fromIntegral rtiShaderGroupBaseAlignment
+        , RT.size =
             fromIntegral rtiShaderGroupBaseAlignment
               * numRayGenShaderGroups
         }
     numHitShaderGroups = 1
     hitRegion =
-      StridedDeviceAddressRegionKHR
-        { deviceAddress =
+      RT.StridedDeviceAddressRegionKHR
+        { RT.deviceAddress =
             rsShaderBindingTableAddress rs
               + (1 * fromIntegral rtiShaderGroupBaseAlignment)
-        , stride = fromIntegral rtiShaderGroupBaseAlignment
-        , size = fromIntegral rtiShaderGroupBaseAlignment * numHitShaderGroups
+        , RT.stride = fromIntegral rtiShaderGroupBaseAlignment
+        , RT.size = fromIntegral rtiShaderGroupBaseAlignment * numHitShaderGroups
         }
     numMissShaderGroups = 1
     missRegion =
-      StridedDeviceAddressRegionKHR
+      RT.StridedDeviceAddressRegionKHR
         { deviceAddress =
             rsShaderBindingTableAddress rs
               + (2 * fromIntegral rtiShaderGroupBaseAlignment)
@@ -261,51 +238,51 @@ recordCommandBuffer commandBuffer rs sc descriptorSet imageIndex = do
     callableRegion = zero
 
   -- Transition image to general (write target for raygen).
-  cmdPipelineBarrier
+  Vk.cmdPipelineBarrier
     commandBuffer
-    PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-    PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
+    Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+    Vk.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
     zero
     []
     []
     [ SomeStruct
         zero
-          { srcAccessMask = zero
-          , dstAccessMask = ACCESS_SHADER_WRITE_BIT
-          , oldLayout = IMAGE_LAYOUT_UNDEFINED
-          , newLayout = IMAGE_LAYOUT_GENERAL
-          , image = image
-          , subresourceRange = imageSubresourceRange
+          { Vk.srcAccessMask = zero
+          , Vk.dstAccessMask = Vk.ACCESS_SHADER_WRITE_BIT
+          , Vk.oldLayout = Vk.IMAGE_LAYOUT_UNDEFINED
+          , Vk.newLayout = Vk.IMAGE_LAYOUT_GENERAL
+          , Vk.image = image
+          , Vk.subresourceRange = imageSubresourceRange
           }
     ]
 
-  cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_RAY_TRACING_KHR (rsPipeline rs)
-  cmdBindDescriptorSets
+  Vk.cmdBindPipeline commandBuffer Vk.PIPELINE_BIND_POINT_RAY_TRACING_KHR (rsPipeline rs)
+  Vk.cmdBindDescriptorSets
     commandBuffer
-    PIPELINE_BIND_POINT_RAY_TRACING_KHR
+    Vk.PIPELINE_BIND_POINT_RAY_TRACING_KHR
     (rsPipelineLayout rs)
     0
     [descriptorSet]
     []
 
-  cmdPipelineBarrier
+  Vk.cmdPipelineBarrier
     commandBuffer
-    PIPELINE_STAGE_TOP_OF_PIPE_BIT
-    PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
+    Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT
+    Vk.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
     zero
     []
     [ SomeStruct
         zero
-          { srcAccessMask = ACCESS_HOST_WRITE_BIT
-          , dstAccessMask = ACCESS_SHADER_READ_BIT
-          , buffer = rsCameraMatricesBuffer rs
-          , offset = 0 -- TODO: per-slot
-          , size = WHOLE_SIZE
+          { Vk.srcAccessMask = Vk.ACCESS_HOST_WRITE_BIT
+          , Vk.dstAccessMask = Vk.ACCESS_SHADER_READ_BIT
+          , Vk.buffer = rsCameraMatricesBuffer rs
+          , Vk.offset = 0 -- TODO: per-slot
+          , Vk.size = Vk.WHOLE_SIZE
           }
     ]
     []
 
-  cmdTraceRaysKHR
+  RT.cmdTraceRaysKHR
     commandBuffer
     rayGenRegion
     missRegion
@@ -315,21 +292,21 @@ recordCommandBuffer commandBuffer rs sc descriptorSet imageIndex = do
     imageHeight
     1
 
-  cmdPipelineBarrier
+  Vk.cmdPipelineBarrier
     commandBuffer
-    PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
-    PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+    Vk.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
+    Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
     zero
     []
     []
     [ SomeStruct
         zero
-          { srcAccessMask = ACCESS_SHADER_WRITE_BIT
-          , dstAccessMask = zero
-          , oldLayout = IMAGE_LAYOUT_GENERAL
-          , newLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR
-          , image = image
-          , subresourceRange = imageSubresourceRange
+          { Vk.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT
+          , Vk.dstAccessMask = zero
+          , Vk.oldLayout = Vk.IMAGE_LAYOUT_GENERAL
+          , Vk.newLayout = Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+          , Vk.image = image
+          , Vk.subresourceRange = imageSubresourceRange
           }
     ]
 

@@ -14,7 +14,7 @@ import Say (sayErr)
 import Utils (noSuchThing)
 import VkResources (Queues (..))
 import Vulkan.CStruct.Extends (SomeStruct (..))
-import Vulkan.Core10 hiding (withDevice)
+import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import Vulkan.Extensions.VK_KHR_surface
   ( SurfaceKHR
@@ -50,10 +50,10 @@ Pass any extra device requirements (extensions, features, API version) in
 -}
 withDevice
   :: (MonadResource m, MonadFail m)
-  => Instance
+  => Vk.Instance
   -> SurfaceKHR
   -> [DeviceRequirement]
-  -> m (PhysicalDevice, Device, Queues (QueueFamilyIndex, Queue))
+  -> m (Vk.PhysicalDevice, Vk.Device, Queues (QueueFamilyIndex, Vk.Queue))
 withDevice inst surface extraReqs = do
   mPd <-
     pickPhysicalDevice
@@ -77,7 +77,7 @@ withDevice inst surface extraReqs = do
       extraReqs
       []
       phys
-      zero{queueCreateInfos = SomeStruct <$> qInfos}
+      zero{Vk.queueCreateInfos = SomeStruct <$> qInfos}
   qs <- liftIO (getQs dev)
   pure (phys, dev, qs)
 
@@ -87,10 +87,10 @@ withDevice inst surface extraReqs = do
 discoverFamilies
   :: (MonadIO m)
   => SurfaceKHR
-  -> PhysicalDevice
+  -> Vk.PhysicalDevice
   -> m (Maybe (Queues QueueFamilyIndex, Word64))
 discoverFamilies surf phys = do
-  qProps <- getPhysicalDeviceQueueFamilyProperties phys
+  qProps <- Vk.getPhysicalDeviceQueueFamilyProperties phys
   let
     withIndex = V.toList (V.indexed qProps)
     asQfi i = QueueFamilyIndex (fromIntegral i)
@@ -126,7 +126,7 @@ discoverFamilies surf phys = do
       let tf = case dedicatedTransfer of
             qfi : _ -> qfi
             [] -> cp
-      heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
+      heaps <- Vk.memoryHeaps <$> Vk.getPhysicalDeviceMemoryProperties phys
       let score = sum (DI.size <$> heaps) :: Word64
       pure (Just (Queues gp cp tf, score))
     _ -> pure Nothing

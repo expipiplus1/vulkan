@@ -9,46 +9,36 @@ module Framebuffer
   , Framebuffer.createFramebuffers
   ) where
 
-import Control.Monad.Trans.Resource
-  ( MonadResource
-  , ReleaseKey
-  , allocate
-  , release
-  )
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate, release)
 import Data.Foldable (traverse_)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import RefCounted (RefCounted, newRefCounted)
 import Vulkan.Core10 as Extent2D (Extent2D (..))
-import Vulkan.Core10 as ImageViewCreateInfo
-  ( ImageViewCreateInfo (..)
-  )
-import Vulkan.Core10 as Vk hiding
-  ( withImage
-  )
-import Vulkan.Zero
+import Vulkan.Core10 as ImageViewCreateInfo (ImageViewCreateInfo (..))
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Zero (zero)
 
 -- | Create a framebuffer covering the whole image with a single attachment.
 createFramebuffer
   :: (MonadResource m)
-  => Device
-  -> RenderPass
-  -> ImageView
-  -> Extent2D
-  -> m (ReleaseKey, Framebuffer)
-createFramebuffer dev renderPass imageView imageSize =
-  let
-    framebufferCreateInfo :: FramebufferCreateInfo '[]
+  => Vk.Device
+  -> Vk.RenderPass
+  -> Vk.ImageView
+  -> Vk.Extent2D
+  -> m (ReleaseKey, Vk.Framebuffer)
+createFramebuffer dev renderPass imageView Vk.Extent2D{width, height} =
+  Vk.withFramebuffer dev framebufferCreateInfo Nothing allocate
+  where
+    framebufferCreateInfo :: Vk.FramebufferCreateInfo '[]
     framebufferCreateInfo =
       zero
-        { renderPass = renderPass
-        , attachments = [imageView]
-        , width = Extent2D.width imageSize
-        , height = Extent2D.height imageSize
-        , layers = 1
+        { Vk.renderPass = renderPass
+        , Vk.attachments = [imageView]
+        , Vk.width = width
+        , Vk.height = height
+        , Vk.layers = 1
         }
-  in
-    withFramebuffer dev framebufferCreateInfo Nothing allocate
 
 {- | Build one framebuffer per image view at the given extent. The returned
 'RefCounted' frees them all when no in-flight frame still uses them — call
@@ -56,11 +46,11 @@ createFramebuffer dev renderPass imageView imageSize =
 -}
 createFramebuffers
   :: (MonadResource m)
-  => Device
-  -> RenderPass
-  -> Vector ImageView
-  -> Extent2D
-  -> m (Vector Framebuffer, RefCounted)
+  => Vk.Device
+  -> Vk.RenderPass
+  -> Vector Vk.ImageView
+  -> Vk.Extent2D
+  -> m (Vector Vk.Framebuffer, RefCounted)
 createFramebuffers dev rp ivs imageSize = do
   (keys, fbs) <- fmap V.unzip . V.forM ivs $ \iv ->
     Framebuffer.createFramebuffer dev rp iv imageSize
@@ -70,31 +60,31 @@ createFramebuffers dev rp ivs imageSize = do
 -- | Vanilla 2D color image view covering the whole image.
 createImageView
   :: (MonadResource m)
-  => Device
-  -> Format
-  -> Image
-  -> m (ReleaseKey, ImageView)
+  => Vk.Device
+  -> Vk.Format
+  -> Vk.Image
+  -> m (ReleaseKey, Vk.ImageView)
 createImageView dev format image =
-  withImageView dev imageViewCreateInfo Nothing allocate
+  Vk.withImageView dev imageViewCreateInfo Nothing allocate
   where
     imageViewCreateInfo =
       zero
         { ImageViewCreateInfo.image = image
-        , viewType = IMAGE_VIEW_TYPE_2D
+        , viewType = Vk.IMAGE_VIEW_TYPE_2D
         , format = format
         , components =
             zero
-              { r = COMPONENT_SWIZZLE_IDENTITY
-              , g = COMPONENT_SWIZZLE_IDENTITY
-              , b = COMPONENT_SWIZZLE_IDENTITY
-              , a = COMPONENT_SWIZZLE_IDENTITY
+              { Vk.r = Vk.COMPONENT_SWIZZLE_IDENTITY
+              , Vk.g = Vk.COMPONENT_SWIZZLE_IDENTITY
+              , Vk.b = Vk.COMPONENT_SWIZZLE_IDENTITY
+              , Vk.a = Vk.COMPONENT_SWIZZLE_IDENTITY
               }
         , subresourceRange =
             zero
-              { aspectMask = IMAGE_ASPECT_COLOR_BIT
-              , baseMipLevel = 0
-              , levelCount = 1
-              , baseArrayLayer = 0
-              , layerCount = 1
+              { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
+              , Vk.baseMipLevel = 0
+              , Vk.levelCount = 1
+              , Vk.baseArrayLayer = 0
+              , Vk.layerCount = 1
               }
         }

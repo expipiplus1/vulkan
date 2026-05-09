@@ -9,26 +9,19 @@ module VkResources
   ) where
 
 import Control.Concurrent.Chan.Unagi
-import Vulkan.Core10
-  ( CommandPool
-  , Device
-  , Instance
-  , PhysicalDevice
-  , Queue
-  , Semaphore
-  )
+import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
-import VulkanMemoryAllocator (Allocator)
+import qualified VulkanMemoryAllocator as VMA
 
 {- | A bunch of long-lived handles that the application carries around.
 Constructed once, never modified.
 -}
 data VkResources = VkResources
-  { vrInstance :: Instance
-  , vrPhysicalDevice :: PhysicalDevice
-  , vrDevice :: Device
-  , vrAllocator :: Allocator
-  , vrQueues :: Queues (QueueFamilyIndex, Queue)
+  { vrInstance :: Vk.Instance
+  , vrPhysicalDevice :: Vk.PhysicalDevice
+  , vrDevice :: Vk.Device
+  , vrAllocator :: VMA.Allocator
+  , vrQueues :: Queues (QueueFamilyIndex, Vk.Queue)
   , vrRecycleBin :: RecycledResources -> IO ()
   {- ^ Drop a frame's reusable bits back into the pool. Called from the
   per-frame wait thread once the GPU is done with the frame.
@@ -40,7 +33,7 @@ data VkResources = VkResources
   }
 
 {- | The full G/C/T queue kit each windowed example gets. Fields are filled
-from 'InitDevice.withDevice' with priorities 1.0/0.5/0.2; on hardware that
+from 'InitDevice.createDevice with priorities 1.0/0.5/0.2; on hardware that
 exposes dedicated families they target async-compute and DMA-only families,
 otherwise they alias the graphics+present family (with distinct 'Queue'
 handles allocated within that shared family).
@@ -70,20 +63,20 @@ for image-acquire / render-done synchronisation, and the command pool the
 frame's commands are recorded into.
 -}
 data RecycledResources = RecycledResources
-  { rrImageAvailable :: Semaphore
-  , rrRenderFinished :: Semaphore
-  , rrCommandPool :: CommandPool
+  { rrImageAvailable :: Vk.Semaphore
+  , rrRenderFinished :: Vk.Semaphore
+  , rrCommandPool :: Vk.CommandPool
   }
 
 {- | Assemble a 'VkResources' from already-constructed handles. Builds the
 recycle channel internally.
 -}
 mkVkResources
-  :: Instance
-  -> PhysicalDevice
-  -> Device
-  -> Allocator
-  -> Queues (QueueFamilyIndex, Queue)
+  :: Vk.Instance
+  -> Vk.PhysicalDevice
+  -> Vk.Device
+  -> VMA.Allocator
+  -> Queues (QueueFamilyIndex, Vk.Queue)
   -> IO VkResources
 mkVkResources vrInstance vrPhysicalDevice vrDevice vrAllocator vrQueues = do
   (binW, binR) <- newChan

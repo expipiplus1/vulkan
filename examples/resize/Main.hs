@@ -8,106 +8,46 @@ module Main
   ) where
 
 import Control.Exception (handle)
-import Control.Lens.Getter
+import Control.Lens.Getter ((^.))
 import Control.Monad (when)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
+import Data.Bits ((.|.))
 import Data.IORef
 import Data.Text.Encoding (decodeUtf8)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import Data.Word (Word64)
-import Frame
-  ( Frame (..)
-  , advanceFrame
-  , frameInstanceRequirements
-  , initialFrame
-  , queueSubmitFrame
-  , runFrame
-  )
+import Data.Word (Word32, Word64)
+import Frame (Frame (..), advanceFrame, frameDeviceRequirements, frameInstanceRequirements, initialFrame, queueSubmitFrame, runFrame)
 import qualified Framebuffer
 import GHC.Clock (getMonotonicTimeNSec)
-import Init
-  ( createVMA
-  , deviceRequirements
-  , myApiVersion
-  )
 import InitDevice (withDevice)
-import Julia
-  ( JuliaPipeline (..)
-  , createJuliaDescriptorSets
-  , createJuliaPipeline
-  , juliaWorkgroupX
-  , juliaWorkgroupY
-  )
+import Julia (JuliaPipeline (..), createJuliaDescriptorSets, createJuliaPipeline, juliaWorkgroupX, juliaWorkgroupY)
 import Linear.Affine (Point (..))
 import Linear.Metric (norm)
 import Linear.V2
-import qualified Pipeline
-import RefCounted
-  ( RefCounted
-  , newRefCounted
-  , releaseRefCounted
-  )
+
+-- import qualified Pipeline
+import RefCounted (RefCounted, newRefCounted, releaseRefCounted)
 import qualified SDL
 import Say
-import Swapchain
-  ( Swapchain (..)
-  , allocSwapchain
-  , recreateSwapchain
-  , threwSwapchainError
-  )
-import UnliftIO.Exception
-  ( displayException
-  , throwIO
-  , throwString
-  )
-import UnliftIO.Foreign
-  ( allocaBytes
-  , plusPtr
-  , poke
-  )
+import Swapchain (Swapchain (..), allocSwapchain, recreateSwapchain, threwSwapchainError)
+import UnliftIO.Exception (displayException, throwIO, throwString)
+import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import Utils (loopJust)
-import VkResources
-  ( Queues (..)
-  , RecycledResources (..)
-  , VkResources (..)
-  , mkVkResources
-  )
-
-import Vulkan.CStruct.Extends
-  ( SomeStruct (..)
-  , pattern (:&)
-  , pattern (::&)
-  )
-import Vulkan.Core10 as Vk hiding
-  ( createDevice
-  , createFramebuffer
-  , createImageView
-  , createInstance
-  , withBuffer
-  , withDevice
-  , withImage
-  )
+import VkResources (Queues (..), RecycledResources (..), VkResources (..), mkVkResources)
+import qualified Vma
+import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
+import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
-import Vulkan.Extensions.VK_KHR_swapchain as Swap
+import Vulkan.Extensions.VK_KHR_swapchain as KHR
 import qualified Vulkan.Utils.Init.SDL2 as Init
-import Vulkan.Zero
-import Window.SDL2
-  ( RefreshLimit (..)
-  , createSurface
-  , createWindow
-  , drawableSize
-  , shouldQuit
-  , withSDL
-  )
+import Vulkan.Zero (zero)
+import Window.SDL2 (RefreshLimit (..), createSurface, createWindow, drawableSize, shouldQuit, withSDL)
 
-----------------------------------------------------------------
--- Main
-----------------------------------------------------------------
 main :: IO ()
 main = prettyError . runResourceT $ do
   withSDL
@@ -120,25 +60,22 @@ main = prettyError . runResourceT $ do
   inst <-
     Init.withInstance
       sdlWindow
-      (Just zero{applicationName = Nothing, apiVersion = myApiVersion})
+      (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion})
       frameInstanceRequirements
       []
   (_, surface) <- createSurface inst sdlWindow
-  (phys, dev, qs) <- withDevice inst surface deviceRequirements
-  vma <- createVMA inst phys dev
-  props <- getPhysicalDeviceProperties phys
-  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
+  (phys, dev, qs) <- withDevice inst surface frameDeviceRequirements
+  vma <- Vma.createVMA zero myApiVersion inst phys dev
+  props <- Vk.getPhysicalDeviceProperties phys
+  sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
 
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   -- Initial swapchain at the requested size.
-  let initialSize = Extent2D initWidth initHeight
-  initialSC <- allocSwapchain vr NULL_HANDLE initialSize surface
+  let initialSize = Vk.Extent2D initWidth initHeight
+  initialSC <- allocSwapchain vr Vk.NULL_HANDLE initialSize surface
 
-  -- Long-lived render setup. Both the graphics pipeline (currently dormant)
-  -- and the Julia compute pipeline are created up front.
-  (_, renderPass) <- Pipeline.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
-  -- (_, pipeline)   <- Pipeline.createPipeline dev renderPass
+  (_, renderPass) <- createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
   juliaPL <- createJuliaPipeline dev
 
   -- Per-swapchain bindings: framebuffers + Julia descriptor sets, both pinned
@@ -193,16 +130,16 @@ prettyError =
 ----------------------------------------------------------------
 
 data Bindings = Bindings
-  { bFramebuffers :: Vector Framebuffer
+  { bFramebuffers :: Vector Vk.Framebuffer
   , bReleaseFramebuffers :: RefCounted
-  , bJuliaDescriptorSets :: Vector DescriptorSet
+  , bJuliaDescriptorSets :: Vector Vk.DescriptorSet
   , bReleaseJuliaDescSets :: RefCounted
   }
 
 createBindings
   :: (MonadResource m)
-  => Device
-  -> RenderPass
+  => Vk.Device
+  -> Vk.RenderPass
   -> JuliaPipeline
   -> Swapchain
   -> m Bindings
@@ -252,161 +189,125 @@ renderJulia vr jp bindings f = do
     gQ = snd (qGraphics (vrQueues vr))
     dev = vrDevice vr
     oneSecond = 1e9
-    Extent2D imageWidth imageHeight = sExtent sc
+    Vk.Extent2D imageWidth imageHeight = sExtent sc
     imageSubresourceRange =
-      ImageSubresourceRange
-        { aspectMask = IMAGE_ASPECT_COLOR_BIT
-        , baseMipLevel = 0
-        , levelCount = 1
-        , baseArrayLayer = 0
-        , layerCount = 1
+      Vk.ImageSubresourceRange
+        { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
+        , Vk.baseMipLevel = 0
+        , Vk.levelCount = 1
+        , Vk.baseArrayLayer = 0
+        , Vk.layerCount = 1
         }
 
   (acquireResult, imageIndex) <-
-    acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable NULL_HANDLE
-      >>= \case
-        r@(SUCCESS, _) -> pure r
-        r@(SUBOPTIMAL_KHR, _) -> pure r
-        (TIMEOUT, _) -> throwString "Couldn't acquire next image after 1 second"
-        _ -> throwString "Unexpected Result from acquireNextImageKHR"
+    acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable Vk.NULL_HANDLE >>= \case
+      r@(Vk.SUCCESS, _) -> pure r
+      r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
+      (Vk.TIMEOUT, _) -> throwString "Couldn't acquire next image after 1 second"
+      _ -> throwString "Unexpected Result from acquireNextImageKHR"
 
   let
     image = sImages sc V.! fromIntegral imageIndex
     descriptorSet = bJuliaDescriptorSets bindings V.! fromIntegral imageIndex
 
   -- Allocate a per-frame command buffer from the recycled pool.
-  (_, ~[commandBuffer]) <-
-    withCommandBuffers
+  (_, [commandBuffer]) <-
+    Vk.withCommandBuffers
       dev
       zero
-        { commandPool = rrCommandPool
-        , level = COMMAND_BUFFER_LEVEL_PRIMARY
-        , commandBufferCount = 1
+        { Vk.commandPool = rrCommandPool
+        , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
+        , Vk.commandBufferCount = 1
         }
       allocate
 
-  let julia = True
-  useCommandBuffer
-    commandBuffer
-    zero{CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-    $ if julia
-      then do
-        -- Transition image to general (compute write target).
-        cmdPipelineBarrier
-          commandBuffer
-          PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-          PIPELINE_STAGE_COMPUTE_SHADER_BIT
+  Vk.useCommandBuffer commandBuffer zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} do
+    -- Transition image to general (compute write target).
+    Vk.cmdPipelineBarrier
+      commandBuffer
+      Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+      Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
+      zero
+      []
+      []
+      [ SomeStruct
           zero
-          []
-          []
-          [ SomeStruct
-              zero
-                { srcAccessMask = zero
-                , dstAccessMask = ACCESS_SHADER_WRITE_BIT
-                , oldLayout = IMAGE_LAYOUT_UNDEFINED
-                , newLayout = IMAGE_LAYOUT_GENERAL
-                , image = image
-                , subresourceRange = imageSubresourceRange
-                }
-          ]
+            { Vk.srcAccessMask = zero
+            , Vk.dstAccessMask = Vk.ACCESS_SHADER_WRITE_BIT
+            , Vk.oldLayout = Vk.IMAGE_LAYOUT_UNDEFINED
+            , Vk.newLayout = Vk.IMAGE_LAYOUT_GENERAL
+            , Vk.image = image
+            , Vk.subresourceRange = imageSubresourceRange
+            }
+      ]
 
-        cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_COMPUTE (jpPipeline jp)
+    Vk.cmdBindPipeline commandBuffer Vk.PIPELINE_BIND_POINT_COMPUTE (jpPipeline jp)
 
-        -- Mouse-driven push constants.
-        P m <- SDL.getAbsoluteMouseLocation
-        let
-          m' :: V2 Float
-          m' =
-            fmap realToFrac m
-              / fmap realToFrac (V2 imageWidth imageHeight)
-          c :: V2 Float
-          c = (m' * 2) - 1
-          r = 0.5 * (1 + sqrt (4 * norm c + 1))
-          imageSizeF = realToFrac <$> V2 imageWidth imageHeight
-          aspect = pure (recip (min (imageSizeF ^. _x) (imageSizeF ^. _y)))
-          frameScale = aspect * 2 * pure r
-          frameOffset = negate (imageSizeF * aspect) * pure r
-          constantBytes = 4 * (2 + 2 + 2 + 1)
-          escapeRadius = 12 :: Float
-        allocaBytes constantBytes $ \p -> do
-          liftIO $ poke (p `plusPtr` 0) frameScale
-          liftIO $ poke (p `plusPtr` 8) frameOffset
-          liftIO $ poke (p `plusPtr` 16) c
-          liftIO $ poke (p `plusPtr` 24) escapeRadius
-          cmdPushConstants
-            commandBuffer
-            (jpPipelineLayout jp)
-            SHADER_STAGE_COMPUTE_BIT
-            0
-            (fromIntegral constantBytes)
-            p
-        cmdBindDescriptorSets
-          commandBuffer
-          PIPELINE_BIND_POINT_COMPUTE
-          (jpPipelineLayout jp)
-          0
-          [descriptorSet]
-          []
-        cmdDispatch
-          commandBuffer
-          ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)
-          ((imageHeight + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
-          1
+    -- Mouse-driven push constants.
+    P m <- SDL.getAbsoluteMouseLocation
+    let
+      m' :: V2 Float
+      m' = fmap realToFrac m / imageSizeF
+      c :: V2 Float
+      c = (m' * 2) - 1
+      r = 0.5 * (1 + sqrt (4 * norm c + 1))
+      imageSizeF = realToFrac <$> V2 imageWidth imageHeight
+      aspect = pure (recip (min (imageSizeF ^. _x) (imageSizeF ^. _y)))
+      frameScale = aspect * 2 * pure r
+      frameOffset = negate (imageSizeF * aspect) * pure r
+      constantBytes = 4 * (2 + 2 + 2 + 1)
+      escapeRadius = 12 :: Float
+    allocaBytes constantBytes $ \p -> do
+      liftIO $ poke (p `plusPtr` 0) frameScale
+      liftIO $ poke (p `plusPtr` 8) frameOffset
+      liftIO $ poke (p `plusPtr` 16) c
+      liftIO $ poke (p `plusPtr` 24) escapeRadius
+      Vk.cmdPushConstants
+        commandBuffer
+        (jpPipelineLayout jp)
+        Vk.SHADER_STAGE_COMPUTE_BIT
+        0
+        constantBytes
+        p
+    Vk.cmdBindDescriptorSets
+      commandBuffer
+      Vk.PIPELINE_BIND_POINT_COMPUTE
+      (jpPipelineLayout jp)
+      0
+      [descriptorSet]
+      []
+    Vk.cmdDispatch
+      commandBuffer
+      ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)
+      ((imageHeight + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
+      1
 
-        -- Transition image back to present.
-        cmdPipelineBarrier
-          commandBuffer
-          PIPELINE_STAGE_COMPUTE_SHADER_BIT
-          PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+    -- Transition image back to present.
+    Vk.cmdPipelineBarrier
+      commandBuffer
+      Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
+      Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+      zero
+      []
+      []
+      [ SomeStruct
           zero
-          []
-          []
-          [ SomeStruct
-              zero
-                { srcAccessMask = ACCESS_SHADER_WRITE_BIT
-                , dstAccessMask = zero
-                , oldLayout = IMAGE_LAYOUT_GENERAL
-                , newLayout = IMAGE_LAYOUT_PRESENT_SRC_KHR
-                , image = image
-                , subresourceRange = imageSubresourceRange
-                }
-          ]
-      else do
-        -- Dormant graphics pipeline path; preserved for reference.
-        let renderPassBeginInfo =
-              zero
-                { renderPass = NULL_HANDLE -- intentionally invalid; see note
-                , framebuffer = bFramebuffers bindings V.! fromIntegral imageIndex
-                , renderArea = Rect2D zero (sExtent sc)
-                , clearValues = [Color (Float32 0.1 0.1 0.1 1)]
-                }
-        cmdSetViewport
-          commandBuffer
-          0
-          [ Viewport
-              { x = 0
-              , y = 0
-              , width = realToFrac imageWidth
-              , height = realToFrac imageHeight
-              , minDepth = 0
-              , maxDepth = 1
-              }
-          ]
-        cmdSetScissor
-          commandBuffer
-          0
-          [Rect2D{offset = Offset2D 0 0, extent = sExtent sc}]
-        cmdUseRenderPass commandBuffer renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
-          cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_GRAPHICS NULL_HANDLE
-          cmdDraw commandBuffer 3 1 0 0
+            { Vk.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT
+            , Vk.dstAccessMask = zero
+            , Vk.oldLayout = Vk.IMAGE_LAYOUT_GENERAL
+            , Vk.newLayout = Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+            , Vk.image = image
+            , Vk.subresourceRange = imageSubresourceRange
+            }
+      ]
 
   -- Submit (and record GPU work for the wait thread).
   let submitInfo =
         zero
           { Vk.waitSemaphores = [rrImageAvailable]
-          , waitDstStageMask = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-          , commandBuffers = [commandBufferHandle commandBuffer]
-          , signalSemaphores = [rrRenderFinished, fHostTimeline f]
+          , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
+          , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline f]
           }
           ::& zero
             { waitSemaphoreValues = [1]
@@ -425,15 +326,67 @@ renderJulia vr jp bindings f = do
     queuePresentKHR
       gQ
       zero
-        { Swap.waitSemaphores = [rrRenderFinished]
-        , swapchains = [sSwapchain sc]
-        , imageIndices = [imageIndex]
+        { KHR.waitSemaphores = [rrRenderFinished]
+        , KHR.swapchains = [sSwapchain sc]
+        , KHR.imageIndices = [imageIndex]
         }
 
   case (acquireResult, presentResult) of
-    (SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
-    (_, SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException ERROR_OUT_OF_DATE_KHR
+    (Vk.SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
+    (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
     _ -> pure ()
+
+createRenderPass
+  :: (MonadResource m)
+  => Vk.Device
+  -> Vk.Format
+  -> m (ReleaseKey, Vk.RenderPass)
+createRenderPass dev imageFormat =
+  Vk.withRenderPass
+    dev
+    zero
+      { Vk.attachments = [attachmentDescription]
+      , Vk.subpasses = [subpass]
+      , Vk.dependencies = [subpassDependency]
+      }
+    Nothing
+    allocate
+  where
+    attachmentDescription :: Vk.AttachmentDescription
+    attachmentDescription =
+      zero
+        { Vk.format = imageFormat
+        , Vk.samples = Vk.SAMPLE_COUNT_1_BIT
+        , Vk.loadOp = Vk.ATTACHMENT_LOAD_OP_CLEAR
+        , Vk.storeOp = Vk.ATTACHMENT_STORE_OP_STORE
+        , Vk.stencilLoadOp = Vk.ATTACHMENT_LOAD_OP_DONT_CARE
+        , Vk.stencilStoreOp = Vk.ATTACHMENT_STORE_OP_DONT_CARE
+        , Vk.initialLayout = Vk.IMAGE_LAYOUT_UNDEFINED
+        , Vk.finalLayout = Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+        }
+    subpass :: Vk.SubpassDescription
+    subpass =
+      zero
+        { Vk.pipelineBindPoint = Vk.PIPELINE_BIND_POINT_GRAPHICS
+        , Vk.colorAttachments =
+            [ zero
+                { Vk.attachment = 0
+                , Vk.layout = Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+                }
+            ]
+        }
+    subpassDependency :: Vk.SubpassDependency
+    subpassDependency =
+      zero
+        { Vk.srcSubpass = Vk.SUBPASS_EXTERNAL
+        , Vk.dstSubpass = 0
+        , Vk.srcStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+        , Vk.srcAccessMask = zero
+        , Vk.dstStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+        , Vk.dstAccessMask =
+            Vk.ACCESS_COLOR_ATTACHMENT_READ_BIT
+              .|. Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+        }
 
 ----------------------------------------------------------------
 -- Frame timing
@@ -449,3 +402,6 @@ reportFrameTime nsec = do
     frameBudgetPercent = ceiling (100 * frameTimeMSec / frameTimeBudgetMSec) :: Int
   when (frameBudgetPercent > 50) $
     sayErrString (show frameTimeMSec <> "ms \t" <> show frameBudgetPercent <> "%")
+
+myApiVersion :: Word32
+myApiVersion = Vk.API_VERSION_1_0

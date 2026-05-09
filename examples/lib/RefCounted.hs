@@ -4,20 +4,10 @@ module RefCounted where
 
 import Control.Exception (throwIO)
 import Control.Monad
-import Control.Monad.IO.Class
-  ( MonadIO
-  , liftIO
-  )
-import Control.Monad.Trans.Resource
-  ( MonadResource
-  , allocate_
-  )
+import Control.Monad.IO.Class (MonadIO (..))
+import Control.Monad.Trans.Resource (MonadResource, allocate_)
 import Data.IORef
-import GHC.IO.Exception
-  ( IOErrorType (UserError)
-  , IOException (IOError)
-  )
-import NoThunks.Class
+import GHC.IO.Exception (IOErrorType (UserError), IOException (IOError))
 import UnliftIO.Exception (mask)
 
 -- | A 'RefCounted' will perform the specified action when the count reaches 0
@@ -25,7 +15,6 @@ data RefCounted = RefCounted
   { rcCount :: IORef Int
   , rcAction :: IO ()
   }
-  deriving (NoThunks) via InspectHeap RefCounted
 
 -- | Create a counter with a value of 1
 newRefCounted :: (MonadIO m) => IO () -> m RefCounted

@@ -258,6 +258,7 @@ flags:
     manual: yes
 
 default-extensions:
+- BlockArguments
 - DataKinds
 - DefaultSignatures
 - DeriveFoldable

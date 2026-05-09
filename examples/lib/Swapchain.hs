@@ -17,47 +17,35 @@ import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Bits
 import Data.Either
-import Data.Foldable
-  ( for_
-  , traverse_
-  )
+import Data.Foldable (for_, traverse_)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import qualified Framebuffer
 import GHC.Generics (Generic)
-import NoThunks.Class
-import Orphans ()
-import RefCounted
-import UnliftIO.Exception
-  ( throwString
-  , tryJust
-  )
+import RefCounted (RefCounted, newRefCounted, releaseRefCounted)
+import UnliftIO.Exception (throwString, tryJust)
 import VkResources (VkResources (..))
-import Vulkan.Core10
-import Vulkan.Exception
-import Vulkan.Extensions.VK_KHR_surface
-import Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR
-  ( SurfaceCapabilitiesKHR (..)
-  )
-import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
-  ( SurfaceFormatKHR (..)
-  )
-import Vulkan.Extensions.VK_KHR_swapchain
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Exception (VulkanException (..))
+import Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR (SurfaceCapabilitiesKHR (..))
+import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
+import qualified Vulkan.Extensions.VK_KHR_surface as KHR
+import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
 import Vulkan.Utils.Misc ((.&&.))
-import Vulkan.Zero
+import Vulkan.Zero (zero)
 
 data Swapchain = Swapchain
-  { sSwapchain :: SwapchainKHR
-  , sSurface :: SurfaceKHR
-  , sFormat :: SurfaceFormatKHR
-  , sExtent :: Extent2D
-  , sPresentMode :: PresentModeKHR
-  , sImages :: Vector Image
-  , sImageViews :: Vector ImageView
+  { sSwapchain :: KHR.SwapchainKHR
+  , sSurface :: KHR.SurfaceKHR
+  , sFormat :: KHR.SurfaceFormatKHR
+  , sExtent :: Vk.Extent2D
+  , sPresentMode :: KHR.PresentModeKHR
+  , sImages :: Vector Vk.Image
+  , sImageViews :: Vector Vk.ImageView
   , sRelease :: RefCounted
   -- ^ Held until no in-flight frame still uses this swapchain.
   }
-  deriving (Generic, NoThunks)
+  deriving (Generic)
 
 ----------------------------------------------------------------
 -- Allocate / recreate
@@ -67,17 +55,17 @@ data Swapchain = Swapchain
 allocSwapchain
   :: (MonadUnliftIO m, MonadResource m)
   => VkResources
-  -> SwapchainKHR
+  -> KHR.SwapchainKHR
   -- ^ Previous swapchain ('NULL_HANDLE' for first)
-  -> Extent2D
+  -> Vk.Extent2D
   -- ^ Fallback size when the surface lets us pick
-  -> SurfaceKHR
+  -> KHR.SurfaceKHR
   -> m Swapchain
 allocSwapchain vr oldSwapchain windowSize surface = do
   (sSwapchain, sFormat, sExtent, sPresentMode, swapchainKey) <-
     createSwapchain vr oldSwapchain windowSize surface
 
-  (_, sImages) <- getSwapchainImagesKHR (vrDevice vr) sSwapchain
+  (_, sImages) <- KHR.getSwapchainImagesKHR (vrDevice vr) sSwapchain
   (imageViewKeys, sImageViews) <-
     fmap V.unzip . V.forM sImages $ \image ->
       Framebuffer.createImageView
@@ -98,7 +86,7 @@ one so its resources can be released once in-flight frames complete.
 recreateSwapchain
   :: (MonadUnliftIO m, MonadResource m)
   => VkResources
-  -> Extent2D
+  -> Vk.Extent2D
   -- ^ New window size
   -> Swapchain
   -> m Swapchain
@@ -114,16 +102,16 @@ recreateSwapchain vr newSize old = do
 createSwapchain
   :: (MonadUnliftIO m, MonadResource m)
   => VkResources
-  -> SwapchainKHR
-  -> Extent2D
-  -> SurfaceKHR
-  -> m (SwapchainKHR, SurfaceFormatKHR, Extent2D, PresentModeKHR, ReleaseKey)
+  -> KHR.SwapchainKHR
+  -> Vk.Extent2D
+  -> KHR.SurfaceKHR
+  -> m (KHR.SwapchainKHR, SurfaceFormatKHR, Vk.Extent2D, KHR.PresentModeKHR, ReleaseKey)
 createSwapchain vr oldSwapchain explicitSize surf = do
   let
     phys = vrPhysicalDevice vr
     dev = vrDevice vr
 
-  surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR phys surf
+  surfaceCaps <- KHR.getPhysicalDeviceSurfaceCapabilitiesKHR phys surf
 
   -- Sanity-check that the surface advertises the usages we need.
   for_ requiredUsageFlags $ \f ->
@@ -131,20 +119,20 @@ createSwapchain vr oldSwapchain explicitSize surf = do
       throwString ("Surface images do not support " <> show f)
 
   -- Pick a present mode in our preference order.
-  (_, availablePresentModes) <- getPhysicalDeviceSurfacePresentModesKHR phys surf
+  (_, availablePresentModes) <- KHR.getPhysicalDeviceSurfacePresentModesKHR phys surf
   presentMode <-
     case filter (`V.elem` availablePresentModes) desiredPresentModes of
       [] -> throwString "Unable to find a suitable present mode for swapchain"
       x : _ -> pure x
 
   -- Pick a surface format. Vulkan guarantees at least one.
-  (_, availableFormats) <- getPhysicalDeviceSurfaceFormatsKHR phys surf
+  (_, availableFormats) <- KHR.getPhysicalDeviceSurfaceFormatsKHR phys surf
   surfaceFormat <- selectSurfaceFormat phys availableFormats
 
   -- Use the surface's reported extent unless it tells us we can pick.
   let imageExtent =
         case currentExtent (surfaceCaps :: SurfaceCapabilitiesKHR) of
-          Extent2D w h | w == maxBound, h == maxBound -> explicitSize
+          Vk.Extent2D w h | w == maxBound, h == maxBound -> explicitSize
           e -> e
 
   let imageCount =
@@ -158,12 +146,12 @@ createSwapchain vr oldSwapchain explicitSize surf = do
           min limit desired
 
   compositeAlphaMode <-
-    if COMPOSITE_ALPHA_OPAQUE_BIT_KHR .&&. supportedCompositeAlpha surfaceCaps
-      then pure COMPOSITE_ALPHA_OPAQUE_BIT_KHR
+    if KHR.COMPOSITE_ALPHA_OPAQUE_BIT_KHR .&&. supportedCompositeAlpha surfaceCaps
+      then pure KHR.COMPOSITE_ALPHA_OPAQUE_BIT_KHR
       else throwString "Surface doesn't support COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
 
   let swapchainCreateInfo =
-        SwapchainCreateInfoKHR
+        KHR.SwapchainCreateInfoKHR
           { surface = surf
           , next = ()
           , flags = zero
@@ -174,7 +162,7 @@ createSwapchain vr oldSwapchain explicitSize surf = do
           , imageExtent = imageExtent
           , imageArrayLayers = 1
           , imageUsage = foldr (.|.) zero requiredUsageFlags
-          , imageSharingMode = SHARING_MODE_EXCLUSIVE
+          , imageSharingMode = Vk.SHARING_MODE_EXCLUSIVE
           , preTransform = SurfaceCapabilitiesKHR.currentTransform surfaceCaps
           , compositeAlpha = compositeAlphaMode
           , presentMode = presentMode
@@ -182,7 +170,7 @@ createSwapchain vr oldSwapchain explicitSize surf = do
           , oldSwapchain = oldSwapchain
           }
 
-  (key, swapchain) <- withSwapchainKHR dev swapchainCreateInfo Nothing allocate
+  (key, swapchain) <- KHR.withSwapchainKHR dev swapchainCreateInfo Nothing allocate
 
   pure (swapchain, surfaceFormat, imageExtent, presentMode, key)
 
@@ -196,16 +184,14 @@ createSwapchain vr oldSwapchain explicitSize surf = do
 @vkCreateSwapchainKHR@ to fail.
 -}
 selectSurfaceFormat
-  :: (MonadIO m) => PhysicalDevice -> Vector SurfaceFormatKHR -> m SurfaceFormatKHR
+  :: (MonadIO m) => Vk.PhysicalDevice -> Vector SurfaceFormatKHR -> m SurfaceFormatKHR
 selectSurfaceFormat phys fmts = do
-  let suitable f = do
-        props <-
-          getPhysicalDeviceFormatProperties
-            phys
-            (SurfaceFormatKHR.format f)
-        pure $ all (optimalTilingFeatures props .&&.) requiredFormatFeatures
   good <- V.filterM suitable fmts
   pure $ if V.null good then V.head fmts else V.head good
+  where
+    suitable f = do
+      props <- Vk.getPhysicalDeviceFormatProperties phys (SurfaceFormatKHR.format f)
+      pure $ all (Vk.optimalTilingFeatures props .&&.) requiredFormatFeatures
 
 ----------------------------------------------------------------
 -- Specifications
@@ -216,24 +202,28 @@ threwSwapchainError :: (MonadUnliftIO f) => f b -> f Bool
 threwSwapchainError = fmap isLeft . tryJust swapchainError
   where
     swapchainError = \case
-      VulkanException e@ERROR_OUT_OF_DATE_KHR -> Just e
+      VulkanException e@Vk.ERROR_OUT_OF_DATE_KHR -> Just e
       -- TODO: handle ERROR_SURFACE_LOST_KHR too
       VulkanException _ -> Nothing
 
 -- | Present-mode preference, best first.
-desiredPresentModes :: [PresentModeKHR]
+desiredPresentModes :: [KHR.PresentModeKHR]
 desiredPresentModes =
-  [ PRESENT_MODE_FIFO_RELAXED_KHR
-  , PRESENT_MODE_FIFO_KHR
-  , PRESENT_MODE_IMMEDIATE_KHR
+  [ KHR.PRESENT_MODE_FIFO_RELAXED_KHR
+  , KHR.PRESENT_MODE_FIFO_KHR
+  , KHR.PRESENT_MODE_IMMEDIATE_KHR
   ]
 
 -- | Image usages every swapchain image must support.
-requiredUsageFlags :: [ImageUsageFlagBits]
+requiredUsageFlags :: [Vk.ImageUsageFlagBits]
 requiredUsageFlags =
-  [IMAGE_USAGE_COLOR_ATTACHMENT_BIT, IMAGE_USAGE_STORAGE_BIT]
+  [ Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+  , Vk.IMAGE_USAGE_STORAGE_BIT
+  ]
 
 -- | Format feature flags the chosen surface format must support.
-requiredFormatFeatures :: [FormatFeatureFlagBits]
+requiredFormatFeatures :: [Vk.FormatFeatureFlagBits]
 requiredFormatFeatures =
-  [FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, FORMAT_FEATURE_STORAGE_IMAGE_BIT]
+  [ Vk.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT
+  , Vk.FORMAT_FEATURE_STORAGE_IMAGE_BIT
+  ]

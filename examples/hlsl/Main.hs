@@ -1,56 +1,31 @@
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TypeApplications #-}
 
 module Main where
 
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Resource
+import Control.Monad.IO.Class (MonadIO (..))
+import Control.Monad.Trans.Resource (runResourceT)
 import Data.IORef
 import Data.Text.Encoding (decodeUtf8)
-import Frame
-  ( Frame (..)
-  , advanceFrame
-  , frameInstanceRequirements
-  , initialFrame
-  , runFrame
-  )
+import Data.Word
+import Frame (Frame (..), advanceFrame, frameDeviceRequirements, frameInstanceRequirements, initialFrame, runFrame)
 import qualified Framebuffer
-import Init
-  ( createVMA
-  , deviceRequirements
-  , myApiVersion
-  )
 import InitDevice (withDevice)
 import qualified Pipeline
 import RefCounted (releaseRefCounted)
 import Render (renderFrame)
 import qualified RenderPass
-import SDL
-  ( showWindow
-  , time
-  )
+import SDL (showWindow, time)
 import Say (sayErr)
-import Swapchain
-  ( Swapchain (..)
-  , allocSwapchain
-  , recreateSwapchain
-  , threwSwapchainError
-  )
+import Swapchain (Swapchain (..), allocSwapchain, recreateSwapchain, threwSwapchainError)
 import Utils (loopJust)
 import VkResources (mkVkResources)
-import Vulkan.Core10 hiding (withDevice)
-import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
-  ( SurfaceFormatKHR (..)
-  )
+import qualified Vma
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import qualified Vulkan.Utils.Init.SDL2 as VkInit
 import Vulkan.Zero (zero)
-import Window.SDL2
-  ( RefreshLimit (..)
-  , createSurface
-  , createWindow
-  , drawableSize
-  , shouldQuit
-  , withSDL
-  )
+import Window.SDL2 (RefreshLimit (..), createSurface, createWindow, drawableSize, shouldQuit, withSDL)
 
 main :: IO ()
 main = runResourceT $ do
@@ -62,19 +37,19 @@ main = runResourceT $ do
   inst <-
     VkInit.withInstance
       win
-      (Just zero{applicationName = Nothing, apiVersion = myApiVersion})
+      (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion})
       frameInstanceRequirements
       []
   (_, surf) <- createSurface inst win
-  (phys, dev, qs) <- withDevice inst surf deviceRequirements
-  vma <- createVMA inst phys dev
-  props <- getPhysicalDeviceProperties phys
-  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
+  (phys, dev, qs) <- withDevice inst surf frameDeviceRequirements
+  vma <- Vma.createVMA zero myApiVersion inst phys dev
+  props <- Vk.getPhysicalDeviceProperties phys
+  sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   -- Initial swapchain
   initialSize <- liftIO $ drawableSize win
-  initialSC <- allocSwapchain vr NULL_HANDLE initialSize surf
+  initialSC <- allocSwapchain vr Vk.NULL_HANDLE initialSize surf
   (_, renderPass) <- RenderPass.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
   (_, pipeline) <- Pipeline.createPipeline dev renderPass
   initialFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
@@ -121,3 +96,6 @@ main = runResourceT $ do
         False -> Just <$> perFrame f
 
   loopJust loop initial
+
+myApiVersion :: Word32
+myApiVersion = Vk.API_VERSION_1_0

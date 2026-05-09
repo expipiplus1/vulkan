@@ -10,51 +10,36 @@ module Vma
 import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Word (Word32)
 import Foreign.Ptr (castFunPtr)
-import Vulkan.Core10
-  ( Device (..)
-  , Instance (..)
-  , PhysicalDevice
-  , deviceHandle
-  , instanceHandle
-  , physicalDeviceHandle
-  )
-import Vulkan.Dynamic
-  ( DeviceCmds (DeviceCmds, pVkGetDeviceProcAddr)
-  , InstanceCmds (InstanceCmds, pVkGetInstanceProcAddr)
-  )
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Dynamic (DeviceCmds (DeviceCmds, pVkGetDeviceProcAddr), InstanceCmds (InstanceCmds, pVkGetInstanceProcAddr))
 import Vulkan.Zero (zero)
-import VulkanMemoryAllocator
-  ( Allocator
-  , AllocatorCreateFlags
-  , AllocatorCreateInfo (..)
-  , VulkanFunctions (..)
-  , withAllocator
-  )
+import qualified VulkanMemoryAllocator as VMA
 
 createVMA
   :: (MonadResource m)
-  => AllocatorCreateFlags
+  => VMA.AllocatorCreateFlags
   -> Word32
   -- ^ Target Vulkan API version
-  -> Instance
-  -> PhysicalDevice
-  -> Device
-  -> m Allocator
+  -> Vk.Instance
+  -> Vk.PhysicalDevice
+  -> Vk.Device
+  -> m VMA.Allocator
 createVMA flags' apiVer inst phys dev =
-  snd
-    <$> withAllocator
+  snd <$> VMA.withAllocator vmaCI allocate
+  where
+    vmaCI =
       zero
-        { flags = flags'
-        , physicalDevice = physicalDeviceHandle phys
-        , device = deviceHandle dev
-        , instance' = instanceHandle inst
-        , vulkanApiVersion = apiVer
-        , vulkanFunctions = Just $ case inst of
-            Instance _ InstanceCmds{..} -> case dev of
-              Device _ DeviceCmds{..} ->
-                zero
-                  { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
-                  , vkGetDeviceProcAddr = castFunPtr pVkGetDeviceProcAddr
-                  }
+        { VMA.flags = flags'
+        , VMA.physicalDevice = Vk.physicalDeviceHandle phys
+        , VMA.device = dh
+        , VMA.instance' = ih
+        , VMA.vulkanApiVersion = apiVer
+        , VMA.vulkanFunctions = Just funs
         }
-      allocate
+    funs =
+      zero
+        { VMA.vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
+        , VMA.vkGetDeviceProcAddr = castFunPtr pVkGetDeviceProcAddr
+        }
+    Vk.Instance ih InstanceCmds{pVkGetInstanceProcAddr} = inst
+    Vk.Device dh DeviceCmds{pVkGetDeviceProcAddr} = dev

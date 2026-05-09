@@ -47,7 +47,6 @@ library
       Frame
       Framebuffer
       InitDevice
-      Orphans
       RefCounted
       Swapchain
       Triangle
@@ -63,6 +62,7 @@ library
   hs-source-dirs:
       lib
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -132,6 +132,7 @@ executable compute
   hs-source-dirs:
       compute
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -187,7 +188,6 @@ executable compute
 executable hlsl
   main-is: Main.hs
   other-modules:
-      Init
       Pipeline
       Render
       RenderPass
@@ -197,6 +197,7 @@ executable hlsl
   hs-source-dirs:
       hlsl
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -263,6 +264,7 @@ executable info
   hs-source-dirs:
       info
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -319,6 +321,7 @@ executable rays
   hs-source-dirs:
       rays
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -384,16 +387,15 @@ executable rays
 executable resize
   main-is: Main.hs
   other-modules:
-      Init
       Julia
       Julia.Constants
-      Pipeline
       Paths_vulkan_examples
   autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       resize
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -459,6 +461,7 @@ executable triangle-glfw
   hs-source-dirs:
       triangle-glfw
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -518,6 +521,7 @@ executable triangle-headless
   hs-source-dirs:
       triangle-headless
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -586,6 +590,7 @@ executable triangle-sdl2
   hs-source-dirs:
       triangle-sdl2
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -645,6 +650,7 @@ executable vrcube
   hs-source-dirs:
       vrcube
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable

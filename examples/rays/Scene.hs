@@ -20,12 +20,10 @@ import GHC.Generics (Generic)
 import Linear.V3
 import Linear.V4
 import System.Random
-import Vulkan.Core10
-import Vulkan.Extensions.VK_KHR_acceleration_structure
-import Vulkan.Zero
-import VulkanMemoryAllocator as VMA hiding
-  ( getPhysicalDeviceProperties
-  )
+import qualified Vulkan.Core10 as Vk
+import qualified Vulkan.Extensions.VK_KHR_acceleration_structure as RT
+import Vulkan.Zero (zero)
+import qualified VulkanMemoryAllocator as VMA
 
 scene :: [Sphere]
 scene =
@@ -59,22 +57,25 @@ pastels =
 ----------------------------------------------------------------
 
 data SceneBuffers = SceneBuffers
-  { sceneAabbs :: Buffer
-  , sceneSpheres :: Buffer
+  { sceneAabbs :: Vk.Buffer
+  , sceneSpheres :: Vk.Buffer
   , sceneSize :: Word32
   }
 
-makeSceneBuffers :: (MonadResource m) => Allocator -> m SceneBuffers
+makeSceneBuffers
+  :: (MonadResource m)
+  => VMA.Allocator
+  -> m SceneBuffers
 makeSceneBuffers vma = do
   sceneAabbs <-
     initBuffer
       vma
-      ( BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
-          .|. BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+      ( Vk.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
+          .|. Vk.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
       )
       (sphereAABB <$> scene)
 
-  sceneSpheres <- initBuffer vma BUFFER_USAGE_STORAGE_BUFFER_BIT scene
+  sceneSpheres <- initBuffer vma Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT scene
 
   let sceneSize = fromIntegral (length scene)
 
@@ -87,18 +88,25 @@ makeSceneBuffers vma = do
 initBuffer
   :: forall a m
    . (Storable a, MonadResource m)
-  => Allocator -> BufferUsageFlags -> [a] -> m Buffer
+  => VMA.Allocator
+  -> Vk.BufferUsageFlags
+  -> [a]
+  -> m Vk.Buffer
 initBuffer vma usage xs = do
   let bufferSize = sizeOf (head xs) * length xs
 
   (_, (buf, allocation, _)) <-
     VMA.withBuffer
       vma
-      zero{flags = zero, size = fromIntegral bufferSize, usage}
       zero
-        { requiredFlags =
-            MEMORY_PROPERTY_HOST_VISIBLE_BIT
-              .|. MEMORY_PROPERTY_HOST_COHERENT_BIT
+        { Vk.flags = zero
+        , Vk.size = fromIntegral bufferSize
+        , Vk.usage
+        }
+      zero
+        { VMA.requiredFlags =
+            Vk.MEMORY_PROPERTY_HOST_VISIBLE_BIT
+              .|. Vk.MEMORY_PROPERTY_HOST_COHERENT_BIT
         }
       allocate
   (unmapKey, p) <- VMA.withMappedMemory vma allocation allocate
@@ -123,16 +131,15 @@ sphereRadius = view _w . spherePos
 sphereOrigin :: Sphere -> V3 Float
 sphereOrigin = view _xyz . spherePos
 
-sphereAABB :: Sphere -> AabbPositionsKHR
+sphereAABB :: Sphere -> RT.AabbPositionsKHR
 sphereAABB s =
-  let
+  RT.AabbPositionsKHR
+    (mini ^. _x)
+    (mini ^. _y)
+    (mini ^. _z)
+    (maxi ^. _x)
+    (maxi ^. _y)
+    (maxi ^. _z)
+  where
     mini = sphereOrigin s - pure (sphereRadius s)
     maxi = sphereOrigin s + pure (sphereRadius s)
-  in
-    AabbPositionsKHR
-      (mini ^. _x)
-      (mini ^. _y)
-      (mini ^. _z)
-      (maxi ^. _x)
-      (maxi ^. _y)
-      (maxi ^. _z)

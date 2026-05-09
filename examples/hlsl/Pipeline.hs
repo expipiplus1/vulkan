@@ -10,91 +10,92 @@ import Control.Monad.Trans.Resource
 import Data.Bits
 import Data.Foldable (traverse_)
 import qualified Data.Vector as V
-import Vulkan.CStruct.Extends
-import Vulkan.Core10 as Vk hiding
-  ( withBuffer
-  , withImage
-  )
-import Vulkan.Utils.ShaderQQ.HLSL.Shaderc
-  ( frag
-  , vert
-  )
-import Vulkan.Zero
+import Vulkan.CStruct.Extends (SomeStruct (..))
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
+import Vulkan.Zero (zero)
 
 -- | The most vanilla rendering pipeline; draws three vertices.
 createPipeline
   :: (MonadResource m, MonadFail m)
-  => Device
-  -> RenderPass
-  -> m (ReleaseKey, Pipeline)
+  => Vk.Device
+  -> Vk.RenderPass
+  -> m (ReleaseKey, Vk.Pipeline)
 createPipeline dev renderPass = do
   (shaderKeys, shaderStages) <- V.unzip <$> createShaders dev
-  (layoutKey, pipelineLayout) <- withPipelineLayout dev zero Nothing allocate
+  (layoutKey, pipelineLayout) <- Vk.withPipelineLayout dev zero Nothing allocate
   let
-    pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
+    pipelineCreateInfo :: Vk.GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo =
       zero
-        { stages = shaderStages
-        , vertexInputState = Just zero
-        , inputAssemblyState =
+        { Vk.stages = shaderStages
+        , Vk.vertexInputState = Just zero
+        , Vk.inputAssemblyState =
             Just
               zero
-                { topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-                , primitiveRestartEnable = False
+                { Vk.topology = Vk.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+                , Vk.primitiveRestartEnable = False
                 }
-        , viewportState =
+        , Vk.viewportState =
             Just $
-              SomeStruct zero{viewportCount = 1, scissorCount = 1}
-        , rasterizationState =
-            Just . SomeStruct $
-              zero
-                { depthClampEnable = False
-                , rasterizerDiscardEnable = False
-                , lineWidth = 1
-                , polygonMode = POLYGON_MODE_FILL
-                , cullMode = CULL_MODE_NONE
-                , frontFace = FRONT_FACE_CLOCKWISE
-                , depthBiasEnable = False
-                }
-        , multisampleState =
-            Just . SomeStruct $
-              zero
-                { sampleShadingEnable = False
-                , rasterizationSamples = SAMPLE_COUNT_1_BIT
-                , minSampleShading = 1
-                , sampleMask = [maxBound]
-                }
-        , depthStencilState = Nothing
-        , colorBlendState =
-            Just . SomeStruct $
-              zero
-                { logicOpEnable = False
-                , attachments =
-                    [ zero
-                        { colorWriteMask =
-                            COLOR_COMPONENT_R_BIT
-                              .|. COLOR_COMPONENT_G_BIT
-                              .|. COLOR_COMPONENT_B_BIT
-                              .|. COLOR_COMPONENT_A_BIT
-                        , blendEnable = False
-                        }
-                    ]
-                }
-        , dynamicState =
+              SomeStruct
+                zero
+                  { Vk.viewportCount = 1
+                  , Vk.scissorCount = 1
+                  }
+        , Vk.rasterizationState =
+            Just $
+              SomeStruct
+                zero
+                  { Vk.depthClampEnable = False
+                  , Vk.rasterizerDiscardEnable = False
+                  , Vk.lineWidth = 1
+                  , Vk.polygonMode = Vk.POLYGON_MODE_FILL
+                  , Vk.cullMode = Vk.CULL_MODE_NONE
+                  , Vk.frontFace = Vk.FRONT_FACE_CLOCKWISE
+                  , Vk.depthBiasEnable = False
+                  }
+        , Vk.multisampleState =
+            Just $
+              SomeStruct
+                zero
+                  { Vk.sampleShadingEnable = False
+                  , Vk.rasterizationSamples = Vk.SAMPLE_COUNT_1_BIT
+                  , Vk.minSampleShading = 1
+                  , Vk.sampleMask = [maxBound]
+                  }
+        , Vk.depthStencilState = Nothing
+        , Vk.colorBlendState =
+            Just $
+              SomeStruct
+                zero
+                  { Vk.logicOpEnable = False
+                  , Vk.attachments =
+                      [ zero
+                          { Vk.colorWriteMask =
+                              Vk.COLOR_COMPONENT_R_BIT
+                                .|. Vk.COLOR_COMPONENT_G_BIT
+                                .|. Vk.COLOR_COMPONENT_B_BIT
+                                .|. Vk.COLOR_COMPONENT_A_BIT
+                          , Vk.blendEnable = False
+                          }
+                      ]
+                  }
+        , Vk.dynamicState =
             Just
               zero
-                { dynamicStates =
-                    [ DYNAMIC_STATE_VIEWPORT
-                    , DYNAMIC_STATE_SCISSOR
+                { Vk.dynamicStates =
+                    [ Vk.DYNAMIC_STATE_VIEWPORT
+                    , Vk.DYNAMIC_STATE_SCISSOR
                     ]
                 }
-        , layout = pipelineLayout
-        , renderPass = renderPass
-        , subpass = 0
-        , basePipelineHandle = zero
+        , Vk.layout = pipelineLayout
+        , Vk.renderPass = renderPass
+        , Vk.subpass = 0
+        , Vk.basePipelineHandle = zero
         }
-  (key, (_, ~[graphicsPipeline])) <-
-    withGraphicsPipelines
+  (key, (_, [graphicsPipeline])) <-
+    Vk.withGraphicsPipelines
       dev
       zero
       [SomeStruct pipelineCreateInfo]
@@ -106,17 +107,29 @@ createPipeline dev renderPass = do
 
 createShaders
   :: (MonadResource m)
-  => Device
-  -> m (V.Vector (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo))
+  => Vk.Device
+  -> m (V.Vector (ReleaseKey, SomeStruct Vk.PipelineShaderStageCreateInfo))
 createShaders dev = do
+  (fragKey, fragModule) <- Vk.withShaderModule dev zero{Vk.code = fragCode} Nothing allocate
+  (vertKey, vertModule) <- Vk.withShaderModule dev zero{Vk.code = vertCode} Nothing allocate
   let
-    fragCode =
-      [frag|
-        float4 main([[vk::location(0)]] const float3 col) : SV_TARGET
-        {
-            return float4(col, 1);
+    vertShaderStageCreateInfo =
+      zero
+        { Vk.stage = Vk.SHADER_STAGE_VERTEX_BIT
+        , Vk.module' = vertModule
+        , Vk.name = "main"
         }
-      |]
+    fragShaderStageCreateInfo =
+      zero
+        { Vk.stage = Vk.SHADER_STAGE_FRAGMENT_BIT
+        , Vk.module' = fragModule
+        , Vk.name = "main"
+        }
+  pure
+    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
+    , (fragKey, SomeStruct fragShaderStageCreateInfo)
+    ]
+  where
     vertCode =
       [vert|
         const static float2 positions[3] = {
@@ -145,22 +158,10 @@ createShaders dev = do
           return output;
         }
       |]
-  (fragKey, fragModule) <- withShaderModule dev zero{code = fragCode} Nothing allocate
-  (vertKey, vertModule) <- withShaderModule dev zero{code = vertCode} Nothing allocate
-  let
-    vertShaderStageCreateInfo =
-      zero
-        { stage = SHADER_STAGE_VERTEX_BIT
-        , module' = vertModule
-        , name = "main"
+    fragCode =
+      [frag|
+        float4 main([[vk::location(0)]] const float3 col) : SV_TARGET
+        {
+            return float4(col, 1);
         }
-    fragShaderStageCreateInfo =
-      zero
-        { stage = SHADER_STAGE_FRAGMENT_BIT
-        , module' = fragModule
-        , name = "main"
-        }
-  pure
-    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
-    , (fragKey, SomeStruct fragShaderStageCreateInfo)
-    ]
+      |]
