@@ -7,21 +7,21 @@ module Main where
 
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, release, runResourceT)
-import Frame (Frame (..))
 import Render (renderFrame)
 import qualified SDL
-import Swapchain (Swapchain (..))
-import VkResources (VkResources (..))
+import VkResources (VkResources (..), vrContext)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
+import Vulkan.Utils.Frame (Frame (..))
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import qualified Vulkan.Utils.Pipeline as Pipeline
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
+import Vulkan.Utils.Swapchain (Swapchain (..), defaultSwapchainConfig)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
-import WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
@@ -35,6 +35,7 @@ main = runResourceT $ do
         , wcInstanceReqs = []
         , wcDeviceReqs = []
         , wcVmaFlags = zero
+        , wcSwapchainConfig = defaultSwapchainConfig
         }
       (sdl2Adapter win)
   let dev = vrDevice vr
@@ -49,7 +50,7 @@ main = runResourceT $ do
   start <- SDL.time @Double
 
   runWindowLoop
-    vr
+    (vrContext vr)
     initialSC
     (drawableSize win)
     (shouldQuit win)

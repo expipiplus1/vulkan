@@ -1,17 +1,20 @@
-{-| Application-static Vulkan handles plus the recycle channel ends used by
-the recycling 'Frame' machinery in "Frame".
+{-| Example-side bundle: the original 'VkResources' shape, now constructed
+from an upstream 'Vulkan.Utils.VulkanContext.VulkanContext' plus the VMA
+allocator the examples use. 'vrContext' projects back out to a
+'VulkanContext' for the upstream Frame/WindowLoop APIs.
 -}
 module VkResources
   ( VkResources (..)
+  , vrContext
+  , mkVkResources
   , Queues (..)
   , RecycledResources (..)
-  , mkVkResources
   ) where
 
-import Control.Concurrent.Chan.Unagi
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.GCT (Queues (..))
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
+import Vulkan.Utils.Queues (Queues (..))
+import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..), mkVulkanContext)
 import qualified VulkanMemoryAllocator as VMA
 
 {- | A bunch of long-lived handles that the application carries around.
@@ -24,27 +27,23 @@ data VkResources = VkResources
   , vrAllocator :: VMA.Allocator
   , vrQueues :: Queues (QueueFamilyIndex, Vk.Queue)
   , vrRecycleBin :: RecycledResources -> IO ()
-  {- ^ Drop a frame's reusable bits back into the pool. Called from the
-  per-frame wait thread once the GPU is done with the frame.
-  -}
   , vrRecycleNib :: IO (Either (IO RecycledResources) RecycledResources)
-  {- ^ Pull a frame's reusable bits out. 'Right' if available immediately;
-  'Left' is a blocking read.
-  -}
   }
 
-{- | The bits of state recycled between frames: two binary semaphores used
-for image-acquire / render-done synchronisation, and the command pool the
-frame's commands are recorded into.
--}
-data RecycledResources = RecycledResources
-  { rrImageAvailable :: Vk.Semaphore
-  , rrRenderFinished :: Vk.Semaphore
-  , rrCommandPool :: Vk.CommandPool
-  }
+-- | Project out the upstream 'VulkanContext' for use with Frame/WindowLoop.
+vrContext :: VkResources -> VulkanContext
+vrContext VkResources{..} =
+  VulkanContext
+    { vcInstance = vrInstance
+    , vcPhysicalDevice = vrPhysicalDevice
+    , vcDevice = vrDevice
+    , vcQueues = vrQueues
+    , vcRecycleBin = vrRecycleBin
+    , vcRecycleNib = vrRecycleNib
+    }
 
 {- | Assemble a 'VkResources' from already-constructed handles. Builds the
-recycle channel internally.
+recycle channel internally via the upstream 'mkVulkanContext'.
 -}
 mkVkResources
   :: Vk.Instance
@@ -53,11 +52,15 @@ mkVkResources
   -> VMA.Allocator
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> IO VkResources
-mkVkResources vrInstance vrPhysicalDevice vrDevice vrAllocator vrQueues = do
-  (binW, binR) <- newChan
-  let
-    vrRecycleBin = writeChan binW
-    vrRecycleNib = do
-      (try, block) <- tryReadChan binR
-      maybe (Left block) Right <$> tryRead try
-  pure VkResources{..}
+mkVkResources inst phys dev vrAllocator queues = do
+  vc <- mkVulkanContext inst phys dev queues
+  pure
+    VkResources
+      { vrInstance = vcInstance vc
+      , vrPhysicalDevice = vcPhysicalDevice vc
+      , vrDevice = vcDevice vc
+      , vrAllocator
+      , vrQueues = vcQueues vc
+      , vrRecycleBin = vcRecycleBin vc
+      , vrRecycleNib = vcRecycleNib vc
+      }

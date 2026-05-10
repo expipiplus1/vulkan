@@ -1,14 +1,23 @@
-{-# LANGUAGE DerivingVia #-}
+{-| Lightweight reference counter that runs a release action when the count
+hits zero. Useful for keeping a Vulkan object alive across an unknown number
+of in-flight frames — bump the count when a frame starts using it, drop the
+count when the frame retires, and the object is destroyed promptly after the
+last frame finishes.
+-}
+module Vulkan.Utils.RefCounted
+  ( RefCounted
+  , newRefCounted
+  , releaseRefCounted
+  , takeRefCounted
+  , resourceTRefCount
+  ) where
 
-module RefCounted where
-
-import Control.Exception (throwIO)
+import Control.Exception (mask, throwIO)
 import Control.Monad
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, allocate_)
 import Data.IORef
 import GHC.IO.Exception (IOErrorType (UserError), IOException (IOError))
-import UnliftIO.Exception (mask)
 
 -- | A 'RefCounted' will perform the specified action when the count reaches 0
 data RefCounted = RefCounted

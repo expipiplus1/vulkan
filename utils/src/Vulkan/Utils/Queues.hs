@@ -20,7 +20,7 @@ If you need a different shape (compute-only, multiple graphics queues,
 custom priorities, …) reach for the lower-level
 'Vulkan.Utils.QueueAssignment.assignQueues' directly.
 -}
-module Vulkan.Utils.GCT
+module Vulkan.Utils.Queues
   ( Queues (..)
   , withDevice
   ) where

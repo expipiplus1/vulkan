@@ -15,17 +15,15 @@ import Control.Monad.Trans.Resource
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Data.Word (Word64)
-import Frame (Frame (..), queueSubmitFrame)
 import Julia (JuliaPipeline (..), createJuliaDescriptorSets, createJuliaPipeline, juliaWorkgroupX, juliaWorkgroupY)
 import Linear.Affine (Point (..))
 import Linear.Metric (norm)
 import Linear.V2
 import qualified SDL
 import Say (sayErrString)
-import Swapchain (Swapchain (..))
 import UnliftIO.Exception (displayException, throwIO, throwString)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
-import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import VkResources (Queues (..), VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
@@ -33,11 +31,14 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import Vulkan.Extensions.VK_KHR_swapchain as KHR
+import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import qualified Vulkan.Utils.RenderPass as RenderPass
+import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
+import Vulkan.Utils.VulkanContext (RecycledResources (..))
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import Vulkan.Zero (zero)
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
-import WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
@@ -56,6 +57,12 @@ main = prettyError . runResourceT $ do
         , wcInstanceReqs = []
         , wcDeviceReqs = []
         , wcVmaFlags = zero
+        , wcSwapchainConfig =
+            defaultSwapchainConfig
+              { scRequiredUsageFlags =
+                  [Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT, Vk.IMAGE_USAGE_STORAGE_BIT]
+              , scRequiredFormatFeatures = [Vk.FORMAT_FEATURE_STORAGE_IMAGE_BIT]
+              }
         }
       (sdl2Adapter sdlWindow)
   let dev = vrDevice vr
@@ -70,7 +77,7 @@ main = prettyError . runResourceT $ do
   SDL.showWindow sdlWindow
 
   runWindowLoop
-    vr
+    (vrContext vr)
     initialSC
     (drawableSize sdlWindow)
     (shouldQuit sdlWindow)

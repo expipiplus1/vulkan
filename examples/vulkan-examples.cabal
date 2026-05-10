@@ -44,11 +44,8 @@ flag vr
 library
   exposed-modules:
       Camera
-      Frame
       HeadlessBoot
       ImageReadback
-      RefCounted
-      Swapchain
       Triangle
       Utils
       VkResources
@@ -56,7 +53,6 @@ library
       Window.GLFW
       Window.SDL2
       WindowedBoot
-      WindowLoop
   other-modules:
       Paths_vulkan_examples
   autogen-modules:

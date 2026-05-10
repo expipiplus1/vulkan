@@ -14,16 +14,14 @@ import qualified Data.Vector as V
 import Data.Word
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable
-import Frame (Frame (..), queueSubmitFrame)
 import GHC.Clock (getMonotonicTime)
 import GHC.IO.Exception (IOErrorType (TimeExpired), IOException (IOError))
 import Init (RTInfo (..))
 import Linear.Matrix
 import Linear.Quaternion
 import Linear.V3
-import Swapchain (Swapchain (..))
 import UnliftIO.Exception (throwString)
-import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import VkResources (Queues (..), VkResources (..))
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
@@ -32,6 +30,9 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Extensions.VK_KHR_ray_tracing_pipeline as RT
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
+import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
+import Vulkan.Utils.Swapchain (Swapchain (..))
+import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 

@@ -1,8 +1,8 @@
-{-| Per-frame window loop shared by the windowed examples.
+{-| Per-frame window loop shared by windowed applications.
 
 The skeleton — read swapchain, run a frame inside @runFrame@, recreate on
-'Swapchain.threwSwapchainError', advance — is identical across triangle,
-hlsl, rays, resize. Each example only varies in:
+'Vulkan.Utils.Swapchain.threwSwapchainError', advance — is the same for any
+windowed Vulkan app. Each consumer only varies in:
 
 * the per-swapchain state it holds (framebuffers, descriptor sets, …),
 * the per-frame render action, and
@@ -10,7 +10,7 @@ hlsl, rays, resize. Each example only varies in:
 
 'runWindowLoop' takes those four points as fields of a 'WindowLoop' record.
 -}
-module WindowLoop
+module Vulkan.Utils.WindowLoop
   ( WindowLoop (..)
   , runWindowLoop
   , noWindowState
@@ -27,12 +27,11 @@ import Control.Monad.Trans.Resource
   )
 import Data.IORef
 import Data.Word (Word64)
-import Frame (Frame (..), advanceFrame, initialFrame, runFrame)
 import GHC.Clock (getMonotonicTimeNSec)
-import Swapchain (Swapchain, recreateSwapchain, threwSwapchainError)
-import Utils (loopJust)
-import VkResources (VkResources)
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Utils.Frame (Frame (..), advanceFrame, initialFrame, runFrame)
+import Vulkan.Utils.Swapchain (Swapchain, recreateSwapchain, threwSwapchainError)
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
 
 data WindowLoop s = WindowLoop
   { wlMkState :: Swapchain -> ResourceT IO (s, ReleaseKey)
@@ -50,7 +49,7 @@ data WindowLoop s = WindowLoop
   }
 
 runWindowLoop
-  :: VkResources
+  :: VulkanContext
   -> Swapchain
   -> IO Vk.Extent2D
   -- ^ Get current drawable size (called on resize)
@@ -58,11 +57,11 @@ runWindowLoop
   -- ^ Per-frame poller; 'True' means quit
   -> WindowLoop s
   -> ResourceT IO ()
-runWindowLoop vr initialSC getSize shouldQuit WindowLoop{..} = do
+runWindowLoop vc initialSC getSize shouldQuit WindowLoop{..} = do
   initialState <- wlMkState initialSC
   scRef <- liftIO $ newIORef initialSC
   stRef <- liftIO $ newIORef initialState
-  initial <- initialFrame vr initialSC
+  initial <- initialFrame vc initialSC
   let
     perFrame f = do
       currentSC <- liftIO $ readIORef scRef
@@ -70,16 +69,15 @@ runWindowLoop vr initialSC getSize shouldQuit WindowLoop{..} = do
       let f' = f{fSwapchain = currentSC}
       startNs <- liftIO getMonotonicTimeNSec
       needsNew <-
-        threwSwapchainError $
-          liftIO $
-            runFrame vr f' (wlRender st f')
+        liftIO . threwSwapchainError $
+          runFrame vc f' (wlRender st f')
       endNs <- liftIO getMonotonicTimeNSec
       wlOnFrame startNs endNs
       sc' <-
         if needsNew
           then do
             newSize <- liftIO getSize
-            sc' <- recreateSwapchain vr newSize currentSC
+            sc' <- recreateSwapchain (vcPhysicalDevice vc) (vcDevice vc) newSize currentSC
             (newSt, newKey) <- wlMkState sc'
             (_, oldKey) <- liftIO $ readIORef stRef
             release oldKey
@@ -87,7 +85,7 @@ runWindowLoop vr initialSC getSize shouldQuit WindowLoop{..} = do
             liftIO $ writeIORef stRef (newSt, newKey)
             pure sc'
           else pure currentSC
-      advanceFrame vr sc' f'
+      advanceFrame vc sc' f'
 
     loop f =
       liftIO shouldQuit >>= \case
@@ -108,3 +106,9 @@ noOnFrame _ _ = pure ()
 
 noOnExit :: Frame -> ResourceT IO ()
 noOnExit _ = pure ()
+
+loopJust :: (Monad m) => (a -> m (Maybe a)) -> a -> m ()
+loopJust f x =
+  f x >>= \case
+    Nothing -> pure ()
+    Just x' -> loopJust f x'

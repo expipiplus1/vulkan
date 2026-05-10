@@ -17,9 +17,7 @@ import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate, release)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import Frame (Frame (..), queueSubmitFrame)
-import Swapchain (Swapchain (..))
-import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import VkResources (Queues (..), VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
@@ -27,13 +25,16 @@ import qualified Vulkan.Core12 as Vk12
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
+import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import Vulkan.Utils.Pipeline (createColorPipeline)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
+import Vulkan.Utils.Swapchain (Swapchain (..))
+import Vulkan.Utils.VulkanContext (RecycledResources (..))
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
-import WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 
 -- | Drive a recycling-Frame render loop drawing the colored triangle.
 runTriangle
@@ -55,7 +56,7 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
   (_, pipeline) <- createGraphicsPipeline dev renderPass
 
   runWindowLoop
-    vr
+    (vrContext vr)
     initialSC
     getDrawableSize
     shouldQuit

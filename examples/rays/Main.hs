@@ -8,19 +8,20 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (sizeOf)
-import Frame (Frame (..))
 import Init (deviceRequirements, getDeviceRTProps, instanceRequirements)
 import qualified Pipeline
 import Render (RenderState (..), renderFrame)
 import qualified SDL
 import Scene (makeSceneBuffers)
-import VkResources (VkResources (..))
+import VkResources (VkResources (..), vrContext)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo (..), getBufferDeviceAddress)
+import Vulkan.Utils.Frame (Frame (..))
+import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noWindowState, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
-import WindowLoop (WindowLoop (..), noOnFrame, noWindowState, runWindowLoop)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
@@ -34,6 +35,7 @@ main = runResourceT $ do
         , wcInstanceReqs = instanceRequirements
         , wcDeviceReqs = deviceRequirements
         , wcVmaFlags = VMA.ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
+        , wcSwapchainConfig = defaultSwapchainConfig
         }
       (sdl2Adapter win)
   let
@@ -85,7 +87,7 @@ main = runResourceT $ do
   start <- SDL.time @Double
 
   runWindowLoop
-    vr
+    (vrContext vr)
     initialSC
     (drawableSize win)
     (shouldQuit win)

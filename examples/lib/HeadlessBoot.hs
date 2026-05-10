@@ -30,10 +30,10 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12 (pattern API_VERSION_1_2)
 import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
-import Vulkan.Utils.GCT (withDevice)
 import qualified Vulkan.Utils.Init.Headless as Init
 import Vulkan.Utils.Initialization (physicalDeviceName)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
+import Vulkan.Utils.Queues (withDevice)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import WindowedBoot (debugMessengerCreateInfo)

@@ -22,10 +22,7 @@ import Data.Bits ((.|.))
 import Data.Text (Text)
 import Data.Text.Encoding (decodeUtf8)
 import qualified Data.Text.Encoding as Text
-import Frame (frameDeviceRequirements, frameInstanceRequirements)
 import Say (sayErr)
-import Swapchain (Swapchain, allocSwapchain)
-import UnliftIO (MonadUnliftIO)
 import VkResources (VkResources, mkVkResources)
 import qualified Vma
 import qualified Vulkan.Core10 as Vk
@@ -34,7 +31,9 @@ import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.Debug (debugCallbackPtr)
-import Vulkan.Utils.GCT (withDevice)
+import Vulkan.Utils.Frame (frameDeviceRequirements, frameInstanceRequirements)
+import Vulkan.Utils.Queues (withDevice)
+import Vulkan.Utils.Swapchain (Swapchain, SwapchainConfig, allocSwapchain)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -48,6 +47,10 @@ data WindowedConfig = WindowedConfig
   -- ^ Extra device requirements (frame's defaults are added automatically).
   , wcVmaFlags :: VMA.AllocatorCreateFlags
   -- ^ VMA flags (e.g. @ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT@ for rays).
+  , wcSwapchainConfig :: SwapchainConfig
+  {- ^ Knobs for the initial swapchain. Pass 'defaultSwapchainConfig' for the
+  common case; compute-shader callers (e.g. @resize@) tweak the storage bits.
+  -}
   }
 
 -- | Bridge between the helper and a particular window-library backend.
@@ -65,7 +68,7 @@ data WindowAdapter m = WindowAdapter
 window. Logs the chosen device's name to stderr.
 -}
 withWindowedVk
-  :: (MonadResource m, MonadFail m, MonadUnliftIO m)
+  :: (MonadResource m, MonadFail m)
   => WindowedConfig
   -> WindowAdapter m
   -> m (VkResources, Swapchain)
@@ -93,7 +96,8 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   vr <- liftIO $ mkVkResources inst phys dev vma qs
 
   initialSize <- waDrawableSize
-  initialSC <- allocSwapchain vr Vk.NULL_HANDLE initialSize surf
+  initialSC <-
+    allocSwapchain phys dev wcSwapchainConfig Vk.NULL_HANDLE initialSize surf
   pure (vr, initialSC)
 
 {- | Standard validation/perf debug messenger create info, shared with

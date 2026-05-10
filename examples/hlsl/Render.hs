@@ -8,12 +8,9 @@ import Control.Exception (throwIO)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Vector (Vector, (!))
-import Frame (Frame (..), queueSubmitFrame)
 import GHC.IO.Exception (IOErrorType (TimeExpired), IOException (IOError))
-import RefCounted (resourceTRefCount)
-import Swapchain (Swapchain (..))
 import UnliftIO.Exception (throwString)
-import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import VkResources (Queues (..), VkResources (..))
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
@@ -21,6 +18,10 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception (VulkanException (..))
 import Vulkan.Extensions.VK_KHR_swapchain as VK_KHR_swapchain
+import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
+import Vulkan.Utils.RefCounted (resourceTRefCount)
+import Vulkan.Utils.Swapchain (Swapchain (..))
+import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
 
 -- | Acquire an image, record a clear+draw, submit, and present.

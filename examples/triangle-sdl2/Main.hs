@@ -3,6 +3,7 @@ module Main where
 import Control.Monad.Trans.Resource (runResourceT)
 import Data.Text (Text)
 import qualified Triangle
+import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
 import Vulkan.Zero (zero)
 import qualified Window.SDL2 as Window
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
@@ -18,6 +19,7 @@ main = runResourceT $ do
         , wcInstanceReqs = []
         , wcDeviceReqs = []
         , wcVmaFlags = zero
+        , wcSwapchainConfig = defaultSwapchainConfig
         }
       (Window.sdl2Adapter window)
   Window.showWindow window

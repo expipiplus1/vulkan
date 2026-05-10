@@ -1,4 +1,7 @@
 {-# LANGUAGE QuasiQuotes #-}
+-- GHC can't prove single-element '::&' chain patterns exhaustive (see
+-- 'getDeviceRTProps'). Suppressed locally; the type guarantees the shape.
+{-# OPTIONS_GHC -Wno-incomplete-patterns -Wno-incomplete-uni-patterns #-}
 
 module Init
   ( instanceRequirements
@@ -9,7 +12,6 @@ module Init
 
 import Control.Monad.IO.Class
 import Data.Word
-import Frame (frameDeviceRequirements)
 import Vulkan.CStruct.Extends (pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeatures (..))
@@ -17,6 +19,7 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (PhysicalDeviceAccelerati
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2 (getPhysicalDeviceProperties2KHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR (..), PhysicalDeviceRayTracingPipelinePropertiesKHR (..))
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement)
+import Vulkan.Utils.Frame (frameDeviceRequirements)
 import Vulkan.Utils.Requirements.TH (reqs)
 
 {- | Extra instance requirements on top of the boot helper's defaults.

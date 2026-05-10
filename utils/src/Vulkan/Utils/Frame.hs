@@ -5,13 +5,17 @@
 {-| Per-frame state and the recycling-Frame loop. Each frame owns a binary
 image-available semaphore, a binary render-finished semaphore, and a
 command pool — those three are 'RecycledResources' that get handed back
-to a channel in 'VkResources' once the frame's GPU work has completed.
+to a channel in 'VulkanContext' once the frame's GPU work has completed.
 
 The host-side timeline semaphore (@fHostTimeline@) lives across frames:
 each frame increments it to its own 'fIndex' on the GPU, and the host
 waits on it inside the spawned wait-and-recycle thread.
+
+This module requires Vulkan 1.2-level timeline-semaphore support. See
+'frameInstanceRequirements' / 'frameDeviceRequirements' for the
+extension/feature requirements to merge into your boot sequence.
 -}
-module Frame
+module Vulkan.Utils.Frame
   ( Frame (..)
   , initialFrame
   , advanceFrame
@@ -23,16 +27,24 @@ module Frame
   ) where
 
 import Control.Concurrent (forkIO)
-import Control.Monad (replicateM_, unless, void)
+import Control.Exception (finally, mask_)
+import Control.Monad (unless, void)
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Trans.Resource (InternalState, MonadResource, ReleaseKey, ResourceT, allocate, closeInternalState, createInternalState, release, runInternalState)
+import Control.Monad.Trans.Resource
+  ( InternalState
+  , MonadResource
+  , ReleaseKey
+  , ResourceT
+  , allocate
+  , closeInternalState
+  , createInternalState
+  , release
+  , runInternalState
+  )
 import Data.IORef
 import qualified Data.Vector as V
 import Data.Word
-import Say (sayErr)
-import Swapchain (Swapchain)
-import UnliftIO (finally, mask_)
-import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import System.IO (hPutStrLn, stderr)
 import Vulkan.CStruct.Extends (SomeStruct, pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
@@ -40,12 +52,14 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as Timeline
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
+import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.Requirements.TH as U
+import Vulkan.Utils.Swapchain (Swapchain)
+import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
 
 {- | Instance-level requirements for the recycling 'Frame' machinery. Merge
-with your example's other 'InstanceRequirement's when calling
-'Vulkan.Utils.Init.SDL2.withInstance' (or equivalent).
+with your application's other 'InstanceRequirement's at instance creation.
 
 Required because checking @PhysicalDeviceTimelineSemaphoreFeatures@ at
 physical-device pick time goes through @VkPhysicalDeviceFeatures2@, which
@@ -60,8 +74,8 @@ frameInstanceRequirements =
   ]
 
 {- | The device-level requirements needed by 'runFrame' / 'queueSubmitFrame' /
-'withTimelineSemaphore'. Merge into your example's other 'DeviceRequirement's
-when calling 'createDeviceFromRequirements'.
+'withTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
+calling 'Vulkan.Utils.Initialization.createDeviceFromRequirements'.
 -}
 frameDeviceRequirements :: [DeviceRequirement]
 frameDeviceRequirements =
@@ -102,16 +116,16 @@ data Frame = Frame
 -- Construction
 ----------------------------------------------------------------
 
-{- | Build the initial frame and pre-populate the recycle channel with
-2 spare 'RecycledResources'.
+{- | Build the initial frame with one spare 'RecycledResources' seeded
+into the recycle channel. That, plus the set attached to this frame,
+caps max-in-flight at 2 (CPU recording + GPU executing the previous).
 -}
-initialFrame :: (MonadResource m) => VkResources -> Swapchain -> m Frame
-initialFrame vr fSwapchain = do
-  replicateM_ 2 $ do
-    rr <- mkRecycledResources vr
-    liftIO (vrRecycleBin vr rr)
-  fRecycled <- mkRecycledResources vr
-  (_, fHostTimeline) <- withTimelineSemaphore (vrDevice vr) 0
+initialFrame :: (MonadResource m) => VulkanContext -> Swapchain -> m Frame
+initialFrame vc fSwapchain = do
+  fRecycled <- mkRecycledResources vc
+  spare <- mkRecycledResources vc
+  liftIO (vcRecycleBin vc spare)
+  (_, fHostTimeline) <- withTimelineSemaphore (vcDevice vc) 0
   fGPUWork <- liftIO $ newIORef mempty
   fResources <- allocate createInternalState closeInternalState
   pure Frame{fIndex = 1, ..}
@@ -121,16 +135,16 @@ Caller passes the (possibly-recreated) 'Swapchain'.
 -}
 advanceFrame
   :: (MonadResource m)
-  => VkResources
+  => VulkanContext
   -> Swapchain
   -- ^ Same as old, or freshly recreated
   -> Frame
   -- ^ The just-finished frame
   -> m Frame
-advanceFrame vr sc f = do
+advanceFrame vc sc f = do
   fRecycled <-
     liftIO $
-      vrRecycleNib vr >>= \case
+      vcRecycleNib vc >>= \case
         Left block -> block
         Right rr -> pure rr
   fGPUWork <- liftIO $ newIORef mempty
@@ -155,13 +169,13 @@ runs in a forked thread so the next frame can begin recording immediately.
 
 Anything 'allocate'd inside @action@ is freed when the frame retires.
 -}
-runFrame :: VkResources -> Frame -> ResourceT IO a -> IO a
-runFrame vr f action =
+runFrame :: VulkanContext -> Frame -> ResourceT IO a -> IO a
+runFrame vc f action =
   runInternalState action (snd (fResources f))
-    `finally` waitAndRecycle vr f
+    `finally` waitAndRecycle vc f
 
-waitAndRecycle :: VkResources -> Frame -> IO ()
-waitAndRecycle vr f = do
+waitAndRecycle :: VulkanContext -> Frame -> IO ()
+waitAndRecycle vc f = do
   waits <- readIORef (fGPUWork f)
   void . forkIO $ do
     unless (null waits) $ do
@@ -170,17 +184,17 @@ waitAndRecycle vr f = do
               { semaphores = V.fromList (fst <$> waits)
               , values = V.fromList (snd <$> waits)
               }
-      r <- waitTwice (vrDevice vr) waitInfo oneSecond
+      r <- waitTwice (vcDevice vc) waitInfo oneSecond
       case r of
-        Vk.TIMEOUT -> sayErr "Frame wait timed out (1s) — GPU may be hung"
+        Vk.TIMEOUT -> hPutStrLn stderr "Frame wait timed out (1s) — GPU may be hung"
         _ -> pure ()
     -- Pool reuse: reset, dropping all recorded buffers.
     Vk.resetCommandPool
-      (vrDevice vr)
+      (vcDevice vc)
       (rrCommandPool (fRecycled f))
       Vk.COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
     -- Hand the borrowed resources back to whoever's waiting on them.
-    vrRecycleBin vr (fRecycled f)
+    vcRecycleBin vc (fRecycled f)
     -- Free the per-frame ResourceT scope.
     release (fst (fResources f))
   where
@@ -225,11 +239,11 @@ withTimelineSemaphore dev initial =
 {- | Build one set of recycled resources: two binary semaphores + a
 command pool keyed to the graphics queue family.
 -}
-mkRecycledResources :: (MonadResource m) => VkResources -> m RecycledResources
-mkRecycledResources vr = do
+mkRecycledResources :: (MonadResource m) => VulkanContext -> m RecycledResources
+mkRecycledResources vc = do
   let
-    dev = vrDevice vr
-    QueueFamilyIndex qfi = fst (qGraphics (vrQueues vr))
+    dev = vcDevice vc
+    QueueFamilyIndex qfi = fst (qGraphics (vcQueues vc))
   (_, rrImageAvailable) <-
     Vk.withSemaphore
       dev
