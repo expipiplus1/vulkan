@@ -15,12 +15,16 @@ import UnliftIO.Foreign (castPtr)
 import VkResources (Queues (..), VkResources (..))
 import Vulkan.CStruct
 import Vulkan.CStruct.Extends
+import Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
+import Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
+import Vulkan.Extensions.VK_KHR_acceleration_structure as AccelerationStructureDeviceAddressInfoKHR (AccelerationStructureDeviceAddressInfoKHR (..))
 import qualified Vulkan.Extensions.VK_KHR_acceleration_structure as RT
 import Vulkan.Utils.Debug (nameObject)
 import Vulkan.Utils.QueueAssignment
 import Vulkan.Zero
+import VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
 import qualified VulkanMemoryAllocator as VMA
 
 ----------------------------------------------------------------
@@ -44,7 +48,7 @@ createTLAS vr sceneBuffers = do
     RT.getAccelerationStructureDeviceAddressKHR
       dev
       zero
-        { RT.accelerationStructure = blas
+        { AccelerationStructureDeviceAddressInfoKHR.accelerationStructure = blas
         }
   let
     identity = RT.TransformMatrixKHR (1, 0, 0, 0) (0, 1, 0, 0) (0, 0, 1, 0)
@@ -151,7 +155,7 @@ buildAccelerationStructure vr geom ranges sizes = do
         { Vk.size = bufferSize
         , Vk.usage = Vk.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
         }
-      zero{VMA.usage = VMA.MEMORY_USAGE_GPU_ONLY}
+      zero{AllocationCreateInfo.usage = VMA.MEMORY_USAGE_GPU_ONLY}
       allocate
 
   (scratchBufferKey, (scratchBuffer, _, _)) <-
@@ -161,7 +165,7 @@ buildAccelerationStructure vr geom ranges sizes = do
         { Vk.size = RT.buildScratchSize sizes
         , Vk.usage = Vk.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
         }
-      zero{VMA.usage = VMA.MEMORY_USAGE_GPU_ONLY}
+      zero{AllocationCreateInfo.usage = VMA.MEMORY_USAGE_GPU_ONLY}
       allocate
   scratchBufferDeviceAddress <-
     getBufferDeviceAddress
@@ -263,7 +267,7 @@ oneShotComputeCommands vr cmds = do
   let
     dev = vrDevice vr
     (QueueFamilyIndex graphicsQueueFamilyIndex, graphicsQueue) = qGraphics (vrQueues vr)
-  (poolKey, commandPool) <- Vk.withCommandPool dev zero{Vk.queueFamilyIndex = graphicsQueueFamilyIndex} Nothing allocate
+  (poolKey, commandPool) <- Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex} Nothing allocate
   [commandBuffer] <-
     Vk.allocateCommandBuffers
       dev
@@ -275,7 +279,7 @@ oneShotComputeCommands vr cmds = do
 
   Vk.useCommandBuffer
     commandBuffer
-    zero{Vk.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
+    zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
     (liftIO (cmds commandBuffer))
   (fenceKey, fence) <- Vk.withFence dev zero Nothing allocate
   Vk.queueSubmit

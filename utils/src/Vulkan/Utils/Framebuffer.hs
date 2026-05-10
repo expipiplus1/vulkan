@@ -3,17 +3,16 @@
 {-| Tiny helpers for the boilerplate that each rendering example needs:
 a framebuffer over a single image view, and a vanilla 2D color image view.
 -}
-module Framebuffer
-  ( Framebuffer.createFramebuffer
-  , Framebuffer.createImageView
-  , Framebuffer.createFramebuffers
+module Vulkan.Utils.Framebuffer
+  ( createFramebuffer
+  , createImageView
+  , createFramebuffers
   ) where
 
-import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate, release)
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate, register, release)
 import Data.Foldable (traverse_)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import RefCounted (RefCounted, newRefCounted)
 import Vulkan.Core10 as Extent2D (Extent2D (..))
 import Vulkan.Core10 as ImageViewCreateInfo (ImageViewCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
@@ -40,9 +39,8 @@ createFramebuffer dev renderPass imageView Vk.Extent2D{width, height} =
         , Vk.layers = 1
         }
 
-{- | Build one framebuffer per image view at the given extent. The returned
-'RefCounted' frees them all when no in-flight frame still uses them — call
-'releaseRefCounted' after a swapchain swap.
+{- | Build one framebuffer per image view at the given extent. Releasing the
+returned 'ReleaseKey' frees them all — fire it after a swapchain swap.
 -}
 createFramebuffers
   :: (MonadResource m)
@@ -50,12 +48,12 @@ createFramebuffers
   -> Vk.RenderPass
   -> Vector Vk.ImageView
   -> Vk.Extent2D
-  -> m (Vector Vk.Framebuffer, RefCounted)
+  -> m (Vector Vk.Framebuffer, ReleaseKey)
 createFramebuffers dev rp ivs imageSize = do
   (keys, fbs) <- fmap V.unzip . V.forM ivs $ \iv ->
-    Framebuffer.createFramebuffer dev rp iv imageSize
-  rel <- newRefCounted (traverse_ release keys)
-  pure (fbs, rel)
+    createFramebuffer dev rp iv imageSize
+  groupKey <- register (traverse_ release keys)
+  pure (fbs, groupKey)
 
 -- | Vanilla 2D color image view covering the whole image.
 createImageView

@@ -10,22 +10,13 @@ where
 
 import qualified Codec.Picture as JP
 import qualified Codec.Picture.Types as JP
-import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Bits
-import qualified Data.ByteString.Lazy as BSL
-import qualified Data.Vector as V
 import Data.Word
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (peek, sizeOf)
-import HeadlessBoot
-  ( HeadlessConfig (..)
-  , HeadlessVk (..)
-  , submitAndWait
-  , withHeadlessVk
-  )
-import qualified RenderPass
-import Say (sayErr)
+import HeadlessBoot (HeadlessConfig (..), HeadlessVk (..), submitAndWait, withHeadlessVk)
+import ImageReadback (captureImageRGBA8, savePng)
 import VkResources (Queues (..))
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
@@ -33,7 +24,10 @@ import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core10.Image as Image
 import Vulkan.Utils.Debug (nameObject)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
+import qualified Vulkan.Utils.RenderPass as RenderPass
+import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -50,9 +44,7 @@ main = runResourceT $ do
   let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics hvQueues)
   image <- render hvAllocator hvDevice graphicsQueueFamilyIndex
   Vk.deviceWaitIdle hvDevice
-  let filename = "triangle.png"
-  sayErr $ "Writing " <> filename
-  liftIO $ BSL.writeFile filename (JP.encodePng image)
+  savePng "triangle.png" image
 
 {- | This function renders a triangle and reads the image on the CPU
 
@@ -81,6 +73,7 @@ render
 render allocator dev graphicsQueueFamilyIndex = do
   let
     imageFormat = Vk.FORMAT_R8G8B8A8_UNORM
+    width, height :: Word32
     width = 256
     height = 256
 
@@ -185,86 +178,12 @@ render allocator dev graphicsQueueFamilyIndex = do
   (_, framebuffer) <- Vk.withFramebuffer dev framebufferCreateInfo Nothing allocate
 
   -- Create the most vanilla rendering pipeline
-  shaderStages <- createShaders dev
-  (_, pipelineLayout) <- Vk.withPipelineLayout dev zero Nothing allocate
-  let
-    pipelineCreateInfo :: Vk.GraphicsPipelineCreateInfo '[]
-    pipelineCreateInfo =
-      zero
-        { Vk.stages = shaderStages
-        , Vk.vertexInputState = Just zero
-        , Vk.inputAssemblyState =
-            Just
-              zero
-                { Vk.topology = Vk.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-                , Vk.primitiveRestartEnable = False
-                }
-        , Vk.viewportState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.viewports =
-                      [ Vk.Viewport
-                          { Vk.x = 0
-                          , Vk.y = 0
-                          , Vk.width = realToFrac (width :: Word32)
-                          , Vk.height = realToFrac (height :: Word32)
-                          , Vk.minDepth = 0
-                          , Vk.maxDepth = 1
-                          }
-                      ]
-                  , Vk.scissors =
-                      [ Vk.Rect2D
-                          { Vk.offset = Vk.Offset2D 0 0
-                          , Vk.extent = Vk.Extent2D width height
-                          }
-                      ]
-                  }
-        , Vk.rasterizationState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.depthClampEnable = False
-                  , Vk.rasterizerDiscardEnable = False
-                  , Vk.lineWidth = 1
-                  , Vk.polygonMode = Vk.POLYGON_MODE_FILL
-                  , Vk.cullMode = Vk.CULL_MODE_NONE
-                  , Vk.frontFace = Vk.FRONT_FACE_CLOCKWISE
-                  , Vk.depthBiasEnable = False
-                  }
-        , Vk.multisampleState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.sampleShadingEnable = False
-                  , Vk.rasterizationSamples = Vk.SAMPLE_COUNT_1_BIT
-                  , Vk.minSampleShading = 1
-                  , Vk.sampleMask = [maxBound]
-                  }
-        , Vk.depthStencilState = Nothing
-        , Vk.colorBlendState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.logicOpEnable = False
-                  , Vk.attachments =
-                      [ zero
-                          { Vk.colorWriteMask =
-                              Vk.COLOR_COMPONENT_R_BIT
-                                .|. Vk.COLOR_COMPONENT_G_BIT
-                                .|. Vk.COLOR_COMPONENT_B_BIT
-                                .|. Vk.COLOR_COMPONENT_A_BIT
-                          , Vk.blendEnable = False
-                          }
-                      ]
-                  }
-        , Vk.dynamicState = Nothing
-        , Vk.layout = pipelineLayout
-        , Vk.renderPass = renderPass
-        , Vk.subpass = 0
-        , Vk.basePipelineHandle = zero
-        }
-  (_, (_, [graphicsPipeline])) <- Vk.withGraphicsPipelines dev zero [SomeStruct pipelineCreateInfo] Nothing allocate
+  (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT vertCode
+  (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT fragCode
+  (_, graphicsPipeline) <-
+    Pipeline.createColorPipeline dev renderPass [vertStage, fragStage]
+  release vertKey
+  release fragKey
 
   -- Create a command buffer
   let commandPoolCreateInfo =
@@ -298,6 +217,22 @@ render allocator dev graphicsQueueFamilyIndex = do
         commandBuffer
         Vk.PIPELINE_BIND_POINT_GRAPHICS
         graphicsPipeline
+      Vk.cmdSetViewport
+        commandBuffer
+        0
+        [ Vk.Viewport
+            { Vk.x = 0
+            , Vk.y = 0
+            , Vk.width = realToFrac width
+            , Vk.height = realToFrac height
+            , Vk.minDepth = 0
+            , Vk.maxDepth = 1
+            }
+        ]
+      Vk.cmdSetScissor
+        commandBuffer
+        0
+        [Vk.Rect2D{Vk.offset = Vk.Offset2D 0 0, Vk.extent = Vk.Extent2D width height}]
       Vk.cmdDraw commandBuffer 3 1 0 0
 
     -- Transition render target to transfer source
@@ -393,10 +328,6 @@ render allocator dev graphicsQueueFamilyIndex = do
     commandBuffer
     "Timed out waiting for image render and copy"
 
-  -- If the cpu image allocation is not HOST_COHERENT this will ensure the
-  -- changes are present on the CPU.
-  VMA.invalidateAllocation allocator cpuImageAllocation 0 Vk.WHOLE_SIZE
-
   -- Find the image layout and read it into a JuicyPixels Image
   cpuImageLayout <-
     Image.getImageSubresourceLayout
@@ -417,70 +348,47 @@ render allocator dev graphicsQueueFamilyIndex = do
             + (y * fromIntegral (Image.rowPitch cpuImageLayout))
             + (x * sizeOf (0 :: Word32))
         )
-  liftIO $
-    JP.withImage
-      width
-      height
-      (\x y -> JP.unpackPixel @JP.PixelRGBA8 <$> peek (pixelAddr x y))
+  captureImageRGBA8
+    allocator
+    cpuImageAllocation
+    (fromIntegral width)
+    (fromIntegral height)
+    (\x y -> JP.unpackPixel @JP.PixelRGBA8 <$> peek (pixelAddr x y))
 
--- | Create a vertex and fragment shader which render a colored triangle
-createShaders
-  :: Vk.Device
-  -> ResourceT IO (V.Vector (SomeStruct Vk.PipelineShaderStageCreateInfo))
-createShaders dev = do
-  let
-    fragCode =
-      [frag|
-        #version 450
-        #extension GL_ARB_separate_shader_objects : enable
+vertCode =
+  [vert|
+    #version 450
+    #extension GL_ARB_separate_shader_objects : enable
 
-        layout(location = 0) in vec3 fragColor;
+    layout(location = 0) out vec3 fragColor;
 
-        layout(location = 0) out vec4 outColor;
+    vec2 positions[3] = vec2[](
+      vec2(0.0, -0.5),
+      vec2(0.5, 0.5),
+      vec2(-0.5, 0.5)
+    );
+    vec3 colors[3] = vec3[](
+      vec3(1.0, 1.0, 0.0),
+      vec3(0.0, 1.0, 1.0),
+      vec3(1.0, 0.0, 1.0)
+    );
 
-        void main() {
-            outColor = vec4(fragColor, 1.0);
-        }
-      |]
-    vertCode =
-      [vert|
-        #version 450
-        #extension GL_ARB_separate_shader_objects : enable
+    void main() {
+      gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+      fragColor = colors[gl_VertexIndex];
+    }
+  |]
 
-        layout(location = 0) out vec3 fragColor;
+fragCode =
+  [frag|
+    #version 450
+    #extension GL_ARB_separate_shader_objects : enable
 
-        vec2 positions[3] = vec2[](
-          vec2(0.0, -0.5),
-          vec2(0.5, 0.5),
-          vec2(-0.5, 0.5)
-        );
-        vec3 colors[3] = vec3[](
-          vec3(1.0, 1.0, 0.0),
-          vec3(0.0, 1.0, 1.0),
-          vec3(1.0, 0.0, 1.0)
-        );
+    layout(location = 0) in vec3 fragColor;
 
-        void main() {
-          gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
-          fragColor = colors[gl_VertexIndex];
-        }
-      |]
-  (_, fragModule) <- Vk.withShaderModule dev zero{Vk.code = fragCode} Nothing allocate
-  (_, vertModule) <- Vk.withShaderModule dev zero{Vk.code = vertCode} Nothing allocate
-  let
-    vertShaderStageCreateInfo =
-      zero
-        { Vk.stage = Vk.SHADER_STAGE_VERTEX_BIT
-        , Vk.module' = vertModule
-        , Vk.name = "main"
-        }
-    fragShaderStageCreateInfo =
-      zero
-        { Vk.stage = Vk.SHADER_STAGE_FRAGMENT_BIT
-        , Vk.module' = fragModule
-        , Vk.name = "main"
-        }
-  pure
-    [ SomeStruct vertShaderStageCreateInfo
-    , SomeStruct fragShaderStageCreateInfo
-    ]
+    layout(location = 0) out vec4 outColor;
+
+    void main() {
+        outColor = vec4(fragColor, 1.0);
+    }
+  |]

@@ -9,20 +9,13 @@ module Main
 where
 
 import qualified Codec.Picture as JP
-import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (ResourceT, allocate, runResourceT)
-import qualified Data.ByteString.Lazy as BSL
 import Data.Word (Word32)
 import Foreign.Marshal.Array (peekArray)
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (sizeOf)
-import HeadlessBoot
-  ( HeadlessConfig (..)
-  , HeadlessVk (..)
-  , submitAndWait
-  , withHeadlessVk
-  )
-import Say (sayErr)
+import HeadlessBoot (HeadlessConfig (..), HeadlessVk (..), submitAndWait, withHeadlessVk)
+import ImageReadback (captureImageRGBA8, savePng)
 import VkResources (Queues (..))
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.CStruct.Utils (FixedArray, lowerArrayPtr)
@@ -31,6 +24,7 @@ import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (
 import qualified Vulkan.Core10 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
+import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -52,9 +46,7 @@ main = runResourceT $ do
 
   image <- render hvAllocator hvDevice computeQueueFamilyIndex
   Vk.deviceWaitIdle hvDevice
-  let filename = "julia.png"
-  sayErr $ "Writing " <> filename
-  liftIO $ BSL.writeFile filename (JP.encodePng image)
+  savePng "julia.png" image
 
 -- | Render the Julia set
 render
@@ -137,7 +129,7 @@ render allocator dev computeQueueFamilyIndex = do
     []
 
   -- Create our shader and compute pipeline
-  shader <- createShader dev
+  (_, shader) <- shaderStage dev Vk.SHADER_STAGE_COMPUTE_BIT compCode
   (_, pipelineLayout) <-
     Vk.withPipelineLayout
       dev
@@ -199,10 +191,6 @@ render allocator dev computeQueueFamilyIndex = do
   computeQueue <- Vk.getDeviceQueue dev computeQueueFamilyIndex 0
   submitAndWait dev computeQueue commandBuffer "Timed out waiting for compute"
 
-  -- If the buffer allocation is not HOST_COHERENT this will ensure the changes
-  -- are present on the CPU.
-  VMA.invalidateAllocation allocator bufferAllocation 0 Vk.WHOLE_SIZE
-
   -- TODO: speed this bit up, it's hopelessly slow
   let
     pixelAddr :: Int -> Int -> Ptr (FixedArray 4 Float)
@@ -210,34 +198,15 @@ render allocator dev computeQueueFamilyIndex = do
       plusPtr
         (VMA.mappedData bufferAllocationInfo)
         (((y * width) + x) * 4 * sizeOf (0 :: Float))
-  liftIO $
-    JP.withImage
-      width
-      height
-      ( \x y -> do
-          let ptr = pixelAddr x y
-          [r, g, b, a] <-
-            fmap (\f -> round (f * 255))
-              <$> peekArray 4 (lowerArrayPtr ptr)
-          pure $ JP.PixelRGBA8 r g b a
-      )
+  captureImageRGBA8 allocator bufferAllocation width height $ \x y -> do
+    let ptr = pixelAddr x y
+    [r, g, b, a] <-
+      fmap (\f -> round (f * 255))
+        <$> peekArray 4 (lowerArrayPtr ptr)
+    pure $ JP.PixelRGBA8 r g b a
 
--- | Create a compute shader
-createShader
-  :: Vk.Device
-  -> ResourceT IO (SomeStruct Vk.PipelineShaderStageCreateInfo)
-createShader dev = do
-  (_, compModule) <- Vk.withShaderModule dev zero{Vk.code = compCode} Nothing allocate
-  let compShaderStageCreateInfo =
-        zero
-          { Vk.stage = Vk.SHADER_STAGE_COMPUTE_BIT
-          , Vk.module' = compModule
-          , Vk.name = "main"
-          }
-  pure $ SomeStruct compShaderStageCreateInfo
-  where
-    compCode =
-      [comp|
+compCode =
+  [comp|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
 

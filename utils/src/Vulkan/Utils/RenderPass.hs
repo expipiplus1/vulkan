@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedLists #-}
 
-{-| Single-color-attachment render pass shared by every example that draws
-to an image (windowed or headless). The final layout is the only meaningful
-variant — windowed callers want @PRESENT_SRC_KHR@, headless callers
-@TRANSFER_SRC_OPTIMAL@.
+{-| Single-color-attachment render pass useful for examples and small
+applications that draw to a single image (windowed or headless). The final
+layout is the only meaningful variant — windowed callers want
+@PRESENT_SRC_KHR@, headless callers @TRANSFER_SRC_OPTIMAL@.
 -}
-module RenderPass
+module Vulkan.Utils.RenderPass
   ( createColorRenderPass
   ) where
 

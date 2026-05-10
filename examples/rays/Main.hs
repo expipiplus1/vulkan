@@ -4,27 +4,23 @@ module Main where
 
 import AccelerationStructure (createTLAS)
 import Camera (CameraMatrices)
-import Control.Monad.IO.Class
+import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource
-import Data.Foldable (for_)
-import Data.IORef
-import Data.Word (Word64)
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (sizeOf)
-import Frame (Frame (..), advanceFrame, initialFrame, runFrame)
+import Frame (Frame (..))
 import Init (deviceRequirements, getDeviceRTProps, instanceRequirements)
 import qualified Pipeline
 import Render (RenderState (..), renderFrame)
 import qualified SDL
 import Scene (makeSceneBuffers)
-import Swapchain (recreateSwapchain, threwSwapchainError)
-import Utils (loopJust)
 import VkResources (VkResources (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo (..), getBufferDeviceAddress)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import WindowLoop (WindowLoop (..), noOnFrame, noWindowState, runWindowLoop)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
@@ -85,41 +81,20 @@ main = runResourceT $ do
           , rsRTInfo = rtInfo
           }
 
-  scRef <- liftIO $ newIORef initialSC
-  initial <- initialFrame vr initialSC
-
-  liftIO $ for_ descSets (\_ -> pure ()) -- descSets is used; silence unused
   SDL.showWindow win
   start <- SDL.time @Double
 
-  let
-    perFrame f = do
-      currentSC <- liftIO $ readIORef scRef
-      let f' = f{fSwapchain = currentSC}
-      needsNew <-
-        threwSwapchainError $
-          liftIO $
-            runFrame vr f' $
-              renderFrame vr renderState f'
-      sc' <-
-        if needsNew
-          then do
-            newSize <- liftIO $ drawableSize win
-            sc' <- recreateSwapchain vr newSize currentSC
-            liftIO $ writeIORef scRef sc'
-            pure sc'
-          else pure currentSC
-      advanceFrame vr sc' f'
-
-    loop f =
-      shouldQuit win >>= \case
-        True -> do
+  runWindowLoop
+    vr
+    initialSC
+    (drawableSize win)
+    (shouldQuit win)
+    WindowLoop
+      { wlMkState = noWindowState
+      , wlRender = \() f -> renderFrame vr renderState f
+      , wlOnFrame = noOnFrame
+      , wlOnExit = \f -> liftIO $ do
           end <- SDL.time
-          let
-            frames = fIndex f :: Word64
-            mean = realToFrac frames / (end - start) :: Double
-          liftIO $ putStrLn $ "Average: " <> show mean
-          pure Nothing
-        False -> Just <$> perFrame f
-
-  loopJust loop initial
+          let mean = realToFrac (fIndex f) / (end - start) :: Double
+          putStrLn $ "Average: " <> show mean
+      }

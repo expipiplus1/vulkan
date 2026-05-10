@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Vulkan.Utils.Init.SDL2
+      Vulkan.Utils.Init.SDL2.Window
   other-modules:
       Paths_vulkan_init_sdl2
   hs-source-dirs:
@@ -46,6 +47,7 @@ library
     , bytestring
     , resourcet >=1.2.4
     , sdl2 ==2.5.*
+    , text
     , vector
     , vulkan >=3.6.14 && <3.28
     , vulkan-utils

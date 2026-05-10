@@ -12,27 +12,19 @@ import Control.Lens.Getter ((^.))
 import Control.Monad (when)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
-import Data.IORef
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Data.Word (Word64)
-import Frame (Frame (..), advanceFrame, initialFrame, queueSubmitFrame, runFrame)
-import qualified Framebuffer
-import GHC.Clock (getMonotonicTimeNSec)
+import Frame (Frame (..), queueSubmitFrame)
 import Julia (JuliaPipeline (..), createJuliaDescriptorSets, createJuliaPipeline, juliaWorkgroupX, juliaWorkgroupY)
 import Linear.Affine (Point (..))
 import Linear.Metric (norm)
 import Linear.V2
-
--- import qualified Pipeline
-import RefCounted (RefCounted, newRefCounted, releaseRefCounted)
-import qualified RenderPass
 import qualified SDL
-import Say
-import Swapchain (Swapchain (..), recreateSwapchain, threwSwapchainError)
+import Say (sayErrString)
+import Swapchain (Swapchain (..))
 import UnliftIO.Exception (displayException, throwIO, throwString)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
-import Utils (loopJust)
 import VkResources (Queues (..), RecycledResources (..), VkResources (..))
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
@@ -41,8 +33,11 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import Vulkan.Extensions.VK_KHR_swapchain as KHR
+import qualified Vulkan.Utils.Framebuffer as Framebuffer
+import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Zero (zero)
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
@@ -72,48 +67,19 @@ main = prettyError . runResourceT $ do
       Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
   juliaPL <- createJuliaPipeline dev
 
-  -- Per-swapchain bindings: framebuffers + Julia descriptor sets, both pinned
-  -- to the current swapchain images.
-  initialBindings <- createBindings dev renderPass juliaPL initialSC
-
-  scRef <- liftIO $ newIORef initialSC
-  bindingsRef <- liftIO $ newIORef initialBindings
-
-  initial <- initialFrame vr initialSC
   SDL.showWindow sdlWindow
 
-  let
-    perFrame f = do
-      currentSC <- liftIO $ readIORef scRef
-      bindings <- liftIO $ readIORef bindingsRef
-      let f' = f{fSwapchain = currentSC}
-      startNs <- liftIO getMonotonicTimeNSec
-      needsNew <-
-        threwSwapchainError $
-          liftIO $
-            runFrame vr f' $
-              renderJulia vr juliaPL bindings f'
-      sc' <-
-        if needsNew
-          then do
-            newSize <- liftIO $ drawableSize sdlWindow
-            sc' <- recreateSwapchain vr newSize currentSC
-            newBindings <- createBindings dev renderPass juliaPL sc'
-            liftIO $ writeIORef scRef sc'
-            dropBindings =<< liftIO (readIORef bindingsRef)
-            liftIO $ writeIORef bindingsRef newBindings
-            pure sc'
-          else pure currentSC
-      endNs <- liftIO getMonotonicTimeNSec
-      reportFrameTime (endNs - startNs)
-      advanceFrame vr sc' f'
-
-    loop f =
-      shouldQuit sdlWindow >>= \case
-        True -> pure Nothing
-        False -> Just <$> perFrame f
-
-  loopJust loop initial
+  runWindowLoop
+    vr
+    initialSC
+    (drawableSize sdlWindow)
+    (shouldQuit sdlWindow)
+    WindowLoop
+      { wlMkState = createBindings dev renderPass juliaPL
+      , wlRender = \bindings f -> renderJulia vr juliaPL bindings f
+      , wlOnFrame = \start end -> reportFrameTime (end - start)
+      , wlOnExit = noOnExit
+      }
 
 prettyError :: IO () -> IO ()
 prettyError =
@@ -125,21 +91,18 @@ prettyError =
 
 data Bindings = Bindings
   { bFramebuffers :: Vector Vk.Framebuffer
-  , bReleaseFramebuffers :: RefCounted
   , bJuliaDescriptorSets :: Vector Vk.DescriptorSet
-  , bReleaseJuliaDescSets :: RefCounted
   }
 
 createBindings
-  :: (MonadResource m)
-  => Vk.Device
+  :: Vk.Device
   -> Vk.RenderPass
   -> JuliaPipeline
   -> Swapchain
-  -> m Bindings
+  -> ResourceT IO (Bindings, ReleaseKey)
 createBindings dev renderPass jp sc = do
   -- Framebuffers (one per swapchain image) for the dormant graphics pipeline.
-  (framebuffers, fbRel) <-
+  (framebuffers, fbKey) <-
     Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
 
   -- Julia descriptor sets (one per swapchain image).
@@ -148,23 +111,14 @@ createBindings dev renderPass jp sc = do
       dev
       (jpDescriptorSetLayout jp)
       (sImageViews sc)
-  -- The whole pool is freed when its allocate-frame closes; mirror that with
-  -- a dummy refcount so swapping bindings releases the previous pool.
-  (poolKey, _) <- allocate (pure ()) (\_ -> pure ())
-  poolRel <- newRefCounted (release poolKey)
 
   pure
-    Bindings
-      { bFramebuffers = framebuffers
-      , bReleaseFramebuffers = fbRel
-      , bJuliaDescriptorSets = juliaSets
-      , bReleaseJuliaDescSets = poolRel
-      }
-
-dropBindings :: (MonadIO m) => Bindings -> m ()
-dropBindings b = do
-  releaseRefCounted (bReleaseFramebuffers b)
-  releaseRefCounted (bReleaseJuliaDescSets b)
+    ( Bindings
+        { bFramebuffers = framebuffers
+        , bJuliaDescriptorSets = juliaSets
+        }
+    , fbKey
+    )
 
 ----------------------------------------------------------------
 -- Per-frame rendering

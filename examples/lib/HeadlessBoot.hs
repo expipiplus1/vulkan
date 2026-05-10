@@ -22,7 +22,6 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Text (Text)
 import qualified Data.Text.Encoding as Text
-import InitDevice (withDevice)
 import Say (sayErr)
 import VkResources (Queues)
 import qualified Vma
@@ -31,6 +30,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12 (pattern API_VERSION_1_2)
 import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
+import Vulkan.Utils.GCT (withDevice)
 import qualified Vulkan.Utils.Init.Headless as Init
 import Vulkan.Utils.Initialization (physicalDeviceName)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)

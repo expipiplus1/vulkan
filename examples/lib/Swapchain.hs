@@ -20,7 +20,6 @@ import Data.Either
 import Data.Foldable (for_, traverse_)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import qualified Framebuffer
 import GHC.Generics (Generic)
 import RefCounted (RefCounted, newRefCounted, releaseRefCounted)
 import UnliftIO.Exception (throwString, tryJust)
@@ -31,6 +30,7 @@ import Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR (SurfaceCapabi
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
+import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import Vulkan.Utils.Misc ((.&&.))
 import Vulkan.Zero (zero)
 

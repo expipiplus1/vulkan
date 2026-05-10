@@ -1,56 +1,76 @@
-{-| Helpers shared by the windowed examples for picking a physical device
-and creating a logical device with a uniform G/C/T queue kit (graphics+
-present, compute, transfer).
+{-| A common physical-device + logical-device boot recipe: pick a device
+that exposes a graphics/compute/transfer queue triple (with the graphics
+family also presenting, when a surface is supplied), then create a logical
+device with one 'Queue' allocated per slot.
+
+This is the wheel every "draw a thing in Vulkan" application reinvents.
+The recipe here is opinionated:
+
+- The graphics slot doubles as the present queue.
+- The compute slot prefers a compute-only queue family (async compute);
+  falls back to aliasing the graphics family.
+- The transfer slot prefers a transfer-only queue family (DMA-only
+  hardware queue); falls back to aliasing the compute family.
+- Priorities are 1.0 / 0.5 / 0.2 for graphics / compute / transfer.
+
+When two slots target the same family, two distinct 'Queue' handles are
+still allocated within that shared family with the requested priorities.
+
+If you need a different shape (compute-only, multiple graphics queues,
+custom priorities, …) reach for the lower-level
+'Vulkan.Utils.QueueAssignment.assignQueues' directly.
 -}
-module InitDevice
-  ( withDevice
+module Vulkan.Utils.GCT
+  ( Queues (..)
+  , withDevice
   ) where
 
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import qualified Data.Vector as V
 import Data.Word (Word64)
-import Say (sayErr)
-import Utils (noSuchThing)
-import VkResources (Queues (..))
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core10.DeviceInitialization as DI
-import Vulkan.Extensions.VK_KHR_surface
-  ( SurfaceKHR
-  )
+import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
 import Vulkan.Requirement (DeviceRequirement)
-import Vulkan.Utils.Initialization
-  ( createDeviceFromRequirements
-  , pickPhysicalDevice
-  )
-import Vulkan.Utils.QueueAssignment
-  ( QueueFamilyIndex (..)
-  , QueueSpec (..)
-  , assignQueues
-  , isComputeQueueFamily
-  , isGraphicsQueueFamily
-  , isPresentQueueFamily
-  , isTransferOnlyQueueFamily
-  )
+import Vulkan.Utils.Initialization (createDeviceFromRequirements, pickPhysicalDevice)
+import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..), QueueSpec (..), assignQueues, isComputeQueueFamily, isGraphicsQueueFamily, isPresentQueueFamily, isTransferOnlyQueueFamily)
 import Vulkan.Zero (zero)
+
+{- | The G/C/T queue kit. Parametric in the slot contents so the same
+shape can carry priorities ('Float'), family indices ('QueueFamilyIndex'),
+queue specs ('QueueSpec'), or fully-resolved @(QueueFamilyIndex, Queue)@
+pairs.
+-}
+data Queues a = Queues
+  { qGraphics :: a
+  -- ^ graphics + present, priority 1.0
+  , qCompute :: a
+  -- ^ compute (prefers compute-only family), priority 0.5
+  , qTransfer :: a
+  -- ^ transfer (prefers transfer-only family), priority 0.2
+  }
+  deriving (Functor, Foldable, Traversable)
+
+-- | Elementwise zip — handy for combining priorities with family predicates.
+instance Applicative Queues where
+  pure x = Queues x x x
+  Queues f g h <*> Queues x y z = Queues (f x) (g y) (h z)
 
 {- | Pick a physical device that has the queue families needed for the
 caller, then create a logical device exposing one queue per G/C/T slot.
 Devices are scored by total memory.
 
-Pass 'Just surface' for windowed callers — the graphics family must also
+Pass @'Just' surface@ for windowed callers — the graphics family must also
 support presentation. Pass 'Nothing' for headless callers — any graphics
 family will do.
 
-Each capability prefers its own dedicated family (async compute, DMA-only
-transfer); falls back to aliasing graphics when the hardware doesn't
-expose one. When two slots target the same family, two distinct 'Queue'
-handles are still allocated within that family with the requested
-priorities (1.0 / 0.5 / 0.2).
-
 Pass any extra device requirements (extensions, features, API version) in
-@extraReqs@; they are forwarded to 'createDeviceFromRequirements'.
+the third argument; they are forwarded to 'createDeviceFromRequirements'.
+
+Fails (via 'MonadFail') when no physical device satisfies the family
+requirements.
 -}
 withDevice
   :: (MonadResource m, MonadFail m)
@@ -66,9 +86,7 @@ withDevice inst mSurface extraReqs = do
       (snd :: (Queues QueueFamilyIndex, Word64) -> Word64)
   ((qFams, _score), phys) <- case mPd of
     Just x -> pure x
-    Nothing ->
-      sayErr "No suitable physical device found"
-        >> noSuchThing "No physical device with the required queue families"
+    Nothing -> fail "No physical device with the required G/C/T queue families"
 
   let
     mkSpec target prio = QueueSpec prio (\i _ -> pure (i == target))
@@ -85,11 +103,6 @@ withDevice inst mSurface extraReqs = do
   qs <- liftIO (getQs dev)
   pure (phys, dev, qs)
 
-{- | Suitability probe used by 'pickPhysicalDevice'. Returns the discovered
-@(graphics, compute, transfer)@ family triple plus a memory score. When a
-surface is supplied the chosen graphics family must also support
-presentation; otherwise any graphics family will do.
--}
 discoverFamilies
   :: (MonadIO m)
   => Maybe SurfaceKHR

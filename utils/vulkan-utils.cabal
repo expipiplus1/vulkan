@@ -34,13 +34,18 @@ library
   exposed-modules:
       Vulkan.Utils.CommandCheck
       Vulkan.Utils.Debug
+      Vulkan.Utils.Framebuffer
       Vulkan.Utils.FromGL
+      Vulkan.Utils.GCT
       Vulkan.Utils.Init.Headless
       Vulkan.Utils.Initialization
       Vulkan.Utils.Misc
+      Vulkan.Utils.Pipeline
       Vulkan.Utils.QueueAssignment
+      Vulkan.Utils.RenderPass
       Vulkan.Utils.Requirements
       Vulkan.Utils.Requirements.TH
+      Vulkan.Utils.Shader
       Vulkan.Utils.ShaderQQ.Backend.Glslang
       Vulkan.Utils.ShaderQQ.Backend.Shaderc
       Vulkan.Utils.ShaderQQ.GLSL.Glslang

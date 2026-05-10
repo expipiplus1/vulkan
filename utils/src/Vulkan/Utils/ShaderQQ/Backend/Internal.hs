@@ -2,8 +2,8 @@ module Vulkan.Utils.ShaderQQ.Backend.Internal
   ( messageProcess
   ) where
 
-import           Data.ByteString                ( ByteString )
-import           Data.List.Extra
+import Data.ByteString (ByteString)
+import Data.List.Extra
 
 messageProcess
   :: (Applicative m, Monad m)
@@ -19,10 +19,10 @@ messageProcess
   -- ^ Spir-V bytecode
 messageProcess tool warn err (warnings, result) = do
   case warnings of
-    []    -> pure ()
+    [] -> pure ()
     _some -> warn $ prepare warnings
   case result of
-    Left []     -> err $ tool ++ " failed with no errors"
+    Left [] -> err $ tool ++ " failed with no errors"
     Left errors -> do
       _ <- err $ prepare errors
       pure mempty

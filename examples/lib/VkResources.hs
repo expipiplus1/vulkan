@@ -10,6 +10,7 @@ module VkResources
 
 import Control.Concurrent.Chan.Unagi
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Utils.GCT (Queues (..))
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -31,32 +32,6 @@ data VkResources = VkResources
   'Left' is a blocking read.
   -}
   }
-
-{- | The full G/C/T queue kit each windowed example gets. Fields are filled
-from 'InitDevice.createDevice with priorities 1.0/0.5/0.2; on hardware that
-exposes dedicated families they target async-compute and DMA-only families,
-otherwise they alias the graphics+present family (with distinct 'Queue'
-handles allocated within that shared family).
-
-The same shape is used internally by 'InitDevice' to feed
-'Vulkan.Utils.QueueAssignment.assignQueues' (as @Queues (QueueSpec m)@).
--}
-data Queues a = Queues
-  { qGraphics :: a
-  -- ^ graphics + present, priority 1.0
-  , qCompute :: a
-  -- ^ compute (prefers compute-only family), priority 0.5
-  , qTransfer :: a
-  -- ^ transfer (prefers transfer-only family), priority 0.2
-  }
-  deriving (Functor, Foldable, Traversable)
-
-{- | Elementwise zip — handy for combining priorities with predicates when
-building a @Queues (QueueSpec m)@.
--}
-instance Applicative Queues where
-  pure x = Queues x x x
-  Queues f g h <*> Queues x y z = Queues (f x) (g y) (h z)
 
 {- | The bits of state recycled between frames: two binary semaphores used
 for image-acquire / render-done synchronisation, and the command pool the

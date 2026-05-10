@@ -25,6 +25,7 @@ import Init (RTInfo (..))
 import Say (sayErrShow)
 import Scene (SceneBuffers (..))
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
+import Vulkan.Core10 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Extensions.VK_KHR_acceleration_structure as RT
 import qualified Vulkan.Extensions.VK_KHR_ray_tracing_pipeline as RT
@@ -105,7 +106,7 @@ createRTPipelineLayout
 createRTPipelineLayout dev descriptorSetLayout =
   Vk.withPipelineLayout
     dev
-    zero{Vk.setLayouts = V.singleton descriptorSetLayout}
+    zero{PipelineLayoutCreateInfo.setLayouts = V.singleton descriptorSetLayout}
     Nothing
     allocate
 

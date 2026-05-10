@@ -23,7 +23,6 @@ import Data.Text (Text)
 import Data.Text.Encoding (decodeUtf8)
 import qualified Data.Text.Encoding as Text
 import Frame (frameDeviceRequirements, frameInstanceRequirements)
-import InitDevice (withDevice)
 import Say (sayErr)
 import Swapchain (Swapchain, allocSwapchain)
 import UnliftIO (MonadUnliftIO)
@@ -35,6 +34,7 @@ import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.Debug (debugCallbackPtr)
+import Vulkan.Utils.GCT (withDevice)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 

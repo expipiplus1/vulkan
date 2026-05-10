@@ -1,34 +1,36 @@
 {-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
 
-module Pipeline
-  ( createPipeline
+{-| Vanilla vertex+fragment graphics pipeline useful for "draw a thing into
+a color attachment" examples and prototypes.
+
+Bakes dynamic viewport + scissor, so callers must emit @cmdSetViewport@ /
+@cmdSetScissor@ at draw time. The pipeline layout is empty (no descriptor
+sets, no push constants).
+-}
+module Vulkan.Utils.Pipeline
+  ( createColorPipeline
   ) where
 
-import Control.Monad.Trans.Resource
-import Data.Bits
-import Data.Foldable (traverse_)
-import qualified Data.Vector as V
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate, release)
+import Data.Bits ((.|.))
+import Data.Vector (Vector)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
 import Vulkan.Zero (zero)
 
--- | The most vanilla rendering pipeline; draws three vertices.
-createPipeline
+createColorPipeline
   :: (MonadResource m, MonadFail m)
   => Vk.Device
   -> Vk.RenderPass
+  -> Vector (SomeStruct Vk.PipelineShaderStageCreateInfo)
   -> m (ReleaseKey, Vk.Pipeline)
-createPipeline dev renderPass = do
-  (shaderKeys, shaderStages) <- V.unzip <$> createShaders dev
+createColorPipeline dev renderPass stages = do
   (layoutKey, pipelineLayout) <- Vk.withPipelineLayout dev zero Nothing allocate
   let
     pipelineCreateInfo :: Vk.GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo =
       zero
-        { Vk.stages = shaderStages
+        { Vk.stages = stages
         , Vk.vertexInputState = Just zero
         , Vk.inputAssemblyState =
             Just
@@ -102,66 +104,4 @@ createPipeline dev renderPass = do
       Nothing
       allocate
   release layoutKey
-  traverse_ release shaderKeys
   pure (key, graphicsPipeline)
-
-createShaders
-  :: (MonadResource m)
-  => Vk.Device
-  -> m (V.Vector (ReleaseKey, SomeStruct Vk.PipelineShaderStageCreateInfo))
-createShaders dev = do
-  (fragKey, fragModule) <- Vk.withShaderModule dev zero{Vk.code = fragCode} Nothing allocate
-  (vertKey, vertModule) <- Vk.withShaderModule dev zero{Vk.code = vertCode} Nothing allocate
-  let
-    vertShaderStageCreateInfo =
-      zero
-        { Vk.stage = Vk.SHADER_STAGE_VERTEX_BIT
-        , Vk.module' = vertModule
-        , Vk.name = "main"
-        }
-    fragShaderStageCreateInfo =
-      zero
-        { Vk.stage = Vk.SHADER_STAGE_FRAGMENT_BIT
-        , Vk.module' = fragModule
-        , Vk.name = "main"
-        }
-  pure
-    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
-    , (fragKey, SomeStruct fragShaderStageCreateInfo)
-    ]
-  where
-    vertCode =
-      [vert|
-        const static float2 positions[3] = {
-          {0.0, -0.5},
-          {0.5, 0.5},
-          {-0.5, 0.5}
-        };
-
-        const static float3 colors[3] = {
-          {1.0, 1.0, 0.0},
-          {0.0, 1.0, 1.0},
-          {1.0, 0.0, 1.0}
-        };
-
-        struct VSOutput
-        {
-          float4 pos : SV_POSITION;
-          [[vk::location(0)]] float3 col;
-        };
-
-        VSOutput main(const uint i : SV_VertexID)
-        {
-          VSOutput output;
-          output.pos = float4(positions[i], 0, 1.0);
-          output.col = colors[i];
-          return output;
-        }
-      |]
-    fragCode =
-      [frag|
-        float4 main([[vk::location(0)]] const float3 col) : SV_TARGET
-        {
-            return float4(col, 1);
-        }
-      |]

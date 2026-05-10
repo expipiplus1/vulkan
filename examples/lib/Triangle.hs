@@ -15,17 +15,10 @@ module Triangle
 import Control.Exception (throwIO)
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate, release)
-import Data.Bits ((.|.))
-import Data.Foldable (traverse_)
-import Data.IORef
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import Frame (Frame (..), advanceFrame, initialFrame, queueSubmitFrame, runFrame)
-import qualified Framebuffer
-import RefCounted (releaseRefCounted)
-import qualified RenderPass
-import Swapchain (Swapchain (..), recreateSwapchain, threwSwapchainError)
-import Utils (loopJust)
+import Frame (Frame (..), queueSubmitFrame)
+import Swapchain (Swapchain (..))
 import VkResources (Queues (..), RecycledResources (..), VkResources (..))
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
@@ -34,8 +27,13 @@ import qualified Vulkan.Core12 as Vk12
 import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
+import qualified Vulkan.Utils.Framebuffer as Framebuffer
+import Vulkan.Utils.Pipeline (createColorPipeline)
+import qualified Vulkan.Utils.RenderPass as RenderPass
+import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Zero (zero)
+import WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 
 -- | Drive a recycling-Frame render loop drawing the colored triangle.
 runTriangle
@@ -55,45 +53,19 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
       (KHR.format (sFormat initialSC))
       Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
   (_, pipeline) <- createGraphicsPipeline dev renderPass
-  initialFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
 
-  scRef <- liftIO $ newIORef initialSC
-  fbsRef <- liftIO $ newIORef initialFBs
-
-  initial <- initialFrame vr initialSC
-
-  let
-    perFrame f = do
-      currentSC <- liftIO $ readIORef scRef
-      (currentFBs, _rel) <- liftIO $ readIORef fbsRef
-      let f' = f{fSwapchain = currentSC}
-      needsNew <-
-        threwSwapchainError $
-          liftIO $
-            runFrame vr f' $
-              drawTriangle vr renderPass pipeline currentFBs f'
-      sc' <-
-        if needsNew
-          then do
-            newSize <- liftIO getDrawableSize
-            sc' <- recreateSwapchain vr newSize currentSC
-            newFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews sc') (sExtent sc')
-            (_oldFbs, oldRel) <- liftIO $ readIORef fbsRef
-            releaseRefCounted oldRel
-            liftIO $ writeIORef scRef sc'
-            liftIO $ writeIORef fbsRef newFBs
-            pure sc'
-          else pure currentSC
-      advanceFrame vr sc' f'
-
-    loop f =
-      liftIO shouldQuit >>= \case
-        True -> do
-          Vk.deviceWaitIdle dev
-          pure Nothing
-        False -> Just <$> perFrame f
-
-  loopJust loop initial
+  runWindowLoop
+    vr
+    initialSC
+    getDrawableSize
+    shouldQuit
+    WindowLoop
+      { wlMkState = \sc ->
+          Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
+      , wlRender = drawTriangle vr renderPass pipeline
+      , wlOnFrame = noOnFrame
+      , wlOnExit = \_ -> Vk.deviceWaitIdle dev
+      }
 
 ----------------------------------------------------------------
 -- Per-frame draw
@@ -208,113 +180,12 @@ createGraphicsPipeline
   -> Vk.RenderPass
   -> m (ReleaseKey, Vk.Pipeline)
 createGraphicsPipeline dev renderPass = do
-  (shaderKeys, shaderStages) <- V.unzip <$> createShaders dev
-  (layoutKey, pipelineLayout) <- Vk.withPipelineLayout dev zero Nothing allocate
-  let
-    pipelineCreateInfo :: Vk.GraphicsPipelineCreateInfo '[]
-    pipelineCreateInfo =
-      zero
-        { Vk.stages = shaderStages
-        , Vk.vertexInputState = Just zero
-        , Vk.inputAssemblyState =
-            Just
-              zero
-                { Vk.topology = Vk.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-                , Vk.primitiveRestartEnable = False
-                }
-        , Vk.viewportState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.viewportCount = 1
-                  , Vk.scissorCount = 1
-                  }
-        , Vk.rasterizationState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.depthClampEnable = False
-                  , Vk.rasterizerDiscardEnable = False
-                  , Vk.lineWidth = 1
-                  , Vk.polygonMode = Vk.POLYGON_MODE_FILL
-                  , Vk.cullMode = Vk.CULL_MODE_NONE
-                  , Vk.frontFace = Vk.FRONT_FACE_CLOCKWISE
-                  , Vk.depthBiasEnable = False
-                  }
-        , Vk.multisampleState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.sampleShadingEnable = False
-                  , Vk.rasterizationSamples = Vk.SAMPLE_COUNT_1_BIT
-                  , Vk.minSampleShading = 1
-                  , Vk.sampleMask = [maxBound]
-                  }
-        , Vk.depthStencilState = Nothing
-        , Vk.colorBlendState =
-            Just $
-              SomeStruct
-                zero
-                  { Vk.logicOpEnable = False
-                  , Vk.attachments =
-                      [ zero
-                          { Vk.colorWriteMask =
-                              Vk.COLOR_COMPONENT_R_BIT
-                                .|. Vk.COLOR_COMPONENT_G_BIT
-                                .|. Vk.COLOR_COMPONENT_B_BIT
-                                .|. Vk.COLOR_COMPONENT_A_BIT
-                          , Vk.blendEnable = False
-                          }
-                      ]
-                  }
-        , Vk.dynamicState =
-            Just
-              zero
-                { Vk.dynamicStates =
-                    [ Vk.DYNAMIC_STATE_VIEWPORT
-                    , Vk.DYNAMIC_STATE_SCISSOR
-                    ]
-                }
-        , Vk.layout = pipelineLayout
-        , Vk.renderPass = renderPass
-        , Vk.subpass = 0
-        , Vk.basePipelineHandle = zero
-        }
-  (key, (_, [graphicsPipeline])) <-
-    Vk.withGraphicsPipelines
-      dev
-      zero
-      [SomeStruct pipelineCreateInfo]
-      Nothing
-      allocate
-  release layoutKey
-  traverse_ release shaderKeys
-  pure (key, graphicsPipeline)
-
-createShaders
-  :: (MonadResource m)
-  => Vk.Device
-  -> m (V.Vector (ReleaseKey, SomeStruct Vk.PipelineShaderStageCreateInfo))
-createShaders dev = do
-  (fragKey, fragModule) <- Vk.withShaderModule dev zero{Vk.code = fragCode} Nothing allocate
-  (vertKey, vertModule) <- Vk.withShaderModule dev zero{Vk.code = vertCode} Nothing allocate
-  let
-    vertShaderStageCreateInfo =
-      zero
-        { Vk.stage = Vk.SHADER_STAGE_VERTEX_BIT
-        , Vk.module' = vertModule
-        , Vk.name = "main"
-        }
-    fragShaderStageCreateInfo =
-      zero
-        { Vk.stage = Vk.SHADER_STAGE_FRAGMENT_BIT
-        , Vk.module' = fragModule
-        , Vk.name = "main"
-        }
-  pure
-    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
-    , (fragKey, SomeStruct fragShaderStageCreateInfo)
-    ]
+  (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT vertCode
+  (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT fragCode
+  (key, pipeline) <- createColorPipeline dev renderPass [vertStage, fragStage]
+  release vertKey
+  release fragKey
+  pure (key, pipeline)
   where
     vertCode =
       [vert|
