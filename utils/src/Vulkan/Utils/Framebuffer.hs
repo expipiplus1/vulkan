@@ -5,7 +5,6 @@ a framebuffer over a single image view, and a vanilla 2D color image view.
 -}
 module Vulkan.Utils.Framebuffer
   ( createFramebuffer
-  , createImageView
   , createFramebuffers
   ) where
 
@@ -14,7 +13,6 @@ import Data.Foldable (traverse_)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Vulkan.Core10 as Extent2D (Extent2D (..))
-import Vulkan.Core10 as ImageViewCreateInfo (ImageViewCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Zero (zero)
 
@@ -54,35 +52,3 @@ createFramebuffers dev rp ivs imageSize = do
     createFramebuffer dev rp iv imageSize
   groupKey <- register (traverse_ release keys)
   pure (fbs, groupKey)
-
--- | Vanilla 2D color image view covering the whole image.
-createImageView
-  :: (MonadResource m)
-  => Vk.Device
-  -> Vk.Format
-  -> Vk.Image
-  -> m (ReleaseKey, Vk.ImageView)
-createImageView dev format image =
-  Vk.withImageView dev imageViewCreateInfo Nothing allocate
-  where
-    imageViewCreateInfo =
-      zero
-        { ImageViewCreateInfo.image = image
-        , viewType = Vk.IMAGE_VIEW_TYPE_2D
-        , format = format
-        , components =
-            zero
-              { Vk.r = Vk.COMPONENT_SWIZZLE_IDENTITY
-              , Vk.g = Vk.COMPONENT_SWIZZLE_IDENTITY
-              , Vk.b = Vk.COMPONENT_SWIZZLE_IDENTITY
-              , Vk.a = Vk.COMPONENT_SWIZZLE_IDENTITY
-              }
-        , subresourceRange =
-            zero
-              { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
-              , Vk.baseMipLevel = 0
-              , Vk.levelCount = 1
-              , Vk.baseArrayLayer = 0
-              , Vk.layerCount = 1
-              }
-        }

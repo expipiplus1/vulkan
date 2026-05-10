@@ -34,7 +34,6 @@ import Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR (SurfaceCapabi
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
-import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import Vulkan.Utils.Misc ((.&&.))
 import Vulkan.Utils.RefCounted (RefCounted, newRefCounted, releaseRefCounted)
 import Vulkan.Zero (zero)
@@ -127,7 +126,7 @@ allocSwapchain phys dev cfg oldSwapchain windowSize surface = do
   (_, sImages) <- KHR.getSwapchainImagesKHR dev sSwapchain
   (imageViewKeys, sImageViews) <-
     fmap V.unzip . V.forM sImages $ \image ->
-      Framebuffer.createImageView dev (SurfaceFormatKHR.format sFormat) image
+      createImageView dev (SurfaceFormatKHR.format sFormat) image
 
   -- Released by the next 'recreateSwapchain' (when frames stop using it).
   sRelease <- newRefCounted $ do
@@ -229,6 +228,38 @@ createSwapchain phys dev cfg oldSwapchain explicitSize surf = do
   (key, swapchain) <- KHR.withSwapchainKHR dev swapchainCreateInfo Nothing allocate
 
   pure (swapchain, surfaceFormat, imageExtent, presentMode, key)
+
+-- | 2D color image view covering the whole image.
+createImageView
+  :: (MonadResource m)
+  => Vk.Device
+  -> Vk.Format
+  -> Vk.Image
+  -> m (ReleaseKey, Vk.ImageView)
+createImageView dev format image =
+  Vk.withImageView dev imageViewCreateInfo Nothing allocate
+  where
+    imageViewCreateInfo =
+      zero
+        { Vk.image = image
+        , Vk.viewType = Vk.IMAGE_VIEW_TYPE_2D
+        , Vk.format = format
+        , Vk.components =
+            zero
+              { Vk.r = Vk.COMPONENT_SWIZZLE_IDENTITY
+              , Vk.g = Vk.COMPONENT_SWIZZLE_IDENTITY
+              , Vk.b = Vk.COMPONENT_SWIZZLE_IDENTITY
+              , Vk.a = Vk.COMPONENT_SWIZZLE_IDENTITY
+              }
+        , Vk.subresourceRange =
+            zero
+              { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
+              , Vk.baseMipLevel = 0
+              , Vk.levelCount = 1
+              , Vk.baseArrayLayer = 0
+              , Vk.layerCount = 1
+              }
+        }
 
 ----------------------------------------------------------------
 -- Format selection

@@ -6,7 +6,7 @@
 module Main where
 
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, release, runResourceT)
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, runResourceT)
 import Render (renderFrame)
 import qualified SDL
 import VkResources (VkResources (..), vrContext)
@@ -14,9 +14,8 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import Vulkan.Utils.Frame (Frame (..))
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
-import qualified Vulkan.Utils.Pipeline as Pipeline
+import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
 import qualified Vulkan.Utils.RenderPass as RenderPass
-import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..), defaultSwapchainConfig)
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
@@ -74,13 +73,13 @@ createPipeline
   => Vk.Device
   -> Vk.RenderPass
   -> m (ReleaseKey, Vk.Pipeline)
-createPipeline dev renderPass = do
-  (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT vertCode
-  (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT fragCode
-  (key, pipeline) <- Pipeline.createColorPipeline dev renderPass [vertStage, fragStage]
-  release vertKey
-  release fragKey
-  pure (key, pipeline)
+createPipeline dev renderPass =
+  createColorPipelineFromShaders
+    dev
+    renderPass
+    [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
+    , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)
+    ]
   where
     vertCode =
       [vert|

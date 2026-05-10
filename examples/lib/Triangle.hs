@@ -14,7 +14,7 @@ module Triangle
 
 import Control.Exception (throwIO)
 import Control.Monad.IO.Class (MonadIO (..))
-import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate, release)
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import VkResources (Queues (..), VkResources (..), vrContext)
@@ -27,9 +27,8 @@ import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
 import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
-import Vulkan.Utils.Pipeline (createColorPipeline)
+import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
 import qualified Vulkan.Utils.RenderPass as RenderPass
-import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
@@ -180,13 +179,13 @@ createGraphicsPipeline
   => Vk.Device
   -> Vk.RenderPass
   -> m (ReleaseKey, Vk.Pipeline)
-createGraphicsPipeline dev renderPass = do
-  (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT vertCode
-  (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT fragCode
-  (key, pipeline) <- createColorPipeline dev renderPass [vertStage, fragStage]
-  release vertKey
-  release fragKey
-  pure (key, pipeline)
+createGraphicsPipeline dev renderPass =
+  createColorPipelineFromShaders
+    dev
+    renderPass
+    [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
+    , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)
+    ]
   where
     vertCode =
       [vert|

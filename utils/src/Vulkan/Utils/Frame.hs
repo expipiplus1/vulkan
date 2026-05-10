@@ -31,16 +31,6 @@ import Control.Exception (finally, mask_)
 import Control.Monad (unless, void)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource
-  ( InternalState
-  , MonadResource
-  , ReleaseKey
-  , ResourceT
-  , allocate
-  , closeInternalState
-  , createInternalState
-  , release
-  , runInternalState
-  )
 import Data.IORef
 import qualified Data.Vector as V
 import Data.Word
@@ -57,33 +47,6 @@ import qualified Vulkan.Utils.Requirements.TH as U
 import Vulkan.Utils.Swapchain (Swapchain)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
-
-{- | Instance-level requirements for the recycling 'Frame' machinery. Merge
-with your application's other 'InstanceRequirement's at instance creation.
-
-Required because checking @PhysicalDeviceTimelineSemaphoreFeatures@ at
-physical-device pick time goes through @VkPhysicalDeviceFeatures2@, which
-needs either Vulkan 1.1+ or this extension.
--}
-frameInstanceRequirements :: [InstanceRequirement]
-frameInstanceRequirements =
-  [ RequireInstanceExtension
-      Nothing
-      KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-      minBound
-  ]
-
-{- | The device-level requirements needed by 'runFrame' / 'queueSubmitFrame' /
-'withTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
-calling 'Vulkan.Utils.Initialization.createDeviceFromRequirements'.
--}
-frameDeviceRequirements :: [DeviceRequirement]
-frameDeviceRequirements =
-  [U.reqs|
-    VK_KHR_swapchain
-    VK_KHR_timeline_semaphore
-    PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
-  |]
 
 -- | Per-frame state.
 data Frame = Frame
@@ -111,6 +74,33 @@ data Frame = Frame
   scope is freed cleanly even on early shutdown.
   -}
   }
+
+{- | Instance-level requirements for the recycling 'Frame' machinery. Merge
+with your application's other 'InstanceRequirement's at instance creation.
+
+Required because checking @PhysicalDeviceTimelineSemaphoreFeatures@ at
+physical-device pick time goes through @VkPhysicalDeviceFeatures2@, which
+needs either Vulkan 1.1+ or this extension.
+-}
+frameInstanceRequirements :: [InstanceRequirement]
+frameInstanceRequirements =
+  [ RequireInstanceExtension
+      Nothing
+      KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+      minBound
+  ]
+
+{- | The device-level requirements needed by 'runFrame' / 'queueSubmitFrame' /
+'withTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
+calling 'Vulkan.Utils.Initialization.createDeviceFromRequirements'.
+-}
+frameDeviceRequirements :: [DeviceRequirement]
+frameDeviceRequirements =
+  [U.reqs|
+    VK_KHR_swapchain
+    VK_KHR_timeline_semaphore
+    PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore
+  |]
 
 ----------------------------------------------------------------
 -- Construction

@@ -280,7 +280,7 @@ pickPhysicalDevice inst devInfo score = do
             if isCPU then pure Nothing else fmap (,d) <$> devInfo d
         | d <- toList devs
         ]
-  pure $ maximumByMay (comparing (score . fst)) infos
+  pure $ maximumBy_ (comparing (score . fst)) infos
 
 -- | Extract the name of a 'PhysicalDevice' with 'getPhysicalDeviceProperties'
 physicalDeviceName :: (MonadIO m) => PhysicalDevice -> m Text
@@ -291,5 +291,5 @@ physicalDeviceName =
 -- Utils
 ----------------------------------------------------------------
 
-maximumByMay :: (Foldable t) => (a -> a -> Ordering) -> t a -> Maybe a
-maximumByMay f xs = if null xs then Nothing else Just (maximumBy f xs)
+maximumBy_ :: (Foldable t) => (a -> a -> Ordering) -> t a -> Maybe a
+maximumBy_ f xs = if null xs then Nothing else Just (maximumBy f xs)

@@ -9,13 +9,18 @@ sets, no push constants).
 -}
 module Vulkan.Utils.Pipeline
   ( createColorPipeline
+  , createColorPipelineFromShaders
   ) where
 
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate, release)
 import Data.Bits ((.|.))
+import Data.ByteString (ByteString)
+import Data.Foldable (traverse_)
 import Data.Vector (Vector)
+import qualified Data.Vector as V
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Zero (zero)
 
 createColorPipeline
@@ -105,3 +110,20 @@ createColorPipeline dev renderPass stages = do
       allocate
   release layoutKey
   pure (key, graphicsPipeline)
+
+{- | Compile each @(stage, SPIR-V)@ pair into a shader module, build a vanilla
+'createColorPipeline' with those stages, then release the now-redundant
+shader-module handles. The returned 'ReleaseKey' frees the pipeline.
+-}
+createColorPipelineFromShaders
+  :: (MonadResource m, MonadFail m)
+  => Vk.Device
+  -> Vk.RenderPass
+  -> [(Vk.ShaderStageFlagBits, ByteString)]
+  -> m (ReleaseKey, Vk.Pipeline)
+createColorPipelineFromShaders dev renderPass shaders = do
+  compiled <- traverse (uncurry (shaderStage dev)) shaders
+  let (keys, stages) = unzip compiled
+  (key, pipeline) <- createColorPipeline dev renderPass (V.fromList stages)
+  traverse_ release keys
+  pure (key, pipeline)
