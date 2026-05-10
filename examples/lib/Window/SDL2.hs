@@ -4,20 +4,21 @@ module Window.SDL2
   , createSurface
   , drawableSize
   , showWindow
-  , RefreshLimit (..)
   , shouldQuit
+  , sdl2Adapter
   ) where
 
 import Control.Monad (void)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
-import Data.Maybe (maybeToList)
 import Data.Text (Text)
 import Foreign.Ptr (castPtr)
 import qualified SDL
 import qualified SDL.Video.Vulkan as SDL
 import Vulkan.Core10
 import Vulkan.Extensions.VK_KHR_surface
+import qualified Vulkan.Utils.Init.SDL2 as Init
+import WindowedBoot (WindowAdapter (..))
 
 withSDL :: (MonadResource m) => m ()
 withSDL = void $ allocate_ (SDL.initialize @[] [SDL.InitEvents]) SDL.quit
@@ -73,22 +74,25 @@ can be brought up first.
 showWindow :: (MonadIO m) => SDL.Window -> m ()
 showWindow = SDL.showWindow
 
+-- | Bridge for 'WindowedBoot.withWindowedVk'.
+sdl2Adapter :: (MonadResource m) => SDL.Window -> WindowAdapter m
+sdl2Adapter w =
+  WindowAdapter
+    { waWithInstance = Init.withInstance w
+    , waWithSurface = \i -> createSurface i w
+    , waDrawableSize = drawableSize w
+    }
+
 ----------------------------------------------------------------
 -- SDL helpers
 ----------------------------------------------------------------
 
-data RefreshLimit
-  = NoLimit
-  | -- | Time in ms
-    TimeLimit Int
-  | -- | Indefinite timeout
-    EventLimit
-
-{- | Consumes all events in the queue and reports if any of them instruct the
-application to quit.
+{- | Poll the event queue and report whether the user requested to quit
+(window close, Q, or Escape). The window argument is unused — SDL's event
+queue is global — but kept for symmetry with the GLFW backend.
 -}
-shouldQuit :: (MonadIO m) => RefreshLimit -> m Bool
-shouldQuit limit = any isQuitEvent <$> awaitSDLEvents limit
+shouldQuit :: (MonadIO m) => SDL.Window -> m Bool
+shouldQuit _ = any isQuitEvent <$> SDL.pollEvents
   where
     isQuitEvent :: SDL.Event -> Bool
     isQuitEvent = \case
@@ -97,16 +101,3 @@ shouldQuit limit = any isQuitEvent <$> awaitSDLEvents limit
         | code == SDL.KeycodeQ || code == SDL.KeycodeEscape ->
             True
       _ -> False
-
-{- | Return the SDL events which have become available
-
-Optionally wait for a timeout or forever.
--}
-awaitSDLEvents :: (MonadIO m) => RefreshLimit -> m [SDL.Event]
-awaitSDLEvents limit = do
-  first <- case limit of
-    NoLimit -> pure Nothing
-    TimeLimit ms -> SDL.waitEventTimeout (fromIntegral ms)
-    EventLimit -> Just <$> SDL.waitEvent
-  next <- SDL.pollEvents
-  pure $ maybeToList first <> next

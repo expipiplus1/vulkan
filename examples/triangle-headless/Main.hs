@@ -10,41 +10,46 @@ where
 
 import qualified Codec.Picture as JP
 import qualified Codec.Picture.Types as JP
-import Control.Exception.Safe
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Bits
 import qualified Data.ByteString.Lazy as BSL
-import Data.Functor.Identity (Identity (..))
 import qualified Data.Vector as V
 import Data.Word
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (peek, sizeOf)
+import HeadlessBoot
+  ( HeadlessConfig (..)
+  , HeadlessVk (..)
+  , submitAndWait
+  , withHeadlessVk
+  )
+import qualified RenderPass
 import Say (sayErr)
-import qualified Vma
+import VkResources (Queues (..))
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
-import qualified Vulkan.Core10.DeviceInitialization as DI
 import qualified Vulkan.Core10.Image as Image
-import Vulkan.Extensions.VK_EXT_debug_utils
-import Vulkan.Requirement (InstanceRequirement (..))
-import Vulkan.Utils.Debug (debugCallbackPtr, nameObject)
-import qualified Vulkan.Utils.Init.Headless as Init
-import Vulkan.Utils.Initialization (createDeviceFromRequirements, physicalDeviceName, pickPhysicalDevice)
-import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..), QueueSpec (..), assignQueues, isGraphicsQueueFamily)
+import Vulkan.Utils.Debug (nameObject)
+import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
 main :: IO ()
 main = runResourceT $ do
-  inst <- Main.createInstance
-  (phys, graphicsQueueFamilyIndex, dev) <- Main.createDevice inst
-  allocator <- Vma.createVMA zero myApiVersion inst phys dev
-  image <- render allocator dev graphicsQueueFamilyIndex
-  Vk.deviceWaitIdle dev
+  HeadlessVk{..} <-
+    withHeadlessVk
+      HeadlessConfig
+        { hcAppName = "Haskell Vulkan triangle (headless) example"
+        , hcInstanceReqs = []
+        , hcDeviceReqs = []
+        }
+  let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics hvQueues)
+  image <- render hvAllocator hvDevice graphicsQueueFamilyIndex
+  Vk.deviceWaitIdle hvDevice
   let filename = "triangle.png"
   sayErr $ "Writing " <> filename
   liftIO $ BSL.writeFile filename (JP.encodePng image)
@@ -160,53 +165,11 @@ render allocator dev graphicsQueueFamilyIndex = do
         }
   (_, imageView) <- Vk.withImageView dev imageViewCreateInfo Nothing allocate
 
-  -- Create a renderpass with a single subpass
-  let
-    attachmentDescription :: Vk.AttachmentDescription
-    attachmentDescription =
-      zero
-        { Vk.format = imageFormat
-        , Vk.samples = Vk.SAMPLE_COUNT_1_BIT
-        , Vk.loadOp = Vk.ATTACHMENT_LOAD_OP_CLEAR
-        , Vk.storeOp = Vk.ATTACHMENT_STORE_OP_STORE
-        , Vk.stencilLoadOp = Vk.ATTACHMENT_LOAD_OP_DONT_CARE
-        , Vk.stencilStoreOp = Vk.ATTACHMENT_STORE_OP_DONT_CARE
-        , Vk.initialLayout = Vk.IMAGE_LAYOUT_UNDEFINED
-        , Vk.finalLayout = Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-        }
-    subpass :: Vk.SubpassDescription
-    subpass =
-      zero
-        { Vk.pipelineBindPoint = Vk.PIPELINE_BIND_POINT_GRAPHICS
-        , Vk.colorAttachments =
-            [ zero
-                { Vk.attachment = 0
-                , Vk.layout = Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-                }
-            ]
-        }
-    subpassDependency :: Vk.SubpassDependency
-    subpassDependency =
-      zero
-        { Vk.srcSubpass = Vk.SUBPASS_EXTERNAL
-        , Vk.dstSubpass = 0
-        , Vk.srcStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-        , Vk.srcAccessMask = zero
-        , Vk.dstStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-        , Vk.dstAccessMask =
-            Vk.ACCESS_COLOR_ATTACHMENT_READ_BIT
-              .|. Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT
-        }
   (_, renderPass) <-
-    Vk.withRenderPass
+    RenderPass.createColorRenderPass
       dev
-      zero
-        { Vk.attachments = [attachmentDescription]
-        , Vk.subpasses = [subpass]
-        , Vk.dependencies = [subpassDependency]
-        }
-      Nothing
-      allocate
+      imageFormat
+      Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
 
   -- Create a framebuffer
   let
@@ -422,23 +385,13 @@ render allocator dev graphicsQueueFamilyIndex = do
             }
       ]
 
-  -- Create a fence so we can know when render is finished
-  (_, fence) <- Vk.withFence dev zero Nothing allocate
-
   -- Submit the command buffer and wait for it to execute
-  let submitInfo =
-        zero
-          { Vk.waitSemaphores = []
-          , Vk.waitDstStageMask = []
-          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
-          , Vk.signalSemaphores = []
-          }
   graphicsQueue <- Vk.getDeviceQueue dev graphicsQueueFamilyIndex 0
-  Vk.queueSubmit graphicsQueue [SomeStruct submitInfo] fence
-  let fenceTimeout = 1e9 -- 1 second
-  Vk.waitForFences dev [fence] True fenceTimeout >>= \case
-    Vk.TIMEOUT -> throwString "Timed out waiting for image render and copy"
-    _ -> pure ()
+  submitAndWait
+    dev
+    graphicsQueue
+    commandBuffer
+    "Timed out waiting for image render and copy"
 
   -- If the cpu image allocation is not HOST_COHERENT this will ensure the
   -- changes are present on the CPU.
@@ -531,70 +484,3 @@ createShaders dev = do
     [ SomeStruct vertShaderStageCreateInfo
     , SomeStruct fragShaderStageCreateInfo
     ]
-
-----------------------------------------------------------------
--- Initialization
-----------------------------------------------------------------
-
-myApiVersion :: Word32
-myApiVersion = Vk.API_VERSION_1_0
-
--- | Create an instance with a debug messenger and validation layer.
-createInstance :: (MonadResource m) => m Vk.Instance
-createInstance = do
-  inst <-
-    Init.withInstance
-      (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion})
-      [ RequireInstanceExtension
-          { instanceExtensionLayerName = Nothing
-          , instanceExtensionName = EXT_DEBUG_UTILS_EXTENSION_NAME
-          , instanceExtensionMinVersion = minBound
-          }
-      ]
-      []
-  let debugMessengerCreateInfo =
-        zero
-          { messageSeverity =
-              DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-                .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
-          , messageType =
-              DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-          , pfnUserCallback = debugCallbackPtr
-          }
-  _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-  pure inst
-
-createDevice
-  :: (MonadResource m, MonadThrow m)
-  => Vk.Instance
-  -> m (Vk.PhysicalDevice, Word32, Vk.Device)
-createDevice inst = do
-  mPd <- pickPhysicalDevice inst hasGraphicsQueue id
-  (_, phys) <- maybe (throwString "Unable to find appropriate PhysicalDevice") pure mPd
-  sayErr . ("Using device: " <>) =<< physicalDeviceName phys
-
-  mAssign <- assignQueues phys (Identity (QueueSpec 1 (\_ q -> pure (isGraphicsQueueFamily q))))
-  (qInfos, getQs) <-
-    maybe
-      (throwString "Unable to assign graphics queue")
-      pure
-      mAssign
-  dev <-
-    createDeviceFromRequirements
-      []
-      []
-      phys
-      zero{Vk.queueCreateInfos = SomeStruct <$> qInfos}
-  Identity (QueueFamilyIndex graphicsFamilyIdx, _q) <- liftIO (getQs dev)
-  pure (phys, graphicsFamilyIdx, dev)
-  where
-    hasGraphicsQueue :: (MonadIO m) => Vk.PhysicalDevice -> m (Maybe Word64)
-    hasGraphicsQueue phys = do
-      qProps <- Vk.getPhysicalDeviceQueueFamilyProperties phys
-      if V.any isGraphicsQueueFamily qProps
-        then do
-          heaps <- Vk.memoryHeaps <$> Vk.getPhysicalDeviceMemoryProperties phys
-          pure (Just (sum (DI.size <$> heaps)))
-        else pure Nothing

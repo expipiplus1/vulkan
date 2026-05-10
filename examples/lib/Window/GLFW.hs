@@ -4,22 +4,28 @@ the SDL2 helpers in "Window".
 module Window.GLFW
   ( withGLFW
   , createWindow
+  , createSurface
   , showWindow
   , drawableSize
   , shouldQuit
+  , glfwAdapter
   ) where
 
 import Control.Monad (unless, void)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource
   ( MonadResource
+  , ReleaseKey
   , allocate
   , allocate_
   )
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Graphics.UI.GLFW as GLFW
-import Vulkan.Core10 (Extent2D (..))
+import Vulkan.Core10 (Extent2D (..), Instance)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
+import qualified Vulkan.Utils.Init.GLFW as Init
+import WindowedBoot (WindowAdapter (..))
 
 -- | Initialise GLFW and tear it down with the resource scope.
 withGLFW :: (MonadResource m) => m ()
@@ -55,8 +61,16 @@ createWindow title width height = do
     Just w -> pure w
     Nothing -> liftIO (fail "GLFW.createWindow returned Nothing")
 
-showWindow :: GLFW.Window -> IO ()
-showWindow = GLFW.showWindow
+{- | Bracketed surface creation. Mirrors 'Window.SDL2.createSurface' so
+callers can swap backends with a one-line module change.
+-}
+createSurface
+  :: (MonadResource m) => Instance -> GLFW.Window -> m (ReleaseKey, SurfaceKHR)
+createSurface inst window =
+  allocate (Init.createSurface inst window) (Init.destroySurface inst)
+
+showWindow :: (MonadIO m) => GLFW.Window -> m ()
+showWindow = liftIO . GLFW.showWindow
 
 -- | Current framebuffer size, suitable as the swapchain extent fallback.
 drawableSize :: (MonadIO m) => GLFW.Window -> m Extent2D
@@ -67,10 +81,19 @@ drawableSize win = do
 {- | Poll events and report whether the user requested to close the window
 (X button, Q, or Escape).
 -}
-shouldQuit :: GLFW.Window -> IO Bool
-shouldQuit win = do
+shouldQuit :: (MonadIO m) => GLFW.Window -> m Bool
+shouldQuit win = liftIO $ do
   GLFW.pollEvents
   closeRequested <- GLFW.windowShouldClose win
   qPressed <- (== GLFW.KeyState'Pressed) <$> GLFW.getKey win GLFW.Key'Q
   escPressed <- (== GLFW.KeyState'Pressed) <$> GLFW.getKey win GLFW.Key'Escape
   pure (closeRequested || qPressed || escPressed)
+
+-- | Bridge for 'WindowedBoot.withWindowedVk'.
+glfwAdapter :: (MonadResource m) => GLFW.Window -> WindowAdapter m
+glfwAdapter w =
+  WindowAdapter
+    { waWithInstance = Init.withInstance w
+    , waWithSurface = \i -> createSurface i w
+    , waDrawableSize = drawableSize w
+    }

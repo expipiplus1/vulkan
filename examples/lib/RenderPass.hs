@@ -1,21 +1,30 @@
 {-# LANGUAGE OverloadedLists #-}
 
+{-| Single-color-attachment render pass shared by every example that draws
+to an image (windowed or headless). The final layout is the only meaningful
+variant — windowed callers want @PRESENT_SRC_KHR@, headless callers
+@TRANSFER_SRC_OPTIMAL@.
+-}
 module RenderPass
-  ( createRenderPass
+  ( createColorRenderPass
   ) where
 
-import Control.Monad.Trans.Resource
-import Data.Bits
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate)
+import Data.Bits ((.|.))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Zero (zero)
 
--- | Create a renderpass with a single subpass that clears + presents.
-createRenderPass
+createColorRenderPass
   :: (MonadResource m)
   => Vk.Device
   -> Vk.Format
+  -- ^ Color attachment format.
+  -> Vk.ImageLayout
+  {- ^ Final layout (e.g. @PRESENT_SRC_KHR@ for swapchains,
+  @TRANSFER_SRC_OPTIMAL@ for offscreen images).
+  -}
   -> m (ReleaseKey, Vk.RenderPass)
-createRenderPass dev imageFormat =
+createColorRenderPass dev imageFormat finalLayout =
   Vk.withRenderPass
     dev
     zero
@@ -36,7 +45,7 @@ createRenderPass dev imageFormat =
         , Vk.stencilLoadOp = Vk.ATTACHMENT_LOAD_OP_DONT_CARE
         , Vk.stencilStoreOp = Vk.ATTACHMENT_STORE_OP_DONT_CARE
         , Vk.initialLayout = Vk.IMAGE_LAYOUT_UNDEFINED
-        , Vk.finalLayout = Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+        , Vk.finalLayout = finalLayout
         }
     subpass :: Vk.SubpassDescription
     subpass =

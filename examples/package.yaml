@@ -25,6 +25,7 @@ library:
   - mtl
   - nothunks >= 0.1.2
   - resourcet >= 1.2.4
+  - safe-exceptions
   - say
   - sdl2 >= 2.5.0
   - template-haskell
@@ -34,6 +35,8 @@ library:
   - unliftio
   - vector
   - vulkan
+  - vulkan-init-glfw
+  - vulkan-init-sdl2
   - vulkan-utils
 
 executables:

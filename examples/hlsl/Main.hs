@@ -6,26 +6,21 @@ module Main where
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (runResourceT)
 import Data.IORef
-import Data.Text.Encoding (decodeUtf8)
-import Data.Word
-import Frame (Frame (..), advanceFrame, frameDeviceRequirements, frameInstanceRequirements, initialFrame, runFrame)
+import Frame (Frame (..), advanceFrame, initialFrame, runFrame)
 import qualified Framebuffer
-import InitDevice (withDevice)
 import qualified Pipeline
 import RefCounted (releaseRefCounted)
 import Render (renderFrame)
 import qualified RenderPass
 import SDL (showWindow, time)
-import Say (sayErr)
-import Swapchain (Swapchain (..), allocSwapchain, recreateSwapchain, threwSwapchainError)
+import Swapchain (Swapchain (..), recreateSwapchain, threwSwapchainError)
 import Utils (loopJust)
-import VkResources (mkVkResources)
-import qualified Vma
+import VkResources (VkResources (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
-import qualified Vulkan.Utils.Init.SDL2 as VkInit
 import Vulkan.Zero (zero)
-import Window.SDL2 (RefreshLimit (..), createSurface, createWindow, drawableSize, shouldQuit, withSDL)
+import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
 main = runResourceT $ do
@@ -34,23 +29,21 @@ main = runResourceT $ do
   --
   withSDL
   win <- createWindow "Vulkan 🚀 Haskell" 1280 720
-  inst <-
-    VkInit.withInstance
-      win
-      (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion})
-      frameInstanceRequirements
-      []
-  (_, surf) <- createSurface inst win
-  (phys, dev, qs) <- withDevice inst surf frameDeviceRequirements
-  vma <- Vma.createVMA zero myApiVersion inst phys dev
-  props <- Vk.getPhysicalDeviceProperties phys
-  sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
-  vr <- liftIO $ mkVkResources inst phys dev vma qs
-
-  -- Initial swapchain
-  initialSize <- liftIO $ drawableSize win
-  initialSC <- allocSwapchain vr Vk.NULL_HANDLE initialSize surf
-  (_, renderPass) <- RenderPass.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
+  (vr, initialSC) <-
+    withWindowedVk
+      WindowedConfig
+        { wcAppName = "Vulkan 🚀 Haskell"
+        , wcInstanceReqs = []
+        , wcDeviceReqs = []
+        , wcVmaFlags = zero
+        }
+      (sdl2Adapter win)
+  let dev = vrDevice vr
+  (_, renderPass) <-
+    RenderPass.createColorRenderPass
+      dev
+      (SurfaceFormatKHR.format (sFormat initialSC))
+      Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
   (_, pipeline) <- Pipeline.createPipeline dev renderPass
   initialFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
 
@@ -87,7 +80,7 @@ main = runResourceT $ do
       advanceFrame vr sc' f'
 
     loop f =
-      shouldQuit (TimeLimit 6) >>= \case
+      shouldQuit win >>= \case
         True -> do
           end <- SDL.time
           let fps = realToFrac (fIndex f) / (end - start) :: Double
@@ -96,6 +89,3 @@ main = runResourceT $ do
         False -> Just <$> perFrame f
 
   loopJust loop initial
-
-myApiVersion :: Word32
-myApiVersion = Vk.API_VERSION_1_0

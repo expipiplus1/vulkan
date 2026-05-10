@@ -12,16 +12,13 @@ import Control.Lens.Getter ((^.))
 import Control.Monad (when)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
-import Data.Bits ((.|.))
 import Data.IORef
-import Data.Text.Encoding (decodeUtf8)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import Data.Word (Word32, Word64)
-import Frame (Frame (..), advanceFrame, frameDeviceRequirements, frameInstanceRequirements, initialFrame, queueSubmitFrame, runFrame)
+import Data.Word (Word64)
+import Frame (Frame (..), advanceFrame, initialFrame, queueSubmitFrame, runFrame)
 import qualified Framebuffer
 import GHC.Clock (getMonotonicTimeNSec)
-import InitDevice (withDevice)
 import Julia (JuliaPipeline (..), createJuliaDescriptorSets, createJuliaPipeline, juliaWorkgroupX, juliaWorkgroupY)
 import Linear.Affine (Point (..))
 import Linear.Metric (norm)
@@ -29,14 +26,14 @@ import Linear.V2
 
 -- import qualified Pipeline
 import RefCounted (RefCounted, newRefCounted, releaseRefCounted)
+import qualified RenderPass
 import qualified SDL
 import Say
-import Swapchain (Swapchain (..), allocSwapchain, recreateSwapchain, threwSwapchainError)
+import Swapchain (Swapchain (..), recreateSwapchain, threwSwapchainError)
 import UnliftIO.Exception (displayException, throwIO, throwString)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import Utils (loopJust)
-import VkResources (Queues (..), RecycledResources (..), VkResources (..), mkVkResources)
-import qualified Vma
+import VkResources (Queues (..), RecycledResources (..), VkResources (..))
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
@@ -44,9 +41,9 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import Vulkan.Extensions.VK_KHR_swapchain as KHR
-import qualified Vulkan.Utils.Init.SDL2 as Init
 import Vulkan.Zero (zero)
-import Window.SDL2 (RefreshLimit (..), createSurface, createWindow, drawableSize, shouldQuit, withSDL)
+import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
 main = prettyError . runResourceT $ do
@@ -57,25 +54,22 @@ main = prettyError . runResourceT $ do
     initHeight = 720
 
   sdlWindow <- createWindow "Haskell ❤️ Vulkan" initWidth initHeight
-  inst <-
-    Init.withInstance
-      sdlWindow
-      (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion})
-      frameInstanceRequirements
-      []
-  (_, surface) <- createSurface inst sdlWindow
-  (phys, dev, qs) <- withDevice inst surface frameDeviceRequirements
-  vma <- Vma.createVMA zero myApiVersion inst phys dev
-  props <- Vk.getPhysicalDeviceProperties phys
-  sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
+  (vr, initialSC) <-
+    withWindowedVk
+      WindowedConfig
+        { wcAppName = "Haskell ❤️ Vulkan"
+        , wcInstanceReqs = []
+        , wcDeviceReqs = []
+        , wcVmaFlags = zero
+        }
+      (sdl2Adapter sdlWindow)
+  let dev = vrDevice vr
 
-  vr <- liftIO $ mkVkResources inst phys dev vma qs
-
-  -- Initial swapchain at the requested size.
-  let initialSize = Vk.Extent2D initWidth initHeight
-  initialSC <- allocSwapchain vr Vk.NULL_HANDLE initialSize surface
-
-  (_, renderPass) <- createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
+  (_, renderPass) <-
+    RenderPass.createColorRenderPass
+      dev
+      (SurfaceFormatKHR.format (sFormat initialSC))
+      Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
   juliaPL <- createJuliaPipeline dev
 
   -- Per-swapchain bindings: framebuffers + Julia descriptor sets, both pinned
@@ -115,7 +109,7 @@ main = prettyError . runResourceT $ do
       advanceFrame vr sc' f'
 
     loop f =
-      shouldQuit (TimeLimit 6) >>= \case
+      shouldQuit sdlWindow >>= \case
         True -> pure Nothing
         False -> Just <$> perFrame f
 
@@ -336,58 +330,6 @@ renderJulia vr jp bindings f = do
     (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
     _ -> pure ()
 
-createRenderPass
-  :: (MonadResource m)
-  => Vk.Device
-  -> Vk.Format
-  -> m (ReleaseKey, Vk.RenderPass)
-createRenderPass dev imageFormat =
-  Vk.withRenderPass
-    dev
-    zero
-      { Vk.attachments = [attachmentDescription]
-      , Vk.subpasses = [subpass]
-      , Vk.dependencies = [subpassDependency]
-      }
-    Nothing
-    allocate
-  where
-    attachmentDescription :: Vk.AttachmentDescription
-    attachmentDescription =
-      zero
-        { Vk.format = imageFormat
-        , Vk.samples = Vk.SAMPLE_COUNT_1_BIT
-        , Vk.loadOp = Vk.ATTACHMENT_LOAD_OP_CLEAR
-        , Vk.storeOp = Vk.ATTACHMENT_STORE_OP_STORE
-        , Vk.stencilLoadOp = Vk.ATTACHMENT_LOAD_OP_DONT_CARE
-        , Vk.stencilStoreOp = Vk.ATTACHMENT_STORE_OP_DONT_CARE
-        , Vk.initialLayout = Vk.IMAGE_LAYOUT_UNDEFINED
-        , Vk.finalLayout = Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
-        }
-    subpass :: Vk.SubpassDescription
-    subpass =
-      zero
-        { Vk.pipelineBindPoint = Vk.PIPELINE_BIND_POINT_GRAPHICS
-        , Vk.colorAttachments =
-            [ zero
-                { Vk.attachment = 0
-                , Vk.layout = Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-                }
-            ]
-        }
-    subpassDependency :: Vk.SubpassDependency
-    subpassDependency =
-      zero
-        { Vk.srcSubpass = Vk.SUBPASS_EXTERNAL
-        , Vk.dstSubpass = 0
-        , Vk.srcStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-        , Vk.srcAccessMask = zero
-        , Vk.dstStageMask = Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-        , Vk.dstAccessMask =
-            Vk.ACCESS_COLOR_ATTACHMENT_READ_BIT
-              .|. Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT
-        }
-
 ----------------------------------------------------------------
 -- Frame timing
 ----------------------------------------------------------------
@@ -402,6 +344,3 @@ reportFrameTime nsec = do
     frameBudgetPercent = ceiling (100 * frameTimeMSec / frameTimeBudgetMSec) :: Int
   when (frameBudgetPercent > 50) $
     sayErrString (show frameTimeMSec <> "ms \t" <> show frameBudgetPercent <> "%")
-
-myApiVersion :: Word32
-myApiVersion = Vk.API_VERSION_1_0

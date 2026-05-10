@@ -35,14 +35,18 @@ import Vulkan.Utils.QueueAssignment
   )
 import Vulkan.Zero (zero)
 
-{- | Pick a physical device that has a graphics+present queue family AND a
-compute queue family, then create a logical device exposing one queue per
-G/C/T slot. Devices are scored by total memory.
+{- | Pick a physical device that has the queue families needed for the
+caller, then create a logical device exposing one queue per G/C/T slot.
+Devices are scored by total memory.
+
+Pass 'Just surface' for windowed callers — the graphics family must also
+support presentation. Pass 'Nothing' for headless callers — any graphics
+family will do.
 
 Each capability prefers its own dedicated family (async compute, DMA-only
-transfer); falls back to aliasing graphics+present when the hardware
-doesn't expose one. When two slots target the same family, two distinct
-'Queue' handles are still allocated within that family with the requested
+transfer); falls back to aliasing graphics when the hardware doesn't
+expose one. When two slots target the same family, two distinct 'Queue'
+handles are still allocated within that family with the requested
 priorities (1.0 / 0.5 / 0.2).
 
 Pass any extra device requirements (extensions, features, API version) in
@@ -51,20 +55,20 @@ Pass any extra device requirements (extensions, features, API version) in
 withDevice
   :: (MonadResource m, MonadFail m)
   => Vk.Instance
-  -> SurfaceKHR
+  -> Maybe SurfaceKHR
   -> [DeviceRequirement]
   -> m (Vk.PhysicalDevice, Vk.Device, Queues (QueueFamilyIndex, Vk.Queue))
-withDevice inst surface extraReqs = do
+withDevice inst mSurface extraReqs = do
   mPd <-
     pickPhysicalDevice
       inst
-      (discoverFamilies surface)
+      (discoverFamilies mSurface)
       (snd :: (Queues QueueFamilyIndex, Word64) -> Word64)
   ((qFams, _score), phys) <- case mPd of
     Just x -> pure x
     Nothing ->
       sayErr "No suitable physical device found"
-        >> noSuchThing "No physical device with graphics+present and compute"
+        >> noSuchThing "No physical device with the required queue families"
 
   let
     mkSpec target prio = QueueSpec prio (\i _ -> pure (i == target))
@@ -82,14 +86,16 @@ withDevice inst surface extraReqs = do
   pure (phys, dev, qs)
 
 {- | Suitability probe used by 'pickPhysicalDevice'. Returns the discovered
-@(graphics+present, compute, transfer)@ family triple plus a memory score.
+@(graphics, compute, transfer)@ family triple plus a memory score. When a
+surface is supplied the chosen graphics family must also support
+presentation; otherwise any graphics family will do.
 -}
 discoverFamilies
   :: (MonadIO m)
-  => SurfaceKHR
+  => Maybe SurfaceKHR
   -> Vk.PhysicalDevice
   -> m (Maybe (Queues QueueFamilyIndex, Word64))
-discoverFamilies surf phys = do
+discoverFamilies mSurf phys = do
   qProps <- Vk.getPhysicalDeviceQueueFamilyProperties phys
   let
     withIndex = V.toList (V.indexed qProps)
@@ -107,19 +113,25 @@ discoverFamilies surf phys = do
     dedicatedTransfer =
       [asQfi i | (i, q) <- withIndex, isTransferOnlyQueueFamily q]
 
-  presentResults <-
-    mapM
-      (\qfi -> (qfi,) <$> isPresentQueueFamily phys surf qfi)
-      graphicsFamilies
-  let
-    mGp = case [qfi | (qfi, True) <- presentResults] of
-      qfi : _ -> Just qfi
-      [] -> Nothing
-    mCp = case asyncCompute of
-      qfi : _ -> Just qfi
-      [] -> case anyCompute of
+  mGp <- case mSurf of
+    Just surf -> do
+      presentResults <-
+        mapM
+          (\qfi -> (qfi,) <$> isPresentQueueFamily phys surf qfi)
+          graphicsFamilies
+      pure $ case [qfi | (qfi, True) <- presentResults] of
         qfi : _ -> Just qfi
         [] -> Nothing
+    Nothing ->
+      pure $ case graphicsFamilies of
+        qfi : _ -> Just qfi
+        [] -> Nothing
+
+  let mCp = case asyncCompute of
+        qfi : _ -> Just qfi
+        [] -> case anyCompute of
+          qfi : _ -> Just qfi
+          [] -> Nothing
 
   case (mGp, mCp) of
     (Just gp, Just cp) -> do

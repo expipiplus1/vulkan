@@ -8,44 +8,42 @@ import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Foldable (for_)
 import Data.IORef
-import Data.Text.Encoding (decodeUtf8)
 import Data.Word (Word64)
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (sizeOf)
 import Frame (Frame (..), advanceFrame, initialFrame, runFrame)
-import Init (deviceRequirements, getDeviceRTProps, instanceRequirements, myApiVersion)
-import InitDevice (withDevice)
+import Init (deviceRequirements, getDeviceRTProps, instanceRequirements)
 import qualified Pipeline
 import Render (RenderState (..), renderFrame)
 import qualified SDL
-import Say (sayErr)
 import Scene (makeSceneBuffers)
-import Swapchain (allocSwapchain, recreateSwapchain, threwSwapchainError)
+import Swapchain (recreateSwapchain, threwSwapchainError)
 import Utils (loopJust)
-import VkResources (mkVkResources)
-import qualified Vma
+import VkResources (VkResources (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo (..), getBufferDeviceAddress)
-import qualified Vulkan.Utils.Init.SDL2 as VkInit
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
-import Window.SDL2 (RefreshLimit (..), createSurface, createWindow, drawableSize, shouldQuit, withSDL)
+import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
 main = runResourceT $ do
   withSDL
   win <- createWindow "Vulkan ⚡ Haskell" 1280 720
-  inst <- VkInit.withInstance win (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion}) instanceRequirements []
-  (_, surf) <- createSurface inst win
-  (phys, dev, qs) <- withDevice inst surf deviceRequirements
-  vma <- Vma.createVMA VMA.ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT myApiVersion inst phys dev
-  props <- Vk.getPhysicalDeviceProperties phys
-  sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
-  vr <- liftIO $ mkVkResources inst phys dev vma qs
-
-  -- Initial swapchain
-  initialSize <- liftIO $ drawableSize win
-  initialSC <- allocSwapchain vr Vk.NULL_HANDLE initialSize surf
+  (vr, initialSC) <-
+    withWindowedVk
+      WindowedConfig
+        { wcAppName = "Vulkan ⚡ Haskell"
+        , wcInstanceReqs = instanceRequirements
+        , wcDeviceReqs = deviceRequirements
+        , wcVmaFlags = VMA.ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
+        }
+      (sdl2Adapter win)
+  let
+    phys = vrPhysicalDevice vr
+    dev = vrDevice vr
+    vma = vrAllocator vr
 
   -- Scene + acceleration structure
   sceneBuffers <- makeSceneBuffers vma
@@ -114,7 +112,7 @@ main = runResourceT $ do
       advanceFrame vr sc' f'
 
     loop f =
-      shouldQuit NoLimit >>= \case
+      shouldQuit win >>= \case
         True -> do
           end <- SDL.time
           let

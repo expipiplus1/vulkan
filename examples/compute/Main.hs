@@ -9,32 +9,28 @@ module Main
 where
 
 import qualified Codec.Picture as JP
-import Control.Exception.Safe (MonadThrow, throwString)
 import Control.Monad.IO.Class (MonadIO (..))
-import Control.Monad.Trans.Resource (MonadResource, ResourceT, allocate, runResourceT)
-import Data.Bits ((.|.))
+import Control.Monad.Trans.Resource (ResourceT, allocate, runResourceT)
 import qualified Data.ByteString.Lazy as BSL
-import Data.Functor.Identity (Identity (..))
-import qualified Data.Vector as V
-import Data.Word (Word32, Word64)
+import Data.Word (Word32)
 import Foreign.Marshal.Array (peekArray)
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (sizeOf)
+import HeadlessBoot
+  ( HeadlessConfig (..)
+  , HeadlessVk (..)
+  , submitAndWait
+  , withHeadlessVk
+  )
 import Say (sayErr)
-import qualified Vma
+import VkResources (Queues (..))
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.CStruct.Utils (FixedArray, lowerArrayPtr)
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
-import qualified Vulkan.Core10.DeviceInitialization as DI
-import Vulkan.Extensions.VK_EXT_debug_utils
-import Vulkan.Requirement (InstanceRequirement (..))
-import Vulkan.Utils.Debug (debugCallbackPtr)
-import qualified Vulkan.Utils.Init.Headless as Init
-import Vulkan.Utils.Initialization (createDeviceFromRequirements, physicalDeviceName, pickPhysicalDevice)
-import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..), QueueSpec (..), assignQueues, isComputeQueueFamily)
+import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -45,12 +41,17 @@ import qualified VulkanMemoryAllocator as VMA
 
 main :: IO ()
 main = runResourceT $ do
-  inst <- Main.createInstance
-  (phys, computeQueueFamilyIndex, dev) <- Main.createDevice inst
-  allocator <- Vma.createVMA zero myApiVersion inst phys dev
+  HeadlessVk{..} <-
+    withHeadlessVk
+      HeadlessConfig
+        { hcAppName = "Haskell Vulkan compute example"
+        , hcInstanceReqs = []
+        , hcDeviceReqs = []
+        }
+  let QueueFamilyIndex computeQueueFamilyIndex = fst (qCompute hvQueues)
 
-  image <- render allocator dev computeQueueFamilyIndex
-  Vk.deviceWaitIdle dev
+  image <- render hvAllocator hvDevice computeQueueFamilyIndex
+  Vk.deviceWaitIdle hvDevice
   let filename = "julia.png"
   sayErr $ "Writing " <> filename
   liftIO $ BSL.writeFile filename (JP.encodePng image)
@@ -195,15 +196,8 @@ render allocator dev computeQueueFamilyIndex = do
         (ceiling (realToFrac height / realToFrac @_ @Float workgroupY))
         1
 
-  -- Create a fence so we can know when render is finished
-  (_, fence) <- Vk.withFence dev zero Nothing allocate
-  let submitInfo = zero{Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]}
   computeQueue <- Vk.getDeviceQueue dev computeQueueFamilyIndex 0
-  Vk.queueSubmit computeQueue [SomeStruct submitInfo] fence
-  let fenceTimeout = 1e9 -- 1 second
-  Vk.waitForFences dev [fence] True fenceTimeout >>= \case
-    Vk.TIMEOUT -> throwString "Timed out waiting for compute"
-    _ -> pure ()
+  submitAndWait dev computeQueue commandBuffer "Timed out waiting for compute"
 
   -- If the buffer allocation is not HOST_COHERENT this will ensure the changes
   -- are present on the CPU.
@@ -306,81 +300,3 @@ createShader dev = do
           }
         }
       |]
-
-----------------------------------------------------------------
--- Initialization
-----------------------------------------------------------------
-
-myApiVersion :: Word32
-myApiVersion = Vk.API_VERSION_1_0
-
--- | Create an instance with a debug messenger and validation layer.
-createInstance :: (MonadResource m) => m Vk.Instance
-createInstance = do
-  inst <-
-    Init.withInstance
-      (Just zero{Vk.applicationName = Nothing, Vk.apiVersion = myApiVersion})
-      [ RequireInstanceExtension
-          { instanceExtensionLayerName = Nothing
-          , instanceExtensionName = EXT_DEBUG_UTILS_EXTENSION_NAME
-          , instanceExtensionMinVersion = minBound
-          }
-      ]
-      [ RequireInstanceLayer
-          { instanceLayerName = "VK_LAYER_KHRONOS_validation"
-          , instanceLayerMinVersion = minBound
-          }
-      ]
-  let debugMessengerCreateInfo =
-        zero
-          { messageSeverity =
-              DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-                .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
-          , messageType =
-              DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-          , pfnUserCallback = debugCallbackPtr
-          }
-  _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-  pure inst
-
-createDevice
-  :: (MonadResource m, MonadThrow m)
-  => Vk.Instance
-  -> m (Vk.PhysicalDevice, Word32, Vk.Device)
-createDevice inst = do
-  mPd <- pickPhysicalDevice inst hasComputeQueue id
-  (_, phys) <-
-    maybe
-      (throwString "Unable to find appropriate PhysicalDevice")
-      pure
-      mPd
-  sayErr . ("Using device: " <>) =<< physicalDeviceName phys
-
-  mAssign <-
-    assignQueues
-      phys
-      (Identity (QueueSpec 1 (\_ q -> pure (isComputeQueueFamily q))))
-  (qInfos, getQs) <-
-    maybe
-      (throwString "Unable to assign compute queue")
-      pure
-      mAssign
-  dev <-
-    createDeviceFromRequirements
-      []
-      []
-      phys
-      zero{Vk.queueCreateInfos = SomeStruct <$> qInfos}
-  Identity (QueueFamilyIndex computeFamilyIdx, _q) <- liftIO (getQs dev)
-  pure (phys, computeFamilyIdx, dev)
-  where
-    hasComputeQueue :: (MonadIO m) => Vk.PhysicalDevice -> m (Maybe Word64)
-    hasComputeQueue phys = do
-      qProps <- Vk.getPhysicalDeviceQueueFamilyProperties phys
-      if V.any isComputeQueueFamily qProps
-        then do
-          heaps <- Vk.memoryHeaps <$> Vk.getPhysicalDeviceMemoryProperties phys
-          pure (Just (sum (DI.size <$> heaps)))
-        else pure Nothing
