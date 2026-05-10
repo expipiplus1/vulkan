@@ -23,59 +23,22 @@ module Frame
   ) where
 
 import Control.Concurrent (forkIO)
-import Control.Monad
-  ( replicateM_
-  , unless
-  , void
-  )
+import Control.Monad (replicateM_, unless, void)
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Trans.Resource
-  ( InternalState
-  , MonadResource
-  , ReleaseKey
-  , ResourceT
-  , allocate
-  , closeInternalState
-  , createInternalState
-  , release
-  , runInternalState
-  )
+import Control.Monad.Trans.Resource (InternalState, MonadResource, ReleaseKey, ResourceT, allocate, closeInternalState, createInternalState, release, runInternalState)
 import Data.IORef
-  ( IORef
-  , newIORef
-  , readIORef
-  )
 import qualified Data.Vector as V
 import Data.Word
 import Say (sayErr)
 import Swapchain (Swapchain)
-import UnliftIO
-  ( atomicModifyIORef'
-  , finally
-  , mask_
-  )
-import VkResources
-  ( Queues (..)
-  , RecycledResources (..)
-  , VkResources (..)
-  )
-import Vulkan.CStruct.Extends
-  ( SomeStruct
-  , pattern (:&)
-  , pattern (::&)
-  )
-import Vulkan.Core10
-import qualified Vulkan.Core10 as CommandPoolCreateInfo
-  ( CommandPoolCreateInfo (..)
-  )
+import UnliftIO (finally, mask_)
+import VkResources (Queues (..), RecycledResources (..), VkResources (..))
+import Vulkan.CStruct.Extends (SomeStruct, pattern (:&), pattern (::&))
+import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
+import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as Timeline
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
-  ( pattern KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-  )
-import Vulkan.Requirement
-  ( DeviceRequirement
-  , InstanceRequirement (..)
-  )
+import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import qualified Vulkan.Utils.Requirements.TH as U
 import Vulkan.Zero (zero)
@@ -120,11 +83,11 @@ data Frame = Frame
   {- ^ This frame's image-available / render-finished / command-pool — all
   borrowed from the recycle channel; returned at retire time.
   -}
-  , fHostTimeline :: Semaphore
+  , fHostTimeline :: Vk.Semaphore
   {- ^ Long-lived timeline semaphore. Each frame increments it to 'fIndex'
   on the GPU; the host wait thread blocks on this.
   -}
-  , fGPUWork :: IORef [(Semaphore, Word64)]
+  , fGPUWork :: IORef [(Vk.Semaphore, Word64)]
   {- ^ (Timeline semaphore, value) pairs the host wait thread will block on.
   Appended to by 'queueSubmitFrame'.
   -}
@@ -209,13 +172,13 @@ waitAndRecycle vr f = do
               }
       r <- waitTwice (vrDevice vr) waitInfo oneSecond
       case r of
-        TIMEOUT -> sayErr "Frame wait timed out (1s) — GPU may be hung"
+        Vk.TIMEOUT -> sayErr "Frame wait timed out (1s) — GPU may be hung"
         _ -> pure ()
     -- Pool reuse: reset, dropping all recorded buffers.
-    resetCommandPool
+    Vk.resetCommandPool
       (vrDevice vr)
       (rrCommandPool (fRecycled f))
-      COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+      Vk.COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
     -- Hand the borrowed resources back to whoever's waiting on them.
     vrRecycleBin vr (fRecycled f)
     -- Free the per-frame ResourceT scope.
@@ -230,16 +193,16 @@ the wait thread will block on.
 Wraps 'queueSubmit' to keep the submit and the bookkeeping atomic.
 -}
 queueSubmitFrame
-  :: Queue
+  :: Vk.Queue
   -> Frame
-  -> V.Vector (SomeStruct SubmitInfo)
-  -> Semaphore
+  -> V.Vector (SomeStruct Vk.SubmitInfo)
+  -> Vk.Semaphore
   -- ^ Timeline semaphore that will be signalled to @value@
   -> Word64
   -- ^ Value the timeline reaches once this submit completes
   -> IO ()
 queueSubmitFrame q f ss sem value = mask_ $ do
-  queueSubmit q ss NULL_HANDLE
+  Vk.queueSubmit q ss Vk.NULL_HANDLE
   atomicModifyIORef' (fGPUWork f) ((,()) . ((sem, value) :))
 
 ----------------------------------------------------------------
@@ -247,10 +210,9 @@ queueSubmitFrame q f ss sem value = mask_ $ do
 ----------------------------------------------------------------
 
 -- | Allocate a timeline semaphore initialised to the given value.
-withTimelineSemaphore
-  :: (MonadResource m) => Device -> Word64 -> m (ReleaseKey, Semaphore)
+withTimelineSemaphore :: (MonadResource m) => Vk.Device -> Word64 -> m (ReleaseKey, Vk.Semaphore)
 withTimelineSemaphore dev initial =
-  withSemaphore
+  Vk.withSemaphore
     dev
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE initial :& ())
     Nothing
@@ -269,19 +231,19 @@ mkRecycledResources vr = do
     dev = vrDevice vr
     QueueFamilyIndex qfi = fst (qGraphics (vrQueues vr))
   (_, rrImageAvailable) <-
-    withSemaphore
+    Vk.withSemaphore
       dev
       (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
       Nothing
       allocate
   (_, rrRenderFinished) <-
-    withSemaphore
+    Vk.withSemaphore
       dev
       (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
       Nothing
       allocate
   (_, rrCommandPool) <-
-    withCommandPool
+    Vk.withCommandPool
       dev
       zero{CommandPoolCreateInfo.queueFamilyIndex = qfi}
       Nothing
@@ -292,8 +254,8 @@ mkRecycledResources vr = do
 more chance with a zero timeout. Catches the case where the host was
 suspended during the wait and the GPU has actually finished.
 -}
-waitTwice :: Device -> SemaphoreWaitInfo -> Word64 -> IO Result
+waitTwice :: Vk.Device -> SemaphoreWaitInfo -> Word64 -> IO Vk.Result
 waitTwice dev waitInfo t =
   Timeline.waitSemaphoresSafe dev waitInfo t >>= \case
-    TIMEOUT -> Timeline.waitSemaphores dev waitInfo 0
+    Vk.TIMEOUT -> Timeline.waitSemaphores dev waitInfo 0
     r -> pure r
