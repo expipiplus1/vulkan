@@ -12,6 +12,7 @@ main :: IO ()
 main = runResourceT $ do
   Window.withGLFW
   window <- Window.createWindow appName windowWidth windowHeight
+  Window.showWindow window
   (vr, initialSC) <-
     withWindowedVk
       WindowedConfig
@@ -22,7 +23,6 @@ main = runResourceT $ do
         , wcSwapchainConfig = defaultSwapchainConfig
         }
       (Window.glfwAdapter window)
-  Window.showWindow window
   Triangle.runTriangle
     vr
     initialSC

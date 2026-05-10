@@ -19,7 +19,6 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception (VulkanException (..))
 import Vulkan.Extensions.VK_KHR_swapchain as VK_KHR_swapchain
 import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
-import Vulkan.Utils.RefCounted (resourceTRefCount)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
@@ -39,10 +38,6 @@ renderFrame vr renderPass pipeline framebuffers f = do
     dev = vrDevice vr
     gQ = snd (qGraphics (vrQueues vr))
     oneSecond = 1e9
-
-  -- Hold a refcount on the swapchain release group so it survives this frame
-  -- if the window resizes mid-flight.
-  resourceTRefCount (sRelease sc)
 
   -- Acquire next image.
   (acquireResult, imageIndex) <-

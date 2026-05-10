@@ -32,7 +32,7 @@ import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
-import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
 
 -- | Drive a recycling-Frame render loop drawing the colored triangle.
@@ -64,7 +64,7 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
           Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
       , wlRender = drawTriangle vr renderPass pipeline
       , wlOnFrame = noOnFrame
-      , wlOnExit = \_ -> Vk.deviceWaitIdle dev
+      , wlOnExit = noOnExit
       }
 
 ----------------------------------------------------------------

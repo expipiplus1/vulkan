@@ -21,6 +21,7 @@ module Vulkan.Utils.Frame
   , advanceFrame
   , runFrame
   , queueSubmitFrame
+  , drainFrames
   , withTimelineSemaphore
   , frameInstanceRequirements
   , frameDeviceRequirements
@@ -43,8 +44,9 @@ import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
+import Vulkan.Utils.RefCounted (resourceTRefCount)
 import qualified Vulkan.Utils.Requirements.TH as U
-import Vulkan.Utils.Swapchain (Swapchain)
+import Vulkan.Utils.Swapchain (Swapchain, sRelease)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
 
@@ -118,6 +120,7 @@ initialFrame vc fSwapchain = do
   (_, fHostTimeline) <- withTimelineSemaphore (vcDevice vc) 0
   fGPUWork <- liftIO $ newIORef mempty
   fResources <- allocate createInternalState closeInternalState
+  liftIO $ runInternalState (resourceTRefCount (sRelease fSwapchain)) (snd fResources)
   pure Frame{fIndex = 1, ..}
 
 {- | Build the next frame, taking one set of recycled resources from the bin.
@@ -139,6 +142,7 @@ advanceFrame vc sc f = do
         Right rr -> pure rr
   fGPUWork <- liftIO $ newIORef mempty
   fResources <- allocate createInternalState closeInternalState
+  liftIO $ runInternalState (resourceTRefCount (sRelease sc)) (snd fResources)
   pure
     Frame
       { fIndex = succ (fIndex f)
@@ -183,10 +187,13 @@ waitAndRecycle vc f = do
       (vcDevice vc)
       (rrCommandPool (fRecycled f))
       Vk.COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+    -- Free the per-frame ResourceT scope. Must precede the channel deposit so
+    -- the deposit signals "all per-frame cleanup done" — otherwise the next
+    -- frame could pick up the recycled pool while this frame's cleanup is
+    -- still calling vkFreeCommandBuffers on it.
+    release (fst (fResources f))
     -- Hand the borrowed resources back to whoever's waiting on them.
     vcRecycleBin vc (fRecycled f)
-    -- Free the per-frame ResourceT scope.
-    release (fst (fResources f))
   where
     oneSecond :: Word64
     oneSecond = 1000000000
@@ -208,6 +215,22 @@ queueSubmitFrame
 queueSubmitFrame q f ss sem value = mask_ $ do
   Vk.queueSubmit q ss Vk.NULL_HANDLE
   atomicModifyIORef' (fGPUWork f) ((,()) . ((sem, value) :))
+
+{- | Shutdown drain: spawn the unrendered current frame's wait/recycle thread,
+then block on the recycle channel until both this frame's and the previous
+in-flight frame's deposits have arrived. After this returns, every forked
+wait thread has run its per-frame cleanup, so the outer 'ResourceT' is safe
+to tear down GPU resources.
+
+Assumes max-in-flight is 2 (see 'initialFrame').
+-}
+drainFrames :: VulkanContext -> Frame -> IO ()
+drainFrames vc f = do
+  waitAndRecycle vc f
+  let take1 = vcRecycleNib vc >>= either id pure
+  _ <- take1
+  _ <- take1
+  pure ()
 
 ----------------------------------------------------------------
 -- Small helpers

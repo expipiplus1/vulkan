@@ -50,6 +50,8 @@ main = prettyError . runResourceT $ do
     initHeight = 720
 
   sdlWindow <- createWindow "Haskell ❤️ Vulkan" initWidth initHeight
+  SDL.showWindow sdlWindow
+
   (vr, initialSC) <-
     withWindowedVk
       WindowedConfig
@@ -73,8 +75,6 @@ main = prettyError . runResourceT $ do
       (SurfaceFormatKHR.format (sFormat initialSC))
       Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
   juliaPL <- createJuliaPipeline dev
-
-  SDL.showWindow sdlWindow
 
   runWindowLoop
     (vrContext vr)

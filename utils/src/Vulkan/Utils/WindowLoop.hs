@@ -29,7 +29,7 @@ import Data.IORef
 import Data.Word (Word64)
 import GHC.Clock (getMonotonicTimeNSec)
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Frame (Frame (..), advanceFrame, initialFrame, runFrame)
+import Vulkan.Utils.Frame (Frame (..), advanceFrame, drainFrames, initialFrame, runFrame)
 import Vulkan.Utils.Swapchain (Swapchain, recreateSwapchain, threwSwapchainError)
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
 
@@ -90,7 +90,9 @@ runWindowLoop vc initialSC getSize shouldQuit WindowLoop{..} = do
     loop f =
       liftIO shouldQuit >>= \case
         True -> do
+          Vk.deviceWaitIdle (vcDevice vc)
           wlOnExit f
+          liftIO $ drainFrames vc f
           pure Nothing
         False -> Just <$> perFrame f
   loopJust loop initial
