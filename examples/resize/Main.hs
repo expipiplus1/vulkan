@@ -21,18 +21,18 @@ import Linear.Metric (norm)
 import Linear.V2
 import qualified SDL
 import Say (sayErrString)
-import UnliftIO.Exception (displayException, throwIO, throwString)
+import UnliftIO.Exception (displayException)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
-import VkResources (Queues (..), VkResources (..), vrContext)
+import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
-import Vulkan.Extensions.VK_KHR_swapchain as KHR
-import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
+import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
@@ -143,7 +143,6 @@ renderJulia vr jp bindings f = do
     sc = fSwapchain f
     gQ = snd (qGraphics (vrQueues vr))
     dev = vrDevice vr
-    oneSecond = 1e9
     Vk.Extent2D imageWidth imageHeight = sExtent sc
     imageSubresourceRange =
       Vk.ImageSubresourceRange
@@ -154,12 +153,7 @@ renderJulia vr jp bindings f = do
         , Vk.layerCount = 1
         }
 
-  (acquireResult, imageIndex) <-
-    acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable Vk.NULL_HANDLE >>= \case
-      r@(Vk.SUCCESS, _) -> pure r
-      r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
-      (Vk.TIMEOUT, _) -> throwString "Couldn't acquire next image after 1 second"
-      _ -> throwString "Unexpected Result from acquireNextImageKHR"
+  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
 
   let
     image = sImages sc V.! fromIntegral imageIndex
@@ -277,19 +271,7 @@ renderJulia vr jp bindings f = do
       (fHostTimeline f)
       (fIndex f)
 
-  presentResult <-
-    queuePresentKHR
-      gQ
-      zero
-        { KHR.waitSemaphores = [rrRenderFinished]
-        , KHR.swapchains = [sSwapchain sc]
-        , KHR.imageIndices = [imageIndex]
-        }
-
-  case (acquireResult, presentResult) of
-    (Vk.SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    _ -> pure ()
+  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Frame timing

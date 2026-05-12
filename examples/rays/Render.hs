@@ -6,7 +6,6 @@ module Render
   ) where
 
 import Camera
-import Control.Exception (throwIO)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Vector ((!))
@@ -15,22 +14,19 @@ import Data.Word
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable
 import GHC.Clock (getMonotonicTime)
-import GHC.IO.Exception (IOErrorType (TimeExpired), IOException (IOError))
 import Init (RTInfo (..))
 import Linear.Matrix
 import Linear.Quaternion
 import Linear.V3
-import UnliftIO.Exception (throwString)
-import VkResources (Queues (..), VkResources (..))
+import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
-import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Extensions.VK_KHR_ray_tracing_pipeline as RT
-import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
-import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
+import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
@@ -62,19 +58,11 @@ renderFrame vr rs f = do
     sc = fSwapchain f
     dev = vrDevice vr
     gQ = snd (qGraphics (vrQueues vr))
-    -- RTInfo{..} = rsRTInfo rs
     slot = fromIntegral (fIndex f) `mod` 2
     descriptorSet = rsDescriptorSets rs ! slot
     cameraMatricesOffset = fromIntegral slot * fromIntegral (sizeOf (undefined :: CameraMatrices))
-    oneSecond = 1e9
 
-  -- Acquire next image
-  (acquireResult, imageIndex) <-
-    KHR.acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable Vk.NULL_HANDLE >>= \case
-      r@(Vk.SUCCESS, _) -> pure r
-      r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
-      (Vk.TIMEOUT, _) -> timeoutError "Timed out (1s) acquiring next image"
-      _ -> throwString "Unexpected Result from acquireNextImageKHR"
+  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
 
   -- Bind the per-slot descriptor set's image view + camera buffer slot.
   Vk.updateDescriptorSets
@@ -169,19 +157,7 @@ renderFrame vr rs f = do
       (fHostTimeline f)
       (fIndex f)
 
-  presentResult <-
-    KHR.queuePresentKHR
-      gQ
-      zero
-        { KHR.waitSemaphores = [rrRenderFinished]
-        , KHR.swapchains = [sSwapchain sc]
-        , KHR.imageIndices = [imageIndex]
-        }
-
-  case (acquireResult, presentResult) of
-    (Vk.SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    _ -> pure ()
+  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Command buffer recording
@@ -310,11 +286,3 @@ recordCommandBuffer commandBuffer rs sc descriptorSet imageIndex = do
           , Vk.subresourceRange = imageSubresourceRange
           }
     ]
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-timeoutError :: (MonadIO m) => String -> m a
-timeoutError message =
-  liftIO . throwIO $ IOError Nothing TimeExpired "" message Nothing Nothing

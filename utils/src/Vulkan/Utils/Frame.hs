@@ -21,6 +21,8 @@ module Vulkan.Utils.Frame
   , advanceFrame
   , runFrame
   , queueSubmitFrame
+  , acquireFrameImage
+  , presentFrameImage
   , drainFrames
   , withTimelineSemaphore
   , frameInstanceRequirements
@@ -28,8 +30,8 @@ module Vulkan.Utils.Frame
   ) where
 
 import Control.Concurrent (forkIO)
-import Control.Exception (finally, mask_)
-import Control.Monad (unless, void)
+import Control.Exception (finally, mask_, throwIO)
+import Control.Monad
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource
 import Data.IORef
@@ -40,13 +42,15 @@ import Vulkan.CStruct.Extends (SomeStruct, pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as Timeline
+import Vulkan.Exception (VulkanException (..))
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
+import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.RefCounted (resourceTRefCount)
 import qualified Vulkan.Utils.Requirements.TH as U
-import Vulkan.Utils.Swapchain (Swapchain, sRelease)
+import Vulkan.Utils.Swapchain (Swapchain (..), sRelease)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
 
@@ -215,6 +219,58 @@ queueSubmitFrame
 queueSubmitFrame q f ss sem value = mask_ $ do
   Vk.queueSubmit q ss Vk.NULL_HANDLE
   atomicModifyIORef' (fGPUWork f) ((,()) . ((sem, value) :))
+
+{- | Acquire the next swapchain image for this frame, signalling the frame's
+image-available semaphore on completion.
+
+The acquire result is returned alongside the image index so the caller can
+thread it into 'presentFrameImage', which honours 'SUBOPTIMAL_KHR' from
+either side by raising 'ERROR_OUT_OF_DATE_KHR' to drive a swapchain
+recreation. Timeouts and unexpected results are also translated to
+'ERROR_OUT_OF_DATE_KHR' — the main loop's swapchain-recreation path is the
+right place to recover.
+-}
+acquireFrameImage :: VulkanContext -> Frame -> IO (Vk.Result, Word32)
+acquireFrameImage vc Frame{..} =
+  acquire >>= \case
+    r@(Vk.SUCCESS, _) -> pure r
+    r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
+    _ -> throwIO (VulkanException Vk.ERROR_OUT_OF_DATE_KHR)
+  where
+    acquire =
+      KHR.acquireNextImageKHRSafe
+        (vcDevice vc)
+        (sSwapchain fSwapchain)
+        oneSecond
+        (rrImageAvailable fRecycled)
+        Vk.NULL_HANDLE
+
+    oneSecond :: Word64
+    oneSecond = 1000000000
+
+{- | Present this frame's acquired image, waiting on the frame's
+render-finished semaphore. Presents on the graphics queue
+(@qGraphics . vcQueues@).
+
+If either the prior acquire (passed in) or this present reports
+'SUBOPTIMAL_KHR', raises 'ERROR_OUT_OF_DATE_KHR' so the main loop
+recreates the swapchain.
+-}
+presentFrameImage :: VulkanContext -> Frame -> Vk.Result -> Word32 -> IO ()
+presentFrameImage vc f acquireResult imageIndex = do
+  let
+    RecycledResources{rrRenderFinished} = fRecycled f
+    gQ = snd (qGraphics (vcQueues vc))
+  presentResult <-
+    KHR.queuePresentKHR
+      gQ
+      zero
+        { KHR.waitSemaphores = [rrRenderFinished]
+        , KHR.swapchains = [sSwapchain (fSwapchain f)]
+        , KHR.imageIndices = [imageIndex]
+        }
+  when (acquireResult == Vk.SUBOPTIMAL_KHR || presentResult == Vk.SUBOPTIMAL_KHR) $
+    throwIO (VulkanException Vk.ERROR_OUT_OF_DATE_KHR)
 
 {- | Shutdown drain: spawn the unrendered current frame's wait/recycle thread,
 then block on the recycle channel until both this frame's and the previous

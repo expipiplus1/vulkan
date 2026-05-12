@@ -4,21 +4,17 @@ module Render
   ( renderFrame
   ) where
 
-import Control.Exception (throwIO)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Vector (Vector, (!))
-import GHC.IO.Exception (IOErrorType (TimeExpired), IOException (IOError))
-import UnliftIO.Exception (throwString)
-import VkResources (Queues (..), VkResources (..))
+import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
-import Vulkan.Exception (VulkanException (..))
-import Vulkan.Extensions.VK_KHR_swapchain as VK_KHR_swapchain
-import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
+import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
@@ -37,16 +33,8 @@ renderFrame vr renderPass pipeline framebuffers f = do
     sc = fSwapchain f
     dev = vrDevice vr
     gQ = snd (qGraphics (vrQueues vr))
-    oneSecond = 1e9
 
-  -- Acquire next image.
-  (acquireResult, imageIndex) <-
-    acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable Vk.NULL_HANDLE
-      >>= \case
-        r@(Vk.SUCCESS, _) -> pure r
-        r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
-        (Vk.TIMEOUT, _) -> timeoutError "Timed out (1s) acquiring next image"
-        _ -> throwString "Unexpected Result from acquireNextImageKHR"
+  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
 
   -- Allocate a per-frame command buffer from the recycled pool.
   (_, [commandBuffer]) <-
@@ -108,26 +96,4 @@ renderFrame vr renderPass pipeline framebuffers f = do
       (fHostTimeline f)
       (fIndex f)
 
-  presentResult <-
-    queuePresentKHR
-      gQ
-      zero
-        { VK_KHR_swapchain.waitSemaphores = [rrRenderFinished]
-        , swapchains = [sSwapchain sc]
-        , imageIndices = [imageIndex]
-        }
-
-  -- Surface either reported SUBOPTIMAL on acquire or present — bubble it up
-  -- as an OUT_OF_DATE so the main loop will recreate the swapchain.
-  case (acquireResult, presentResult) of
-    (Vk.SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    _ -> pure ()
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-timeoutError :: (MonadIO m) => String -> m a
-timeoutError message =
-  liftIO . throwIO $ IOError Nothing TimeExpired "" message Nothing Nothing
+  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex

@@ -12,22 +12,20 @@ module Triangle
   ( runTriangle
   ) where
 
-import Control.Exception (throwIO)
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import VkResources (Queues (..), VkResources (..), vrContext)
+import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core12 as Vk12
-import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
-import qualified Vulkan.Extensions.VK_KHR_swapchain as KHR
-import Vulkan.Utils.Frame (Frame (..), queueSubmitFrame)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
+import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
@@ -84,14 +82,8 @@ drawTriangle vr renderPass pipeline framebuffers f = do
     sc = fSwapchain f
     dev = vrDevice vr
     gQ = snd (qGraphics (vrQueues vr))
-    oneSecond = 1e9
 
-  (acquireResult, imageIndex) <-
-    KHR.acquireNextImageKHRSafe dev (sSwapchain sc) oneSecond rrImageAvailable Vk.NULL_HANDLE >>= \case
-      r@(Vk.SUCCESS, _) -> pure r
-      r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
-      (Vk.TIMEOUT, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-      _ -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
+  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
 
   (_, [commandBuffer]) <-
     Vk.withCommandBuffers
@@ -156,19 +148,7 @@ drawTriangle vr renderPass pipeline framebuffers f = do
       (fHostTimeline f)
       (fIndex f)
 
-  presentResult <-
-    KHR.queuePresentKHR
-      gQ
-      zero
-        { KHR.waitSemaphores = [rrRenderFinished]
-        , KHR.swapchains = [sSwapchain sc]
-        , KHR.imageIndices = [imageIndex]
-        }
-
-  case (acquireResult, presentResult) of
-    (Vk.SUBOPTIMAL_KHR, _) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    (_, Vk.SUBOPTIMAL_KHR) -> liftIO . throwIO $ VulkanException Vk.ERROR_OUT_OF_DATE_KHR
-    _ -> pure ()
+  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Pipeline (long-lived)
