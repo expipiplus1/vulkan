@@ -25,15 +25,13 @@ import UnliftIO.Exception (displayException)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..))
-import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
-import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import Vulkan.Zero (zero)
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
@@ -136,40 +134,15 @@ renderJulia
   -> Frame
   -> ResourceT IO ()
 renderJulia vr jp bindings f = do
-  let
-    sc = fSwapchain f
-    dev = vrDevice vr
-    Vk.Extent2D imageWidth imageHeight = sExtent sc
-    imageSubresourceRange =
-      Vk.ImageSubresourceRange
-        { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
-        , Vk.baseMipLevel = 0
-        , Vk.levelCount = 1
-        , Vk.baseArrayLayer = 0
-        , Vk.layerCount = 1
-        }
-
   (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
-
   let
     image = sImages sc V.! fromIntegral imageIndex
     descriptorSet = bJuliaDescriptorSets bindings V.! fromIntegral imageIndex
 
-  -- Allocate a per-frame command buffer from the recycled pool.
-  (_, [commandBuffer]) <-
-    Vk.withCommandBuffers
-      dev
-      zero
-        { Vk.commandPool = rrCommandPool (fRecycled f)
-        , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
-        , Vk.commandBufferCount = 1
-        }
-      allocate
-
-  Vk.useCommandBuffer commandBuffer zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} do
+  commands <- recordCommands (vrContext vr) f \cb -> do
     -- Transition image to general (compute write target).
     Vk.cmdPipelineBarrier
-      commandBuffer
+      cb
       Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
       Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
       zero
@@ -186,7 +159,7 @@ renderJulia vr jp bindings f = do
             }
       ]
 
-    Vk.cmdBindPipeline commandBuffer Vk.PIPELINE_BIND_POINT_COMPUTE (jpPipeline jp)
+    Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE (jpPipeline jp)
 
     -- Mouse-driven push constants.
     P m <- SDL.getAbsoluteMouseLocation
@@ -208,28 +181,28 @@ renderJulia vr jp bindings f = do
       liftIO $ poke (p `plusPtr` 16) c
       liftIO $ poke (p `plusPtr` 24) escapeRadius
       Vk.cmdPushConstants
-        commandBuffer
+        cb
         (jpPipelineLayout jp)
         Vk.SHADER_STAGE_COMPUTE_BIT
         0
         constantBytes
         p
     Vk.cmdBindDescriptorSets
-      commandBuffer
+      cb
       Vk.PIPELINE_BIND_POINT_COMPUTE
       (jpPipelineLayout jp)
       0
       [descriptorSet]
       []
     Vk.cmdDispatch
-      commandBuffer
+      cb
       ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)
       ((imageHeight + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
       1
 
     -- Transition image back to present.
     Vk.cmdPipelineBarrier
-      commandBuffer
+      cb
       Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
       Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
       zero
@@ -246,8 +219,19 @@ renderJulia vr jp bindings f = do
             }
       ]
 
-  queueSubmitFrame (vrContext vr) f [commandBuffer]
+  queueSubmitFrame (vrContext vr) f [commands]
   presentFrameImage (vrContext vr) f acquireResult imageIndex
+  where
+    sc = fSwapchain f
+    Vk.Extent2D imageWidth imageHeight = sExtent sc
+    imageSubresourceRange =
+      Vk.ImageSubresourceRange
+        { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
+        , Vk.baseMipLevel = 0
+        , Vk.levelCount = 1
+        , Vk.baseArrayLayer = 0
+        , Vk.layerCount = 1
+        }
 
 ----------------------------------------------------------------
 -- Frame timing

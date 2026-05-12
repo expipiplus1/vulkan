@@ -20,13 +20,11 @@ import Linear.Quaternion
 import Linear.V3
 import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..))
-import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Extensions.VK_KHR_ray_tracing_pipeline as RT
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
 import Vulkan.Utils.Swapchain (Swapchain (..))
-import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -115,24 +113,10 @@ renderFrame vr rs f = do
     cameraMatricesOffset
     (fromIntegral (sizeOf (undefined :: CameraMatrices)))
 
-  -- Allocate per-frame command buffer from the recycled pool.
-  let commandBufferAllocateInfo =
-        zero
-          { Vk.commandPool = rrCommandPool (fRecycled f)
-          , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
-          , Vk.commandBufferCount = 1
-          }
-  (_, [commandBuffer]) <- Vk.withCommandBuffers dev commandBufferAllocateInfo allocate
+  commands <- recordCommands (vrContext vr) f \cb ->
+    recordCommandBuffer cb rs sc descriptorSet imageIndex
 
-  Vk.useCommandBuffer commandBuffer zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} $
-    recordCommandBuffer
-      commandBuffer
-      rs
-      sc
-      descriptorSet
-      imageIndex
-
-  queueSubmitFrame (vrContext vr) f [commandBuffer]
+  queueSubmitFrame (vrContext vr) f [commands]
   presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------

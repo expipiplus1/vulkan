@@ -164,32 +164,29 @@ render allocator dev computeQueueFamilyIndex = do
           , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
           , Vk.commandBufferCount = 1
           }
-  (_, [commandBuffer]) <- Vk.withCommandBuffers dev commandBufferAllocateInfo allocate
+  (_, [cb]) <- Vk.withCommandBuffers dev commandBufferAllocateInfo allocate
 
   -- Fill command buffer
-  Vk.useCommandBuffer
-    commandBuffer
-    zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-    do
-      Vk.cmdBindPipeline
-        commandBuffer
-        Vk.PIPELINE_BIND_POINT_COMPUTE
-        computePipeline
-      Vk.cmdBindDescriptorSets
-        commandBuffer
-        Vk.PIPELINE_BIND_POINT_COMPUTE
-        pipelineLayout
-        0
-        [descriptorSet]
-        []
-      Vk.cmdDispatch
-        commandBuffer
-        (ceiling (realToFrac width / realToFrac @_ @Float workgroupX))
-        (ceiling (realToFrac height / realToFrac @_ @Float workgroupY))
-        1
+  Vk.useCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} do
+    Vk.cmdBindPipeline
+      cb
+      Vk.PIPELINE_BIND_POINT_COMPUTE
+      computePipeline
+    Vk.cmdBindDescriptorSets
+      cb
+      Vk.PIPELINE_BIND_POINT_COMPUTE
+      pipelineLayout
+      0
+      [descriptorSet]
+      []
+    Vk.cmdDispatch
+      cb
+      (ceiling (realToFrac width / realToFrac @_ @Float workgroupX))
+      (ceiling (realToFrac height / realToFrac @_ @Float workgroupY))
+      1
 
   computeQueue <- Vk.getDeviceQueue dev computeQueueFamilyIndex 0
-  submitAndWait dev computeQueue commandBuffer "Timed out waiting for compute"
+  submitAndWait dev computeQueue cb "Timed out waiting for compute"
 
   -- TODO: speed this bit up, it's hopelessly slow
   let

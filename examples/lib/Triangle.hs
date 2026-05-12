@@ -12,20 +12,18 @@ module Triangle
   ( runTriangle
   ) where
 
-import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate)
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import VkResources (VkResources (..), vrContext)
-import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
-import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
 
@@ -73,56 +71,40 @@ drawTriangle
   -> Frame
   -> ResourceT IO ()
 drawTriangle vr renderPass pipeline framebuffers f = do
-  let
-    sc = fSwapchain f
-    dev = vrDevice vr
+  let sc = fSwapchain f
 
   (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
 
-  (_, [commandBuffer]) <-
-    Vk.withCommandBuffers
-      dev
-      zero
-        { Vk.commandPool = rrCommandPool (fRecycled f)
-        , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
-        , Vk.commandBufferCount = 1
-        }
-      allocate
+  commands <- recordCommands (vrContext vr) f \cb -> do
+    let renderPassBeginInfo =
+          zero
+            { Vk.renderPass = renderPass
+            , Vk.framebuffer = framebuffers V.! fromIntegral imageIndex
+            , Vk.renderArea = Vk.Rect2D{Vk.offset = zero, Vk.extent = sExtent sc}
+            , Vk.clearValues = [Vk.Color (Vk.Float32 0.1 0.1 0.1 0)]
+            }
+    Vk.cmdUseRenderPass cb renderPassBeginInfo Vk.SUBPASS_CONTENTS_INLINE do
+      let Vk.Extent2D w h = sExtent sc
+      Vk.cmdSetViewport
+        cb
+        0
+        [ Vk.Viewport
+            { Vk.x = 0
+            , Vk.y = 0
+            , Vk.width = realToFrac w
+            , Vk.height = realToFrac h
+            , Vk.minDepth = 0
+            , Vk.maxDepth = 1
+            }
+        ]
+      Vk.cmdSetScissor
+        cb
+        0
+        [Vk.Rect2D{Vk.offset = Vk.Offset2D 0 0, Vk.extent = sExtent sc}]
+      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
+      Vk.cmdDraw cb 3 1 0 0
 
-  let renderPassBeginInfo =
-        zero
-          { Vk.renderPass = renderPass
-          , Vk.framebuffer = framebuffers V.! fromIntegral imageIndex
-          , Vk.renderArea = Vk.Rect2D{Vk.offset = zero, Vk.extent = sExtent sc}
-          , Vk.clearValues = [Vk.Color (Vk.Float32 0.1 0.1 0.1 0)]
-          }
-
-  Vk.useCommandBuffer
-    commandBuffer
-    zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
-    do
-      Vk.cmdUseRenderPass commandBuffer renderPassBeginInfo Vk.SUBPASS_CONTENTS_INLINE do
-        let Vk.Extent2D w h = sExtent sc
-        Vk.cmdSetViewport
-          commandBuffer
-          0
-          [ Vk.Viewport
-              { Vk.x = 0
-              , Vk.y = 0
-              , Vk.width = realToFrac w
-              , Vk.height = realToFrac h
-              , Vk.minDepth = 0
-              , Vk.maxDepth = 1
-              }
-          ]
-        Vk.cmdSetScissor
-          commandBuffer
-          0
-          [Vk.Rect2D{Vk.offset = Vk.Offset2D 0 0, Vk.extent = sExtent sc}]
-        Vk.cmdBindPipeline commandBuffer Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
-        Vk.cmdDraw commandBuffer 3 1 0 0
-
-  queueSubmitFrame (vrContext vr) f [commandBuffer]
+  queueSubmitFrame (vrContext vr) f [commands]
   presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------

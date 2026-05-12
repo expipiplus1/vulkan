@@ -213,10 +213,6 @@ render allocator dev graphicsQueueFamilyIndex = do
             , Vk.clearValues = [Vk.Color (Vk.Float32 0.1 0.1 0.1 1)]
             }
     Vk.cmdUseRenderPass commandBuffer renderPassBeginInfo Vk.SUBPASS_CONTENTS_INLINE do
-      Vk.cmdBindPipeline
-        commandBuffer
-        Vk.PIPELINE_BIND_POINT_GRAPHICS
-        graphicsPipeline
       Vk.cmdSetViewport
         commandBuffer
         0
@@ -233,6 +229,10 @@ render allocator dev graphicsQueueFamilyIndex = do
         commandBuffer
         0
         [Vk.Rect2D{Vk.offset = Vk.Offset2D 0 0, Vk.extent = Vk.Extent2D width height}]
+      Vk.cmdBindPipeline
+        commandBuffer
+        Vk.PIPELINE_BIND_POINT_GRAPHICS
+        graphicsPipeline
       Vk.cmdDraw commandBuffer 3 1 0 0
 
     -- Transition render target to transfer source

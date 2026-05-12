@@ -20,6 +20,7 @@ module Vulkan.Utils.Frame
   , initialFrame
   , advanceFrame
   , runFrame
+  , recordCommands
   , queueSubmitFrame
   , acquireFrameImage
   , presentFrameImage
@@ -39,6 +40,7 @@ import qualified Data.Vector as V
 import Data.Word
 import System.IO (hPutStrLn, stderr)
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
+import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as Timeline
@@ -201,6 +203,36 @@ waitAndRecycle vc f = do
   where
     oneSecond :: Word64
     oneSecond = 1000000000
+
+{- | Allocate a primary command buffer from this frame's recycled command pool,
+begin it with 'Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT', run the caller's
+recording action, end recording, and return the buffer ready to hand to
+'queueSubmitFrame'.
+
+For a non-standard begin shape (secondary level, different usage flags,
+inheritance info) call 'Vk.withCommandBuffers' and 'Vk.useCommandBuffer'
+directly.
+-}
+recordCommands
+  :: (MonadResource m, MonadFail m)
+  => VulkanContext
+  -> Frame
+  -> (Vk.CommandBuffer -> m ())
+  -> m Vk.CommandBuffer
+{-# INLINE recordCommands #-}
+recordCommands vc Frame{fRecycled} record = do
+  (_, [cb]) <-
+    Vk.withCommandBuffers
+      (vcDevice vc)
+      zero
+        { Vk.commandPool = rrCommandPool fRecycled
+        , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
+        , Vk.commandBufferCount = 1
+        }
+      allocate
+  Vk.useCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} $
+    record cb
+  pure cb
 
 {- | Submit a per-frame command buffer batch and record the timeline-wait
 bookkeeping the host wait thread will block on.
