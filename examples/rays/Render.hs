@@ -19,14 +19,12 @@ import Linear.Matrix
 import Linear.Quaternion
 import Linear.V3
 import VkResources (VkResources (..), vrContext)
-import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
+import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import qualified Vulkan.Extensions.VK_KHR_ray_tracing_pipeline as RT
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
-import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
@@ -54,15 +52,13 @@ renderFrame
   -> ResourceT IO ()
 renderFrame vr rs f = do
   let
-    RecycledResources{..} = fRecycled f
     sc = fSwapchain f
     dev = vrDevice vr
-    gQ = snd (qGraphics (vrQueues vr))
     slot = fromIntegral (fIndex f) `mod` 2
     descriptorSet = rsDescriptorSets rs ! slot
     cameraMatricesOffset = fromIntegral slot * fromIntegral (sizeOf (undefined :: CameraMatrices))
 
-  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
+  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
 
   -- Bind the per-slot descriptor set's image view + camera buffer slot.
   Vk.updateDescriptorSets
@@ -122,7 +118,7 @@ renderFrame vr rs f = do
   -- Allocate per-frame command buffer from the recycled pool.
   let commandBufferAllocateInfo =
         zero
-          { Vk.commandPool = rrCommandPool
+          { Vk.commandPool = rrCommandPool (fRecycled f)
           , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
           , Vk.commandBufferCount = 1
           }
@@ -136,28 +132,8 @@ renderFrame vr rs f = do
       descriptorSet
       imageIndex
 
-  -- Submit and record GPU work for the frame's wait thread.
-  let submitInfo =
-        zero
-          { Vk.waitSemaphores = [rrImageAvailable]
-          , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
-          , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline f]
-          }
-          ::& zero
-            { waitSemaphoreValues = [1]
-            , signalSemaphoreValues = [1, fIndex f]
-            }
-            :& ()
-  liftIO $
-    queueSubmitFrame
-      gQ
-      f
-      [SomeStruct submitInfo]
-      (fHostTimeline f)
-      (fIndex f)
-
-  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame (vrContext vr) f [commandBuffer]
+  presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Command buffer recording

@@ -12,20 +12,16 @@ module Triangle
   ( runTriangle
   ) where
 
-import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, allocate)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import VkResources (VkResources (..), vrContext)
-import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
-import qualified Vulkan.Core12 as Vk12
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
-import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
@@ -78,18 +74,16 @@ drawTriangle
   -> ResourceT IO ()
 drawTriangle vr renderPass pipeline framebuffers f = do
   let
-    RecycledResources{..} = fRecycled f
     sc = fSwapchain f
     dev = vrDevice vr
-    gQ = snd (qGraphics (vrQueues vr))
 
-  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
+  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
 
   (_, [commandBuffer]) <-
     Vk.withCommandBuffers
       dev
       zero
-        { Vk.commandPool = rrCommandPool
+        { Vk.commandPool = rrCommandPool (fRecycled f)
         , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
         , Vk.commandBufferCount = 1
         }
@@ -128,27 +122,8 @@ drawTriangle vr renderPass pipeline framebuffers f = do
         Vk.cmdBindPipeline commandBuffer Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
         Vk.cmdDraw commandBuffer 3 1 0 0
 
-  let submitInfo =
-        zero
-          { Vk.waitSemaphores = [rrImageAvailable]
-          , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
-          , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline f]
-          }
-          ::& zero
-            { Vk12.waitSemaphoreValues = [1]
-            , Vk12.signalSemaphoreValues = [1, fIndex f]
-            }
-            :& ()
-  liftIO $
-    queueSubmitFrame
-      gQ
-      f
-      [SomeStruct submitInfo]
-      (fHostTimeline f)
-      (fIndex f)
-
-  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame (vrContext vr) f [commandBuffer]
+  presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Pipeline (long-lived)

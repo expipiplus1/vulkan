@@ -24,15 +24,13 @@ import Say (sayErrString)
 import UnliftIO.Exception (displayException)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
 import VkResources (VkResources (..), vrContext)
-import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
+import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Exception
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
-import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
@@ -139,9 +137,7 @@ renderJulia
   -> ResourceT IO ()
 renderJulia vr jp bindings f = do
   let
-    RecycledResources{..} = fRecycled f
     sc = fSwapchain f
-    gQ = snd (qGraphics (vrQueues vr))
     dev = vrDevice vr
     Vk.Extent2D imageWidth imageHeight = sExtent sc
     imageSubresourceRange =
@@ -153,7 +149,7 @@ renderJulia vr jp bindings f = do
         , Vk.layerCount = 1
         }
 
-  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
+  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
 
   let
     image = sImages sc V.! fromIntegral imageIndex
@@ -164,7 +160,7 @@ renderJulia vr jp bindings f = do
     Vk.withCommandBuffers
       dev
       zero
-        { Vk.commandPool = rrCommandPool
+        { Vk.commandPool = rrCommandPool (fRecycled f)
         , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
         , Vk.commandBufferCount = 1
         }
@@ -250,28 +246,8 @@ renderJulia vr jp bindings f = do
             }
       ]
 
-  -- Submit (and record GPU work for the wait thread).
-  let submitInfo =
-        zero
-          { Vk.waitSemaphores = [rrImageAvailable]
-          , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
-          , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline f]
-          }
-          ::& zero
-            { waitSemaphoreValues = [1]
-            , signalSemaphoreValues = [1, fIndex f]
-            }
-            :& ()
-  liftIO $
-    queueSubmitFrame
-      gQ
-      f
-      [SomeStruct submitInfo]
-      (fHostTimeline f)
-      (fIndex f)
-
-  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame (vrContext vr) f [commandBuffer]
+  presentFrameImage (vrContext vr) f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Frame timing

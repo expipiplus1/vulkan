@@ -32,13 +32,13 @@ module Vulkan.Utils.Frame
 import Control.Concurrent (forkIO)
 import Control.Exception (finally, mask_, throwIO)
 import Control.Monad
-import Control.Monad.IO.Class (liftIO)
+import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource
 import Data.IORef
 import qualified Data.Vector as V
 import Data.Word
 import System.IO (hPutStrLn, stderr)
-import Vulkan.CStruct.Extends (SomeStruct, pattern (:&), pattern (::&))
+import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore as Timeline
@@ -202,23 +202,43 @@ waitAndRecycle vc f = do
     oneSecond :: Word64
     oneSecond = 1000000000
 
-{- | Submit GPU work for this frame and record the timeline semaphore + value
-the wait thread will block on.
+{- | Submit a per-frame command buffer batch and record the timeline-wait
+bookkeeping the host wait thread will block on.
 
-Wraps 'queueSubmit' to keep the submit and the bookkeeping atomic.
+Builds the standard frame submit from context/frame: waits on the frame's
+image-available semaphore at @COLOR_ATTACHMENT_OUTPUT@, signals its
+render-finished semaphore plus its timeline value, and submits on the
+graphics queue.
+
+For a non-standard submit shape (multiple submit infos, different wait
+stage, extra signals), call 'Vk.queueSubmit' directly and append
+@(fHostTimeline f, fIndex f)@ to @fGPUWork f@.
 -}
 queueSubmitFrame
-  :: Vk.Queue
+  :: (MonadIO m)
+  => VulkanContext
   -> Frame
-  -> V.Vector (SomeStruct Vk.SubmitInfo)
-  -> Vk.Semaphore
-  -- ^ Timeline semaphore that will be signalled to @value@
-  -> Word64
-  -- ^ Value the timeline reaches once this submit completes
-  -> IO ()
-queueSubmitFrame q f ss sem value = mask_ $ do
-  Vk.queueSubmit q ss Vk.NULL_HANDLE
-  atomicModifyIORef' (fGPUWork f) ((,()) . ((sem, value) :))
+  -> V.Vector Vk.CommandBuffer
+  -> m ()
+{-# INLINE queueSubmitFrame #-}
+queueSubmitFrame vc Frame{..} cbs = liftIO . mask_ $ do
+  let
+    RecycledResources{rrImageAvailable, rrRenderFinished} = fRecycled
+    gQ = snd (qGraphics (vcQueues vc))
+    submitInfo =
+      zero
+        { Vk.waitSemaphores = [rrImageAvailable]
+        , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+        , Vk.commandBuffers = fmap Vk.commandBufferHandle cbs
+        , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline]
+        }
+        ::& zero
+          { waitSemaphoreValues = [1]
+          , signalSemaphoreValues = [1, fIndex]
+          }
+          :& ()
+  Vk.queueSubmit gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
+  atomicModifyIORef' fGPUWork ((,()) . ((fHostTimeline, fIndex) :))
 
 {- | Acquire the next swapchain image for this frame, signalling the frame's
 image-available semaphore on completion.
@@ -230,12 +250,14 @@ recreation. Timeouts and unexpected results are also translated to
 'ERROR_OUT_OF_DATE_KHR' — the main loop's swapchain-recreation path is the
 right place to recover.
 -}
-acquireFrameImage :: VulkanContext -> Frame -> IO (Vk.Result, Word32)
+acquireFrameImage :: (MonadIO m) => VulkanContext -> Frame -> m (Vk.Result, Word32)
+{-# INLINE acquireFrameImage #-}
 acquireFrameImage vc Frame{..} =
-  acquire >>= \case
-    r@(Vk.SUCCESS, _) -> pure r
-    r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
-    _ -> throwIO (VulkanException Vk.ERROR_OUT_OF_DATE_KHR)
+  liftIO $
+    acquire >>= \case
+      r@(Vk.SUCCESS, _) -> pure r
+      r@(Vk.SUBOPTIMAL_KHR, _) -> pure r
+      _ -> throwIO (VulkanException Vk.ERROR_OUT_OF_DATE_KHR)
   where
     acquire =
       KHR.acquireNextImageKHRSafe
@@ -256,8 +278,9 @@ If either the prior acquire (passed in) or this present reports
 'SUBOPTIMAL_KHR', raises 'ERROR_OUT_OF_DATE_KHR' so the main loop
 recreates the swapchain.
 -}
-presentFrameImage :: VulkanContext -> Frame -> Vk.Result -> Word32 -> IO ()
-presentFrameImage vc f acquireResult imageIndex = do
+presentFrameImage :: (MonadIO m) => VulkanContext -> Frame -> Vk.Result -> Word32 -> m ()
+{-# INLINE presentFrameImage #-}
+presentFrameImage vc f acquireResult imageIndex = liftIO $ do
   let
     RecycledResources{rrRenderFinished} = fRecycled f
     gQ = snd (qGraphics (vcQueues vc))

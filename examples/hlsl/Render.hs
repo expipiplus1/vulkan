@@ -4,17 +4,13 @@ module Render
   ( renderFrame
   ) where
 
-import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Vector (Vector, (!))
 import VkResources (VkResources (..), vrContext)
-import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
-import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (RecycledResources (..))
 import Vulkan.Zero (zero)
@@ -29,19 +25,17 @@ renderFrame
   -> ResourceT IO ()
 renderFrame vr renderPass pipeline framebuffers f = do
   let
-    RecycledResources{..} = fRecycled f
     sc = fSwapchain f
     dev = vrDevice vr
-    gQ = snd (qGraphics (vrQueues vr))
 
-  (acquireResult, imageIndex) <- liftIO $ acquireFrameImage (vrContext vr) f
+  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
 
   -- Allocate a per-frame command buffer from the recycled pool.
   (_, [commandBuffer]) <-
     Vk.withCommandBuffers
       dev
       zero
-        { Vk.commandPool = rrCommandPool
+        { Vk.commandPool = rrCommandPool (fRecycled f)
         , Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY
         , Vk.commandBufferCount = 1
         }
@@ -76,24 +70,5 @@ renderFrame vr renderPass pipeline framebuffers f = do
         Vk.cmdBindPipeline commandBuffer Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
         Vk.cmdDraw commandBuffer 3 1 0 0
 
-  let submitInfo =
-        zero
-          { Vk.waitSemaphores = [rrImageAvailable]
-          , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-          , Vk.commandBuffers = [Vk.commandBufferHandle commandBuffer]
-          , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline f]
-          }
-          ::& zero
-            { waitSemaphoreValues = [1]
-            , signalSemaphoreValues = [1, fIndex f]
-            }
-            :& ()
-  liftIO $
-    queueSubmitFrame
-      gQ
-      f
-      [SomeStruct submitInfo]
-      (fHostTimeline f)
-      (fIndex f)
-
-  liftIO $ presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame (vrContext vr) f [commandBuffer]
+  presentFrameImage (vrContext vr) f acquireResult imageIndex
