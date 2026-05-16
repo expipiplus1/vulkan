@@ -48,7 +48,6 @@ library
       ImageReadback
       Triangle
       Utils
-      VkResources
       Vma
       Window.GLFW
       Window.SDL2

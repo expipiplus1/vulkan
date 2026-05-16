@@ -23,7 +23,6 @@ import Data.Text (Text)
 import Data.Text.Encoding (decodeUtf8)
 import qualified Data.Text.Encoding as Text
 import Say (sayErr)
-import VkResources (VkResources, mkVkResources)
 import qualified Vma
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12 (pattern API_VERSION_1_2)
@@ -34,6 +33,7 @@ import Vulkan.Utils.Debug (debugCallbackPtr)
 import Vulkan.Utils.Frame (frameDeviceRequirements, frameInstanceRequirements)
 import Vulkan.Utils.Queues (withDevice)
 import Vulkan.Utils.Swapchain (Swapchain, SwapchainConfig, allocSwapchain)
+import Vulkan.Utils.VulkanContext (VulkanContext, mkVulkanContext)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -71,7 +71,7 @@ withWindowedVk
   :: (MonadResource m, MonadFail m)
   => WindowedConfig
   -> WindowAdapter m
-  -> m (VkResources, Swapchain)
+  -> m (VulkanContext, VMA.Allocator, Swapchain)
 withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   inst <-
     waWithInstance
@@ -93,12 +93,12 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   vma <- Vma.createVMA wcVmaFlags API_VERSION_1_2 inst phys dev
   props <- Vk.getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
-  vr <- liftIO $ mkVkResources inst phys dev vma qs
+  vc <- liftIO $ mkVulkanContext inst phys dev qs
 
   initialSize <- waDrawableSize
   initialSC <-
     allocSwapchain phys dev wcSwapchainConfig Vk.NULL_HANDLE initialSize surf
-  pure (vr, initialSC)
+  pure (vc, vma, initialSC)
 
 {- | Standard validation/perf debug messenger create info, shared with
 'HeadlessBoot.withHeadlessVk'.

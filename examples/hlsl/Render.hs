@@ -6,25 +6,25 @@ module Render
 
 import Control.Monad.Trans.Resource (ResourceT)
 import Data.Vector (Vector, (!))
-import VkResources (VkResources (..), vrContext)
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
 import Vulkan.Utils.Swapchain (Swapchain (..))
+import Vulkan.Utils.VulkanContext (VulkanContext)
 import Vulkan.Zero (zero)
 
 -- | Acquire an image, record a clear+draw, submit, and present.
 renderFrame
-  :: VkResources
+  :: VulkanContext
   -> Vk.RenderPass
   -> Vk.Pipeline
   -> Vector Vk.Framebuffer
   -> Frame
   -> ResourceT IO ()
-renderFrame vr renderPass pipeline framebuffers f = do
+renderFrame vc renderPass pipeline framebuffers f = do
   let sc = fSwapchain f
 
-  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
+  (acquireResult, imageIndex) <- acquireFrameImage vc f
 
   let renderPassBeginInfo =
         zero
@@ -34,7 +34,7 @@ renderFrame vr renderPass pipeline framebuffers f = do
           , Vk.clearValues = [Vk.Color (Vk.Float32 0.3 0.4 0.8 1)]
           }
 
-  commands <- recordCommands (vrContext vr) f \cb ->
+  commands <- recordCommands vc f \cb ->
     Vk.cmdUseRenderPass cb renderPassBeginInfo Vk.SUBPASS_CONTENTS_INLINE do
       Vk.cmdSetViewport
         cb
@@ -52,5 +52,5 @@ renderFrame vr renderPass pipeline framebuffers f = do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
       Vk.cmdDraw cb 3 1 0 0
 
-  queueSubmitFrame (vrContext vr) f [commands]
-  presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame vc f [commands]
+  presentFrameImage vc f acquireResult imageIndex

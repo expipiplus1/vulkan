@@ -9,7 +9,6 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, runResourceT)
 import Render (renderFrame)
 import qualified SDL
-import VkResources (VkResources (..), vrContext)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
 import Vulkan.Utils.Frame (Frame (..))
@@ -18,6 +17,7 @@ import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..), defaultSwapchainConfig)
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
@@ -27,7 +27,7 @@ main :: IO ()
 main = runResourceT $ do
   withSDL
   win <- createWindow "Vulkan 🚀 Haskell" 1280 720
-  (vr, initialSC) <-
+  (vc, _vma, initialSC) <-
     withWindowedVk
       WindowedConfig
         { wcAppName = "Vulkan 🚀 Haskell"
@@ -37,7 +37,7 @@ main = runResourceT $ do
         , wcSwapchainConfig = defaultSwapchainConfig
         }
       (sdl2Adapter win)
-  let dev = vrDevice vr
+  let dev = vcDevice vc
   (_, renderPass) <-
     RenderPass.createColorRenderPass
       dev
@@ -49,14 +49,14 @@ main = runResourceT $ do
   start <- SDL.time @Double
 
   runWindowLoop
-    (vrContext vr)
+    vc
     initialSC
     (drawableSize win)
     (shouldQuit win)
     WindowLoop
       { wlMkState = \sc ->
           Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
-      , wlRender = \fbs f -> renderFrame vr renderPass pipeline fbs f
+      , wlRender = \fbs f -> renderFrame vc renderPass pipeline fbs f
       , wlOnFrame = noOnFrame
       , wlOnExit = \f -> liftIO $ do
           end <- SDL.time

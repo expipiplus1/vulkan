@@ -13,11 +13,11 @@ import qualified Pipeline
 import Render (RenderState (..), renderFrame)
 import qualified SDL
 import Scene (makeSceneBuffers)
-import VkResources (VkResources (..), vrContext)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo (..), getBufferDeviceAddress)
 import Vulkan.Utils.Frame (Frame (..))
 import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noWindowState, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -28,7 +28,7 @@ main :: IO ()
 main = runResourceT $ do
   withSDL
   win <- createWindow "Vulkan ⚡ Haskell" 1280 720
-  (vr, initialSC) <-
+  (vc, vma, initialSC) <-
     withWindowedVk
       WindowedConfig
         { wcAppName = "Vulkan ⚡ Haskell"
@@ -39,13 +39,12 @@ main = runResourceT $ do
         }
       (sdl2Adapter win)
   let
-    phys = vrPhysicalDevice vr
-    dev = vrDevice vr
-    vma = vrAllocator vr
+    phys = vcPhysicalDevice vc
+    dev = vcDevice vc
 
   -- Scene + acceleration structure
   sceneBuffers <- makeSceneBuffers vma
-  (_, tlas) <- createTLAS vr sceneBuffers
+  (_, tlas) <- createTLAS vc vma sceneBuffers
 
   -- RT pipeline + descriptor sets
   rtInfo <- getDeviceRTProps phys
@@ -87,13 +86,13 @@ main = runResourceT $ do
   start <- SDL.time @Double
 
   runWindowLoop
-    (vrContext vr)
+    vc
     initialSC
     (drawableSize win)
     (shouldQuit win)
     WindowLoop
       { wlMkState = noWindowState
-      , wlRender = \() f -> renderFrame vr renderState f
+      , wlRender = \() f -> renderFrame vc vma renderState f
       , wlOnFrame = noOnFrame
       , wlOnExit = \f -> liftIO $ do
           end <- SDL.time

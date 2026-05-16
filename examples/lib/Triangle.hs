@@ -4,7 +4,7 @@
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 {-| Backend-independent triangle renderer using the recycling 'Frame' loop
-from "Frame". Each backend (SDL2, GLFW) builds 'VkResources' + an initial
+from "Frame". Each backend (SDL2, GLFW) builds a 'VulkanContext' + an initial
 'Swapchain', supplies callbacks for "current drawable size" and "should
 quit", and hands off to 'runTriangle'.
 -}
@@ -15,7 +15,6 @@ module Triangle
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import VkResources (VkResources (..), vrContext)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
@@ -24,12 +23,13 @@ import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
 
 -- | Drive a recycling-Frame render loop drawing the colored triangle.
 runTriangle
-  :: VkResources
+  :: VulkanContext
   -> Swapchain
   -- ^ Initial swapchain
   -> IO Vk.Extent2D
@@ -37,8 +37,8 @@ runTriangle
   -> IO Bool
   -- ^ Per-frame poller; 'True' means quit
   -> ResourceT IO ()
-runTriangle vr initialSC getDrawableSize shouldQuit = do
-  let dev = vrDevice vr
+runTriangle vc initialSC getDrawableSize shouldQuit = do
+  let dev = vcDevice vc
   (_, renderPass) <-
     RenderPass.createColorRenderPass
       dev
@@ -47,14 +47,14 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
   (_, pipeline) <- createGraphicsPipeline dev renderPass
 
   runWindowLoop
-    (vrContext vr)
+    vc
     initialSC
     getDrawableSize
     shouldQuit
     WindowLoop
       { wlMkState = \sc ->
           Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
-      , wlRender = drawTriangle vr renderPass pipeline
+      , wlRender = drawTriangle vc renderPass pipeline
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
       }
@@ -64,18 +64,18 @@ runTriangle vr initialSC getDrawableSize shouldQuit = do
 ----------------------------------------------------------------
 
 drawTriangle
-  :: VkResources
+  :: VulkanContext
   -> Vk.RenderPass
   -> Vk.Pipeline
   -> Vector Vk.Framebuffer
   -> Frame
   -> ResourceT IO ()
-drawTriangle vr renderPass pipeline framebuffers f = do
+drawTriangle vc renderPass pipeline framebuffers f = do
   let sc = fSwapchain f
 
-  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
+  (acquireResult, imageIndex) <- acquireFrameImage vc f
 
-  commands <- recordCommands (vrContext vr) f \cb -> do
+  commands <- recordCommands vc f \cb -> do
     let renderPassBeginInfo =
           zero
             { Vk.renderPass = renderPass
@@ -104,8 +104,8 @@ drawTriangle vr renderPass pipeline framebuffers f = do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
       Vk.cmdDraw cb 3 1 0 0
 
-  queueSubmitFrame (vrContext vr) f [commands]
-  presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame vc f [commands]
+  presentFrameImage vc f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Pipeline (long-lived)

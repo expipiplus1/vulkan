@@ -18,13 +18,13 @@ import Init (RTInfo (..))
 import Linear.Matrix
 import Linear.Quaternion
 import Linear.V3
-import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Extent2D (Extent2D (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Extensions.VK_KHR_ray_tracing_pipeline as RT
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
 import Vulkan.Utils.Swapchain (Swapchain (..))
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -44,19 +44,20 @@ data RenderState = RenderState
   }
 
 renderFrame
-  :: VkResources
+  :: VulkanContext
+  -> VMA.Allocator
   -> RenderState
   -> Frame
   -> ResourceT IO ()
-renderFrame vr rs f = do
+renderFrame vc vma rs f = do
   let
     sc = fSwapchain f
-    dev = vrDevice vr
+    dev = vcDevice vc
     slot = fromIntegral (fIndex f) `mod` 2
     descriptorSet = rsDescriptorSets rs ! slot
     cameraMatricesOffset = fromIntegral slot * fromIntegral (sizeOf (undefined :: CameraMatrices))
 
-  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
+  (acquireResult, imageIndex) <- acquireFrameImage vc f
 
   -- Bind the per-slot descriptor set's image view + camera buffer slot.
   Vk.updateDescriptorSets
@@ -108,16 +109,16 @@ renderFrame vr rs f = do
       (rsCameraMatricesBufferData rs `plusPtr` fromIntegral cameraMatricesOffset)
       cameraMats
   VMA.flushAllocation
-    (vrAllocator vr)
+    vma
     (rsCameraMatricesAllocation rs)
     cameraMatricesOffset
     (fromIntegral (sizeOf (undefined :: CameraMatrices)))
 
-  commands <- recordCommands (vrContext vr) f \cb ->
+  commands <- recordCommands vc f \cb ->
     recordCommandBuffer cb rs sc descriptorSet imageIndex
 
-  queueSubmitFrame (vrContext vr) f [commands]
-  presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame vc f [commands]
+  presentFrameImage vc f acquireResult imageIndex
 
 ----------------------------------------------------------------
 -- Command buffer recording

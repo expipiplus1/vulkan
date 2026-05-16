@@ -12,7 +12,6 @@ import Data.Vector (Vector)
 import Foreign.Storable (Storable (poke, sizeOf))
 import Scene
 import UnliftIO.Foreign (castPtr)
-import VkResources (Queues (..), VkResources (..))
 import Vulkan.CStruct
 import Vulkan.CStruct.Extends
 import Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
@@ -23,6 +22,8 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure as AccelerationStructureD
 import qualified Vulkan.Extensions.VK_KHR_acceleration_structure as RT
 import Vulkan.Utils.Debug (nameObject)
 import Vulkan.Utils.QueueAssignment
+import Vulkan.Utils.Queues (Queues (..))
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Zero
 import VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
 import qualified VulkanMemoryAllocator as VMA
@@ -33,17 +34,16 @@ import qualified VulkanMemoryAllocator as VMA
 
 createTLAS
   :: (MonadResource m, MonadFail m)
-  => VkResources
+  => VulkanContext
+  -> VMA.Allocator
   -> SceneBuffers
   -> m (ReleaseKey, RT.AccelerationStructureKHR)
-createTLAS vr sceneBuffers = do
-  let
-    dev = vrDevice vr
-    vma = vrAllocator vr
+createTLAS vc vma sceneBuffers = do
+  let dev = vcDevice vc
   --
   -- Create the bottom level acceleration structure.
   --
-  (_blasReleaseKey, blas) <- createBLAS vr sceneBuffers
+  (_blasReleaseKey, blas) <- createBLAS vc vma sceneBuffers
   blasAddress <-
     RT.getAccelerationStructureDeviceAddressKHR
       dev
@@ -128,7 +128,8 @@ createTLAS vr sceneBuffers = do
 
   (_tlasBufferKey, tlasKey, tlas) <-
     buildAccelerationStructure
-      vr
+      vc
+      vma
       buildInfo
       rangeInfos
       sizes
@@ -137,15 +138,15 @@ createTLAS vr sceneBuffers = do
 
 buildAccelerationStructure
   :: (MonadResource m, MonadFail m)
-  => VkResources
+  => VulkanContext
+  -> VMA.Allocator
   -> RT.AccelerationStructureBuildGeometryInfoKHR
   -> Vector RT.AccelerationStructureBuildRangeInfoKHR
   -> RT.AccelerationStructureBuildSizesInfoKHR
   -> m (ReleaseKey, ReleaseKey, RT.AccelerationStructureKHR)
-buildAccelerationStructure vr geom ranges sizes = do
+buildAccelerationStructure vc vma geom ranges sizes = do
   let
-    dev = vrDevice vr
-    vma = vrAllocator vr
+    dev = vcDevice vc
     bufferSize = RT.accelerationStructureSize sizes
 
   (asBufferKey, (asBuffer, _, _)) <-
@@ -183,7 +184,7 @@ buildAccelerationStructure vr geom ranges sizes = do
           }
   (asKey, as) <- RT.withAccelerationStructureKHR dev asci Nothing allocate
 
-  oneShotComputeCommands vr $ \cmd ->
+  oneShotComputeCommands vc $ \cmd ->
     RT.cmdBuildAccelerationStructuresKHR
       cmd
       [ geom
@@ -199,12 +200,13 @@ buildAccelerationStructure vr geom ranges sizes = do
 
 createBLAS
   :: (MonadResource m, MonadFail m)
-  => VkResources
+  => VulkanContext
+  -> VMA.Allocator
   -> SceneBuffers
   -> m (ReleaseKey, RT.AccelerationStructureKHR)
-createBLAS vr sceneBuffers = do
-  let dev = vrDevice vr
-  (sceneGeom, sceneOffsets) <- sceneGeometry vr sceneBuffers
+createBLAS vc vma sceneBuffers = do
+  let dev = vcDevice vc
+  (sceneGeom, sceneOffsets) <- sceneGeometry vc sceneBuffers
 
   let
     buildInfo =
@@ -224,20 +226,20 @@ createBLAS vr sceneBuffers = do
       buildInfo
       maxPrimitiveCounts
 
-  (_blasBufferKey, blasKey, blas) <- buildAccelerationStructure vr buildInfo sceneOffsets sizes
+  (_blasBufferKey, blasKey, blas) <- buildAccelerationStructure vc vma buildInfo sceneOffsets sizes
   nameObject dev blas "BLAS"
   pure (blasKey, blas)
 
 sceneGeometry
   :: (MonadIO m)
-  => VkResources
+  => VulkanContext
   -> SceneBuffers
   -> m
        ( RT.AccelerationStructureGeometryKHR '[]
        , Vector RT.AccelerationStructureBuildRangeInfoKHR
        )
-sceneGeometry vr SceneBuffers{..} = do
-  boxAddr <- getBufferDeviceAddress (vrDevice vr) zero{buffer = sceneAabbs}
+sceneGeometry vc SceneBuffers{..} = do
+  boxAddr <- getBufferDeviceAddress (vcDevice vc) zero{buffer = sceneAabbs}
   let
     boxData =
       RT.AccelerationStructureGeometryAabbsDataKHR
@@ -260,13 +262,13 @@ sceneGeometry vr SceneBuffers{..} = do
 
 oneShotComputeCommands
   :: (MonadResource m, MonadFail m)
-  => VkResources
+  => VulkanContext
   -> (Vk.CommandBuffer -> IO ())
   -> m ()
-oneShotComputeCommands vr cmds = do
+oneShotComputeCommands vc cmds = do
   let
-    dev = vrDevice vr
-    (QueueFamilyIndex graphicsQueueFamilyIndex, graphicsQueue) = qGraphics (vrQueues vr)
+    dev = vcDevice vc
+    (QueueFamilyIndex graphicsQueueFamilyIndex, graphicsQueue) = qGraphics (vcQueues vc)
   (poolKey, commandPool) <- Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex} Nothing allocate
   [commandBuffer] <-
     Vk.allocateCommandBuffers

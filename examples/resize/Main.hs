@@ -23,7 +23,6 @@ import qualified SDL
 import Say (sayErrString)
 import UnliftIO.Exception (displayException)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
-import VkResources (VkResources (..), vrContext)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception
@@ -32,6 +31,7 @@ import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, que
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import Vulkan.Zero (zero)
 import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
@@ -48,7 +48,7 @@ main = prettyError . runResourceT $ do
   sdlWindow <- createWindow "Haskell ❤️ Vulkan" initWidth initHeight
   SDL.showWindow sdlWindow
 
-  (vr, initialSC) <-
+  (vc, _vma, initialSC) <-
     withWindowedVk
       WindowedConfig
         { wcAppName = "Haskell ❤️ Vulkan"
@@ -63,7 +63,7 @@ main = prettyError . runResourceT $ do
               }
         }
       (sdl2Adapter sdlWindow)
-  let dev = vrDevice vr
+  let dev = vcDevice vc
 
   (_, renderPass) <-
     RenderPass.createColorRenderPass
@@ -73,13 +73,13 @@ main = prettyError . runResourceT $ do
   juliaPL <- createJuliaPipeline dev
 
   runWindowLoop
-    (vrContext vr)
+    vc
     initialSC
     (drawableSize sdlWindow)
     (shouldQuit sdlWindow)
     WindowLoop
       { wlMkState = createBindings dev renderPass juliaPL
-      , wlRender = \bindings f -> renderJulia vr juliaPL bindings f
+      , wlRender = \bindings f -> renderJulia vc juliaPL bindings f
       , wlOnFrame = \start end -> reportFrameTime (end - start)
       , wlOnExit = noOnExit
       }
@@ -128,18 +128,18 @@ createBindings dev renderPass jp sc = do
 ----------------------------------------------------------------
 
 renderJulia
-  :: VkResources
+  :: VulkanContext
   -> JuliaPipeline
   -> Bindings
   -> Frame
   -> ResourceT IO ()
-renderJulia vr jp bindings f = do
-  (acquireResult, imageIndex) <- acquireFrameImage (vrContext vr) f
+renderJulia vc jp bindings f = do
+  (acquireResult, imageIndex) <- acquireFrameImage vc f
   let
     image = sImages sc V.! fromIntegral imageIndex
     descriptorSet = bJuliaDescriptorSets bindings V.! fromIntegral imageIndex
 
-  commands <- recordCommands (vrContext vr) f \cb -> do
+  commands <- recordCommands vc f \cb -> do
     -- Transition image to general (compute write target).
     Vk.cmdPipelineBarrier
       cb
@@ -219,8 +219,8 @@ renderJulia vr jp bindings f = do
             }
       ]
 
-  queueSubmitFrame (vrContext vr) f [commands]
-  presentFrameImage (vrContext vr) f acquireResult imageIndex
+  queueSubmitFrame vc f [commands]
+  presentFrameImage vc f acquireResult imageIndex
   where
     sc = fSwapchain f
     Vk.Extent2D imageWidth imageHeight = sExtent sc

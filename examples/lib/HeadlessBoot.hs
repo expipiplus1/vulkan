@@ -23,7 +23,6 @@ import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Text (Text)
 import qualified Data.Text.Encoding as Text
 import Say (sayErr)
-import VkResources (Queues)
 import qualified Vma
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
@@ -33,7 +32,7 @@ import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import qualified Vulkan.Utils.Init.Headless as Init
 import Vulkan.Utils.Initialization (physicalDeviceName)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
-import Vulkan.Utils.Queues (withDevice)
+import Vulkan.Utils.Queues (Queues, withDevice)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import WindowedBoot (debugMessengerCreateInfo)

@@ -17,7 +17,6 @@ import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (peek, sizeOf)
 import HeadlessBoot (HeadlessConfig (..), HeadlessVk (..), submitAndWait, withHeadlessVk)
 import ImageReadback (captureImageRGBA8, savePng)
-import VkResources (Queues (..))
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
 import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
@@ -26,6 +25,7 @@ import qualified Vulkan.Core10.Image as Image
 import Vulkan.Utils.Debug (nameObject)
 import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
+import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.Shader (shaderStage)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)

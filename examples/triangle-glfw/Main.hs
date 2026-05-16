@@ -13,7 +13,7 @@ main = runResourceT $ do
   Window.withGLFW
   window <- Window.createWindow appName windowWidth windowHeight
   Window.showWindow window
-  (vr, initialSC) <-
+  (vc, _vma, initialSC) <-
     withWindowedVk
       WindowedConfig
         { wcAppName = appName
@@ -24,7 +24,7 @@ main = runResourceT $ do
         }
       (Window.glfwAdapter window)
   Triangle.runTriangle
-    vr
+    vc
     initialSC
     (Window.drawableSize window)
     (Window.shouldQuit window)
