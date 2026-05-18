@@ -1,12 +1,10 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# OPTIONS_GHC -fplugin-opt=Foreign.Storable.Generic.Plugin:-v0 #-}
-{-# OPTIONS_GHC -fplugin=Foreign.Storable.Generic.Plugin #-}
 
 module Camera where
 
 import Control.Lens
-import Foreign.Storable.Generic
+import Foreign.Storable
 import GHC.Generics (Generic)
 import Linear
 
@@ -22,7 +20,16 @@ data CameraMatrices = CameraMatrices
   { cmViewInverse :: M44 Float
   , cmProjInverse :: M44 Float
   }
-  deriving (Generic, GStorable)
+  deriving (Generic)
+
+instance Storable CameraMatrices where
+  sizeOf ~_ = 2 * 4 * 4 * sizeOf (undefined :: Float)
+  alignment ~_ = 16
+  peek ptr =
+    CameraMatrices <$> peekByteOff ptr 0 <*> peekByteOff ptr 64
+  poke ptr CameraMatrices{..} = do
+    pokeByteOff ptr 0 cmViewInverse
+    pokeByteOff ptr 64 cmProjInverse
 
 initialCamera :: Camera
 initialCamera =

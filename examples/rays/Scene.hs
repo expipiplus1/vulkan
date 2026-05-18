@@ -1,8 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ParallelListComp #-}
-{-# OPTIONS_GHC -fplugin-opt=Foreign.Storable.Generic.Plugin:-v0 #-}
-{-# OPTIONS_GHC -fplugin=Foreign.Storable.Generic.Plugin #-}
 
 module Scene where
 
@@ -15,7 +13,7 @@ import Data.Colour.RGBSpace.HSV
 import Data.Word
 import Foreign.Marshal.Array
 import Foreign.Ptr
-import Foreign.Storable.Generic
+import Foreign.Storable
 import GHC.Generics (Generic)
 import Linear.V3
 import Linear.V4
@@ -123,7 +121,15 @@ data Sphere = Sphere
   { spherePos :: V4 Float
   , sphereColor :: V4 Float
   }
-  deriving (Generic, GStorable)
+  deriving (Generic)
+
+instance Storable Sphere where
+  sizeOf ~_ = 2 * sizeOf (undefined :: V4 Float)
+  alignment ~_ = alignment (undefined :: V4 Float)
+  peek ptr = Sphere <$> peekByteOff ptr 0 <*> peekByteOff ptr 16
+  poke ptr (Sphere pos col) = do
+    pokeByteOff ptr 0 pos
+    pokeByteOff ptr 16 col
 
 sphereRadius :: Sphere -> Float
 sphereRadius = view _w . spherePos

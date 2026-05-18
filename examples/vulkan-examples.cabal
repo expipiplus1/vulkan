@@ -43,7 +43,6 @@ flag vr
 
 library
   exposed-modules:
-      Camera
       HeadlessBoot
       ImageReadback
       Triangle
@@ -99,8 +98,6 @@ library
     , VulkanMemoryAllocator
     , base <5
     , bytestring
-    , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , mtl
@@ -310,6 +307,7 @@ executable rays
   main-is: Main.hs
   other-modules:
       AccelerationStructure
+      Camera
       Init
       Pipeline
       Render
@@ -360,8 +358,6 @@ executable rays
     , base <5
     , bytestring
     , colour
-    , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , random
@@ -690,8 +686,6 @@ executable vrcube
     , bytestring
     , colour
     , containers
-    , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , nothunks >=0.1.2
