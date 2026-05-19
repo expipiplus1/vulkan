@@ -6,9 +6,6 @@ module Vulkan.Core12  ( pattern API_VERSION_1_2
                       , PhysicalDeviceVulkan12Features(..)
                       , PhysicalDeviceVulkan12Properties(..)
                       , StructureType(..)
-                      , ResolveModeFlagBits(..)
-                      , ResolveModeFlags
-                      , ShaderFloatControlsIndependence(..)
                       , module Vulkan.Core12.Enums
                       , module Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing
                       , module Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset
@@ -103,9 +100,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES))
-import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(..))
-import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
-import Vulkan.Core12.Enums.ShaderFloatControlsIndependence (ShaderFloatControlsIndependence(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 pattern API_VERSION_1_2 :: Word32
 pattern API_VERSION_1_2 = MAKE_API_VERSION 1 2 0

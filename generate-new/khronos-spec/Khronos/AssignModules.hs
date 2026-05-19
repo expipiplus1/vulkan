@@ -31,6 +31,7 @@ import           Relude                  hiding ( State
 
 import           Error
 import           Haskell
+import           Render.Aggregate               ( noAggregateModules )
 import           Render.Element
 import           Render.SpecInfo
 import           Spec.Types
@@ -77,16 +78,42 @@ assignModules spec rs = do
         $ \n -> throw $ show n <> " is not exported from any module"
     Just _ -> pure ()
 
+  noAgg <- Data.Set.fromList <$> noAggregateModules
   let declaredNames = Map.fromListWith
         (<>)
         (   IntMap.toList exports
         <&> \(n, ExportLocation d _) -> (d, Set.singleton n)
         )
+      -- True when the declaring module is reachable from @parent@ via the
+      -- aggregate "module X" re-export chain set up by 'mergeElements'.
+      -- Every strict ancestor of @declarer@ down to (but not including)
+      -- @parent@ must itself be aggregated, i.e. not in 'noAggregateModules'.
+      isCoveredByAggregateChain :: ModName -> ModName -> Bool
+      isCoveredByAggregateChain (ModName parent) (ModName declarer) =
+        let parentParts   = if T.null parent then [] else T.splitOn "." parent
+            declarerParts = T.splitOn "." declarer
+            stripPrefix [] ys = Just ys
+            stripPrefix _  [] = Nothing
+            stripPrefix (x:xs) (y:ys)
+              | x == y    = stripPrefix xs ys
+              | otherwise = Nothing
+        in  case stripPrefix parentParts declarerParts of
+              Just rest@(_:_) ->
+                -- Every step from parent.head down to declarer is a module
+                -- whose own parent must aggregate it.
+                let intermediateNames =
+                      [ ModName . T.intercalate "."
+                          $ parentParts <> Relude.take k rest
+                      | k <- [1 .. length rest]
+                      ]
+                in  all (`Data.Set.notMember` noAgg) intermediateNames
+              _ -> False
       reexportingMap = Map.fromListWith
         (<>)
         [ (m, Set.singleton n)
-        | (n, ExportLocation _ ms) <- IntMap.toList exports
+        | (n, ExportLocation d ms) <- IntMap.toList exports
         , m                        <- toList ms
+        , not (isCoveredByAggregateChain m d)
         ]
 
   forV (Map.toList declaredNames) $ \(modname, is) -> do
