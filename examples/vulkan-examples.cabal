@@ -43,19 +43,14 @@ flag vr
 
 library
   exposed-modules:
-      Camera
-      Frame
-      Framebuffer
-      InitDevice
-      Orphans
-      RefCounted
-      Swapchain
+      HeadlessBoot
+      ImageReadback
       Triangle
       Utils
-      VkResources
       Vma
       Window.GLFW
       Window.SDL2
+      WindowedBoot
   other-modules:
       Paths_vulkan_examples
   autogen-modules:
@@ -63,6 +58,7 @@ library
   hs-source-dirs:
       lib
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -98,16 +94,16 @@ library
       ViewPatterns
   build-depends:
       GLFW-b
+    , JuicyPixels
     , VulkanMemoryAllocator
     , base <5
     , bytestring
-    , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , mtl
     , nothunks >=0.1.2
     , resourcet >=1.2.4
+    , safe-exceptions
     , say
     , sdl2 >=2.5.0
     , template-haskell
@@ -117,6 +113,8 @@ library
     , unliftio
     , vector
     , vulkan
+    , vulkan-init-glfw
+    , vulkan-init-sdl2
     , vulkan-utils
   default-language: Haskell2010
   if os(windows)
@@ -132,6 +130,7 @@ executable compute
   hs-source-dirs:
       compute
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -187,16 +186,14 @@ executable compute
 executable hlsl
   main-is: Main.hs
   other-modules:
-      Init
-      Pipeline
       Render
-      RenderPass
       Paths_vulkan_examples
   autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       hlsl
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -263,6 +260,7 @@ executable info
   hs-source-dirs:
       info
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -309,6 +307,7 @@ executable rays
   main-is: Main.hs
   other-modules:
       AccelerationStructure
+      Camera
       Init
       Pipeline
       Render
@@ -319,6 +318,7 @@ executable rays
   hs-source-dirs:
       rays
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -358,8 +358,6 @@ executable rays
     , base <5
     , bytestring
     , colour
-    , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , random
@@ -384,16 +382,15 @@ executable rays
 executable resize
   main-is: Main.hs
   other-modules:
-      Init
       Julia
       Julia.Constants
-      Pipeline
       Paths_vulkan_examples
   autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       resize
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -459,6 +456,7 @@ executable triangle-glfw
   hs-source-dirs:
       triangle-glfw
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -518,6 +516,7 @@ executable triangle-headless
   hs-source-dirs:
       triangle-headless
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -586,6 +585,7 @@ executable triangle-sdl2
   hs-source-dirs:
       triangle-sdl2
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -645,6 +645,7 @@ executable vrcube
   hs-source-dirs:
       vrcube
   default-extensions:
+      BlockArguments
       DataKinds
       DefaultSignatures
       DeriveFoldable
@@ -685,8 +686,6 @@ executable vrcube
     , bytestring
     , colour
     , containers
-    , derive-storable >=0.3
-    , derive-storable-plugin >=0.2.3.3
     , lens
     , linear
     , nothunks >=0.1.2

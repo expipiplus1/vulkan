@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Vulkan.Utils.Init.GLFW
+      Vulkan.Utils.Init.GLFW.Window
   other-modules:
       Paths_vulkan_init_glfw
   hs-source-dirs:
@@ -46,6 +47,7 @@ library
     , base <5
     , bytestring
     , resourcet >=1.2.4
+    , text
     , vector
     , vulkan >=3.6.14 && <3.28
     , vulkan-utils

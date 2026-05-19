@@ -4,55 +4,25 @@ module Window.SDL2
   , createSurface
   , drawableSize
   , showWindow
-  , RefreshLimit (..)
   , shouldQuit
+  , sdl2Adapter
   ) where
 
-import Control.Monad (void)
-import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
-import Data.Maybe (maybeToList)
-import Data.Text (Text)
 import Foreign.Ptr (castPtr)
 import qualified SDL
 import qualified SDL.Video.Vulkan as SDL
 import Vulkan.Core10
 import Vulkan.Extensions.VK_KHR_surface
-
-withSDL :: (MonadResource m) => m ()
-withSDL = void $ allocate_ (SDL.initialize @[] [SDL.InitEvents]) SDL.quit
-
--- | The caller is responsible to initializing SDL
-createWindow
-  :: (MonadResource m)
-  => Text
-  -- ^ Title
-  -> Int
-  -- ^ Width
-  -> Int
-  -- ^ Height
-  -> m SDL.Window
-createWindow title width height = do
-  SDL.initialize @[] [SDL.InitVideo]
-  _ <- allocate_ (SDL.vkLoadLibrary Nothing) SDL.vkUnloadLibrary
-  (_, window) <-
-    allocate
-      ( SDL.createWindow
-          title
-          ( SDL.defaultWindow
-              { SDL.windowInitialSize =
-                  SDL.V2
-                    (fromIntegral width)
-                    (fromIntegral height)
-              , SDL.windowGraphicsContext = SDL.VulkanContext
-              , SDL.windowResizable = True
-              , SDL.windowHighDPI = True
-              , SDL.windowVisible = False
-              }
-          )
-      )
-      SDL.destroyWindow
-  pure window
+import qualified Vulkan.Utils.Init.SDL2 as Init
+import Vulkan.Utils.Init.SDL2.Window
+  ( createWindow
+  , drawableSize
+  , shouldQuit
+  , showWindow
+  , withSDL
+  )
+import WindowedBoot (WindowAdapter (..))
 
 createSurface
   :: (MonadResource m) => Instance -> SDL.Window -> m (ReleaseKey, SurfaceKHR)
@@ -61,52 +31,11 @@ createSurface inst window =
     (SurfaceKHR <$> SDL.vkCreateSurface window (castPtr (instanceHandle inst)))
     (\s -> destroySurfaceKHR inst s Nothing)
 
--- | Current drawable size, suitable as the swapchain extent fallback.
-drawableSize :: (MonadIO m) => SDL.Window -> m Extent2D
-drawableSize win = do
-  SDL.V2 w h <- SDL.vkGetDrawableSize win
-  pure $ Extent2D (fromIntegral w) (fromIntegral h)
-
-{- | Make the window visible. The window is created hidden so the swapchain
-can be brought up first.
--}
-showWindow :: (MonadIO m) => SDL.Window -> m ()
-showWindow = SDL.showWindow
-
-----------------------------------------------------------------
--- SDL helpers
-----------------------------------------------------------------
-
-data RefreshLimit
-  = NoLimit
-  | -- | Time in ms
-    TimeLimit Int
-  | -- | Indefinite timeout
-    EventLimit
-
-{- | Consumes all events in the queue and reports if any of them instruct the
-application to quit.
--}
-shouldQuit :: (MonadIO m) => RefreshLimit -> m Bool
-shouldQuit limit = any isQuitEvent <$> awaitSDLEvents limit
-  where
-    isQuitEvent :: SDL.Event -> Bool
-    isQuitEvent = \case
-      (SDL.Event _ SDL.QuitEvent) -> True
-      SDL.Event _ (SDL.KeyboardEvent (SDL.KeyboardEventData _ SDL.Released False (SDL.Keysym _ code _)))
-        | code == SDL.KeycodeQ || code == SDL.KeycodeEscape ->
-            True
-      _ -> False
-
-{- | Return the SDL events which have become available
-
-Optionally wait for a timeout or forever.
--}
-awaitSDLEvents :: (MonadIO m) => RefreshLimit -> m [SDL.Event]
-awaitSDLEvents limit = do
-  first <- case limit of
-    NoLimit -> pure Nothing
-    TimeLimit ms -> SDL.waitEventTimeout (fromIntegral ms)
-    EventLimit -> Just <$> SDL.waitEvent
-  next <- SDL.pollEvents
-  pure $ maybeToList first <> next
+-- | Bridge for 'WindowedBoot.withWindowedVk'.
+sdl2Adapter :: (MonadResource m) => SDL.Window -> WindowAdapter m
+sdl2Adapter w =
+  WindowAdapter
+    { waWithInstance = Init.withInstance w
+    , waWithSurface = \i -> createSurface i w
+    , waDrawableSize = drawableSize w
+    }

@@ -6,36 +6,39 @@ module Vulkan.Utils.Initialization
     createInstanceFromRequirements
   , createDebugInstanceFromRequirements
   , withVulkanInstance
+
     -- * macOS portability
   , portabilityRequirements
   , portabilityFlags
+
     -- * Device creation
   , createDeviceFromRequirements
-  , -- * Physical device selection
-    pickPhysicalDevice
+
+    -- * Physical device selection
+  , pickPhysicalDevice
   , physicalDeviceName
   ) where
 
-import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Resource
-import           Data.Bits
-import           Data.ByteString                ( ByteString )
-import           Data.Foldable
-import           Data.Maybe
-import           Data.Ord
-import           Data.Text                      ( Text )
-import           Data.Text.Encoding             ( decodeUtf8 )
-import           Data.Vector                    ( Vector )
-import           Vulkan.CStruct.Extends
-import           Vulkan.Core10
-import qualified Vulkan.Core10 as Instance      ( InstanceCreateInfo(..) )
-import           Vulkan.Extensions.VK_EXT_debug_utils
-import           Vulkan.Extensions.VK_EXT_validation_features
-import           Vulkan.Requirement
-import           Vulkan.Utils.Debug
-import           Vulkan.Utils.Internal
-import           Vulkan.Utils.Requirements
-import           Vulkan.Zero
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Resource
+import Data.Bits
+import Data.ByteString (ByteString)
+import Data.Foldable
+import Data.Maybe
+import Data.Ord
+import Data.Text (Text)
+import Data.Text.Encoding (decodeUtf8)
+import Data.Vector (Vector)
+import Vulkan.CStruct.Extends
+import Vulkan.Core10
+import qualified Vulkan.Core10 as Instance (InstanceCreateInfo (..))
+import Vulkan.Extensions.VK_EXT_debug_utils
+import Vulkan.Extensions.VK_EXT_validation_features
+import Vulkan.Requirement
+import Vulkan.Utils.Debug
+import Vulkan.Utils.Internal
+import Vulkan.Utils.Requirements
+import Vulkan.Zero
 
 #if defined(darwin_HOST_OS)
 import           Vulkan.Core10.Enums.InstanceCreateFlagBits
@@ -48,12 +51,13 @@ import           Vulkan.Extensions.VK_KHR_portability_enumeration
 -- Instance
 ----------------------------------------------------------------
 
--- | Like 'createInstanceFromRequirements' except it will create a debug utils
--- messenger (from the @VK_EXT_debug_utils@ extension).
---
--- If the @VK_EXT_validation_features@ extension (from the
--- @VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and
--- best practices messages enabled.
+{- | Like 'createInstanceFromRequirements' except it will create a debug utils
+messenger (from the @VK_EXT_debug_utils@ extension).
+
+If the @VK_EXT_validation_features@ extension (from the
+@VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and
+best practices messages enabled.
+-}
 createDebugInstanceFromRequirements
   :: forall m es
    . (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
@@ -64,53 +68,61 @@ createDebugInstanceFromRequirements
   -> InstanceCreateInfo es
   -> m Instance
 createDebugInstanceFromRequirements required optional baseCreateInfo = do
-  let debugMessengerCreateInfo = zero
-        { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-                              .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
-        , messageType     = DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                            .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                            .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+  let
+    debugMessengerCreateInfo =
+      zero
+        { messageSeverity =
+            DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+              .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+        , messageType =
+            DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+              .|. DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+              .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
         , pfnUserCallback = debugCallbackPtr
         }
-      validationFeatures =
-        ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
-      instanceCreateInfo
-        :: InstanceCreateInfo
-             (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
-      instanceCreateInfo = baseCreateInfo
-        { Instance.next = debugMessengerCreateInfo
-                       :& validationFeatures
-                       :& Instance.next baseCreateInfo
+    validationFeatures =
+      ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
+    instanceCreateInfo
+      :: InstanceCreateInfo
+           (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
+    instanceCreateInfo =
+      baseCreateInfo
+        { Instance.next =
+            debugMessengerCreateInfo
+              :& validationFeatures
+              :& Instance.next baseCreateInfo
         }
-      additionalRequirements =
-        [ RequireInstanceExtension
-            { instanceExtensionLayerName  = Nothing
-            , instanceExtensionName       = EXT_DEBUG_UTILS_EXTENSION_NAME
-            , instanceExtensionMinVersion = minBound
-            }
-        ]
-      additionalOptionalRequirements =
-        [ RequireInstanceLayer
-          { instanceLayerName       = "VK_LAYER_KHRONOS_validation"
-          , instanceLayerMinVersion = minBound
-          }
-        , RequireInstanceExtension
-          { instanceExtensionLayerName  = Just "VK_LAYER_KHRONOS_validation"
-          , instanceExtensionName       = EXT_VALIDATION_FEATURES_EXTENSION_NAME
+    additionalRequirements =
+      [ RequireInstanceExtension
+          { instanceExtensionLayerName = Nothing
+          , instanceExtensionName = EXT_DEBUG_UTILS_EXTENSION_NAME
           , instanceExtensionMinVersion = minBound
           }
-        ]
-  inst <- createInstanceFromRequirements
-    (additionalRequirements <> toList required)
-    (additionalOptionalRequirements <> toList optional)
-    instanceCreateInfo
+      ]
+    additionalOptionalRequirements =
+      [ RequireInstanceLayer
+          { instanceLayerName = "VK_LAYER_KHRONOS_validation"
+          , instanceLayerMinVersion = minBound
+          }
+      , RequireInstanceExtension
+          { instanceExtensionLayerName = Just "VK_LAYER_KHRONOS_validation"
+          , instanceExtensionName = EXT_VALIDATION_FEATURES_EXTENSION_NAME
+          , instanceExtensionMinVersion = minBound
+          }
+      ]
+  inst <-
+    createInstanceFromRequirements
+      (additionalRequirements <> toList required)
+      (additionalOptionalRequirements <> toList optional)
+      instanceCreateInfo
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   pure inst
 
--- | Create an 'Instance from some requirements.
---
--- Will throw an 'IOError in the case of unsatisfied non-optional requirements.
--- Unsatisfied requirements will be listed on stderr.
+{- | Create an 'Instance from some requirements.
+
+Will throw an 'IOError in the case of unsatisfied non-optional requirements.
+Unsatisfied requirements will be listed on stderr.
+-}
 createInstanceFromRequirements
   :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
   => [InstanceRequirement]
@@ -120,24 +132,28 @@ createInstanceFromRequirements
   -> InstanceCreateInfo es
   -> m Instance
 createInstanceFromRequirements required optional baseCreateInfo = do
-  (mbICI, rrs, ors) <- checkInstanceRequirements required
-                                                 optional
-                                                 baseCreateInfo
+  (mbICI, rrs, ors) <-
+    checkInstanceRequirements
+      required
+      optional
+      baseCreateInfo
   traverse_ sayErr (requirementReport rrs ors)
   case mbICI of
-    Nothing  -> liftIO $ unsatisfiedConstraints "Failed to create instance"
+    Nothing -> liftIO $ unsatisfiedConstraints "Failed to create instance"
     Just ici -> snd <$> withInstance ici Nothing allocate
 
 ----------------------------------------------------------------
 -- macOS portability + windowing-friendly instance creation
 ----------------------------------------------------------------
 
--- | Instance requirements needed on macOS to enumerate non-conformant drivers
--- such as MoltenVK. Empty on every other platform.
+{- | Instance requirements needed on macOS to enumerate non-conformant drivers
+such as MoltenVK. Empty on every other platform.
+-}
 portabilityRequirements :: [InstanceRequirement]
 
--- | Instance create flag bits that pair with 'portabilityRequirements'.
--- 'zero' on every non-macOS platform.
+{- | Instance create flag bits that pair with 'portabilityRequirements'.
+'zero' on every non-macOS platform.
+-}
 portabilityFlags :: InstanceCreateFlags
 
 #if defined(darwin_HOST_OS)
@@ -154,46 +170,51 @@ portabilityRequirements = []
 portabilityFlags        = zero
 #endif
 
--- | Build a Vulkan 'Instance' from a backend-supplied extension list plus
--- caller-supplied requirements. Automatically merges 'portabilityRequirements'
--- into the required list and 'portabilityFlags' into the create flags so
--- macOS apps work without per-call plumbing.
---
--- Pass 'mempty' for the extension list when running headless; or call
--- 'Vulkan.Utils.Init.Headless.withInstance' which does so.
+{- | Build a Vulkan 'Instance' from a backend-supplied extension list plus
+caller-supplied requirements. Automatically merges 'portabilityRequirements'
+into the required list and 'portabilityFlags' into the create flags so
+macOS apps work without per-call plumbing.
+
+Pass 'mempty' for the extension list when running headless; or call
+'Vulkan.Utils.Init.Headless.withInstance' which does so.
+-}
 withVulkanInstance
-  :: MonadResource m
+  :: (MonadResource m)
   => Vector ByteString
-     -- ^ Backend-required instance extensions (e.g. from
-     -- @Vulkan.Utils.Init.SDL2.getRequiredInstanceExtensions@). 'mempty' for
-     -- headless.
+  {- ^ Backend-required instance extensions (e.g. from
+  @Vulkan.Utils.Init.SDL2.getRequiredInstanceExtensions@). 'mempty' for
+  headless.
+  -}
   -> Maybe ApplicationInfo
   -> [InstanceRequirement]
-     -- ^ Caller's required requirements
+  -- ^ Caller's required requirements
   -> [InstanceRequirement]
-     -- ^ Caller's optional requirements
+  -- ^ Caller's optional requirements
   -> m Instance
 withVulkanInstance exts appInfo reqs optReqs =
   createInstanceFromRequirements
     (portabilityRequirements <> reqs)
     optReqs
     zero
-      { applicationInfo       = appInfo
+      { applicationInfo = appInfo
       , enabledExtensionNames = exts
-      , flags                 = portabilityFlags
+      , flags = portabilityFlags
       }
 
 ----------------------------------------------------------------
+
 -- * Device creation
+
 ----------------------------------------------------------------
 
--- | Create a 'Device' from some requirements.
---
--- Will throw an 'IOError in the case of unsatisfied non-optional requirements.
--- Unsatisfied requirements will be listed on stderr.
+{- | Create a 'Device' from some requirements.
+
+Will throw an 'IOError in the case of unsatisfied non-optional requirements.
+Unsatisfied requirements will be listed on stderr.
+-}
 createDeviceFromRequirements
   :: forall m
-   . MonadResource m
+   . (MonadResource m)
   => [DeviceRequirement]
   -- ^ Required
   -> [DeviceRequirement]
@@ -202,66 +223,73 @@ createDeviceFromRequirements
   -> DeviceCreateInfo '[]
   -> m Device
 createDeviceFromRequirements required optional phys baseCreateInfo = do
-  (mbDCI, rrs, ors) <- checkDeviceRequirements required
-                                               optional
-                                               phys
-                                               baseCreateInfo
+  (mbDCI, rrs, ors) <-
+    checkDeviceRequirements
+      required
+      optional
+      phys
+      baseCreateInfo
   traverse_ sayErr (requirementReport rrs ors)
   case mbDCI of
     Nothing -> liftIO $ unsatisfiedConstraints "Failed to create instance"
     Just (SomeStruct dci) -> snd <$> withDevice phys dci Nothing allocate
 
 ----------------------------------------------------------------
+
 -- * Physical device selection
+
 ----------------------------------------------------------------
 
--- | Get a single 'PhysicalDevice' deciding with a scoring function
---
--- Pass a function which will extract any required values from a device in the
--- spirit of parse-don't-validate. Also provide a function to compare these
--- results for sorting multiple suitable devices.
---
--- As an example, the suitability function could return a tuple of device
--- memory and the compute queue family index, and the scoring function could be
--- 'fst' to select devices based on their memory capacity. Consider using
--- 'Vulkan.Utils.QueueAssignment.assignQueues' to find your desired queues in
--- the suitability function.
---
--- Pehaps also use the functionality in 'Vulkan.Utils.Requirements' and return
--- the 'DeviceCreateInfo' too.
---
--- If no devices are deemed suitable then a 'NoSuchThing' 'IOError' is thrown.
+{- | Get a single 'PhysicalDevice' deciding with a scoring function
+
+Pass a function which will extract any required values from a device in the
+spirit of parse-don't-validate. Also provide a function to compare these
+results for sorting multiple suitable devices.
+
+As an example, the suitability function could return a tuple of device
+memory and the compute queue family index, and the scoring function could be
+'fst' to select devices based on their memory capacity. Consider using
+'Vulkan.Utils.QueueAssignment.assignQueues' to find your desired queues in
+the suitability function.
+
+Pehaps also use the functionality in 'Vulkan.Utils.Requirements' and return
+the 'DeviceCreateInfo' too.
+
+If no devices are deemed suitable then a 'NoSuchThing' 'IOError' is thrown.
+-}
 pickPhysicalDevice
   :: (MonadIO m, Ord b)
   => Instance
   -> (PhysicalDevice -> m (Maybe a))
-  -- ^ A suitability funcion for a 'PhysicalDevice', 'Nothing' if it is not to
-  -- be chosen.
+  {- ^ A suitability funcion for a 'PhysicalDevice', 'Nothing' if it is not to
+  be chosen.
+  -}
   -> (a -> b)
   -- ^ Scoring function to rate this result
   -> m (Maybe (a, PhysicalDevice))
   -- ^ The score and the device
 pickPhysicalDevice inst devInfo score = do
   (_, devs) <- enumeratePhysicalDevices inst
-  infos     <- catMaybes <$> sequence
-    [ do
-        isCPU <- (PHYSICAL_DEVICE_TYPE_CPU ==) . deviceType
-          <$> getPhysicalDeviceProperties d
-        if isCPU then pure Nothing else fmap (, d) <$> devInfo d
-    | d <- toList devs
-    ]
-  pure $ maximumByMay (comparing (score . fst)) infos
+  infos <-
+    catMaybes
+      <$> sequence
+        [ do
+            isCPU <-
+              (PHYSICAL_DEVICE_TYPE_CPU ==) . deviceType
+                <$> getPhysicalDeviceProperties d
+            if isCPU then pure Nothing else fmap (,d) <$> devInfo d
+        | d <- toList devs
+        ]
+  pure $ maximumBy_ (comparing (score . fst)) infos
 
 -- | Extract the name of a 'PhysicalDevice' with 'getPhysicalDeviceProperties'
-physicalDeviceName :: MonadIO m => PhysicalDevice -> m Text
+physicalDeviceName :: (MonadIO m) => PhysicalDevice -> m Text
 physicalDeviceName =
   fmap (decodeUtf8 . deviceName) . getPhysicalDeviceProperties
-
 
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
 
-maximumByMay :: Foldable t => (a -> a -> Ordering) -> t a -> Maybe a
-maximumByMay f xs = if null xs then Nothing else Just (maximumBy f xs)
-
+maximumBy_ :: (Foldable t) => (a -> a -> Ordering) -> t a -> Maybe a
+maximumBy_ f xs = if null xs then Nothing else Just (maximumBy f xs)

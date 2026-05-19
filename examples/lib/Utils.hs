@@ -4,13 +4,9 @@ module Utils
   , noSuchThing
   ) where
 
-import Control.Concurrent ()
 import Control.Monad (unless)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import GHC.IO.Exception
-  ( IOErrorType (NoSuchThing)
-  , IOException (IOError)
-  )
+import GHC.IO.Exception (IOErrorType (NoSuchThing), IOException (IOError))
 import UnliftIO.Exception (throwIO)
 
 loopJust :: (Monad m) => (a -> m (Maybe a)) -> a -> m ()

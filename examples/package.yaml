@@ -14,17 +14,19 @@ library:
   verbatim:
     ghc-options: -Wall
   dependencies:
+  - JuicyPixels
   - VulkanMemoryAllocator
   - base <5
   - bytestring
-  - derive-storable >= 0.3
-  - derive-storable-plugin >= 0.2.3.3
+  # - derive-storable >= 0.3
+  # - derive-storable-plugin >= 0.2.3.3
   - GLFW-b
   - lens
   - linear
   - mtl
   - nothunks >= 0.1.2
   - resourcet >= 1.2.4
+  - safe-exceptions
   - say
   - sdl2 >= 2.5.0
   - template-haskell
@@ -34,6 +36,8 @@ library:
   - unliftio
   - vector
   - vulkan
+  - vulkan-init-glfw
+  - vulkan-init-sdl2
   - vulkan-utils
 
 executables:
@@ -176,8 +180,8 @@ executables:
     - base <5
     - bytestring
     - colour
-    - derive-storable >= 0.3
-    - derive-storable-plugin >= 0.2.3.3
+    # - derive-storable >= 0.3
+    # - derive-storable-plugin >= 0.2.3.3
     - lens
     - linear
     - random
@@ -207,8 +211,8 @@ executables:
     - bytestring
     - colour
     - containers
-    - derive-storable >= 0.3
-    - derive-storable-plugin >= 0.2.3.3
+    # - derive-storable >= 0.3
+    # - derive-storable-plugin >= 0.2.3.3
     - lens
     - linear
     - nothunks >= 0.1.2
@@ -258,6 +262,7 @@ flags:
     manual: yes
 
 default-extensions:
+- BlockArguments
 - DataKinds
 - DefaultSignatures
 - DeriveFoldable

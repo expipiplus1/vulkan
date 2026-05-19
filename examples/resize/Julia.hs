@@ -19,33 +19,34 @@ module Julia
 import Control.Monad.Trans.Resource
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-
-import Vulkan.CStruct.Extends
-import Vulkan.Core10
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang
-import Vulkan.Zero
+import Vulkan.CStruct.Extends (SomeStruct (..))
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (compileShaderQ, glsl)
+import Vulkan.Zero (zero)
 
 import Julia.Constants
 
 data JuliaPipeline = JuliaPipeline
-  { jpPipeline :: Pipeline
-  , jpPipelineLayout :: PipelineLayout
-  , jpDescriptorSetLayout :: DescriptorSetLayout
+  { jpPipeline :: Vk.Pipeline
+  , jpPipelineLayout :: Vk.PipelineLayout
+  , jpDescriptorSetLayout :: Vk.DescriptorSetLayout
   }
 
 createJuliaPipeline
-  :: (MonadResource m, MonadFail m) => Device -> m JuliaPipeline
+  :: (MonadResource m, MonadFail m)
+  => Vk.Device
+  -> m JuliaPipeline
 createJuliaPipeline dev = do
   (_, descriptorSetLayout) <-
-    withDescriptorSetLayout
+    Vk.withDescriptorSetLayout
       dev
       zero
-        { bindings =
+        { Vk.bindings =
             [ zero
-                { binding = 0
-                , descriptorType = DESCRIPTOR_TYPE_STORAGE_IMAGE
-                , descriptorCount = 1
-                , stageFlags = SHADER_STAGE_COMPUTE_BIT
+                { Vk.binding = 0
+                , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
+                , Vk.descriptorCount = 1
+                , Vk.stageFlags = Vk.SHADER_STAGE_COMPUTE_BIT
                 }
             ]
         }
@@ -53,13 +54,13 @@ createJuliaPipeline dev = do
       allocate
   (releaseShader, shader) <- juliaShader dev
   (_, pipelineLayout) <-
-    withPipelineLayout
+    Vk.withPipelineLayout
       dev
       zero
-        { setLayouts = [descriptorSetLayout]
-        , pushConstantRanges =
-            [ PushConstantRange
-                SHADER_STAGE_COMPUTE_BIT
+        { Vk.setLayouts = [descriptorSetLayout]
+        , Vk.pushConstantRanges =
+            [ Vk.PushConstantRange
+                Vk.SHADER_STAGE_COMPUTE_BIT
                 0
                 ((2 + 2 + 2 + 1) * 4)
             ]
@@ -67,15 +68,15 @@ createJuliaPipeline dev = do
       Nothing
       allocate
   let
-    pipelineCreateInfo :: ComputePipelineCreateInfo '[]
+    pipelineCreateInfo :: Vk.ComputePipelineCreateInfo '[]
     pipelineCreateInfo =
       zero
-        { layout = pipelineLayout
-        , stage = shader
-        , basePipelineHandle = zero
+        { Vk.layout = pipelineLayout
+        , Vk.stage = shader
+        , Vk.basePipelineHandle = zero
         }
   (_, (_, [computePipeline])) <-
-    withComputePipelines
+    Vk.withComputePipelines
       dev
       zero
       [SomeStruct pipelineCreateInfo]
@@ -94,19 +95,19 @@ from a fresh descriptor pool so that releasing this scope frees the lot.
 -}
 createJuliaDescriptorSets
   :: (MonadResource m)
-  => Device
-  -> DescriptorSetLayout
-  -> Vector ImageView
-  -> m (Vector DescriptorSet)
+  => Vk.Device
+  -> Vk.DescriptorSetLayout
+  -> Vector Vk.ImageView
+  -> m (Vector Vk.DescriptorSet)
 createJuliaDescriptorSets dev descriptorSetLayout imageViews = do
   (_, descriptorPool) <-
-    withDescriptorPool
+    Vk.withDescriptorPool
       dev
       zero
-        { maxSets = fromIntegral (V.length imageViews)
-        , poolSizes =
-            [ DescriptorPoolSize
-                DESCRIPTOR_TYPE_STORAGE_IMAGE
+        { Vk.maxSets = fromIntegral (V.length imageViews)
+        , Vk.poolSizes =
+            [ Vk.DescriptorPoolSize
+                Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
                 (fromIntegral (V.length imageViews))
             ]
         }
@@ -115,28 +116,28 @@ createJuliaDescriptorSets dev descriptorSetLayout imageViews = do
 
   -- Sets are freed automatically when the pool is destroyed.
   descriptorSets <-
-    allocateDescriptorSets
+    Vk.allocateDescriptorSets
       dev
       zero
-        { descriptorPool = descriptorPool
-        , setLayouts = V.replicate (V.length imageViews) descriptorSetLayout
+        { Vk.descriptorPool = descriptorPool
+        , Vk.setLayouts = V.replicate (V.length imageViews) descriptorSetLayout
         }
 
-  updateDescriptorSets
+  Vk.updateDescriptorSets
     dev
     ( V.zipWith
         ( \set view ->
             SomeStruct
               zero
-                { dstSet = set
-                , dstBinding = 0
-                , descriptorType = DESCRIPTOR_TYPE_STORAGE_IMAGE
-                , descriptorCount = 1
-                , imageInfo =
-                    [ DescriptorImageInfo
-                        { sampler = NULL_HANDLE
-                        , imageView = view
-                        , imageLayout = IMAGE_LAYOUT_GENERAL
+                { Vk.dstSet = set
+                , Vk.dstBinding = 0
+                , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
+                , Vk.descriptorCount = 1
+                , Vk.imageInfo =
+                    [ Vk.DescriptorImageInfo
+                        { Vk.sampler = Vk.NULL_HANDLE
+                        , Vk.imageView = view
+                        , Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL
                         }
                     ]
                 }
@@ -150,15 +151,24 @@ createJuliaDescriptorSets dev descriptorSetLayout imageViews = do
 
 juliaShader
   :: (MonadResource m)
-  => Device
-  -> m (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo)
+  => Vk.Device
+  -> m (ReleaseKey, SomeStruct Vk.PipelineShaderStageCreateInfo)
 juliaShader dev = do
-  let compCode =
-        $( compileShaderQ
-             (Just "vulkan1.0")
-             "comp"
-             Nothing
-             [glsl|
+  (releaseKey, compModule) <- Vk.withShaderModule dev zero{Vk.code = compCode} Nothing allocate
+  let compShaderStageCreateInfo =
+        zero
+          { Vk.stage = Vk.SHADER_STAGE_COMPUTE_BIT
+          , Vk.module' = compModule
+          , Vk.name = "main"
+          }
+  pure (releaseKey, SomeStruct compShaderStageCreateInfo)
+  where
+    compCode =
+      $( compileShaderQ
+           (Just "vulkan1.0")
+           "comp"
+           Nothing
+           [glsl|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
 
@@ -231,12 +241,4 @@ juliaShader dev = do
           imageStore(img, ivec2(gl_GlobalInvocationID.xy), vec4(res, 1));
         }
       |]
-         )
-  (releaseKey, compModule) <- withShaderModule dev zero{code = compCode} Nothing allocate
-  let compShaderStageCreateInfo =
-        zero
-          { stage = SHADER_STAGE_COMPUTE_BIT
-          , module' = compModule
-          , name = "main"
-          }
-  pure (releaseKey, SomeStruct compShaderStageCreateInfo)
+       )

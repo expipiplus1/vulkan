@@ -18,6 +18,7 @@ library:
   - bytestring
   - GLFW-b >= 3.3 && < 3.4
   - resourcet >= 1.2.4
+  - text
   - vector
   - vulkan >= 3.6.14 && < 3.28
   - vulkan-utils

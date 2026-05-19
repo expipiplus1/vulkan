@@ -2,7 +2,7 @@ module Vulkan.Utils.ShaderQQ.ShaderType
   ( ShaderType (..)
   ) where
 
-import           Data.String (IsString (..))
+import Data.String (IsString (..))
 
 data ShaderType
   = GLSL

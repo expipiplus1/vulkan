@@ -1,76 +1,46 @@
-{-| GLFW windowing helpers used by the @glfw@ triangle example. Mirrors
-the SDL2 helpers in "Window".
+{-| GLFW windowing helpers used by the @glfw@ triangle example. The
+generic helpers (window creation, drawable size, event polling) live
+upstream in "Vulkan.Utils.Init.GLFW.Window"; this module adds the
+'createSurface' wrapper that the example's 'WindowAdapter' shape
+expects.
 -}
 module Window.GLFW
   ( withGLFW
   , createWindow
+  , createSurface
   , showWindow
   , drawableSize
   , shouldQuit
+  , glfwAdapter
   ) where
 
-import Control.Monad (unless, void)
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Trans.Resource
-  ( MonadResource
-  , allocate
-  , allocate_
-  )
-import Data.Text (Text)
-import qualified Data.Text as T
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate)
 import qualified Graphics.UI.GLFW as GLFW
-import Vulkan.Core10 (Extent2D (..))
+import Vulkan.Core10 (Instance)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
+import qualified Vulkan.Utils.Init.GLFW as Init
+import Vulkan.Utils.Init.GLFW.Window
+  ( createWindow
+  , drawableSize
+  , shouldQuit
+  , showWindow
+  , withGLFW
+  )
+import WindowedBoot (WindowAdapter (..))
 
--- | Initialise GLFW and tear it down with the resource scope.
-withGLFW :: (MonadResource m) => m ()
-withGLFW = void $ allocate_ initGLFW GLFW.terminate
-  where
-    initGLFW = do
-      ok <- GLFW.init
-      unless ok (fail "GLFW.init failed")
-
-{- | Create a GLFW window configured for Vulkan rendering. The window is
-created hidden so the caller can call 'showWindow' once the swapchain is
-ready.
+{- | Bracketed surface creation. Mirrors 'Window.SDL2.createSurface' so
+callers can swap backends with a one-line module change.
 -}
-createWindow
-  :: (MonadResource m)
-  => Text
-  -- ^ Title
-  -> Int
-  -- ^ Width
-  -> Int
-  -- ^ Height
-  -> m GLFW.Window
-createWindow title width height = do
-  liftIO $ do
-    GLFW.windowHint (GLFW.WindowHint'ClientAPI GLFW.ClientAPI'NoAPI)
-    GLFW.windowHint (GLFW.WindowHint'Resizable True)
-    GLFW.windowHint (GLFW.WindowHint'Visible False)
-  (_, mWin) <-
-    allocate
-      (GLFW.createWindow width height (T.unpack title) Nothing Nothing)
-      (maybe (pure ()) GLFW.destroyWindow)
-  case mWin of
-    Just w -> pure w
-    Nothing -> liftIO (fail "GLFW.createWindow returned Nothing")
+createSurface
+  :: (MonadResource m) => Instance -> GLFW.Window -> m (ReleaseKey, SurfaceKHR)
+createSurface inst window =
+  allocate (Init.createSurface inst window) (Init.destroySurface inst)
 
-showWindow :: GLFW.Window -> IO ()
-showWindow = GLFW.showWindow
-
--- | Current framebuffer size, suitable as the swapchain extent fallback.
-drawableSize :: (MonadIO m) => GLFW.Window -> m Extent2D
-drawableSize win = do
-  (w, h) <- liftIO $ GLFW.getFramebufferSize win
-  pure $ Extent2D (fromIntegral w) (fromIntegral h)
-
-{- | Poll events and report whether the user requested to close the window
-(X button, Q, or Escape).
--}
-shouldQuit :: GLFW.Window -> IO Bool
-shouldQuit win = do
-  GLFW.pollEvents
-  closeRequested <- GLFW.windowShouldClose win
-  qPressed <- (== GLFW.KeyState'Pressed) <$> GLFW.getKey win GLFW.Key'Q
-  escPressed <- (== GLFW.KeyState'Pressed) <$> GLFW.getKey win GLFW.Key'Escape
-  pure (closeRequested || qPressed || escPressed)
+-- | Bridge for 'WindowedBoot.withWindowedVk'.
+glfwAdapter :: (MonadResource m) => GLFW.Window -> WindowAdapter m
+glfwAdapter w =
+  WindowAdapter
+    { waWithInstance = Init.withInstance w
+    , waWithSurface = \i -> createSurface i w
+    , waDrawableSize = drawableSize w
+    }

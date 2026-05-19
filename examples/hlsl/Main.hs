@@ -1,123 +1,118 @@
+{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TypeApplications #-}
 
 module Main where
 
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Resource
-import Data.IORef
-import Data.Text.Encoding (decodeUtf8)
-import Frame
-  ( Frame (..)
-  , advanceFrame
-  , frameInstanceRequirements
-  , initialFrame
-  , runFrame
-  )
-import qualified Framebuffer
-import Init
-  ( createVMA
-  , deviceRequirements
-  , myApiVersion
-  )
-import InitDevice (withDevice)
-import qualified Pipeline
-import RefCounted (releaseRefCounted)
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, runResourceT)
 import Render (renderFrame)
-import qualified RenderPass
-import SDL
-  ( showWindow
-  , time
-  )
-import Say (sayErr)
-import Swapchain
-  ( Swapchain (..)
-  , allocSwapchain
-  , recreateSwapchain
-  , threwSwapchainError
-  )
-import Utils (loopJust)
-import VkResources (mkVkResources)
-import Vulkan.Core10 hiding (withDevice)
-import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR
-  ( SurfaceFormatKHR (..)
-  )
-import qualified Vulkan.Utils.Init.SDL2 as VkInit
+import qualified SDL
+import qualified Vulkan.Core10 as Vk
+import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
+import Vulkan.Utils.Frame (Frame (..))
+import qualified Vulkan.Utils.Framebuffer as Framebuffer
+import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
+import qualified Vulkan.Utils.RenderPass as RenderPass
+import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
+import Vulkan.Utils.Swapchain (Swapchain (..), defaultSwapchainConfig)
+import Vulkan.Utils.VulkanContext (VulkanContext (..))
+import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
-import Window.SDL2
-  ( RefreshLimit (..)
-  , createSurface
-  , createWindow
-  , drawableSize
-  , shouldQuit
-  , withSDL
-  )
+import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
 main = runResourceT $ do
-  --
-  -- Initialization
-  --
   withSDL
   win <- createWindow "Vulkan 🚀 Haskell" 1280 720
-  inst <-
-    VkInit.withInstance
-      win
-      (Just zero{applicationName = Nothing, apiVersion = myApiVersion})
-      frameInstanceRequirements
-      []
-  (_, surf) <- createSurface inst win
-  (phys, dev, qs) <- withDevice inst surf deviceRequirements
-  vma <- createVMA inst phys dev
-  props <- getPhysicalDeviceProperties phys
-  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
-  vr <- liftIO $ mkVkResources inst phys dev vma qs
+  (vc, _vma, initialSC) <-
+    withWindowedVk
+      WindowedConfig
+        { wcAppName = "Vulkan 🚀 Haskell"
+        , wcInstanceReqs = []
+        , wcDeviceReqs = []
+        , wcVmaFlags = zero
+        , wcSwapchainConfig = defaultSwapchainConfig
+        }
+      (sdl2Adapter win)
+  let dev = vcDevice vc
+  (_, renderPass) <-
+    RenderPass.createColorRenderPass
+      dev
+      (SurfaceFormatKHR.format (sFormat initialSC))
+      Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+  (_, pipeline) <- createPipeline dev renderPass
 
-  -- Initial swapchain
-  initialSize <- liftIO $ drawableSize win
-  initialSC <- allocSwapchain vr NULL_HANDLE initialSize surf
-  (_, renderPass) <- RenderPass.createRenderPass dev (SurfaceFormatKHR.format (sFormat initialSC))
-  (_, pipeline) <- Pipeline.createPipeline dev renderPass
-  initialFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews initialSC) (sExtent initialSC)
-
-  scRef <- liftIO $ newIORef initialSC
-  fbsRef <- liftIO $ newIORef initialFBs
-
-  initial <- initialFrame vr initialSC
-
-  showWindow win
+  SDL.showWindow win
   start <- SDL.time @Double
 
-  let
-    perFrame f = do
-      currentSC <- liftIO $ readIORef scRef
-      (currentFBs, _rel) <- liftIO $ readIORef fbsRef
-      let f' = f{fSwapchain = currentSC}
-      needsNew <-
-        threwSwapchainError $
-          liftIO $
-            runFrame vr f' $
-              renderFrame vr renderPass pipeline currentFBs f'
-      sc' <-
-        if needsNew
-          then do
-            newSize <- liftIO $ drawableSize win
-            sc' <- recreateSwapchain vr newSize currentSC
-            newFBs <- Framebuffer.createFramebuffers dev renderPass (sImageViews sc') (sExtent sc')
-            (_oldFbs, oldRel) <- liftIO $ readIORef fbsRef
-            releaseRefCounted oldRel
-            liftIO $ writeIORef scRef sc'
-            liftIO $ writeIORef fbsRef newFBs
-            pure sc'
-          else pure currentSC
-      advanceFrame vr sc' f'
-
-    loop f =
-      shouldQuit (TimeLimit 6) >>= \case
-        True -> do
+  runWindowLoop
+    vc
+    initialSC
+    (drawableSize win)
+    (shouldQuit win)
+    WindowLoop
+      { wlMkState = \sc ->
+          Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
+      , wlRender = \fbs f -> renderFrame vc renderPass pipeline fbs f
+      , wlOnFrame = noOnFrame
+      , wlOnExit = \f -> liftIO $ do
           end <- SDL.time
           let fps = realToFrac (fIndex f) / (end - start) :: Double
-          liftIO $ putStrLn $ "Average: " <> show fps
-          pure Nothing
-        False -> Just <$> perFrame f
+          putStrLn $ "Average: " <> show fps
+      }
 
-  loopJust loop initial
+----------------------------------------------------------------
+-- HLSL pipeline
+----------------------------------------------------------------
+
+createPipeline
+  :: (MonadResource m, MonadFail m)
+  => Vk.Device
+  -> Vk.RenderPass
+  -> m (ReleaseKey, Vk.Pipeline)
+createPipeline dev renderPass =
+  createColorPipelineFromShaders
+    dev
+    renderPass
+    [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
+    , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)
+    ]
+  where
+    vertCode =
+      [vert|
+        const static float2 positions[3] = {
+          {0.0, -0.5},
+          {0.5, 0.5},
+          {-0.5, 0.5}
+        };
+
+        const static float3 colors[3] = {
+          {1.0, 1.0, 0.0},
+          {0.0, 1.0, 1.0},
+          {1.0, 0.0, 1.0}
+        };
+
+        struct VSOutput
+        {
+          float4 pos : SV_POSITION;
+          [[vk::location(0)]] float3 col;
+        };
+
+        VSOutput main(const uint i : SV_VertexID)
+        {
+          VSOutput output;
+          output.pos = float4(positions[i], 0, 1.0);
+          output.col = colors[i];
+          return output;
+        }
+      |]
+    fragCode =
+      [frag|
+        float4 main([[vk::location(0)]] const float3 col) : SV_TARGET
+        {
+            return float4(col, 1);
+        }
+      |]

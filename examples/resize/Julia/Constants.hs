@@ -1,5 +1,4 @@
-module Julia.Constants
-where
+module Julia.Constants where
 
 import Data.Word
 
