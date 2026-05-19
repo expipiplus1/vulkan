@@ -81,6 +81,19 @@ executables:
     - vulkan-init-glfw
     - vulkan-utils
 
+  triangle-dynamic:
+    main: Main.hs
+    source-dirs: triangle-dynamic
+    dependencies:
+    - base <5
+    - resourcet
+    - text
+    - vector
+    - vulkan
+    - vulkan-examples
+    - vulkan-init-glfw
+    - vulkan-utils
+
   triangle-headless:
     main: Main.hs
     source-dirs: triangle-headless

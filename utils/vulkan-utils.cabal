@@ -37,6 +37,7 @@ library
       Vulkan.Utils.Frame
       Vulkan.Utils.Framebuffer
       Vulkan.Utils.FromGL
+      Vulkan.Utils.ImageBarrier
       Vulkan.Utils.Init.Headless
       Vulkan.Utils.Initialization
       Vulkan.Utils.Misc

@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
-{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 {-| Backend-independent triangle renderer using the recycling 'Frame' loop
 from "Frame". Each backend (SDL2, GLFW) builds a 'VulkanContext' + an initial
@@ -10,9 +9,12 @@ quit", and hands off to 'runTriangle'.
 -}
 module Triangle
   ( runTriangle
+  , vertCode
+  , fragCode
   ) where
 
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT)
+import Data.ByteString (ByteString)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import qualified Vulkan.Core10 as Vk
@@ -123,39 +125,40 @@ createGraphicsPipeline dev renderPass =
     [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
     , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)
     ]
-  where
-    vertCode =
-      [vert|
-        #version 450
-        #extension GL_ARB_separate_shader_objects : enable
 
-        layout(location = 0) out vec3 fragColor;
+vertCode :: ByteString
+vertCode =
+  [vert|
+    #version 450
 
-        vec2 positions[3] = vec2[](
-          vec2(0.0, -0.5),
-          vec2(0.5, 0.5),
-          vec2(-0.5, 0.5)
-        );
-        vec3 colors[3] = vec3[](
-          vec3(1.0, 1.0, 0.0),
-          vec3(0.0, 1.0, 1.0),
-          vec3(1.0, 0.0, 1.0)
-        );
+    layout(location = 0) out vec3 fragColor;
 
-        void main() {
-          gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
-          fragColor   = colors[gl_VertexIndex];
-        }
-      |]
-    fragCode =
-      [frag|
-        #version 450
-        #extension GL_ARB_separate_shader_objects : enable
+    vec2 positions[3] = vec2[](
+      vec2(0.0, -0.5),
+      vec2(0.5, 0.5),
+      vec2(-0.5, 0.5)
+    );
+    vec3 colors[3] = vec3[](
+      vec3(1.0, 1.0, 0.0),
+      vec3(0.0, 1.0, 1.0),
+      vec3(1.0, 0.0, 1.0)
+    );
 
-        layout(location = 0) in vec3 fragColor;
-        layout(location = 0) out vec4 outColor;
+    void main() {
+      gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+      fragColor   = colors[gl_VertexIndex];
+    }
+  |]
 
-        void main() {
-            outColor = vec4(fragColor, 1.0);
-        }
-      |]
+fragCode :: ByteString
+fragCode =
+  [frag|
+    #version 450
+
+    layout(location = 0) in vec3 fragColor;
+    layout(location = 0) out vec4 outColor;
+
+    void main() {
+        outColor = vec4(fragColor, 1.0);
+    }
+  |]
