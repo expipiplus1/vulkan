@@ -4,8 +4,8 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                    , PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
+                                                                           , PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
-                                                                           , PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
                                                                            , PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                            , PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                            , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
@@ -191,7 +191,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     pipeline will be used with
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorbuffers descriptor buffers>,
 --     rather than
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets descriptor sets>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors descriptor sets>.
 --
 -- -   'PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT' specifies
 --     that the pipeline /may/ be used with an attachment
@@ -207,9 +207,10 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT'
 --     is set in @pDynamicStates@.
 --
--- -   'PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT' specifies
+-- -   'PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR' specifies
 --     that the ray tracing pipeline /can/ be used with acceleration
---     structures which reference an opacity micromap array.
+--     structures which reference an opacity micromap array. This flag has
+--     no effect on using opacity micromaps with ray queries.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV' specifies
 --     that the ray tracing pipeline /can/ be used with acceleration
@@ -262,11 +263,11 @@ pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = PipelineCreateFlagBits 0x0000000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
 pattern PIPELINE_CREATE_DERIVATIVE_BIT = PipelineCreateFlagBits 0x00000004
 
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"
+pattern PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR = PipelineCreateFlagBits 0x01000000
+
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"
 pattern PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = PipelineCreateFlagBits 0x10000000
-
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
-pattern PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = PipelineCreateFlagBits 0x01000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"
 pattern PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = PipelineCreateFlagBits 0x04000000
@@ -367,12 +368,12 @@ showTablePipelineCreateFlagBits =
     , "DERIVATIVE_BIT"
     )
   ,
-    ( PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
-    , "RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"
+    ( PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+    , "RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"
     )
   ,
-    ( PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
-    , "RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
+    ( PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
+    , "RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"
     )
   ,
     ( PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT

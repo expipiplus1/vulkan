@@ -150,7 +150,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DISPLAY_S
 -- | VkDisplaySurfaceStereoCreateInfoNV - Structure specifying stereo
 -- parameters of a newly created display plane surface object
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR'
 --
 -- = See Also
 --
@@ -206,7 +210,11 @@ instance Zero DisplaySurfaceStereoCreateInfoNV where
 -- | VkDisplayModeStereoPropertiesNV - Structure describing the stereo
 -- properties of a display mode
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayModeProperties2KHR'
 --
 -- = See Also
 --

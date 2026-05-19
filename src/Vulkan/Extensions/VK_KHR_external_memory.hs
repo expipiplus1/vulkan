@@ -179,9 +179,9 @@
 -- space. Options for defining this transition include:
 --
 -- -   A new structure that can be added to the @pNext@ list in
---     'Vulkan.Core10.OtherTypes.MemoryBarrier',
---     'Vulkan.Core10.OtherTypes.BufferMemoryBarrier', and
---     'Vulkan.Core10.OtherTypes.ImageMemoryBarrier'.
+--     'Vulkan.Core10.CommandBufferBuilding.MemoryBarrier',
+--     'Vulkan.Core10.CommandBufferBuilding.BufferMemoryBarrier', and
+--     'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier'.
 --
 -- -   A new bit in 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags' that
 --     can be set to indicate an “external” access.

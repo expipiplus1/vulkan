@@ -90,7 +90,7 @@
 --
 -- -   'CopyMemoryToImageIndirectInfoKHR'
 --
--- -   'StridedDeviceAddressRangeKHR'
+-- -   'Vulkan.Extensions.VK_KHR_device_address_commands.StridedDeviceAddressRangeKHR'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -160,7 +160,6 @@ module Vulkan.Extensions.VK_KHR_copy_memory_indirect  ( CopyMemoryIndirectComman
                                                       , CopyMemoryToImageIndirectInfoKHR
                                                       , PhysicalDeviceCopyMemoryIndirectFeaturesKHR
                                                       , PhysicalDeviceCopyMemoryIndirectPropertiesKHR
-                                                      , StridedDeviceAddressRangeKHR
                                                       ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -213,12 +212,4 @@ instance ToCStruct PhysicalDeviceCopyMemoryIndirectPropertiesKHR
 instance Show PhysicalDeviceCopyMemoryIndirectPropertiesKHR
 
 instance FromCStruct PhysicalDeviceCopyMemoryIndirectPropertiesKHR
-
-
-data StridedDeviceAddressRangeKHR
-
-instance ToCStruct StridedDeviceAddressRangeKHR
-instance Show StridedDeviceAddressRangeKHR
-
-instance FromCStruct StridedDeviceAddressRangeKHR
 

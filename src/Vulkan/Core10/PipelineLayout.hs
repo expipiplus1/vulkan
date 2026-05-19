@@ -841,6 +841,12 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_ARM_tensors.PhysicalDeviceTensorPropertiesARM'::@maxPerStageDescriptorUpdateAfterBindStorageTensors@
 --
+-- -   #VUID-VkPipelineLayoutCreateInfo-flags-13352# If @flags@ has
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_NO_TASK_SHADER_BIT_KHR'
+--     set, then
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
+--     /must/ also be set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-sType-sType# @sType@ /must/ be
@@ -861,6 +867,24 @@ instance Zero PushConstantRange where
 --     @pushConstantRangeCount@ is not @0@, @pPushConstantRanges@ /must/ be
 --     a valid pointer to an array of @pushConstantRangeCount@ valid
 --     'PushConstantRange' structures
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorBufferEmbeddedSamplersInfoEXT'
+--
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindDescriptorSetsInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutCreateInfoEXT'
+--
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo'
+--
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetInfo'
+--
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetWithTemplateInfo'
+--
+--     -   'Vulkan.Extensions.VK_KHR_maintenance6.SetDescriptorBufferOffsetsInfoEXT'
 --
 -- = See Also
 --

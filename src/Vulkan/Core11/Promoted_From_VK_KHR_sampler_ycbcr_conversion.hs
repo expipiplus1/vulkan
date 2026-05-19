@@ -303,7 +303,13 @@ destroySamplerYcbcrConversion device
 -- | VkSamplerYcbcrConversionInfo - Structure specifying Y′CBCR conversion to
 -- a sampler or image view
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ImageView.ImageViewCreateInfo'
+--
+--     -   'Vulkan.Core10.Sampler.SamplerCreateInfo'
 --
 -- = See Also
 --
@@ -724,6 +730,12 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --     @planeAspect@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>,
@@ -806,6 +818,12 @@ instance Zero BindImagePlaneMemoryInfo where
 --     @planeAspect@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageMemoryRequirementsInfo2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>,
@@ -878,7 +896,13 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -935,7 +959,11 @@ instance Zero PhysicalDeviceSamplerYcbcrConversionFeatures where
 -- | VkSamplerYcbcrConversionImageFormatProperties - Structure specifying
 -- combined image sampler descriptor count for multi-planar images
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
 --
 -- = See Also
 --

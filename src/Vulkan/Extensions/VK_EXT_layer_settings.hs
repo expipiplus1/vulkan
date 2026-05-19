@@ -247,6 +247,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_LAYER_SET
 --     @settingCount@ is not @0@, @pSettings@ /must/ be a valid pointer to
 --     an array of @settingCount@ valid 'LayerSettingEXT' structures
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_layer_settings VK_EXT_layer_settings>,

@@ -101,7 +101,7 @@
 -- This extension has a number of limitations. The
 -- @OpImageSampleFootprintNV@ instruction only supports for two- and
 -- three-dimensional textures. Footprint evaluation only supports the
--- CLAMP_TO_EDGE wrap mode; results are undefined for all other wrap modes.
+-- CLAMP_TO_EDGE wrap mode; results are poison for all other wrap modes.
 -- Only a limited set of granularity values and that set does not support
 -- separate coverage information for each texel in the original image.
 --

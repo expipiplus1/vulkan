@@ -365,6 +365,24 @@ exportMetalObjectsEXT device = liftIO . evalContT $ do
 --     If @exportObjectType@ is not @0@, @exportObjectType@ /must/ be a
 --     valid 'ExportMetalObjectTypeFlagBitsEXT' value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.BufferView.BufferViewCreateInfo'
+--
+--     -   'Vulkan.Core10.Event.EventCreateInfo'
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
+--     -   'Vulkan.Core10.ImageView.ImageViewCreateInfo'
+--
+--     -   'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo'
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
+--
+--     -   'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_objects VK_EXT_metal_objects>,
@@ -633,7 +651,11 @@ instance es ~ '[] => Zero (ExportMetalObjectsInfoEXT es) where
 -- | VkExportMetalDeviceInfoEXT - Structure that identifies a VkDevice object
 -- and corresponding Metal MTLDevice object
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'ExportMetalObjectsInfoEXT'
 --
 -- = See Also
 --
@@ -688,7 +710,11 @@ instance Zero ExportMetalDeviceInfoEXT where
 -- | VkExportMetalCommandQueueInfoEXT - Structure that identifies a VkQueue
 -- object and corresponding Metal MTLCommandQueue object
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'ExportMetalObjectsInfoEXT'
 --
 -- = See Also
 --
@@ -753,7 +779,11 @@ instance Zero ExportMetalCommandQueueInfoEXT where
 -- | VkExportMetalBufferInfoEXT - Structure that identifies a VkDeviceMemory
 -- object and corresponding Metal MTLBuffer object
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'ExportMetalObjectsInfoEXT'
 --
 -- = See Also
 --
@@ -825,7 +855,11 @@ instance Zero ExportMetalBufferInfoEXT where
 -- 'Vulkan.Core10.Handles.DeviceMemory'. Failure to do so results in
 -- undefined behavior.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- = See Also
 --
@@ -904,6 +938,12 @@ instance Zero ImportMetalBufferInfoEXT where
 --     @bufferView@, @image@, and @imageView@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
 --     retrieved from the same 'Vulkan.Core10.Handles.Device'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'ExportMetalObjectsInfoEXT'
 --
 -- = See Also
 --
@@ -1004,7 +1044,11 @@ instance Zero ExportMetalTextureInfoEXT where
 -- 'Vulkan.Core10.Image.ImageCreateInfo' will be treated as bound to a
 -- VkDeviceMemory.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
 --
 -- = See Also
 --
@@ -1068,7 +1112,11 @@ instance Zero ImportMetalTextureInfoEXT where
 -- | VkExportMetalIOSurfaceInfoEXT - Structure that identifies a VkImage
 -- object and corresponding Metal IOSurfaceRef object
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'ExportMetalObjectsInfoEXT'
 --
 -- = See Also
 --
@@ -1145,7 +1193,11 @@ instance Zero ExportMetalIOSurfaceInfoEXT where
 -- 'Vulkan.Core10.Handles.Image'. Failure to do so results in undefined
 -- behavior.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
 --
 -- = See Also
 --
@@ -1215,6 +1267,12 @@ instance Zero ImportMetalIOSurfaceInfoEXT where
 --     and @semaphore@ that are valid handles of non-ignored parameters
 --     /must/ have been created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'ExportMetalObjectsInfoEXT'
 --
 -- = See Also
 --
@@ -1295,7 +1353,13 @@ instance Zero ExportMetalSharedEventInfoEXT where
 -- object will be set to
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@initialValue@.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Event.EventCreateInfo'
+--
+--     -   'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'
 --
 -- = See Also
 --

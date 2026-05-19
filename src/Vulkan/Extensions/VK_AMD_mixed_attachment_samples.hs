@@ -183,7 +183,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMEN
 -- is created with a valid 'Vulkan.Core10.Handles.RenderPass', parameters
 -- of this structure are ignored.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
 --
 -- = See Also
 --

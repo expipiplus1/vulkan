@@ -304,7 +304,7 @@ import GHC.Show (Show(showsPrec))
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass Render Pass>).
 -- For use in a descriptor set, this is a member in the
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo' structure (see
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates>).
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets-updates>).
 --
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-unifiedImageLayouts unifiedImageLayouts>
@@ -368,11 +368,13 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core14.PromotedStreamingTransfers'.CopyImageToMemoryInfo',
 -- 'Vulkan.Extensions.VK_KHR_copy_memory_indirect.CopyMemoryToImageIndirectInfoKHR',
 -- 'Vulkan.Core14.PromotedStreamingTransfers'.CopyMemoryToImageInfo',
+-- 'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineResourceInfoImageLayoutARM',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+-- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceMemoryImageCopyKHR',
 -- 'Vulkan.Core14.PromotedStreamingTransfers'.HostImageLayoutTransitionInfo',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_heap.ImageDescriptorInfoEXT',
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
 -- 'Vulkan.Core14.PromotedStreamingTransfers'.PhysicalDeviceHostImageCopyProperties',
 -- 'Vulkan.Core14.PhysicalDeviceVulkan14Properties',

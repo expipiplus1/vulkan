@@ -58,7 +58,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -139,7 +145,11 @@ instance Zero PhysicalDeviceInlineUniformBlockFeatures where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -149,7 +159,7 @@ instance Zero PhysicalDeviceInlineUniformBlockFeatures where
 data PhysicalDeviceInlineUniformBlockProperties = PhysicalDeviceInlineUniformBlockProperties
   { -- | #extension-limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@
     -- is the maximum size in bytes of an
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-inlineuniformblock inline uniform block>
     -- binding.
     maxInlineUniformBlockSize :: Word32
   , -- | #extension-limits-maxPerStageDescriptorInlineUniformBlocks#
@@ -250,7 +260,11 @@ instance Zero PhysicalDeviceInlineUniformBlockProperties where
 -- | VkWriteDescriptorSetInlineUniformBlock - Structure specifying inline
 -- uniform block data
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
 --
 -- = See Also
 --
@@ -320,7 +334,11 @@ instance Zero WriteDescriptorSetInlineUniformBlock where
 -- maximum number of inline uniform block bindings of a newly created
 -- descriptor pool
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo'
 --
 -- = See Also
 --

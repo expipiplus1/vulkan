@@ -8,8 +8,6 @@ module Vulkan.Core10.ComputePipeline  ( createComputePipelines
                                       , PipelineShaderStageCreateInfo(..)
                                       , ComputePipelineCreateInfo(..)
                                       , Pipeline(..)
-                                      , ShaderStageFlagBits(..)
-                                      , ShaderStageFlags
                                       , PipelineCreateFlagBits(..)
                                       , PipelineCreateFlags
                                       , PipelineShaderStageCreateFlagBits(..)
@@ -129,8 +127,6 @@ import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits (PipelineLayoutCreateFla
 import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits (PipelineLayoutCreateFlags)
 import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits (PipelineShaderStageCreateFlagBits(..))
 import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits (PipelineShaderStageCreateFlags)
-import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(..))
-import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -1227,7 +1223,7 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources shader resource interface>
 --     with a 'Vulkan.Core10.Handles.DescriptorSet' and @Binding@
 --     decoration /must/ have a mapping declared in
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::pMappings
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::@pMappings@
 --
 -- -   #VUID-VkComputePipelineCreateInfo-flags-03365# @flags@ /must/ not
 --     include
@@ -1314,11 +1310,21 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --
 -- -   #VUID-VkComputePipelineCreateInfo-flags-07367# @flags@ /must/ not
 --     include
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR'
+--
+-- -   #VUID-VkComputePipelineCreateInfo-flags-11593# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap ::micromap>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR'
 --
 -- -   #VUID-VkComputePipelineCreateInfo-flags-07996# @flags@ /must/ not
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV'
+--
+-- -   #VUID-VkComputePipelineCreateInfo-layout-12396# If @layout@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ not have been
+--     created with
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
 --
 -- -   #VUID-VkComputePipelineCreateInfo-None-11367# If
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlags2CreateInfoKHR'::@flags@

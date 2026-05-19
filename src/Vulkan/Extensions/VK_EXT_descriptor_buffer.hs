@@ -43,6 +43,8 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_EXT_fragment_density_map
+--
 --     -   Interacts with VK_KHR_acceleration_structure
 --
 --     -   Interacts with VK_NV_ray_tracing
@@ -169,7 +171,8 @@
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
 --     'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM',
---     'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM':
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.AccelerationStructureCreateInfo2KHR':
 --
 --     -   'OpaqueCaptureDescriptorDataCreateInfoEXT'
 --
@@ -186,9 +189,16 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
 --
---     -   'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT'
---
 --     -   'PhysicalDeviceDescriptorBufferPropertiesEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
@@ -640,7 +650,7 @@ foreign import ccall
 -- be used. Any potential types in
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'::@pDescriptorTypes@
 -- for @binding@ share the same offset. If the size of the
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-mutable mutable descriptor>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-mutable mutable descriptor>
 -- is larger than the size of a concrete descriptor type being accessed,
 -- the padding area is ignored by the implementation.
 --
@@ -926,7 +936,7 @@ foreign import ccall
 --     'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM'
 --     usage flag set if the command pool from which @commandBuffer@ was
 --     allocated from was created with any element of
---     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'::pProcessingEngines
+--     'Vulkan.Extensions.VK_ARM_data_graph.DataGraphProcessingEngineCreateInfoARM'::@pProcessingEngines@
 --     with @isForeign@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
@@ -1031,7 +1041,7 @@ foreign import ccall
 -- are no longer valid. Other sets will also be invalidated upon calling
 -- this command if @layout@ differs from the pipeline layout used to bind
 -- those other sets, as described in
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility Pipeline Layout Compatibility>.
 --
 -- After binding descriptors, applications /can/ modify descriptor memory
 -- either by performing writes on the host or with device commands. When
@@ -1306,7 +1316,7 @@ foreign import ccall
 -- invalidated upon calling this command. Other sets will also be
 -- invalidated upon calling this command if @layout@ differs from the
 -- pipeline layout used to bind those other sets, as described in
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility Pipeline Layout Compatibility>.
 --
 -- == Valid Usage
 --
@@ -1884,7 +1894,13 @@ pattern IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = IMAGE_CREATE_DES
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -2001,7 +2017,11 @@ instance Zero PhysicalDeviceDescriptorBufferFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -2417,11 +2437,16 @@ instance Zero PhysicalDeviceDescriptorBufferPropertiesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT = PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT
   { -- | #limits-combinedImageSamplerDensityMapDescriptorSize#
@@ -2776,6 +2801,12 @@ instance es ~ '[] => Zero (DescriptorBufferBindingInfoEXT es) where
 -- -   #VUID-VkDescriptorBufferBindingPushDescriptorBufferHandleEXT-buffer-parameter#
 --     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'DescriptorBufferBindingInfoEXT'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_buffer VK_EXT_descriptor_buffer>,
@@ -2989,7 +3020,7 @@ instance Zero DescriptorBufferBindingPushDescriptorBufferHandleEXT where
 --
 -- -   #VUID-VkDescriptorGetInfoEXT-type-12270# If @type@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
---     the and @pStorageTexelBuffer@ is not @NULL@,
+--     and @pStorageTexelBuffer@ is not @NULL@,
 --     @pStorageTexelBuffer->address@ /must/ be a multiple of the effective
 --     alignment requirement as determined by
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minTexelBufferOffsetAlignment minTexelBufferOffsetAlignment>
@@ -3531,7 +3562,27 @@ instance Zero AccelerationStructureCaptureDescriptorDataInfoEXT where
 -- have capture data from different original resources, resource creation
 -- is much more likely to fail.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_device_address_commands.AccelerationStructureCreateInfo2KHR'
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR'
+--
+--     -   'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'
+--
+--     -   'Vulkan.Core10.Buffer.BufferCreateInfo'
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
+--     -   'Vulkan.Core10.ImageView.ImageViewCreateInfo'
+--
+--     -   'Vulkan.Core10.Sampler.SamplerCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM'
+--
+--     -   'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM'
 --
 -- = See Also
 --
@@ -3678,7 +3729,6 @@ peekDescriptorDataEXT tag p = case tag of
     pStorageBuffer <- peek @(Ptr DescriptorAddressInfoEXT) (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p)
     maybePeek (\j -> peekCStruct @DescriptorAddressInfoEXT (j)) pStorageBuffer)
   DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR -> AnAccelerationStructure <$> (peek @DeviceAddress (castPtr @_ @DeviceAddress p))
-  _ -> error "peekDescriptorDataEXT: unhandled DescriptorType"
 
 
 type EXT_DESCRIPTOR_BUFFER_SPEC_VERSION = 1

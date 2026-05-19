@@ -186,7 +186,13 @@ pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT = FORMAT_G16_B16R16_2PLANE_444_UN
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- Although the formats defined by the @VK_EXT_ycbcr_2plane_444_formats@
 -- were promoted to Vulkan 1.3 as optional formats, the

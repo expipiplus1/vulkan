@@ -18,6 +18,8 @@ module Vulkan.Extensions.Handles  ( PipelineBinaryKHR(..)
                                   , TensorARM(..)
                                   , TensorViewARM(..)
                                   , DataGraphPipelineSessionARM(..)
+                                  , ShaderInstrumentationARM(..)
+                                  , GpaSessionAMD(..)
                                   , DisplayKHR(..)
                                   , DisplayModeKHR(..)
                                   , SurfaceKHR(..)
@@ -83,6 +85,7 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_MODE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_EXTERNAL_COMPUTE_QUEUE_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_GPA_SESSION_AMD))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT))
@@ -91,6 +94,7 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_OPTICAL_FLOW_SESSI
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PIPELINE_BINARY_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SHADER_EXT))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_TENSOR_ARM))
@@ -245,11 +249,13 @@ instance Show ValidationCacheEXT where
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.AccelerationStructureCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureDeviceAddressInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureToMemoryInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyMemoryToAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR',
+-- 'Vulkan.Extensions.VK_KHR_device_address_commands.createAccelerationStructure2KHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.createAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.destroyAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'
@@ -541,6 +547,54 @@ instance HasObjectType DataGraphPipelineSessionARM where
                                                         , h )
 instance Show DataGraphPipelineSessionARM where
   showsPrec p (DataGraphPipelineSessionARM x) = showParen (p >= 11) (showString "DataGraphPipelineSessionARM 0x" . showHex x)
+
+
+-- | VkShaderInstrumentationARM - Opaque handle to a shader instrumentation
+-- object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_shader_instrumentation VK_ARM_shader_instrumentation>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- 'Vulkan.Extensions.VK_ARM_shader_instrumentation.clearShaderInstrumentationMetricsARM',
+-- 'Vulkan.Extensions.VK_ARM_shader_instrumentation.cmdBeginShaderInstrumentationARM',
+-- 'Vulkan.Extensions.VK_ARM_shader_instrumentation.createShaderInstrumentationARM',
+-- 'Vulkan.Extensions.VK_ARM_shader_instrumentation.destroyShaderInstrumentationARM',
+-- 'Vulkan.Extensions.VK_ARM_shader_instrumentation.getShaderInstrumentationValuesARM'
+newtype ShaderInstrumentationARM = ShaderInstrumentationARM Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType ShaderInstrumentationARM where
+  objectTypeAndHandle (ShaderInstrumentationARM h) = ( OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM
+                                                     , h )
+instance Show ShaderInstrumentationARM where
+  showsPrec p (ShaderInstrumentationARM x) = showParen (p >= 11) (showString "ShaderInstrumentationARM 0x" . showHex x)
+
+
+-- | VkGpaSessionAMD - Opaque handle to a GPU Performance API object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_gpa_interface VK_AMD_gpa_interface>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_DEFINE_NON_DISPATCHABLE_HANDLE VK_DEFINE_NON_DISPATCHABLE_HANDLE>,
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.GpaSessionCreateInfoAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.cmdBeginGpaSampleAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.cmdBeginGpaSessionAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.cmdCopyGpaSessionResultsAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.cmdEndGpaSampleAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.cmdEndGpaSessionAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.createGpaSessionAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.destroyGpaSessionAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.getGpaSessionResultsAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.getGpaSessionStatusAMD',
+-- 'Vulkan.Extensions.VK_AMD_gpa_interface.resetGpaSessionAMD'
+newtype GpaSessionAMD = GpaSessionAMD Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType GpaSessionAMD where
+  objectTypeAndHandle (GpaSessionAMD h) = (OBJECT_TYPE_GPA_SESSION_AMD, h)
+instance Show GpaSessionAMD where
+  showsPrec p (GpaSessionAMD x) = showParen (p >= 11) (showString "GpaSessionAMD 0x" . showHex x)
 
 
 -- | VkDisplayKHR - Opaque handle to a display object

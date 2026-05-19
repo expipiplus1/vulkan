@@ -237,7 +237,11 @@ setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
 -- | VkDisplayNativeHdrSurfaceCapabilitiesAMD - Structure describing display
 -- native HDR specific capabilities of a surface
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 --
 -- = See Also
 --
@@ -306,6 +310,12 @@ instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
 -- -   #VUID-VkSwapchainDisplayNativeHdrCreateInfoAMD-sType-sType# @sType@
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --
 -- == Valid Usage
 --

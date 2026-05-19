@@ -105,7 +105,7 @@ type AccessFlags2 = AccessFlagBits2
 --     pipeline stage.
 --
 -- -   'ACCESS_2_UNIFORM_READ_BIT' specifies read access to a
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformbuffer uniform buffer>
 --     in any shader pipeline stage.
 --
 -- -   'ACCESS_2_INPUT_ATTACHMENT_READ_BIT' specifies read access to an
@@ -118,17 +118,17 @@ type AccessFlags2 = AccessFlagBits2
 --     pipeline stage.
 --
 -- -   'ACCESS_2_SHADER_SAMPLED_READ_BIT' specifies read access to a
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformtexelbuffer uniform texel buffer>
 --     or
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage sampled image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampledimage sampled image>
 --     in any shader pipeline stage.
 --
 -- -   'ACCESS_2_SHADER_STORAGE_READ_BIT' specifies read access to a
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebuffer storage buffer>,
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-physical-storage-buffer physical storage buffer>,
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebuffer storage buffer>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-physical-storage-buffer physical storage buffer>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer storage texel buffer>,
 --     or
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage storage image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage storage image>
 --     in any shader pipeline stage.
 --
 -- -   'ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR' specifies read access
@@ -147,11 +147,11 @@ type AccessFlags2 = AccessFlagBits2
 --     -   'ACCESS_2_SHADER_TILE_ATTACHMENT_READ_BIT_QCOM'
 --
 -- -   'ACCESS_2_SHADER_STORAGE_WRITE_BIT' specifies write access to a
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebuffer storage buffer>,
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-physical-storage-buffer physical storage buffer>,
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebuffer storage buffer>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-physical-storage-buffer physical storage buffer>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer storage texel buffer>,
 --     or
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage storage image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage storage image>
 --     in any shader pipeline stage.
 --
 -- -   'ACCESS_2_SHADER_WRITE_BIT' is equivalent to
@@ -183,7 +183,10 @@ type AccessFlags2 = AccessFlagBits2
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-store-operations store>,
 --     and
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-resolve-operations multisample resolve>
---     operations. Such access occurs in the
+--     operations. This includes
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-resolve-operations multisample resolve>
+--     operations for depth\/stencil resolve attachments. Such access
+--     occurs in the
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT'
 --     pipeline stage.
 --
@@ -467,6 +470,13 @@ type AccessFlags2 = AccessFlagBits2
 --
 -- -   'ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT' specifies read access to a
 --     resource heap in any shader pipeline stage.
+--
+-- Certain access types are only performed by a subset of pipeline stages,
+-- as described in more detail for
+-- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits'. The
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types-supported Supported Access Types>
+-- table lists, for each access flag, which pipeline stages /can/ perform
+-- that type of access.
 --
 -- In situations where an application wishes to select all access types for
 -- a given set of pipeline stages, 'ACCESS_2_MEMORY_READ_BIT' or

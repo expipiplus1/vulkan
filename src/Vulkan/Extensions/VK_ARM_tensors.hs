@@ -1616,6 +1616,14 @@ getPhysicalDeviceExternalTensorPropertiesARM physicalDevice
 -- -   #VUID-VkTensorDescriptionARM-dimensionCount-arraylength#
 --     @dimensionCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineConstantARM'
+--
+--     -   'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineResourceInfoARM'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_tensors VK_ARM_tensors>,
@@ -2221,6 +2229,12 @@ instance Zero BindTensorMemoryInfoARM where
 -- -   #VUID-VkWriteDescriptorSetTensorARM-tensorViewCount-arraylength#
 --     @tensorViewCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_tensors VK_ARM_tensors>,
@@ -2269,7 +2283,11 @@ instance Zero WriteDescriptorSetTensorARM where
 -- | VkTensorFormatPropertiesARM - Structure specifying properties of a
 -- format used to describe tensor elements
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2'
 --
 -- = See Also
 --
@@ -2343,7 +2361,11 @@ instance Zero TensorFormatPropertiesARM where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -2631,6 +2653,12 @@ instance Zero PhysicalDeviceTensorPropertiesARM where
 -- -   #VUID-VkTensorMemoryBarrierARM-tensor-parameter# @tensor@ /must/ be
 --     a valid 'Vulkan.Extensions.Handles.TensorARM' handle
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.DependencyInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_tensors VK_ARM_tensors>,
@@ -2734,7 +2762,11 @@ instance Zero TensorMemoryBarrierARM where
 -- | VkTensorDependencyInfoARM - Structure specifying tensor dependency
 -- information for a synchronization command
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.DependencyInfo'
 --
 -- = See Also
 --
@@ -2742,18 +2774,14 @@ instance Zero TensorMemoryBarrierARM where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'TensorMemoryBarrierARM'
 data TensorDependencyInfoARM = TensorDependencyInfoARM
-  { -- | @tensorMemoryBarrierCount@ is the length of the @pTensorMemoryBarriers@
-    -- array.
-    tensorMemoryBarrierCount :: Word32
-  , -- | @pTensorMemoryBarriers@ is a pointer to an array of
+  { -- | @pTensorMemoryBarriers@ is a pointer to an array of
     -- 'TensorMemoryBarrierARM' structures defining memory dependencies between
     -- tensors.
     --
     -- #VUID-VkTensorDependencyInfoARM-pTensorMemoryBarriers-parameter#
-    -- @pTensorMemoryBarriers@ /must/ be a valid pointer to a valid
-    -- 'TensorMemoryBarrierARM' structure
-    tensorMemoryBarriers :: TensorMemoryBarrierARM
-  }
+    -- @pTensorMemoryBarriers@ /must/ be a valid pointer to an array of
+    -- @tensorMemoryBarrierCount@ valid 'TensorMemoryBarrierARM' structures
+    tensorMemoryBarriers :: Vector TensorMemoryBarrierARM }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (TensorDependencyInfoARM)
@@ -2765,31 +2793,29 @@ instance ToCStruct TensorDependencyInfoARM where
   pokeCStruct p TensorDependencyInfoARM{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (tensorMemoryBarrierCount)
-    pTensorMemoryBarriers'' <- ContT $ withCStruct (tensorMemoryBarriers)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr TensorMemoryBarrierARM))) pTensorMemoryBarriers''
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (tensorMemoryBarriers)) :: Word32))
+    pPTensorMemoryBarriers' <- ContT $ allocaBytes @TensorMemoryBarrierARM ((Data.Vector.length (tensorMemoryBarriers)) * 64)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPTensorMemoryBarriers' `plusPtr` (64 * (i)) :: Ptr TensorMemoryBarrierARM) (e)) (tensorMemoryBarriers)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr TensorMemoryBarrierARM))) (pPTensorMemoryBarriers')
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    pTensorMemoryBarriers'' <- ContT $ withCStruct (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr TensorMemoryBarrierARM))) pTensorMemoryBarriers''
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
 
 instance FromCStruct TensorDependencyInfoARM where
   peekCStruct p = do
     tensorMemoryBarrierCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    pTensorMemoryBarriers <- peekCStruct @TensorMemoryBarrierARM =<< peek ((p `plusPtr` 24 :: Ptr (Ptr TensorMemoryBarrierARM)))
+    pTensorMemoryBarriers <- peek @(Ptr TensorMemoryBarrierARM) ((p `plusPtr` 24 :: Ptr (Ptr TensorMemoryBarrierARM)))
+    pTensorMemoryBarriers' <- generateM (fromIntegral tensorMemoryBarrierCount) (\i -> peekCStruct @TensorMemoryBarrierARM ((pTensorMemoryBarriers `advancePtrBytes` (64 * (i)) :: Ptr TensorMemoryBarrierARM)))
     pure $ TensorDependencyInfoARM
-             tensorMemoryBarrierCount pTensorMemoryBarriers
+             pTensorMemoryBarriers'
 
 instance Zero TensorDependencyInfoARM where
   zero = TensorDependencyInfoARM
-           zero
-           zero
+           mempty
 
 
 -- | VkPhysicalDeviceTensorFeaturesARM - Structure describing tensor features
@@ -2816,7 +2842,13 @@ instance Zero TensorDependencyInfoARM where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -3277,6 +3309,12 @@ instance Zero TensorCopyARM where
 --     @tensor@ /must/ be a valid 'Vulkan.Extensions.Handles.TensorARM'
 --     handle
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_tensors VK_ARM_tensors>,
@@ -3337,7 +3375,11 @@ instance Zero MemoryDedicatedAllocateInfoTensorARM where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -3429,7 +3471,13 @@ instance Zero PhysicalDeviceDescriptorBufferTensorPropertiesARM where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -3647,6 +3695,12 @@ instance Zero TensorViewCaptureDescriptorDataInfoARM where
 --     @tensorView@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.TensorViewARM' handle
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorGetInfoEXT'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_tensors VK_ARM_tensors>,
@@ -3699,7 +3753,17 @@ instance Zero DescriptorGetTensorInfoARM where
 -- | VkFrameBoundaryTensorsARM - Add tensor frame boundary information to
 -- queue submissions
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo'
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
+--
+--     -   'Vulkan.Core10.Queue.SubmitInfo'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.SubmitInfo2'
 --
 -- = See Also
 --
@@ -3899,7 +3963,11 @@ instance Zero ExternalTensorPropertiesARM where
 -- @handleTypes@ field must be included in the creation parameters for a
 -- tensor that will be bound to memory that is either exported or imported.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'TensorCreateInfoARM'
 --
 -- = See Also
 --

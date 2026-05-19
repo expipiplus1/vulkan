@@ -519,7 +519,6 @@ module Vulkan.Extensions.VK_EXT_descriptor_heap  ( BindHeapInfoEXT
                                                  , DescriptorMappingSourcePushIndexEXT
                                                  , DescriptorMappingSourceShaderRecordIndexEXT
                                                  , DescriptorSetAndBindingMappingEXT
-                                                 , DeviceAddressRangeEXT
                                                  , HostAddressRangeConstEXT
                                                  , HostAddressRangeEXT
                                                  , ImageDescriptorInfoEXT
@@ -621,14 +620,6 @@ data DescriptorSetAndBindingMappingEXT (es :: [Type])
 instance ( Extendss DescriptorSetAndBindingMappingEXT es
          , PokeChain es ) => ToCStruct (DescriptorSetAndBindingMappingEXT es)
 instance Show (Chain es) => Show (DescriptorSetAndBindingMappingEXT es)
-
-
-data DeviceAddressRangeEXT
-
-instance ToCStruct DeviceAddressRangeEXT
-instance Show DeviceAddressRangeEXT
-
-instance FromCStruct DeviceAddressRangeEXT
 
 
 data HostAddressRangeConstEXT

@@ -119,6 +119,16 @@
 --
 -- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixKHR CooperativeMatrixKHR>
 --
+-- == Issues
+--
+-- 1.) How does cooperativeMatrixRobustBufferAccess interact with
+-- nullDescriptor?
+--
+-- __RESOLVED__: nullDescriptor is not allowed here While drivers can
+-- handle going OOB into a buffer, if there is not buffer, via
+-- nullDescriptor, it is invalid to load\/store from the cooperative
+-- matrix.
+--
 -- == Version History
 --
 -- -   Revision 2, 2023-05-03 (Kevin Petit)
@@ -335,7 +345,13 @@ getPhysicalDeviceCooperativeMatrixPropertiesKHR physicalDevice = liftIO . evalCo
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -348,8 +364,10 @@ data PhysicalDeviceCooperativeMatrixFeaturesKHR = PhysicalDeviceCooperativeMatri
     cooperativeMatrix :: Bool
   , -- | #features-cooperativeMatrixRobustBufferAccess#
     -- @cooperativeMatrixRobustBufferAccess@ indicates that the implementation
-    -- supports robust buffer access for SPIR-V @OpCooperativeMatrixLoadKHR@
-    -- and @OpCooperativeMatrixStoreKHR@ instructions.
+    -- supports
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-robust-buffer-access robust buffer access>
+    -- for SPIR-V @OpCooperativeMatrixLoadKHR@ and
+    -- @OpCooperativeMatrixStoreKHR@ instructions.
     cooperativeMatrixRobustBufferAccess :: Bool
   }
   deriving (Typeable, Eq)
@@ -546,7 +564,11 @@ instance Zero CooperativeMatrixPropertiesKHR where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

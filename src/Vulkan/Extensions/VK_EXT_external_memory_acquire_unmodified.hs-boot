@@ -59,9 +59,9 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
+-- -   Extending 'Vulkan.Core10.CommandBufferBuilding.BufferMemoryBarrier',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2',
---     'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+--     'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2':
 --
 --     -   'ExternalMemoryAcquireUnmodifiedEXT'

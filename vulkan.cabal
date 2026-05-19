@@ -323,6 +323,7 @@ library
       Vulkan.Extensions.VK_AMD_display_native_hdr
       Vulkan.Extensions.VK_AMD_draw_indirect_count
       Vulkan.Extensions.VK_AMD_gcn_shader
+      Vulkan.Extensions.VK_AMD_gpa_interface
       Vulkan.Extensions.VK_AMD_gpu_shader_half_float
       Vulkan.Extensions.VK_AMD_gpu_shader_int16
       Vulkan.Extensions.VK_AMD_memory_overallocation_behavior
@@ -345,6 +346,9 @@ library
       Vulkan.Extensions.VK_ANDROID_external_format_resolve
       Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
       Vulkan.Extensions.VK_ARM_data_graph
+      Vulkan.Extensions.VK_ARM_data_graph_instruction_set_tosa
+      Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics
+      Vulkan.Extensions.VK_ARM_data_graph_optical_flow
       Vulkan.Extensions.VK_ARM_format_pack
       Vulkan.Extensions.VK_ARM_pipeline_opacity_micromap
       Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
@@ -352,6 +356,7 @@ library
       Vulkan.Extensions.VK_ARM_scheduling_controls
       Vulkan.Extensions.VK_ARM_shader_core_builtins
       Vulkan.Extensions.VK_ARM_shader_core_properties
+      Vulkan.Extensions.VK_ARM_shader_instrumentation
       Vulkan.Extensions.VK_ARM_tensors
       Vulkan.Extensions.VK_EXT_4444_formats
       Vulkan.Extensions.VK_EXT_acquire_drm_display
@@ -450,6 +455,7 @@ library
       Vulkan.Extensions.VK_EXT_post_depth_coverage
       Vulkan.Extensions.VK_EXT_present_mode_fifo_latest_ready
       Vulkan.Extensions.VK_EXT_present_timing
+      Vulkan.Extensions.VK_EXT_primitive_restart_index
       Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
       Vulkan.Extensions.VK_EXT_primitives_generated_query
       Vulkan.Extensions.VK_EXT_private_data
@@ -473,6 +479,7 @@ library
       Vulkan.Extensions.VK_EXT_shader_module_identifier
       Vulkan.Extensions.VK_EXT_shader_object
       Vulkan.Extensions.VK_EXT_shader_replicated_composites
+      Vulkan.Extensions.VK_EXT_shader_split_barrier
       Vulkan.Extensions.VK_EXT_shader_stencil_export
       Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
       Vulkan.Extensions.VK_EXT_shader_subgroup_partitioned
@@ -536,6 +543,8 @@ library
       Vulkan.Extensions.VK_KHR_depth_clamp_zero_one
       Vulkan.Extensions.VK_KHR_depth_stencil_resolve
       Vulkan.Extensions.VK_KHR_descriptor_update_template
+      Vulkan.Extensions.VK_KHR_device_address_commands
+      Vulkan.Extensions.VK_KHR_device_fault
       Vulkan.Extensions.VK_KHR_device_group
       Vulkan.Extensions.VK_KHR_device_group_creation
       Vulkan.Extensions.VK_KHR_display
@@ -573,6 +582,7 @@ library
       Vulkan.Extensions.VK_KHR_load_store_op_none
       Vulkan.Extensions.VK_KHR_maintenance1
       Vulkan.Extensions.VK_KHR_maintenance10
+      Vulkan.Extensions.VK_KHR_maintenance11
       Vulkan.Extensions.VK_KHR_maintenance2
       Vulkan.Extensions.VK_KHR_maintenance3
       Vulkan.Extensions.VK_KHR_maintenance4
@@ -583,6 +593,7 @@ library
       Vulkan.Extensions.VK_KHR_maintenance9
       Vulkan.Extensions.VK_KHR_map_memory2
       Vulkan.Extensions.VK_KHR_multiview
+      Vulkan.Extensions.VK_KHR_opacity_micromap
       Vulkan.Extensions.VK_KHR_performance_query
       Vulkan.Extensions.VK_KHR_pipeline_binary
       Vulkan.Extensions.VK_KHR_pipeline_executable_properties
@@ -604,9 +615,11 @@ library
       Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
       Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
       Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts
+      Vulkan.Extensions.VK_KHR_shader_abort
       Vulkan.Extensions.VK_KHR_shader_atomic_int64
       Vulkan.Extensions.VK_KHR_shader_bfloat16
       Vulkan.Extensions.VK_KHR_shader_clock
+      Vulkan.Extensions.VK_KHR_shader_constant_data
       Vulkan.Extensions.VK_KHR_shader_draw_parameters
       Vulkan.Extensions.VK_KHR_shader_expect_assume
       Vulkan.Extensions.VK_KHR_shader_float16_int8
@@ -719,17 +732,21 @@ library
       Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
       Vulkan.Extensions.VK_QCOM_cooperative_matrix_conversion
       Vulkan.Extensions.VK_QCOM_data_graph_model
+      Vulkan.Extensions.VK_QCOM_elapsed_timer_query
       Vulkan.Extensions.VK_QCOM_filter_cubic_clamp
       Vulkan.Extensions.VK_QCOM_filter_cubic_weights
       Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
       Vulkan.Extensions.VK_QCOM_image_processing
       Vulkan.Extensions.VK_QCOM_image_processing2
+      Vulkan.Extensions.VK_QCOM_image_processing3
       Vulkan.Extensions.VK_QCOM_multiview_per_view_render_areas
       Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports
+      Vulkan.Extensions.VK_QCOM_queue_perf_hint
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
       Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+      Vulkan.Extensions.VK_QCOM_shader_multiple_wait_queues
       Vulkan.Extensions.VK_QCOM_tile_memory_heap
       Vulkan.Extensions.VK_QCOM_tile_properties
       Vulkan.Extensions.VK_QCOM_tile_shading
@@ -738,9 +755,11 @@ library
       Vulkan.Extensions.VK_QNX_screen_surface
       Vulkan.Extensions.VK_SEC_amigo_profiling
       Vulkan.Extensions.VK_SEC_pipeline_cache_incremental_mode
+      Vulkan.Extensions.VK_SEC_throttle_hint
       Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping
       Vulkan.Extensions.VK_VALVE_fragment_density_map_layered
       Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
+      Vulkan.Extensions.VK_VALVE_shader_mixed_float_dot_product
       Vulkan.NamedType
       Vulkan.SPIRVRequirements
       Vulkan.Version

@@ -33,10 +33,15 @@ type RenderingFlags = RenderingFlagBits
 -- = Description
 --
 -- -   'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT' specifies that
---     draw calls for the render pass instance will be recorded in
---     secondary command buffers. If the
+--     contents for the render pass instance will be recorded in secondary
+--     command buffers, and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands' is the only
+--     valid command in the command buffer until
+--     'Vulkan.Extensions.VK_KHR_maintenance10.cmdEndRendering2KHR' or
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdEndRendering'.
+--     If the
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nestedCommandBuffer nestedCommandBuffer>
---     feature is enabled, the draw calls /can/ come from both inline and
+--     feature is enabled, the contents /can/ come from both inline and
 --     'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands'.
 --
 -- -   'RENDERING_RESUMING_BIT' specifies that the render pass instance is
@@ -49,11 +54,12 @@ type RenderingFlags = RenderingFlagBits
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>
 --     is enabled for the render pass instance.
 --
--- -   'RENDERING_CONTENTS_INLINE_BIT_KHR' specifies that draw calls for
---     the render pass instance /can/ be recorded inline within the current
+-- -   'RENDERING_CONTENTS_INLINE_BIT_KHR' specifies that contents for the
+--     render pass instance /can/ be recorded inline within the current
 --     command buffer. This /can/ be combined with the
---     'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT' bit to allow draw
---     calls to be recorded both inline and in secondary command buffers.
+--     'RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT' bit to allow
+--     contents to be recorded both inline and in secondary command
+--     buffers.
 --
 -- -   'RENDERING_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE' specifies that the
 --     render pass /can/ be used with layered fragment density maps.

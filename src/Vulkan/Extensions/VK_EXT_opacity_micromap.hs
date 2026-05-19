@@ -29,9 +29,21 @@
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_4
+--
+--     -   Interacts with VK_KHR_maintenance5
+--
 -- [__SPIR-V Dependencies__]
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_opacity_micromap.html SPV_EXT_opacity_micromap>
+--
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_opacity_micromap VK_KHR_opacity_micromap>
+--         extension
 --
 -- [__Contact__]
 --
@@ -212,7 +224,7 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
 --     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT'
 --
@@ -220,18 +232,18 @@
 --
 --     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT'
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT'
 --
 --     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT'
 --
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryInstanceFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
+--     -   'GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
 --     -   'GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT'
+--     -   'GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT'
 --
 --     -   'GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT'
 --
@@ -240,9 +252,27 @@
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_MICROMAP_EXT'
 --
 -- -   Extending
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapFormatKHR':
+--
+--     -   'OPACITY_MICROMAP_FORMAT_2_STATE_EXT'
+--
+--     -   'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapSpecialIndexKHR':
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT'
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT'
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT'
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT'
+--
+-- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--     -   'PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
@@ -276,6 +306,32 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BufferUsageFlagBits2':
+--
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
+--
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT'
+--
+-- -   Extending
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
+--
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--
+-- == Promotion to VK_KHR_opacity_micromap
+--
+-- Functionality in this extension is included in VK_KHR_opacity_micromap.
+-- The type, enum and command names are still aliases of the KHR
+-- functionality with some exceptions.
+--
+-- See the VK_KHR_opacity_micromap proposal for details on the differences.
 --
 -- == Reference Code
 --
@@ -410,11 +466,22 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
                                                   , writeMicromapsPropertiesEXT
                                                   , getDeviceMicromapCompatibilityEXT
                                                   , getMicromapBuildSizesEXT
+                                                  , pattern PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
+                                                  , pattern GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT
                                                   , pattern GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT
+                                                  , pattern GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT
                                                   , pattern GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT
+                                                  , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT
                                                   , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT
+                                                  , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT
                                                   , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT
                                                   , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT
+                                                  , pattern OPACITY_MICROMAP_FORMAT_2_STATE_EXT
+                                                  , pattern OPACITY_MICROMAP_FORMAT_4_STATE_EXT
+                                                  , pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT
+                                                  , pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT
+                                                  , pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT
+                                                  , pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT
                                                   , MicromapBuildInfoEXT(..)
                                                   , MicromapCreateInfoEXT(..)
                                                   , MicromapVersionInfoEXT(..)
@@ -423,7 +490,6 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
                                                   , CopyMemoryToMicromapInfoEXT(..)
                                                   , MicromapBuildSizesInfoEXT(..)
                                                   , MicromapUsageEXT(..)
-                                                  , MicromapTriangleEXT(..)
                                                   , PhysicalDeviceOpacityMicromapFeaturesEXT(..)
                                                   , PhysicalDeviceOpacityMicromapPropertiesEXT(..)
                                                   , AccelerationStructureTrianglesOpacityMicromapEXT(..)
@@ -450,22 +516,16 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
                                                   , BuildMicromapModeEXT( BUILD_MICROMAP_MODE_BUILD_EXT
                                                                         , ..
                                                                         )
-                                                  , OpacityMicromapFormatEXT( OPACITY_MICROMAP_FORMAT_2_STATE_EXT
-                                                                            , OPACITY_MICROMAP_FORMAT_4_STATE_EXT
-                                                                            , ..
-                                                                            )
-                                                  , OpacityMicromapSpecialIndexEXT( OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT
-                                                                                  , OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT
-                                                                                  , OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT
-                                                                                  , OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT
-                                                                                  , ..
-                                                                                  )
+                                                  , OpacityMicromapFormatEXT
+                                                  , OpacityMicromapSpecialIndexEXT
+                                                  , MicromapTriangleEXT
                                                   , EXT_OPACITY_MICROMAP_SPEC_VERSION
                                                   , pattern EXT_OPACITY_MICROMAP_SPEC_VERSION
                                                   , EXT_OPACITY_MICROMAP_EXTENSION_NAME
                                                   , pattern EXT_OPACITY_MICROMAP_EXTENSION_NAME
                                                   , DeferredOperationKHR(..)
                                                   , MicromapEXT(..)
+                                                  , MicromapTriangleKHR(..)
                                                   , DeviceOrHostAddressKHR(..)
                                                   , DeviceOrHostAddressConstKHR(..)
                                                   , GeometryInstanceFlagBitsKHR(..)
@@ -474,6 +534,9 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
                                                   , BuildAccelerationStructureFlagsKHR
                                                   , AccelerationStructureBuildTypeKHR(..)
                                                   , AccelerationStructureCompatibilityKHR(..)
+                                                  , OpacityMicromapFormatKHR(..)
+                                                  , OpacityMicromapSpecialIndexKHR(..)
+                                                  , pattern PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
                                                   ) where
 
 import Data.Bits (Bits)
@@ -528,7 +591,6 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
-import Data.Word (Word16)
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Word (Word8)
@@ -578,6 +640,9 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.IndexType (IndexType)
 import Vulkan.Extensions.Handles (MicromapEXT)
 import Vulkan.Extensions.Handles (MicromapEXT(..))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (MicromapTriangleKHR)
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapFormatKHR)
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapSpecialIndexKHR)
 import Vulkan.Core10.Handles (QueryPool)
 import Vulkan.Core10.Handles (QueryPool(..))
 import Vulkan.Core10.Enums.QueryType (QueryType)
@@ -587,15 +652,23 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagsKHR)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_KHR))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapFormatKHR(OPACITY_MICROMAP_FORMAT_2_STATE_KHR))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapFormatKHR(OPACITY_MICROMAP_FORMAT_4_STATE_KHR))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapSpecialIndexKHR(OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_KHR))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapSpecialIndexKHR(OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_KHR))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapSpecialIndexKHR(OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_KHR))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapSpecialIndexKHR(OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_KHR))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_MEMORY_TO_MICROMAP_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_MICROMAP_INFO_EXT))
@@ -618,6 +691,10 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (DeviceOrHostAddressKHR(.
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(..))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
 import Vulkan.Extensions.Handles (MicromapEXT(..))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (MicromapTriangleKHR(..))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapFormatKHR(..))
+import Vulkan.Extensions.VK_KHR_opacity_micromap (OpacityMicromapSpecialIndexKHR(..))
+import Vulkan.Core14.Enums.PipelineCreateFlags2 (pattern PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -636,39 +713,22 @@ foreign import ccall
 --
 -- The micromap data is stored in the object referred to by
 -- 'MicromapCreateInfoEXT'::@buffer@. Once memory has been bound to that
--- buffer, it /must/ be populated by micromap build or micromap copy
--- commands such as 'cmdBuildMicromapsEXT', 'buildMicromapsEXT',
+-- buffer, it must be populated by micromap build or micromap copy commands
+-- such as 'cmdBuildMicromapsEXT', 'buildMicromapsEXT',
 -- 'cmdCopyMicromapEXT', and 'copyMicromapEXT'.
 --
 -- The expected usage for a trace capture\/replay tool is that it will
 -- serialize and later deserialize the micromap data using micromap copy
--- commands. During capture the tool will use 'copyMicromapToMemoryEXT' or
--- 'cmdCopyMicromapToMemoryEXT' with a @mode@ of
--- 'COPY_MICROMAP_MODE_SERIALIZE_EXT', and 'copyMemoryToMicromapEXT' or
--- 'cmdCopyMemoryToMicromapEXT' with a @mode@ of
--- 'COPY_MICROMAP_MODE_DESERIALIZE_EXT' during replay.
---
--- The input buffers passed to micromap build commands will be referenced
--- by the implementation for the duration of the command. Micromaps /must/
--- be fully self-contained. The application /can/ reuse or free any memory
--- which was used by the command as an input or as scratch without
--- affecting the results of a subsequent acceleration structure build using
--- the micromap or traversal of that acceleration structure.
+-- commands. During capture the tool will set
+-- 'CopyMicromapToMemoryInfoEXT'::@mode@ to
+-- 'COPY_MICROMAP_MODE_SERIALIZE_EXT', and during replay the tool will set
+-- 'CopyMemoryToMicromapInfoEXT'::@mode@ to
+-- 'COPY_MICROMAP_MODE_DESERIALIZE_EXT'.
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCreateMicromapEXT-micromap-07430# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
---     feature /must/ be enabled
---
--- -   #VUID-vkCreateMicromapEXT-deviceAddress-07431# If
---     'MicromapCreateInfoEXT'::@deviceAddress@ is not zero, the
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapCaptureReplay micromapCaptureReplay>
---     feature /must/ be enabled
---
--- -   #VUID-vkCreateMicromapEXT-device-07432# If @device@ was created with
---     multiple physical devices, then the
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+-- -   #VUID-vkCreateMicromapEXT-micromap-11615# The
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapEXT ::micromap>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -714,7 +774,8 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.MicromapEXT'
 createMicromapEXT :: forall io
                    . (MonadIO io)
-                  => -- | @device@ is the logical device that creates the micromap object.
+                  => -- | @device@ is the logical device that creates the micromap structure
+                     -- object.
                      Device
                   -> -- | @pCreateInfo@ is a pointer to a 'MicromapCreateInfoEXT' structure
                      -- containing parameters affecting creation of the micromap.
@@ -775,6 +836,15 @@ foreign import ccall
 -- This means that there /cannot/ be any memory aliasing between any
 -- micromap memories or scratch memories being used by any of the builds.
 --
+-- The input buffers passed to this command will be referenced by the
+-- implementation for the duration of the command’s execution on the
+-- device. Micromaps /must/ be fully self-contained. The application /can/
+-- reuse or free any memory which was used by this command’s execution on
+-- the device as an input or as scratch without affecting the results of a
+-- subsequent acceleration structure build using the micromap or traversal
+-- of that acceleration structure, provided proper synchronization is used
+-- as described below.
+--
 -- Accesses to the micromap scratch buffers as identified by the
 -- 'MicromapBuildInfoEXT'::@scratchData@ buffer device addresses /must/ be
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-dependencies synchronized>
@@ -824,23 +894,9 @@ foreign import ccall
 --     @pInfos@ its @type@ member /must/ match the value of
 --     'MicromapCreateInfoEXT'::@type@ when its @dstMicromap@ was created
 --
--- -   #VUID-vkCmdBuildMicromapsEXT-dstMicromap-07465# The range of memory
---     backing the @dstMicromap@ member of any element of @pInfos@ that is
---     accessed by this command /must/ not overlap the memory backing the
---     @dstMicromap@ member of any other element of @pInfos@, which is
---     accessed by this command
---
--- -   #VUID-vkCmdBuildMicromapsEXT-dstMicromap-07466# The range of memory
---     backing the @dstMicromap@ member of any element of @pInfos@ that is
---     accessed by this command /must/ not overlap the memory backing the
---     @scratchData@ member of any element of @pInfos@ (including the same
---     element), which is accessed by this command
---
--- -   #VUID-vkCmdBuildMicromapsEXT-scratchData-07467# The range of memory
---     backing the @scratchData@ member of any element of @pInfos@ that is
---     accessed by this command /must/ not overlap the memory backing the
---     @scratchData@ member of any other element of @pInfos@, which is
---     accessed by this command
+-- -   #VUID-vkCmdBuildMicromapsEXT-micromap-11648# The
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapEXT ::micromap>
+--     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-07508# For each element of
 --     @pInfos@, the @buffer@ used to create its @dstMicromap@ member
@@ -893,6 +949,27 @@ foreign import ccall
 -- -   #VUID-vkCmdBuildMicromapsEXT-pInfos-07515# For each element of
 --     @pInfos@, its @triangleArray.deviceAddress@ and @data.deviceAddress@
 --     members /must/ be a multiple of @256@
+--
+-- -   #VUID-vkCmdBuildMicromapsEXT-dstMicromap-11649# The range of memory
+--     backing the @dstMicromap@ member of any element of @pInfos@ that is
+--     accessed by the execution of this command on the device /must/ not
+--     overlap the memory backing the @dstMicromap@ member of any other
+--     element of @pInfos@, which is accessed by the execution of this
+--     command on the device
+--
+-- -   #VUID-vkCmdBuildMicromapsEXT-dstMicromap-11650# The range of memory
+--     backing the @dstMicromap@ member of any element of @pInfos@ that is
+--     accessed by the execution of this command on the device /must/ not
+--     overlap the memory backing the @scratchData@ member of any element
+--     of @pInfos@ (including the same element), which is accessed by the
+--     execution of this command on the device
+--
+-- -   #VUID-vkCmdBuildMicromapsEXT-scratchData-11651# The range of memory
+--     backing the @scratchData@ member of any element of @pInfos@ that is
+--     accessed by the execution of this command on the device /must/ not
+--     overlap the memory backing the @scratchData@ member of any other
+--     element of @pInfos@, which is accessed by the execution of this
+--     command on the device
 --
 -- == Valid Usage (Implicit)
 --
@@ -996,6 +1073,13 @@ foreign import ccall
 -- This means that there /cannot/ be any memory aliasing between any
 -- micromap memories or scratch memories being used by any of the builds.
 --
+-- The input buffers passed to this command will be referenced by the
+-- implementation for the duration of the command. Micromaps /must/ be
+-- fully self-contained. The application /can/ reuse or free any memory
+-- which was used by the command as an input or as scratch without
+-- affecting the results of a subsequent acceleration structure build using
+-- the micromap or traversal of that acceleration structure.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkBuildMicromapsEXT-pInfos-07461# For each @pInfos@[i],
@@ -1015,24 +1099,6 @@ foreign import ccall
 --     its @type@ member /must/ match the value of
 --     'MicromapCreateInfoEXT'::@type@ when its @dstMicromap@ was created
 --
--- -   #VUID-vkBuildMicromapsEXT-dstMicromap-07465# The range of memory
---     backing the @dstMicromap@ member of any element of @pInfos@ that is
---     accessed by this command /must/ not overlap the memory backing the
---     @dstMicromap@ member of any other element of @pInfos@, which is
---     accessed by this command
---
--- -   #VUID-vkBuildMicromapsEXT-dstMicromap-07466# The range of memory
---     backing the @dstMicromap@ member of any element of @pInfos@ that is
---     accessed by this command /must/ not overlap the memory backing the
---     @scratchData@ member of any element of @pInfos@ (including the same
---     element), which is accessed by this command
---
--- -   #VUID-vkBuildMicromapsEXT-scratchData-07467# The range of memory
---     backing the @scratchData@ member of any element of @pInfos@ that is
---     accessed by this command /must/ not overlap the memory backing the
---     @scratchData@ member of any other element of @pInfos@, which is
---     accessed by this command
---
 -- -   #VUID-vkBuildMicromapsEXT-pInfos-07552# For each element of
 --     @pInfos@, the @buffer@ used to create its @dstMicromap@ member
 --     /must/ be bound to host-visible device memory
@@ -1046,7 +1112,7 @@ foreign import ccall
 --     @pInfos@[i].@triangleArray.hostAddress@ /must/ be valid host memory
 --
 -- -   #VUID-vkBuildMicromapsEXT-micromapHostCommands-07555# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommandsEXT ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkBuildMicromapsEXT-pInfos-07556# If @pInfos@[i].@mode@ is
@@ -1062,6 +1128,24 @@ foreign import ccall
 --     @pInfos@, the @buffer@ used to create its @dstMicromap@ member
 --     /must/ be bound to memory that was not allocated with multiple
 --     instances
+--
+-- -   #VUID-vkBuildMicromapsEXT-dstMicromap-11667# The range of memory
+--     backing the @dstMicromap@ member of any element of @pInfos@ that is
+--     accessed by this command /must/ not overlap the memory backing the
+--     @dstMicromap@ member of any other element of @pInfos@, which is
+--     accessed by this command
+--
+-- -   #VUID-vkBuildMicromapsEXT-dstMicromap-11668# The range of memory
+--     backing the @dstMicromap@ member of any element of @pInfos@ that is
+--     accessed by this command /must/ not overlap the memory backing the
+--     @scratchData@ member of any element of @pInfos@ (including the same
+--     element), which is accessed by this command
+--
+-- -   #VUID-vkBuildMicromapsEXT-scratchData-11669# The range of memory
+--     backing the @scratchData@ member of any element of @pInfos@ that is
+--     accessed by this command /must/ not overlap the memory backing the
+--     @scratchData@ member of any other element of @pInfos@, which is
+--     accessed by this command
 --
 -- == Valid Usage (Implicit)
 --
@@ -1150,8 +1234,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkDestroyMicromapEXT-micromap-10382# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
+-- -   #VUID-vkDestroyMicromapEXT-micromap-11619# The
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapEXT ::micromap>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkDestroyMicromapEXT-micromap-07441# All submitted commands
@@ -1249,7 +1333,11 @@ foreign import ccall
 --     @pInfo->src@ /must/ be bound to device memory
 --
 -- -   #VUID-vkCmdCopyMicromapEXT-buffer-07530# The @buffer@ used to create
---     @pInfo->dst@ /must/ be bound to device memory
+--     @pInfo->dst@ /must/ /must/ be bound to device memory
+--
+-- -   #VUID-vkCmdCopyMicromapEXT-src-07532# The source micromap @src@
+--     /must/ have been constructed prior to the execution of this command
+--     on the device
 --
 -- == Valid Usage (Implicit)
 --
@@ -1352,7 +1440,7 @@ foreign import ccall
 --     @pInfo->dst@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyMicromapEXT-micromapHostCommands-07560# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommandsEXT ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMicromapEXT-buffer-07561# The @buffer@ used to create
@@ -1362,6 +1450,9 @@ foreign import ccall
 -- -   #VUID-vkCopyMicromapEXT-buffer-07562# The @buffer@ used to create
 --     @pInfo->dst@ /must/ be bound to memory that was not allocated with
 --     multiple instances
+--
+-- -   #VUID-vkCopyMicromapEXT-src-11670# The source micromap @src@ /must/
+--     have been constructed prior to the execution of this command
 --
 -- == Valid Usage (Implicit)
 --
@@ -1451,8 +1542,8 @@ foreign import ccall
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT'.
--- Accesses to the buffer indicated by @pInfo->dst.deviceAddress@ /must/ be
--- synchronized with the
+-- Accesses to the buffer indicated by @pInfo->dst@ /must/ be synchronized
+-- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 -- pipeline stage and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT'.
@@ -1460,7 +1551,7 @@ foreign import ccall
 -- This command produces the same results as 'copyMicromapToMemoryEXT', but
 -- writes its result to a device address, and is executed on the device
 -- rather than the host. The output /may/ not necessarily be bit-for-bit
--- identical, but it can be equally used by either
+-- identical, but is equally compatible for use with either
 -- 'cmdCopyMemoryToMicromapEXT' or 'copyMemoryToMicromapEXT'.
 --
 -- The defined header structure for the serialized data consists of:
@@ -1470,9 +1561,10 @@ foreign import ccall
 --
 -- -   'Vulkan.Core10.APIConstants.UUID_SIZE' bytes of data identifying the
 --     compatibility for comparison using
---     'getDeviceMicromapCompatibilityEXT' The serialized data is written
---     to the buffer (or read from the buffer) according to the host
---     endianness.
+--     'getDeviceMicromapCompatibilityEXT'
+--
+-- The serialized data is written to the buffer (or read from the buffer)
+-- according to the host endianness.
 --
 -- == Valid Usage
 --
@@ -1482,11 +1574,6 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMicromapToMemoryEXT-pInfo-07537#
 --     @pInfo->dst.deviceAddress@ /must/ be aligned to @256@ bytes
---
--- -   #VUID-vkCmdCopyMicromapToMemoryEXT-pInfo-07538# If the buffer
---     pointed to by @pInfo->dst.deviceAddress@ is non-sparse then it
---     /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyMicromapToMemoryEXT-buffer-07539# The @buffer@ used
 --     to create @pInfo->src@ /must/ be bound to device memory
@@ -1584,7 +1671,7 @@ foreign import ccall
 -- This command produces the same results as 'cmdCopyMicromapToMemoryEXT',
 -- but writes its result directly to a host pointer, and is executed on the
 -- host rather than the device. The output /may/ not necessarily be
--- bit-for-bit identical, but it can be equally used by either
+-- bit-for-bit identical, but is compatible for use with either
 -- 'cmdCopyMemoryToMicromapEXT' or 'copyMemoryToMicromapEXT'.
 --
 -- == Valid Usage
@@ -1603,7 +1690,7 @@ foreign import ccall
 --     @pInfo->dst.hostAddress@ /must/ be aligned to 16 bytes
 --
 -- -   #VUID-vkCopyMicromapToMemoryEXT-micromapHostCommands-07571# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommandsEXT ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMicromapToMemoryEXT-buffer-07572# The @buffer@ used to
@@ -1698,15 +1785,15 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-access-types access type>
--- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT'.
--- Accesses to the buffer indicated by @pInfo->src.deviceAddress@ /must/ be
--- synchronized with the
+-- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT'.
+-- Accesses to the buffer indicated by @pInfo->src@ /must/ be synchronized
+-- with the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 -- pipeline stage and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_READ_BIT'.
 --
--- This command can accept micromaps produced by either
--- 'cmdCopyMicromapToMemoryEXT' or 'copyMicromapToMemoryEXT'.
+-- This command /can/ accept micromaps produced by either
+-- 'copyMicromapToMemoryEXT' or 'cmdCopyMicromapToMemoryEXT'.
 --
 -- == Valid Usage
 --
@@ -1716,11 +1803,6 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyMemoryToMicromapEXT-pInfo-07544#
 --     @pInfo->src.deviceAddress@ /must/ be aligned to @256@ bytes
---
--- -   #VUID-vkCmdCopyMemoryToMicromapEXT-pInfo-07545# If the buffer
---     pointed to by @pInfo->src.deviceAddress@ is non-sparse then it
---     /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyMemoryToMicromapEXT-buffer-07546# The @buffer@ used
 --     to create @pInfo->dst@ /must/ be bound to device memory
@@ -1815,7 +1897,7 @@ foreign import ccall
 -- This command fulfills the same task as 'cmdCopyMemoryToMicromapEXT' but
 -- is executed by the host.
 --
--- This command can accept micromaps produced by either
+-- This command /can/ accept micromaps produced by either
 -- 'cmdCopyMicromapToMemoryEXT' or 'copyMicromapToMemoryEXT'.
 --
 -- == Valid Usage
@@ -1834,7 +1916,7 @@ foreign import ccall
 --     create @pInfo->dst@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyMemoryToMicromapEXT-micromapHostCommands-07566# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommandsEXT ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMemoryToMicromapEXT-buffer-07567# The @buffer@ used to
@@ -1947,20 +2029,20 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-queryPool-07525# @queryPool@
 --     /must/ have been created with a @queryType@ matching @queryType@
 --
--- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-queryPool-07526# The queries
---     identified by @queryPool@ and @firstQuery@ /must/ be /unavailable/
+-- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-None-12417# All queries used
+--     by this command /must/ be /unavailable/
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-buffer-07527# The @buffer@
---     used to create each micromap in @pMicrmaps@ /must/ be bound to
+--     used to create each micromap in @pMicromaps@ /must/ be bound to
 --     device memory
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-query-07528# The sum of
 --     @query@ plus @micromapCount@ /must/ be less than or equal to the
 --     number of queries in @queryPool@
 --
--- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-pMicromaps-07501# All
+-- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-pMicromaps-11662# All
 --     micromaps in @pMicromaps@ /must/ have been constructed prior to the
---     execution of this command
+--     execution of this command on the device
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-pMicromaps-07502# All
 --     micromaps in @pMicromaps@ /must/ have been constructed with
@@ -1969,7 +2051,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-queryType-07503# @queryType@
 --     /must/ be
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT'
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT',
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT'
 --
@@ -1983,10 +2065,6 @@ foreign import ccall
 --     @pMicromaps@ /must/ be a valid pointer to an array of
 --     @micromapCount@ valid 'Vulkan.Extensions.Handles.MicromapEXT'
 --     handles
---
--- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-queryType-parameter#
---     @queryType@ /must/ be a valid
---     'Vulkan.Core10.Enums.QueryType.QueryType' value
 --
 -- -   #VUID-vkCmdWriteMicromapsPropertiesEXT-queryPool-parameter#
 --     @queryPool@ /must/ be a valid 'Vulkan.Core10.Handles.QueryPool'
@@ -2102,10 +2180,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkWriteMicromapsPropertiesEXT-pMicromaps-07501# All micromaps
---     in @pMicromaps@ /must/ have been constructed prior to the execution
---     of this command
---
 -- -   #VUID-vkWriteMicromapsPropertiesEXT-pMicromaps-07502# All micromaps
 --     in @pMicromaps@ /must/ have been constructed with
 --     'BUILD_MICROMAP_ALLOW_COMPACTION_BIT_EXT' if @queryType@ is
@@ -2113,7 +2187,7 @@ foreign import ccall
 --
 -- -   #VUID-vkWriteMicromapsPropertiesEXT-queryType-07503# @queryType@
 --     /must/ be
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT'
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT',
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT'
 --
@@ -2141,12 +2215,16 @@ foreign import ccall
 --     host-visible device memory
 --
 -- -   #VUID-vkWriteMicromapsPropertiesEXT-micromapHostCommands-07578# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommands ::micromapHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapHostCommandsEXT ::micromapHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkWriteMicromapsPropertiesEXT-buffer-07579# The @buffer@ used
 --     to create each micromap in @pMicromaps@ /must/ be bound to memory
 --     that was not allocated with multiple instances
+--
+-- -   #VUID-vkWriteMicromapsPropertiesEXT-pMicromaps-11671# All micromaps
+--     in @pMicromaps@ /must/ have been constructed prior to the execution
+--     of this command
 --
 -- == Valid Usage (Implicit)
 --
@@ -2249,8 +2327,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetDeviceMicromapCompatibilityEXT-micromap-07551# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
+-- -   #VUID-vkGetDeviceMicromapCompatibilityEXT-micromap-11666# The
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapEXT ::micromap>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2306,8 +2384,7 @@ foreign import ccall
 --
 -- = Description
 --
--- The @dstMicromap@ and @mode@ members of @pBuildInfo@ are ignored. Any
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressKHR'
+-- The @dstMicromap@, @mode@, @data@, @scratchData@, and @triangleArray@
 -- members of @pBuildInfo@ are ignored by this command.
 --
 -- A micromap created with the @micromapSize@ returned by this command
@@ -2340,16 +2417,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetMicromapBuildSizesEXT-dstMicromap-09180#
---     'MicromapBuildInfoEXT'::@dstMicromap@ /must/ have been created from
---     @device@
---
--- -   #VUID-vkGetMicromapBuildSizesEXT-micromap-07439# The
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
+-- -   #VUID-vkGetMicromapBuildSizesEXT-micromap-11618# The
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapEXT ::micromap>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetMicromapBuildSizesEXT-device-07440# If @device@ was
---     created with multiple physical devices, then the
+--     created with multiple physical devices, the
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
@@ -2404,16 +2477,36 @@ getMicromapBuildSizesEXT device buildType buildInfo = liftIO . evalContT $ do
   pure $ (pSizeInfo)
 
 
+-- No documentation found for TopLevel "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
+pattern PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT"
+pattern GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT = GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_KHR
+
+
 -- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT"
 pattern GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT = GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT"
+pattern GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT = GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_KHR
 
 
 -- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT"
 pattern GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT = GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT
 
 
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT = BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR
+
+
 -- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT"
 pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT = BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT = BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR
 
 
 -- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT"
@@ -2422,6 +2515,30 @@ pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT = BUILD
 
 -- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT"
 pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT = BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_OPACITY_MICROMAP_FORMAT_2_STATE_EXT"
+pattern OPACITY_MICROMAP_FORMAT_2_STATE_EXT = OPACITY_MICROMAP_FORMAT_2_STATE_KHR
+
+
+-- No documentation found for TopLevel "VK_OPACITY_MICROMAP_FORMAT_4_STATE_EXT"
+pattern OPACITY_MICROMAP_FORMAT_4_STATE_EXT = OPACITY_MICROMAP_FORMAT_4_STATE_KHR
+
+
+-- No documentation found for TopLevel "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT"
+pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT = OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_KHR
+
+
+-- No documentation found for TopLevel "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT"
+pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT = OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_KHR
+
+
+-- No documentation found for TopLevel "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT"
+pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT = OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_KHR
+
+
+-- No documentation found for TopLevel "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT"
+pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT = OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_KHR
 
 
 -- | VkMicromapBuildInfoEXT - Structure specifying the data used to build a
@@ -2464,25 +2581,65 @@ pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT = BU
 --     @pUsageCounts@ or @ppUsageCounts@ /can/ be a valid pointer, the
 --     other /must/ be @NULL@
 --
--- -   #VUID-VkMicromapBuildInfoEXT-type-07517# If @type@ is
---     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' the @format@ member of
---     'MicromapUsageEXT' /must/ be a valid value from
---     'OpacityMicromapFormatEXT'
+-- -   #VUID-VkMicromapBuildInfoEXT-format-11652# If @type@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@, @format@ /must/ be a valid value
+--     from 'OpacityMicromapFormatEXT'
 --
--- -   #VUID-VkMicromapBuildInfoEXT-type-07518# If @type@ is
---     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' the @format@ member of
---     'MicromapTriangleEXT' /must/ be a valid value from
---     'OpacityMicromapFormatEXT'
---
--- -   #VUID-VkMicromapBuildInfoEXT-type-08704# If @type@ is
---     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' the @format@ member of
---     'MicromapUsageEXT' /must/ be a valid value from
+-- -   #VUID-VkMicromapBuildInfoEXT-format-11653# If @type@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@, @format@ /must/ be a valid value
+--     from
 --     'Vulkan.Extensions.VK_NV_displacement_micromap.DisplacementMicromapFormatNV'
 --
--- -   #VUID-VkMicromapBuildInfoEXT-type-08705# If @type@ is
---     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' the @format@ member of
---     'MicromapTriangleEXT' /must/ be a valid value from
+-- -   #VUID-VkMicromapBuildInfoEXT-subdivisionLevel-11654# If @type@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@, if @format@ is
+--     'OPACITY_MICROMAP_FORMAT_2_STATE_EXT', @subdivisionLevel@ /must/ be
+--     less than or equal to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxOpacity2StateSubdivisionLevelEXT ::maxOpacity2StateSubdivisionLevel>
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-subdivisionLevel-11655# If @type@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@, if @format@ is
+--     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT', @subdivisionLevel@ /must/ be
+--     less than or equal to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxOpacity4StateSubdivisionLevelEXT ::maxOpacity4StateSubdivisionLevel>
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-subdivisionLevel-11656# If @type@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@, @subdivisionLevel@ /must/ be less
+--     than or equal to
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapPropertiesNV'::@maxDisplacementMicromapSubdivisionLevel@
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-format-11657# If @type@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @triangleArray@, @format@ /must/ be a valid value from
+--     'OpacityMicromapFormatEXT'
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-format-11658# If @type@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV', for each member of
+--     @triangleArray@, @format@ /must/ be a valid value from
 --     'Vulkan.Extensions.VK_NV_displacement_micromap.DisplacementMicromapFormatNV'
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-subdivisionLevel-11659# If @type@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @triangleArray@, if @format@ is
+--     'OPACITY_MICROMAP_FORMAT_2_STATE_EXT', @subdivisionLevel@ /must/ be
+--     less than or equal to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxOpacity2StateSubdivisionLevelEXT ::maxOpacity2StateSubdivisionLevel>
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-subdivisionLevel-11660# If @type@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @triangleArray@, if @format@ is
+--     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT', @subdivisionLevel@ /must/ be
+--     less than or equal to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxOpacity4StateSubdivisionLevelEXT ::maxOpacity4StateSubdivisionLevel>
+--
+-- -   #VUID-VkMicromapBuildInfoEXT-subdivisionLevel-11661# If @type@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV', for each member of
+--     @triangleArray@, @subdivisionLevel@ /must/ be less than or equal to
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapPropertiesNV'::@maxDisplacementMicromapSubdivisionLevel@
 --
 -- == Valid Usage (Implicit)
 --
@@ -2618,18 +2775,19 @@ instance Zero MicromapBuildInfoEXT where
 -- The expected usage for this is that a trace capture\/replay tool will
 -- add the
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
--- flag to all buffers that use
--- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT',
--- and will add
+-- flag and
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
--- to all buffers used as storage for a micromap where @deviceAddress@ is
--- not zero. This also means that the tool will need to add
+-- to all buffers used as storage for a micromap with
+-- 'MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT' included in
+-- @createFlags@. This also means that the tool will need to add
 -- 'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
--- to memory allocations to allow the flag to be set where the application
--- may not have otherwise required it. During capture the tool will save
--- the queried opaque device addresses in the trace. During replay, the
--- buffers will be created specifying the original address so any address
--- values stored in the trace data will remain valid.
+-- to memory allocations to allow the
+-- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
+-- flag to be set where the application may not have otherwise required it.
+-- During capture the tool will save the queried opaque device addresses in
+-- the trace. During replay, the buffers will be created specifying the
+-- original address so any address values stored in the trace data will
+-- remain valid.
 --
 -- Implementations are expected to separate such buffers in the GPU address
 -- space so normal allocations will avoid using these addresses.
@@ -2647,10 +2805,18 @@ instance Zero MicromapBuildInfoEXT where
 --     @deviceAddress@ is not zero, @createFlags@ /must/ include
 --     'MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT'
 --
--- -   #VUID-VkMicromapCreateInfoEXT-createFlags-07434# If @createFlags@
---     includes 'MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT',
---     'PhysicalDeviceOpacityMicromapFeaturesEXT'::@micromapCaptureReplay@
+-- -   #VUID-VkMicromapCreateInfoEXT-micromapCaptureReplay-11616# If
+--     @createFlags@ includes
+--     'MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT',
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapCaptureReplayEXT ::micromapCaptureReplay>
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
+--
+-- -   #VUID-VkMicromapCreateInfoEXT-bufferDeviceAddressMultiDevice-11617#
+--     If @createFlags@ includes
+--     'MICROMAP_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT' and @device@
+--     was created with multiple physical devices, the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     feature /must/ be enabled
 --
 -- -   #VUID-VkMicromapCreateInfoEXT-buffer-07435# @buffer@ /must/ have
 --     been created with the
@@ -2710,7 +2876,7 @@ data MicromapCreateInfoEXT = MicromapCreateInfoEXT
     -- will be created.
     type' :: MicromapTypeEXT
   , -- | @deviceAddress@ is the device address requested for the micromap if the
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapCaptureReplay micromapCaptureReplay>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromapCaptureReplayEXT ::micromapCaptureReplay>
     -- feature is being used.
     deviceAddress :: DeviceAddress
   }
@@ -2778,8 +2944,7 @@ instance Zero MicromapCreateInfoEXT where
 -- 2×'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values instead of two
 -- 'Vulkan.Core10.APIConstants.UUID_SIZE' arrays as the expected use case
 -- for this member is to be pointed at the header of a previously
--- serialized micromap (via 'cmdCopyMicromapToMemoryEXT' or
--- 'copyMicromapToMemoryEXT') that is loaded in memory. Using arrays would
+-- serialized micromap that is loaded in memory. Using arrays would
 -- necessitate extra memory copies of the UUIDs.
 --
 -- == Valid Usage (Implicit)
@@ -2840,19 +3005,9 @@ instance Zero MicromapVersionInfoEXT where
 -- -   #VUID-VkCopyMicromapInfoEXT-mode-07531# @mode@ /must/ be
 --     'COPY_MICROMAP_MODE_COMPACT_EXT' or 'COPY_MICROMAP_MODE_CLONE_EXT'
 --
--- -   #VUID-VkCopyMicromapInfoEXT-src-07532# The source acceleration
---     structure @src@ /must/ have been constructed prior to the execution
---     of this command
---
 -- -   #VUID-VkCopyMicromapInfoEXT-mode-07533# If @mode@ is
 --     'COPY_MICROMAP_MODE_COMPACT_EXT', @src@ /must/ have been constructed
 --     with 'BUILD_MICROMAP_ALLOW_COMPACTION_BIT_EXT' in the build
---
--- -   #VUID-VkCopyMicromapInfoEXT-buffer-07534# The @buffer@ used to
---     create @src@ /must/ be bound to device memory
---
--- -   #VUID-VkCopyMicromapInfoEXT-buffer-07535# The @buffer@ used to
---     create @dst@ /must/ be bound to device memory
 --
 -- == Valid Usage (Implicit)
 --
@@ -2866,9 +3021,6 @@ instance Zero MicromapVersionInfoEXT where
 --
 -- -   #VUID-VkCopyMicromapInfoEXT-dst-parameter# @dst@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.MicromapEXT' handle
---
--- -   #VUID-VkCopyMicromapInfoEXT-mode-parameter# @mode@ /must/ be a valid
---     'CopyMicromapModeEXT' value
 --
 -- -   #VUID-VkCopyMicromapInfoEXT-commonparent# Both of @dst@, and @src@
 --     /must/ have been created, allocated, or retrieved from the same
@@ -3124,7 +3276,7 @@ data MicromapBuildSizesInfoEXT = MicromapBuildSizesInfoEXT
     -- contain references to the data contained therein, and the application
     -- /must/ not destroy the micromap until ray traversal has concluded. A
     -- true value means that the information in the micromap will be copied by
-    -- value into the acceleration structure, and the micromap /may/ be
+    -- value into the acceleration structure, and the micromap /can/ be
     -- destroyed after the acceleration structure build concludes.
     discardable :: Bool
   }
@@ -3177,38 +3329,7 @@ instance Zero MicromapBuildSizesInfoEXT where
 -- | VkMicromapUsageEXT - Structure specifying the usage information used to
 -- build a micromap
 --
--- == Valid Usage
---
--- -   #VUID-VkMicromapUsageEXT-format-07519# If the 'MicromapTypeEXT' of
---     the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' then @format@
---     /must/ be 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' or
---     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'
---
--- -   #VUID-VkMicromapUsageEXT-format-07520# If the 'MicromapTypeEXT' of
---     the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@ is
---     'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' then @subdivisionLevel@ /must/
---     be less than or equal to
---     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity2StateSubdivisionLevel@
---
--- -   #VUID-VkMicromapUsageEXT-format-07521# If the 'MicromapTypeEXT' of
---     the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@ is
---     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' then @subdivisionLevel@ /must/
---     be less than or equal to
---     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity4StateSubdivisionLevel@
---
--- -   #VUID-VkMicromapUsageEXT-format-08706# If the 'MicromapTypeEXT' of
---     the micromap is 'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then
---     @format@ /must/ be
---     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV',
---     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV'
---     or
---     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV'
---
--- -   #VUID-VkMicromapUsageEXT-subdivisionLevel-08707# If the
---     'MicromapTypeEXT' of the micromap is
---     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then @subdivisionLevel@
---     /must/ be less than or equal to
---     'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapPropertiesNV'::@maxDisplacementMicromapSubdivisionLevel@
+-- = Description
 --
 -- The @format@ is interpreted based on the @type@ of the micromap using
 -- it.
@@ -3270,99 +3391,6 @@ instance Zero MicromapUsageEXT where
            zero
 
 
--- | VkMicromapTriangleEXT - Structure specifying the micromap format and
--- data for a triangle
---
--- == Valid Usage
---
--- -   #VUID-VkMicromapTriangleEXT-format-07522# If the 'MicromapTypeEXT'
---     of the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' then
---     @format@ /must/ be 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' or
---     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'
---
--- -   #VUID-VkMicromapTriangleEXT-format-07523# If the 'MicromapTypeEXT'
---     of the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@
---     is 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' then @subdivisionLevel@
---     /must/ be less than or equal to
---     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity2StateSubdivisionLevel@
---
--- -   #VUID-VkMicromapTriangleEXT-format-07524# If the 'MicromapTypeEXT'
---     of the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@
---     is 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' then @subdivisionLevel@
---     /must/ be less than or equal to
---     'PhysicalDeviceOpacityMicromapPropertiesEXT'::@maxOpacity4StateSubdivisionLevel@
---
--- -   #VUID-VkMicromapTriangleEXT-format-08708# If the 'MicromapTypeEXT'
---     of the micromap is 'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then
---     @format@ /must/ be
---     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_64_TRIANGLES_64_BYTES_NV',
---     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_256_TRIANGLES_128_BYTES_NV'
---     or
---     'Vulkan.Extensions.VK_NV_displacement_micromap.DISPLACEMENT_MICROMAP_FORMAT_1024_TRIANGLES_128_BYTES_NV'
---
--- -   #VUID-VkMicromapTriangleEXT-subdivisionLevel-08709# If the
---     'MicromapTypeEXT' of the micromap is
---     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV' then @subdivisionLevel@
---     /must/ be less than or equal to
---     'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapPropertiesNV'::@maxDisplacementMicromapSubdivisionLevel@
---
--- The @format@ is interpreted based on the @type@ of the micromap using
--- it.
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
-data MicromapTriangleEXT = MicromapTriangleEXT
-  { -- | @dataOffset@ is the offset in bytes of the start of the data for this
-    -- triangle. This is a byte aligned value.
-    dataOffset :: Word32
-  , -- | @subdivisionLevel@ is the subdivision level of this triangle
-    subdivisionLevel :: Word16
-  , -- | @format@ is the format of this triangle
-    format :: Word16
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (MicromapTriangleEXT)
-#endif
-deriving instance Show MicromapTriangleEXT
-
-instance ToCStruct MicromapTriangleEXT where
-  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p MicromapTriangleEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr Word32)) (dataOffset)
-    poke ((p `plusPtr` 4 :: Ptr Word16)) (subdivisionLevel)
-    poke ((p `plusPtr` 6 :: Ptr Word16)) (format)
-    f
-  cStructSize = 8
-  cStructAlignment = 4
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 4 :: Ptr Word16)) (zero)
-    poke ((p `plusPtr` 6 :: Ptr Word16)) (zero)
-    f
-
-instance FromCStruct MicromapTriangleEXT where
-  peekCStruct p = do
-    dataOffset <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
-    subdivisionLevel <- peek @Word16 ((p `plusPtr` 4 :: Ptr Word16))
-    format <- peek @Word16 ((p `plusPtr` 6 :: Ptr Word16))
-    pure $ MicromapTriangleEXT
-             dataOffset subdivisionLevel format
-
-instance Storable MicromapTriangleEXT where
-  sizeOf ~_ = 8
-  alignment ~_ = 4
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero MicromapTriangleEXT where
-  zero = MicromapTriangleEXT
-           zero
-           zero
-           zero
-
-
 -- | VkPhysicalDeviceOpacityMicromapFeaturesEXT - Structure describing the
 -- ray tracing opacity micromap features that can be supported by an
 -- implementation
@@ -3387,7 +3415,13 @@ instance Zero MicromapTriangleEXT where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -3395,15 +3429,15 @@ instance Zero MicromapTriangleEXT where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceOpacityMicromapFeaturesEXT = PhysicalDeviceOpacityMicromapFeaturesEXT
-  { -- | #features-micromap# @micromap@ indicates whether the implementation
+  { -- | #features-micromapEXT# @micromap@ indicates whether the implementation
     -- supports the micromap array feature.
     micromap :: Bool
-  , -- | #features-micromapCaptureReplay# @micromapCaptureReplay@ indicates
+  , -- | #features-micromapCaptureReplayEXT# @micromapCaptureReplay@ indicates
     -- whether the implementation supports capture and replay of addresses for
     -- micromap arrays.
     micromapCaptureReplay :: Bool
-  , -- | #features-micromapHostCommands# @micromapHostCommands@ indicates whether
-    -- the implementation supports host side micromap array commands.
+  , -- | #features-micromapHostCommandsEXT# @micromapHostCommands@ indicates
+    -- whether the implementation supports host side micromap array commands.
     micromapHostCommands :: Bool
   }
   deriving (Typeable, Eq)
@@ -3467,20 +3501,26 @@ instance Zero PhysicalDeviceOpacityMicromapFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceOpacityMicromapPropertiesEXT = PhysicalDeviceOpacityMicromapPropertiesEXT
-  { -- | @maxOpacity2StateSubdivisionLevel@ is the maximum allowed
+  { -- | #limits-maxOpacity2StateSubdivisionLevelEXT#
+    -- @maxOpacity2StateSubdivisionLevel@ is the maximum allowed
     -- @subdivisionLevel@ when @format@ is
-    -- 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT'
+    -- 'Vulkan.Extensions.VK_KHR_opacity_micromap.OPACITY_MICROMAP_FORMAT_2_STATE_KHR'
     maxOpacity2StateSubdivisionLevel :: Word32
-  , -- | @maxOpacity4StateSubdivisionLevel@ is the maximum allowed
+  , -- | #limits-maxOpacity4StateSubdivisionLevelEXT#
+    -- @maxOpacity4StateSubdivisionLevel@ is the maximum allowed
     -- @subdivisionLevel@ when @format@ is
-    -- 'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'
+    -- 'Vulkan.Extensions.VK_KHR_opacity_micromap.OPACITY_MICROMAP_FORMAT_4_STATE_KHR'
     maxOpacity4StateSubdivisionLevel :: Word32
   }
   deriving (Typeable, Eq)
@@ -3539,8 +3579,9 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 --
 -- For each triangle in the geometry, the acceleration structure build
 -- fetches an index from @indexBuffer@ using @indexType@ and @indexStride@
--- if present. If @indexBuffer@ is @NULL@ then the index used is the index
--- of the triangle in the geometry.
+-- if present. If @indexType@ is
+-- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then the index used
+-- is the index of the triangle in the geometry.
 --
 -- If that value is the unsigned cast of one of the values from
 -- 'OpacityMicromapSpecialIndexEXT' then that triangle behaves as described
@@ -3548,7 +3589,7 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap Ray Opacity Micromap>.
 --
 -- Otherwise that triangle uses the opacity micromap information from
--- @micromap@ at that index plus @baseTriangle@.
+-- micromap at that index plus @baseTriangle@.
 --
 -- Only one of @pUsageCounts@ or @ppUsageCounts@ /can/ be a valid pointer,
 -- the other /must/ be @NULL@. The elements of the non-@NULL@ array
@@ -3584,6 +3625,47 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 --     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then
 --     @indexStride@ /must/ be less than or equal to 232-1
 --
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-format-11679#
+--     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @type@ used to construct @micromap@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', the @format@ member of each
+--     element of @pUsageCounts@ or @ppUsageCounts@ /must/ be a valid value
+--     from 'OpacityMicromapFormatEXT'
+--
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-subdivisionLevel-11680#
+--     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @type@ used to build @micromap@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@ with @format@ equal to
+--     'OPACITY_MICROMAP_FORMAT_2_STATE_EXT', @subdivisionLevel@ /must/ be
+--     less than or equal to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxOpacity2StateSubdivisionLevelEXT ::maxOpacity2StateSubdivisionLevel>
+--
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-subdivisionLevel-11681#
+--     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @type@ used to build @micromap@ is
+--     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@ with @format@ equal to
+--     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT', @subdivisionLevel@ /must/ be
+--     less than or equal to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxOpacity4StateSubdivisionLevelEXT ::maxOpacity4StateSubdivisionLevel>
+--
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-format-11682#
+--     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @type@ used to construct @micromap@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV', the @format@ member of
+--     each element of @pUsageCounts@ or @ppUsageCounts@ /must/ be a valid
+--     value from
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.DisplacementMicromapFormatNV'
+--
+-- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-subdivisionLevel-11683#
+--     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     @type@ used to construct @micromap@ is
+--     'MICROMAP_TYPE_DISPLACEMENT_MICROMAP_NV', for each member of
+--     @pUsageCounts@ or @ppUsageCounts@ @subdivisionLevel@ /must/ be less
+--     than or equal to
+--     'Vulkan.Extensions.VK_NV_displacement_micromap.PhysicalDeviceDisplacementMicromapPropertiesNV'::@maxDisplacementMicromapSubdivisionLevel@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-sType-sType#
@@ -3608,6 +3690,14 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 --     If @micromap@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @micromap@ /must/ be a valid 'Vulkan.Extensions.Handles.MicromapEXT'
 --     handle
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_AMDX_dense_geometry_format.AccelerationStructureDenseGeometryFormatTrianglesDataAMDX'
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR'
 --
 -- = See Also
 --
@@ -3759,6 +3849,12 @@ type BuildMicromapFlagsEXT = BuildMicromapFlagBitsEXT
 -- -   'BUILD_MICROMAP_PREFER_FAST_BUILD_BIT_EXT' specifies that the given
 --     micromap build /should/ prioritize build time over trace
 --     performance.
+--
+-- -   'BUILD_MICROMAP_ALLOW_COMPACTION_BIT_EXT' specifies that the
+--     micromap /can/ act as the source for a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#micromap-copying copy micromap command>
+--     with @mode@ of 'COPY_MICROMAP_MODE_COMPACT_EXT' to produce a
+--     compacted micromap.
 --
 -- = See Also
 --
@@ -4002,172 +4098,17 @@ instance Read BuildMicromapModeEXT where
       conNameBuildMicromapModeEXT
       BuildMicromapModeEXT
 
--- | VkOpacityMicromapFormatEXT - Format enum for opacity micromaps
---
--- = Description
---
--- -   'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' specifies that the given
---     micromap format has one bit per subtriangle encoding either fully
---     opaque or fully transparent.
---
--- -   'OPACITY_MICROMAP_FORMAT_4_STATE_EXT' specifies that the given
---     micromap format has two bits per subtriangle encoding four modes
---     which can be interpreted as described in
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap ray traversal>.
---
--- For compactness, these values are stored as 16-bit in some structures.
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
-newtype OpacityMicromapFormatEXT = OpacityMicromapFormatEXT Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
+-- No documentation found for TopLevel "VkOpacityMicromapFormatEXT"
+type OpacityMicromapFormatEXT = OpacityMicromapFormatKHR
 
--- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
--- No documentation found for Nested "VkOpacityMicromapFormatEXT" "VK_OPACITY_MICROMAP_FORMAT_2_STATE_EXT"
-pattern OPACITY_MICROMAP_FORMAT_2_STATE_EXT = OpacityMicromapFormatEXT 1
+-- No documentation found for TopLevel "VkOpacityMicromapSpecialIndexEXT"
+type OpacityMicromapSpecialIndexEXT = OpacityMicromapSpecialIndexKHR
 
--- No documentation found for Nested "VkOpacityMicromapFormatEXT" "VK_OPACITY_MICROMAP_FORMAT_4_STATE_EXT"
-pattern OPACITY_MICROMAP_FORMAT_4_STATE_EXT = OpacityMicromapFormatEXT 2
 
-{-# COMPLETE
-  OPACITY_MICROMAP_FORMAT_2_STATE_EXT
-  , OPACITY_MICROMAP_FORMAT_4_STATE_EXT ::
-    OpacityMicromapFormatEXT
-  #-}
+-- No documentation found for TopLevel "VkMicromapTriangleEXT"
+type MicromapTriangleEXT = MicromapTriangleKHR
 
-conNameOpacityMicromapFormatEXT :: String
-conNameOpacityMicromapFormatEXT = "OpacityMicromapFormatEXT"
-
-enumPrefixOpacityMicromapFormatEXT :: String
-enumPrefixOpacityMicromapFormatEXT = "OPACITY_MICROMAP_FORMAT_"
-
-showTableOpacityMicromapFormatEXT :: [(OpacityMicromapFormatEXT, String)]
-showTableOpacityMicromapFormatEXT =
-  [
-    ( OPACITY_MICROMAP_FORMAT_2_STATE_EXT
-    , "2_STATE_EXT"
-    )
-  ,
-    ( OPACITY_MICROMAP_FORMAT_4_STATE_EXT
-    , "4_STATE_EXT"
-    )
-  ]
-
-instance Show OpacityMicromapFormatEXT where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixOpacityMicromapFormatEXT
-      showTableOpacityMicromapFormatEXT
-      conNameOpacityMicromapFormatEXT
-      (\(OpacityMicromapFormatEXT x) -> x)
-      (showsPrec 11)
-
-instance Read OpacityMicromapFormatEXT where
-  readPrec =
-    enumReadPrec
-      enumPrefixOpacityMicromapFormatEXT
-      showTableOpacityMicromapFormatEXT
-      conNameOpacityMicromapFormatEXT
-      OpacityMicromapFormatEXT
-
--- | VkOpacityMicromapSpecialIndexEXT - Enum for special indices in the
--- opacity micromap
---
--- = Description
---
--- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT' specifies
---     that the entire triangle is fully transparent.
---
--- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT' specifies that the
---     entire triangle is fully opaque.
---
--- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT'
---     specifies that the entire triangle is unknown-transparent.
---
--- -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT' specifies
---     that the entire triangle is unknown-opaque.
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkOpacityMicromapSpecialIndexEXT VK_OPACITY_MICROMAP_SPECIAL_INDEX_CLUSTER_GEOMETRY_DISABLE_OPACITY_MICROMAP_NV>
---     specifies that
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-opacity-micromap Opacity Micromap>
---     will be disabled for this triangle and opacity value will be picked
---     from
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureBuildTriangleClusterInfoNV VkClusterAccelerationStructureBuildTriangleClusterInfoNV>::@baseGeometryIndexAndGeometryFlags@
---     instead. Note that this special index is only valid for
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#cluster-geometry Cluster Geometry>.
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
-newtype OpacityMicromapSpecialIndexEXT = OpacityMicromapSpecialIndexEXT Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
-
--- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT"
-pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT = OpacityMicromapSpecialIndexEXT (-1)
-
--- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT"
-pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT = OpacityMicromapSpecialIndexEXT (-2)
-
--- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT"
-pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT = OpacityMicromapSpecialIndexEXT (-3)
-
--- No documentation found for Nested "VkOpacityMicromapSpecialIndexEXT" "VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT"
-pattern OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT = OpacityMicromapSpecialIndexEXT (-4)
-
-{-# COMPLETE
-  OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT
-  , OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT
-  , OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT
-  , OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT ::
-    OpacityMicromapSpecialIndexEXT
-  #-}
-
-conNameOpacityMicromapSpecialIndexEXT :: String
-conNameOpacityMicromapSpecialIndexEXT = "OpacityMicromapSpecialIndexEXT"
-
-enumPrefixOpacityMicromapSpecialIndexEXT :: String
-enumPrefixOpacityMicromapSpecialIndexEXT = "OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_"
-
-showTableOpacityMicromapSpecialIndexEXT :: [(OpacityMicromapSpecialIndexEXT, String)]
-showTableOpacityMicromapSpecialIndexEXT =
-  [
-    ( OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT
-    , "TRANSPARENT_EXT"
-    )
-  ,
-    ( OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT
-    , "OPAQUE_EXT"
-    )
-  ,
-    ( OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT
-    , "UNKNOWN_TRANSPARENT_EXT"
-    )
-  ,
-    ( OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT
-    , "UNKNOWN_OPAQUE_EXT"
-    )
-  ]
-
-instance Show OpacityMicromapSpecialIndexEXT where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixOpacityMicromapSpecialIndexEXT
-      showTableOpacityMicromapSpecialIndexEXT
-      conNameOpacityMicromapSpecialIndexEXT
-      (\(OpacityMicromapSpecialIndexEXT x) -> x)
-      (showsPrec 11)
-
-instance Read OpacityMicromapSpecialIndexEXT where
-  readPrec =
-    enumReadPrec
-      enumPrefixOpacityMicromapSpecialIndexEXT
-      showTableOpacityMicromapSpecialIndexEXT
-      conNameOpacityMicromapSpecialIndexEXT
-      OpacityMicromapSpecialIndexEXT
 
 type EXT_OPACITY_MICROMAP_SPEC_VERSION = 2
 

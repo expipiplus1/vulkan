@@ -767,7 +767,13 @@ instance Zero ValidationCacheCreateInfoEXT where
 -- | VkShaderModuleValidationCacheCreateInfoEXT - Specify validation cache to
 -- use during shader module creation
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo'
+--
+--     -   'Vulkan.Core10.Shader.ShaderModuleCreateInfo'
 --
 -- = See Also
 --

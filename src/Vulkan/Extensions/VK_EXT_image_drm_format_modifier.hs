@@ -716,7 +716,11 @@ getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
 -- Among the elements in array @pDrmFormatModifierProperties@, each
 -- returned @drmFormatModifier@ /must/ be unique.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2'
 --
 -- = See Also
 --
@@ -937,8 +941,17 @@ instance Zero DrmFormatModifierPropertiesEXT where
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
+-- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-maintenance11-13351#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is supported and @sharingMode@ is
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
+--     @queueFamilyIndexCount@ /must/ be greater than @0@
+--
 -- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-sharingMode-02315#
---     If @sharingMode@ is
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is not supported and @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
@@ -959,6 +972,12 @@ instance Zero DrmFormatModifierPropertiesEXT where
 -- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-sharingMode-parameter#
 --     @sharingMode@ /must/ be a valid
 --     'Vulkan.Core10.Enums.SharingMode.SharingMode' value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
 --
 -- = See Also
 --
@@ -1047,6 +1066,12 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 --
 -- -   #VUID-VkImageDrmFormatModifierListCreateInfoEXT-drmFormatModifierCount-arraylength#
 --     @drmFormatModifierCount@ /must/ be greater than @0@
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
 --
 -- = See Also
 --
@@ -1156,6 +1181,12 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 --
 -- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-drmFormatModifierPlaneCount-arraylength#
 --     @drmFormatModifierPlaneCount@ /must/ be greater than @0@
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
 --
 -- = See Also
 --
@@ -1296,7 +1327,11 @@ instance Zero ImageDrmFormatModifierPropertiesEXT where
 -- reported in the corresponding element of
 -- 'DrmFormatModifierPropertiesListEXT'::@pDrmFormatModifierProperties@.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2'
 --
 -- = See Also
 --

@@ -15,7 +15,7 @@
 --     582
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Ratified
@@ -38,7 +38,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2025-11-12
+--     2026-04-02
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -121,6 +121,12 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2026-04-02 (Vikram Kushwaha)
+--
+--     -   Add @hitKind@ overload for @hitObjectRecordFromQueryEXT@ in
+--         @GL_EXT_shader_invocation_reorder@, and fix for
+--         <https://github.com/KhronosGroup/SPIRV-Registry/issues/373>
+--
 -- -   Revision 1, 2025-11-12 (Eric Werness)
 --
 --     -   Internal development - forked from NV
@@ -202,7 +208,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -279,7 +291,11 @@ instance Zero PhysicalDeviceRayTracingInvocationReorderFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -405,11 +421,11 @@ instance Read RayTracingInvocationReorderModeEXT where
       conNameRayTracingInvocationReorderModeEXT
       RayTracingInvocationReorderModeEXT
 
-type EXT_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION = 1
+type EXT_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION"
 pattern EXT_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION = 1
+pattern EXT_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION = 2
 
 
 type EXT_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME = "VK_EXT_ray_tracing_invocation_reorder"

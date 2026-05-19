@@ -105,7 +105,13 @@ pattern API_VERSION_1_3 = MAKE_API_VERSION 1 3 0
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -388,7 +394,11 @@ instance Zero PhysicalDeviceVulkan13Features where
 -- and
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlProperties'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -426,7 +436,7 @@ data PhysicalDeviceVulkan13Properties = PhysicalDeviceVulkan13Properties
     requiredSubgroupSizeStages :: ShaderStageFlags
   , -- | #limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@ is the
     -- maximum size in bytes of an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptors-inlineuniformblock inline uniform block>
     -- binding.
     maxInlineUniformBlockSize :: Word32
   , -- | #limits-maxPerStageDescriptorInlineUniformBlocks#

@@ -1237,7 +1237,11 @@ instance Zero InitializePerformanceApiInfoINTEL where
 -- @pNext@ chain of the 'Vulkan.Core10.Query.QueryPoolCreateInfo'
 -- structure.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Query.QueryPoolCreateInfo'
 --
 -- = See Also
 --

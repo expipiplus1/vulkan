@@ -259,7 +259,11 @@ pattern PRESENT_GRAVITY_CENTERED_BIT_EXT = PRESENT_GRAVITY_CENTERED_BIT_KHR
 -- is required for the specification to be backwards compatible with
 -- applications that do not know about, or make use of this feature.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
 --
 -- = See Also
 --
@@ -335,7 +339,11 @@ instance Zero SurfacePresentModeKHR where
 -- through the use of
 -- 'Vulkan.Extensions.VK_KHR_swapchain_maintenance1.SwapchainPresentScalingCreateInfoKHR'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 --
 -- = See Also
 --
@@ -480,6 +488,12 @@ instance Zero SurfacePresentScalingCapabilitiesKHR where
 --     @pPresentModes@ /must/ be a valid pointer to an array of
 --     @presentModeCount@ 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
 --     values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 --
 -- = See Also
 --

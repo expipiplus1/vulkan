@@ -794,7 +794,11 @@ getBufferCollectionPropertiesFUCHSIA device collection = liftIO . evalContT $ do
 -- | VkImportMemoryBufferCollectionFUCHSIA - Structure to specify the Sysmem
 -- buffer to import
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- = See Also
 --
@@ -861,7 +865,11 @@ instance Zero ImportMemoryBufferCollectionFUCHSIA where
 -- | VkBufferCollectionImageCreateInfoFUCHSIA - Create a
 -- VkBufferCollectionFUCHSIA-compatible VkImage
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
 --
 -- = See Also
 --
@@ -928,7 +936,11 @@ instance Zero BufferCollectionImageCreateInfoFUCHSIA where
 -- | VkBufferCollectionBufferCreateInfoFUCHSIA - Create a
 -- VkBufferCollectionFUCHSIA-compatible VkBuffer
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Buffer.BufferCreateInfo'
 --
 -- = See Also
 --

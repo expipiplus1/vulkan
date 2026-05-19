@@ -82,7 +82,7 @@ marshalParams spec@Spec {..} = do
 
 isDefaultable' :: CType -> Bool
 isDefaultable' t =
-  isDefaultableForeignType t || isIntegral t || isFloating t || hasUnknownEnum t
+  isDefaultableForeignType t || isIntegral t || isFloating t || hasUnknownEnum t || isDefaultableStruct t
 
 isIntegral :: CType -> Bool
 isIntegral =
@@ -138,7 +138,12 @@ isDefaultableForeignType t =
 
 -- TODO: These shouldn't be defaultable, probably a spec oversight
 hasUnknownEnum :: CType -> Bool
-hasUnknownEnum = (`elem` [TypeName "VkFormat", TypeName "VkObjectType", TypeName "VkOpticalFlowPerformanceLevelNV"])
+hasUnknownEnum = (`elem` [TypeName "VkFormat", TypeName "VkObjectType", TypeName "VkOpticalFlowPerformanceLevelNV", TypeName "VkDataGraphOpticalFlowPerformanceLevelARM"])
+
+-- | Embedded structs that are marked optional="true" but have no Maybe representation;
+-- the zeroed value is the "absent" form. Add new spec entries here when needed.
+isDefaultableStruct :: CType -> Bool
+isDefaultableStruct = (`elem` [TypeName "VkDeviceFaultAddressInfoKHR", TypeName "VkDeviceFaultVendorInfoKHR"])
 
 -- | Is this a type we don't want to marshal
 isPassAsPointerType' :: CType -> Bool

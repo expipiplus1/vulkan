@@ -146,6 +146,22 @@ instance Zero PipelineCreationFeedback where
 --     array of @pipelineStageCreationFeedbackCount@
 --     'PipelineCreationFeedback' structures
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineCreateInfoARM'
+--
+--     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'
+--
+--     -   'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,

@@ -621,9 +621,11 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, @dstImage@ /must/ not be an unprotected image
 --
--- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-07737# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
+-- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-07737# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is not enabled, and the queue family used to create the
+--     'Vulkan.Core10.Handles.CommandPool' which @commandBuffer@ was
+--     allocated from does not support
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
 --     @bufferOffset@ member of any element of
@@ -815,9 +817,11 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
--- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-07746# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
+-- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-07746# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is not enabled, and the queue family used to create the
+--     'Vulkan.Core10.Handles.CommandPool' which @commandBuffer@ was
+--     allocated from does not support
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
 --     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
 --     @bufferOffset@ member of any element of
@@ -2452,7 +2456,7 @@ instance Zero CopyImageInfo2 where
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- -   #VUID-VkBlitImageInfo2-srcImage-09459# If @srcImage@ and @dstImage@
---     are the same, and an elements of @pRegions@ contains the
+--     are the same, and an element of @pRegions@ contains the
 --     @srcSubresource@ and @dstSubresource@ with matching @mipLevel@ and
 --     overlapping array layers, then the @srcImageLayout@ and
 --     @dstImageLayout@ /must/ be

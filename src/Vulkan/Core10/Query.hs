@@ -438,6 +438,14 @@ foreign import ccall
 --     not contain
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
 --
+-- -   #VUID-vkGetQueryPoolResults-queryType-12424# If the @queryType@ used
+--     to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIME_ELAPSED_QCOM',
+--     @flags@ /must/ not contain
+--     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryResultFlagBits VK_QUERY_RESULT_WITH_STATUS_BIT_KHR>
+--
 -- -   #VUID-vkGetQueryPoolResults-queryType-09440# If the @queryType@ used
 --     to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
@@ -637,6 +645,11 @@ getQueryPoolResults device
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-pipelineStatisticsQuery pipelineStatisticsQuery>
 --     feature is not enabled, @queryType@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
+--
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-12416# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-elapsedTimerQuery elapsedTimerQuery>
+--     feature is not enabled, @queryType@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIME_ELAPSED_QCOM'
 --
 -- -   #VUID-VkQueryPoolCreateInfo-meshShaderQueries-07068# If the
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-meshShaderQueries meshShaderQueries>

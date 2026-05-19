@@ -204,7 +204,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PA
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -271,7 +277,11 @@ instance Zero PhysicalDeviceRenderPassStripedFeaturesARM where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -418,6 +428,14 @@ instance Zero RenderPassStripeInfoARM where
 -- -   #VUID-VkRenderPassStripeBeginInfoARM-stripeInfoCount-arraylength#
 --     @stripeInfoCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_render_pass_striped VK_ARM_render_pass_striped>,
@@ -512,6 +530,12 @@ instance Zero RenderPassStripeBeginInfoARM where
 --
 -- -   #VUID-VkRenderPassStripeSubmitInfoARM-stripeSemaphoreInfoCount-arraylength#
 --     @stripeSemaphoreInfoCount@ /must/ be greater than @0@
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.CommandBufferSubmitInfo'
 --
 -- = See Also
 --

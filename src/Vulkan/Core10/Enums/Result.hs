@@ -193,6 +193,12 @@ import GHC.Show (Show(showsPrec))
 --     occur due to implementation-dependent reasons, outside of the
 --     application’s control.
 --
+-- -   'ERROR_PRESENT_TIMING_QUEUE_FULL_EXT' A present operation on a
+--     swapchain created with
+--     'Vulkan.Extensions.VK_KHR_swapchain.SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT'
+--     failed due to insufficient space in the swapchain’s internal results
+--     queue to hold requested present timing data.
+--
 -- -   'ERROR_VALIDATION_FAILED' A command failed because invalid usage was
 --     detected by the implementation or a validation layer. This /may/
 --     result in the command not being dispatched to the ICD.

@@ -27,6 +27,9 @@ module Vulkan.Core13.Enums.FormatFeatureFlags2  ( FormatFeatureFlags2
                                                                         , FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT
                                                                         , FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT
                                                                         , FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT
+                                                                        , FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM
+                                                                        , FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM
+                                                                        , FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM
                                                                         , FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR
                                                                         , FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR
                                                                         , FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR
@@ -44,6 +47,7 @@ module Vulkan.Core13.Enums.FormatFeatureFlags2  ( FormatFeatureFlags2
                                                                         , FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM
                                                                         , FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV
                                                                         , FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV
+                                                                        , FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM
                                                                         , FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                         , FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT
                                                                         , FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
@@ -80,11 +84,11 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --
 -- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT' specifies that an image view
 --     /can/ be
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampledimage sampled from>.
 --
 -- -   'FORMAT_FEATURE_2_STORAGE_IMAGE_BIT' specifies that an image view
 --     /can/ be used as a
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage storage image>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage storage image>.
 --
 -- -   'FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image
 --     view /can/ be used as storage image that supports atomic operations.
@@ -305,17 +309,17 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 -- -   'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT' specifies that
 --     image views or buffer views created with this format /can/ be used
 --     as
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage storage images>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage storage images>
 --     or
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer storage texel buffers>
 --     respectively for read operations without specifying a format.
 --
 -- -   'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT' specifies that
 --     image views or buffer views created with this format /can/ be used
 --     as
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage storage images>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage storage images>
 --     or
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer storage texel buffers>
 --     respectively for write operations without specifying a format.
 --
 -- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT' specifies that
@@ -331,7 +335,7 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --
 -- -   'FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM' specifies that image views
 --     created with this format /can/ be used as the
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-weightimage weight image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-weightimage weight image>
 --     input to
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-weightimage weight image sampling>
 --     operations.
@@ -429,12 +433,12 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --
 -- -   'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT' specifies that
 --     buffer views created with this format /can/ be used as
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer storage texel buffers>
 --     for read operations without specifying a format.
 --
 -- -   'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT' specifies that
 --     buffer views created with this format /can/ be used as
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer storage texel buffers>
 --     for write operations without specifying a format.
 --
 -- -   'FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV' specifies that an image
@@ -449,6 +453,28 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 -- -   'FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV' specifies that an image
 --     view with this format /can/ be used as an output cost map for
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#opticalflow-operations optical flow operations>
+--
+-- -   'FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM' specifies that image
+--     views created with this format /can/ be used in
+--     @OpImageBlockMatchSSDQCOM@ and @OpImageBlockMatchSADQCOM@
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-blockmatch block matching>
+--     operations. Implementations /must/ set this flag for all formats
+--     which it sets the 'FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM' flag.
+--
+-- -   'FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM' specifies
+--     that an image view with this format /can/ be used as an input or
+--     reference to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#graphs-operations-opticalflow optical flow operations>
+--
+-- -   'FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM' specifies
+--     that an image view with this format /can/ be used as a flow vector
+--     map (either as hint, output or global flow) for
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#graphs-operations-opticalflow optical flow operations>
+--
+-- -   'FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM' specifies
+--     that an image view with this format /can/ be used as an output cost
+--     map for
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#graphs-operations-opticalflow optical flow operations>
 --
 -- = See Also
 --
@@ -536,6 +562,15 @@ pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = FormatFeatureFlagBit
 -- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"
 pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = FormatFeatureFlagBits2 0x0000000200000000
 
+-- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"
+pattern FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM = FormatFeatureFlagBits2 0x0400000000000000
+
+-- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"
+pattern FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM = FormatFeatureFlagBits2 0x0200000000000000
+
+-- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"
+pattern FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM = FormatFeatureFlagBits2 0x0100000000000000
+
 -- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"
 pattern FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR = FormatFeatureFlagBits2 0x0080000000000000
 
@@ -586,6 +621,9 @@ pattern FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV = FormatFeatureFlagBits2
 
 -- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"
 pattern FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV = FormatFeatureFlagBits2 0x0008000000000000
+
+-- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"
+pattern FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM = FormatFeatureFlagBits2 0x0000100000000000
 
 -- No documentation found for Nested "VkFormatFeatureFlagBits2" "VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
 pattern FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = FormatFeatureFlagBits2 0x0000000040000000
@@ -715,6 +753,18 @@ showTableFormatFeatureFlagBits2 =
     , "SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"
     )
   ,
+    ( FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM
+    , "DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"
+    )
+  ,
+    ( FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM
+    , "DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"
+    )
+  ,
+    ( FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM
+    , "DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"
+    )
+  ,
     ( FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR
     , "STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"
     )
@@ -781,6 +831,10 @@ showTableFormatFeatureFlagBits2 =
   ,
     ( FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV
     , "ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"
+    )
+  ,
+    ( FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM
+    , "BLOCK_MATCHING_SXD_BIT_QCOM"
     )
   ,
     ( FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR

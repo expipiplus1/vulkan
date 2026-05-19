@@ -521,7 +521,7 @@ data DecompressMemoryRegionNV = DecompressMemoryRegionNV
   , -- | @decompressionMethod@ is a bitmask of
     -- 'MemoryDecompressionMethodFlagBitsNV' with a single bit set specifying
     -- the method used to decompress data.
-    decompressionMethod :: MemoryDecompressionMethodFlagsNV
+    decompressionMethod :: MemoryDecompressionMethodFlagsEXT
   }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -536,7 +536,7 @@ instance ToCStruct DecompressMemoryRegionNV where
     poke ((p `plusPtr` 8 :: Ptr DeviceAddress)) (dstAddress)
     poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (compressedSize)
     poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (decompressedSize)
-    poke ((p `plusPtr` 32 :: Ptr MemoryDecompressionMethodFlagsNV)) (decompressionMethod)
+    poke ((p `plusPtr` 32 :: Ptr MemoryDecompressionMethodFlagsEXT)) (decompressionMethod)
     f
   cStructSize = 40
   cStructAlignment = 8
@@ -545,7 +545,7 @@ instance ToCStruct DecompressMemoryRegionNV where
     poke ((p `plusPtr` 8 :: Ptr DeviceAddress)) (zero)
     poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
     poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr MemoryDecompressionMethodFlagsNV)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr MemoryDecompressionMethodFlagsEXT)) (zero)
     f
 
 instance FromCStruct DecompressMemoryRegionNV where
@@ -554,7 +554,7 @@ instance FromCStruct DecompressMemoryRegionNV where
     dstAddress <- peek @DeviceAddress ((p `plusPtr` 8 :: Ptr DeviceAddress))
     compressedSize <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
     decompressedSize <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
-    decompressionMethod <- peek @MemoryDecompressionMethodFlagsNV ((p `plusPtr` 32 :: Ptr MemoryDecompressionMethodFlagsNV))
+    decompressionMethod <- peek @MemoryDecompressionMethodFlagsEXT ((p `plusPtr` 32 :: Ptr MemoryDecompressionMethodFlagsEXT))
     pure $ DecompressMemoryRegionNV
              srcAddress
              dstAddress

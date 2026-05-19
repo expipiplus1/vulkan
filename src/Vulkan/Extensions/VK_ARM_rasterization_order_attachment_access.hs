@@ -39,7 +39,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-11-12
+--     2026-01-16
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -105,14 +105,7 @@
 --
 -- == Issues
 --
--- 1) Is there any interaction with the @VK_KHR_dynamic_rendering@
--- extension?
---
--- No. This extension only affects reads from input attachments. Render
--- pass instances begun with
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' do not
--- have input attachments and a different mechanism will be needed to
--- provide similar functionality in this case.
+-- See the Issues for @VK_EXT_rasterization_order_attachment_access@.
 --
 -- == Examples
 --
@@ -123,6 +116,8 @@
 -- -   Revision 1, 2021-11-12 (Jan-Harald Fredriksen)
 --
 --     -   Initial draft
+--
+--     -   Updated Issues section 2026-01-16
 --
 -- == See Also
 --

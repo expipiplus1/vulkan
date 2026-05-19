@@ -275,7 +275,13 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 -- time, and the capture and replay mechanism is built around opaque
 -- capture addresses for buffer and memory objects.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -376,6 +382,12 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 -- -   #VUID-VkBufferDeviceAddressCreateInfoEXT-deviceAddress-parameter# If
 --     @deviceAddress@ is not @0@, @deviceAddress@ /must/ be a valid
 --     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Buffer.BufferCreateInfo'
 --
 -- = See Also
 --

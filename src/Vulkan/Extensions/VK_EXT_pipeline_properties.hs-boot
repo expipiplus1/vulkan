@@ -149,13 +149,12 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_pipeline_properties  ( PhysicalDevicePipelinePropertiesFeaturesEXT
                                                      , PipelinePropertiesIdentifierEXT
-                                                     , PipelineInfoEXT
                                                      ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineInfoKHR)
+
 data PhysicalDevicePipelinePropertiesFeaturesEXT
 
 instance ToCStruct PhysicalDevicePipelinePropertiesFeaturesEXT
@@ -170,8 +169,4 @@ instance ToCStruct PipelinePropertiesIdentifierEXT
 instance Show PipelinePropertiesIdentifierEXT
 
 instance FromCStruct PipelinePropertiesIdentifierEXT
-
-
--- No documentation found for TopLevel "VkPipelineInfoEXT"
-type PipelineInfoEXT = PipelineInfoKHR
 

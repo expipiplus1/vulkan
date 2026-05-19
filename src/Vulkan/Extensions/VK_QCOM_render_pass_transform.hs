@@ -333,6 +333,12 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 --     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_transform VK_QCOM_render_pass_transform>,
@@ -394,7 +400,11 @@ instance Zero RenderPassTransformBeginInfoQCOM where
 -- @renderArea@ for command buffer /must/ be identical to the @transform@
 -- and @renderArea@ of the render pass instance.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
 --
 -- = See Also
 --

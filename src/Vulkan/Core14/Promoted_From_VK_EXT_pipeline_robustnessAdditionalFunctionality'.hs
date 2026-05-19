@@ -4,8 +4,6 @@ module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctiona
                                                                                        , PipelineRobustnessCreateInfo(..)
                                                                                        , PhysicalDevicePipelineRobustnessProperties(..)
                                                                                        , StructureType(..)
-                                                                                       , PipelineRobustnessBufferBehavior(..)
-                                                                                       , PipelineRobustnessImageBehavior(..)
                                                                                        ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -33,8 +31,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO))
-import Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior (PipelineRobustnessBufferBehavior(..))
-import Vulkan.Core14.Enums.PipelineRobustnessImageBehavior (PipelineRobustnessImageBehavior(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDevicePipelineRobustnessFeatures - Structure describing
 -- whether an implementation supports robustness requests on a per-pipeline
@@ -69,7 +65,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -277,6 +279,18 @@ instance Zero PhysicalDevicePipelineRobustnessFeatures where
 --     'Vulkan.Core14.Enums.PipelineRobustnessImageBehavior.PipelineRobustnessImageBehavior'
 --     value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
+--
+--     -   'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_robustness VK_EXT_pipeline_robustness>,
@@ -387,7 +401,11 @@ instance Zero PipelineRobustnessCreateInfo where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

@@ -25,7 +25,6 @@ module Vulkan.Core10.GraphicsPipeline  ( createGraphicsPipelines
                                        , PipelineInputAssemblyStateCreateFlags(..)
                                        , PipelineVertexInputStateCreateFlags(..)
                                        , PrimitiveTopology(..)
-                                       , CompareOp(..)
                                        , PolygonMode(..)
                                        , FrontFace(..)
                                        , BlendFactor(..)
@@ -216,7 +215,6 @@ import Vulkan.Core10.Enums.BlendFactor (BlendFactor(..))
 import Vulkan.Core10.Enums.BlendOp (BlendOp(..))
 import Vulkan.Core10.Enums.ColorComponentFlagBits (ColorComponentFlagBits(..))
 import Vulkan.Core10.Enums.ColorComponentFlagBits (ColorComponentFlags)
-import Vulkan.Core10.Enums.CompareOp (CompareOp(..))
 import Vulkan.Core10.Enums.CullModeFlagBits (CullModeFlagBits(..))
 import Vulkan.Core10.Enums.CullModeFlagBits (CullModeFlags)
 import Vulkan.Core10.Enums.DynamicState (DynamicState(..))
@@ -1063,7 +1061,11 @@ data PipelineInputAssemblyStateCreateInfo = PipelineInputAssemblyStateCreateInfo
     -- 'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST')
     -- or
     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-primitiveTopologyListRestart primitiveTopologyListRestart>
-    -- (for all other list topologies) is enabled.
+    -- (for all other list topologies) is enabled. If the
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-primitiveRestartIndex primitiveRestartIndex>
+    -- feature is enabled,
+    -- 'Vulkan.Extensions.VK_EXT_primitive_restart_index.cmdSetPrimitiveRestartIndexEXT'
+    -- /can/ be used to set a custom index for primitive restart.
     primitiveRestartEnable :: Bool
   }
   deriving (Typeable, Eq)
@@ -2905,7 +2907,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   'PipelineMultisampleStateCreateInfo'
 --
--- -   'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
+-- -   The format parameters of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
+--     (@viewMask@ is ignored)
 --
 -- -   'Vulkan.Extensions.VK_AMD_mixed_attachment_samples.AttachmentSampleCountInfoAMD'
 --
@@ -2978,13 +2982,13 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- pipeline layout /can/ be overridden when linking with
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'
 -- by providing a 'Vulkan.Core10.Handles.PipelineLayout' that is
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility compatible>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility compatible>
 -- with this union other than
 -- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
 -- or when linking without
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'
 -- by providing a 'Vulkan.Core10.Handles.PipelineLayout' that is fully
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility compatible>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility compatible>
 -- with this union.
 --
 -- If the @pNext@ chain includes a
@@ -3102,7 +3106,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources shader resource interface>
 --     with a 'Vulkan.Core10.Handles.DescriptorSet' and @Binding@
 --     decoration /must/ have a mapping declared in
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::pMappings
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::@pMappings@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-stage-02096# If the pipeline
 --     requires
@@ -3554,10 +3558,11 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-multisampledRenderToSingleSampled-06853#
 --     If the pipeline requires
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
---     and none of the @VK_AMD_mixed_attachment_samples@ extension, the
---     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     the
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature are enabled, @rasterizationSamples@ is not dynamic, and if
+--     feature is not enabled, the @VK_AMD_mixed_attachment_samples@
+--     extension is not enabled, the @VK_NV_framebuffer_mixed_samples@
+--     extension is not enabled, @rasterizationSamples@ is not dynamic, and
 --     @subpass@ uses color and\/or depth\/stencil attachments, then the
 --     @rasterizationSamples@ member of @pMultisampleState@ /must/ be the
 --     same as the sample count for those subpass attachments
@@ -3573,8 +3578,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06854# If @renderPass@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
---     @VK_EXT_multisampled_render_to_single_sampled@ extension is enabled,
---     @rasterizationSamples@ is not dynamic, and @subpass@ has a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, @rasterizationSamples@ is not dynamic, and
+--     @subpass@ has a
 --     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
 --     structure included in the
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2'::@pNext@
@@ -4480,20 +4486,18 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-multiview-06577# If the
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-multiview multiview>
 --     feature is not enabled, the pipeline requires
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
 --     /must/ be @0@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06578# If the pipeline
 --     requires
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
 --     index of the most significant bit in
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
@@ -5193,8 +5197,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
 --     an element of
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
---     includes the other subset, any element of the @pSetLayouts@ array
---     when @layout@ was created and the corresponding element of the
+--     includes the other subset,
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
+--     was not used, and any element of the @pSetLayouts@ array when
+--     @layout@ was created and the corresponding element of the
 --     @pSetLayouts@ array used to create the library’s @layout@ /must/ not
 --     both be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -5208,10 +5214,12 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
 --     and another element includes
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
---     and any element of the @pSetLayouts@ array used to create each
---     library’s @layout@ was 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     then the corresponding element of the @pSetLayouts@ array used to
---     create the other library’s @layout@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
+--     was not used, and any element of the @pSetLayouts@ array used to
+--     create each library’s @layout@ was
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', then the corresponding
+--     element of the @pSetLayouts@ array used to create the other
+--     library’s @layout@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06756# If
@@ -5345,32 +5353,26 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06626# If
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
---     includes at least one of and no more than two of
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT',
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
+--     includes either
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
 --     or
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT',
---     an element of
---     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
---     includes one of the other flags, and @renderPass@ is
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
+--     and the other element is included in
+--     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@,
+--     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
+--     value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
 --     used by this pipeline and that specified by the library /must/ be
 --     identical
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-pLibraries-06627# If one element
---     of
---     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
---     includes at least one of and no more than two of
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT',
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
---     or
---     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT',
---     another element of
---     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
---     includes one of the other flags, and @renderPass@ was
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' for both libraries, the
---     value of
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pLibraries-06627# If
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
+--     and
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT'
+--     are included in two elements of
+--     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@,
+--     and @renderPass@ was 'Vulkan.Core10.APIConstants.NULL_HANDLE' for
+--     both libraries, the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
 --     set by each library /must/ be identical
 --
@@ -5698,7 +5700,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Handles.PipelineLayout' created without
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
 --     then @layout@ /must/ be
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility compatible>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility compatible>
 --     with the layouts in those libraries
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06729# If
@@ -5713,7 +5715,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Handles.PipelineLayout' created with
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
 --     then @layout@ /must/ be
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility compatible>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility compatible>
 --     with the union of the libraries\' pipeline layouts other than the
 --     inclusion\/exclusion of
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
@@ -5730,7 +5732,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Handles.PipelineLayout' created with
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
 --     then @layout@ /must/ be
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility compatible>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility compatible>
 --     with the union of the libraries\' pipeline layouts
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-conservativePointAndLineRasterization-08892#
@@ -6006,7 +6008,21 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07401# @flags@ /must/ not
 --     include
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pLibraries-11594# If @flags@
+--     includes
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR',
+--     each element of
+--     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
+--     /must/ have been created with the
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR'
+--     bit set
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-11595# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap ::micromap>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07997# @flags@ /must/ not
 --     include

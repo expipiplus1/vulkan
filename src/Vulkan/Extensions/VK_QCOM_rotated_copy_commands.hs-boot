@@ -95,7 +95,8 @@
 --
 -- -   Extending
 --     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BufferImageCopy2',
---     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceMemoryImageCopyKHR':
 --
 --     -   'CopyCommandTransformInfoQCOM'
 --

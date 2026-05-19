@@ -2,7 +2,6 @@
 -- No documentation found for Chapter "Promoted_From_VK_KHR_shader_float_controls"
 module Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls  ( PhysicalDeviceFloatControlsProperties(..)
                                                                  , StructureType(..)
-                                                                 , ShaderFloatControlsIndependence(..)
                                                                  ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -27,7 +26,6 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core12.Enums.ShaderFloatControlsIndependence (ShaderFloatControlsIndependence)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES))
-import Vulkan.Core12.Enums.ShaderFloatControlsIndependence (ShaderFloatControlsIndependence(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDeviceFloatControlsProperties - Structure describing
 -- properties supported by VK_KHR_shader_float_controls
@@ -42,7 +40,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

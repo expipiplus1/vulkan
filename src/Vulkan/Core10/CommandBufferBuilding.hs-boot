@@ -2,13 +2,16 @@
 -- No documentation found for Chapter "CommandBufferBuilding"
 module Vulkan.Core10.CommandBufferBuilding  ( BufferCopy
                                             , BufferImageCopy
+                                            , BufferMemoryBarrier
                                             , ClearAttachment
                                             , ClearDepthStencilValue
                                             , ClearRect
                                             , ImageBlit
                                             , ImageCopy
+                                            , ImageMemoryBarrier
                                             , ImageResolve
                                             , ImageSubresourceLayers
+                                            , MemoryBarrier
                                             , RenderPassBeginInfo
                                             , ClearColorValue
                                             ) where
@@ -18,6 +21,7 @@ import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data BufferCopy
 
@@ -33,6 +37,17 @@ instance ToCStruct BufferImageCopy
 instance Show BufferImageCopy
 
 instance FromCStruct BufferImageCopy
+
+
+type role BufferMemoryBarrier nominal
+data BufferMemoryBarrier (es :: [Type])
+
+instance ( Extendss BufferMemoryBarrier es
+         , PokeChain es ) => ToCStruct (BufferMemoryBarrier es)
+instance Show (Chain es) => Show (BufferMemoryBarrier es)
+
+instance ( Extendss BufferMemoryBarrier es
+         , PeekChain es ) => FromCStruct (BufferMemoryBarrier es)
 
 
 data ClearAttachment
@@ -73,6 +88,17 @@ instance Show ImageCopy
 instance FromCStruct ImageCopy
 
 
+type role ImageMemoryBarrier nominal
+data ImageMemoryBarrier (es :: [Type])
+
+instance ( Extendss ImageMemoryBarrier es
+         , PokeChain es ) => ToCStruct (ImageMemoryBarrier es)
+instance Show (Chain es) => Show (ImageMemoryBarrier es)
+
+instance ( Extendss ImageMemoryBarrier es
+         , PeekChain es ) => FromCStruct (ImageMemoryBarrier es)
+
+
 data ImageResolve
 
 instance ToCStruct ImageResolve
@@ -87,6 +113,14 @@ instance ToCStruct ImageSubresourceLayers
 instance Show ImageSubresourceLayers
 
 instance FromCStruct ImageSubresourceLayers
+
+
+data MemoryBarrier
+
+instance ToCStruct MemoryBarrier
+instance Show MemoryBarrier
+
+instance FromCStruct MemoryBarrier
 
 
 type role RenderPassBeginInfo nominal

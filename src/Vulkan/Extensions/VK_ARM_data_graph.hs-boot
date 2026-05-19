@@ -429,12 +429,15 @@ instance ( Extendss DataGraphPipelineCreateInfoARM es
          , PeekChain es ) => FromCStruct (DataGraphPipelineCreateInfoARM es)
 
 
-data DataGraphPipelineDispatchInfoARM
+type role DataGraphPipelineDispatchInfoARM nominal
+data DataGraphPipelineDispatchInfoARM (es :: [Type])
 
-instance ToCStruct DataGraphPipelineDispatchInfoARM
-instance Show DataGraphPipelineDispatchInfoARM
+instance ( Extendss DataGraphPipelineDispatchInfoARM es
+         , PokeChain es ) => ToCStruct (DataGraphPipelineDispatchInfoARM es)
+instance Show (Chain es) => Show (DataGraphPipelineDispatchInfoARM es)
 
-instance FromCStruct DataGraphPipelineDispatchInfoARM
+instance ( Extendss DataGraphPipelineDispatchInfoARM es
+         , PeekChain es ) => FromCStruct (DataGraphPipelineDispatchInfoARM es)
 
 
 data DataGraphPipelineIdentifierCreateInfoARM
@@ -488,12 +491,15 @@ instance Show DataGraphPipelineSessionBindPointRequirementsInfoARM
 instance FromCStruct DataGraphPipelineSessionBindPointRequirementsInfoARM
 
 
-data DataGraphPipelineSessionCreateInfoARM
+type role DataGraphPipelineSessionCreateInfoARM nominal
+data DataGraphPipelineSessionCreateInfoARM (es :: [Type])
 
-instance ToCStruct DataGraphPipelineSessionCreateInfoARM
-instance Show DataGraphPipelineSessionCreateInfoARM
+instance ( Extendss DataGraphPipelineSessionCreateInfoARM es
+         , PokeChain es ) => ToCStruct (DataGraphPipelineSessionCreateInfoARM es)
+instance Show (Chain es) => Show (DataGraphPipelineSessionCreateInfoARM es)
 
-instance FromCStruct DataGraphPipelineSessionCreateInfoARM
+instance ( Extendss DataGraphPipelineSessionCreateInfoARM es
+         , PeekChain es ) => FromCStruct (DataGraphPipelineSessionCreateInfoARM es)
 
 
 data DataGraphPipelineSessionMemoryRequirementsInfoARM

@@ -9,6 +9,7 @@ module Vulkan.Core10.Sampler  ( createSampler
                               , Filter(..)
                               , SamplerMipmapMode(..)
                               , SamplerAddressMode(..)
+                              , CompareOp(..)
                               , SamplerCreateFlagBits(..)
                               , SamplerCreateFlags
                               ) where
@@ -95,6 +96,7 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Enums.BorderColor (BorderColor(..))
+import Vulkan.Core10.Enums.CompareOp (CompareOp(..))
 import Vulkan.Core10.Enums.Filter (Filter(..))
 import Vulkan.Core10.Handles (Sampler(..))
 import Vulkan.Core10.Enums.SamplerAddressMode (SamplerAddressMode(..))

@@ -43,7 +43,11 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 -- @handleTypes@ field must be included in the creation parameters for an
 -- image that will be bound to memory that is either exported or imported.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
 --
 -- = See Also
 --
@@ -107,7 +111,11 @@ instance Zero ExternalMemoryImageCreateInfo where
 -- @handleTypes@ field must be included in the creation parameters for a
 -- buffer that will be bound to memory that is either exported or imported.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Buffer.BufferCreateInfo'
 --
 -- = See Also
 --
@@ -183,6 +191,12 @@ instance Zero ExternalMemoryBufferCreateInfo where
 --     @handleTypes@ /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- = See Also
 --

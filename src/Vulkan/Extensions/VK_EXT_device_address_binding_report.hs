@@ -210,6 +210,14 @@
 -- reporting the association between virtual address range and the
 -- buffer\/image.
 --
+-- 12.) Should binding reports be emitted for vkQueueBindSparse()
+-- operations?
+--
+-- __RESOLVED__: binding reports for sparse objects are best effort, some
+-- implementations might report events on vkQueueBindSparse() other
+-- implementations might report events on sparse object
+-- creation\/destruction.
+--
 -- == Version History
 --
 -- -   Revision 1, 2020-09-23 (Ralph Potter)
@@ -307,7 +315,13 @@ import Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsMessageTypeFlagsEXT)
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -390,7 +404,11 @@ instance Zero PhysicalDeviceAddressBindingReportFeaturesEXT where
 -- match the handle specified via any previously reported binding events
 -- associated with the object’s creation.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCallbackDataEXT'
 --
 -- = See Also
 --

@@ -397,7 +397,13 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -463,7 +469,11 @@ instance Zero PhysicalDeviceTimelineSemaphoreFeatures where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -550,6 +560,14 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 --     @semaphoreType@ /must/ be a valid
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.PhysicalDeviceExternalSemaphoreInfo'
+--
+--     -   'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
@@ -635,6 +653,14 @@ instance Zero SemaphoreTypeCreateInfo where
 --     @pSignalSemaphoreValues@ is not @NULL@, @pSignalSemaphoreValues@
 --     /must/ be a valid pointer to an array of @signalSemaphoreValueCount@
 --     @uint64_t@ values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo'
+--
+--     -   'Vulkan.Core10.Queue.SubmitInfo'
 --
 -- = See Also
 --

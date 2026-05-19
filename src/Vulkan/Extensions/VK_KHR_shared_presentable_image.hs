@@ -349,7 +349,11 @@ getSwapchainStatusKHR device swapchain = liftIO $ do
 -- | VkSharedPresentSurfaceCapabilitiesKHR - Structure describing
 -- capabilities of a surface for shared presentation
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 --
 -- = See Also
 --

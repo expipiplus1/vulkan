@@ -185,6 +185,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (AccelerationStructureTrianglesOpacityMicromapEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_opacity_micromap (AccelerationStructureTrianglesOpacityMicromapKHR)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (DeviceOrHostAddressConstKHR)
@@ -227,7 +228,13 @@ import Vulkan.Core10.APIConstants (pattern COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -309,18 +316,6 @@ instance Zero PhysicalDeviceDenseGeometryFormatFeaturesAMDX where
 --     'Vulkan.Core10.APIConstants.COMPRESSED_TRIANGLE_FORMAT_DGF1_BYTE_STRIDE_AMDX'
 --     (128) bytes
 --
--- -   #VUID-VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX-pNext-10890#
---     @pNext@ /must/ be @NULL@ or a pointer to a valid
---     'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
---     structure
---
--- -   #VUID-VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX-pNext-10891#
---     If @pNext@ is a pointer to a valid
---     'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
---     structure, the
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap micromap>
---     feature /must/ be enabled
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX-sType-sType#
@@ -334,6 +329,12 @@ instance Zero PhysicalDeviceDenseGeometryFormatFeaturesAMDX where
 --
 -- -   #VUID-VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX-format-parameter#
 --     @format@ /must/ be a valid 'CompressedTriangleFormatAMDX' value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryKHR'
 --
 -- = See Also
 --
@@ -377,6 +378,7 @@ instance Extensible AccelerationStructureDenseGeometryFormatTrianglesDataAMDX wh
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureDenseGeometryFormatTrianglesDataAMDX e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @AccelerationStructureTrianglesOpacityMicromapEXT = Just f
+    | Just Refl <- eqT @e @AccelerationStructureTrianglesOpacityMicromapKHR = Just f
     | otherwise = Nothing
 
 instance ( Extendss AccelerationStructureDenseGeometryFormatTrianglesDataAMDX es

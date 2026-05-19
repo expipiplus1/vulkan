@@ -362,7 +362,11 @@ cmdBindTileMemoryQCOM commandBuffer tileMemoryBindInfo = liftIO . evalContT $ do
 -- contents become undefined for the /tile memory scope/ if an action
 -- command is executed.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
 --
 -- = See Also
 --
@@ -444,7 +448,13 @@ instance Zero TileMemoryBindInfoQCOM where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -506,7 +516,11 @@ instance Zero PhysicalDeviceTileMemoryHeapFeaturesQCOM where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -585,7 +599,15 @@ instance Zero PhysicalDeviceTileMemoryHeapPropertiesQCOM where
 -- evaluating tile properties. If the application does not need to query
 -- the tile properties, then this size /can/ be safely omitted.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Pass.RenderPassCreateInfo'
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
 --
 -- = See Also
 --
@@ -656,7 +678,11 @@ instance Zero TileMemorySizeInfoQCOM where
 -- If the resource cannot be bound to tile memory, then @size@ and
 -- @alignment@ is filled with zero by the implementation.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
 --
 -- = See Also
 --

@@ -114,6 +114,8 @@
 --
 -- -   'CompositeAlphaFlagsKHR'
 --
+-- -   'SurfaceTransformFlagsKHR'
+--
 -- == New Enum Constants
 --
 -- -   'KHR_SURFACE_EXTENSION_NAME'

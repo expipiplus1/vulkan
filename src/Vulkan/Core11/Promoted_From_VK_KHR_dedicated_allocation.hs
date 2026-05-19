@@ -134,6 +134,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- -   #VUID-VkMemoryDedicatedRequirements-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation VK_KHR_dedicated_allocation>,
@@ -321,6 +327,12 @@ instance Zero MemoryDedicatedRequirements where
 --     and @image@ that are valid handles of non-ignored parameters /must/
 --     have been created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- = See Also
 --

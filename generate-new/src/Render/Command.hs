@@ -69,10 +69,11 @@ renderCommand
   -> Sem r RenderElement
 renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
   RenderParams {..} <- input
+  let isDualPurpose = any ((isOutCount <||> isInOutCount) . mpScheme) mcParams
   genRe ("command " <> unCName mcName) $ case commandOverrides mcName of
     Just o  -> o
     Nothing -> do
-      renderForeignDecls mcCommand
+      renderForeignDecls isDualPurpose mcCommand
 
       let siblingMap = Map.fromList
             [ (n, SiblingInfo (pretty . unCName $ n) (mpScheme p))
@@ -85,7 +86,7 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
 
       let commandName = mkFunName mcName
       runInputConst lookupSibling
-        $ if any ((isOutCount <||> isInOutCount) . mpScheme) mcParams
+        $ if isDualPurpose
             then marshaledDualPurposeCommandCall commandName m
             else marshaledCommandCall commandName m
 
@@ -950,9 +951,13 @@ renderForeignDecls
      , HasRenderParams r
      , HasRenderedNames r
      )
-  => Command
+  => Bool
+  -- ^ Is this command rendered via the dual-purpose (two-call) path?
+  -- Dual-purpose commands never produce a SafeOrUnsafe wrapper, so
+  -- they only need a single FFI import even when the command can block.
+  -> Command
   -> Sem r ()
-renderForeignDecls c@Command {..} = do
+renderForeignDecls isDualPurpose c@Command {..} = do
   let tellFFI :: Bool -> Maybe CName -> Text -> Doc () -> Sem r ()
       tellFFI unsafe ffiName name tyDoc =
         tellDoc
@@ -980,7 +985,7 @@ renderForeignDecls c@Command {..} = do
           dynName         = getDynName c
       dynamicBindTypeDoc <- renderType dynamicBindType
       importConstructors dynamicBindType
-      if cCanBlock
+      if cCanBlock && not isDualPurpose
         then do
           tellFFI True  Nothing (dynName <> "Unsafe") dynamicBindTypeDoc
           tellFFI False Nothing (dynName <> "Safe")   dynamicBindTypeDoc
@@ -989,7 +994,7 @@ renderForeignDecls c@Command {..} = do
       let staticName = getStaticName c
       staticBindTypeDoc <- renderType ffiTy
       importConstructors ffiTy
-      if cCanBlock
+      if cCanBlock && not isDualPurpose
         then do
           tellFFI True  (Just cName) (staticName <> "Unsafe") staticBindTypeDoc
           tellFFI False (Just cName) (staticName <> "Safe")   staticBindTypeDoc

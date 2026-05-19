@@ -2,8 +2,6 @@
 -- No documentation found for Chapter "Originally_Based_On_VK_KHR_subgroup"
 module Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup  ( PhysicalDeviceSubgroupProperties(..)
                                                           , StructureType(..)
-                                                          , SubgroupFeatureFlagBits(..)
-                                                          , SubgroupFeatureFlags
                                                           ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -31,8 +29,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
-import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(..))
-import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 -- | VkPhysicalDeviceSubgroupProperties - Structure describing subgroup
 -- support for an implementation
 --
@@ -105,7 +101,11 @@ import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 -- feature is supported, @supportedOperations@ /must/ include
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroup-partitioned >.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

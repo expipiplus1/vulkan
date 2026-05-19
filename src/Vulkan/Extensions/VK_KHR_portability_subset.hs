@@ -197,7 +197,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -241,7 +247,7 @@ data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubse
   , -- | #features-mutableComparisonSamplers# @mutableComparisonSamplers@
     -- indicates whether this implementation allows descriptors with comparison
     -- samplers to be
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates updated>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets-updates updated>.
     mutableComparisonSamplers :: Bool
   , -- | #features-pointPolygons# @pointPolygons@ indicates whether this
     -- implementation supports
@@ -420,7 +426,11 @@ instance Zero PhysicalDevicePortabilitySubsetFeaturesKHR where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

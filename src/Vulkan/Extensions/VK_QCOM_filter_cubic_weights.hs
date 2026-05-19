@@ -183,7 +183,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -244,7 +250,11 @@ instance Zero PhysicalDeviceCubicWeightsFeaturesQCOM where
 -- If that structure is not present, @cubicWeights@ is considered to be
 -- 'CUBIC_FILTER_WEIGHTS_CATMULL_ROM_QCOM'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Sampler.SamplerCreateInfo'
 --
 -- = See Also
 --
@@ -299,7 +309,11 @@ instance Zero SamplerCubicWeightsCreateInfoQCOM where
 -- | VkBlitImageCubicWeightsInfoQCOM - Structure specifying image blit cubic
 -- weight info
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BlitImageInfo2'
 --
 -- = See Also
 --

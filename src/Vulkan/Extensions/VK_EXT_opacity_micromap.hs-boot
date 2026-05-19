@@ -29,9 +29,21 @@
 --         
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Vulkan Version 1.3>
 --
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_VERSION_1_4
+--
+--     -   Interacts with VK_KHR_maintenance5
+--
 -- [__SPIR-V Dependencies__]
 --
 --     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_opacity_micromap.html SPV_EXT_opacity_micromap>
+--
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_opacity_micromap VK_KHR_opacity_micromap>
+--         extension
 --
 -- [__Contact__]
 --
@@ -212,7 +224,7 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BuildAccelerationStructureFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
 --     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT'
 --
@@ -220,18 +232,18 @@
 --
 --     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT'
+--     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT'
 --
 --     -   'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT'
 --
 -- -   Extending
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryInstanceFlagBitsKHR':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
+--     -   'GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT'
 --
 --     -   'GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT'
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT'
+--     -   'GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT'
 --
 --     -   'GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT'
 --
@@ -240,9 +252,27 @@
 --     -   'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_MICROMAP_EXT'
 --
 -- -   Extending
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapFormatKHR':
+--
+--     -   'OPACITY_MICROMAP_FORMAT_2_STATE_EXT'
+--
+--     -   'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapSpecialIndexKHR':
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT'
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT'
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT'
+--
+--     -   'OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT'
+--
+-- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--     -   'PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
@@ -276,6 +306,32 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance5 VK_KHR_maintenance5>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.4 Vulkan Version 1.4>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core14.Enums.BufferUsageFlags2.BufferUsageFlagBits2':
+--
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
+--
+--     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT'
+--
+-- -   Extending
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
+--
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--
+-- == Promotion to VK_KHR_opacity_micromap
+--
+-- Functionality in this extension is included in VK_KHR_opacity_micromap.
+-- The type, enum and command names are still aliases of the KHR
+-- functionality with some exceptions.
+--
+-- See the VK_KHR_opacity_micromap proposal for details on the differences.
 --
 -- == Reference Code
 --
@@ -402,7 +458,6 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( AccelerationStructureTriangl
                                                   , MicromapBuildInfoEXT
                                                   , MicromapBuildSizesInfoEXT
                                                   , MicromapCreateInfoEXT
-                                                  , MicromapTriangleEXT
                                                   , MicromapUsageEXT
                                                   , MicromapVersionInfoEXT
                                                   , PhysicalDeviceOpacityMicromapFeaturesEXT
@@ -459,14 +514,6 @@ instance ToCStruct MicromapCreateInfoEXT
 instance Show MicromapCreateInfoEXT
 
 instance FromCStruct MicromapCreateInfoEXT
-
-
-data MicromapTriangleEXT
-
-instance ToCStruct MicromapTriangleEXT
-instance Show MicromapTriangleEXT
-
-instance FromCStruct MicromapTriangleEXT
 
 
 data MicromapUsageEXT

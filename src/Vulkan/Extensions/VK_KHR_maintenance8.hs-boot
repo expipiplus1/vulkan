@@ -108,7 +108,8 @@
 -- -   Extending
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2',
---     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.MemoryRangeBarriersInfoKHR':
 --
 --     -   'MemoryBarrierAccessFlags3KHR'
 --

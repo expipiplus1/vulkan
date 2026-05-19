@@ -126,6 +126,15 @@
 -- on when determining which internal formats and layouts to use for that
 -- image.
 --
+-- 5) Can 'DisplayPresentInfoKHR' be used without calling
+-- 'createSharedSwapchainsKHR'?
+--
+-- __RESOLVED__: Yes.
+--
+-- The two bits of functionality were meant to be independent. If the
+-- extension was created today, there would likely be two feature bits for
+-- 'DisplayPresentInfoKHR' and 'createSharedSwapchainsKHR'.
+--
 -- == Examples
 --
 -- The example code for the @VK_KHR_display@ and @VK_KHR_display_swapchain@
@@ -444,6 +453,12 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkDisplayPresentInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
 --
 -- = See Also
 --

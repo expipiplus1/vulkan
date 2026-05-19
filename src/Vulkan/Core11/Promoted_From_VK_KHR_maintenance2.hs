@@ -9,7 +9,6 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance2  ( InputAttachmentAspectR
                                                         , StructureType(..)
                                                         , ImageCreateFlagBits(..)
                                                         , ImageCreateFlags
-                                                        , PointClippingBehavior(..)
                                                         , TessellationDomainOrigin(..)
                                                         ) where
 
@@ -50,7 +49,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PA
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(..))
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
-import Vulkan.Core11.Enums.PointClippingBehavior (PointClippingBehavior(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..))
 -- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
@@ -155,7 +153,11 @@ instance Zero InputAttachmentAspectReference where
 -- Otherwise, an application /must/ not access aspect(s) of an input
 -- attachment other than those in its specified aspect mask.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Pass.RenderPassCreateInfo'
 --
 -- = See Also
 --
@@ -222,7 +224,11 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -283,7 +289,11 @@ instance Zero PhysicalDevicePointClippingProperties where
 -- time and its value is used instead for the purposes of determining the
 -- valid usage conditions of 'Vulkan.Core10.ImageView.ImageViewCreateInfo'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.ImageView.ImageViewCreateInfo'
 --
 -- = See Also
 --
@@ -353,7 +363,11 @@ instance Zero ImageViewUsageCreateInfo where
 -- present, it is as if @domainOrigin@ was
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.PipelineTessellationStateCreateInfo'
 --
 -- = See Also
 --

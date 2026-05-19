@@ -80,7 +80,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- Vulkan 1.3 implementations always support the features structure.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -165,7 +171,11 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeatures where
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-subgroup-quad >,
 -- @minSubgroupSize@ /must/ be greater than or equal to 4.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -272,7 +282,13 @@ instance Zero PhysicalDeviceSubgroupSizeControlProperties where
 -- 'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT', it
 -- specifies that the shader being compiled has a required subgroup size.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT'
 --
 -- = See Also
 --

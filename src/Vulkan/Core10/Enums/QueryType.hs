@@ -10,6 +10,7 @@ module Vulkan.Core10.Enums.QueryType  (QueryType( QUERY_TYPE_OCCLUSION
                                                 , QUERY_TYPE_PRIMITIVES_GENERATED_EXT
                                                 , QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT
                                                 , QUERY_TYPE_PERFORMANCE_QUERY_INTEL
+                                                , QUERY_TYPE_TIME_ELAPSED_QCOM
                                                 , QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
                                                 , QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR
                                                 , QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR
@@ -90,6 +91,15 @@ import GHC.Show (Show(showsPrec))
 -- -   'QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT' specifies a
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-mesh-shader generated mesh primitives query>.
 --
+-- -   'QUERY_TYPE_TIME_ELAPSED_QCOM' specifies an
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#queries-elapsed-timer elapsed timer query>.
+--
+-- -   'QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT' specifies a micromap
+--     query to get the size required by a serialized micromap.
+--
+-- -   'QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT' specifies a micromap query
+--     to get the size required by a compacted micromap.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
@@ -132,6 +142,9 @@ pattern QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT = QueryType 1000328000
 -- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_PERFORMANCE_QUERY_INTEL"
 pattern QUERY_TYPE_PERFORMANCE_QUERY_INTEL = QueryType 1000210000
 
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_TIME_ELAPSED_QCOM"
+pattern QUERY_TYPE_TIME_ELAPSED_QCOM = QueryType 1000173000
+
 -- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV"
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = QueryType 1000165000
 
@@ -158,6 +171,7 @@ pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = QueryType 1000028004
   , QUERY_TYPE_PRIMITIVES_GENERATED_EXT
   , QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT
   , QUERY_TYPE_PERFORMANCE_QUERY_INTEL
+  , QUERY_TYPE_TIME_ELAPSED_QCOM
   , QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
   , QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR
   , QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR
@@ -205,6 +219,7 @@ showTableQueryType =
     ( QUERY_TYPE_PERFORMANCE_QUERY_INTEL
     , "PERFORMANCE_QUERY_INTEL"
     )
+  , (QUERY_TYPE_TIME_ELAPSED_QCOM, "TIME_ELAPSED_QCOM")
   ,
     ( QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
     , "ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV"

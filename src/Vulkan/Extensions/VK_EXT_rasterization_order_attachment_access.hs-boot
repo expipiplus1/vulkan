@@ -36,7 +36,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-07-04
+--     2026-01-16
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -108,6 +108,8 @@
 -- -   Revision 1, 2022-07-04 (Jan-Harald Fredriksen)
 --
 --     -   Initial draft
+--
+--     -   Updated Issues section 2026-01-16
 --
 -- == See Also
 --

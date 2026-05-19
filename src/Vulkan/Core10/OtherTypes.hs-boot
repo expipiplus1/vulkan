@@ -1,31 +1,14 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "OtherTypes"
-module Vulkan.Core10.OtherTypes  ( BufferMemoryBarrier
-                                 , DispatchIndirectCommand
+module Vulkan.Core10.OtherTypes  ( DispatchIndirectCommand
                                  , DrawIndexedIndirectCommand
                                  , DrawIndirectCommand
-                                 , ImageMemoryBarrier
-                                 , MemoryBarrier
                                  , PipelineCacheHeaderVersionOne
                                  ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-type role BufferMemoryBarrier nominal
-data BufferMemoryBarrier (es :: [Type])
-
-instance ( Extendss BufferMemoryBarrier es
-         , PokeChain es ) => ToCStruct (BufferMemoryBarrier es)
-instance Show (Chain es) => Show (BufferMemoryBarrier es)
-
-instance ( Extendss BufferMemoryBarrier es
-         , PeekChain es ) => FromCStruct (BufferMemoryBarrier es)
-
 
 data DispatchIndirectCommand
 
@@ -49,25 +32,6 @@ instance ToCStruct DrawIndirectCommand
 instance Show DrawIndirectCommand
 
 instance FromCStruct DrawIndirectCommand
-
-
-type role ImageMemoryBarrier nominal
-data ImageMemoryBarrier (es :: [Type])
-
-instance ( Extendss ImageMemoryBarrier es
-         , PokeChain es ) => ToCStruct (ImageMemoryBarrier es)
-instance Show (Chain es) => Show (ImageMemoryBarrier es)
-
-instance ( Extendss ImageMemoryBarrier es
-         , PeekChain es ) => FromCStruct (ImageMemoryBarrier es)
-
-
-data MemoryBarrier
-
-instance ToCStruct MemoryBarrier
-instance Show MemoryBarrier
-
-instance FromCStruct MemoryBarrier
 
 
 data PipelineCacheHeaderVersionOne

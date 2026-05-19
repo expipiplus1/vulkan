@@ -1,6 +1,7 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineCreateFlags2"
-module Vulkan.Core14.Enums.PipelineCreateFlags2  ( PipelineCreateFlags2
+module Vulkan.Core14.Enums.PipelineCreateFlags2  ( pattern PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
+                                                 , PipelineCreateFlags2
                                                  , PipelineCreateFlagBits2( PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT
                                                                           , PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT
                                                                           , PIPELINE_CREATE_2_DERIVATIVE_BIT
@@ -11,7 +12,10 @@ module Vulkan.Core14.Enums.PipelineCreateFlags2  ( PipelineCreateFlags2
                                                                           , PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT
                                                                           , PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT
                                                                           , PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT
+                                                                          , PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR
+                                                                          , PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
                                                                           , PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE
+                                                                          , PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM
                                                                           , PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM
                                                                           , PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT
                                                                           , PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR
@@ -19,7 +23,6 @@ module Vulkan.Core14.Enums.PipelineCreateFlags2  ( PipelineCreateFlags2
                                                                           , PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
                                                                           , PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                           , PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
-                                                                          , PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
                                                                           , PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
                                                                           , PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                           , PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV
@@ -56,6 +59,10 @@ import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags64)
+-- No documentation found for TopLevel "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
+pattern PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+
+
 type PipelineCreateFlags2 = PipelineCreateFlagBits2
 
 -- | VkPipelineCreateFlagBits2 - Bitmask controlling how a pipeline is
@@ -218,7 +225,7 @@ type PipelineCreateFlags2 = PipelineCreateFlagBits2
 --     pipeline will be used with
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorbuffers descriptor buffers>,
 --     rather than
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets descriptor sets>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors descriptor sets>.
 --
 -- -   'PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT' specifies
 --     that the pipeline /may/ be used with an attachment
@@ -230,9 +237,10 @@ type PipelineCreateFlags2 = PipelineCreateFlagBits2
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-feedbackloop feedback loop>
 --     including depth-stencil attachments.
 --
--- -   'PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT' specifies
+-- -   'PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR' specifies
 --     that the ray tracing pipeline /can/ be used with acceleration
---     structures which reference an opacity micromap array.
+--     structures which reference an opacity micromap array. This flag has
+--     no effect on using opacity micromaps with ray queries.
 --
 -- -   'PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV'
 --     specifies that the ray tracing pipeline /can/ be used with
@@ -267,7 +275,15 @@ type PipelineCreateFlags2 = PipelineCreateFlagBits2
 --
 -- -   'PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM' specifies that
 --     the pipeline /must/ not be used with acceleration structures which
---     reference an opacity micromap array.
+--     reference an opacity micromap.
+--
+-- -   'PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR'
+--     specifies that the pipeline /cannot/ be used with acceleration
+--     structures which are built with geometry that have an index buffer
+--     including both special indices and indices pointing to an associated
+--     micromap array. Geometry which has an index buffer using only
+--     special indices without an associated micromap array /can/ be used
+--     with this flag.
 --
 -- -   'PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT' specifies that the
 --     pipeline enables
@@ -276,6 +292,9 @@ type PipelineCreateFlags2 = PipelineCreateFlagBits2
 -- -   'PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT' specifies that the
 --     pipeline will use descriptor heap mappings instead of descriptor set
 --     layouts.
+--
+-- -   'PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM' specifies that the
+--     shaders in the pipeline will be instrumented.
 --
 -- It is valid to set both 'PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_2_DERIVATIVE_BIT'. This allows a pipeline to be both a
@@ -340,8 +359,17 @@ pattern PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT = PipelineCreateFlagBits2 0x
 -- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT"
 pattern PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT = PipelineCreateFlagBits2 0x0000080000000000
 
+-- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR"
+pattern PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR = PipelineCreateFlagBits2 0x0000020000000000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"
+pattern PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR = PipelineCreateFlagBits2 0x0000000001000000
+
 -- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"
 pattern PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE = PipelineCreateFlagBits2 0x0000010000000000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"
+pattern PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM = PipelineCreateFlagBits2 0x0000008000000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"
 pattern PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM = PipelineCreateFlagBits2 0x0000002000000000
@@ -363,9 +391,6 @@ pattern PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = Pipel
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"
 pattern PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = PipelineCreateFlagBits2 0x0000000002000000
-
--- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
-pattern PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = PipelineCreateFlagBits2 0x0000000001000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits2" "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
 pattern PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = PipelineCreateFlagBits2 0x0000000000400000
@@ -479,8 +504,20 @@ showTablePipelineCreateFlagBits2 =
     , "64_BIT_INDEXING_BIT_EXT"
     )
   ,
+    ( PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR
+    , "OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR"
+    )
+  ,
+    ( PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+    , "RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"
+    )
+  ,
     ( PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE
     , "PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"
+    )
+  ,
+    ( PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM
+    , "INSTRUMENT_SHADERS_BIT_ARM"
     )
   ,
     ( PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM
@@ -509,10 +546,6 @@ showTablePipelineCreateFlagBits2 =
   ,
     ( PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
     , "COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"
-    )
-  ,
-    ( PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
-    , "RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
     )
   ,
     ( PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT

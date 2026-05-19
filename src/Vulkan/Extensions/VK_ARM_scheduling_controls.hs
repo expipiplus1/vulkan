@@ -15,7 +15,7 @@
 --     418
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2023-08-23
+--     2025-09-05
 --
 -- [__Interactions and External Dependencies__]
 --     None
@@ -52,7 +52,13 @@
 -- This extension exposes a collection of controls to modify the scheduling
 -- behavior of Arm Mali devices.
 --
+-- == New Commands
+--
+-- -   'cmdSetDispatchParametersARM'
+--
 -- == New Structures
+--
+-- -   'DispatchParametersARM'
 --
 -- -   Extending 'Vulkan.Core10.Device.DeviceQueueCreateInfo',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
@@ -67,6 +73,8 @@
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'
 --
 --     -   'PhysicalDeviceSchedulingControlsPropertiesARM'
 --
@@ -88,6 +96,10 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM'
 --
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM'
+--
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM'
@@ -101,6 +113,18 @@
 -- None.
 --
 -- == Version History
+--
+-- -   Revision 2, 2025-09-05 (Kévin Petit)
+--
+--     -   Add dispatch parameters controls
+--
+--         -   'PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM'
+--
+--         -   'cmdSetDispatchParametersARM'
+--
+--         -   'DispatchParametersARM'
+--
+--         -   'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'
 --
 -- -   Revision 1, 2023-08-23 (Kévin Petit)
 --
@@ -117,11 +141,15 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_ARM_scheduling_controls  ( DeviceQueueShaderCoreControlCreateInfoARM(..)
+module Vulkan.Extensions.VK_ARM_scheduling_controls  ( cmdSetDispatchParametersARM
+                                                     , DeviceQueueShaderCoreControlCreateInfoARM(..)
                                                      , PhysicalDeviceSchedulingControlsFeaturesARM(..)
                                                      , PhysicalDeviceSchedulingControlsPropertiesARM(..)
+                                                     , PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM(..)
+                                                     , DispatchParametersARM(..)
                                                      , PhysicalDeviceSchedulingControlsFlagsARM
                                                      , PhysicalDeviceSchedulingControlsFlagBitsARM( PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM
+                                                                                                  , PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM
                                                                                                   , ..
                                                                                                   )
                                                      , ARM_SCHEDULING_CONTROLS_SPEC_VERSION
@@ -134,17 +162,25 @@ import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
+import Vulkan.Internal.Utils (traceAroundEvent)
+import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytes)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
 import Numeric (showHex)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -152,19 +188,132 @@ import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
+import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.Handles (CommandBuffer)
+import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
+import Vulkan.Core10.Handles (CommandBuffer_T)
+import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDispatchParametersARM))
 import Vulkan.Core10.FundamentalTypes (Flags64)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdSetDispatchParametersARM
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr DispatchParametersARM -> IO ()) -> Ptr CommandBuffer_T -> Ptr DispatchParametersARM -> IO ()
+
+-- | vkCmdSetDispatchParametersARM - Set parameters that affect dispatch
+-- commands
+--
+-- = Description
+--
+-- Parameters set using 'cmdSetDispatchParametersARM' affect the following
+-- dispatch commands:
+--
+-- -   'Vulkan.Core10.CommandBufferBuilding.cmdDispatch'
+--
+-- -   'Vulkan.Core11.Promoted_From_VK_KHR_device_group.cmdDispatchBase'
+--
+-- -   'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCmdSetDispatchParametersARM-schedulingControlsFlags-12391#
+--     'PhysicalDeviceSchedulingControlsPropertiesARM'::@schedulingControlsFlags@
+--     /must/ contain
+--     'PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkCmdSetDispatchParametersARM-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
+--     'Vulkan.Core10.Handles.CommandBuffer' handle
+--
+-- -   #VUID-vkCmdSetDispatchParametersARM-pDispatchParameters-parameter#
+--     @pDispatchParameters@ /must/ be a valid pointer to a valid
+--     'DispatchParametersARM' structure
+--
+-- -   #VUID-vkCmdSetDispatchParametersARM-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   #VUID-vkCmdSetDispatchParametersARM-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' operations
+--
+-- -   #VUID-vkCmdSetDispatchParametersARM-renderpass# This command /must/
+--     only be called outside of a render pass instance
+--
+-- -   #VUID-vkCmdSetDispatchParametersARM-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-queueoperation-command-types Command Type> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+========================================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | VK_QUEUE_COMPUTE_BIT                                                                                                  | State                                                                                                                                  |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |                                                                                                                                        |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- == Conditional Rendering
+--
+-- vkCmdSetDispatchParametersARM is not affected by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-conditional-rendering conditional rendering>
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_scheduling_controls VK_ARM_scheduling_controls>,
+-- 'Vulkan.Core10.Handles.CommandBuffer', 'DispatchParametersARM'
+cmdSetDispatchParametersARM :: forall io
+                             . (MonadIO io)
+                            => -- | @commandBuffer@ is the command buffer into which the command will be
+                               -- recorded.
+                               CommandBuffer
+                            -> -- | @pDispatchParameters@ is a pointer to a 'DispatchParametersARM'
+                               -- structure specifying the dispatch parameters to be set.
+                               DispatchParametersARM
+                            -> io ()
+cmdSetDispatchParametersARM commandBuffer
+                              dispatchParameters = liftIO . evalContT $ do
+  let vkCmdSetDispatchParametersARMPtr = pVkCmdSetDispatchParametersARM (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
+  lift $ unless (vkCmdSetDispatchParametersARMPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDispatchParametersARM is null" Nothing Nothing
+  let vkCmdSetDispatchParametersARM' = mkVkCmdSetDispatchParametersARM vkCmdSetDispatchParametersARMPtr
+  pDispatchParameters <- ContT $ withCStruct (dispatchParameters)
+  lift $ traceAroundEvent "vkCmdSetDispatchParametersARM" (vkCmdSetDispatchParametersARM'
+                                                             (commandBufferHandle (commandBuffer))
+                                                             pDispatchParameters)
+  pure $ ()
+
+
 -- | VkDeviceQueueShaderCoreControlCreateInfoARM - Control the number of
 -- shader cores used by queues
 --
@@ -174,7 +323,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'DeviceQueueShaderCoreControlCreateInfoARM' will default to using all
 -- the shader cores available.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core10.Device.DeviceQueueCreateInfo'
 --
 -- = See Also
 --
@@ -249,7 +404,13 @@ instance Zero DeviceQueueShaderCoreControlCreateInfoARM where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -316,7 +477,11 @@ instance Zero PhysicalDeviceSchedulingControlsFeaturesARM where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -364,6 +529,188 @@ instance Zero PhysicalDeviceSchedulingControlsPropertiesARM where
            zero
 
 
+-- | VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM -
+-- Structure containing scheduling control dispatch parameters properties
+-- of a physical device
+--
+-- = Members
+--
+-- -   #limits-schedulingControlsMaxWarpsCount#@schedulingControlsMaxWarpsCount@
+--     specifies the maximum number of warps that a shader core /can/ run
+--     concurrently.
+--
+-- -   #limits-schedulingControlsMaxQueuedWorkgroupBatchesCount#@schedulingControlsMaxQueuedWorkgroupBatchesCount@
+--     specifies the maximum number of workgroup batches that a shader core
+--     /can/ queue.
+--
+-- -   #limits-schedulingControlsMaxWorkGroupBatchSize#@schedulingControlsMaxWorkGroupBatchSize@
+--     specifies the maximum size of workgroup batches that /can/ be
+--     requested using 'DispatchParametersARM'::@workGroupBatchSize@.
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'
+-- structure is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- If
+-- 'PhysicalDeviceSchedulingControlsPropertiesARM'::@schedulingControlsFlags@
+-- does not contain
+-- 'PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM' then
+-- @schedulingControlsMaxWarpCount@ and
+-- @schedulingControlsMaxQueuedBatchesCount@ are undefined.
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_scheduling_controls VK_ARM_scheduling_controls>,
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM = PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+  { -- No documentation found for Nested "VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM" "schedulingControlsMaxWarpsCount"
+    schedulingControlsMaxWarpsCount :: Word32
+  , -- No documentation found for Nested "VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM" "schedulingControlsMaxQueuedBatchesCount"
+    schedulingControlsMaxQueuedBatchesCount :: Word32
+  , -- No documentation found for Nested "VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM" "schedulingControlsMaxWorkGroupBatchSize"
+    schedulingControlsMaxWorkGroupBatchSize :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM)
+#endif
+deriving instance Show PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+
+instance ToCStruct PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (schedulingControlsMaxWarpsCount)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (schedulingControlsMaxQueuedBatchesCount)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (schedulingControlsMaxWorkGroupBatchSize)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM where
+  peekCStruct p = do
+    schedulingControlsMaxWarpsCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    schedulingControlsMaxQueuedBatchesCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    schedulingControlsMaxWorkGroupBatchSize <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    pure $ PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+             schedulingControlsMaxWarpsCount
+             schedulingControlsMaxQueuedBatchesCount
+             schedulingControlsMaxWorkGroupBatchSize
+
+instance Storable PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM where
+  zero = PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+           zero
+           zero
+           zero
+
+
+-- | VkDispatchParametersARM - Structure specifying parameters that affect
+-- dispatch commands
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_scheduling_controls VK_ARM_scheduling_controls>,
+-- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'cmdSetDispatchParametersARM'
+data DispatchParametersARM = DispatchParametersARM
+  { -- | @workGroupBatchSize@, if it is not 0, is the number of workgroups in
+    -- each batch distributed to shader cores. Otherwise, the implementation
+    -- selects the number of workgroups in each batch.
+    --
+    -- #VUID-VkDispatchParametersARM-workGroupBatchSize-12394#
+    -- @workGroupBatchSize@ /must/ be less than or equal to
+    -- 'PhysicalDeviceSchedulingControlsPropertiesARM'::@schedulingControlsMaxWorkGroupBatchSize@
+    workGroupBatchSize :: Word32
+  , -- | @maxQueuedWorkGroupBatches@, if it is not 0, is the maximum number of
+    -- workgroup batches that shader cores /may/ queue. Otherwise, the
+    -- implementation selects the maximum number of workgroup batches that
+    -- shader cores /may/ queue.
+    --
+    -- #VUID-VkDispatchParametersARM-maxQueuedWorkGroupBatches-12393#
+    -- @maxQueuedWorkGroupBatches@ /must/ be less than or equal to
+    -- 'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'::@schedulingControlsMaxQueuedBatchesCount@
+    maxQueuedWorkGroupBatches :: Word32
+  , -- | @maxWarpsPerShaderCore@, if it is not 0, is the maximum number of warps
+    -- that /may/ run concurrently on individual shader cores. Otherwise, the
+    -- implementation selects the maximum number of warps that /may/ run
+    -- concurrently on individual shader cores.
+    --
+    -- #VUID-VkDispatchParametersARM-maxWarpsPerShaderCore-12392#
+    -- @maxWarpsPerShaderCore@ /must/ be less than or equal to
+    -- 'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'::@schedulingControlsMaxWarpCount@
+    maxWarpsPerShaderCore :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DispatchParametersARM)
+#endif
+deriving instance Show DispatchParametersARM
+
+instance ToCStruct DispatchParametersARM where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DispatchParametersARM{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (workGroupBatchSize)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (maxQueuedWorkGroupBatches)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (maxWarpsPerShaderCore)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct DispatchParametersARM where
+  peekCStruct p = do
+    workGroupBatchSize <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    maxQueuedWorkGroupBatches <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    maxWarpsPerShaderCore <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    pure $ DispatchParametersARM
+             workGroupBatchSize maxQueuedWorkGroupBatches maxWarpsPerShaderCore
+
+instance Storable DispatchParametersARM where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DispatchParametersARM where
+  zero = DispatchParametersARM
+           zero
+           zero
+           zero
+
+
 type PhysicalDeviceSchedulingControlsFlagsARM = PhysicalDeviceSchedulingControlsFlagBitsARM
 
 -- | VkPhysicalDeviceSchedulingControlsFlagBitsARM - Bitmask specifying
@@ -377,6 +724,12 @@ type PhysicalDeviceSchedulingControlsFlagsARM = PhysicalDeviceSchedulingControls
 --     'Vulkan.Core10.Device.DeviceQueueCreateInfo' or
 --     'Vulkan.Core10.Device.DeviceCreateInfo' structure.
 --
+-- -   'PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM'
+--     specifies that a 'cmdSetDispatchParametersARM' command /may/ be
+--     recorded in a command buffer and that properties returned in
+--     'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'
+--     are valid.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_scheduling_controls VK_ARM_scheduling_controls>,
@@ -387,17 +740,24 @@ newtype PhysicalDeviceSchedulingControlsFlagBitsARM = PhysicalDeviceSchedulingCo
 -- No documentation found for Nested "VkPhysicalDeviceSchedulingControlsFlagBitsARM" "VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM"
 pattern PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM = PhysicalDeviceSchedulingControlsFlagBitsARM 0x0000000000000001
 
+-- No documentation found for Nested "VkPhysicalDeviceSchedulingControlsFlagBitsARM" "VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM"
+pattern PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM = PhysicalDeviceSchedulingControlsFlagBitsARM 0x0000000000000002
+
 conNamePhysicalDeviceSchedulingControlsFlagBitsARM :: String
 conNamePhysicalDeviceSchedulingControlsFlagBitsARM = "PhysicalDeviceSchedulingControlsFlagBitsARM"
 
 enumPrefixPhysicalDeviceSchedulingControlsFlagBitsARM :: String
-enumPrefixPhysicalDeviceSchedulingControlsFlagBitsARM = "PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM"
+enumPrefixPhysicalDeviceSchedulingControlsFlagBitsARM = "PHYSICAL_DEVICE_SCHEDULING_CONTROLS_"
 
 showTablePhysicalDeviceSchedulingControlsFlagBitsARM :: [(PhysicalDeviceSchedulingControlsFlagBitsARM, String)]
 showTablePhysicalDeviceSchedulingControlsFlagBitsARM =
   [
     ( PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM
-    , ""
+    , "SHADER_CORE_COUNT_ARM"
+    )
+  ,
+    ( PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM
+    , "DISPATCH_PARAMETERS_ARM"
     )
   ]
 
@@ -418,11 +778,11 @@ instance Read PhysicalDeviceSchedulingControlsFlagBitsARM where
       conNamePhysicalDeviceSchedulingControlsFlagBitsARM
       PhysicalDeviceSchedulingControlsFlagBitsARM
 
-type ARM_SCHEDULING_CONTROLS_SPEC_VERSION = 1
+type ARM_SCHEDULING_CONTROLS_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_ARM_SCHEDULING_CONTROLS_SPEC_VERSION"
 pattern ARM_SCHEDULING_CONTROLS_SPEC_VERSION :: forall a . Integral a => a
-pattern ARM_SCHEDULING_CONTROLS_SPEC_VERSION = 1
+pattern ARM_SCHEDULING_CONTROLS_SPEC_VERSION = 2
 
 
 type ARM_SCHEDULING_CONTROLS_EXTENSION_NAME = "VK_ARM_scheduling_controls"

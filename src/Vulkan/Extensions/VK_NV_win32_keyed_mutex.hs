@@ -308,6 +308,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WIN32_KEY
 --     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Queue.SubmitInfo'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.SubmitInfo2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_win32_keyed_mutex VK_NV_win32_keyed_mutex>,

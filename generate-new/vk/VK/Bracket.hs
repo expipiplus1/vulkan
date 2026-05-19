@@ -103,6 +103,8 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "TensorViewARM"
     , cdBracket "DataGraphPipelineSessionARM"
     , cdBracket "ExternalComputeQueueNV"
+    , cdBracket "GpaSessionAMD"
+    , cdBracket "ShaderInstrumentationARM"
     , pure withCommmandBuffers
     , afBracket "Memory"
     , pure withDescriptorSets

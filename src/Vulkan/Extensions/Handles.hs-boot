@@ -15,6 +15,7 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , DisplayModeKHR
                                   , ExternalComputeQueueNV
                                   , ExternalComputeQueueNV_T
+                                  , GpaSessionAMD
                                   , IndirectCommandsLayoutEXT
                                   , IndirectCommandsLayoutNV
                                   , IndirectExecutionSetEXT
@@ -23,6 +24,7 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , PerformanceConfigurationINTEL
                                   , PipelineBinaryKHR
                                   , ShaderEXT
+                                  , ShaderInstrumentationARM
                                   , SurfaceKHR
                                   , SwapchainKHR
                                   , TensorARM
@@ -76,6 +78,9 @@ data ExternalComputeQueueNV
 data ExternalComputeQueueNV_T
 
 
+data GpaSessionAMD
+
+
 data IndirectCommandsLayoutEXT
 
 
@@ -98,6 +103,9 @@ data PipelineBinaryKHR
 
 
 data ShaderEXT
+
+
+data ShaderInstrumentationARM
 
 
 data SurfaceKHR

@@ -1124,7 +1124,13 @@ instance Zero OutOfBandQueueTypeInfoNV where
 -- 'Vulkan.Core10.Queue.queueSubmit' /must/ include a
 -- 'LatencySubmissionPresentIdNV' structure.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Queue.SubmitInfo'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.SubmitInfo2'
 --
 -- = See Also
 --
@@ -1178,7 +1184,11 @@ instance Zero LatencySubmissionPresentIdNV where
 -- | VkSwapchainLatencyCreateInfoNV - Specify that a swapchain will use low
 -- latency mode
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --
 -- = See Also
 --
@@ -1251,6 +1261,12 @@ instance Zero SwapchainLatencyCreateInfoNV where
 --     @pPresentModes@ /must/ be a valid pointer to an array of
 --     @presentModeCount@ 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
 --     values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 --
 -- = See Also
 --

@@ -100,8 +100,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- image view used with min\/max filtering /must/ have been created with
 -- the @r@ component set to the
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
--- Only the @r@ component of the sampled image value is defined and the
--- other component values are undefined. If
+-- Only the @r@ component of the sampled image value is defined; reading
+-- other component values results in poison. If
 -- @filterMinmaxImageComponentMapping@ is
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' this restriction does not apply
 -- and image component mapping works as normal.
@@ -111,6 +111,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- -   #VUID-VkPhysicalDeviceSamplerFilterMinmaxProperties-sType-sType#
 --     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -180,7 +186,11 @@ instance Zero PhysicalDeviceSamplerFilterMinmaxProperties where
 -- If this structure is not present, @reductionMode@ is considered to be
 -- 'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Sampler.SamplerCreateInfo'
 --
 -- = See Also
 --

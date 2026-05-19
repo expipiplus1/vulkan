@@ -2058,7 +2058,8 @@ foreign import ccall
 -- However, if the presentation request is rejected by the presentation
 -- engine with an error 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR',
 -- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT',
--- or 'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set of queue
+-- 'Vulkan.Core10.Enums.Result.ERROR_PRESENT_TIMING_QUEUE_FULL_EXT', or
+-- 'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set of queue
 -- operations are still considered to be enqueued and thus any
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>
 -- specified in 'PresentInfoKHR' will execute when the corresponding queue
@@ -3194,8 +3195,8 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 -- to delay subsequent processing, or perform any visibility operations (as
 -- 'queuePresentKHR' performs automatic visibility operations). To achieve
 -- this, the @dstAccessMask@ member of the
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' /should/ be @0@, and the
--- @dstStageMask@ parameter /should/ be
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier' /should/ be
+-- @0@, and the @dstStageMask@ parameter /should/ be
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT'.
 --
 -- The second
@@ -3535,6 +3536,12 @@ instance Zero DeviceGroupPresentCapabilitiesKHR where
 --     @swapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
@@ -3620,6 +3627,12 @@ instance Zero ImageSwapchainCreateInfoKHR where
 -- == Host Synchronization
 --
 -- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo'
 --
 -- = See Also
 --
@@ -3928,6 +3941,12 @@ instance Zero AcquireNextImageInfoKHR where
 -- -   #VUID-VkDeviceGroupPresentInfoKHR-mode-parameter# @mode@ /must/ be a
 --     valid 'DeviceGroupPresentModeFlagBitsKHR' value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'PresentInfoKHR'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
@@ -3991,7 +4010,11 @@ instance Zero DeviceGroupPresentInfoKHR where
 -- If this structure is not present, @modes@ is considered to be
 -- 'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'SwapchainCreateInfoKHR'
 --
 -- = See Also
 --

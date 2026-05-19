@@ -236,6 +236,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEDICATED
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_dedicated_allocation VK_NV_dedicated_allocation>,
@@ -286,7 +292,11 @@ instance Zero DedicatedAllocationImageCreateInfoNV where
 -- | VkDedicatedAllocationBufferCreateInfoNV - Specify that a buffer is bound
 -- to a dedicated memory resource
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Buffer.BufferCreateInfo'
 --
 -- = See Also
 --
@@ -402,6 +412,12 @@ instance Zero DedicatedAllocationBufferCreateInfoNV where
 --     of @buffer@, and @image@ that are valid handles of non-ignored
 --     parameters /must/ have been created, allocated, or retrieved from
 --     the same 'Vulkan.Core10.Handles.Device'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- = See Also
 --

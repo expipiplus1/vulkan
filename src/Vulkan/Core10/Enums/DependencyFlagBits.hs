@@ -51,13 +51,15 @@ type DependencyFlags = DependencyFlagBits
 --     performing a
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
 --
--- -   'DEPENDENCY_ASYMMETRIC_EVENT_BIT_KHR' specifies that
+-- -   'DEPENDENCY_ASYMMETRIC_EVENT_BIT_KHR' specifies that the access
+--     scopes of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdSetEvent2'
---     /must/ only include the
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
---     of the first synchronization scope, and that
+--     and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWaitEvents2'
---     /must/ specify the complete barrier.
+--     do not need to match for a given event when it is specified in both
+--     commands, and the access scope of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdSetEvent2'
+--     is empty.
 --
 -- = See Also
 --

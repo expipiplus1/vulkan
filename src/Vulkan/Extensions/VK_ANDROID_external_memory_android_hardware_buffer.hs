@@ -563,6 +563,12 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 -- -   #VUID-VkImportAndroidHardwareBufferInfoANDROID-buffer-parameter#
 --     @buffer@ /must/ be a valid pointer to an 'AHardwareBuffer' value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer VK_ANDROID_external_memory_android_hardware_buffer>,
@@ -633,7 +639,11 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
 -- are required.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
 --
 -- = See Also
 --
@@ -932,7 +942,11 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- does, achieving identical results between APIs /may/ not be possible on
 -- some implementations.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'AndroidHardwareBufferPropertiesANDROID'
 --
 -- = See Also
 --
@@ -1058,7 +1072,19 @@ instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
 -- rely only on other format information. If this structure is not present,
 -- it is equivalent to setting @externalFormat@ to zero.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2'
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
 --
 -- = See Also
 --
@@ -1120,7 +1146,11 @@ instance Zero ExternalFormatANDROID where
 -- in the corresponding fields of
 -- 'AndroidHardwareBufferFormatPropertiesANDROID'::@formatFeatures@.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'AndroidHardwareBufferPropertiesANDROID'
 --
 -- = See Also
 --

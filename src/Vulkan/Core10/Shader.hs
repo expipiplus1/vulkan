@@ -363,6 +363,14 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --     valid pointer to an array of \(\textrm{codeSize} \over 4\)
 --     @uint32_t@ values
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_ARM_data_graph.DataGraphPipelineCreateInfoARM'
+--
+--     -   'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,

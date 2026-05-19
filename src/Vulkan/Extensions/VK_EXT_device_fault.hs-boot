@@ -25,6 +25,12 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_fault VK_KHR_device_fault>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Ralph Potter <<data:image/png;base64, GitLab>>r_potter
@@ -105,6 +111,23 @@
 --
 -- -   'EXT_DEVICE_FAULT_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_device_fault.DeviceFaultAddressTypeKHR':
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_FAULT_COUNTS_EXT'
@@ -136,25 +159,14 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_device_fault  ( DeviceFaultAddressInfoEXT
-                                              , DeviceFaultCountsEXT
+module Vulkan.Extensions.VK_EXT_device_fault  ( DeviceFaultCountsEXT
                                               , DeviceFaultInfoEXT
-                                              , DeviceFaultVendorBinaryHeaderVersionOneEXT
-                                              , DeviceFaultVendorInfoEXT
                                               , PhysicalDeviceFaultFeaturesEXT
                                               ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
-data DeviceFaultAddressInfoEXT
-
-instance ToCStruct DeviceFaultAddressInfoEXT
-instance Show DeviceFaultAddressInfoEXT
-
-instance FromCStruct DeviceFaultAddressInfoEXT
-
 
 data DeviceFaultCountsEXT
 
@@ -170,22 +182,6 @@ instance ToCStruct DeviceFaultInfoEXT
 instance Show DeviceFaultInfoEXT
 
 instance FromCStruct DeviceFaultInfoEXT
-
-
-data DeviceFaultVendorBinaryHeaderVersionOneEXT
-
-instance ToCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT
-instance Show DeviceFaultVendorBinaryHeaderVersionOneEXT
-
-instance FromCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT
-
-
-data DeviceFaultVendorInfoEXT
-
-instance ToCStruct DeviceFaultVendorInfoEXT
-instance Show DeviceFaultVendorInfoEXT
-
-instance FromCStruct DeviceFaultVendorInfoEXT
 
 
 data PhysicalDeviceFaultFeaturesEXT

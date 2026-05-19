@@ -116,11 +116,15 @@ type BufferUsageFlags = BufferUsageFlagBits
 -- -   'BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT' specifies that the
 --     buffer is suitable for using for binding as a transform feedback
 --     buffer with
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdBindTransformFeedbackBuffers2EXT'
+--     or
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBindTransformFeedbackBuffersEXT'.
 --
 -- -   'BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT' specifies
 --     that the buffer is suitable for using as a counter buffer with
---     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBeginTransformFeedbackEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdBeginTransformFeedback2EXT',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdEndTransformFeedback2EXT',
+--     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBeginTransformFeedbackEXT',
 --     and
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT'.
 --
@@ -137,6 +141,16 @@ type BufferUsageFlags = BufferUsageFlagBits
 -- -   'BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT' specifies
 --     that the buffer, when bound, /can/ be used by the implementation to
 --     support push descriptors when using descriptor buffers.
+--
+-- -   'BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT' specifies that
+--     when building a 'Vulkan.Extensions.Handles.MicromapEXT', the buffer
+--     /can/ be used as a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#micromap-building read-only micromap build input>,
+--     which includes the @data@ and @triangleArray@ parameters
+--
+-- -   'BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT' specifies that the buffer
+--     /can/ be used to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-micromaps create  objects>.
 --
 -- -   'BUFFER_USAGE_TILE_MEMORY_BIT_QCOM' specifies that the buffer /can/
 --     be bound to 'Vulkan.Core10.Handles.DeviceMemory' allocated from a

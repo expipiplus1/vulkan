@@ -3,8 +3,6 @@
 module Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve  ( PhysicalDeviceDepthStencilResolveProperties(..)
                                                                  , SubpassDescriptionDepthStencilResolve(..)
                                                                  , StructureType(..)
-                                                                 , ResolveModeFlagBits(..)
-                                                                 , ResolveModeFlags
                                                                  ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -41,8 +39,6 @@ import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE))
-import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(..))
-import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDeviceDepthStencilResolveProperties - Structure describing
 -- depth\/stencil resolve properties that can be supported by an
@@ -58,7 +54,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -356,6 +356,12 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     valid
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2'
 --     structure
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2'
 --
 -- = See Also
 --

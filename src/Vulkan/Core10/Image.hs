@@ -56,6 +56,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionImageCreateInfoFUCHSIA)
 import Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph_optical_flow (DataGraphOpticalFlowImageFormatInfoARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationImageCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
@@ -959,8 +960,16 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   #VUID-VkImageCreateInfo-sharingMode-00942# If @sharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+-- -   #VUID-VkImageCreateInfo-maintenance11-13354# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is enabled and @sharingMode@ is
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
+--     @queueFamilyIndexCount@ /must/ be greater than @0@
+--
+-- -   #VUID-VkImageCreateInfo-sharingMode-00942# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is not enabled and @sharingMode@ is
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
 -- -   #VUID-VkImageCreateInfo-sharingMode-01420# If @sharingMode@ is
@@ -1938,6 +1947,17 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TENSOR_ALIASING_BIT_ARM'
 --     /must/ not be set in @usage@
 --
+-- -   #VUID-VkImageCreateInfo-flags-13355# If @flags@ contains
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkImageCreateInfo-flags-13356# If @flags@ contains
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR',
+--     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D'
+--     or 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
 -- -   #VUID-VkImageCreateInfo-None-12279# If Vulkan 1.3 is not supported
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-ycbcr2plane444Formats ycbcr2plane444Formats>
@@ -1948,7 +1968,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     or 'Vulkan.Core10.Enums.Format.FORMAT_G16_B16R16_2PLANE_444_UNORM'
 --
 -- -   #VUID-VkImageCreateInfo-flags-11281# If
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.OpaqueCaptureDataCreateInfoEXT'::pData
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.OpaqueCaptureDataCreateInfoEXT'::@pData@
 --     is not @NULL@, @flags@ /must/ contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT'
 --
@@ -1970,6 +1990,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA',
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphOpticalFlowImageFormatInfoARM',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
@@ -2106,6 +2127,7 @@ instance Extensible ImageCreateInfo where
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @DataGraphOpticalFlowImageFormatInfoARM = Just f
     | Just Refl <- eqT @e @OpaqueCaptureDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageAlignmentControlCreateInfoMESA = Just f
     | Just Refl <- eqT @e @ExternalFormatQNX = Just f

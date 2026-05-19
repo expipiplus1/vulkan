@@ -192,8 +192,23 @@ bespokeSchemes spec =
          , buildingAccelerationStructures
          , micromapUsageCounts
          , cuLaunchSchemes
+         , inOutCountWithoutOptionalAttr
          ]
       <> openXRSchemes
+
+-- | Some commands added in v1.4.351 use the two-call enumeration pattern
+-- without the customary optional="false,true" annotation on the count
+-- pointer; the count is still in/out but the inference in
+-- 'returnPointerScheme' relies on the optional attribute. Hard-code the
+-- known offenders here.
+inOutCountWithoutOptionalAttr :: BespokeScheme
+inOutCountWithoutOptionalAttr = BespokeScheme $ \case
+  "vkGetDeviceFaultReportsKHR" -> \case
+    p | "pFaultCounts" <- name p
+      , Ptr NonConst t@(TypeName "uint32_t") <- type' p
+      -> Just $ InOutCount (Normal t)
+    _ -> Nothing
+  _ -> const Nothing
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -779,6 +794,10 @@ micromapUsageCounts = BespokeScheme $ \case
     (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
       Just $ ElidedUnivalued "nullPtr"
     _ -> Nothing
+  "VkAccelerationStructureGeometryMicromapDataKHR" -> \case
+    (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
+      Just $ ElidedUnivalued "nullPtr"
+    _ -> Nothing
   _ -> const Nothing
 
 structChainVar :: String
@@ -889,6 +908,9 @@ bespokeOptionality = \case
     "pUsageCounts" -> Just mempty
     _             -> Nothing
   "VkAccelerationStructureTrianglesDisplacementMicromapNV" -> \case
+    "pUsageCounts" -> Just mempty
+    _             -> Nothing
+  "VkAccelerationStructureGeometryMicromapDataKHR" -> \case
     "pUsageCounts" -> Just mempty
     _             -> Nothing
   _ -> const Nothing

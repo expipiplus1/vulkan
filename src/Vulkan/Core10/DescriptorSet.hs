@@ -626,18 +626,18 @@ foreign import ccall
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
 --     bit set, all descriptors in that binding that are dynamically used
 --     /must/ have been populated before the descriptor set is
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-binding consumed>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-binding consumed>.
 --
 -- -   For descriptor set bindings created without the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
 --     bit set, all descriptors in that binding that are statically used
 --     /must/ have been populated before the descriptor set is
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-binding consumed>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-binding consumed>.
 --
 -- -   Descriptor bindings with descriptor type of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     /can/ be undefined when the descriptor set is
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-binding consumed>;
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-binding consumed>;
 --     though values in that block will be undefined.
 --
 -- -   Entries that are not used by a pipeline /can/ have undefined
@@ -1330,33 +1330,72 @@ instance Zero DescriptorImageInfo where
 --
 -- = Description
 --
--- Only one of @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
--- is used according to the descriptor type specified in the
--- @descriptorType@ member of the containing 'WriteDescriptorSet'
--- structure, or none of them in case @descriptorType@ is
+-- Members of @pImageInfo@, @pBufferInfo@ and @pTexelBufferView@ are only
+-- accessed by the implementation when they correspond to a descriptor type
+-- being defined - otherwise they are ignored. The members accessed are as
+-- follows for each descriptor type:
+--
+-- -   For 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+--     only the @sampler@ member of each element of
+--     'WriteDescriptorSet'::@pImageInfo@ is accessed.
+--
+-- -   For
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     only the @imageView@ and @imageLayout@ members of each element of
+--     'WriteDescriptorSet'::@pImageInfo@ are accessed.
+--
+-- -   For
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     all members of each element of 'WriteDescriptorSet'::@pImageInfo@
+--     are accessed.
+--
+-- -   For
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
+--     all members of each element of 'WriteDescriptorSet'::@pBufferInfo@
+--     are accessed.
+--
+-- -   For
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+--     each element of 'WriteDescriptorSet'::@pTexelBufferView@ is
+--     accessed.
+--
+-- When updating descriptor sets with a @descriptorType@ of
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
--- in which case the source data for the descriptor writes is taken from
--- the
+-- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
+-- are accessed, instead the source data of the descriptor update operation
+-- is taken from the
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlock'
--- structure included in the @pNext@ chain of 'WriteDescriptorSet', or if
--- @descriptorType@ is
+-- structure in the @pNext@ chain of 'WriteDescriptorSet'. When updating
+-- descriptor sets with a @descriptorType@ of
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
--- in which case the source data for the descriptor writes is taken from
--- the
+-- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
+-- are accessed, instead the source data of the descriptor update operation
+-- is taken from the
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
--- structure in the @pNext@ chain of 'WriteDescriptorSet', or if
--- @descriptorType@ is
+-- structure in the @pNext@ chain of 'WriteDescriptorSet'. When updating
+-- descriptor sets with a @descriptorType@ of
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
--- in which case the source data for the descriptor writes is taken from
--- the
+-- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
+-- are accessed, instead the source data of the descriptor update operation
+-- is taken from the
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
--- structure in the @pNext@ chain of 'WriteDescriptorSet', or if
--- @descriptorType@ is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM', in
--- which case the source data for the descriptor writes is taken from the
--- instance of
+-- structure in the @pNext@ chain of 'WriteDescriptorSet'. When updating
+-- descriptor sets with a @descriptorType@ of
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM', none of
+-- the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members are
+-- accessed, instead the source data of the descriptor update operation is
+-- taken from the instance of
 -- 'Vulkan.Extensions.VK_ARM_tensors.WriteDescriptorSetTensorARM' in the
--- @pNext@ chain of 'WriteDescriptorSet', as specified below.
+-- @pNext@ chain of 'WriteDescriptorSet'.
 --
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor nullDescriptor>
@@ -1442,7 +1481,7 @@ instance Zero DescriptorImageInfo where
 --     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     specified by @dstBinding@, and all applicable
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02219# If @descriptorType@
 --     is
@@ -1711,28 +1750,28 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage Sampled Image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampledimage Sampled Image>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-04150# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-combinedimagesampler Combined Image Sampler>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-04151# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inputattachment Input Attachment>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-inputattachment Input Attachment>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-04152# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage Storage Image>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage Storage Image>
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00338# If @descriptorType@
 --     is
@@ -2038,7 +2077,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     @srcArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     specified by @srcBinding@, and all applicable
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-dstBinding-00347# @dstBinding@ /must/ be a
 --     valid binding within @dstSet@
@@ -2047,7 +2086,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding
 --     specified by @dstBinding@, and all applicable
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-dstBinding-02632# The type of @dstBinding@
 --     within @dstSet@ /must/ be equal to the type of @srcBinding@ within
@@ -2057,7 +2096,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     @dstSet@, then the source and destination ranges of descriptors
 --     /must/ not overlap, where the ranges /may/ include array elements
 --     from
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkCopyDescriptorSet-srcBinding-02223# If the descriptor type
 --     of the descriptor set binding specified by @srcBinding@ is

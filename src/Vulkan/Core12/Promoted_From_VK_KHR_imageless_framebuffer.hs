@@ -72,7 +72,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -137,6 +143,12 @@ instance Zero PhysicalDeviceImagelessFramebufferFeatures where
 --     If @attachmentImageInfoCount@ is not @0@, @pAttachmentImageInfos@
 --     /must/ be a valid pointer to an array of @attachmentImageInfoCount@
 --     valid 'FramebufferAttachmentImageInfo' structures
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Pass.FramebufferCreateInfo'
 --
 -- = See Also
 --
@@ -351,6 +363,12 @@ instance Zero FramebufferAttachmentImageInfo where
 --     @attachmentCount@ is not @0@, @pAttachments@ /must/ be a valid
 --     pointer to an array of @attachmentCount@ valid
 --     'Vulkan.Core10.Handles.ImageView' handles
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'
 --
 -- = See Also
 --

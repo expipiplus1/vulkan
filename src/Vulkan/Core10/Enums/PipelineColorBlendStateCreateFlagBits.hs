@@ -63,6 +63,7 @@ type PipelineColorBlendStateCreateFlags = PipelineColorBlendStateCreateFlagBits
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_rasterization_order_attachment_access VK_EXT_rasterization_order_attachment_access>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PipelineColorBlendStateCreateFlags'
 newtype PipelineColorBlendStateCreateFlagBits = PipelineColorBlendStateCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

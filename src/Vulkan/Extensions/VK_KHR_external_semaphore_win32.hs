@@ -615,6 +615,12 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
 --     value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
@@ -734,6 +740,12 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 --     @pSignalSemaphoreValues@ is not @NULL@, @pSignalSemaphoreValues@
 --     /must/ be a valid pointer to an array of
 --     @signalSemaphoreValuesCount@ @uint64_t@ values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Queue.SubmitInfo'
 --
 -- = See Also
 --
