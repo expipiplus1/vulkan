@@ -447,6 +447,64 @@ executable resize
   if os(windows)
     ghc-options: -optl-mconsole
 
+executable triangle-dynamic
+  main-is: Main.hs
+  other-modules:
+      TriangleDynamic
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      triangle-dynamic
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base <5
+    , resourcet
+    , text
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-init-glfw
+    , vulkan-utils
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
 executable triangle-glfw
   main-is: Main.hs
   other-modules:
