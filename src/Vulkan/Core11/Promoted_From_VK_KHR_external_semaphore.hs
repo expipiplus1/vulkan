@@ -47,6 +47,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
 --     values
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore VK_KHR_external_semaphore>,

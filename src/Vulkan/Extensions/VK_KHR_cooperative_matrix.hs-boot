@@ -119,6 +119,16 @@
 --
 -- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-CooperativeMatrixKHR CooperativeMatrixKHR>
 --
+-- == Issues
+--
+-- 1.) How does cooperativeMatrixRobustBufferAccess interact with
+-- nullDescriptor?
+--
+-- __RESOLVED__: nullDescriptor is not allowed here While drivers can
+-- handle going OOB into a buffer, if there is not buffer, via
+-- nullDescriptor, it is invalid to load\/store from the cooperative
+-- matrix.
+--
 -- == Version History
 --
 -- -   Revision 2, 2023-05-03 (Kevin Petit)

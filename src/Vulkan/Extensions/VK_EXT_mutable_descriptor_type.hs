@@ -236,6 +236,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_mutable_descriptor_type VK_EXT_mutable_descriptor_type>,
@@ -417,6 +425,14 @@ instance Zero MutableDescriptorTypeListEXT where
 --     @pMutableDescriptorTypeLists@ /must/ be a valid pointer to an array
 --     of @mutableDescriptorTypeListCount@ valid
 --     'MutableDescriptorTypeListEXT' structures
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo'
+--
+--     -   'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'
 --
 -- = See Also
 --

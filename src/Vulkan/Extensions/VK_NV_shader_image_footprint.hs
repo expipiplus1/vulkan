@@ -101,7 +101,7 @@
 -- This extension has a number of limitations. The
 -- @OpImageSampleFootprintNV@ instruction only supports for two- and
 -- three-dimensional textures. Footprint evaluation only supports the
--- CLAMP_TO_EDGE wrap mode; results are undefined for all other wrap modes.
+-- CLAMP_TO_EDGE wrap mode; results are poison for all other wrap modes.
 -- Only a limited set of granularity values and that set does not support
 -- separate coverage information for each texel in the original image.
 --
@@ -326,7 +326,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --

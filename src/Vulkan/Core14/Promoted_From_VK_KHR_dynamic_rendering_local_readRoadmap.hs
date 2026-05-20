@@ -326,7 +326,13 @@ cmdSetRenderingInputAttachmentIndices commandBuffer
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -414,12 +420,12 @@ instance Zero PhysicalDeviceDynamicRenderingLocalReadFeatures where
 -- This structure /can/ be included in the @pNext@ chain of a
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' structure to
 -- specify inherited state from the primary command buffer. If
--- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'::renderPass
+-- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'::@renderPass@
 -- is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', or
 -- 'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
 -- is not specified in
--- 'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::flags, members of
--- this structure are ignored. If this structure is not included in the
+-- 'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@flags@, members
+-- of this structure are ignored. If this structure is not included in the
 -- @pNext@ chain of
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo', it is
 -- equivalent to specifying this structure with the following properties:
@@ -455,6 +461,14 @@ instance Zero PhysicalDeviceDynamicRenderingLocalReadFeatures where
 -- -   #VUID-VkRenderingAttachmentLocationInfo-sType-sType# @sType@ /must/
 --     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
 --
 -- = See Also
 --
@@ -631,6 +645,14 @@ instance Zero RenderingAttachmentLocationInfo where
 --     If @pStencilInputAttachmentIndex@ is not @NULL@,
 --     @pStencilInputAttachmentIndex@ /must/ be a valid pointer to a valid
 --     @uint32_t@ value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
 --
 -- = See Also
 --

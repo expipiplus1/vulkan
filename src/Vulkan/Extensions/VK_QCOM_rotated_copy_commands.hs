@@ -95,7 +95,8 @@
 --
 -- -   Extending
 --     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BufferImageCopy2',
---     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceMemoryImageCopyKHR':
 --
 --     -   'CopyCommandTransformInfoQCOM'
 --
@@ -185,7 +186,15 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 -- /can/ only be specified for single-plane 2D images with a 1x1x1
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-compatibility-classes texel block extent>.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BufferImageCopy2'
+--
+--     -   'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceMemoryImageCopyKHR'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2'
 --
 -- = See Also
 --

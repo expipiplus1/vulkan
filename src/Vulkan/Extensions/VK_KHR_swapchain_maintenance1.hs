@@ -373,7 +373,13 @@ releaseSwapchainImagesKHR device releaseInfo = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -512,6 +518,12 @@ instance Zero PhysicalDeviceSwapchainMaintenance1FeaturesKHR where
 -- -   #VUID-VkSwapchainPresentFenceInfoKHR-swapchainCount-arraylength#
 --     @swapchainCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_swapchain_maintenance1 VK_EXT_swapchain_maintenance1>,
@@ -603,6 +615,12 @@ instance Zero SwapchainPresentFenceInfoKHR where
 --
 -- -   #VUID-VkSwapchainPresentModesCreateInfoKHR-presentModeCount-arraylength#
 --     @presentModeCount@ /must/ be greater than @0@
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --
 -- = See Also
 --
@@ -765,6 +783,12 @@ instance Zero SwapchainPresentModesCreateInfoKHR where
 -- -   #VUID-VkSwapchainPresentModeInfoKHR-swapchainCount-arraylength#
 --     @swapchainCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_swapchain_maintenance1 VK_EXT_swapchain_maintenance1>,
@@ -920,6 +944,12 @@ instance Zero SwapchainPresentModeInfoKHR where
 --     @presentGravityY@ /must/ be a valid combination of
 --     'Vulkan.Extensions.VK_KHR_surface_maintenance1.PresentGravityFlagBitsKHR'
 --     values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --
 -- = See Also
 --

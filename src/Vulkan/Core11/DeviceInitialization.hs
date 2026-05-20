@@ -1,6 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "DeviceInitialization"
-module Vulkan.Core11.DeviceInitialization  (enumerateInstanceVersion) where
+module Vulkan.Core11.DeviceInitialization  ( enumerateInstanceVersion
+                                           , SubgroupFeatureFlagBits(..)
+                                           , SubgroupFeatureFlags
+                                           , PointClippingBehavior(..)
+                                           ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
@@ -30,6 +34,9 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core11.Enums.PointClippingBehavior (PointClippingBehavior(..))
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(..))
+import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

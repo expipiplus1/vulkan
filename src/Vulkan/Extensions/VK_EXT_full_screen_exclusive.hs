@@ -747,7 +747,13 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
 -- If this structure is not present, @fullScreenExclusive@ is considered to
 -- be 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --
 -- = See Also
 --
@@ -815,7 +821,13 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 -- APIs. Such changes /may/ alter the surface capabilities reported for the
 -- created surface.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --
 -- = See Also
 --
@@ -884,7 +896,11 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 -- @fullScreenExclusiveSupported@ is
 -- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 --
 -- = See Also
 --

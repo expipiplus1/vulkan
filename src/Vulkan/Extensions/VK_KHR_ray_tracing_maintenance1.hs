@@ -513,33 +513,20 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08600# If a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
---     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
---     flag or as part of a pipeline without the
---     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
---     flag, and that shader statically uses a set /n/, a descriptor set
---     /must/ have been bound to /n/ at the same pipeline bind point, with
---     a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline' or the
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
---     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--     was created with a pipeline layout and statically uses a set /n/, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with layouts compatible for set /n/ with the layout(s)
+--     used to create the shader, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptors-compatibility ???>
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08601# If a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
---     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
---     flag or as part of a pipeline without the
---     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
---     flag, and that shader statically uses a push constant value, that
---     value /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility compatible for push constants>
---     with the 'Vulkan.Core10.Handles.PipelineLayout' used to create the
---     current 'Vulkan.Core10.Handles.Pipeline' or the
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
---     current 'Vulkan.Extensions.Handles.ShaderEXT'
+--     was created with a pipeline layout or specified push constant ranges
+--     and statically uses a push constant value, that value /must/ have
+--     been set for the same pipeline bind point, with push constant ranges
+--     that are
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptors-compatibility compatible>
+--     with the push constant range used to create the shader
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-10068# For each array of
 --     resources that is used by
@@ -547,22 +534,6 @@ foreign import ccall
 --     the indices used to access members of the array /must/ be less than
 --     the descriptor count for the identified binding in the descriptor
 --     sets used by this command
---
--- -   #VUID-vkCmdTraceRaysIndirect2KHR-maintenance4-08602# If a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
---     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
---     flag or as part of a pipeline without the
---     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
---     flag, and that shader statically uses a push constant value, that
---     value /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility compatible for push constants>
---     with the 'Vulkan.Core10.Handles.PipelineLayout' used to create the
---     current 'Vulkan.Core10.Handles.Pipeline' or the
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Extensions.Handles.ShaderEXT'
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-08114# Descriptors in each
 --     bound descriptor set, specified via
@@ -801,19 +772,27 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--     or
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM'
 --
--- -   #VUID-vkCmdTraceRaysIndirect2KHR-OpImageBlockMatchSADQCOM-06975# If
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-OpImageBlockMatchSADQCOM-12420# If
 --     @OpImageBlockMatchSADQCOM@ is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--     or
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM'
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-OpImageBlockMatchSADQCOM-06976# If
 --     @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
---     read from a reference image as result of this command, then the
---     specified reference coordinates /must/ not fail
+--     read from a reference image as result of this command, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-blockMatchExtendedClampToEdge blockMatchExtendedClampToEdge>
+--     feature is not enabled or the /input/ sampler was not created with
+--     both @addressModeU@ and @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
+--     then the specified reference coordinates /must/ not fail
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-OpImageSampleWeightedQCOM-06977# If
@@ -852,9 +831,32 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-OpImageBlockMatchWindow-09217# If a
 --     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
---     read from a reference image as result of this command, then the
---     specified reference coordinates /must/ not fail
+--     read from a reference image as result of this command, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-blockMatchExtendedClampToEdge blockMatchExtendedClampToEdge>
+--     feature is not enabled or the /input/ sampler was not created with
+--     both @addressModeU@ and @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
+--     then the specified reference coordinates /must/ not fail
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-OpImageBlockMatchWindow-12421# If a
+--     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
+--     instruction uses a 'Vulkan.Core10.Handles.Sampler' as a result of
+--     this command, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-blockMatchExtendedClampToEdge blockMatchExtendedClampToEdge>
+--     is not enabled, the /input/ sampler /must/ not have been created
+--     with either @addressModeU@ or @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-addressModeU-12422# If a
+--     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
+--     instruction uses a 'Vulkan.Core10.Handles.Sampler' as a result of
+--     this command, and the /input/ sampler was created with either
+--     @addressModeU@ or @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE',
+--     then the sampler /must/ have been created with both @addressModeU@
+--     and @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-07288# Any shader invocation
 --     executed by this command /must/
@@ -872,12 +874,57 @@ foreign import ccall
 --     identified by that descriptor /must/ be in the image layout
 --     identified when the descriptor was written
 --
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-micromap-11636# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command through an
+--     @OpRayQueryProceedKHR@ operation , the @VK_EXT_opacity_micromap@
+--     extension is not enabled, and the acceleration structure is built
+--     using geometry with a
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapKHR'
+--     structure included in its @pNext@ chain, the shader /must/ have
+--     specified a @OpacityMicromapIdKHR@ execution mode with its
+--     specialization constant operand equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE'
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-micromap-11637# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command and the
+--     acceleration structure was constructed through deserialization, all
+--     micromap arrays referenced by the acceleration structure that were
+--     not replaced by an acceleration structure update command /must/ have
+--     been deserialized using the serialized data of the corresponding
+--     micromaps used to originally build the acceleration structure prior
+--     to the execution of this command on the device
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-micromap-11638# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command and the
+--     acceleration structure is built using geometry with an @indexBuffer@
+--     containing both
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapSpecialIndexKHR'
+--     values and indices into an associated micromap array, any
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command /must/ not have been created with @flags@ that
+--     includes
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR'
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-micromap-11639# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command and the
+--     acceleration structure is built using geometry with an @indexBuffer@
+--     containing both
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapSpecialIndexKHR'
+--     values and indices into an associated micromap array, any
+--     'Vulkan.Extensions.Handles.ShaderEXT' that accessed the descriptor
+--     /must/ not have been created with @flags@ that includes
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT'
+--
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-commandBuffer-10746# The
 --     'Vulkan.Core10.Handles.DeviceMemory' object allocated from a
 --     'Vulkan.Core10.DeviceInitialization.MemoryHeap' with the
 --     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
 --     property that is bound to a resource accessed as a result of this
---     command /must/ be the active bound
+--     command /must/ be the active
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-bind-tile-memory bound tile memory object>
 --     in @commandBuffer@
 --
@@ -1082,7 +1129,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     feature is not enabled, that stage /must/ not access values outside
 --     of the range of the descriptor specified via
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
 --     when the descriptor was written
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-11373# If any stage of the
@@ -1099,7 +1146,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     feature is not enabled, that stage /must/ not access values outside
 --     of the range of the descriptor specified by
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
 --     when the descriptor was written
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-11374# If the
@@ -1112,7 +1159,7 @@ foreign import ccall
 --     buffer, uniform texel buffer, storage buffer, or storage texel
 --     buffer, that shader /must/ not access values outside of the range of
 --     the buffer as specified by
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
 --     when the descriptor was written
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-pBindInfo-11375# If any
@@ -1311,6 +1358,20 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-commandBuffer-03635#
 --     @commandBuffer@ /must/ not be a protected command buffer
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-micromap-11640# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command, the access is
+--     not through an @OpRayQueryProceedKHR@ operation, and the
+--     acceleration structure is built using geometry with a
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapKHR'
+--     or
+--     'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
+--     structure included in its @pNext@ chain, the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command /must/ have been created with @flags@ that
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR'
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-indirectDeviceAddress-03633#
 --     @indirectDeviceAddress@ /must/ be a device address allocated to the
@@ -1765,7 +1826,13 @@ instance Zero TraceRaysIndirectCommand2KHR where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --

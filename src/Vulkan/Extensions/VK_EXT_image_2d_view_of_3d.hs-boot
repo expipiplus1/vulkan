@@ -38,6 +38,9 @@
 --     -   Mike Blumenkrantz
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_2d_view_of_3d] @zmike%0A*Here describe the issue or question you have about the VK_EXT_image_2d_view_of_3d extension* >
 --
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_image_2d_view_of_3d.adoc VK_EXT_image_2d_view_of_3d>
+--
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]

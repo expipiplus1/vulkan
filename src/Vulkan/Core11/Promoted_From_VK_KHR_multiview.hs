@@ -104,6 +104,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview VK_KHR_multiview>,
@@ -179,7 +187,11 @@ instance Zero PhysicalDeviceMultiviewFeatures where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -360,6 +372,12 @@ instance Zero PhysicalDeviceMultiviewProperties where
 --     If @correlationMaskCount@ is not @0@, @pCorrelationMasks@ /must/ be
 --     a valid pointer to an array of @correlationMaskCount@ @uint32_t@
 --     values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Pass.RenderPassCreateInfo'
 --
 -- = See Also
 --

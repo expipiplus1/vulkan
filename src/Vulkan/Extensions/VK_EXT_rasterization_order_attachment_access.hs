@@ -36,7 +36,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-07-04
+--     2026-01-16
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -109,6 +109,8 @@
 --
 --     -   Initial draft
 --
+--     -   Updated Issues section 2026-01-16
+--
 -- == See Also
 --
 -- No cross-references are available
@@ -173,7 +175,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --

@@ -387,9 +387,12 @@ module Vulkan.Extensions.VK_ARM_data_graph  ( createDataGraphPipelinesARM
                                             , DataGraphProcessingEngineCreateInfoARM(..)
                                             , DataGraphPipelineSessionCreateFlagsARM
                                             , DataGraphPipelineSessionCreateFlagBitsARM( DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM
+                                                                                       , DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM
                                                                                        , ..
                                                                                        )
                                             , DataGraphPipelineSessionBindPointARM( DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM
+                                                                                  , DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM
+                                                                                  , DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM
                                                                                   , ..
                                                                                   )
                                             , DataGraphPipelineSessionBindPointTypeARM( DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TYPE_MEMORY_ARM
@@ -397,6 +400,8 @@ module Vulkan.Extensions.VK_ARM_data_graph  ( createDataGraphPipelinesARM
                                                                                       )
                                             , DataGraphPipelinePropertyARM( DATA_GRAPH_PIPELINE_PROPERTY_CREATION_LOG_ARM
                                                                           , DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM
+                                                                          , DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM
+                                                                          , DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM
                                                                           , ..
                                                                           )
                                             , DataGraphPipelineDispatchFlagsARM
@@ -407,6 +412,7 @@ module Vulkan.Extensions.VK_ARM_data_graph  ( createDataGraphPipelinesARM
                                                                                             , ..
                                                                                             )
                                             , PhysicalDeviceDataGraphOperationTypeARM( PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_SPIRV_EXTENDED_INSTRUCTION_SET_ARM
+                                                                                     , PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM
                                                                                      , PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM
                                                                                      , PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_NEURAL_MODEL_QCOM
                                                                                      , ..
@@ -419,7 +425,6 @@ module Vulkan.Extensions.VK_ARM_data_graph  ( createDataGraphPipelinesARM
                                             , DataGraphPipelineSessionARM(..)
                                             , TensorUsageFlagBitsARM(..)
                                             , TensorUsageFlagsARM
-                                            , PipelineCreateFlags2KHR
                                             , MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM
                                             , pattern MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM
                                             ) where
@@ -506,8 +511,14 @@ import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_data_graph_model (DataGraphPipelineBuiltinModelCreateInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics (DataGraphPipelineNeuralStatisticsCreateInfoARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph_optical_flow (DataGraphPipelineOpticalFlowCreateInfoARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph_optical_flow (DataGraphPipelineOpticalFlowDispatchInfoARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph_optical_flow (DataGraphPipelineResourceInfoImageLayoutARM)
 import Vulkan.Extensions.Handles (DataGraphPipelineSessionARM)
 import Vulkan.Extensions.Handles (DataGraphPipelineSessionARM(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics (DataGraphPipelineSessionNeuralStatisticsCreateInfoARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_data_graph_optical_flow (DataGraphPipelineSingleNodeCreateInfoARM)
 import Vulkan.Extensions.Handles (DeferredOperationKHR)
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.Handles (Device)
@@ -545,7 +556,7 @@ import Vulkan.Core10.Handles (Pipeline)
 import Vulkan.Core10.Handles (Pipeline(..))
 import Vulkan.Core10.Handles (PipelineCache)
 import Vulkan.Core10.Handles (PipelineCache(..))
-import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
+import Vulkan.Core14.Enums.PipelineCreateFlags2 (PipelineCreateFlags2)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.CStruct.Extends (PokeChain)
@@ -583,7 +594,6 @@ import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (DataGraphPipelineSessionARM(..))
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.APIConstants (MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM)
-import Vulkan.Extensions.VK_KHR_maintenance5 (PipelineCreateFlags2KHR)
 import Vulkan.Extensions.VK_ARM_tensors (TensorUsageFlagBitsARM(..))
 import Vulkan.Extensions.VK_ARM_tensors (TensorUsageFlagsARM)
 import Vulkan.Core10.APIConstants (pattern MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM)
@@ -759,7 +769,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateDataGraphPipelineSessionARM
-  :: FunPtr (Ptr Device_T -> Ptr DataGraphPipelineSessionCreateInfoARM -> Ptr AllocationCallbacks -> Ptr DataGraphPipelineSessionARM -> IO Result) -> Ptr Device_T -> Ptr DataGraphPipelineSessionCreateInfoARM -> Ptr AllocationCallbacks -> Ptr DataGraphPipelineSessionARM -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DataGraphPipelineSessionCreateInfoARM) -> Ptr AllocationCallbacks -> Ptr DataGraphPipelineSessionARM -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct DataGraphPipelineSessionCreateInfoARM) -> Ptr AllocationCallbacks -> Ptr DataGraphPipelineSessionARM -> IO Result
 
 -- | vkCreateDataGraphPipelineSessionARM - Create a data graph pipeline
 -- session
@@ -807,14 +817,16 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DataGraphPipelineSessionARM',
 -- 'DataGraphPipelineSessionCreateInfoARM', 'Vulkan.Core10.Handles.Device'
-createDataGraphPipelineSessionARM :: forall io
-                                   . (MonadIO io)
+createDataGraphPipelineSessionARM :: forall a io
+                                   . ( Extendss DataGraphPipelineSessionCreateInfoARM a
+                                     , PokeChain a
+                                     , MonadIO io )
                                   => -- | @device@ is the logical device that creates the data graph pipeline
                                      -- session.
                                      Device
                                   -> -- | @pCreateInfo@ is a pointer to a 'DataGraphPipelineSessionCreateInfoARM'
                                      -- structure.
-                                     DataGraphPipelineSessionCreateInfoARM
+                                     (DataGraphPipelineSessionCreateInfoARM a)
                                   -> -- | @pAllocator@ controls host memory allocation as described in the
                                      -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-allocation Memory Allocation>
                                      -- chapter.
@@ -834,7 +846,7 @@ createDataGraphPipelineSessionARM device
   pPSession <- ContT $ bracket (callocBytes @DataGraphPipelineSessionARM 8) free
   r <- lift $ traceAroundEvent "vkCreateDataGraphPipelineSessionARM" (vkCreateDataGraphPipelineSessionARM'
                                                                         (deviceHandle (device))
-                                                                        pCreateInfo
+                                                                        (forgetExtensions pCreateInfo)
                                                                         pAllocator
                                                                         (pPSession))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -850,7 +862,7 @@ createDataGraphPipelineSessionARM device
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withDataGraphPipelineSessionARM :: forall io r . MonadIO io => Device -> DataGraphPipelineSessionCreateInfoARM -> Maybe AllocationCallbacks -> (io DataGraphPipelineSessionARM -> (DataGraphPipelineSessionARM -> io ()) -> r) -> r
+withDataGraphPipelineSessionARM :: forall a io r . (Extendss DataGraphPipelineSessionCreateInfoARM a, PokeChain a, MonadIO io) => Device -> DataGraphPipelineSessionCreateInfoARM a -> Maybe AllocationCallbacks -> (io DataGraphPipelineSessionARM -> (DataGraphPipelineSessionARM -> io ()) -> r) -> r
 withDataGraphPipelineSessionARM device pCreateInfo pAllocator b =
   b (createDataGraphPipelineSessionARM device pCreateInfo pAllocator)
     (\(o0) -> destroyDataGraphPipelineSessionARM device o0 pAllocator)
@@ -1191,7 +1203,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdDispatchDataGraphARM
-  :: FunPtr (Ptr CommandBuffer_T -> DataGraphPipelineSessionARM -> Ptr DataGraphPipelineDispatchInfoARM -> IO ()) -> Ptr CommandBuffer_T -> DataGraphPipelineSessionARM -> Ptr DataGraphPipelineDispatchInfoARM -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> DataGraphPipelineSessionARM -> Ptr (SomeStruct DataGraphPipelineDispatchInfoARM) -> IO ()) -> Ptr CommandBuffer_T -> DataGraphPipelineSessionARM -> Ptr (SomeStruct DataGraphPipelineDispatchInfoARM) -> IO ()
 
 -- | vkCmdDispatchDataGraphARM - Dispatch a data graph pipeline within a
 -- session
@@ -1215,7 +1227,7 @@ foreign import ccall
 --     a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
 --     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility>
 --
 -- -   #VUID-vkCmdDispatchDataGraphARM-None-09935# Descriptors in each
 --     bound descriptor set, specified via
@@ -1331,6 +1343,53 @@ foreign import ccall
 --     @commandBuffer@ was allocated, as reported by
 --     'getPhysicalDeviceQueueFamilyDataGraphPropertiesARM'
 --
+-- -   #VUID-vkCmdDispatchDataGraphARM-pInfo-09964# If @pInfo@ is not
+--     @NULL@ and its @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineOpticalFlowDispatchInfoARM'
+--     structure, then the @flags@ member of that latter structure /must/
+--     not contain
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_UNCHANGED_BIT_ARM',
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_UNCHANGED_BIT_ARM',
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_IS_PREVIOUS_REFERENCE_BIT_ARM',
+--     or ename
+--     VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_IS_PREVIOUS_INPUT_BIT_ARM
+--     if @session@ was not created with
+--     'DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM'
+--
+-- -   #VUID-vkCmdDispatchDataGraphARM-nodeType-09980# If the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_DATA_GRAPH_ARM'
+--     pipeline bind point was not created with a
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineSingleNodeCreateInfoARM'
+--     structure whose @nodeType@ member is
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DATA_GRAPH_PIPELINE_NODE_TYPE_OPTICAL_FLOW_ARM'
+--     included in the @pNext@ chain of 'DataGraphPipelineCreateInfoARM',
+--     then a
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineOpticalFlowDispatchInfoARM'
+--     structure /must/ not be included in the @pNext@ chain of @pInfo@
+--
+-- -   #VUID-vkCmdDispatchDataGraphARM-nodeType-09981# If the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_DATA_GRAPH_ARM'
+--     pipeline bind point was created with a
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineSingleNodeCreateInfoARM'
+--     structure whose @nodeType@ member is
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DATA_GRAPH_PIPELINE_NODE_TYPE_OPTICAL_FLOW_ARM'
+--     included in the @pNext@ chain of 'DataGraphPipelineCreateInfoARM',
+--     then all image subresources that are accessed via a connection point
+--     in
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineSingleNodeCreateInfoARM'::@pConnections@
+--     /must/ be in the layout specified by the @layout@ member of the
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineResourceInfoImageLayoutARM'
+--     that extends the 'DataGraphPipelineResourceInfoARM' structure whose
+--     @descriptorSet@ and @binding@ members match the @set@ and @binding@
+--     members of the
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineSingleNodeConnectionARM'
+--     structure for the connection point , unless the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-unifiedImageLayouts unifiedImageLayouts>
+--     feature is enabled, in which case they /may/ be in the
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' layout
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdDispatchDataGraphARM-commandBuffer-parameter#
@@ -1397,8 +1456,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'DataGraphPipelineDispatchInfoARM',
 -- 'Vulkan.Extensions.Handles.DataGraphPipelineSessionARM'
-cmdDispatchDataGraphARM :: forall io
-                         . (MonadIO io)
+cmdDispatchDataGraphARM :: forall a io
+                         . ( Extendss DataGraphPipelineDispatchInfoARM a
+                           , PokeChain a
+                           , MonadIO io )
                         => -- | @commandBuffer@ is the command buffer into which the command will be
                            -- recorded.
                            CommandBuffer
@@ -1407,7 +1468,7 @@ cmdDispatchDataGraphARM :: forall io
                            DataGraphPipelineSessionARM
                         -> -- | @pInfo@ is @NULL@ or a pointer to a 'DataGraphPipelineDispatchInfoARM'
                            -- structure.
-                           ("info" ::: Maybe DataGraphPipelineDispatchInfoARM)
+                           ("info" ::: Maybe (DataGraphPipelineDispatchInfoARM a))
                         -> io ()
 cmdDispatchDataGraphARM commandBuffer session info = liftIO . evalContT $ do
   let vkCmdDispatchDataGraphARMPtr = pVkCmdDispatchDataGraphARM (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
@@ -1420,7 +1481,7 @@ cmdDispatchDataGraphARM commandBuffer session info = liftIO . evalContT $ do
   lift $ traceAroundEvent "vkCmdDispatchDataGraphARM" (vkCmdDispatchDataGraphARM'
                                                          (commandBufferHandle (commandBuffer))
                                                          (session)
-                                                         pInfo)
+                                                         (forgetExtensions pInfo))
   pure $ ()
 
 
@@ -1550,6 +1611,16 @@ foreign import ccall
 -- -   #VUID-vkGetDataGraphPipelinePropertiesARM-pProperties-09889# There
 --     /must/ not be two or more structures in the @pProperties@ array with
 --     the same 'DataGraphPipelinePropertyQueryResultARM'::@property@
+--
+-- -   #VUID-vkGetDataGraphPipelinePropertiesARM-pProperties-09856# If
+--     @pProperties@ includes a 'DataGraphPipelinePropertyQueryResultARM'
+--     whose @property@ member is
+--     'DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM'
+--     then @dataGraphPipeline@ /must/ have been created with a
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineNeuralStatisticsCreateInfoARM'
+--     whose @allowNeuralStatistics@ member was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' included in the @pNext@ chain
+--     of 'DataGraphPipelineCreateInfoARM'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1803,7 +1874,13 @@ getPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM physicalDevic
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -1905,7 +1982,11 @@ instance Zero PhysicalDeviceDataGraphFeaturesARM where
 -- they /can/ not take advantage of the sparsity information,
 -- implementations will ignore it and treat the data as dense.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'DataGraphPipelineConstantARM'
 --
 -- = See Also
 --
@@ -2137,15 +2218,25 @@ instance es ~ '[] => Zero (DataGraphPipelineConstantARM es) where
 --     then its @usage@ /must/ contain
 --     'Vulkan.Extensions.VK_ARM_tensors.TENSOR_USAGE_DATA_GRAPH_BIT_ARM'
 --
+-- -   #VUID-VkDataGraphPipelineResourceInfoARM-descriptorSet-09962# If
+--     @descriptorSet@ and @binding@ identify an image resource or an array
+--     of image resources, then a
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineResourceInfoImageLayoutARM'
+--     structure /must/ be included in the @pNext@ chain , unless the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-unifiedImageLayouts unifiedImageLayouts>
+--     feature is enabled
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDataGraphPipelineResourceInfoARM-sType-sType# @sType@ /must/
 --     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM'
 --
--- -   #VUID-VkDataGraphPipelineResourceInfoARM-pNext-pNext# @pNext@ /must/
---     be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_ARM_tensors.TensorDescriptionARM'
+-- -   #VUID-VkDataGraphPipelineResourceInfoARM-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineResourceInfoImageLayoutARM'
+--     or 'Vulkan.Extensions.VK_ARM_tensors.TensorDescriptionARM'
 --
 -- -   #VUID-VkDataGraphPipelineResourceInfoARM-sType-unique# The @sType@
 --     value of each structure in the @pNext@ chain /must/ be unique
@@ -2179,6 +2270,7 @@ instance Extensible DataGraphPipelineResourceInfoARM where
   getNext DataGraphPipelineResourceInfoARM{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DataGraphPipelineResourceInfoARM e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @DataGraphPipelineResourceInfoImageLayoutARM = Just f
     | Just Refl <- eqT @e @TensorDescriptionARM = Just f
     | otherwise = Nothing
 
@@ -2225,7 +2317,11 @@ instance es ~ '[] => Zero (DataGraphPipelineResourceInfoARM es) where
 -- | VkDataGraphPipelineCompilerControlCreateInfoARM - Structure specifying
 -- compiler control parameters of a newly created data graph pipeline
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'DataGraphPipelineCreateInfoARM'
 --
 -- = See Also
 --
@@ -2308,7 +2404,7 @@ instance Zero DataGraphPipelineCompilerControlCreateInfoARM where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkDataGraphPipelineCreateInfoARM-pNext-09763# One and only one
+-- -   #VUID-VkDataGraphPipelineCreateInfoARM-pNext-09977# One and only one
 --     of the following structures /must/ be included in the @pNext@ chain:
 --
 --     -   'DataGraphPipelineShaderModuleCreateInfoARM'
@@ -2316,6 +2412,8 @@ instance Zero DataGraphPipelineCompilerControlCreateInfoARM where
 --     -   'DataGraphPipelineIdentifierCreateInfoARM'
 --
 --     -   'Vulkan.Extensions.VK_QCOM_data_graph_model.DataGraphPipelineBuiltinModelCreateInfoQCOM'
+--
+--     -   'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineSingleNodeCreateInfoARM'
 --
 -- -   #VUID-VkDataGraphPipelineCreateInfoARM-flags-09764# @flags@ /may/
 --     only contain
@@ -2326,6 +2424,13 @@ instance Zero DataGraphPipelineCompilerControlCreateInfoARM where
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_KHR'
 --     or
 --     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT_KHR'
+--
+-- -   #VUID-VkDataGraphPipelineCreateInfoARM-flags-09848# If @flags@
+--     contains
+--     'Vulkan.Extensions.VK_KHR_maintenance5.PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT_EXT'
+--     then a
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineNeuralStatisticsCreateInfoARM'
+--     structure /must/ not be included in the @pNext@ chain.
 --
 -- -   #VUID-VkDataGraphPipelineCreateInfoARM-layout-09767# @layout@ /must/
 --     have been created with @pushConstantRangeCount@ equal to 0 and
@@ -2454,7 +2559,10 @@ instance Zero DataGraphPipelineCompilerControlCreateInfoARM where
 --     'Vulkan.Extensions.VK_QCOM_data_graph_model.DataGraphPipelineBuiltinModelCreateInfoQCOM',
 --     'DataGraphPipelineCompilerControlCreateInfoARM',
 --     'DataGraphPipelineIdentifierCreateInfoARM',
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineNeuralStatisticsCreateInfoARM',
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineOpticalFlowCreateInfoARM',
 --     'DataGraphPipelineShaderModuleCreateInfoARM',
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineSingleNodeCreateInfoARM',
 --     'DataGraphProcessingEngineCreateInfoARM',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo',
 --     or 'Vulkan.Core10.Shader.ShaderModuleCreateInfo'
@@ -2464,7 +2572,7 @@ instance Zero DataGraphPipelineCompilerControlCreateInfoARM where
 --
 -- -   #VUID-VkDataGraphPipelineCreateInfoARM-flags-parameter# @flags@
 --     /must/ be a valid combination of
---     'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR'
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2'
 --     values
 --
 -- -   #VUID-VkDataGraphPipelineCreateInfoARM-layout-parameter# @layout@
@@ -2489,7 +2597,7 @@ data DataGraphPipelineCreateInfoARM (es :: [Type]) = DataGraphPipelineCreateInfo
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Extensions.VK_KHR_maintenance5.PipelineCreateFlagBits2KHR'
     -- specifying how the pipeline will be generated.
-    flags :: PipelineCreateFlags2KHR
+    flags :: PipelineCreateFlags2
   , -- | @layout@ is the description of binding locations used by both the
     -- pipeline and descriptor sets used with the pipeline.
     layout :: PipelineLayout
@@ -2509,11 +2617,14 @@ instance Extensible DataGraphPipelineCreateInfoARM where
   getNext DataGraphPipelineCreateInfoARM{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DataGraphPipelineCreateInfoARM e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @DataGraphPipelineOpticalFlowCreateInfoARM = Just f
+    | Just Refl <- eqT @e @DataGraphPipelineSingleNodeCreateInfoARM = Just f
     | Just Refl <- eqT @e @DataGraphPipelineBuiltinModelCreateInfoQCOM = Just f
     | Just Refl <- eqT @e @DataGraphProcessingEngineCreateInfoARM = Just f
     | Just Refl <- eqT @e @DataGraphPipelineIdentifierCreateInfoARM = Just f
     | Just Refl <- eqT @e @DataGraphPipelineShaderModuleCreateInfoARM = Just f
     | Just Refl <- eqT @e @DataGraphPipelineCompilerControlCreateInfoARM = Just f
+    | Just Refl <- eqT @e @DataGraphPipelineNeuralStatisticsCreateInfoARM = Just f
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfo = Just f
     | Just Refl <- eqT @e @(ShaderModuleCreateInfo '[]) = Just f
     | otherwise = Nothing
@@ -2525,7 +2636,7 @@ instance ( Extendss DataGraphPipelineCreateInfoARM es
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CREATE_INFO_ARM)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCreateFlags2KHR)) (flags)
+    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCreateFlags2)) (flags)
     lift $ poke ((p `plusPtr` 24 :: Ptr PipelineLayout)) (layout)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (resourceInfos)) :: Word32))
     pPResourceInfos' <- ContT $ allocaBytes @(DataGraphPipelineResourceInfoARM _) ((Data.Vector.length (resourceInfos)) * 32)
@@ -2546,7 +2657,7 @@ instance ( Extendss DataGraphPipelineCreateInfoARM es
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
-    flags <- peek @PipelineCreateFlags2KHR ((p `plusPtr` 16 :: Ptr PipelineCreateFlags2KHR))
+    flags <- peek @PipelineCreateFlags2 ((p `plusPtr` 16 :: Ptr PipelineCreateFlags2))
     layout <- peek @PipelineLayout ((p `plusPtr` 24 :: Ptr PipelineLayout))
     resourceInfoCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pResourceInfos <- peek @(Ptr (DataGraphPipelineResourceInfoARM _)) ((p `plusPtr` 40 :: Ptr (Ptr (DataGraphPipelineResourceInfoARM _))))
@@ -2616,6 +2727,12 @@ instance es ~ '[] => Zero (DataGraphPipelineCreateInfoARM es) where
 --     If @constantCount@ is not @0@, and @pConstants@ is not @NULL@,
 --     @pConstants@ /must/ be a valid pointer to an array of
 --     @constantCount@ valid 'DataGraphPipelineConstantARM' structures
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'DataGraphPipelineCreateInfoARM'
 --
 -- = See Also
 --
@@ -2722,6 +2839,22 @@ instance Zero DataGraphPipelineShaderModuleCreateInfoARM where
 --     feature is not enabled, @flags@ /must/ not contain
 --     'DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM'
 --
+-- -   #VUID-VkDataGraphPipelineSessionCreateInfoARM-pNext-09852# A
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineSessionNeuralStatisticsCreateInfoARM'
+--     structure /may/ only be included in the @pNext@ chain if and only if
+--     a
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineNeuralStatisticsCreateInfoARM'
+--     structure whose @allowNeuralStatistics@ member was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' was included in the @pNext@
+--     chain of the 'DataGraphPipelineCreateInfoARM' structure used to
+--     create @dataGraphPipeline@
+--
+-- -   #VUID-VkDataGraphPipelineSessionCreateInfoARM-flags-09853# If
+--     @flags@ contains
+--     'DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM' then a
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineNeuralStatisticsCreateInfoARM'
+--     structure /must/ not be included in the @pNext@ chain
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDataGraphPipelineSessionCreateInfoARM-sType-sType# @sType@
@@ -2729,7 +2862,12 @@ instance Zero DataGraphPipelineShaderModuleCreateInfoARM where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM'
 --
 -- -   #VUID-VkDataGraphPipelineSessionCreateInfoARM-pNext-pNext# @pNext@
---     /must/ be @NULL@
+--     /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineSessionNeuralStatisticsCreateInfoARM'
+--
+-- -   #VUID-VkDataGraphPipelineSessionCreateInfoARM-sType-unique# The
+--     @sType@ value of each structure in the @pNext@ chain /must/ be
+--     unique
 --
 -- -   #VUID-VkDataGraphPipelineSessionCreateInfoARM-flags-parameter#
 --     @flags@ /must/ be a valid combination of
@@ -2746,51 +2884,63 @@ instance Zero DataGraphPipelineShaderModuleCreateInfoARM where
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDataGraphPipelineSessionARM'
-data DataGraphPipelineSessionCreateInfoARM = DataGraphPipelineSessionCreateInfoARM
-  { -- | @flags@ is a bitmask of 'DataGraphPipelineSessionCreateFlagBitsARM'
+data DataGraphPipelineSessionCreateInfoARM (es :: [Type]) = DataGraphPipelineSessionCreateInfoARM
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @flags@ is a bitmask of 'DataGraphPipelineSessionCreateFlagBitsARM'
     -- describing additional parameters of the session.
     flags :: DataGraphPipelineSessionCreateFlagsARM
   , -- | @dataGraphPipeline@ is the 'Vulkan.Core10.Handles.Pipeline' handle of
     -- the data graph pipeline for which a session is being created.
     dataGraphPipeline :: Pipeline
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (DataGraphPipelineSessionCreateInfoARM)
+deriving instance Generic (DataGraphPipelineSessionCreateInfoARM (es :: [Type]))
 #endif
-deriving instance Show DataGraphPipelineSessionCreateInfoARM
+deriving instance Show (Chain es) => Show (DataGraphPipelineSessionCreateInfoARM es)
 
-instance ToCStruct DataGraphPipelineSessionCreateInfoARM where
+instance Extensible DataGraphPipelineSessionCreateInfoARM where
+  extensibleTypeName = "DataGraphPipelineSessionCreateInfoARM"
+  setNext DataGraphPipelineSessionCreateInfoARM{..} next' = DataGraphPipelineSessionCreateInfoARM{next = next', ..}
+  getNext DataGraphPipelineSessionCreateInfoARM{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends DataGraphPipelineSessionCreateInfoARM e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @DataGraphPipelineSessionNeuralStatisticsCreateInfoARM = Just f
+    | otherwise = Nothing
+
+instance ( Extendss DataGraphPipelineSessionCreateInfoARM es
+         , PokeChain es ) => ToCStruct (DataGraphPipelineSessionCreateInfoARM es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DataGraphPipelineSessionCreateInfoARM{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DataGraphPipelineSessionCreateFlagsARM)) (flags)
-    poke ((p `plusPtr` 24 :: Ptr Pipeline)) (dataGraphPipeline)
-    f
+  pokeCStruct p DataGraphPipelineSessionCreateInfoARM{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr DataGraphPipelineSessionCreateFlagsARM)) (flags)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Pipeline)) (dataGraphPipeline)
+    lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 24 :: Ptr Pipeline)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_CREATE_INFO_ARM)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 24 :: Ptr Pipeline)) (zero)
+    lift $ f
 
-instance FromCStruct DataGraphPipelineSessionCreateInfoARM where
+instance ( Extendss DataGraphPipelineSessionCreateInfoARM es
+         , PeekChain es ) => FromCStruct (DataGraphPipelineSessionCreateInfoARM es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     flags <- peek @DataGraphPipelineSessionCreateFlagsARM ((p `plusPtr` 16 :: Ptr DataGraphPipelineSessionCreateFlagsARM))
     dataGraphPipeline <- peek @Pipeline ((p `plusPtr` 24 :: Ptr Pipeline))
     pure $ DataGraphPipelineSessionCreateInfoARM
-             flags dataGraphPipeline
+             next flags dataGraphPipeline
 
-instance Storable DataGraphPipelineSessionCreateInfoARM where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DataGraphPipelineSessionCreateInfoARM where
+instance es ~ '[] => Zero (DataGraphPipelineSessionCreateInfoARM es) where
   zero = DataGraphPipelineSessionCreateInfoARM
+           ()
            zero
            zero
 
@@ -2863,6 +3013,8 @@ instance Zero DataGraphPipelineSessionBindPointRequirementsInfoARM where
 -- is one of the following bind points:
 --
 -- -   'DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM'
+--
+-- -   'DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM'
 --
 -- == Valid Usage (Implicit)
 --
@@ -3361,7 +3513,11 @@ instance Zero DataGraphPipelinePropertyQueryResultARM where
 -- 'DataGraphPipelinePropertyQueryResultARM' structure with @property@ set
 -- to 'DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'DataGraphPipelineCreateInfoARM'
 --
 -- = See Also
 --
@@ -3416,53 +3572,77 @@ instance Zero DataGraphPipelineIdentifierCreateInfoARM where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkDataGraphPipelineDispatchInfoARM-sType-sType# @sType@ /must/
+--     be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM'
+--
+-- -   #VUID-VkDataGraphPipelineDispatchInfoARM-pNext-pNext# @pNext@ /must/
+--     be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineOpticalFlowDispatchInfoARM'
+--
+-- -   #VUID-VkDataGraphPipelineDispatchInfoARM-sType-unique# The @sType@
+--     value of each structure in the @pNext@ chain /must/ be unique
+--
+-- -   #VUID-VkDataGraphPipelineDispatchInfoARM-flags-zerobitmask# @flags@
+--     /must/ be @0@
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>,
 -- 'DataGraphPipelineDispatchFlagsARM',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdDispatchDataGraphARM'
-data DataGraphPipelineDispatchInfoARM = DataGraphPipelineDispatchInfoARM
-  { -- | @flags@ is a bitmask of 'DataGraphPipelineDispatchFlagBitsARM'
+data DataGraphPipelineDispatchInfoARM (es :: [Type]) = DataGraphPipelineDispatchInfoARM
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @flags@ is a bitmask of 'DataGraphPipelineDispatchFlagBitsARM'
     -- describing additional parameters of the dispatch.
-    --
-    -- #VUID-VkDataGraphPipelineDispatchInfoARM-flags-zerobitmask# @flags@
-    -- /must/ be @0@
-    flags :: DataGraphPipelineDispatchFlagsARM }
-  deriving (Typeable, Eq)
+    flags :: DataGraphPipelineDispatchFlagsARM
+  }
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (DataGraphPipelineDispatchInfoARM)
+deriving instance Generic (DataGraphPipelineDispatchInfoARM (es :: [Type]))
 #endif
-deriving instance Show DataGraphPipelineDispatchInfoARM
+deriving instance Show (Chain es) => Show (DataGraphPipelineDispatchInfoARM es)
 
-instance ToCStruct DataGraphPipelineDispatchInfoARM where
+instance Extensible DataGraphPipelineDispatchInfoARM where
+  extensibleTypeName = "DataGraphPipelineDispatchInfoARM"
+  setNext DataGraphPipelineDispatchInfoARM{..} next' = DataGraphPipelineDispatchInfoARM{next = next', ..}
+  getNext DataGraphPipelineDispatchInfoARM{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends DataGraphPipelineDispatchInfoARM e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @DataGraphPipelineOpticalFlowDispatchInfoARM = Just f
+    | otherwise = Nothing
+
+instance ( Extendss DataGraphPipelineDispatchInfoARM es
+         , PokeChain es ) => ToCStruct (DataGraphPipelineDispatchInfoARM es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DataGraphPipelineDispatchInfoARM{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DataGraphPipelineDispatchFlagsARM)) (flags)
-    f
+  pokeCStruct p DataGraphPipelineDispatchInfoARM{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr DataGraphPipelineDispatchFlagsARM)) (flags)
+    lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_DISPATCH_INFO_ARM)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ f
 
-instance FromCStruct DataGraphPipelineDispatchInfoARM where
+instance ( Extendss DataGraphPipelineDispatchInfoARM es
+         , PeekChain es ) => FromCStruct (DataGraphPipelineDispatchInfoARM es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     flags <- peek @DataGraphPipelineDispatchFlagsARM ((p `plusPtr` 16 :: Ptr DataGraphPipelineDispatchFlagsARM))
     pure $ DataGraphPipelineDispatchInfoARM
-             flags
+             next flags
 
-instance Storable DataGraphPipelineDispatchInfoARM where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DataGraphPipelineDispatchInfoARM where
+instance es ~ '[] => Zero (DataGraphPipelineDispatchInfoARM es) where
   zero = DataGraphPipelineDispatchInfoARM
+           ()
            zero
 
 
@@ -3595,6 +3775,8 @@ instance Zero PhysicalDeviceDataGraphOperationSupportARM where
 -- 'PhysicalDeviceDataGraphOperationSupportARM',
 -- 'PhysicalDeviceDataGraphProcessingEngineARM',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Extensions.VK_ARM_data_graph_instruction_set_tosa.getPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.getPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM',
 -- 'getPhysicalDeviceQueueFamilyDataGraphPropertiesARM'
 data QueueFamilyDataGraphPropertiesARM = QueueFamilyDataGraphPropertiesARM
   { -- | @engine@ is a 'PhysicalDeviceDataGraphProcessingEngineARM' structure
@@ -3825,6 +4007,16 @@ instance Zero QueueFamilyDataGraphProcessingEnginePropertiesARM where
 -- -   #VUID-VkDataGraphProcessingEngineCreateInfoARM-processingEngineCount-arraylength#
 --     @processingEngineCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandPool.CommandPoolCreateInfo'
+--
+--     -   'DataGraphPipelineCreateInfoARM'
+--
+--     -   'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>,
@@ -3890,6 +4082,11 @@ type DataGraphPipelineSessionCreateFlagsARM = DataGraphPipelineSessionCreateFlag
 -- -   'DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM' specifies
 --     that the data graph pipeline session is backed by protected memory.
 --
+-- -   'DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM'
+--     specifies that the data graph pipeline session has a cache for
+--     optical flow operations. Enabling the cache is required for the
+--     implementation to use temporal hints.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>,
@@ -3900,17 +4097,24 @@ newtype DataGraphPipelineSessionCreateFlagBitsARM = DataGraphPipelineSessionCrea
 -- No documentation found for Nested "VkDataGraphPipelineSessionCreateFlagBitsARM" "VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM"
 pattern DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM = DataGraphPipelineSessionCreateFlagBitsARM 0x0000000000000001
 
+-- No documentation found for Nested "VkDataGraphPipelineSessionCreateFlagBitsARM" "VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM"
+pattern DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM = DataGraphPipelineSessionCreateFlagBitsARM 0x0000000000000002
+
 conNameDataGraphPipelineSessionCreateFlagBitsARM :: String
 conNameDataGraphPipelineSessionCreateFlagBitsARM = "DataGraphPipelineSessionCreateFlagBitsARM"
 
 enumPrefixDataGraphPipelineSessionCreateFlagBitsARM :: String
-enumPrefixDataGraphPipelineSessionCreateFlagBitsARM = "DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM"
+enumPrefixDataGraphPipelineSessionCreateFlagBitsARM = "DATA_GRAPH_PIPELINE_SESSION_CREATE_"
 
 showTableDataGraphPipelineSessionCreateFlagBitsARM :: [(DataGraphPipelineSessionCreateFlagBitsARM, String)]
 showTableDataGraphPipelineSessionCreateFlagBitsARM =
   [
     ( DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM
-    , ""
+    , "PROTECTED_BIT_ARM"
+    )
+  ,
+    ( DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM
+    , "OPTICAL_FLOW_CACHE_BIT_ARM"
     )
   ]
 
@@ -3943,6 +4147,14 @@ instance Read DataGraphPipelineSessionCreateFlagBitsARM where
 --     clobbered once a 'cmdDispatchDataGraphARM' command completes
 --     execution.
 --
+-- -   'DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM'
+--     corresponds to the cache for
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#graphs-operations-opticalflow optical flow operations>.
+--
+-- -   'DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM'
+--     corresponds to neural statistics data produced during one dispatch
+--     of a data graph pipeline in a data graph pipeline session.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>,
@@ -3955,19 +4167,38 @@ newtype DataGraphPipelineSessionBindPointARM = DataGraphPipelineSessionBindPoint
 -- No documentation found for Nested "VkDataGraphPipelineSessionBindPointARM" "VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM"
 pattern DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM = DataGraphPipelineSessionBindPointARM 0
 
-{-# COMPLETE DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM :: DataGraphPipelineSessionBindPointARM #-}
+-- No documentation found for Nested "VkDataGraphPipelineSessionBindPointARM" "VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM"
+pattern DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM = DataGraphPipelineSessionBindPointARM 1000676000
+
+-- No documentation found for Nested "VkDataGraphPipelineSessionBindPointARM" "VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM"
+pattern DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM = DataGraphPipelineSessionBindPointARM 1000631001
+
+{-# COMPLETE
+  DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM
+  , DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM
+  , DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM ::
+    DataGraphPipelineSessionBindPointARM
+  #-}
 
 conNameDataGraphPipelineSessionBindPointARM :: String
 conNameDataGraphPipelineSessionBindPointARM = "DataGraphPipelineSessionBindPointARM"
 
 enumPrefixDataGraphPipelineSessionBindPointARM :: String
-enumPrefixDataGraphPipelineSessionBindPointARM = "DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM"
+enumPrefixDataGraphPipelineSessionBindPointARM = "DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_"
 
 showTableDataGraphPipelineSessionBindPointARM :: [(DataGraphPipelineSessionBindPointARM, String)]
 showTableDataGraphPipelineSessionBindPointARM =
   [
     ( DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM
-    , ""
+    , "TRANSIENT_ARM"
+    )
+  ,
+    ( DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM
+    , "NEURAL_ACCELERATOR_STATISTICS_ARM"
+    )
+  ,
+    ( DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM
+    , "OPTICAL_FLOW_CACHE_ARM"
     )
   ]
 
@@ -4057,6 +4288,18 @@ instance Read DataGraphPipelineSessionBindPointTypeARM where
 --     provide any creation data beyond the identifier, using a
 --     'DataGraphPipelineIdentifierCreateInfoARM' structure.
 --
+-- -   'DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM'
+--     corresponds to opaque debug information that /can/ be queried for
+--     any data graph pipeline.
+--
+-- -   'DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM'
+--     corresponds to opaque information about neural statistics that /can/
+--     be queried for any data graph pipeline that was created with a
+--     'Vulkan.Extensions.VK_ARM_data_graph_neural_accelerator_statistics.DataGraphPipelineSessionNeuralStatisticsCreateInfoARM'
+--     structure whose @allowNeuralStatistics@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' included in the @pNext@ chain
+--     of 'DataGraphPipelineCreateInfoARM'.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>,
@@ -4071,9 +4314,17 @@ pattern DATA_GRAPH_PIPELINE_PROPERTY_CREATION_LOG_ARM = DataGraphPipelinePropert
 -- No documentation found for Nested "VkDataGraphPipelinePropertyARM" "VK_DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM"
 pattern DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM = DataGraphPipelinePropertyARM 1
 
+-- No documentation found for Nested "VkDataGraphPipelinePropertyARM" "VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM"
+pattern DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM = DataGraphPipelinePropertyARM 1000676001
+
+-- No documentation found for Nested "VkDataGraphPipelinePropertyARM" "VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM"
+pattern DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM = DataGraphPipelinePropertyARM 1000676000
+
 {-# COMPLETE
   DATA_GRAPH_PIPELINE_PROPERTY_CREATION_LOG_ARM
-  , DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM ::
+  , DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM
+  , DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM
+  , DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM ::
     DataGraphPipelinePropertyARM
   #-}
 
@@ -4092,6 +4343,14 @@ showTableDataGraphPipelinePropertyARM =
   ,
     ( DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM
     , "IDENTIFIER_ARM"
+    )
+  ,
+    ( DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM
+    , "NEURAL_ACCELERATOR_STATISTICS_INFO_ARM"
+    )
+  ,
+    ( DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM
+    , "NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM"
     )
   ]
 
@@ -4245,6 +4504,10 @@ instance Read PhysicalDeviceDataGraphProcessingEngineTypeARM where
 --     specifies an operation that executes specialized built-in models
 --     provided by the implementation.
 --
+-- -   'PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM'
+--     corresponds to fixed-function optical flow as defined by
+--     @VK_ARM_data_graph_optical_flow@.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph VK_ARM_data_graph>,
@@ -4255,6 +4518,9 @@ newtype PhysicalDeviceDataGraphOperationTypeARM = PhysicalDeviceDataGraphOperati
 -- No documentation found for Nested "VkPhysicalDeviceDataGraphOperationTypeARM" "VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_SPIRV_EXTENDED_INSTRUCTION_SET_ARM"
 pattern PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_SPIRV_EXTENDED_INSTRUCTION_SET_ARM = PhysicalDeviceDataGraphOperationTypeARM 0
 
+-- No documentation found for Nested "VkPhysicalDeviceDataGraphOperationTypeARM" "VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM"
+pattern PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM = PhysicalDeviceDataGraphOperationTypeARM 1000631000
+
 -- No documentation found for Nested "VkPhysicalDeviceDataGraphOperationTypeARM" "VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM"
 pattern PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM = PhysicalDeviceDataGraphOperationTypeARM 1000629001
 
@@ -4263,6 +4529,7 @@ pattern PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_NEURAL_MODEL_QCOM = PhysicalDe
 
 {-# COMPLETE
   PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_SPIRV_EXTENDED_INSTRUCTION_SET_ARM
+  , PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM
   , PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM
   , PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_NEURAL_MODEL_QCOM ::
     PhysicalDeviceDataGraphOperationTypeARM
@@ -4279,6 +4546,10 @@ showTablePhysicalDeviceDataGraphOperationTypeARM =
   [
     ( PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_SPIRV_EXTENDED_INSTRUCTION_SET_ARM
     , "SPIRV_EXTENDED_INSTRUCTION_SET_ARM"
+    )
+  ,
+    ( PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM
+    , "OPTICAL_FLOW_ARM"
     )
   ,
     ( PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM

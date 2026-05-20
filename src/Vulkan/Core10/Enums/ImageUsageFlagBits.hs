@@ -135,6 +135,14 @@ type ImageUsageFlags = ImageUsageFlagBits
 --     image /can/ be used as a color or depth\/stencil attachment with
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-feedbackloop feedback loop enabled>.
 --
+-- -   'IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM' specifies that the image /can/
+--     be used in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-weightimage weight image sampling operations>.
+--
+-- -   'IMAGE_USAGE_SAMPLE_BLOCK_MATCH_BIT_QCOM' specifies that the image
+--     /can/ be used in
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-blockmatch block matching operations>.
+--
 -- -   'IMAGE_USAGE_TILE_MEMORY_BIT_QCOM' specifies that the image /can/ be
 --     bound to 'Vulkan.Core10.Handles.DeviceMemory' allocated from a
 --     'Vulkan.Core10.DeviceInitialization.MemoryHeap' with the

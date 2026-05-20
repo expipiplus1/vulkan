@@ -305,7 +305,8 @@ type PipelineStageFlags2 = PipelineStageFlagBits2
 --     shading shader stage.
 --
 -- -   'PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT' specifies the execution of
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#micromap micromap commands>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#micromap micromap commands>
+--     for 'Vulkan.Extensions.Handles.MicromapEXT' objects.
 --
 -- -   'PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI' specifies the
 --     cluster culling shader stage.

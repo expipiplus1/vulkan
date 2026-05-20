@@ -324,6 +324,12 @@
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_MODULE_TEXTURING_MODE_CREATE_INFO_NVX'
 --
+-- === Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'CuModuleCreateInfoNVX'
+--
 -- There is currently no specification language written for this command.
 -- This section acts only as placeholder and to avoid dead links in the
 -- specification and reference pages.

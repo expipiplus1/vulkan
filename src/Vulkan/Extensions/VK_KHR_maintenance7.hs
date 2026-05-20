@@ -271,7 +271,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -361,7 +367,11 @@ instance Zero PhysicalDeviceMaintenance7FeaturesKHR where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -404,7 +414,7 @@ data PhysicalDeviceMaintenance7PropertiesKHR = PhysicalDeviceMaintenance7Propert
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformbufferdynamic>.
     maxDescriptorSetTotalUniformBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetTotalStorageBuffersDynamic#
     -- @maxDescriptorSetTotalStorageBuffersDynamic@ is the maximum total count
@@ -415,7 +425,7 @@ data PhysicalDeviceMaintenance7PropertiesKHR = PhysicalDeviceMaintenance7Propert
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebufferdynamic>.
     maxDescriptorSetTotalStorageBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetTotalBuffersDynamic#
     -- @maxDescriptorSetTotalBuffersDynamic@ is the maximum total count of
@@ -571,6 +581,12 @@ instance Zero PhysicalDeviceMaintenance7PropertiesKHR where
 --     If @layeredApiCount@ is not @0@, and @pLayeredApis@ is not @NULL@,
 --     @pLayeredApis@ /must/ be a valid pointer to an array of
 --     @layeredApiCount@ 'PhysicalDeviceLayeredApiPropertiesKHR' structures
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -761,6 +777,12 @@ instance es ~ '[] => Zero (PhysicalDeviceLayeredApiPropertiesKHR es) where
 -- -   #VUID-VkPhysicalDeviceLayeredApiVulkanPropertiesKHR-sType-sType#
 --     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_API_VULKAN_PROPERTIES_KHR'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'PhysicalDeviceLayeredApiPropertiesKHR'
 --
 -- = See Also
 --

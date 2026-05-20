@@ -103,6 +103,27 @@ foreign import ccall
 
 -- | vkCreateBuffer - Create a new buffer object
 --
+-- = Description
+--
+-- Implementations /may/ fail to create a buffer if the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-effective-buffer-usage effective usage>
+-- includes the
+-- 'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT'
+-- flag, and @size@ is greater than the maximum of
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxResourceHeapSize maxResourceHeapSize>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxSamplerHeapSize maxSamplerHeapSize>.
+-- If this happens, 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+-- will be returned.
+--
+-- This is an issue identified with
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
+-- which we plan to tighten up for the KHR version. Applications using
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>
+-- may wish to avoid suballocating heaps from the same buffer, instead
+-- creating one buffer per heap, to avoid situations where this causes
+-- issues.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateBuffer-device-09664# @device@ /must/ support at least
@@ -358,8 +379,16 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   #VUID-VkBufferCreateInfo-sharingMode-00914# If @sharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+-- -   #VUID-VkBufferCreateInfo-maintenance11-13353# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is enabled and @sharingMode@ is
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
+--     @queueFamilyIndexCount@ /must/ be greater than @0@
+--
+-- -   #VUID-VkBufferCreateInfo-sharingMode-00914# If the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+--     feature is not enabled and @sharingMode@ is
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
 -- -   #VUID-VkBufferCreateInfo-sharingMode-01419# If @sharingMode@ is

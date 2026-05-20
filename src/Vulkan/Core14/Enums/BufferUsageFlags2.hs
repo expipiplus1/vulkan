@@ -15,8 +15,6 @@ module Vulkan.Core14.Enums.BufferUsageFlags2  ( BufferUsageFlags2
                                                                     , BUFFER_USAGE_2_TILE_MEMORY_BIT_QCOM
                                                                     , BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM
                                                                     , BUFFER_USAGE_2_COMPRESSED_DATA_DGF1_BIT_AMDX
-                                                                    , BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
-                                                                    , BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
                                                                     , BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT
                                                                     , BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT
                                                                     , BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT
@@ -30,6 +28,8 @@ module Vulkan.Core14.Enums.BufferUsageFlags2  ( BufferUsageFlags2
                                                                     , BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
                                                                     , BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR
                                                                     , BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT
+                                                                    , BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
+                                                                    , BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
                                                                     , BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT
                                                                     , BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX
                                                                     , BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT
@@ -124,11 +124,15 @@ type BufferUsageFlags2 = BufferUsageFlagBits2
 -- -   'BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT' specifies that
 --     the buffer is suitable for using for binding as a transform feedback
 --     buffer with
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdBindTransformFeedbackBuffers2EXT'
+--     or
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBindTransformFeedbackBuffersEXT'.
 --
 -- -   'BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT' specifies
 --     that the buffer is suitable for using as a counter buffer with
---     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBeginTransformFeedbackEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdBeginTransformFeedback2EXT',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdEndTransformFeedback2EXT',
+--     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBeginTransformFeedbackEXT',
 --     and
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT'.
 --
@@ -196,6 +200,15 @@ type BufferUsageFlags2 = BufferUsageFlagBits2
 -- -   'BUFFER_USAGE_2_PREPROCESS_BUFFER_BIT_EXT' specifies that the buffer
 --     /can/ be used as a preprocess buffer for
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+--
+-- -   'BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT' specifies
+--     that the buffer /can/ be used as a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#micromap-building read-only  build input>,
+--     which includes the @data@ and @triangleArray@ parameters
+--
+-- -   'BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT' specifies that the buffer
+--     /can/ be used to
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#resources-micromaps create  objects>.
 --
 -- -   'BUFFER_USAGE_2_COMPRESSED_DATA_DGF1_BIT_AMDX' specifies that the
 --     buffer is suitable as storage space for
@@ -266,12 +279,6 @@ pattern BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM = BufferUsageFlagBi
 -- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_COMPRESSED_DATA_DGF1_BIT_AMDX"
 pattern BUFFER_USAGE_2_COMPRESSED_DATA_DGF1_BIT_AMDX = BufferUsageFlagBits2 0x0000000200000000
 
--- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT"
-pattern BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT = BufferUsageFlagBits2 0x0000000001000000
-
--- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
-pattern BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = BufferUsageFlagBits2 0x0000000000800000
-
 -- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"
 pattern BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = BufferUsageFlagBits2 0x0000000004000000
 
@@ -310,6 +317,12 @@ pattern BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR = BufferUsageFlagBits2 0x000
 
 -- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT"
 pattern BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT = BufferUsageFlagBits2 0x0000000000000200
+
+-- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT"
+pattern BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT = BufferUsageFlagBits2 0x0000000001000000
+
+-- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
+pattern BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = BufferUsageFlagBits2 0x0000000000800000
 
 -- No documentation found for Nested "VkBufferUsageFlagBits2" "VK_BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT"
 pattern BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT = BufferUsageFlagBits2 0x0000000010000000
@@ -385,14 +398,6 @@ showTableBufferUsageFlagBits2 =
     , "COMPRESSED_DATA_DGF1_BIT_AMDX"
     )
   ,
-    ( BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
-    , "MICROMAP_STORAGE_BIT_EXT"
-    )
-  ,
-    ( BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
-    , "MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
-    )
-  ,
     ( BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT
     , "PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"
     )
@@ -443,6 +448,14 @@ showTableBufferUsageFlagBits2 =
   ,
     ( BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT
     , "CONDITIONAL_RENDERING_BIT_EXT"
+    )
+  ,
+    ( BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
+    , "MICROMAP_STORAGE_BIT_EXT"
+    )
+  ,
+    ( BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
+    , "MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
     )
   ,
     ( BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT

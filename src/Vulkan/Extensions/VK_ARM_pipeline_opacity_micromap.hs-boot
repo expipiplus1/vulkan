@@ -53,7 +53,7 @@
 --
 -- The Opacity Micromap extension @VK_EXT_opacity_micromap@ supports the
 -- new pipeline creation flag
--- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT',
 -- indicating that the ray tracing pipeline may be used with acceleration
 -- structures referencing micromaps. This allows for possible
 -- optimizations, knowing beforehand that opacity micromaps may be used

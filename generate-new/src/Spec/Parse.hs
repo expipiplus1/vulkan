@@ -233,6 +233,13 @@ parseSpec bs = do
                     ]
             in
               baseMap <> aliasMap
+          structAliases :: Map.Map CName [CName]
+          structAliases =
+            Map.fromListWith (<>)
+              [ (aTarget, [aName])
+              | Alias {..} <- toList typeAliases
+              , aType == TypeAlias
+              ]
           constantMap :: Map.Map CName Int
           constantMap = Map.fromList
             [ (n, fromIntegral v)
@@ -255,6 +262,7 @@ parseSpec bs = do
           unionsWithChildren =
             (\Struct {..} -> Struct { .. }) <$> unsizedUnions
         (specUnions, specStructs, getSize) <- sizeAll sizeMap
+                                                      structAliases
                                                       constantValue
                                                       unionsWithChildren
                                                       nonDisabledStructs
@@ -269,6 +277,7 @@ sizeAll
   :: forall r uc sc
    . HasErr r
   => Map.Map CName (Int, Int)
+  -> Map.Map CName [CName]
   -> (CName -> Maybe Int)
   -> Vector (StructOrUnion AUnion WithoutSize uc)
   -> Vector (StructOrUnion AStruct WithoutSize sc)
@@ -278,9 +287,12 @@ sizeAll
        , Vector (StructOrUnion AStruct 'WithSize sc)
        , CType -> Maybe (Int, Int)
        )
-sizeAll typeSizes constantMap unions structs = do
+sizeAll typeSizes structAliases constantMap unions structs = do
   let both    = (Left <$> unions) <> (Right <$> structs)
       initial = typeSizes
+      insertWithAliases n sz =
+        let aliases = fromMaybe [] (Map.lookup n structAliases)
+        in  modify' (Map.union (Map.fromList ((n, sz) : [(a, sz) | a <- aliases])))
       try
         :: Either
              (StructOrUnion AUnion WithoutSize uc)
@@ -303,10 +315,10 @@ sizeAll typeSizes constantMap unions structs = do
         let g = getSize m
         case s of
           Left u -> for (sizeUnion g u) $ \u' -> do
-            modify' (Map.insert (sName u') (sSize u', sAlignment u'))
+            insertWithAliases (sName u') (sSize u', sAlignment u')
             pure (Left u')
           Right s -> for (structSizeOverrides s <|> sizeStruct g s) $ \s' -> do
-            modify' (Map.insert (sName s') (sSize s', sAlignment s'))
+            insertWithAliases (sName s') (sSize s', sAlignment s')
             pure (Right s')
   (m, r) <- runState initial $ tryTwice both try
 

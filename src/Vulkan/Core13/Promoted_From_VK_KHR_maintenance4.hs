@@ -360,6 +360,14 @@ instance Zero DeviceBufferMemoryRequirements where
 --     associated with the image’s @format@ and
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierPropertiesEXT'::@drmFormatModifier@)
 --
+-- -   #VUID-VkDeviceImageMemoryRequirements-planeAspect-12399# If
+--     @planeAspect@ is not 0, @pCreateInfo->tiling@ is not
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
+--     and @pCreateInfo->flags@ does not have
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
+--     set, @planeAspect@ must be a valid
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDeviceImageMemoryRequirements-sType-sType# @sType@ /must/ be
@@ -371,10 +379,6 @@ instance Zero DeviceBufferMemoryRequirements where
 -- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-parameter#
 --     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure
---
--- -   #VUID-VkDeviceImageMemoryRequirements-planeAspect-parameter# If
---     @planeAspect@ is not @0@, @planeAspect@ /must/ be a valid
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
 --
 -- = See Also
 --
@@ -460,7 +464,13 @@ instance Zero DeviceImageMemoryRequirements where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -543,7 +553,11 @@ instance Zero PhysicalDeviceMaintenance4Features where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

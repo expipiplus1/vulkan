@@ -62,11 +62,11 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' specifies that an image view
 --     /can/ be
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampledimage sampled from>.
 --
 -- -   'FORMAT_FEATURE_STORAGE_IMAGE_BIT' specifies that an image view
 --     /can/ be used as a
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage storage image>.
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage storage image>.
 --
 -- -   'FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image
 --     view /can/ be used as storage image that supports atomic operations.

@@ -88,6 +88,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
 --     pointer to an array of @deviceIndexCount@ @uint32_t@ values
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 VK_KHR_bind_memory2>,
@@ -236,6 +242,12 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --     @pSplitInstanceBindRegions@ /must/ be a valid pointer to an array of
 --     @splitInstanceBindRegionCount@
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo'
 --
 -- = See Also
 --

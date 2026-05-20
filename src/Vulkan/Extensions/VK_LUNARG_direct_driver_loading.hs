@@ -234,7 +234,11 @@ instance Zero DirectDriverLoadingInfoLUNARG where
 -- structures which contain the information necessary to load additional
 -- drivers.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo'
 --
 -- = See Also
 --

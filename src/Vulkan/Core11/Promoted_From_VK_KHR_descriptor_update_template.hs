@@ -455,7 +455,7 @@ updateDescriptorSetWithTemplate device
 --     to the number of array elements in the descriptor set binding
 --     implicitly specified when using a descriptor update template to
 --     update descriptors, and all applicable
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-updates-consecutive consecutive bindings>
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets-updates-consecutive consecutive bindings>
 --
 -- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02226# If
 --     @descriptor@ type is

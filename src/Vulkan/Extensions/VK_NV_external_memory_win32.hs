@@ -430,7 +430,11 @@ getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
 -- If @handleType@ is @0@, this structure is ignored by consumers of the
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo' structure it is chained from.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- = See Also
 --
@@ -520,6 +524,12 @@ instance Zero ImportMemoryWin32HandleInfoNV where
 -- -   #VUID-VkExportMemoryWin32HandleInfoNV-pAttributes-parameter# If
 --     @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid pointer
 --     to a valid 'SECURITY_ATTRIBUTES' value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- = See Also
 --

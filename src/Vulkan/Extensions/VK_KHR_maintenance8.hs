@@ -108,7 +108,8 @@
 -- -   Extending
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2',
---     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.MemoryRangeBarriersInfoKHR':
 --
 --     -   'MemoryBarrierAccessFlags3KHR'
 --
@@ -233,7 +234,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -306,7 +313,17 @@ instance Zero PhysicalDeviceMaintenance8FeaturesKHR where
 -- | VkMemoryBarrierAccessFlags3KHR - Structure specifying additional access
 -- flags
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2'
+--
+--     -   'Vulkan.Extensions.VK_KHR_device_address_commands.MemoryRangeBarriersInfoKHR'
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2'
 --
 -- = See Also
 --

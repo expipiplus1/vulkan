@@ -158,7 +158,7 @@ foreign import ccall
 --     @pRenderingInfo->pDepthAttachment@ is not @NULL@,
 --     @pRenderingInfo->pDepthAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @pRenderingInfo->pDepthAttachment->imageResolveMode@ is not
+--     @pRenderingInfo->pDepthAttachment->resolveMode@ is not
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and
 --     @pRenderingInfo->pDepthAttachment->resolveImageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
@@ -178,7 +178,7 @@ foreign import ccall
 --     @pRenderingInfo->pStencilAttachment@ is not @NULL@,
 --     @pRenderingInfo->pStencilAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @pRenderingInfo->pStencilAttachment->imageResolveMode@ is not
+--     @pRenderingInfo->pStencilAttachment->resolveMode@ is not
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and
 --     @pRenderingInfo->pStencilAttachment->resolveImageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
@@ -193,7 +193,7 @@ foreign import ccall
 --     member of that same element of @pRenderingInfo->pColorAttachments@
 --
 -- -   #VUID-vkCmdBeginRendering-pRenderingInfo-09593# For each element of
---     @pRenderingInfo->pColorAttachments@, if either @imageResolveMode@ is
+--     @pRenderingInfo->pColorAttachments@, if either @resolveMode@ is
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_BIT_ANDROID',
 --     or @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
 --     @resolveMode@ is not
@@ -480,7 +480,11 @@ cmdEndRendering commandBuffer = liftIO $ do
 -- 'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo', defining
 -- the external format of the resolve attachment that will be used.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
 --
 -- = See Also
 --
@@ -869,23 +873,44 @@ instance Zero PipelineRenderingCreateInfo where
 --     than or equal to
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-maxFramebufferLayers maxFramebufferLayers>
 --
--- -   #VUID-VkRenderingInfo-viewMask-10859# If @viewMask@ is @0@, Each
+-- -   #VUID-VkRenderingInfo-viewMask-10859# If @viewMask@ is @0@, each
 --     @pColorAttachment->imageView@ and
 --     @pColorAttachment->resolveImageView@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have a @layerCount@
 --     that is greater than or equal to 'RenderingInfo'::@layerCount@
 --
--- -   #VUID-VkRenderingInfo-viewMask-10860# If @viewMask@ is @0@, Each
+-- -   #VUID-VkRenderingInfo-viewMask-10860# If @viewMask@ is @0@, each
 --     @pDepthAttachment->imageView@ and
 --     @pDepthAttachment->resolveImageView@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have a @layerCount@
 --     that is greater than or equal to 'RenderingInfo'::@layerCount@
 --
--- -   #VUID-VkRenderingInfo-viewMask-10861# If @viewMask@ is @0@, Each
+-- -   #VUID-VkRenderingInfo-viewMask-10861# If @viewMask@ is @0@, each
 --     @pStencilAttachment->imageView@ and
 --     @pStencilAttachment->resolveImageView@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have a @layerCount@
 --     that is greater than or equal to 'RenderingInfo'::@layerCount@
+--
+-- -   #VUID-VkRenderingInfo-viewMask-12403# If @viewMask@ is not @0@, each
+--     @pColorAttachment->imageView@ and
+--     @pColorAttachment->resolveImageView@ that is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have a @layerCount@
+--     that is greater than the index of the most significant bit in
+--     @viewMask@
+--
+-- -   #VUID-VkRenderingInfo-viewMask-12404# If @viewMask@ is not @0@, each
+--     @pDepthAttachment->imageView@ and
+--     @pDepthAttachment->resolveImageView@ that is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have a @layerCount@
+--     that is greater than the index of the most significant bit in
+--     @viewMask@
+--
+-- -   #VUID-VkRenderingInfo-viewMask-12405# If @viewMask@ is not @0@, each
+--     @pStencilAttachment->imageView@ and
+--     @pStencilAttachment->resolveImageView@ that is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have a @layerCount@
+--     that is greater than the index of the most significant bit in
+--     @viewMask@
 --
 -- -   #VUID-VkRenderingInfo-colorAttachmentCount-06096# If
 --     @colorAttachmentCount@ is not @0@ and the @imageView@ member of an
@@ -1036,8 +1061,8 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderingFragmentDensityMapAttachmentInfoEXT'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and @viewMask@ is not @0@,
---     @imageView@ /must/ have a @layerCount@ greater than or equal to the
---     index of the most significant bit in @viewMask@
+--     @imageView@ /must/ have a @layerCount@ greater than the index of the
+--     most significant bit in @viewMask@
 --
 -- -   #VUID-VkRenderingInfo-imageView-06109# If the @imageView@ member of
 --     a
@@ -1199,9 +1224,8 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.RenderingFragmentShadingRateAttachmentInfoKHR'
 --     structure included in the @pNext@ chain is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and @viewMask@ is not @0@,
---     @imageView@ /must/ have a @layerCount@ that either equal to @1@ or
---     greater than or equal to the index of the most significant bit in
---     @viewMask@
+--     @imageView@ /must/ have a @layerCount@ that is either equal to @1@
+--     or greater than the index of the most significant bit in @viewMask@
 --
 -- -   #VUID-VkRenderingInfo-imageView-06125# If the @imageView@ member of
 --     a
@@ -2060,7 +2084,13 @@ instance es ~ '[] => Zero (RenderingAttachmentInfo es) where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -2233,6 +2263,12 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 --     If @rasterizationSamples@ is not @0@, @rasterizationSamples@ /must/
 --     be a valid
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
 --
 -- = See Also
 --

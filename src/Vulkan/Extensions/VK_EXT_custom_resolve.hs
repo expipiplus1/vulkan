@@ -456,7 +456,13 @@ instance Zero BeginCustomResolveInfoEXT where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -630,6 +636,16 @@ instance Zero PhysicalDeviceCustomResolveFeaturesEXT where
 --
 -- -   #VUID-VkCustomResolveCreateInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT'
 --
 -- = See Also
 --

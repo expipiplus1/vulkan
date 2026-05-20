@@ -435,6 +435,14 @@ instance es ~ '[] => Zero (DepthBiasInfoEXT es) where
 --     @depthBiasRepresentation@ /must/ be a valid
 --     'DepthBiasRepresentationEXT' value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'DepthBiasInfoEXT'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_bias_control VK_EXT_depth_bias_control>,
@@ -497,7 +505,13 @@ instance Zero DepthBiasRepresentationInfoEXT where
 --
 -- This structure describes the following feature:
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --

@@ -363,10 +363,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     -- usages.
     supportedUsageFlags :: ImageUsageFlags
   , -- | @supportedSurfaceCounters@ is a bitmask of 'SurfaceCounterFlagBitsEXT'
-    -- indicating the supported surface counter types.
-    --
-    -- #VUID-VkSurfaceCapabilities2EXT-supportedSurfaceCounters-01246#
-    -- @supportedSurfaceCounters@ /must/ not include
+    -- indicating the supported surface counter types. It /must/ not include
     -- 'SURFACE_COUNTER_VBLANK_BIT_EXT' unless the surface queried is a
     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#wsi-display-surfaces display surface>
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT

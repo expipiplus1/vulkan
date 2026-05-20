@@ -76,8 +76,8 @@
 -- the 'SampleLocationsInfoEXT' structure /can/ be specified for each
 -- situation where an explicit or automatic layout transition has to take
 -- place. 'SampleLocationsInfoEXT' /can/ be chained from
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures to provide
--- sample locations for layout transitions performed by
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier' structures to
+-- provide sample locations for layout transitions performed by
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' and
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier' calls, and
 -- 'RenderPassSampleLocationsBeginInfoEXT' /can/ be chained from
@@ -101,7 +101,7 @@
 --
 -- -   'SubpassSampleLocationsEXT'
 --
--- -   Extending 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+-- -   Extending 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2':
 --
 --     -   'SampleLocationsInfoEXT'

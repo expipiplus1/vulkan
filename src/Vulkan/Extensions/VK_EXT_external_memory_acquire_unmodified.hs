@@ -59,9 +59,9 @@
 --
 -- == New Structures
 --
--- -   Extending 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
+-- -   Extending 'Vulkan.Core10.CommandBufferBuilding.BufferMemoryBarrier',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2',
---     'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+--     'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2':
 --
 --     -   'ExternalMemoryAcquireUnmodifiedEXT'
@@ -180,6 +180,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 -- -   #VUID-VkExternalMemoryAcquireUnmodifiedEXT-sType-sType# @sType@
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXTERNAL_MEMORY_ACQUIRE_UNMODIFIED_EXT'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandBufferBuilding.BufferMemoryBarrier'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2'
+--
+--     -   'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2'
 --
 -- = See Also
 --

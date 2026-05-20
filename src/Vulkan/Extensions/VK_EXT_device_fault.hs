@@ -25,6 +25,12 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
+-- [__Deprecation State__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_fault VK_KHR_device_fault>
+--         extension
+--
 -- [__Contact__]
 --
 --     -   Ralph Potter <<data:image/png;base64, GitLab>>r_potter
@@ -105,6 +111,23 @@
 --
 -- -   'EXT_DEVICE_FAULT_SPEC_VERSION'
 --
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_device_fault.DeviceFaultAddressTypeKHR':
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT'
+--
+--     -   'DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT'
+--
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_FAULT_COUNTS_EXT'
@@ -137,33 +160,33 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_device_fault  ( getDeviceFaultInfoEXT
+                                              , pattern DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT
+                                              , pattern DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT
+                                              , pattern DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT
+                                              , pattern DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT
+                                              , pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT
+                                              , pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT
+                                              , pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT
                                               , PhysicalDeviceFaultFeaturesEXT(..)
-                                              , DeviceFaultAddressInfoEXT(..)
-                                              , DeviceFaultVendorInfoEXT(..)
                                               , DeviceFaultCountsEXT(..)
                                               , DeviceFaultInfoEXT(..)
-                                              , DeviceFaultVendorBinaryHeaderVersionOneEXT(..)
-                                              , DeviceFaultAddressTypeEXT( DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT
-                                                                         , DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT
-                                                                         , DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT
-                                                                         , DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT
-                                                                         , DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT
-                                                                         , DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT
-                                                                         , DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT
-                                                                         , ..
-                                                                         )
-                                              , DeviceFaultVendorBinaryHeaderVersionEXT( DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT
-                                                                                       , ..
-                                                                                       )
+                                              , DeviceFaultVendorBinaryHeaderVersionEXT
+                                              , DeviceFaultAddressTypeEXT
+                                              , DeviceFaultAddressInfoEXT
+                                              , DeviceFaultVendorInfoEXT
+                                              , DeviceFaultVendorBinaryHeaderVersionOneEXT
                                               , EXT_DEVICE_FAULT_SPEC_VERSION
                                               , pattern EXT_DEVICE_FAULT_SPEC_VERSION
                                               , EXT_DEVICE_FAULT_EXTENSION_NAME
                                               , pattern EXT_DEVICE_FAULT_EXTENSION_NAME
+                                              , DeviceFaultAddressInfoKHR(..)
+                                              , DeviceFaultVendorInfoKHR(..)
+                                              , DeviceFaultVendorBinaryHeaderVersionOneKHR(..)
+                                              , DeviceFaultAddressTypeKHR(..)
+                                              , DeviceFaultVendorBinaryHeaderVersionKHR(..)
                                               ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
-import Vulkan.Internal.Utils (enumReadPrec)
-import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -173,7 +196,6 @@ import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Show (showsPrec)
 import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -181,7 +203,6 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
@@ -194,41 +215,49 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
-import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
-import GHC.Read (Read(readPrec))
-import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
-import Data.Word (Word64)
-import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
-import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
-import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
-import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceFaultInfoEXT))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressInfoKHR)
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR)
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultVendorBinaryHeaderVersionKHR)
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultVendorBinaryHeaderVersionOneKHR)
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultVendorInfoKHR)
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.APIConstants (MAX_DESCRIPTION_SIZE)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.APIConstants (UUID_SIZE)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_KHR))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_KHR))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_KHR))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_KHR))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(DEVICE_FAULT_ADDRESS_TYPE_NONE_KHR))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_KHR))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_FAULT_COUNTS_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_FAULT_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressInfoKHR(..))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultAddressTypeKHR(..))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultVendorBinaryHeaderVersionKHR(..))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultVendorBinaryHeaderVersionOneKHR(..))
+import Vulkan.Extensions.VK_KHR_device_fault (DeviceFaultVendorInfoKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -236,8 +265,8 @@ foreign import ccall
   "dynamic" mkVkGetDeviceFaultInfoEXT
   :: FunPtr (Ptr Device_T -> Ptr DeviceFaultCountsEXT -> Ptr DeviceFaultInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DeviceFaultCountsEXT -> Ptr DeviceFaultInfoEXT -> IO Result
 
--- | vkGetDeviceFaultInfoEXT - Reports diagnostic fault information on the
--- specified logical device
+-- | vkGetDeviceFaultInfoEXT - Reports fault information for the specified
+-- device
 --
 -- = Description
 --
@@ -260,7 +289,7 @@ foreign import ccall
 -- @pFaultInfo@.
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceFaultVendorBinary vendor-specific crash dumps>
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-deviceFaultVendorBinaryEXT vendor-specific crash dumps>
 -- feature is not enabled, then implementations /must/ set
 -- @pFaultCounts@->vendorBinarySize to zero and /must/ not modify
 -- @pFaultInfo@->pVendorBinaryData.
@@ -382,13 +411,40 @@ getDeviceFaultInfoEXT device = liftIO . evalContT $ do
   pure $ (r, pFaultCounts, pFaultInfo)
 
 
+-- No documentation found for TopLevel "VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT"
+pattern DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT = DEVICE_FAULT_ADDRESS_TYPE_NONE_KHR
+
+
+-- No documentation found for TopLevel "VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT"
+pattern DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT = DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_KHR
+
+
+-- No documentation found for TopLevel "VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT"
+pattern DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT = DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_KHR
+
+
+-- No documentation found for TopLevel "VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT"
+pattern DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT = DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_KHR
+
+
+-- No documentation found for TopLevel "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT"
+pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT = DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_KHR
+
+
+-- No documentation found for TopLevel "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT"
+pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT = DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_KHR
+
+
+-- No documentation found for TopLevel "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT"
+pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT = DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_KHR
+
+
 -- | VkPhysicalDeviceFaultFeaturesEXT - Structure indicating support for
 -- device fault reporting
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceFaultFeaturesEXT' structure describe
--- the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
@@ -406,7 +462,13 @@ getDeviceFaultInfoEXT device = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -414,13 +476,13 @@ getDeviceFaultInfoEXT device = liftIO . evalContT $ do
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFaultFeaturesEXT = PhysicalDeviceFaultFeaturesEXT
-  { -- | #features-deviceFault# @deviceFault@ indicates that the implementation
-    -- supports the reporting of device fault information.
+  { -- | #features-deviceFaultEXT# @deviceFault@ indicates that the
+    -- implementation supports the reporting of device fault information.
     deviceFault :: Bool
-  , -- | #features-deviceFaultVendorBinary# @deviceFaultVendorBinary@ indicates
-    -- that the implementation supports the generation of vendor-specific
-    -- binary crash dumps. These may provide additional information when
-    -- imported into vendor-specific external tools.
+  , -- | #features-deviceFaultVendorBinaryEXT# @deviceFaultVendorBinary@
+    -- indicates that the implementation supports the generation of
+    -- vendor-specific binary crash dumps. These may provide additional
+    -- information when imported into vendor-specific external tools.
     deviceFaultVendorBinary :: Bool
   }
   deriving (Typeable, Eq)
@@ -461,152 +523,6 @@ instance Storable PhysicalDeviceFaultFeaturesEXT where
 
 instance Zero PhysicalDeviceFaultFeaturesEXT where
   zero = PhysicalDeviceFaultFeaturesEXT
-           zero
-           zero
-
-
--- | VkDeviceFaultAddressInfoEXT - Structure specifying GPU virtual address
--- information
---
--- = Description
---
--- The combination of @reportedAddress@ and @addressPrecision@ allow the
--- possible range of addresses to be calculated, such that:
---
--- > lower_address = (pInfo->reportedAddress & ~(pInfo->addressPrecision-1))
--- > upper_address = (pInfo->reportedAddress |  (pInfo->addressPrecision-1))
---
--- It is valid for the @reportedAddress@ to contain a more precise address
--- than indicated by @addressPrecision@. In this case, the value of
--- @reportedAddress@ should be treated as an additional hint as to the
--- value of the address that triggered the page fault, or to the value of
--- an instruction pointer.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_fault VK_EXT_device_fault>,
--- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
--- 'DeviceFaultAddressTypeEXT', 'DeviceFaultInfoEXT',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
-data DeviceFaultAddressInfoEXT = DeviceFaultAddressInfoEXT
-  { -- | @addressType@ is either the type of memory operation that triggered a
-    -- page fault, or the type of association between an instruction pointer
-    -- and a fault.
-    --
-    -- #VUID-VkDeviceFaultAddressInfoEXT-addressType-parameter# @addressType@
-    -- /must/ be a valid 'DeviceFaultAddressTypeEXT' value
-    addressType :: DeviceFaultAddressTypeEXT
-  , -- | @reportedAddress@ is the GPU virtual address recorded by the device.
-    --
-    -- #VUID-VkDeviceFaultAddressInfoEXT-reportedAddress-parameter#
-    -- @reportedAddress@ /must/ be a valid
-    -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
-    reportedAddress :: DeviceAddress
-  , -- | @addressPrecision@ is a power of two value that specifies how precisely
-    -- the device can report the address.
-    addressPrecision :: DeviceSize
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (DeviceFaultAddressInfoEXT)
-#endif
-deriving instance Show DeviceFaultAddressInfoEXT
-
-instance ToCStruct DeviceFaultAddressInfoEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DeviceFaultAddressInfoEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceFaultAddressTypeEXT)) (addressType)
-    poke ((p `plusPtr` 8 :: Ptr DeviceAddress)) (reportedAddress)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (addressPrecision)
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceFaultAddressTypeEXT)) (zero)
-    poke ((p `plusPtr` 8 :: Ptr DeviceAddress)) (zero)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
-    f
-
-instance FromCStruct DeviceFaultAddressInfoEXT where
-  peekCStruct p = do
-    addressType <- peek @DeviceFaultAddressTypeEXT ((p `plusPtr` 0 :: Ptr DeviceFaultAddressTypeEXT))
-    reportedAddress <- peek @DeviceAddress ((p `plusPtr` 8 :: Ptr DeviceAddress))
-    addressPrecision <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
-    pure $ DeviceFaultAddressInfoEXT
-             addressType reportedAddress addressPrecision
-
-instance Storable DeviceFaultAddressInfoEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DeviceFaultAddressInfoEXT where
-  zero = DeviceFaultAddressInfoEXT
-           zero
-           zero
-           zero
-
-
--- | VkDeviceFaultVendorInfoEXT - Structure specifying vendor-specific fault
--- information
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_fault VK_EXT_device_fault>,
--- 'DeviceFaultInfoEXT'
-data DeviceFaultVendorInfoEXT = DeviceFaultVendorInfoEXT
-  { -- | @description@ is an array of
-    -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE' @char@ containing a
-    -- null-terminated UTF-8 string which is a human readable description of
-    -- the fault.
-    description :: ByteString
-  , -- | @vendorFaultCode@ is the vendor-specific fault code for this fault.
-    vendorFaultCode :: Word64
-  , -- | @vendorFaultData@ is the vendor-specific fault data associated with this
-    -- fault.
-    vendorFaultData :: Word64
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (DeviceFaultVendorInfoEXT)
-#endif
-deriving instance Show DeviceFaultVendorInfoEXT
-
-instance ToCStruct DeviceFaultVendorInfoEXT where
-  withCStruct x f = allocaBytes 272 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DeviceFaultVendorInfoEXT{..} f = do
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
-    poke ((p `plusPtr` 256 :: Ptr Word64)) (vendorFaultCode)
-    poke ((p `plusPtr` 264 :: Ptr Word64)) (vendorFaultData)
-    f
-  cStructSize = 272
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    poke ((p `plusPtr` 256 :: Ptr Word64)) (zero)
-    poke ((p `plusPtr` 264 :: Ptr Word64)) (zero)
-    f
-
-instance FromCStruct DeviceFaultVendorInfoEXT where
-  peekCStruct p = do
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
-    vendorFaultCode <- peek @Word64 ((p `plusPtr` 256 :: Ptr Word64))
-    vendorFaultData <- peek @Word64 ((p `plusPtr` 264 :: Ptr Word64))
-    pure $ DeviceFaultVendorInfoEXT
-             description vendorFaultCode vendorFaultData
-
-instance Storable DeviceFaultVendorInfoEXT where
-  sizeOf ~_ = 272
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DeviceFaultVendorInfoEXT where
-  zero = DeviceFaultVendorInfoEXT
-           mempty
            zero
            zero
 
@@ -713,7 +629,8 @@ instance Zero DeviceFaultCountsEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_fault VK_EXT_device_fault>,
--- 'DeviceFaultAddressInfoEXT', 'DeviceFaultVendorInfoEXT',
+-- 'Vulkan.Extensions.VK_KHR_device_fault.DeviceFaultAddressInfoKHR',
+-- 'Vulkan.Extensions.VK_KHR_device_fault.DeviceFaultVendorInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceFaultInfoEXT'
 data DeviceFaultInfoEXT = DeviceFaultInfoEXT
@@ -725,19 +642,25 @@ data DeviceFaultInfoEXT = DeviceFaultInfoEXT
   , -- | @pAddressInfos@ is @NULL@ or a pointer to an array of
     -- 'DeviceFaultAddressInfoEXT' structures describing either memory accesses
     -- which /may/ have caused a page fault, or describing active instruction
-    -- pointers at the time of the fault. If not @NULL@, each element of
-    -- @pAddressInfos@ describes the a bounded region of GPU virtual address
-    -- space containing either the GPU virtual address accessed, or the value
-    -- of an active instruction pointer.
-    addressInfos :: Ptr DeviceFaultAddressInfoEXT
+    -- pointers at the time of the fault. The length of @pAddressInfos@ is
+    -- specified by the 'DeviceFaultCountsEXT'::@addressInfoCount@ value passed
+    -- to 'getDeviceFaultInfoEXT'. If not @NULL@, each element of
+    -- @pAddressInfos@ describes a bounded region of GPU virtual address space
+    -- containing either the GPU virtual address accessed, or the value of an
+    -- active instruction pointer.
+    addressInfos :: Ptr DeviceFaultAddressInfoKHR
   , -- | @pVendorInfos@ is @NULL@ or a pointer to an array of
     -- 'DeviceFaultVendorInfoEXT' structures describing vendor-specific fault
-    -- information.
-    vendorInfos :: Ptr DeviceFaultVendorInfoEXT
-  , -- | @pVendorBinaryData@ is @NULL@ or a pointer to @vendorBinarySize@ number
-    -- of bytes of data, which will be populated with a vendor-specific binary
-    -- crash dump, as described in
+    -- information. The length of @pVendorInfos@ is specified by the
+    -- 'DeviceFaultCountsEXT'::@vendorInfoCount@ value passed to
+    -- 'getDeviceFaultInfoEXT'.
+    vendorInfos :: Ptr DeviceFaultVendorInfoKHR
+  , -- | @pVendorBinaryData@ is @NULL@ or a pointer to memory which will be
+    -- populated with a vendor-specific binary crash dump, as described in
     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vendor-binary-crash-dumps Vendor Binary Crash Dumps>.
+    -- The size of @pVendorBinaryData@ is specified by the
+    -- 'DeviceFaultCountsEXT'::@vendorBinarySize@ value passed to
+    -- 'getDeviceFaultInfoEXT'.
     vendorBinaryData :: Ptr ()
   }
   deriving (Typeable)
@@ -752,8 +675,8 @@ instance ToCStruct DeviceFaultInfoEXT where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_FAULT_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
-    poke ((p `plusPtr` 272 :: Ptr (Ptr DeviceFaultAddressInfoEXT))) (addressInfos)
-    poke ((p `plusPtr` 280 :: Ptr (Ptr DeviceFaultVendorInfoEXT))) (vendorInfos)
+    poke ((p `plusPtr` 272 :: Ptr (Ptr DeviceFaultAddressInfoKHR))) (addressInfos)
+    poke ((p `plusPtr` 280 :: Ptr (Ptr DeviceFaultVendorInfoKHR))) (vendorInfos)
     poke ((p `plusPtr` 288 :: Ptr (Ptr ()))) (vendorBinaryData)
     f
   cStructSize = 296
@@ -767,8 +690,8 @@ instance ToCStruct DeviceFaultInfoEXT where
 instance FromCStruct DeviceFaultInfoEXT where
   peekCStruct p = do
     description <- packCString (lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
-    pAddressInfos <- peek @(Ptr DeviceFaultAddressInfoEXT) ((p `plusPtr` 272 :: Ptr (Ptr DeviceFaultAddressInfoEXT)))
-    pVendorInfos <- peek @(Ptr DeviceFaultVendorInfoEXT) ((p `plusPtr` 280 :: Ptr (Ptr DeviceFaultVendorInfoEXT)))
+    pAddressInfos <- peek @(Ptr DeviceFaultAddressInfoKHR) ((p `plusPtr` 272 :: Ptr (Ptr DeviceFaultAddressInfoKHR)))
+    pVendorInfos <- peek @(Ptr DeviceFaultVendorInfoKHR) ((p `plusPtr` 280 :: Ptr (Ptr DeviceFaultVendorInfoKHR)))
     pVendorBinaryData <- peek @(Ptr ()) ((p `plusPtr` 288 :: Ptr (Ptr ())))
     pure $ DeviceFaultInfoEXT
              description pAddressInfos pVendorInfos pVendorBinaryData
@@ -787,357 +710,25 @@ instance Zero DeviceFaultInfoEXT where
            zero
 
 
--- | VkDeviceFaultVendorBinaryHeaderVersionOneEXT - Structure describing the
--- layout of the vendor binary crash dump header
---
--- = Description
---
--- Unlike most structures declared by the Vulkan API, all fields of this
--- structure are written with the least significant byte first, regardless
--- of host byte-order.
---
--- The C language specification does not define the packing of structure
--- members. This layout assumes tight structure member packing, with
--- members laid out in the order listed in the structure, and the intended
--- size of the structure is 56 bytes. If a compiler produces code that
--- diverges from that pattern, applications /must/ employ another method to
--- set values at the correct offsets.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_fault VK_EXT_device_fault>,
--- 'DeviceFaultVendorBinaryHeaderVersionEXT'
-data DeviceFaultVendorBinaryHeaderVersionOneEXT = DeviceFaultVendorBinaryHeaderVersionOneEXT
-  { -- | @headerSize@ is the length in bytes of the crash dump header.
-    --
-    -- #VUID-VkDeviceFaultVendorBinaryHeaderVersionOneEXT-headerSize-07340#
-    -- @headerSize@ /must/ be 56
-    headerSize :: Word32
-  , -- | @headerVersion@ is a 'DeviceFaultVendorBinaryHeaderVersionEXT' enum
-    -- value specifying the version of the header. A consumer of the crash dump
-    -- /should/ use the header version to interpret the remainder of the
-    -- header. @headerVersion@ /must/ be written as exactly 4 bytes.
-    --
-    -- #VUID-VkDeviceFaultVendorBinaryHeaderVersionOneEXT-headerVersion-07341#
-    -- @headerVersion@ /must/ be
-    -- 'DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT'
-    --
-    -- #VUID-VkDeviceFaultVendorBinaryHeaderVersionOneEXT-headerVersion-parameter#
-    -- @headerVersion@ /must/ be a valid
-    -- 'DeviceFaultVendorBinaryHeaderVersionEXT' value
-    headerVersion :: DeviceFaultVendorBinaryHeaderVersionEXT
-  , -- | @vendorID@ is the
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@vendorID@
-    -- of the implementation.
-    vendorID :: Word32
-  , -- | @deviceID@ is the
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@deviceID@
-    -- of the implementation.
-    deviceID :: Word32
-  , -- | @driverVersion@ is the
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@driverVersion@
-    -- of the implementation.
-    driverVersion :: Word32
-  , -- | @pipelineCacheUUID@ is an array of
-    -- 'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values matching the
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@pipelineCacheUUID@
-    -- property of the implementation.
-    pipelineCacheUUID :: ByteString
-  , -- | @applicationNameOffset@ is zero, or an offset from the base address of
-    -- the crash dump header to a null-terminated UTF-8 string containing the
-    -- name of the application. If @applicationNameOffset@ is non-zero, this
-    -- string /must/ match the application name specified via
-    -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@pApplicationName@
-    -- during instance creation.
-    applicationNameOffset :: Word32
-  , -- | @applicationVersion@ /must/ be zero or the value specified by
-    -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@applicationVersion@
-    -- during instance creation.
-    applicationVersion :: Word32
-  , -- | @engineNameOffset@ is zero, or an offset from the base address of the
-    -- crash dump header to a null-terminated UTF-8 string containing the name
-    -- of the engine (if any) used to create the application. If
-    -- @engineNameOffset@ is non-zero, this string /must/ match the engine name
-    -- specified via
-    -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@pEngineName@
-    -- during instance creation.
-    engineNameOffset :: Word32
-  , -- | @engineVersion@ /must/ be zero or the value specified by
-    -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@engineVersion@
-    -- during instance creation.
-    engineVersion :: Word32
-  , -- | @apiVersion@ /must/ be zero or the value specified by
-    -- 'Vulkan.Core10.DeviceInitialization.ApplicationInfo'::@apiVersion@
-    -- during instance creation.
-    apiVersion :: Word32
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (DeviceFaultVendorBinaryHeaderVersionOneEXT)
-#endif
-deriving instance Show DeviceFaultVendorBinaryHeaderVersionOneEXT
-
-instance ToCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
-  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DeviceFaultVendorBinaryHeaderVersionOneEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr Word32)) (headerSize)
-    poke ((p `plusPtr` 4 :: Ptr DeviceFaultVendorBinaryHeaderVersionEXT)) (headerVersion)
-    poke ((p `plusPtr` 8 :: Ptr Word32)) (vendorID)
-    poke ((p `plusPtr` 12 :: Ptr Word32)) (deviceID)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (driverVersion)
-    pokeFixedLengthByteString ((p `plusPtr` 20 :: Ptr (FixedArray UUID_SIZE Word8))) (pipelineCacheUUID)
-    poke ((p `plusPtr` 36 :: Ptr Word32)) (applicationNameOffset)
-    poke ((p `plusPtr` 40 :: Ptr Word32)) (applicationVersion)
-    poke ((p `plusPtr` 44 :: Ptr Word32)) (engineNameOffset)
-    poke ((p `plusPtr` 48 :: Ptr Word32)) (engineVersion)
-    poke ((p `plusPtr` 52 :: Ptr Word32)) (apiVersion)
-    f
-  cStructSize = 56
-  cStructAlignment = 4
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 4 :: Ptr DeviceFaultVendorBinaryHeaderVersionEXT)) (zero)
-    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    pokeFixedLengthByteString ((p `plusPtr` 20 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
-    poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
-    f
-
-instance FromCStruct DeviceFaultVendorBinaryHeaderVersionOneEXT where
-  peekCStruct p = do
-    headerSize <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
-    headerVersion <- peek @DeviceFaultVendorBinaryHeaderVersionEXT ((p `plusPtr` 4 :: Ptr DeviceFaultVendorBinaryHeaderVersionEXT))
-    vendorID <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
-    deviceID <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
-    driverVersion <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    pipelineCacheUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 20 :: Ptr (FixedArray UUID_SIZE Word8)))
-    applicationNameOffset <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
-    applicationVersion <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    engineNameOffset <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    engineVersion <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
-    apiVersion <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
-    pure $ DeviceFaultVendorBinaryHeaderVersionOneEXT
-             headerSize
-             headerVersion
-             vendorID
-             deviceID
-             driverVersion
-             pipelineCacheUUID
-             applicationNameOffset
-             applicationVersion
-             engineNameOffset
-             engineVersion
-             apiVersion
-
-instance Storable DeviceFaultVendorBinaryHeaderVersionOneEXT where
-  sizeOf ~_ = 56
-  alignment ~_ = 4
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DeviceFaultVendorBinaryHeaderVersionOneEXT where
-  zero = DeviceFaultVendorBinaryHeaderVersionOneEXT
-           zero
-           zero
-           zero
-           zero
-           zero
-           mempty
-           zero
-           zero
-           zero
-           zero
-           zero
+-- No documentation found for TopLevel "VkDeviceFaultVendorBinaryHeaderVersionEXT"
+type DeviceFaultVendorBinaryHeaderVersionEXT = DeviceFaultVendorBinaryHeaderVersionKHR
 
 
--- | VkDeviceFaultAddressTypeEXT - Page fault access types
---
--- = Description
---
--- -   'DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT' specifies that
---     'DeviceFaultAddressInfoEXT' does not describe a page fault, or an
---     instruction address.
---
--- -   'DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT' specifies that
---     'DeviceFaultAddressInfoEXT' describes a page fault triggered by an
---     invalid read operation.
---
--- -   'DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT' specifies that
---     'DeviceFaultAddressInfoEXT' describes a page fault triggered by an
---     invalid write operation.
---
--- -   'DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT' describes a page
---     fault triggered by an attempt to execute non-executable memory.
---
--- -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT'
---     specifies an instruction pointer value at the time the fault
---     occurred. This may or may not be related to a fault.
---
--- -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT'
---     specifies an instruction pointer value associated with an invalid
---     instruction fault.
---
--- -   'DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT' specifies
---     an instruction pointer value associated with a fault.
---
--- The instruction pointer values recorded may not identify the specific
--- instruction(s) that triggered the fault. The relationship between the
--- instruction pointer reported and triggering instruction will be
--- vendor-specific.
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_fault VK_EXT_device_fault>,
--- 'DeviceFaultAddressInfoEXT'
-newtype DeviceFaultAddressTypeEXT = DeviceFaultAddressTypeEXT Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
+-- No documentation found for TopLevel "VkDeviceFaultAddressTypeEXT"
+type DeviceFaultAddressTypeEXT = DeviceFaultAddressTypeKHR
 
--- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT"
-pattern DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT = DeviceFaultAddressTypeEXT 0
 
--- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT"
-pattern DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT = DeviceFaultAddressTypeEXT 1
+-- No documentation found for TopLevel "VkDeviceFaultAddressInfoEXT"
+type DeviceFaultAddressInfoEXT = DeviceFaultAddressInfoKHR
 
--- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT"
-pattern DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT = DeviceFaultAddressTypeEXT 2
 
--- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT"
-pattern DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT = DeviceFaultAddressTypeEXT 3
+-- No documentation found for TopLevel "VkDeviceFaultVendorInfoEXT"
+type DeviceFaultVendorInfoEXT = DeviceFaultVendorInfoKHR
 
--- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT"
-pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT = DeviceFaultAddressTypeEXT 4
 
--- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT"
-pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT = DeviceFaultAddressTypeEXT 5
+-- No documentation found for TopLevel "VkDeviceFaultVendorBinaryHeaderVersionOneEXT"
+type DeviceFaultVendorBinaryHeaderVersionOneEXT = DeviceFaultVendorBinaryHeaderVersionOneKHR
 
--- No documentation found for Nested "VkDeviceFaultAddressTypeEXT" "VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT"
-pattern DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT = DeviceFaultAddressTypeEXT 6
-
-{-# COMPLETE
-  DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT
-  , DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT
-  , DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT
-  , DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT
-  , DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT
-  , DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT
-  , DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT ::
-    DeviceFaultAddressTypeEXT
-  #-}
-
-conNameDeviceFaultAddressTypeEXT :: String
-conNameDeviceFaultAddressTypeEXT = "DeviceFaultAddressTypeEXT"
-
-enumPrefixDeviceFaultAddressTypeEXT :: String
-enumPrefixDeviceFaultAddressTypeEXT = "DEVICE_FAULT_ADDRESS_TYPE_"
-
-showTableDeviceFaultAddressTypeEXT :: [(DeviceFaultAddressTypeEXT, String)]
-showTableDeviceFaultAddressTypeEXT =
-  [
-    ( DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT
-    , "NONE_EXT"
-    )
-  ,
-    ( DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT
-    , "READ_INVALID_EXT"
-    )
-  ,
-    ( DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT
-    , "WRITE_INVALID_EXT"
-    )
-  ,
-    ( DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT
-    , "EXECUTE_INVALID_EXT"
-    )
-  ,
-    ( DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT
-    , "INSTRUCTION_POINTER_UNKNOWN_EXT"
-    )
-  ,
-    ( DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT
-    , "INSTRUCTION_POINTER_INVALID_EXT"
-    )
-  ,
-    ( DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT
-    , "INSTRUCTION_POINTER_FAULT_EXT"
-    )
-  ]
-
-instance Show DeviceFaultAddressTypeEXT where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixDeviceFaultAddressTypeEXT
-      showTableDeviceFaultAddressTypeEXT
-      conNameDeviceFaultAddressTypeEXT
-      (\(DeviceFaultAddressTypeEXT x) -> x)
-      (showsPrec 11)
-
-instance Read DeviceFaultAddressTypeEXT where
-  readPrec =
-    enumReadPrec
-      enumPrefixDeviceFaultAddressTypeEXT
-      showTableDeviceFaultAddressTypeEXT
-      conNameDeviceFaultAddressTypeEXT
-      DeviceFaultAddressTypeEXT
-
--- | VkDeviceFaultVendorBinaryHeaderVersionEXT - Encode vendor binary crash
--- dump version
---
--- = Description
---
--- -   'DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT' specifies
---     version one of the binary crash dump header.
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_fault VK_EXT_device_fault>,
--- 'DeviceFaultVendorBinaryHeaderVersionOneEXT', 'getDeviceFaultInfoEXT'
-newtype DeviceFaultVendorBinaryHeaderVersionEXT = DeviceFaultVendorBinaryHeaderVersionEXT Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
-
--- No documentation found for Nested "VkDeviceFaultVendorBinaryHeaderVersionEXT" "VK_DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT"
-pattern DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT = DeviceFaultVendorBinaryHeaderVersionEXT 1
-
-{-# COMPLETE DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT :: DeviceFaultVendorBinaryHeaderVersionEXT #-}
-
-conNameDeviceFaultVendorBinaryHeaderVersionEXT :: String
-conNameDeviceFaultVendorBinaryHeaderVersionEXT = "DeviceFaultVendorBinaryHeaderVersionEXT"
-
-enumPrefixDeviceFaultVendorBinaryHeaderVersionEXT :: String
-enumPrefixDeviceFaultVendorBinaryHeaderVersionEXT = "DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT"
-
-showTableDeviceFaultVendorBinaryHeaderVersionEXT :: [(DeviceFaultVendorBinaryHeaderVersionEXT, String)]
-showTableDeviceFaultVendorBinaryHeaderVersionEXT =
-  [
-    ( DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT
-    , ""
-    )
-  ]
-
-instance Show DeviceFaultVendorBinaryHeaderVersionEXT where
-  showsPrec =
-    enumShowsPrec
-      enumPrefixDeviceFaultVendorBinaryHeaderVersionEXT
-      showTableDeviceFaultVendorBinaryHeaderVersionEXT
-      conNameDeviceFaultVendorBinaryHeaderVersionEXT
-      (\(DeviceFaultVendorBinaryHeaderVersionEXT x) -> x)
-      (showsPrec 11)
-
-instance Read DeviceFaultVendorBinaryHeaderVersionEXT where
-  readPrec =
-    enumReadPrec
-      enumPrefixDeviceFaultVendorBinaryHeaderVersionEXT
-      showTableDeviceFaultVendorBinaryHeaderVersionEXT
-      conNameDeviceFaultVendorBinaryHeaderVersionEXT
-      DeviceFaultVendorBinaryHeaderVersionEXT
 
 type EXT_DEVICE_FAULT_SPEC_VERSION = 2
 

@@ -15,7 +15,7 @@
 --     418
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Not ratified
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2023-08-23
+--     2025-09-05
 --
 -- [__Interactions and External Dependencies__]
 --     None
@@ -52,7 +52,13 @@
 -- This extension exposes a collection of controls to modify the scheduling
 -- behavior of Arm Mali devices.
 --
+-- == New Commands
+--
+-- -   'cmdSetDispatchParametersARM'
+--
 -- == New Structures
+--
+-- -   'DispatchParametersARM'
 --
 -- -   Extending 'Vulkan.Core10.Device.DeviceQueueCreateInfo',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
@@ -67,6 +73,8 @@
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'
 --
 --     -   'PhysicalDeviceSchedulingControlsPropertiesARM'
 --
@@ -88,6 +96,10 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM'
 --
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM'
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM'
+--
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM'
@@ -101,6 +113,18 @@
 -- None.
 --
 -- == Version History
+--
+-- -   Revision 2, 2025-09-05 (Kévin Petit)
+--
+--     -   Add dispatch parameters controls
+--
+--         -   'PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM'
+--
+--         -   'cmdSetDispatchParametersARM'
+--
+--         -   'DispatchParametersARM'
+--
+--         -   'PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM'
 --
 -- -   Revision 1, 2023-08-23 (Kévin Petit)
 --
@@ -118,6 +142,8 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_ARM_scheduling_controls  ( DeviceQueueShaderCoreControlCreateInfoARM
+                                                     , DispatchParametersARM
+                                                     , PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
                                                      , PhysicalDeviceSchedulingControlsFeaturesARM
                                                      , PhysicalDeviceSchedulingControlsPropertiesARM
                                                      ) where
@@ -132,6 +158,22 @@ instance ToCStruct DeviceQueueShaderCoreControlCreateInfoARM
 instance Show DeviceQueueShaderCoreControlCreateInfoARM
 
 instance FromCStruct DeviceQueueShaderCoreControlCreateInfoARM
+
+
+data DispatchParametersARM
+
+instance ToCStruct DispatchParametersARM
+instance Show DispatchParametersARM
+
+instance FromCStruct DispatchParametersARM
+
+
+data PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+
+instance ToCStruct PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+instance Show PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+
+instance FromCStruct PhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
 
 
 data PhysicalDeviceSchedulingControlsFeaturesARM

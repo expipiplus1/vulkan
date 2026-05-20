@@ -958,7 +958,13 @@ getPastPresentationTimingEXT device
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -1027,7 +1033,18 @@ instance Zero PhysicalDevicePresentTimingFeaturesEXT where
 -- | VkPresentTimingSurfaceCapabilitiesEXT - Structure describing present
 -- timing capabilities of a surface
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- If @presentTimingSupported@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+-- the implementation /must/ also advertise support for at least the
+-- 'PRESENT_STAGE_QUEUE_OPERATIONS_END_BIT_EXT' present stage in pname
+-- @presentStageQueries@.
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 --
 -- = See Also
 --
@@ -1199,6 +1216,9 @@ instance Zero SwapchainTimingPropertiesEXT where
 -- Otherwise, @timeDomainCount@ /must/ specify the number of elements in
 -- @pTimeDomains@ and @pTimeDomainIds@, and on return is overwritten with
 -- the number of values actually written to each array.
+--
+-- Implementations /must/ advertise support for at least one time domain of
+-- 'TIME_DOMAIN_PRESENT_STAGE_LOCAL_EXT'.
 --
 -- Due to the dynamic nature of their underlying
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' properties, swapchains may need
@@ -1689,6 +1709,12 @@ instance Zero PastPresentationTimingEXT where
 -- -   #VUID-VkPresentTimingsInfoEXT-swapchainCount-arraylength#
 --     @swapchainCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_present_timing VK_EXT_present_timing>,
@@ -1773,6 +1799,12 @@ instance Zero PresentTimingsInfoEXT where
 -- time domain @targetTime@ is specified for. Otherwise,
 -- @targetTimeDomainPresentStage@ is ignored.
 --
+-- If @presentStageQueries@ is not zero, a slot in the swapchain’s internal
+-- results queue is reserved to hold the requested present timing data
+-- until the application retrieves them. If no slots are available,
+-- presentation fails and returns
+-- 'Vulkan.Core10.Enums.Result.ERROR_PRESENT_TIMING_QUEUE_FULL_EXT'.
+--
 -- Some platforms, due to hardware or system limitations, /may/ not be able
 -- to accurately time @targetTime@ with the actual physical event of the
 -- image becoming visible on the display. However, those timing
@@ -1796,6 +1828,11 @@ instance Zero PresentTimingsInfoEXT where
 -- 'PRESENT_TIMING_INFO_PRESENT_AT_NEAREST_REFRESH_CYCLE_BIT_EXT' to allow
 -- the implementation to compensate for small precision errors that may
 -- cause an image to be displayed one refresh cycle later than intended.
+--
+-- Some implementations /may/ not provide timing data for the
+-- 'PRESENT_STAGE_IMAGE_FIRST_PIXEL_VISIBLE_BIT_EXT' present stage.
+-- Applications /should/ use the supported present stage nearest to it to
+-- compute a desired target presentation time.
 --
 -- == Valid Usage
 --
@@ -1823,6 +1860,10 @@ instance Zero PresentTimingsInfoEXT where
 --     is associated with a 'TIME_DOMAIN_PRESENT_STAGE_LOCAL_EXT' time
 --     domain, and @targetTime@ is not zero, @targetTimeDomainPresentStage@
 --     /must/ be a single 'PresentStageFlagsEXT' value
+--
+-- -   #VUID-VkPresentTimingInfoEXT-timeDomainId-12400# @timeDomainId@
+--     /must/ be an id previously returned by
+--     'getSwapchainTimeDomainPropertiesEXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1860,9 +1901,9 @@ data PresentTimingInfoEXT = PresentTimingInfoEXT
     -- 'getPastPresentationTimingEXT' call for the current presentation
     -- request.
     timeDomainId :: Word64
-  , -- | @presentStageQueries@ is a valid 'PresentStageFlagsEXT' value indicating
-    -- which present stages the presentation engine will collect timing
-    -- information for.
+  , -- | @presentStageQueries@ is zero or a valid 'PresentStageFlagsEXT' value
+    -- indicating which present stages the presentation engine will collect
+    -- timing information for.
     presentStageQueries :: PresentStageFlagsEXT
   , -- | @targetTimeDomainPresentStage@ is a valid 'PresentStageFlagsEXT'
     -- specifying a single present stage used to interpret @targetTime@.
@@ -1956,12 +1997,11 @@ instance Zero PresentTimingInfoEXT where
 --     @presentStage@ /must/ be a valid combination of
 --     'PresentStageFlagBitsEXT' values
 --
--- -   #VUID-VkSwapchainCalibratedTimestampInfoEXT-presentStage-requiredbitmask#
---     @presentStage@ /must/ not be @0@
+-- == Structure Chaining
 --
--- == Host Synchronization
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
 --
--- -   Host access to @swapchain@ /must/ be externally synchronized
+--     -   'Vulkan.Extensions.VK_KHR_calibrated_timestamps.CalibratedTimestampInfoKHR'
 --
 -- = See Also
 --
@@ -2001,7 +2041,6 @@ instance ToCStruct SwapchainCalibratedTimestampInfoEXT where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_CALIBRATED_TIMESTAMP_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr SwapchainKHR)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr PresentStageFlagsEXT)) (zero)
     poke ((p `plusPtr` 32 :: Ptr Word64)) (zero)
     f
 

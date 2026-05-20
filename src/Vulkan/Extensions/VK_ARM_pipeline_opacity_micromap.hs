@@ -53,7 +53,7 @@
 --
 -- The Opacity Micromap extension @VK_EXT_opacity_micromap@ supports the
 -- new pipeline creation flag
--- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT',
 -- indicating that the ray tracing pipeline may be used with acceleration
 -- structures referencing micromaps. This allows for possible
 -- optimizations, knowing beforehand that opacity micromaps may be used
@@ -171,7 +171,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --

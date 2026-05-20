@@ -90,7 +90,7 @@
 --
 -- -   'CopyMemoryToImageIndirectInfoKHR'
 --
--- -   'StridedDeviceAddressRangeKHR'
+-- -   'Vulkan.Extensions.VK_KHR_device_address_commands.StridedDeviceAddressRangeKHR'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -156,7 +156,6 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_copy_memory_indirect  ( cmdCopyMemoryIndirectKHR
                                                       , cmdCopyMemoryToImageIndirectKHR
-                                                      , StridedDeviceAddressRangeKHR(..)
                                                       , CopyMemoryIndirectCommandKHR(..)
                                                       , CopyMemoryIndirectInfoKHR(..)
                                                       , CopyMemoryToImageIndirectCommandKHR(..)
@@ -173,6 +172,7 @@ module Vulkan.Extensions.VK_KHR_copy_memory_indirect  ( cmdCopyMemoryIndirectKHR
                                                       , pattern KHR_COPY_MEMORY_INDIRECT_SPEC_VERSION
                                                       , KHR_COPY_MEMORY_INDIRECT_EXTENSION_NAME
                                                       , pattern KHR_COPY_MEMORY_INDIRECT_EXTENSION_NAME
+                                                      , StridedDeviceAddressRangeKHR(..)
                                                       ) where
 
 import Data.Bits (Bits)
@@ -237,11 +237,13 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
 import Vulkan.Core10.FundamentalTypes (Offset3D)
 import Vulkan.Core10.Enums.QueueFlagBits (QueueFlags)
+import Vulkan.Extensions.VK_KHR_device_address_commands (StridedDeviceAddressRangeKHR)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INDIRECT_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_PROPERTIES_KHR))
+import Vulkan.Extensions.VK_KHR_device_address_commands (StridedDeviceAddressRangeKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -478,87 +480,6 @@ cmdCopyMemoryToImageIndirectKHR commandBuffer
   pure $ ()
 
 
--- | VkStridedDeviceAddressRangeKHR - Structure specifying a device address
--- range with a stride
---
--- == Valid Usage
---
--- -   #VUID-VkStridedDeviceAddressRangeKHR-size-11411# If @size@ is not 0,
---     @address@ /must/ not be 0
---
--- -   #VUID-VkStridedDeviceAddressRangeKHR-address-11365# The sum of
---     @address@ and @size@ /must/ be less than or equal to the sum of an
---     address retrieved from a 'Vulkan.Core10.Handles.Buffer' and the
---     value of 'Vulkan.Core10.Buffer.BufferCreateInfo'::@size@ used to
---     create that 'Vulkan.Core10.Handles.Buffer'
---
--- -   #VUID-VkStridedDeviceAddressRangeKHR-stride-10957# @stride@ /must/
---     be less than or equal to @size@
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkStridedDeviceAddressRangeKHR-address-parameter# If @address@
---     is not @0@, @address@ /must/ be a valid
---     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_memory_indirect VK_KHR_copy_memory_indirect>,
--- 'CopyMemoryIndirectInfoKHR', 'CopyMemoryToImageIndirectInfoKHR',
--- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
-data StridedDeviceAddressRangeKHR = StridedDeviceAddressRangeKHR
-  { -- | @address@ is a 'Vulkan.Core10.FundamentalTypes.DeviceAddress' specifying
-    -- the start of the range.
-    address :: DeviceAddress
-  , -- | @size@ is a 'Vulkan.Core10.FundamentalTypes.DeviceSize' specifying the
-    -- size of the range.
-    size :: DeviceSize
-  , -- | @stride@ is a 'Vulkan.Core10.FundamentalTypes.DeviceSize' specifying the
-    -- stride of elements over the range.
-    stride :: DeviceSize
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (StridedDeviceAddressRangeKHR)
-#endif
-deriving instance Show StridedDeviceAddressRangeKHR
-
-instance ToCStruct StridedDeviceAddressRangeKHR where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p StridedDeviceAddressRangeKHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (address)
-    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (size)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (stride)
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
-    f
-
-instance FromCStruct StridedDeviceAddressRangeKHR where
-  peekCStruct p = do
-    address <- peek @DeviceAddress ((p `plusPtr` 0 :: Ptr DeviceAddress))
-    size <- peek @DeviceSize ((p `plusPtr` 8 :: Ptr DeviceSize))
-    stride <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
-    pure $ StridedDeviceAddressRangeKHR
-             address size stride
-
-instance Storable StridedDeviceAddressRangeKHR where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero StridedDeviceAddressRangeKHR where
-  zero = StridedDeviceAddressRangeKHR
-           zero
-           zero
-           zero
-
-
 -- | VkCopyMemoryIndirectCommandKHR - Structure specifying indirect memory
 -- region copy operation
 --
@@ -723,7 +644,8 @@ instance Zero CopyMemoryIndirectCommandKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_memory_indirect VK_KHR_copy_memory_indirect>,
--- 'AddressCopyFlagsKHR', 'StridedDeviceAddressRangeKHR',
+-- 'AddressCopyFlagsKHR',
+-- 'Vulkan.Extensions.VK_KHR_device_address_commands.StridedDeviceAddressRangeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdCopyMemoryIndirectKHR'
 data CopyMemoryIndirectInfoKHR = CopyMemoryIndirectInfoKHR
@@ -1147,7 +1069,7 @@ instance Zero CopyMemoryToImageIndirectCommandKHR where
 -- 'AddressCopyFlagsKHR', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
--- 'StridedDeviceAddressRangeKHR',
+-- 'Vulkan.Extensions.VK_KHR_device_address_commands.StridedDeviceAddressRangeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdCopyMemoryToImageIndirectKHR'
 data CopyMemoryToImageIndirectInfoKHR = CopyMemoryToImageIndirectInfoKHR
@@ -1247,7 +1169,13 @@ instance Zero CopyMemoryToImageIndirectInfoKHR where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -1328,7 +1256,11 @@ instance Zero PhysicalDeviceCopyMemoryIndirectFeaturesKHR where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

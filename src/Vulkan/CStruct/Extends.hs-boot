@@ -38,3 +38,4 @@ type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
 type family Chain (xs :: [Type]) = (r :: Type) | r -> xs where
   Chain '[]    = ()
   Chain (x:xs) = (x, Chain xs)
+

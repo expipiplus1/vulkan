@@ -332,7 +332,13 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -415,6 +421,12 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 -- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-coverageReductionMode-parameter#
 --     @coverageReductionMode@ /must/ be a valid 'CoverageReductionModeNV'
 --     value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo'
 --
 -- = See Also
 --

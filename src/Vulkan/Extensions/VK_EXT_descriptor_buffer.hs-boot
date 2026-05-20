@@ -43,6 +43,8 @@
 --
 -- [__API Interactions__]
 --
+--     -   Interacts with VK_EXT_fragment_density_map
+--
 --     -   Interacts with VK_KHR_acceleration_structure
 --
 --     -   Interacts with VK_NV_ray_tracing
@@ -169,7 +171,8 @@
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
 --     'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM',
---     'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM':
+--     'Vulkan.Extensions.VK_ARM_tensors.TensorViewCreateInfoARM',
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.AccelerationStructureCreateInfo2KHR':
 --
 --     -   'OpaqueCaptureDescriptorDataCreateInfoEXT'
 --
@@ -186,9 +189,16 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
 --
---     -   'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT'
---
 --     -   'PhysicalDeviceDescriptorBufferPropertiesEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
+--
+--     -   'PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>

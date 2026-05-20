@@ -90,6 +90,7 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import {-# SOURCE #-} Vulkan.Extensions.VK_SEC_throttle_hint (ThrottleHintSubmitInfoSEC)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo)
 import Vulkan.Exception (VulkanException(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_win32_keyed_mutex (Win32KeyedMutexAcquireReleaseInfoKHR)
@@ -690,8 +691,8 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 -- image before it is used in a framebuffer, that /can/ be performed as the
 -- first operation submitted to the queue after acquiring the image, and
 -- /should/ not prevent other work from overlapping with the presentation
--- operation. For example, a 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier'
--- could use:
+-- operation. For example, a
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier' could use:
 --
 -- -   @srcStageMask@ =
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
@@ -949,6 +950,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Extensions.VK_NV_low_latency2.LatencySubmissionPresentIdNV',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceQuerySubmitInfoKHR',
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo',
+--     'Vulkan.Extensions.VK_SEC_throttle_hint.ThrottleHintSubmitInfoSEC',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo',
 --     'Vulkan.Extensions.VK_KHR_win32_keyed_mutex.Win32KeyedMutexAcquireReleaseInfoKHR',
 --     or
@@ -1026,6 +1028,7 @@ instance Extensible SubmitInfo where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubmitInfo e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @FrameBoundaryTensorsARM = Just f
+    | Just Refl <- eqT @e @ThrottleHintSubmitInfoSEC = Just f
     | Just Refl <- eqT @e @LatencySubmissionPresentIdNV = Just f
     | Just Refl <- eqT @e @FrameBoundaryEXT = Just f
     | Just Refl <- eqT @e @AmigoProfilingSubmitInfoSEC = Just f

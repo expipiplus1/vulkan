@@ -145,7 +145,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- | VkPipelineCompilerControlCreateInfoAMD - Structure used to pass
 -- compilation control flags to a pipeline
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_AMDX_shader_enqueue.ExecutionGraphPipelineCreateInfoAMDX'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
 --
 -- = See Also
 --

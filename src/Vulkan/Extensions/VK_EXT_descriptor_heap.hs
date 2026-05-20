@@ -521,7 +521,6 @@ module Vulkan.Extensions.VK_EXT_descriptor_heap  ( writeSamplerDescriptorsEXT
                                                  , getTensorOpaqueCaptureDataARM
                                                  , HostAddressRangeEXT(..)
                                                  , HostAddressRangeConstEXT(..)
-                                                 , DeviceAddressRangeEXT(..)
                                                  , TexelBufferDescriptorInfoEXT(..)
                                                  , ImageDescriptorInfoEXT(..)
                                                  , ResourceDescriptorInfoEXT(..)
@@ -573,6 +572,7 @@ module Vulkan.Extensions.VK_EXT_descriptor_heap  ( writeSamplerDescriptorsEXT
                                                                                , SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT
                                                                                , ..
                                                                                )
+                                                 , DeviceAddressRangeEXT
                                                  , EXT_DESCRIPTOR_HEAP_SPEC_VERSION
                                                  , pattern EXT_DESCRIPTOR_HEAP_SPEC_VERSION
                                                  , EXT_DESCRIPTOR_HEAP_EXTENSION_NAME
@@ -580,6 +580,7 @@ module Vulkan.Extensions.VK_EXT_descriptor_heap  ( writeSamplerDescriptorsEXT
                                                  , TensorARM(..)
                                                  , SamplerCustomBorderColorCreateInfoEXT(..)
                                                  , TensorViewCreateInfoARM(..)
+                                                 , DeviceAddressRangeKHR(..)
                                                  , IndirectCommandsTokenTypeNV(..)
                                                  , IndirectCommandsTokenTypeEXT(..)
                                                  , ShaderCreateFlagBitsEXT(..)
@@ -670,7 +671,7 @@ import Vulkan.Core10.Enums.DescriptorType (DescriptorType(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
-import Vulkan.Core10.FundamentalTypes (DeviceAddress)
+import Vulkan.Extensions.VK_KHR_device_address_commands (DeviceAddressRangeKHR)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBindResourceHeapEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBindSamplerHeapEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdPushDataEXT))
@@ -728,6 +729,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SHADER_DE
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Extensions.VK_KHR_device_address_commands (DeviceAddressRangeKHR(..))
 import Vulkan.Extensions.VK_EXT_device_generated_commands (IndirectCommandsTokenTypeEXT(..))
 import Vulkan.Extensions.VK_NV_device_generated_commands (IndirectCommandsTokenTypeNV(..))
 import Vulkan.Extensions.VK_EXT_custom_border_color (SamplerCustomBorderColorCreateInfoEXT(..))
@@ -893,7 +895,7 @@ foreign import ccall
 -- If any image descriptor written by this command includes a
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion', multiple descriptors
 -- will be written adjacent to each other for that descriptor, equal to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::combinedImageSamplerDescriptorCount
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@
 -- for the image.
 --
 -- If any image descriptor written by this command is for an image created
@@ -901,13 +903,14 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 -- multiple descriptors will be written adjacent to each other for that
 -- descriptor, equal to
--- 'SubsampledImageFormatPropertiesEXT'::subsampledImageDescriptorCount for
--- the image.
+-- 'SubsampledImageFormatPropertiesEXT'::@subsampledImageDescriptorCount@
+-- for the image.
 --
 -- Descriptors using the same @type@ and written using a fully identical
--- 'TexelBufferDescriptorInfoEXT' or 'DeviceAddressRangeEXT' structure on
--- the same 'Vulkan.Core10.Handles.Device' will always return the same bit
--- pattern. If the
+-- 'TexelBufferDescriptorInfoEXT' or
+-- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
+-- structure on the same 'Vulkan.Core10.Handles.Device' will always return
+-- the same bit pattern. If the
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-descriptorHeapCaptureReplay descriptorHeapCaptureReplay>
 -- feature is enabled, this applies to any 'Vulkan.Core10.Handles.Device'
 -- created with identical parameters from the same
@@ -973,7 +976,7 @@ foreign import ccall
 --     equal to the product of the value returned by
 --     'getPhysicalDeviceDescriptorSizeEXT' with a @descriptorType@ equal
 --     to @type@ and
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::combinedImageSamplerDescriptorCount,
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@,
 --     as queried from
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
 --     with image format info equivalent to the image view the descriptor
@@ -988,7 +991,7 @@ foreign import ccall
 --     member that is greater than or equal to the product of the value
 --     returned by 'getPhysicalDeviceDescriptorSizeEXT' with a
 --     @descriptorType@ equal to @type@ and
---     'SubsampledImageFormatPropertiesEXT'::subsampledImageDescriptorCount,
+--     'SubsampledImageFormatPropertiesEXT'::@subsampledImageDescriptorCount@,
 --     as queried from
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
 --     with image format info equivalent to the image view the descriptor
@@ -1082,14 +1085,13 @@ foreign import ccall
 -- this heap anywhere except for the reserved range specified by
 -- @pBindInfo->reservedRangeOffset@. Addresses in the range
 -- [@pBindInfo->reservedRangeOffset@, @pBindInfo->reservedRangeOffset@ +
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minSamplerHeapReservedRange minSamplerHeapReservedRange>),
--- or in the range [@pBindInfo->reservedRangeOffset@,
--- @pBindInfo->reservedRangeOffset@ +
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minSamplerHeapReservedRangeWithEmbedded minSamplerHeapReservedRangeWithEmbedded>)
--- if embedded samplers will be used, are reserved for the implementation
--- and /must/ not be accessed by the application at any time from when this
--- command is recorded until all command buffers with that range bound
--- (even invalid ones) have been reset or freed.
+-- @pBindInfo->reservedRangeSize@) are reserved for the implementation and
+-- /must/ not be accessed by the application at any time from when this
+-- command is recorded until there are no command buffers with that range
+-- bound.
+--
+-- The reserved range is bound to the command buffer until it has been
+-- reset.
 --
 -- Implementations may require a larger sampler heap reservation to store
 -- embedded sampler descriptors when used in a mapping, as advertised by
@@ -1235,10 +1237,13 @@ foreign import ccall
 -- through this heap anywhere except for the reserved range specified by
 -- @pBindInfo->reservedRangeOffset@. Addresses in the range
 -- [@pBindInfo->reservedRangeOffset@, @pBindInfo->reservedRangeOffset@ +
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minResourceHeapReservedRange minResourceHeapReservedRange>)
--- are reserved for the implementation and /must/ not be accessed by the
--- application at any time from when this command is recorded until there
--- are no command buffers with that range bound.
+-- @pBindInfo->reservedRangeSize@) are reserved for the implementation and
+-- /must/ not be accessed by the application at any time from when this
+-- command is recorded until there are no command buffers with that range
+-- bound.
+--
+-- The reserved range is bound to the command buffer until it has been
+-- reset.
 --
 -- Shaders executed by commands recorded after this command /can/ use the
 -- specified resource heap to access resources.
@@ -2008,76 +2013,6 @@ instance Zero HostAddressRangeConstEXT where
            zero
 
 
--- | VkDeviceAddressRangeEXT - Structure specifying a device address range
---
--- == Valid Usage
---
--- -   #VUID-VkDeviceAddressRangeEXT-size-11411# If @size@ is not 0,
---     @address@ /must/ not be 0
---
--- -   #VUID-VkDeviceAddressRangeEXT-address-11365# The sum of @address@
---     and @size@ /must/ be less than or equal to the sum of an address
---     retrieved from a 'Vulkan.Core10.Handles.Buffer' and the value of
---     'Vulkan.Core10.Buffer.BufferCreateInfo'::@size@ used to create that
---     'Vulkan.Core10.Handles.Buffer'
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-VkDeviceAddressRangeEXT-address-parameter# If @address@ is not
---     @0@, @address@ /must/ be a valid
---     'Vulkan.Core10.FundamentalTypes.DeviceAddress' value
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
--- 'BindHeapInfoEXT', 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
--- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
--- 'ResourceDescriptorDataEXT', 'TexelBufferDescriptorInfoEXT'
-data DeviceAddressRangeEXT = DeviceAddressRangeEXT
-  { -- | @address@ is a 'Vulkan.Core10.FundamentalTypes.DeviceAddress' specifying
-    -- the start of the range.
-    address :: DeviceAddress
-  , -- | @size@ is a 'Vulkan.Core10.FundamentalTypes.DeviceSize' specifying the
-    -- size of the range.
-    size :: DeviceSize
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (DeviceAddressRangeEXT)
-#endif
-deriving instance Show DeviceAddressRangeEXT
-
-instance ToCStruct DeviceAddressRangeEXT where
-  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DeviceAddressRangeEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (address)
-    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (size)
-    f
-  cStructSize = 16
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
-    f
-
-instance FromCStruct DeviceAddressRangeEXT where
-  peekCStruct p = do
-    address <- peek @DeviceAddress ((p `plusPtr` 0 :: Ptr DeviceAddress))
-    size <- peek @DeviceSize ((p `plusPtr` 8 :: Ptr DeviceSize))
-    pure $ DeviceAddressRangeEXT
-             address size
-
-instance Storable DeviceAddressRangeEXT where
-  sizeOf ~_ = 16
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DeviceAddressRangeEXT where
-  zero = DeviceAddressRangeEXT
-           zero
-           zero
-
-
 -- | VkTexelBufferDescriptorInfoEXT - Structure describing an image
 -- descriptor created from a buffer
 --
@@ -2086,8 +2021,8 @@ instance Zero DeviceAddressRangeEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
--- 'DeviceAddressRangeEXT', 'Vulkan.Core10.Enums.Format.Format',
--- 'ResourceDescriptorDataEXT',
+-- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR',
+-- 'Vulkan.Core10.Enums.Format.Format', 'ResourceDescriptorDataEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data TexelBufferDescriptorInfoEXT = TexelBufferDescriptorInfoEXT
   { -- | @format@ is the 'Vulkan.Core10.Enums.Format.Format' of the descriptor.
@@ -2095,8 +2030,9 @@ data TexelBufferDescriptorInfoEXT = TexelBufferDescriptorInfoEXT
     -- #VUID-VkTexelBufferDescriptorInfoEXT-format-parameter# @format@ /must/
     -- be a valid 'Vulkan.Core10.Enums.Format.Format' value
     format :: Format
-  , -- | @addressRange@ is a 'DeviceAddressRangeEXT' defining the range of data
-    -- backing the descriptor.
+  , -- | @addressRange@ is a
+    -- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
+    -- defining the range of data backing the descriptor.
     addressRange :: DeviceAddressRangeEXT
   }
   deriving (Typeable)
@@ -2107,20 +2043,20 @@ deriving instance Show TexelBufferDescriptorInfoEXT
 
 instance ToCStruct TexelBufferDescriptorInfoEXT where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p TexelBufferDescriptorInfoEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Format)) (format)
-    poke ((p `plusPtr` 24 :: Ptr DeviceAddressRangeEXT)) (addressRange)
-    f
+  pokeCStruct p TexelBufferDescriptorInfoEXT{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Format)) (format)
+    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr DeviceAddressRangeEXT)) (addressRange) . ($ ())
+    lift $ f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Format)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr DeviceAddressRangeEXT)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Format)) (zero)
+    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr DeviceAddressRangeEXT)) (zero) . ($ ())
+    lift $ f
 
 instance FromCStruct TexelBufferDescriptorInfoEXT where
   peekCStruct p = do
@@ -2128,12 +2064,6 @@ instance FromCStruct TexelBufferDescriptorInfoEXT where
     addressRange <- peekCStruct @DeviceAddressRangeEXT ((p `plusPtr` 24 :: Ptr DeviceAddressRangeEXT))
     pure $ TexelBufferDescriptorInfoEXT
              format addressRange
-
-instance Storable TexelBufferDescriptorInfoEXT where
-  sizeOf ~_ = 40
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero TexelBufferDescriptorInfoEXT where
   zero = TexelBufferDescriptorInfoEXT
@@ -2363,7 +2293,6 @@ instance Zero ImageDescriptorInfoEXT where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDescriptorType VK_DESCRIPTOR_TYPE_PARTITIONED_ACCELERATION_STRUCTURE_NV>,
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_TENSOR_ARM',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
@@ -2645,12 +2574,15 @@ instance es ~ '[] => Zero (ResourceDescriptorInfoEXT es) where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
 -- 'CommandBufferInheritanceDescriptorHeapInfoEXT',
--- 'DeviceAddressRangeEXT', 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdBindResourceHeapEXT', 'cmdBindSamplerHeapEXT'
 data BindHeapInfoEXT = BindHeapInfoEXT
-  { -- | @heapRange@ is a 'DeviceAddressRangeEXT' defining the device address
-    -- range used for the heap, inclusive of the implementation reserved range.
+  { -- | @heapRange@ is a
+    -- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
+    -- defining the device address range used for the heap, inclusive of the
+    -- implementation reserved range.
     heapRange :: DeviceAddressRangeEXT
   , -- | @reservedRangeOffset@ is the offset within @heapRange@ to the start of
     -- the reserved range for the implementation.
@@ -2667,22 +2599,22 @@ deriving instance Show BindHeapInfoEXT
 
 instance ToCStruct BindHeapInfoEXT where
   withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p BindHeapInfoEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_HEAP_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceAddressRangeEXT)) (heapRange)
-    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (reservedRangeOffset)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (reservedRangeSize)
-    f
+  pokeCStruct p BindHeapInfoEXT{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_HEAP_INFO_EXT)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DeviceAddressRangeEXT)) (heapRange) . ($ ())
+    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (reservedRangeOffset)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (reservedRangeSize)
+    lift $ f
   cStructSize = 48
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_HEAP_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceAddressRangeEXT)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_HEAP_INFO_EXT)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr DeviceAddressRangeEXT)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
+    lift $ f
 
 instance FromCStruct BindHeapInfoEXT where
   peekCStruct p = do
@@ -2691,12 +2623,6 @@ instance FromCStruct BindHeapInfoEXT where
     reservedRangeSize <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
     pure $ BindHeapInfoEXT
              heapRange reservedRangeOffset reservedRangeSize
-
-instance Storable BindHeapInfoEXT where
-  sizeOf ~_ = 48
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero BindHeapInfoEXT where
   zero = BindHeapInfoEXT
@@ -4069,6 +3995,18 @@ instance Zero DescriptorMappingSourceIndirectAddressEXT where
 --     @sourceData@ /must/ be 0 or a multiple of
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-samplerDescriptorAlignment samplerDescriptorAlignment>
 --
+-- -   #VUID-VkDescriptorSetAndBindingMappingEXT-source-12406# If @source@
+--     is 'DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT',
+--     'DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT',
+--     'DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT',
+--     'DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT', or
+--     'DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT', and
+--     @descriptorSet@, @firstBinding@, and @bindingCount@ identify any
+--     @OpTypeSampledImage@ variables, any @heapOffset@ and
+--     @heapArrayStride@ members of the corresponding member of
+--     @sourceData@ /must/ be 0 or a multiple of
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-imageDescriptorAlignment imageDescriptorAlignment>
+--
 -- -   #VUID-VkDescriptorSetAndBindingMappingEXT-source-11356# If @source@
 --     is 'DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT',
 --     'DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT', or
@@ -4287,6 +4225,14 @@ instance es ~ '[] => Zero (DescriptorSetAndBindingMappingEXT es) where
 --     to an array of @mappingCount@ valid
 --     'DescriptorSetAndBindingMappingEXT' structures
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
@@ -4349,7 +4295,11 @@ instance Zero ShaderDescriptorSetAndBindingMappingInfoEXT where
 -- If this structure is not provided when creating a sampler object without
 -- a custom border color, it is equivalent to setting @index@ to 0.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Sampler.SamplerCreateInfo'
 --
 -- = See Also
 --
@@ -4444,6 +4394,14 @@ instance Zero SamplerCustomBorderColorIndexCreateInfoEXT where
 --     is not @NULL@, @pData@ /must/ be a valid pointer to a valid
 --     'HostAddressRangeConstEXT' structure
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_ARM_tensors.TensorCreateInfoARM'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
@@ -4522,6 +4480,12 @@ instance Zero OpaqueCaptureDataCreateInfoEXT where
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
@@ -4578,7 +4542,11 @@ instance Zero IndirectCommandsLayoutPushDataTokenNV where
 -- | VkSubsampledImageFormatPropertiesEXT - Structure specifying image
 -- descriptor count for subsampled images
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
 --
 -- = See Also
 --
@@ -4646,7 +4614,13 @@ instance Zero SubsampledImageFormatPropertiesEXT where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -4720,7 +4694,11 @@ instance Zero PhysicalDeviceDescriptorHeapFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -4740,12 +4718,15 @@ data PhysicalDeviceDescriptorHeapPropertiesEXT = PhysicalDeviceDescriptorHeapPro
     -- value.
     resourceHeapAlignment :: DeviceSize
   , -- | #limits-maxSamplerHeapSize# @maxSamplerHeapSize@ describes maximum value
-    -- of the @size@ member of 'DeviceAddressRangeEXT' for binding sampler
-    -- heaps, including the reservation, when embedded samplers are used.
+    -- of the @size@ member of
+    -- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
+    -- for binding sampler heaps, including the reservation, when embedded
+    -- samplers are used.
     maxSamplerHeapSize :: DeviceSize
   , -- | #limits-maxResourceHeapSize# @maxResourceHeapSize@ describes maximum
-    -- value of the @size@ member of 'DeviceAddressRangeEXT' for binding
-    -- resource heaps, including the reservation.
+    -- value of the @size@ member of
+    -- 'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
+    -- for binding resource heaps, including the reservation.
     maxResourceHeapSize :: DeviceSize
   , -- | #limits-minSamplerHeapReservedRange# @minSamplerHeapReservedRange@
     -- specifies the minimum amount of data that the implementation needs to be
@@ -4991,6 +4972,12 @@ instance Zero PhysicalDeviceDescriptorHeapPropertiesEXT where
 --     If @pResourceHeapBindInfo@ is not @NULL@, @pResourceHeapBindInfo@
 --     /must/ be a valid pointer to a valid 'BindHeapInfoEXT' structure
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_heap VK_EXT_descriptor_heap>,
@@ -5060,7 +5047,11 @@ instance Zero CommandBufferInheritanceDescriptorHeapInfoEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -5542,6 +5533,10 @@ instance Read SpirvResourceTypeFlagBitsEXT where
       showTableSpirvResourceTypeFlagBitsEXT
       conNameSpirvResourceTypeFlagBitsEXT
       SpirvResourceTypeFlagBitsEXT
+
+-- No documentation found for TopLevel "VkDeviceAddressRangeEXT"
+type DeviceAddressRangeEXT = DeviceAddressRangeKHR
+
 
 type EXT_DESCRIPTOR_HEAP_SPEC_VERSION = 1
 

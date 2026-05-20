@@ -131,7 +131,11 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 -- | VkProtectedSubmitInfo - Structure indicating whether the submission is
 -- protected
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Queue.SubmitInfo'
 --
 -- = See Also
 --
@@ -207,7 +211,13 @@ instance Zero ProtectedSubmitInfo where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -270,7 +280,11 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -284,9 +298,9 @@ data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProp
     -- memory in an unprotected queue operation, or perform a query in a
     -- protected queue operation. If this limit is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
-    -- have undefined values written; reads and queries will return undefined
-    -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- applications /must/ not perform these operations. See
+    -- have undefined values written; reads and queries will return poison. If
+    -- this limit is 'Vulkan.Core10.FundamentalTypes.FALSE', applications
+    -- /must/ not perform these operations. See
     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-protected-access-rules>
     -- for more information.
     protectedNoFault :: Bool }

@@ -126,6 +126,15 @@
 -- on when determining which internal formats and layouts to use for that
 -- image.
 --
+-- 5) Can 'DisplayPresentInfoKHR' be used without calling
+-- 'createSharedSwapchainsKHR'?
+--
+-- __RESOLVED__: Yes.
+--
+-- The two bits of functionality were meant to be independent. If the
+-- extension was created today, there would likely be two feature bits for
+-- 'DisplayPresentInfoKHR' and 'createSharedSwapchainsKHR'.
+--
 -- == Examples
 --
 -- The example code for the @VK_KHR_display@ and @VK_KHR_display_swapchain@

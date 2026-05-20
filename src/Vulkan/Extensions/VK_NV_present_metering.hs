@@ -25,12 +25,6 @@
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
 --
---     -   __This is a /provisional/ extension and /must/ be used with
---         caution. See the
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#boilerplate-provisional-header description>
---         of provisional header files for enablement and stability
---         details.__
---
 -- [__Contact__]
 --
 --     -   Charles Hansen
@@ -143,7 +137,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SET_PRESE
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' and needs to be
 -- updated every @numFramesPerBatch@ presents.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
 --
 -- = See Also
 --
@@ -223,7 +221,13 @@ instance Zero SetPresentConfigNV where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --

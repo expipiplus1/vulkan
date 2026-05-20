@@ -1608,6 +1608,16 @@ submitDebugUtilsMessageEXT instance'
 --     @pObjectName@ is not @NULL@, @pObjectName@ /must/ be a
 --     null-terminated UTF-8 string
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.PipelineShaderStageCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_descriptor_heap.ResourceDescriptorInfoEXT'
+--
+--     -   'Vulkan.Core10.Sampler.SamplerCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
@@ -1910,7 +1920,11 @@ instance Zero DebugUtilsLabelEXT where
 -- A callback /can/ be called from multiple threads simultaneously (if the
 -- application is making Vulkan calls from multiple threads).
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo'
 --
 -- = See Also
 --
@@ -2121,7 +2135,7 @@ data DebugUtilsMessengerCallbackDataEXT (es :: [Type]) = DebugUtilsMessengerCall
     -- for more information.
     cmdBufLabels :: Vector DebugUtilsLabelEXT
   , -- | @pObjects@ is a pointer to an array of 'DebugUtilsObjectNameInfoEXT'
-    -- objects related to the detected issue. The array is roughly in order or
+    -- objects related to the detected issue. The array is roughly in order of
     -- importance, but the 0th element is always guaranteed to be the most
     -- important object for this message.
     objects :: Vector DebugUtilsObjectNameInfoEXT

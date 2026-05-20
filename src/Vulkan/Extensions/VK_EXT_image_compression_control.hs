@@ -270,6 +270,16 @@ pattern STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT = STRUCTURE_TYPE_IMAGE_SUBRESOURC
 -- -   #VUID-VkImageCompressionControlEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
+--
 -- Some combinations of compression properties may not be supported. For
 -- example, some implementations may not support different fixed-rate
 -- compression rates per plane of a
@@ -364,7 +374,13 @@ instance Zero ImageCompressionControlEXT where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -416,7 +432,15 @@ instance Zero PhysicalDeviceImageCompressionControlFeaturesEXT where
 
 -- | VkImageCompressionPropertiesEXT - Compression properties of an image
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
+--
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2'
+--
+--     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR'
 --
 -- = See Also
 --

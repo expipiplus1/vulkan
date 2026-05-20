@@ -460,7 +460,11 @@ getExternalComputeQueueDataNV externalQueue data' = liftIO . evalContT $ do
 -- | VkExternalComputeQueueDeviceCreateInfoNV - Structure specifying
 -- information about external compute queues relevant to device creation
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
 --
 -- = See Also
 --
@@ -631,7 +635,11 @@ instance Zero ExternalComputeQueueDataParamsNV where
 -- hardware specific information and limits for
 -- VK_NV_external_compute_queue functionality
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

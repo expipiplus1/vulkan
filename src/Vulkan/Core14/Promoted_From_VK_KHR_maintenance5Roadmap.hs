@@ -201,9 +201,12 @@ foreign import ccall
 --
 -- = Description
 --
--- @size@ specifies the bound size of the index buffer starting from
--- @offset@. If @size@ is 'Vulkan.Core10.APIConstants.WHOLE_SIZE' then the
--- bound size is from @offset@ to the end of the @buffer@.
+-- @buffer@, @offset@, and @size@ specify the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#index-buffer-range bound index buffer range>,
+-- with a range of memory bound from [@base@ + @offset@, @base@ + @offset@
+-- + @size@), where @base@ is the start of @buffer@. If @size@ is
+-- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' then the range is from @offset@
+-- to the end of the @buffer@.
 --
 -- If the
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance6 maintenance6>
@@ -560,7 +563,17 @@ getDeviceImageSubresourceLayout device info = liftIO . evalContT $ do
 -- @usage@ of this structure, and the usage flags representable in @usage@
 -- of the buffer query structure are also returned in that field.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Buffer.BufferCreateInfo'
+--
+--     -   'Vulkan.Core10.BufferView.BufferViewCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorBufferBindingInfoEXT'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalBufferInfo'
 --
 -- = See Also
 --
@@ -627,7 +640,17 @@ instance Zero BufferUsageFlags2CreateInfo where
 -- value passed in that creation structure, allowing additional creation
 -- flags to be specified.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.ComputePipeline.ComputePipelineCreateInfo'
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'
+--
+--     -   'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'
 --
 -- = See Also
 --
@@ -705,7 +728,13 @@ instance Zero PipelineCreateFlags2CreateInfo where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -836,7 +865,11 @@ instance Zero PhysicalDeviceMaintenance5Features where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

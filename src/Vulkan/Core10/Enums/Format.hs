@@ -2131,6 +2131,8 @@ import GHC.Show (Show(showsPrec))
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkClusterAccelerationStructureTriangleClusterInputNV VkClusterAccelerationStructureTriangleClusterInputNV>,
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
 -- 'Vulkan.Extensions.VK_EXT_custom_resolve.CustomResolveCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphOpticalFlowImageFormatPropertiesARM',
+-- 'Vulkan.Extensions.VK_ARM_data_graph_optical_flow.DataGraphPipelineOpticalFlowCreateInfoARM',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorAddressInfoEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',

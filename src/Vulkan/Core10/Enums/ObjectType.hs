@@ -26,6 +26,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_DESCRIPTOR_SET
                                                   , OBJECT_TYPE_FRAMEBUFFER
                                                   , OBJECT_TYPE_COMMAND_POOL
+                                                  , OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM
                                                   , OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT
                                                   , OBJECT_TYPE_EXTERNAL_COMPUTE_QUEUE_NV
@@ -45,6 +46,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
                                                   , OBJECT_TYPE_VALIDATION_CACHE_EXT
                                                   , OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
+                                                  , OBJECT_TYPE_GPA_SESSION_AMD
                                                   , OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
                                                   , OBJECT_TYPE_CU_FUNCTION_NVX
                                                   , OBJECT_TYPE_CU_MODULE_NVX
@@ -275,6 +277,9 @@ pattern OBJECT_TYPE_FRAMEBUFFER = ObjectType 24
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern OBJECT_TYPE_COMMAND_POOL = ObjectType 25
 
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM"
+pattern OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM = ObjectType 1000607000
+
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT"
 pattern OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT = ObjectType 1000572001
 
@@ -331,6 +336,9 @@ pattern OBJECT_TYPE_VALIDATION_CACHE_EXT = ObjectType 1000160000
 
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR"
 pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR = ObjectType 1000150000
+
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_GPA_SESSION_AMD"
+pattern OBJECT_TYPE_GPA_SESSION_AMD = ObjectType 1000133000
 
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
 pattern OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = ObjectType 1000128000
@@ -392,6 +400,7 @@ pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = ObjectType 1000085000
   , OBJECT_TYPE_DESCRIPTOR_SET
   , OBJECT_TYPE_FRAMEBUFFER
   , OBJECT_TYPE_COMMAND_POOL
+  , OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM
   , OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT
   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT
   , OBJECT_TYPE_EXTERNAL_COMPUTE_QUEUE_NV
@@ -411,6 +420,7 @@ pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = ObjectType 1000085000
   , OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
   , OBJECT_TYPE_VALIDATION_CACHE_EXT
   , OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
+  , OBJECT_TYPE_GPA_SESSION_AMD
   , OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
   , OBJECT_TYPE_CU_FUNCTION_NVX
   , OBJECT_TYPE_CU_MODULE_NVX
@@ -462,6 +472,10 @@ showTableObjectType =
   , (OBJECT_TYPE_DESCRIPTOR_SET, "DESCRIPTOR_SET")
   , (OBJECT_TYPE_FRAMEBUFFER, "FRAMEBUFFER")
   , (OBJECT_TYPE_COMMAND_POOL, "COMMAND_POOL")
+  ,
+    ( OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM
+    , "SHADER_INSTRUMENTATION_ARM"
+    )
   ,
     ( OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT
     , "INDIRECT_EXECUTION_SET_EXT"
@@ -517,6 +531,7 @@ showTableObjectType =
     ( OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
     , "ACCELERATION_STRUCTURE_KHR"
     )
+  , (OBJECT_TYPE_GPA_SESSION_AMD, "GPA_SESSION_AMD")
   ,
     ( OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
     , "DEBUG_UTILS_MESSENGER_EXT"

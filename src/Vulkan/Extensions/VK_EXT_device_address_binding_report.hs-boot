@@ -210,6 +210,14 @@
 -- reporting the association between virtual address range and the
 -- buffer\/image.
 --
+-- 12.) Should binding reports be emitted for vkQueueBindSparse()
+-- operations?
+--
+-- __RESOLVED__: binding reports for sparse objects are best effort, some
+-- implementations might report events on vkQueueBindSparse() other
+-- implementations might report events on sparse object
+-- creation\/destruction.
+--
 -- == Version History
 --
 -- -   Revision 1, 2020-09-23 (Ralph Potter)

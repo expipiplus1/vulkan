@@ -287,6 +287,18 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PUSH_CONS
 -- -   #VUID-VkPushConstantBankInfoNV-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV'
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT'
+--
+--     -   'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT'
+--
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_push_constant_bank VK_NV_push_constant_bank>,
@@ -355,7 +367,13 @@ instance Zero PushConstantBankInfoNV where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -430,7 +448,11 @@ instance Zero PhysicalDevicePushConstantBankFeaturesNV where
 -- limits are greater than 1. For compute shaders, the number of banks is
 -- equal to or greater than 1.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

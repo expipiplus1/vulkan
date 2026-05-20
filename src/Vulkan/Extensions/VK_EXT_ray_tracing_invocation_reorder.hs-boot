@@ -15,7 +15,7 @@
 --     582
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Ratification Status__]
 --     Ratified
@@ -38,7 +38,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2025-11-12
+--     2026-04-02
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -120,6 +120,12 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_EXT'
 --
 -- == Version History
+--
+-- -   Revision 2, 2026-04-02 (Vikram Kushwaha)
+--
+--     -   Add @hitKind@ overload for @hitObjectRecordFromQueryEXT@ in
+--         @GL_EXT_shader_invocation_reorder@, and fix for
+--         <https://github.com/KhronosGroup/SPIRV-Registry/issues/373>
 --
 -- -   Revision 1, 2025-11-12 (Eric Werness)
 --

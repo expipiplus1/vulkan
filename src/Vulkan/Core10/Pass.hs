@@ -1803,17 +1803,18 @@ instance Zero SubpassDescription where
 --
 -- For non-attachment resources, the memory dependency expressed by subpass
 -- dependency is nearly identical to that of a
--- 'Vulkan.Core10.OtherTypes.MemoryBarrier' (with matching @srcAccessMask@
--- and @dstAccessMask@ parameters) submitted as a part of a
+-- 'Vulkan.Core10.CommandBufferBuilding.MemoryBarrier' (with matching
+-- @srcAccessMask@ and @dstAccessMask@ parameters) submitted as a part of a
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier' (with matching
 -- @srcStageMask@ and @dstStageMask@ parameters). The only difference being
 -- that its scopes are limited to the identified subpasses rather than
 -- potentially affecting everything before and after.
 --
 -- For attachments however, subpass dependencies work more like a
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' defined similarly to the
--- 'Vulkan.Core10.OtherTypes.MemoryBarrier' above, the queue family indices
--- set to 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', and layouts as
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier' defined
+-- similarly to the 'Vulkan.Core10.CommandBufferBuilding.MemoryBarrier'
+-- above, the queue family indices set to
+-- 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', and layouts as
 -- follows:
 --
 -- -   The equivalent to @oldLayout@ is the attachment’s layout according

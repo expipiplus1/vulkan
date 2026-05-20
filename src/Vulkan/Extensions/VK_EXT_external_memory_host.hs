@@ -419,6 +419,12 @@ getMemoryHostPointerPropertiesEXT device
 -- -   #VUID-VkImportMemoryHostPointerInfoEXT-pHostPointer-parameter#
 --     @pHostPointer@ /must/ be a pointer value
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Memory.MemoryAllocateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_external_memory_host VK_EXT_external_memory_host>,
@@ -548,7 +554,11 @@ instance Zero MemoryHostPointerPropertiesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

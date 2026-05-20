@@ -436,7 +436,13 @@ transitionImageLayout device transitions = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -589,6 +595,12 @@ instance Zero PhysicalDeviceHostImageCopyFeatures where
 --     @NULL@, @pCopyDstLayouts@ /must/ be a valid pointer to an array of
 --     @copyDstLayoutCount@ 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 --     values
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -2935,7 +2947,11 @@ instance Zero HostImageLayoutTransitionInfo where
 -- | VkSubresourceHostMemcpySize - Memory size needed to copy to or from an
 -- image on the host with VK_HOST_IMAGE_COPY_MEMCPY_BIT
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2'
 --
 -- = See Also
 --
@@ -3027,7 +3043,11 @@ instance Zero SubresourceHostMemcpySize where
 -- certain conditions are met, such as specific image usage flags or
 -- creation flags.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
 --
 -- = See Also
 --

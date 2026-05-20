@@ -459,7 +459,13 @@ pattern COMPONENT_TYPE_UINT64_NV = COMPONENT_TYPE_UINT64_KHR
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -472,8 +478,10 @@ data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrix
     cooperativeMatrix :: Bool
   , -- | #features-cooperativeMatrixRobustBufferAccessNV#
     -- @cooperativeMatrixRobustBufferAccess@ indicates that the implementation
-    -- supports robust buffer access for SPIR-V @OpCooperativeMatrixLoadNV@ and
-    -- @OpCooperativeMatrixStoreNV@ instructions.
+    -- supports implementation supports
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-robust-buffer-access robust buffer access>
+    -- for SPIR-V @OpCooperativeMatrixLoadNV@ and @OpCooperativeMatrixStoreNV@
+    -- instructions.
     cooperativeMatrixRobustBufferAccess :: Bool
   }
   deriving (Typeable, Eq)
@@ -532,7 +540,11 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

@@ -226,7 +226,13 @@ cmdEndRendering2EXT = cmdEndRendering2KHR
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -291,7 +297,11 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -427,7 +437,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT where
 --     an integer multiple of @fragmentDensityOffsetGranularity.height@
 --
 -- -   #VUID-VkRenderPassFragmentDensityMapOffsetEndInfoEXT-pFragmentDensityOffsets-10730#
---     Each element of @pFragmentDensityOffsets@ must be identical for
+--     Each element of @pFragmentDensityOffsets@ /must/ be identical for
 --     every 'Vulkan.Extensions.VK_KHR_maintenance10.cmdEndRendering2KHR'
 --     call made in a render pass
 --
@@ -442,6 +452,14 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT where
 --     @pFragmentDensityOffsets@ /must/ be a valid pointer to an array of
 --     @fragmentDensityOffsetCount@
 --     'Vulkan.Core10.FundamentalTypes.Offset2D' structures
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_maintenance10.RenderingEndInfoKHR'
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassEndInfo'
 --
 -- = See Also
 --

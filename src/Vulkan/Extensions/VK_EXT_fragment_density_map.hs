@@ -302,7 +302,13 @@ pattern PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -398,7 +404,11 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -542,6 +552,14 @@ instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
 --     @fragmentDensityMapAttachment@ /must/ be a valid
 --     'Vulkan.Core10.Pass.AttachmentReference' structure
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Pass.RenderPassCreateInfo'
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>,
@@ -612,7 +630,7 @@ instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
 --     /must/ have been created with the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
---     usage flag set_EXT
+--     usage flag set
 --
 -- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageView-06159#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it
@@ -641,6 +659,12 @@ instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
 -- -   #VUID-VkRenderingFragmentDensityMapAttachmentInfoEXT-imageLayout-parameter#
 --     @imageLayout@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'
 --
 -- = See Also
 --

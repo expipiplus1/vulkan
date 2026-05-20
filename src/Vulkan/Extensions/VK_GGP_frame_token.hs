@@ -114,7 +114,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP))
 -- | VkPresentFrameTokenGGP - The Google Games Platform frame token
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
 --
 -- = See Also
 --

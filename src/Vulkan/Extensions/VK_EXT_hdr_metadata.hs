@@ -239,6 +239,11 @@ foreign import ccall
 --     @pSwapchains@ /must/ have been created, allocated, or retrieved from
 --     @device@
 --
+-- == Host Synchronization
+--
+-- -   Host access to each member of @pSwapchains@ /must/ be externally
+--     synchronized
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,

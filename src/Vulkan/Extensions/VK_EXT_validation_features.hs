@@ -226,6 +226,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --     of @disabledValidationFeatureCount@ valid
 --     'ValidationFeatureDisableEXT' values
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo'
+--
+--     -   'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateInfoEXT'
+--
+--     -   'Vulkan.Core10.Shader.ShaderModuleCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features VK_EXT_validation_features>,

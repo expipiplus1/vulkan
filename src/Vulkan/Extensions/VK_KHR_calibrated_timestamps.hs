@@ -307,7 +307,8 @@ foreign import ccall
 --
 -- -   #VUID-vkGetCalibratedTimestampsKHR-timeDomain-09246# The
 --     @timeDomain@ value of each 'CalibratedTimestampInfoKHR' in
---     @pTimestampInfos@ /must/ be unique
+--     @pTimestampInfos@ /must/ be unique except for those with a value of
+--     'Vulkan.Extensions.VK_EXT_present_timing.TIME_DOMAIN_PRESENT_STAGE_LOCAL_EXT'
 --
 -- == Valid Usage (Implicit)
 --

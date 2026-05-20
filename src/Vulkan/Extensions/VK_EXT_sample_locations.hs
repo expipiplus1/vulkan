@@ -76,8 +76,8 @@
 -- the 'SampleLocationsInfoEXT' structure /can/ be specified for each
 -- situation where an explicit or automatic layout transition has to take
 -- place. 'SampleLocationsInfoEXT' /can/ be chained from
--- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures to provide
--- sample locations for layout transitions performed by
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier' structures to
+-- provide sample locations for layout transitions performed by
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' and
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier' calls, and
 -- 'RenderPassSampleLocationsBeginInfoEXT' /can/ be chained from
@@ -101,7 +101,7 @@
 --
 -- -   'SubpassSampleLocationsEXT'
 --
--- -   Extending 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
+-- -   Extending 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2':
 --
 --     -   'SampleLocationsInfoEXT'
@@ -518,6 +518,14 @@ instance Zero SampleLocationEXT where
 --     valid pointer to an array of @sampleLocationsCount@
 --     'SampleLocationEXT' structures
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier'
+--
+--     -   'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
@@ -745,6 +753,12 @@ instance Zero SubpassSampleLocationsEXT where
 --     of @postSubpassSampleLocationsCount@ valid
 --     'SubpassSampleLocationsEXT' structures
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
@@ -828,7 +842,11 @@ instance Zero RenderPassSampleLocationsBeginInfoEXT where
 -- | VkPipelineSampleLocationsStateCreateInfoEXT - Structure specifying
 -- sample locations for a pipeline
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.PipelineMultisampleStateCreateInfo'
 --
 -- = See Also
 --
@@ -901,7 +919,11 @@ instance Zero PipelineSampleLocationsStateCreateInfoEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

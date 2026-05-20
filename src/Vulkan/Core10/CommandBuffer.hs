@@ -509,6 +509,10 @@ foreign import ccall
 --     ended by a call to
 --     'Vulkan.Extensions.VK_EXT_debug_marker.cmdDebugMarkerEndEXT'
 --
+-- -   #VUID-vkEndCommandBuffer-commandBuffer-12372# @commandBuffer@ /must/
+--     not have any shader instrumentation
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#shaders-instrumentation-active active>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkEndCommandBuffer-commandBuffer-parameter# @commandBuffer@

@@ -128,7 +128,13 @@ pattern API_VERSION_1_2 = MAKE_API_VERSION 1 2 0
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -355,7 +361,11 @@ instance Zero PhysicalDeviceVulkan11Features where
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'::@quadOperationsInAllStages@
 -- members, but add the @subgroup@ prefix to the member name.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -442,9 +452,9 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- memory in an unprotected queue operation, or perform a query in a
     -- protected queue operation. If this limit is
     -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
-    -- have undefined values written; reads and queries will return undefined
-    -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
-    -- applications /must/ not perform these operations. See
+    -- have undefined values written; reads and queries will return poison. If
+    -- this limit is 'Vulkan.Core10.FundamentalTypes.FALSE', applications
+    -- /must/ not perform these operations. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules ???>
     -- for more information.
     protectedNoFault :: Bool
@@ -905,8 +915,8 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-separateDepthStencilLayouts# @separateDepthStencilLayouts@
 --     indicates whether the implementation supports a
---     'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' for a depth\/stencil
---     image with only one of
+--     'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier' for a
+--     depth\/stencil image with only one of
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     set, and whether
@@ -1005,6 +1015,14 @@ instance Zero PhysicalDeviceVulkan11Properties where
 -- -   #VUID-VkPhysicalDeviceVulkan12Features-sType-sType# @sType@ /must/
 --     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES'
+--
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -1400,7 +1418,11 @@ instance Zero PhysicalDeviceVulkan12Features where
 -- and
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreProperties'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

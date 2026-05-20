@@ -39,6 +39,8 @@
 --
 --     -   Interacts with VK_ARM_pipeline_opacity_micromap
 --
+--     -   Interacts with VK_ARM_shader_instrumentation
+--
 --     -   Interacts with VK_EXT_attachment_feedback_loop_layout
 --
 --     -   Interacts with VK_EXT_buffer_device_address
@@ -50,8 +52,6 @@
 --     -   Interacts with VK_EXT_fragment_density_map
 --
 --     -   Interacts with VK_EXT_graphics_pipeline_library
---
---     -   Interacts with VK_EXT_opacity_micromap
 --
 --     -   Interacts with VK_EXT_pipeline_creation_cache_control
 --
@@ -363,6 +363,20 @@
 --     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM'
 --
 -- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_shader_instrumentation VK_ARM_shader_instrumentation>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
+--
+--     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_EXT_shader_object.ShaderCreateFlagBitsEXT':
+--
+--     -   'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM'
+--
+-- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_attachment_feedback_loop_layout VK_EXT_attachment_feedback_loop_layout>
 -- is supported:
 --
@@ -410,22 +424,6 @@
 --     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT'
 --
 --     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>
--- is supported:
---
--- -   Extending
---     'Vulkan.Core14.Enums.BufferUsageFlags2.BufferUsageFlagBits2':
---
---     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT'
---
---     -   'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT'
---
--- -   Extending
---     'Vulkan.Core14.Enums.PipelineCreateFlags2.PipelineCreateFlagBits2':
---
---     -   'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
@@ -670,6 +668,8 @@ module Vulkan.Extensions.VK_KHR_maintenance5  ( pattern STRUCTURE_TYPE_PHYSICAL_
                                               , pattern KHR_MAINTENANCE_5_SPEC_VERSION
                                               , KHR_MAINTENANCE_5_EXTENSION_NAME
                                               , pattern KHR_MAINTENANCE_5_EXTENSION_NAME
+                                              , ShaderCreateFlagBitsEXT(..)
+                                              , ShaderCreateFlagsEXT
                                               ) where
 
 import Data.String (IsString)
@@ -739,6 +739,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDERING_AREA_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2))
+import Vulkan.Extensions.VK_EXT_shader_object (ShaderCreateFlagBitsEXT(..))
+import Vulkan.Extensions.VK_EXT_shader_object (ShaderCreateFlagsEXT)
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES
 

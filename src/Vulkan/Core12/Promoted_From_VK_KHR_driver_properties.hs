@@ -127,7 +127,11 @@ instance Zero ConformanceVersion where
 -- @driverID@ /must/ be immutable for a given driver across instances,
 -- processes, driver versions, and system reboots.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

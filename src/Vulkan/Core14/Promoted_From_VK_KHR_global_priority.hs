@@ -61,7 +61,11 @@ import Vulkan.Core10.APIConstants (pattern MAX_GLOBAL_PRIORITY_SIZE)
 -- will default to
 -- 'Vulkan.Core14.Enums.QueueGlobalPriority.QUEUE_GLOBAL_PRIORITY_MEDIUM'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Device.DeviceQueueCreateInfo'
 --
 -- = See Also
 --
@@ -140,7 +144,13 @@ instance Zero DeviceQueueGlobalPriorityCreateInfo where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -210,7 +220,7 @@ instance Zero PhysicalDeviceGlobalPriorityQueryFeatures where
 --
 -- The valid elements of @priorities@ /must/ be a continuous sequence of
 -- 'Vulkan.Core14.Enums.QueueGlobalPriority.QueueGlobalPriority' enums in
--- the ascending order.
+-- ascending order.
 --
 -- For example, returning @priorityCount@ as 3 with supported @priorities@
 -- as 'Vulkan.Core14.Enums.QueueGlobalPriority.QUEUE_GLOBAL_PRIORITY_LOW',
@@ -219,7 +229,11 @@ instance Zero PhysicalDeviceGlobalPriorityQueryFeatures where
 -- 'Vulkan.Core14.Enums.QueueGlobalPriority.QUEUE_GLOBAL_PRIORITY_REALTIME'
 -- is not allowed.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2'
 --
 -- = See Also
 --

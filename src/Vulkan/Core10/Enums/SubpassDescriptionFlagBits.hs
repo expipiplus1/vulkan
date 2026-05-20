@@ -81,6 +81,16 @@ type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 -- any depth testing, stencil testing, or blending operation which sources
 -- these undefined values also has undefined result value.
 --
+-- There is no equivalent to
+-- 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT',
+-- 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT',
+-- or
+-- 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'
+-- for render pass instances begun with
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'.
+-- For such render passes, only the corresponding pipeline flags are
+-- specified.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,

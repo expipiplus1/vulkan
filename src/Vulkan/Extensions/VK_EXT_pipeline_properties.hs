@@ -220,7 +220,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPipelinePropertiesEXT
-  :: FunPtr (Ptr Device_T -> Ptr PipelineInfoEXT -> Ptr BaseOutStructure -> IO Result) -> Ptr Device_T -> Ptr PipelineInfoEXT -> Ptr BaseOutStructure -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr PipelineInfoKHR -> Ptr BaseOutStructure -> IO Result) -> Ptr Device_T -> Ptr PipelineInfoKHR -> Ptr BaseOutStructure -> IO Result
 
 -- | vkGetPipelinePropertiesEXT - Query pipeline properties
 --
@@ -251,7 +251,8 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPipelinePropertiesEXT-pPipelineInfo-parameter#
 --     @pPipelineInfo@ /must/ be a valid pointer to a valid
---     'PipelineInfoEXT' structure
+--     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineInfoKHR'
+--     structure
 --
 -- == Return Codes
 --
@@ -279,7 +280,7 @@ getPipelinePropertiesEXT :: forall io
                             Device
                          -> -- | @pPipelineInfo@ is a pointer to a 'PipelineInfoEXT' structure which
                             -- describes the pipeline being queried.
-                            PipelineInfoEXT
+                            PipelineInfoKHR
                          -> -- | @pPipelineProperties@ is a pointer to a
                             -- 'Vulkan.CStruct.Extends.BaseOutStructure' structure in which the
                             -- pipeline properties will be written.
@@ -379,7 +380,13 @@ instance Zero PipelinePropertiesIdentifierEXT where
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --

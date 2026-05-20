@@ -1,0 +1,167 @@
+{-# language CPP #-}
+-- | = Name
+--
+-- VK_QCOM_image_processing3 - device extension
+--
+-- = VK_QCOM_image_processing3
+--
+-- [__Name String__]
+--     @VK_QCOM_image_processing3@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     304
+--
+-- [__Revision__]
+--     1
+--
+-- [__Ratification Status__]
+--     Not ratified
+--
+-- [__Extension and Version Dependencies__]
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 VK_KHR_get_physical_device_properties2>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Vulkan Version 1.1>
+--
+-- [__API Interactions__]
+--
+--     -   Interacts with VK_QCOM_image_processing
+--
+-- [__SPIR-V Dependencies__]
+--
+--     -   <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/QCOM/SPV_QCOM_image_processing3.html SPV_QCOM_image_processing3>
+--
+-- [__Contact__]
+--
+--     -   Matthew Netsch
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_image_processing3] @mnetsch%0A*Here describe the issue or question you have about the VK_QCOM_image_processing3 extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_QCOM_image_processing3.adoc VK_QCOM_image_processing3>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2026-05-08
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/main/extensions/qcom/GLSL_QCOM_image_processing3.txt GL_QCOM_image_processing3>
+--
+--     -   Interacts with @VK_QCOM_tile_shading@
+--
+--     -   Interacts with @VK_QCOM_image_processing@
+--
+--     -   Interacts with @VK_QCOM_image_processing2@
+--
+-- [__Contributors__]
+--
+--     -   Matthew Netsch, Qualcomm Technologies, Inc.
+--
+--     -   Jonathan Wicks, Qualcomm Technologies, Inc.
+--
+--     -   Liang Li, Qualcomm Technologies, Inc.
+--
+--     -   Wooyoung Kim, Qualcomm Technologies, Inc.
+--
+-- == Description
+--
+-- This extension introduces a new SPIR-V built-in function to support
+-- predefined image gather operations used in popular image processing
+-- algorithms such as super resolution upscaling and contrast-adaptive
+-- sharpening.
+--
+-- The @OpImageGatherQCOM@ instruction supports the following modes:
+--
+-- -   @GatherH2QCOM@ - produces an image gather with an extra horizontal
+--     offset
+--
+-- -   @GatherV2QCOM@ - produces an image gather with an extra vertical
+--     offset. Combined with @OpImageGather@ and @GatherH2QCOM@, this is
+--     useful for creating a 12-tap filter for upscaling.
+--
+-- -   @GatherDQCOM@ - produces an image gather by sampling the cardinal
+--     offsets. Combined with a point sample of the center texel, this is
+--     useful for creating a 5-tap sharpening filter (eg. CAS).
+--
+-- -   @Gather4x1QCOM@ - produces an image gather by sampling 4 texels in a
+--     horizontal row. This is useful for kernels requiring vectorized
+--     loads, and can help with cache locality for linear access.
+--
+-- Each of the image processing instructions operate on the same sampled
+-- images that the @OpImage*Gather@ instructions support with the exception
+-- of cube-maps, depth comparison, @ConstOffsets@, and sparse residency
+-- check.
+--
+-- Implementations of this extension should support these operations
+-- natively at the HW instruction level, offering potential performance
+-- gains as well as ease of development.
+--
+-- This extension also adds some block matching improvements over
+-- @VK_QCOM_image_processing@ and @VK_QCOM_image_processing2@ by exposing
+-- more formats and wrap modes.
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceImageProcessing3FeaturesQCOM'
+--
+-- == New Enum Constants
+--
+-- -   'QCOM_IMAGE_PROCESSING_3_EXTENSION_NAME'
+--
+-- -   'QCOM_IMAGE_PROCESSING_3_SPEC_VERSION'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_image_processing VK_QCOM_image_processing>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
+--
+--     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM'
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-ImageGatherLinearQCOM ImageGatherLinearQCOM>
+--
+-- -   <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities-table-ImageGatherExtendedModesQCOM ImageGatherExtendedModesQCOM>
+--
+-- == Version History
+--
+-- -   Revision 1, 2026-05-08 (Matthew Netsch)
+--
+-- == See Also
+--
+-- No cross-references are available
+--
+-- == Document Notes
+--
+-- For more information, see the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_QCOM_image_processing3 Vulkan Specification>.
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
+module Vulkan.Extensions.VK_QCOM_image_processing3  (PhysicalDeviceImageProcessing3FeaturesQCOM) where
+
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
+data PhysicalDeviceImageProcessing3FeaturesQCOM
+
+instance ToCStruct PhysicalDeviceImageProcessing3FeaturesQCOM
+instance Show PhysicalDeviceImageProcessing3FeaturesQCOM
+
+instance FromCStruct PhysicalDeviceImageProcessing3FeaturesQCOM
+

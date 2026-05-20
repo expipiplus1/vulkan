@@ -66,6 +66,8 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM
                                    , DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM
                                    , pattern DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM
+                                   , MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM
+                                   , pattern MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM
                                    , pattern NULL_HANDLE
                                    , IsHandle
                                    , HasObjectType(..)
@@ -479,6 +481,18 @@ type DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM = 3
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_data_graph_model VK_QCOM_data_graph_model>
 pattern DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM :: forall a . Integral a => a
 pattern DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM = 3
+
+
+type MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM = 128
+
+-- | VK_MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM - Length of a data graph TOSA
+-- profile or extension name string
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_data_graph_instruction_set_tosa VK_ARM_data_graph_instruction_set_tosa>
+pattern MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM :: forall a . Integral a => a
+pattern MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM = 128
 
 
 -- | VK_NULL_HANDLE - Reserved non-valid object handle

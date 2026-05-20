@@ -87,7 +87,7 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-bindpoint-commands bound pipeline commands>
 -- with the pipeline type set by @pipelineBindPoint@ until the descriptor
 -- is overwritten, or else until the set is disturbed as described in
--- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility Pipeline Layout Compatibility>.
 -- When the set is disturbed or push descriptors with a different
 -- descriptor set layout are set, all push descriptors are undefined.
 --
@@ -507,7 +507,11 @@ cmdPushDescriptorSetWithTemplate commandBuffer
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

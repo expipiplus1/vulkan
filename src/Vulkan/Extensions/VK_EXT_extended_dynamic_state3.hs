@@ -774,6 +774,20 @@ foreign import ccall
 -- enabled, then depth clipping is enabled when depth clamping is disabled
 -- and vice versa.
 --
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+-- feature is enabled, the above statement is further clarified to state
+-- that the depth clipping state is only affected by the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#dynamic-state-current-value current value>
+-- of @depthClampEnable@ if the pipeline was not created with the
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'
+-- structure. If
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'
+-- was included in the pipeline creation then the depth clipping state is
+-- set explicitly by
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'::@depthClipEnable@
+-- and not changed when the depth clamping state is modified.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetDepthClampEnableEXT-None-09423# At least one of the
@@ -2255,11 +2269,11 @@ foreign import ccall
 -- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'::@depthClipEnable@
--- value used to create the currently active pipeline, or by the inverse of
--- 'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
--- if
+-- value used to create the currently active pipeline. If
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'
--- is not specified.
+-- was not specified, depth clipping is set to the inverse of the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#dynamic-state-current-value current value>
+-- of @depthClampEnable@.
 --
 -- == Valid Usage
 --
@@ -4131,7 +4145,13 @@ cmdSetRepresentativeFragmentTestEnableNV commandBuffer
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -4527,7 +4547,11 @@ instance Zero PhysicalDeviceExtendedDynamicState3FeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --

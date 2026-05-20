@@ -556,6 +556,12 @@ instance Zero PastPresentationTimingGOOGLE where
 -- -   #VUID-VkPresentTimesInfoGOOGLE-swapchainCount-arraylength#
 --     @swapchainCount@ /must/ be greater than @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,

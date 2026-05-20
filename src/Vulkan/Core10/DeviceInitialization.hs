@@ -39,6 +39,8 @@ module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , MemoryPropertyFlags
                                            , MemoryHeapFlagBits(..)
                                            , MemoryHeapFlags
+                                           , ShaderStageFlagBits(..)
+                                           , ShaderStageFlags
                                            , ImageUsageFlagBits(..)
                                            , ImageUsageFlags
                                            , ImageCreateFlagBits(..)
@@ -242,6 +244,8 @@ import Vulkan.Core10.Enums.QueueFlagBits (QueueFlagBits(..))
 import Vulkan.Core10.Enums.QueueFlagBits (QueueFlags)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlags)
+import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(..))
+import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.Core10.Enums.SystemAllocationScope (SystemAllocationScope(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1812,13 +1816,22 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 --         above calculations the granularity /must/ be scaled up by the
 --         compressed texel block dimensions.
 --
--- Queues supporting graphics and\/or compute operations /must/ report
--- (1,1,1) in @minImageTransferGranularity@, meaning that there are no
--- additional restrictions on the granularity of image transfer operations
--- for these queues. Other queues supporting image transfer operations are
--- only /required/ to support whole mip level transfers, thus
+-- Queues supporting graphics and\/or compute and\/or, if the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+-- feature is supported, transfer operations, /must/ report (1,1,1) in
+-- @minImageTransferGranularity@, meaning that there are no additional
+-- restrictions on the granularity of image transfer operations for these
+-- queues. Other queues supporting image transfer operations are only
+-- /required/ to support whole mip level transfers, thus
 -- @minImageTransferGranularity@ for queues belonging to such queue
 -- families /may/ be (0,0,0).
+--
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-maintenance11 maintenance11>
+-- feature is supported,
+-- 'Vulkan.Extensions.VK_KHR_maintenance11.QueueFamilyOptimalImageTransferGranularityPropertiesKHR'::@optimalImageTransferGranularity@
+-- /can/ be used to determine the optimal image transfer granularity for a
+-- particular queue family.
 --
 -- The
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-device Device Memory>
@@ -3024,8 +3037,10 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | #features-shaderImageGatherExtended# @shaderImageGatherExtended@
     -- specifies whether the extended set of image gather instructions are
     -- available in shader code. If this feature is not enabled, the
-    -- @OpImage*Gather@ instructions do not support the @Offset@ and
-    -- @ConstOffsets@ operands. This also specifies whether shader modules
+    -- @OpImage*Gather@ and @OpImageGatherQCOM@ instructions do not support the
+    -- @Offset@ and @ConstOffsets@ operands. The @OpImageGatherQCOM@
+    -- instruction does not support the @ConstOffsets@ operand regardless of
+    -- the value of this feature. This also specifies whether shader modules
     -- /can/ declare the @ImageGatherExtended@ capability.
     shaderImageGatherExtended :: Bool
   , -- | #features-shaderStorageImageExtendedFormats#
@@ -3886,7 +3901,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
   , -- | #limits-maxBoundDescriptorSets# @maxBoundDescriptorSets@ is the maximum
     -- number of descriptor sets that /can/ be simultaneously used by a
     -- pipeline. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sets>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sets>.
     maxBoundDescriptorSets :: Word32
   , -- | #limits-maxPerStageDescriptorSamplers# @maxPerStageDescriptorSamplers@
     -- is the maximum number of samplers that /can/ be accessible to a single
@@ -3900,9 +3915,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampler>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampler>
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-combinedimagesampler>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-combinedimagesampler>.
     maxPerStageDescriptorSamplers :: Word32
   , -- | #limits-maxPerStageDescriptorUniformBuffers#
     -- @maxPerStageDescriptorUniformBuffers@ is the maximum number of uniform
@@ -3917,9 +3932,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbuffer>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformbuffer>
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformbufferdynamic>.
     maxPerStageDescriptorUniformBuffers :: Word32
   , -- | #limits-maxPerStageDescriptorStorageBuffers#
     -- @maxPerStageDescriptorStorageBuffers@ is the maximum number of storage
@@ -3934,9 +3949,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- pipeline shader stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebuffer>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebuffer>
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebufferdynamic>.
     maxPerStageDescriptorStorageBuffers :: Word32
   , -- | #limits-maxPerStageDescriptorSampledImages#
     -- @maxPerStageDescriptorSampledImages@ is the maximum number of sampled
@@ -3952,10 +3967,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- pipeline shader stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-combinedimagesampler>,
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-combinedimagesampler>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampledimage>,
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformtexelbuffer>.
     maxPerStageDescriptorSampledImages :: Word32
   , -- | #limits-maxPerStageDescriptorStorageImages#
     -- @maxPerStageDescriptorStorageImages@ is the maximum number of storage
@@ -3970,9 +3985,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- pipeline shader stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage>,
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer>.
     maxPerStageDescriptorStorageImages :: Word32
   , -- | #limits-maxPerStageDescriptorInputAttachments#
     -- @maxPerStageDescriptorInputAttachments@ is the maximum number of input
@@ -3988,7 +4003,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. These are only supported for the
     -- fragment stage. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inputattachment>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-inputattachment>.
     --
     -- @maxPerStageDescriptorInputAttachments@ was originally only intended to
     -- limit the number of attachments per stage, not the number of available
@@ -4031,9 +4046,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampler>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampler>
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-combinedimagesampler>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-combinedimagesampler>.
     maxDescriptorSetSamplers :: Word32
   , -- | #limits-maxDescriptorSetUniformBuffers# @maxDescriptorSetUniformBuffers@
     -- is the maximum number of uniform buffers that /can/ be included in a
@@ -4044,9 +4059,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbuffer>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformbuffer>
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformbufferdynamic>.
     maxDescriptorSetUniformBuffers :: Word32
   , -- | #limits-maxDescriptorSetUniformBuffersDynamic#
     -- @maxDescriptorSetUniformBuffersDynamic@ is the maximum number of dynamic
@@ -4057,7 +4072,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformbufferdynamic>.
     maxDescriptorSetUniformBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetStorageBuffers# @maxDescriptorSetStorageBuffers@
     -- is the maximum number of storage buffers that /can/ be included in a
@@ -4068,9 +4083,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebuffer>
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebuffer>
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebufferdynamic>.
     maxDescriptorSetStorageBuffers :: Word32
   , -- | #limits-maxDescriptorSetStorageBuffersDynamic#
     -- @maxDescriptorSetStorageBuffersDynamic@ is the maximum number of dynamic
@@ -4081,7 +4096,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagebufferdynamic>.
     maxDescriptorSetStorageBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetSampledImages# @maxDescriptorSetSampledImages@
     -- is the maximum number of sampled images that /can/ be included in a
@@ -4093,10 +4108,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-combinedimagesampler>,
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sampledimage>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-combinedimagesampler>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-sampledimage>,
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-uniformtexelbuffer>.
     maxDescriptorSetSampledImages :: Word32
   , -- | #limits-maxDescriptorSetStorageImages# @maxDescriptorSetStorageImages@
     -- is the maximum number of storage images that /can/ be included in a
@@ -4107,9 +4122,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storageimage>,
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storageimage>,
     -- and
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-storagetexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-storagetexelbuffer>.
     maxDescriptorSetStorageImages :: Word32
   , -- | #limits-maxDescriptorSetInputAttachments#
     -- @maxDescriptorSetInputAttachments@ is the maximum number of input
@@ -4120,7 +4135,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-inputattachment>.
+    -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-inputattachment>.
     maxDescriptorSetInputAttachments :: Word32
   , -- | #limits-maxVertexInputAttributes# @maxVertexInputAttributes@ is the
     -- maximum number of vertex input attributes that /can/ be specified for a
@@ -4346,14 +4361,13 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- See
     -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
     --
-    -- The intent of the @viewportBoundsRange@ limit is to allow a maximum
-    -- sized viewport to be arbitrarily shifted relative to the output target
-    -- as long as at least some portion intersects. This would give a bounds
-    -- limit of [-@size@ + 1, 2 × @size@ - 1] which would allow all possible
-    -- non-empty-set intersections of the output target and the viewport. Since
-    -- these numbers are typically powers of two, picking the signed number
-    -- range using the smallest possible number of bits ends up with the
-    -- specified range.
+    -- The wide range of values required for @viewportBoundsRange@ allows the
+    -- viewport to be arbitrarily shifted relative to the output render target
+    -- while still partially overlapping. However, the minimum range required
+    -- to achieve this would actually be [-@size@ + 1, 2 × @size@ - 1]. As
+    -- these limits in implementations are typically simple power-of-two
+    -- values, the specification reflects this convention, rounding the lower
+    -- bound accordingly.
     viewportBoundsRange :: (Float, Float)
   , -- | #limits-viewportSubPixelBits# @viewportSubPixelBits@ is the number of
     -- bits of subpixel precision for viewport bounds. The subpixel precision
@@ -4430,11 +4444,13 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     maxTexelOffset :: Word32
   , -- | #limits-minTexelGatherOffset# @minTexelGatherOffset@ is the minimum
     -- offset value for the @Offset@, @ConstOffset@, or @ConstOffsets@ image
-    -- operands of any of the @OpImage*Gather@ image instructions.
+    -- operands of any of the @OpImage*Gather@ and @OpImageGatherQCOM@ image
+    -- instructions.
     minTexelGatherOffset :: Int32
   , -- | #limits-maxTexelGatherOffset# @maxTexelGatherOffset@ is the maximum
     -- offset value for the @Offset@, @ConstOffset@, or @ConstOffsets@ image
-    -- operands of any of the @OpImage*Gather@ image instructions.
+    -- operands of any of the @OpImage*Gather@ and @OpImageGatherQCOM@ image
+    -- instructions.
     maxTexelGatherOffset :: Word32
   , -- | #limits-minInterpolationOffset# @minInterpolationOffset@ is the base
     -- minimum (inclusive) negative offset value for the @Offset@ operand of

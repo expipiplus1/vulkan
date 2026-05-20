@@ -296,6 +296,12 @@ instance Zero PhysicalDeviceGroupProperties where
 --     valid pointer to an array of @physicalDeviceCount@ valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handles
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group_creation VK_KHR_device_group_creation>,

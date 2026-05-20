@@ -7,6 +7,7 @@ module Vulkan.Core10.Enums.ImageCreateFlagBits  ( pattern IMAGE_CREATE_SPLIT_INS
                                                                      , IMAGE_CREATE_SPARSE_ALIASED_BIT
                                                                      , IMAGE_CREATE_MUTABLE_FORMAT_BIT
                                                                      , IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+                                                                     , IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR
                                                                      , IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT
                                                                      , IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT
                                                                      , IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT
@@ -194,6 +195,27 @@ type ImageCreateFlags = ImageCreateFlagBits
 --     specifies that an image /can/ be used with
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#multisampled-render-to-single-sampled multisampled rendering as a single-sampled framebuffer attachment>
 --
+-- -   'IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR' specifies that
+--     a single layer image view created from this image can be accessed
+--     with both @Arrayed@ equal to 0 and @Arrayed@ equal to 1 in a shader.
+--     If accessed with @Arrayed@ equal to 1 in a shader, and
+--     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D', the image is
+--     treated as having an array size of @1@, and
+--     @subresourceRange.baseArrayLayer@ is accessed. If accessed with
+--     @Arrayed@ equal to 0 in a shader, and
+--     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY', the
+--     descriptor is accessed as-if the view was created with
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' respectively.
+--     Cube map view aliasing is not included by this flag bit. Also, image
+--     views created with a
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-multiplanar multi-planar format>
+--     /can/ not alias like this.
+--
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateFlagBits VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR>
 --     specifies that the image /can/ be used in
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#video-coding video coding operations>
@@ -262,6 +284,9 @@ pattern IMAGE_CREATE_MUTABLE_FORMAT_BIT = ImageCreateFlagBits 0x00000008
 
 -- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT"
 pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlagBits 0x00000010
+
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"
+pattern IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR = ImageCreateFlagBits 0x00400000
 
 -- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"
 pattern IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT = ImageCreateFlagBits 0x00008000
@@ -332,6 +357,10 @@ showTableImageCreateFlagBits =
   ,
     ( IMAGE_CREATE_CUBE_COMPATIBLE_BIT
     , "CUBE_COMPATIBLE_BIT"
+    )
+  ,
+    ( IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR
+    , "ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"
     )
   ,
     ( IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT

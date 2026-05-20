@@ -356,6 +356,10 @@ foreign import ccall
 --     equal to
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
+-- -   #VUID-vkCmdBindTransformFeedbackBuffersEXT-None-02365# Transform
+--     feedback /must/ not be active when the
+--     'cmdBindTransformFeedbackBuffersEXT' command is recorded
+--
 -- -   #VUID-vkCmdBindTransformFeedbackBuffersEXT-pOffsets-02358# All
 --     elements of @pOffsets@ /must/ be less than the size of the
 --     corresponding element in @pBuffers@
@@ -378,10 +382,6 @@ foreign import ccall
 --     element of @pBuffers@ that is non-sparse /must/ be bound completely
 --     and contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory'
 --     object
---
--- -   #VUID-vkCmdBindTransformFeedbackBuffersEXT-None-02365# Transform
---     feedback /must/ not be active when the
---     'cmdBindTransformFeedbackBuffersEXT' command is recorded
 --
 -- == Valid Usage (Implicit)
 --
@@ -526,14 +526,38 @@ foreign import ccall
 -- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-02367# Transform feedback
 --     /must/ not be active
 --
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-firstCounterBuffer-02368#
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-firstCounter-02368#
 --     @firstCounterBuffer@ /must/ be less than
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-firstCounterBuffer-02369# The
---     sum of @firstCounterBuffer@ and @counterBufferCount@ /must/ be less
---     than or equal to
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-firstCounter-02369# The sum of
+--     @firstCounterBuffer@ and @counterBufferCount@ /must/ be less than or
+--     equal to
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
+--
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-firstCounter-09630# The sum of
+--     @firstCounterBuffer@ and @counterBufferCount@ /must/ be less than or
+--     equal to the number of transform feedback buffers bound by
+--     'cmdBindTransformFeedbackBuffersEXT'
+--
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-06233# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderObject shaderObject>
+--     feature is not enabled, a valid graphics pipeline /must/ be bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-04128# The last
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     of the bound graphics pipeline /must/ have been declared with the
+--     @Xfb@ execution mode
+--
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-02373# Transform feedback
+--     /must/ not be made active in a render pass instance with multiview
+--     enabled
+--
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-10656# This command /must/
+--     not be recorded when
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is enabled
 --
 -- -   #VUID-vkCmdBeginTransformFeedbackEXT-counterBufferCount-02607# If
 --     @counterBufferCount@ is not @0@, and @pCounterBuffers@ is not
@@ -553,34 +577,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBeginTransformFeedbackEXT-pCounterBuffers-02372# For each
 --     buffer handle in the @pCounterBuffers@ array that is not
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ have been created
---     with the
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ have been with
+--     the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --     usage flag set
---
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-firstCounterBuffer-09630# The
---     sum of @firstCounterBuffer@ and @counterBufferCount@ /must/ be less
---     than or equal to the number of transform feedback buffers bound by
---     'cmdBindTransformFeedbackBuffersEXT'
---
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-06233# If the
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-shaderObject shaderObject>
---     feature is not enabled, a valid graphics pipeline /must/ be bound to
---     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
---
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-04128# The last
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>
---     of the bound graphics pipeline /must/ have been declared with the
---     @Xfb@ execution mode
---
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-02373# Transform feedback
---     /must/ not be made active in a render pass instance with multiview
---     enabled
---
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-10656# This command /must/
---     not be recorded when
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
---     is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -757,6 +757,11 @@ foreign import ccall
 --     or equal to
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
+-- -   #VUID-vkCmdEndTransformFeedbackEXT-None-10657# This command /must/
+--     not be recorded when
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
+--     is enabled
+--
 -- -   #VUID-vkCmdEndTransformFeedbackEXT-counterBufferCount-02608# If
 --     @counterBufferCount@ is not @0@, and @pCounterBuffers@ is not
 --     @NULL@, @pCounterBuffers@ /must/ be a valid pointer to an array of
@@ -779,11 +784,6 @@ foreign import ccall
 --     with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --     usage flag set
---
--- -   #VUID-vkCmdEndTransformFeedbackEXT-None-10657# This command /must/
---     not be recorded when
---     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
---     is enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -960,6 +960,12 @@ foreign import ccall
 --     used to create @queryPool@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-08972# The @queryType@
+--     used to create @queryPool@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT',
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT'
+--
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-00800# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-occlusionQueryPrecise occlusionQueryPrecise>
 --     feature is not enabled, or the @queryType@ used to create
@@ -1058,6 +1064,12 @@ foreign import ccall
 --     be recorded when
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-per-tile-execution-model per-tile execution model>
 --     is enabled
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-12423# If the @queryType@
+--     used to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIME_ELAPSED_QCOM', the
+--     command pool’s queue family /must/ support a non-zero
+--     @timestampValidBits@
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-04753# If the @queryPool@
 --     was created with the same @queryType@ as that of another
@@ -1716,33 +1728,20 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-08600# If a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
---     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
---     flag or as part of a pipeline without the
---     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
---     flag, and that shader statically uses a set /n/, a descriptor set
---     /must/ have been bound to /n/ at the same pipeline bind point, with
---     a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
---     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
---     the current 'Vulkan.Core10.Handles.Pipeline' or the
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
---     current 'Vulkan.Extensions.Handles.ShaderEXT' , as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--     was created with a pipeline layout and statically uses a set /n/, a
+--     descriptor set /must/ have been bound to /n/ at the same pipeline
+--     bind point, with layouts compatible for set /n/ with the layout(s)
+--     used to create the shader, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptors-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-08601# If a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
---     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
---     flag or as part of a pipeline without the
---     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
---     flag, and that shader statically uses a push constant value, that
---     value /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility compatible for push constants>
---     with the 'Vulkan.Core10.Handles.PipelineLayout' used to create the
---     current 'Vulkan.Core10.Handles.Pipeline' or the
---     'Vulkan.Core10.Handles.DescriptorSetLayout' array used to create the
---     current 'Vulkan.Extensions.Handles.ShaderEXT'
+--     was created with a pipeline layout or specified push constant ranges
+--     and statically uses a push constant value, that value /must/ have
+--     been set for the same pipeline bind point, with push constant ranges
+--     that are
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptors-compatibility compatible>
+--     with the push constant range used to create the shader
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-10068# For each array of
 --     resources that is used by
@@ -1750,22 +1749,6 @@ foreign import ccall
 --     the indices used to access members of the array /must/ be less than
 --     the descriptor count for the identified binding in the descriptor
 --     sets used by this command
---
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-maintenance4-08602# If a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-binding a bound shader>
---     was created as a 'Vulkan.Extensions.Handles.ShaderEXT' without the
---     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT'
---     flag or as part of a pipeline without the
---     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT'
---     flag, and that shader statically uses a push constant value, that
---     value /must/ have been set for the same pipeline bind point, with a
---     'Vulkan.Core10.Handles.PipelineLayout' that is
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility compatible for push constants>
---     with the 'Vulkan.Core10.Handles.PipelineLayout' used to create the
---     current 'Vulkan.Core10.Handles.Pipeline' or the
---     'Vulkan.Core10.Handles.DescriptorSetLayout' and
---     'Vulkan.Core10.PipelineLayout.PushConstantRange' arrays used to
---     create the current 'Vulkan.Extensions.Handles.ShaderEXT'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-08114# Descriptors in each
 --     bound descriptor set, specified via
@@ -2004,19 +1987,27 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--     or
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM'
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpImageBlockMatchSADQCOM-06975#
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpImageBlockMatchSADQCOM-12420#
 --     If @OpImageBlockMatchSADQCOM@ is used to read from an
 --     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--     or
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpImageBlockMatchSADQCOM-06976#
 --     If @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
---     read from a reference image as result of this command, then the
---     specified reference coordinates /must/ not fail
+--     read from a reference image as result of this command, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-blockMatchExtendedClampToEdge blockMatchExtendedClampToEdge>
+--     feature is not enabled or the /input/ sampler was not created with
+--     both @addressModeU@ and @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
+--     then the specified reference coordinates /must/ not fail
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpImageSampleWeightedQCOM-06977#
@@ -2056,9 +2047,32 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpImageBlockMatchWindow-09217#
 --     If a @OpImageBlockMatchWindow*QCOM@ or
 --     @OpImageBlockMatchGather*QCOM@ read from a reference image as result
---     of this command, then the specified reference coordinates /must/ not
---     fail
+--     of this command, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-blockMatchExtendedClampToEdge blockMatchExtendedClampToEdge>
+--     feature is not enabled or the /input/ sampler was not created with
+--     both @addressModeU@ and @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
+--     then the specified reference coordinates /must/ not fail
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpImageBlockMatchWindow-12421#
+--     If a @OpImageBlockMatchWindow*QCOM@ or
+--     @OpImageBlockMatchGather*QCOM@ instruction uses a
+--     'Vulkan.Core10.Handles.Sampler' as a result of this command, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-blockMatchExtendedClampToEdge blockMatchExtendedClampToEdge>
+--     is not enabled, the /input/ sampler /must/ not have been created
+--     with either @addressModeU@ or @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-addressModeU-12422# If a
+--     @OpImageBlockMatchWindow*QCOM@ or @OpImageBlockMatchGather*QCOM@
+--     instruction uses a 'Vulkan.Core10.Handles.Sampler' as a result of
+--     this command, and the /input/ sampler was created with either
+--     @addressModeU@ or @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE',
+--     then the sampler /must/ have been created with both @addressModeU@
+--     and @addressModeV@ equal to
+--     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-07288# Any shader
 --     invocation executed by this command /must/
@@ -2076,12 +2090,57 @@ foreign import ccall
 --     identified by that descriptor /must/ be in the image layout
 --     identified when the descriptor was written
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-micromap-11636# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command through an
+--     @OpRayQueryProceedKHR@ operation , the @VK_EXT_opacity_micromap@
+--     extension is not enabled, and the acceleration structure is built
+--     using geometry with a
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapKHR'
+--     structure included in its @pNext@ chain, the shader /must/ have
+--     specified a @OpacityMicromapIdKHR@ execution mode with its
+--     specialization constant operand equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-micromap-11637# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command and the
+--     acceleration structure was constructed through deserialization, all
+--     micromap arrays referenced by the acceleration structure that were
+--     not replaced by an acceleration structure update command /must/ have
+--     been deserialized using the serialized data of the corresponding
+--     micromaps used to originally build the acceleration structure prior
+--     to the execution of this command on the device
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-micromap-11638# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command and the
+--     acceleration structure is built using geometry with an @indexBuffer@
+--     containing both
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapSpecialIndexKHR'
+--     values and indices into an associated micromap array, any
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command /must/ not have been created with @flags@ that
+--     includes
+--     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-micromap-11639# If a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
+--     descriptor is accessed as a result of this command and the
+--     acceleration structure is built using geometry with an @indexBuffer@
+--     containing both
+--     'Vulkan.Extensions.VK_KHR_opacity_micromap.OpacityMicromapSpecialIndexKHR'
+--     values and indices into an associated micromap array, any
+--     'Vulkan.Extensions.Handles.ShaderEXT' that accessed the descriptor
+--     /must/ not have been created with @flags@ that includes
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT'
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-commandBuffer-10746# The
 --     'Vulkan.Core10.Handles.DeviceMemory' object allocated from a
 --     'Vulkan.Core10.DeviceInitialization.MemoryHeap' with the
 --     'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_TILE_MEMORY_BIT_QCOM'
 --     property that is bound to a resource accessed as a result of this
---     command /must/ be the active bound
+--     command /must/ be the active
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-bind-tile-memory bound tile memory object>
 --     in @commandBuffer@
 --
@@ -2296,7 +2355,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     feature is not enabled, that stage /must/ not access values outside
 --     of the range of the descriptor specified via
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
 --     when the descriptor was written
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-11373# If any stage of the
@@ -2313,7 +2372,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     feature is not enabled, that stage /must/ not access values outside
 --     of the range of the descriptor specified by
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
 --     when the descriptor was written
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-11374# If the
@@ -2326,7 +2385,7 @@ foreign import ccall
 --     buffer, uniform texel buffer, storage buffer, or storage texel
 --     buffer, that shader /must/ not access values outside of the range of
 --     the buffer as specified by
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.DeviceAddressRangeEXT'
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.DeviceAddressRangeKHR'
 --     when the descriptor was written
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-pBindInfo-11375# If any
@@ -4468,19 +4527,6 @@ foreign import ccall
 --     in the last call to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-rasterizationSamples-07474# If
---     the bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
---     state enabled, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
---     feature is not enabled, and neither the
---     @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then the
---     @rasterizationSamples@ in the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
---     /must/ be the same as the current subpass color and\/or
---     depth\/stencil attachments
---
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-09211# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
@@ -5465,6 +5511,65 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_custom_resolve.CustomResolveCreateInfoEXT'::@customResolve@
 --     as 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-flags-13361# If there are any
+--     shader objects bound that were created with @flags@ that includes
+--     the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR'
+--     bit, then all bound shader objects /must/ have been created with the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR'
+--     bit
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-flags-13362# If there are any
+--     shader objects bound that were created with @flags@ that includes
+--     the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR'
+--     bit, then the pipeline layout of the bound descriptor sets /must/
+--     have been created with
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
+--     set
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-flags-13363# If there are any
+--     shader objects bound that were created with @flags@ that includes
+--     the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR'
+--     bit, and any of the descriptor set layouts used to create the
+--     pipeline layout of the bound descriptor sets were created with any
+--     binding’s
+--     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding'::@stageFlags@
+--     set with
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
+--     then there /must/ be no binding with
+--     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding'::@stageFlags@
+--     set with
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-flags-13364# If there are any
+--     shader objects bound that were created with @flags@ that includes
+--     both the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR'
+--     and
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     bits, the pipeline layout of the bound descriptor sets /must/ have
+--     been created with
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_NO_TASK_SHADER_BIT_KHR'
+--     set
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-flags-13365# If there are any
+--     shader objects bound that were created with @flags@ that includes
+--     both the
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR'
+--     and
+--     'Vulkan.Extensions.VK_EXT_shader_object.SHADER_CREATE_NO_TASK_SHADER_BIT_EXT'
+--     bits, there /must/ be no shader object bound to the
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
+--     stage
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
 --     shader entry point’s interface /must/ have either valid or
@@ -5577,12 +5682,25 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
 --     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
---     /must/ have been called and not subsequently
+--     with a non-@NULL@ @pStrides@ parameter or
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdBindVertexBuffers3KHR'
+--     with @setStride@ set to 'Vulkan.Core10.FundamentalTypes.TRUE' /must/
+--     have been called and not subsequently
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
---     in the current command buffer prior to this draw command, and the
---     @pStrides@ parameter of
---     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
---     /must/ not be @NULL@
+--     in the current command buffer prior to this draw command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-13118# If the bound
+--     graphics pipeline was created without the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE'
+--     dynamic state enabled, without the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, and
+--     'Vulkan.Extensions.VK_KHR_device_address_commands.cmdBindVertexBuffers3KHR'
+--     was called and not subsequently
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
+--     in the current command buffer prior to this draw command, the value
+--     of @setStride@ in each of its @pBindInfos@ elements must have been
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04914# If there is a shader
 --     object bound to the
@@ -5806,6 +5924,9 @@ foreign import ccall
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-counterOffset-09474#
+--     @counterOffset@ /must/ be a multiple of @4@
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-transformFeedback-02287#
 --     'PhysicalDeviceTransformFeedbackFeaturesEXT'::@transformFeedback@
 --     /must/ be enabled
@@ -5818,6 +5939,12 @@ foreign import ccall
 --     @vertexStride@ /must/ be greater than 0 and less than or equal to
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBufferDataStride@
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-vertexStride-09475#
+--     @vertexStride@ /must/ be a multiple of @4@
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-commandBuffer-02646#
+--     @commandBuffer@ /must/ not be a protected command buffer
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-counterBuffer-04567# If
 --     @counterBuffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
@@ -5829,15 +5956,6 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-counterBufferOffset-04568#
 --     @counterBufferOffset@ /must/ be a multiple of @4@
---
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-counterOffset-09474#
---     @counterOffset@ /must/ be a multiple of @4@
---
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-vertexStride-09475#
---     @vertexStride@ /must/ be a multiple of @4@
---
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-commandBuffer-02646#
---     @commandBuffer@ /must/ not be a protected command buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -5969,7 +6087,13 @@ cmdDrawIndirectByteCountEXT commandBuffer
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -6040,7 +6164,11 @@ instance Zero PhysicalDeviceTransformFeedbackFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -6201,7 +6329,11 @@ instance Zero PhysicalDeviceTransformFeedbackPropertiesEXT where
 -- If this structure is not present, @rasterizationStream@ is assumed to be
 -- zero.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core10.GraphicsPipeline.PipelineRasterizationStateCreateInfo'
 --
 -- = See Also
 --

@@ -57,7 +57,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -68,8 +74,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 data PhysicalDeviceSeparateDepthStencilLayoutsFeatures = PhysicalDeviceSeparateDepthStencilLayoutsFeatures
   { -- | #extension-features-separateDepthStencilLayouts#
     -- @separateDepthStencilLayouts@ indicates whether the implementation
-    -- supports a 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' for a
-    -- depth\/stencil image with only one of
+    -- supports a 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier' for
+    -- a depth\/stencil image with only one of
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT' set,
     -- and whether
@@ -121,7 +127,11 @@ instance Zero PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
 -- | VkAttachmentReferenceStencilLayout - Structure specifying an attachment
 -- description
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2'
 --
 -- = See Also
 --
@@ -192,7 +202,11 @@ instance Zero AttachmentReferenceStencilLayout where
 -- | VkAttachmentDescriptionStencilLayout - Structure specifying an
 -- attachment description
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2'
 --
 -- = See Also
 --

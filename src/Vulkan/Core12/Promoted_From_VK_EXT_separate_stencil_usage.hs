@@ -77,6 +77,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- -   #VUID-VkImageStencilUsageCreateInfo-stencilUsage-requiredbitmask#
 --     @stencilUsage@ /must/ not be @0@
 --
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Image.ImageCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_separate_stencil_usage VK_EXT_separate_stencil_usage>,

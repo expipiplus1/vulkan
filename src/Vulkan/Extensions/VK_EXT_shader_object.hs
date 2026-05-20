@@ -777,7 +777,10 @@ module Vulkan.Extensions.VK_EXT_shader_object  ( createShadersEXT
                                                , ShaderCreateInfoEXT(..)
                                                , ShaderCreateFlagsEXT
                                                , ShaderCreateFlagBitsEXT( SHADER_CREATE_LINK_STAGE_BIT_EXT
+                                                                        , SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR
                                                                         , SHADER_CREATE_64_BIT_INDEXING_BIT_EXT
+                                                                        , SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT
+                                                                        , SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM
                                                                         , SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT
                                                                         , SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
                                                                         , SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT
@@ -1128,9 +1131,13 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
 --     includes 'SHADER_CREATE_LINK_STAGE_BIT_EXT', there /must/ be no
---     member of @pCreateInfos@ whose @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
---     and whose @flags@ member includes 'SHADER_CREATE_LINK_STAGE_BIT_EXT'
+--     member of @pCreateInfos@ whose @flags@ member includes
+--     'SHADER_CREATE_LINK_STAGE_BIT_EXT' and whose @stage@ is any of
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
 --
 -- -   #VUID-vkCreateShadersEXT-pCreateInfos-08405# If there is any element
 --     of @pCreateInfos@ whose @stage@ is
@@ -1814,7 +1821,13 @@ pattern ERROR_INCOMPATIBLE_SHADER_BINARY_EXT = INCOMPATIBLE_SHADER_BINARY_EXT
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' when creating the
 -- 'Vulkan.Core10.Handles.Device'.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structures>]
+--
+--     -   'Vulkan.Core10.Device.DeviceCreateInfo'
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 --
 -- = See Also
 --
@@ -1881,7 +1894,11 @@ instance Zero PhysicalDeviceShaderObjectFeaturesEXT where
 -- it is filled in with each corresponding implementation-dependent
 -- property.
 --
--- == Valid Usage (Implicit)
+-- == Structure Chaining
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
+--
+--     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
 --
 -- = See Also
 --
@@ -1944,6 +1961,16 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 -- created shader
 --
 -- = Description
+--
+-- When determining
+-- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptors-compatibility pipeline layout compatibility>,
+-- compatibility is determined as if a the shader was created with a
+-- pipeline layout object that was created with identical values of
+-- @setLayoutCount@, @pSetLayouts@, @pushConstantRangeCount@, and
+-- @pPushConstantRanges@, and with
+-- 'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@flags@ set to
+-- 0. If @flags@ includes 'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT', the
+-- shader is not considered created with a pipeline layout.
 --
 -- When specifying descriptor heap mappings, only mappings corresponding to
 -- bindings that are actually present in the SPIR-V shader affect
@@ -2129,6 +2156,12 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
 --     feature is not enabled, @flags@ /must/ not include
 --     'SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   #VUID-VkShaderCreateInfoEXT-micromap-11623# If @flags@ includes
+--     'SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-micromap ::micromap>
+--     feature /must/ be enabled
 --
 -- -   #VUID-VkShaderCreateInfoEXT-flags-09404# If @flags@ includes
 --     'SHADER_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT', the
@@ -2412,6 +2445,20 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     is declared in a shader as an array, the corresponding descriptor
 --     set in @pSetLayouts@ /must/ match the descriptor count
 --
+-- -   #VUID-VkShaderCreateInfoEXT-setLayoutCount-13359# If
+--     @setLayoutCount@ is not 0, pSetLayouts is not @NULL@, and @flags@
+--     does not include 'SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR', then
+--     @pSetLayouts@ must be a valid pointer to an array of
+--     @setLayoutCount@ valid 'Vulkan.Core10.Handles.DescriptorSetLayout'
+--     handles
+--
+-- -   #VUID-VkShaderCreateInfoEXT-setLayoutCount-13360# If
+--     @setLayoutCount@ is not 0, pSetLayouts is not @NULL@, and @flags@
+--     includes 'SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR', then
+--     @pSetLayouts@ must be a valid pointer to an array of
+--     @setLayoutCount@ 'Vulkan.Core10.Handles.DescriptorSetLayout' or
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' handles
+--
 -- -   #VUID-VkShaderCreateInfoEXT-codeType-10386# If @codeType@ is
 --     'SHADER_CODE_TYPE_SPIRV_EXT', @flags@ does not include
 --     'SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT' and a
@@ -2451,7 +2498,7 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources shader resource interface>
 --     with a 'Vulkan.Core10.Handles.DescriptorSet' and @Binding@
 --     decoration /must/ have a mapping declared in
---     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::pMappings
+--     'Vulkan.Extensions.VK_EXT_descriptor_heap.ShaderDescriptorSetAndBindingMappingInfoEXT'::@pMappings@
 --
 -- == Valid Usage (Implicit)
 --
@@ -2490,12 +2537,6 @@ instance Zero PhysicalDeviceShaderObjectPropertiesEXT where
 -- -   #VUID-VkShaderCreateInfoEXT-pName-parameter# If @pName@ is not
 --     @NULL@, @pName@ /must/ be a null-terminated UTF-8 string
 --
--- -   #VUID-VkShaderCreateInfoEXT-pSetLayouts-parameter# If
---     @setLayoutCount@ is not @0@, and @pSetLayouts@ is not @NULL@,
---     @pSetLayouts@ /must/ be a valid pointer to an array of
---     @setLayoutCount@ valid 'Vulkan.Core10.Handles.DescriptorSetLayout'
---     handles
---
 -- -   #VUID-VkShaderCreateInfoEXT-pPushConstantRanges-parameter# If
 --     @pushConstantRangeCount@ is not @0@, and @pPushConstantRanges@ is
 --     not @NULL@, @pPushConstantRanges@ /must/ be a valid pointer to an
@@ -2532,7 +2573,7 @@ data ShaderCreateInfoEXT (es :: [Type]) = ShaderCreateInfoEXT
     stage :: ShaderStageFlagBits
   , -- | @nextStage@ is a bitmask of
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' specifying
-    -- which stages /may/ be used as a logically next bound stage when drawing
+    -- which stages /can/ be used as a logically next bound stage when drawing
     -- with the shader bound. A value of zero indicates this shader stage
     -- /must/ be the last one.
     nextStage :: ShaderStageFlags
@@ -2748,6 +2789,20 @@ type ShaderCreateFlagsEXT = ShaderCreateFlagBitsEXT
 --     /can/ be used in combination with
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#device-generated-commands>.
 --
+-- -   'SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT'
+--     specifies that shader objects /cannot/ be used with acceleration
+--     structures which are built with geometry that have an index buffer
+--     including both special indices and indices pointing to an associated
+--     micromap array. Geometry which has an index buffer using only
+--     special indices without an associated micromap array /can/ be used
+--     with this flag.
+--
+-- -   'SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR' specifies that
+--     implementations /must/ ensure that the properties and\/or absence of
+--     a particular descriptor set do not influence any other descriptor
+--     sets for the shader. This allows shader objects to be created with a
+--     subset of the total descriptor sets.
+--
 -- -   'SHADER_CREATE_64_BIT_INDEXING_BIT_EXT' specifies that the shader
 --     enables
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-64bindexing 64-bit indexing>.
@@ -2765,8 +2820,17 @@ newtype ShaderCreateFlagBitsEXT = ShaderCreateFlagBitsEXT Flags
 -- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_LINK_STAGE_BIT_EXT"
 pattern SHADER_CREATE_LINK_STAGE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000001
 
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR"
+pattern SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR = ShaderCreateFlagBitsEXT 0x00040000
+
 -- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_64_BIT_INDEXING_BIT_EXT"
 pattern SHADER_CREATE_64_BIT_INDEXING_BIT_EXT = ShaderCreateFlagBitsEXT 0x00008000
+
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT"
+pattern SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT = ShaderCreateFlagBitsEXT 0x00001000
+
+-- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM"
+pattern SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM = ShaderCreateFlagBitsEXT 0x00000800
 
 -- No documentation found for Nested "VkShaderCreateFlagBitsEXT" "VK_SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT"
 pattern SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT = ShaderCreateFlagBitsEXT 0x00000080
@@ -2805,8 +2869,20 @@ showTableShaderCreateFlagBitsEXT =
     , "LINK_STAGE_BIT_EXT"
     )
   ,
+    ( SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR
+    , "INDEPENDENT_SETS_BIT_KHR"
+    )
+  ,
     ( SHADER_CREATE_64_BIT_INDEXING_BIT_EXT
     , "64_BIT_INDEXING_BIT_EXT"
+    )
+  ,
+    ( SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT
+    , "OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT"
+    )
+  ,
+    ( SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM
+    , "INSTRUMENT_SHADER_BIT_ARM"
     )
   ,
     ( SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT
