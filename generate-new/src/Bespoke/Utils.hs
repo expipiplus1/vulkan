@@ -19,7 +19,6 @@ import qualified Data.Vector.Generic           as VG
 import           Foreign.Marshal.Array
 import           Foreign.Marshal.Utils
 import           Foreign.Storable
-import           GHC.TypeNats
 
 import           Error
 import           Foreign.Marshal.Alloc          ( callocBytes )
@@ -176,4 +175,3 @@ marshalUtils = genRe "marshal utils" $ do
     advancePtrBytes :: Ptr a -> Int -> Ptr a
     advancePtrBytes = plusPtr
   |]
-

@@ -79,7 +79,7 @@ normal
   -> CType
   -> CType
   -> Stmt s r (Ref s AddrDoc)
-normal name toTy fromTy = do
+normal cName toTy fromTy = do
   toElem <- unPtr toTy
   unless (toElem == fromTy)
     $  throw
@@ -92,7 +92,7 @@ normal name toTy fromTy = do
     TypeName n -> isJust <$> getStruct n
     _          -> pure False
 
-  stmt Nothing (Just . ("p" <>) . T.upperCaseFirst $ unCName name)
+  stmt Nothing (Just . ("p" <>) . T.upperCaseFirst $ unCName cName)
     $   ContTAction
     .   AddrDoc
     <$> do
@@ -131,13 +131,13 @@ allocateVector vec = do
   let name' = name vec
       toTy  = type' vec
   case toTy of
-    Array _ arraySize toElem -> stmt Nothing (Just (unCName name')) $ do
+    Array _ sz toElem -> stmt Nothing (Just (unCName name')) $ do
       tellImportWithAll ''ContT
       tellImport 'free
       tellImport 'bracket
       tellImport (TermName "callocFixedArray")
       tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve toElem
-      size  <- case arraySize of
+      size  <- case sz of
         SymbolicArraySize n -> do
           RenderParams {..} <- input
           let p = mkPatternName n
@@ -175,5 +175,3 @@ unPtr :: HasErr r => CType -> Sem r CType
 unPtr = \case
   Ptr NonConst t -> pure t
   t -> throw $ "Trying to allocate for a non non-const ptr type " <> show t
-
-

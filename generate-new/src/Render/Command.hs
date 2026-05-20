@@ -286,9 +286,9 @@ commandRHS m@MarshaledCommand {..} = context "commandRHS" $ do
             /= Void
 
     -- Run the command and capture the result
-    let name = bool "r" "_" useEmptyBinder
+    let name_ = Just $ bool "r" "_" useEmptyBinder
     rTy        <- cToHsType DoLower (cReturnType mcCommand)
-    wrappedRef <- stmt (Just rTy) (Just name) $ do
+    wrappedRef <- stmt (Just rTy) name_ $ do
       FunDoc fun <- use funRef
       pokes      <- traverseV use pokeRefs
       tellImport
@@ -302,7 +302,7 @@ commandRHS m@MarshaledCommand {..} = context "commandRHS" $ do
         $   "traceAroundEvent"
         <+> viaShow traceName
         <+> parens (hang 2 (sep (fun : (unValueDoc <$> toList pokes))))
-    retRef        <- unwrapIdiomaticType (Just name) wrappedRef
+    retRef        <- unwrapIdiomaticType name_ wrappedRef
 
     -- check the result
     checkedResult <- checkResultMaybe mcCommand retRef
@@ -476,8 +476,8 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
 
     for_ (V.zip addrs countParamSets) $ \(countAddr, p) -> do
       let outCountParam = case p of
-            SameIndex (IndexedParam _ p) _          -> p
-            DifferentIndices _ (IndexedParam _ p) _ -> p
+            SameIndex (IndexedParam _ p') _          -> p'
+            DifferentIndices _ (IndexedParam _ p') _ -> p'
       finalCountRef <- stmt Nothing Nothing $ do
         after ret2
         countScheme <- case mpScheme outCountParam of
@@ -717,12 +717,12 @@ pokesForGettingResults oldPokes oldPeeks countParamSets = do
 
   (vecPokeOverrides, vecPeekOverrides) <-
     fmap (V.unzip . V.concat . V.toList) . for countParamSets $ \(_, c) ->
-      let (vs, nameModifier) = case c of
+      let (vs', nameModifier) = case c of
             SameIndex _ vs -> (vs, id)
             DifferentIndices _ (IndexedParam _ outParam) vs ->
               (vs, const . pName . mpParam $ outParam)
       in
-        for vs $ \(IndexedParam i MarshaledParam {..}) -> do
+        for vs' $ \(IndexedParam i MarshaledParam {..}) -> do
           let lowered = lowerParamType mpParam
           let allocated = lowered
                 { pLengths = case pLengths lowered of
@@ -774,7 +774,7 @@ runWithPokes includeReturnType MarshaledCommand {..} funRef pokes = do
           /= Void
   retRef <- stmt Nothing (Just (bool "r" "_" useEmptyBinder)) $ do
     FunDoc fun <- use funRef
-    pokes      <- traverseV use pokes
+    pokes' <- traverseV use pokes
     tellImport
       (mkName (T.unpack modulePrefix <> ".Internal.Utils.traceAroundEvent"))
     let traceName :: Text
@@ -785,7 +785,7 @@ runWithPokes includeReturnType MarshaledCommand {..} funRef pokes = do
       .   ValueDoc
       $   "traceAroundEvent"
       <+> viaShow traceName
-      <+> parens (hang 2 (sep (fun : (unValueDoc <$> toList pokes))))
+      <+> parens (hang 2 (sep (fun : (unValueDoc <$> toList pokes'))))
 
   checkResultMaybe mcCommand retRef
 
@@ -959,7 +959,7 @@ renderForeignDecls
   -> Sem r ()
 renderForeignDecls isDualPurpose c@Command {..} = do
   let tellFFI :: Bool -> Maybe CName -> Text -> Doc () -> Sem r ()
-      tellFFI unsafe ffiName name tyDoc =
+      tellFFI unsafe ffiName nameT tyDoc =
         tellDoc
           .  vsep
           $  ["foreign import ccall"]
@@ -970,7 +970,7 @@ renderForeignDecls isDualPurpose c@Command {..} = do
           <> [ indent 2 $ maybe (dquotes "dynamic" <+>)
                                 ((<+>) . dquotes . pretty . unCName)
                                 ffiName
-                                (pretty name)
+                                (pretty nameT)
              , indent 2 $ "::" <+> tyDoc
              ]
 
@@ -1035,7 +1035,7 @@ getPoke valueRef MarshaledParam {..} = do
         r <- getPokeDirectElided (lowerParamType mpParam) mpScheme
         nameRef (unCName $ pName mpParam) r
         pure r
-      Just valueRef -> getPokeDirect (lowerParamType mpParam) mpScheme valueRef
+      Just valueRef' -> getPokeDirect (lowerParamType mpParam) mpScheme valueRef'
 
   -- If any extensible structs are passed to the command they are passed as
   -- `Ptr (SomeStruct StructName)`, coerce them to that type using
@@ -1053,7 +1053,7 @@ forgetStructExtensions
 forgetStructExtensions ty poke = do
   forgottenPoke <- case ty of
     Ptr _ (TypeName s) -> getStruct s >>= \case
-      Just s | not (V.null (sExtendedBy s)) ->
+      Just s' | not (V.null (sExtendedBy s')) ->
         fmap Just . stmt Nothing Nothing $ do
           tellImport (TermName "forgetExtensions")
           ValueDoc p <- use poke
@@ -1070,7 +1070,7 @@ lowerParamType p@Parameter {..} =
   in  case pType of
         Array _ (NumericArraySize n) _ | large n     -> p
         Array _ (SymbolicArraySize n) _ | largeSym n -> p
-        Array q _ elem                               -> p { pType = Ptr q elem }
+        Array q _ e                               -> p { pType = Ptr q e }
         _                                            -> p
 
 ----------------------------------------------------------------
@@ -1089,11 +1089,11 @@ renderCommandHaskellType
   :: (HasRenderElem r, HasRenderParams r)
   => CommandHaskellType Type
   -> Sem r (CommandHaskellType (Doc ()))
-renderCommandHaskellType CommandHaskellType {..} = do
-  chtVars        <- traverse renderTypeHighPrec chtVars
-  chtConstraints <- traverse renderType chtConstraints
-  chtArgs        <- traverse (traverse renderTypeHighPrec) chtArgs
-  chtResult      <- renderType chtResult
+renderCommandHaskellType cht = do
+  chtVars        <- traverse renderTypeHighPrec $ chtVars cht
+  chtConstraints <- traverse renderType $ chtConstraints cht
+  chtArgs        <- traverse (traverse renderTypeHighPrec) $ chtArgs cht
+  chtResult      <- renderType $ chtResult cht
   pure CommandHaskellType { .. }
 
 commandHaskellType

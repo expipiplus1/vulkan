@@ -34,9 +34,9 @@ manTxtToDocbook
   -- ^ The path to the man page to translate
   -> IO (Either Text Text)
   -- ^ Either an error if something went wrong, or the docbook xml
-manTxtToDocbook specFlavor extensions vkPath manTxt =
+manTxtToDocbook sf extensions vkPath manTxt =
   fmap (T.toStrict . asciidoctor4076 . asciidoctor4075 . fixupDocbookOutput)
-    <$> asciidoctor specFlavor extensions vkPath manTxt
+    <$> asciidoctor sf extensions vkPath manTxt
 
 asciidoctor
   :: SpecFlavor
@@ -47,7 +47,7 @@ asciidoctor
   -> FilePath
   -- ^ The path to the man page to translate
   -> IO (Either Text TL.Text)
-asciidoctor specFlavor extensions vkPathRelative manTxt = do
+asciidoctor sf extensions vkPathRelative manTxt = do
   vkPath <- makeAbsolute vkPathRelative
   let
     asciidoctorPath = "asciidoctor"
@@ -76,7 +76,7 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
       ]
 
     noteOpts = []
-    adocExts = case specFlavor of
+    adocExts = case sf of
       SpecVk ->
         [ "-I"
         , vkPath </> "gen"

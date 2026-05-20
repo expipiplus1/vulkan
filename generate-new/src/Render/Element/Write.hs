@@ -215,9 +215,9 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
               CName "" -> []
               CName n' | isLower (T.head n') -> [mkFunName n]
               _ -> [mkTyName n, mkFunName n, mkPatternName n]
-        in  case asum ((\n -> (n, ) <$> findLocalModule n) <$> names) of
-              Just (n, m) | m == modName -> ThisModule n
-              Just (n, m)                -> OtherModule m n
+        in  case asum ((\n' -> (n', ) <$> findLocalModule n') <$> names) of
+              Just (n', m) | m == modName -> ThisModule n'
+              Just (n', m)                -> OtherModule m n'
               Nothing                    -> Unknown
 
       getDocumentation :: Documentee -> Doc ()
@@ -300,7 +300,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
                         <> T.pack (displayException @Ormolu.OrmoluException ex)
                         <> "\n\n\n"
                         <> t
-                    Right f -> pure f
+                    Right r -> pure r
           else pure t
     contentsTexts <- mapMaybeM layoutContent (V.toList es)
     let moduleText =
@@ -479,4 +479,3 @@ ormoluConfig = Ormolu.defaultConfig
     , Ormolu.poRespectful  = pure False
     }
   }
-

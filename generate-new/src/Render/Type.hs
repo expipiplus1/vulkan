@@ -74,9 +74,9 @@ cToHsTypeQuantified
   -> CType
   -> Sem r H.Type
 cToHsTypeQuantified preserve t = do
-  (negNames, posNames, t) <- runRenderTypeContext
+  (negNames, posNames, t') <- runRenderTypeContext
     $ cToHsType' Unwrapped preserve t
-  pure $ ForallT (plainTVcompat . cVarName <$> (negNames <> posNames)) [] t
+  pure $ ForallT (plainTVcompat . cVarName <$> (negNames <> posNames)) [] t'
 
 cToHsTypeWithContext
   :: forall r
@@ -191,9 +191,9 @@ arraySizeType = \case
     RenderParams {..} <- input
     pure $ ConT (typeName (mkTyName n))
   MultipleArraySize a b -> do
-    a <- arraySizeType (NumericArraySize a)
-    b <- arraySizeType b
-    pure $ InfixT a ''(*) b
+    a' <- arraySizeType (NumericArraySize a)
+    b' <- arraySizeType b
+    pure $ InfixT a' ''(*) b'
 
 -- TODO: Remove vulkan specific stuff here
 namedTy :: Text -> H.Type -> H.Type
@@ -226,12 +226,12 @@ initialContextState = ContextState mempty mempty allVars
 
 negateTypeContext :: HasContextState r => Sem r a -> Sem r a
 negateTypeContext a = do
-  let swap cs = cs { csNegativeVars = csPositiveVars cs
+  let swapVars cs = cs { csNegativeVars = csPositiveVars cs
                    , csPositiveVars = csNegativeVars cs
                    }
-  modify' swap
+  modify' swapVars
   r <- a
-  modify' swap
+  modify' swapVars
   pure r
 
 getVar

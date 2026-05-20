@@ -272,10 +272,10 @@ minVersionAndExtensionsReqs rs = do
       v
       [ "RequireInstanceExtension" <> braceAssignmentList
           [ ("instanceExtensionLayerName" , "Nothing")
-          , ("instanceExtensionName"      , e)
-          , ("instanceExtensionMinVersion", v)
+          , ("instanceExtensionName"      , en)
+          , ("instanceExtensionMinVersion", ver)
           ]
-      | (e, v) <- instanceExtensions
+      | (en, ver) <- instanceExtensions
       ]
     , maybe
       id
@@ -283,10 +283,10 @@ minVersionAndExtensionsReqs rs = do
       v
       [ "RequireDeviceExtension" <> braceAssignmentList
           [ ("deviceExtensionLayerName" , "Nothing")
-          , ("deviceExtensionName"      , e)
-          , ("deviceExtensionMinVersion", v)
+          , ("deviceExtensionName"      , en)
+          , ("deviceExtensionMinVersion", ver)
           ]
-      | (e, v) <- deviceExtensions
+      | (en, ver) <- deviceExtensions
       ]
     )
 

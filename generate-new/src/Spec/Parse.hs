@@ -64,22 +64,22 @@ parseSpec
   -> Sem r (Spec t, CType -> Maybe (Int, Int))
   -- ^ Return the map from CType to size and alignment because it's useful later
 parseSpec bs = do
-  n <- fromEither (first show (parse bs))
-  case name n of
+  node <- fromEither (first show (parse bs))
+  case name node of
     "registry" -> do
-      types     <- contents <$> oneChild "types" n
+      types     <- contents <$> oneChild "types" node
       typeNames <- allTypeNames types
       runInputConst typeNames $ do
         specHeaderVersion <- parseHeaderVersion types
         specAtoms         <- case sSpecFlavor @t of
           SSpecVk -> pure mempty
           SSpecXr -> parseAtoms types
-        specFeatures <- parseFeatures NotDisabled (contents n)
-        specDisabledFeatures <- parseFeatures OnlyDisabled (contents n)
+        specFeatures <- parseFeatures NotDisabled (contents node)
+        specDisabledFeatures <- parseFeatures OnlyDisabled (contents node)
         specExtensions <-
-          parseExtensions NotDisabled . contents =<< oneChild "extensions" n
+          parseExtensions NotDisabled . contents =<< oneChild "extensions" node
         specDisabledExtensions <-
-          parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
+          parseExtensions OnlyDisabled . contents =<< oneChild "extensions" node
         let disabledTypeNames = V.fromList
               ([ n
               | Extension {..} <- toList specDisabledExtensions
@@ -120,8 +120,8 @@ parseSpec bs = do
               Element n -> maybe True (`S.notMember` disabledCommandByteNames)
                                       (cmdProtoName n)
               _         -> True
-            cmdProtoName node = do
-              proto <- listToMaybe [p | Element p <- contents node, name p == "proto"]
+            cmdProtoName node' = do
+              proto <- listToMaybe [p | Element p <- contents node', name p == "proto"]
               elemText "name" proto
         specHandles <- V.filter ((`V.notElem` disabledTypeNames) . hName)
           <$> parseHandles @t enabledTypes
@@ -138,17 +138,17 @@ parseSpec bs = do
           .   parseCommands
           .   filter enabledCommand
           .   contents
-          =<< oneChild "commands" n
+          =<< oneChild "commands" node
         emptyBitmasks   <- parseEmptyBitmasks types
-        nonEmptyEnums   <- parseEnums types . contents $ n
-        requires        <- allRequires NotDisabled . contents $ n
+        nonEmptyEnums   <- parseEnums types $ contents node
+        requires        <- allRequires NotDisabled $ contents node
         enumExtensions  <- parseEnumExtensions requires
-        constantAliases <- parseConstantAliases (contents n)
+        constantAliases <- parseConstantAliases $ contents node
         enumAliases     <-
           (<>) <$> parseEnumAliases (fst <$> requires) <*> parseEnumAliases
-            (V.fromList $ [ c | Element c <- contents n, "enums" == name c ])
+            (V.fromList $ [ c | Element c <- contents node, "enums" == name c ])
         commandAliases <-
-          parseCommandAliases . contents =<< oneChild "commands" n
+          parseCommandAliases . contents =<< oneChild "commands" node
         let isDisabledEnum e =
               V.elem (eName e) disabledTypeNames || case eType e of
                 ABitmask flagsName _ -> V.elem flagsName disabledTypeNames
@@ -167,11 +167,11 @@ parseSpec bs = do
                 <> commandAliases
                 <> constantAliases
         specAPIConstants <- case specFlavor @t of
-          SpecVk -> parseAPIConstants (contents n)
+          SpecVk -> parseAPIConstants (contents node)
           SpecXr -> liftA2 (<>)
-                           (parseAPIConstants (contents n))
+                           (parseAPIConstants (contents node))
                            (parseDefinedConstants types)
-        specExtensionConstants <- parseExtensionConstants (contents n)
+        specExtensionConstants <- parseExtensionConstants (contents node)
         (specSPIRVExtensions, specSPIRVCapabilities) <- case sSpecFlavor @t of
           SSpecVk -> do
             let disabledExtNameSet = S.fromList
@@ -197,11 +197,11 @@ parseSpec bs = do
             (,)
               <$> (   fmap (V.map filterSpirvExt) . parseSPIRVExtensions
                   .   contents
-                  =<< oneChild "spirvextensions" n
+                  =<< oneChild "spirvextensions" node
                   )
               <*> (   fmap (V.map filterSpirvCap) . parseSPIRVCapabilities
                   .   contents
-                  =<< oneChild "spirvcapabilities" n
+                  =<< oneChild "spirvcapabilities" node
                   )
           SSpecXr -> pure mempty
         let
@@ -317,9 +317,9 @@ sizeAll typeSizes structAliases constantMap unions structs = do
           Left u -> for (sizeUnion g u) $ \u' -> do
             insertWithAliases (sName u') (sSize u', sAlignment u')
             pure (Left u')
-          Right s -> for (structSizeOverrides s <|> sizeStruct g s) $ \s' -> do
-            insertWithAliases (sName s') (sSize s', sAlignment s')
-            pure (Right s')
+          Right s' -> for (structSizeOverrides s' <|> sizeStruct g s') $ \s'' -> do
+            insertWithAliases (sName s'') (sSize s'', sAlignment s'')
+            pure (Right s'')
   (m, r) <- runState initial $ tryTwice both try
 
   let (failed, succeeded) = partitionEithers . V.toList $ r
@@ -650,14 +650,14 @@ parseRequires parseDisabled n = V.fromList <$> traverseV
       [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
     let -- TODO: this should probably be all constants
         isRequiredTypeActuallyAnEnum = (`elem` ["XR_MIN_HAPTIC_DURATION"])
-        (extraEnums, rTypeNames) =
+        (extraEnums', rTypeNames) =
           V.partition isRequiredTypeActuallyAnEnum typeNames
     rCommandNames <- V.fromList <$> sequenceV
       [ nameAttr "require commands" t
       | Element t <- contents r
       , "command" == name t
       ]
-    let rEnumValueNames = V.fromList enums <> extraEnums
+    let rEnumValueNames = V.fromList enums <> extraEnums'
     pure Require { .. }
 
 ----------------------------------------------------------------
@@ -807,26 +807,26 @@ parseHeaderVersion es = do
         ]
   vers <- case sSpecFlavor @t of
     SSpecVk -> flip mapMaybeM defines $ \d -> do
-      name <- nameElemMaybe d
-      if name /= Just "VK_HEADER_VERSION"
+      name_ <- nameElemMaybe d
+      if name_ /= Just "VK_HEADER_VERSION"
         then pure Nothing
         else do
-          allText <- decode $ allNonCommentText d
-          let ver = T.takeWhileEnd isNumber allText
+          allText' <- decode $ allNonCommentText d
+          let ver = T.takeWhileEnd isNumber allText'
           pure . fmap VkVersion $ readMaybe (T.unpack ver)
     SSpecXr -> flip mapMaybeM defines $ \d -> do
-      name <- nameElemMaybe d
-      if name /= Just "XR_CURRENT_API_VERSION"
+      name_ <- nameElemMaybe d
+      if name_ /= Just "XR_CURRENT_API_VERSION"
         then pure Nothing
         else do
-          allText <- decode $ allNonCommentText d
+          allText' <- decode $ allNonCommentText d
           pure $ do
             let nums =
                   T.splitOn ","
                     . T.init
                     . T.tail
                     . T.dropAround (`notElem` ['(', ')'])
-                    $ allText
+                    $ allText'
                 r = readMaybe . T.unpack . T.strip
             [ma, mi, pa] <- traverse r nums
             pure $ XrVersion ma mi pa
@@ -1216,18 +1216,18 @@ parseSPIRVThings thingType mkThing es = V.fromList <$> sequenceV
   ]
  where
   parseExtension n = do
-    name <- decode =<< note ("spirv " <> show thingType <> " has no name")
+    thingName <- decode =<< note ("spirv " <> show thingType <> " has no name")
                             (getAttr "name" n)
     reqs <- V.fromList
       <$> traverse parseSPIRVReq [ r | Element r <- contents n ]
-    pure $ mkThing name reqs
+    pure $ mkThing thingName reqs
 
 parseSPIRVReq :: Node -> P SPIRVRequirement
 parseSPIRVReq r
   | Just v <- getAttr "version" r
   = case parseAPIVersion v of
     Nothing -> throw $ "Unable to parse API version: " <> show v
-    Just v  -> pure $ SPIRVReqVersion v
+    Just v'  -> pure $ SPIRVReqVersion v'
   | Just e <- getAttr "extension" r
   = do
     e' <- decode e

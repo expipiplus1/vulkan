@@ -397,7 +397,7 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
       tellImport 'evalContT
       pure $ "evalContT $" <+> d
     IOStmts d -> pure d
-  (size, alignment) <- getTypeSize (TypeName msName)
+  (size', alignment') <- getTypeSize (TypeName msName)
   let unpack = if all (isElided . msmScheme) msMembers then "" else "{..}"
   stub <- toCStructInstanceStub tellImport msStruct
   let (a, an, af) = chooseAlign sAlignment
@@ -415,8 +415,8 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
       <+> pretty contVar
       <+> "="
       <+> pokeDoc
-      , "cStructSize =" <+> viaShow size
-      , "cStructAlignment =" <+> viaShow alignment
+      , "cStructSize =" <+> viaShow size'
+      , "cStructAlignment =" <+> viaShow alignment'
       , zero
       ]
     )
@@ -544,7 +544,7 @@ zeroInstanceDecl MarshaledStruct {..}
     RenderParams {..} <- input
     let n    = mkTyName msName
         con  = mkConName msName msName
-        head = if hasChildren msStruct
+        instanceHead = if hasChildren msStruct
           then " " <> pretty structChainVar <> " ~ '[] =>"
           else ""
         tDoc = if hasChildren msStruct
@@ -555,7 +555,7 @@ zeroInstanceDecl MarshaledStruct {..}
     tellImportWithAll (TyConName "Zero")
     tellDoc
       $   "instance"
-      <>  head
+      <>  instanceHead
       <+> "Zero"
       <+> tDoc
       <+> "where"
@@ -680,16 +680,16 @@ fromCStructInstanceStub
   => (HName -> Sem r ())
   -> Struct
   -> Sem r (Doc ())
-fromCStructInstanceStub tellSourceImport s = do
+fromCStructInstanceStub import_ s = do
   RenderParams {..} <- input
   let n    = mkTyName (sName s)
       tDoc = if hasChildren s
         then parens (pretty n <+> pretty structChainVar)
         else pretty n
-  head <- if hasChildren s
+  instanceHead <- if hasChildren s
     then do
-      tellSourceImport (TyConName "PeekChain")
-      tellSourceImport (TyConName "Extendss")
+      import_ (TyConName "PeekChain")
+      import_ (TyConName "Extendss")
       pure
         $   " "
         <>  align (tupled
@@ -699,23 +699,23 @@ fromCStructInstanceStub tellSourceImport s = do
         <+> "=>"
     else pure ""
   tellImport (TyConName "FromCStruct")
-  pure $ "instance" <> head <+> "FromCStruct" <+> tDoc
+  pure $ "instance" <> instanceHead <+> "FromCStruct" <+> tDoc
 
 toCStructInstanceStub
   :: (HasRenderParams r, HasRenderElem r)
   => (HName -> Sem r ())
   -> Struct
   -> Sem r (Doc ())
-toCStructInstanceStub tellSourceImport s = do
+toCStructInstanceStub import_ s = do
   RenderParams {..} <- input
   let n    = mkTyName (sName s)
       tDoc = if hasChildren s
         then parens (pretty n <+> pretty structChainVar)
         else pretty n
-  head <- if hasChildren s
+  instaneHead <- if hasChildren s
     then do
-      tellSourceImport (TyConName "PokeChain")
-      tellSourceImport (TyConName "Extendss")
+      import_ (TyConName "PokeChain")
+      import_ (TyConName "Extendss")
       pure
         $   " "
         <>  align
@@ -727,19 +727,19 @@ toCStructInstanceStub tellSourceImport s = do
         <+> "=>"
     else pure ""
   tellImport (TyConName "ToCStruct")
-  pure $ "instance" <> head <+> "ToCStruct" <+> tDoc
+  pure $ "instance" <> instaneHead <+> "ToCStruct" <+> tDoc
 
 showInstanceStub
   :: (HasRenderParams r, HasRenderElem r)
   => (HName -> Sem r ())
   -> Struct
   -> Sem r (Doc ())
-showInstanceStub tellSourceImport s = do
+showInstanceStub import_ s = do
   RenderParams {..} <- input
   let n = mkTyName (sName s)
   if hasChildren s
     then do
-      tellSourceImport (TyConName "Chain")
+      import_ (TyConName "Chain")
       pure $ "instance Show (Chain es) => Show (" <> pretty n <+> "es)"
     else pure $ "instance Show" <+> pretty n
 

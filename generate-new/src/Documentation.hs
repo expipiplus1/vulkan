@@ -52,10 +52,10 @@ docBookToDocumentation
   -> Text
   -- ^ The documentee name
   -> Either Text [Documentation]
-docBookToDocumentation specFlavor db name = do
+docBookToDocumentation sf db name = do
   let readerOptions = def
   pandoc <- first show $ runPure (readDocBook readerOptions db)
-  let prefix = case specFlavor of
+  let prefix = case sf of
         SpecVk -> "VK_"
         SpecXr -> "XR_"
 

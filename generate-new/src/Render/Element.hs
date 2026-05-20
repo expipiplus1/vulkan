@@ -388,9 +388,9 @@ makeRenderElementInternal re =
   re { reExports = mempty, reInternal = reExports re <> reInternal re }
 
 tellExplicitModule :: (HasRenderElem r, HasErr r) => ModName -> Sem r ()
-tellExplicitModule mod = gets reExplicitModule >>= \case
-  Nothing -> modify' (\r -> r { reExplicitModule = Just mod })
-  Just m | m == mod -> pure ()
+tellExplicitModule mn = gets reExplicitModule >>= \case
+  Nothing -> modify' (\r -> r { reExplicitModule = Just mn })
+  Just m | m == mn -> pure ()
   _ -> throw "Render element has been given two explicit modules"
 
 tellExport :: Member (State RenderElement) r => Export -> Sem r ()
@@ -450,7 +450,6 @@ instance Importable Name where
     case nameModule withModule of
       Just _ -> do
         -- This is an name in an external library, don't import with source
-        RenderParams {..} <- input
         let q = qual || V.elem withModule alwaysQualifiedNames
         modify' $ \r -> r
           { reImports = insert (Import withModule q children withAll False)
@@ -474,7 +473,7 @@ instance Importable HName where
 
 addModName :: HasRenderParams r => HName -> Sem r (Maybe Name)
 addModName n = do
-  let mkName' m n = case n of
+  let mkName' m = \case
         TyConName s -> mkNameG_tc "" (T.unpack m) (T.unpack s)
         ConName   s -> mkNameG_d "" (T.unpack m) (T.unpack s)
         TermName  s -> mkNameG_v "" (T.unpack m) (T.unpack s)

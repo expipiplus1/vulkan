@@ -93,11 +93,11 @@ main =
       <>  vulkanDocsDir
       </> "xml"
       <>  " to generate the most up-to-date vulkan headers"
-    (ds, state) <- fileDecls DoNotIgnoreWarnings
+    (ds, ts) <- fileDecls DoNotIgnoreWarnings
                              ["./Vulkan-Docs/gen/include"]
                              vmaHeader
-    enums    <- unitEnums state ds
-    structs  <- unitStructs state ds
+    enums    <- unitEnums ts ds
+    structs  <- unitStructs ts ds
     commands <- unitCommands ds
     let handles = unitHandles ds
     funcPointers <- unitFuncPointers ds
@@ -111,19 +111,19 @@ main =
                      (snd <$> commands)
         )
 
-      (renderedNames, specTypeInfo) <-
+      (renderedNames, specTI) <-
         runInputConst (Vk.renderParams (specHandles spec)) $ do
           rn <- specRenderedNames spec
           ti <- specTypeInfo spec
           pure (rn, ti)
 
       runInputConst headerInfo
-        . runInputConst specTypeInfo
+        . runInputConst specTI
         . runInputConst renderedNames
         . evalStateIO initialRenderState
         $ do
-            vulkanFuncPointers                    <- vulkanFuncPointers
-            specMarshalParams                     <- Vk.marshalParams spec
+            vkFuns <- vulkanFuncPointers
+            specMarshalParams <- Vk.marshalParams spec
             ourMarshalParams <- marshalParams (snd <$> handles)
             (marshaledStructs, marshaledCommands) <-
               runInputConst (specMarshalParams <> ourMarshalParams) $ do
@@ -138,7 +138,7 @@ main =
                                         marshaledCommands
             renderedVulkanFuncPointers <- traverseV
               (fmap makeRenderElementInternal . renderFuncPointer)
-              vulkanFuncPointers
+              vkFuns
             let sortedRenderElems =
                   snd <$> V.modify (V.sortBy (comparing fst)) renderElems
                 segments =
@@ -161,12 +161,12 @@ marshalParams handles =
       ("VmaAllocatorCreateInfo", "pHeapSizeLimit") -> Just $ Preserve (type' a)
       ("VmaAllocatorCreateInfo", "pTypeExternalMemoryHandleTypes") -> Just $ Preserve (type' a)
       ("vmaGetHeapBudgets", "pBudgets") -> Just $ Preserve (type' a)
-      ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
-        Just $ Returned (Preserve p)
-      ("vmaBuildVirtualBlockStatsString", "ppStatsString") | Ptr _ p <- type' a ->
-        Just $ Returned (Preserve p)
-      ("vmaGetPoolName", "ppName") | Ptr _ p <- type' a ->
-        Just $ Returned (Preserve p)
+      ("vmaBuildStatsString", "ppStatsString") | Ptr _ p' <- type' a ->
+        Just $ Returned (Preserve p')
+      ("vmaBuildVirtualBlockStatsString", "ppStatsString") | Ptr _ p' <- type' a ->
+        Just $ Returned (Preserve p')
+      ("vmaGetPoolName", "ppName") | Ptr _ p' <- type' a ->
+        Just $ Returned (Preserve p')
       ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
       ("vmaFreeVirtualBlockStatsString", "pStatsString") -> Just $ Preserve (type' a)
       _ -> Nothing
@@ -226,18 +226,18 @@ unitEnums
   => TravState Identity s
   -> GlobalDecls
   -> Sem r (Vector (NodeInfo, Enum'))
-unitEnums state ds = do
+unitEnums tState ds = do
   let ets = [ e | EnumDef e <- Map.elems (gTags ds) ]
   fmap fromList . forV ets $ \case
     EnumType (AnonymousRef _) _ _ _ -> throw "Enum without a name"
-    EnumType (NamedRef (Ident n _ nodeInfo)) es _ _ -> do
+    EnumType (NamedRef (Ident n _ ni)) es _ _ -> do
       allValues <-
-        fmap fromList . forV es $ \(Enumerator (Ident n _ _) expr _ _) -> do
-          let evName        = CName (T.pack n)
+        fmap fromList . forV es $ \(Enumerator (Ident eName _ _) expr _ _) -> do
+          let evName        = CName (T.pack eName)
               evIsExtension = False
               evComment     = Nothing
           expr' <- runTrav_' DoNotIgnoreWarnings
-                             state
+                             tState
                              (constEval x86_64 mempty expr)
           evValue <- exprValue expr'
           pure EnumValue { .. }
@@ -249,13 +249,13 @@ unitEnums state ds = do
         eType   = if "FlagBits" `List.isSuffixOf` n
           then ABitmask (CName $ T.dropEnd 8 (T.pack n) <> "Flags") Bitmask32
           else AnEnum
-      pure (nodeInfo, Enum { .. })
+      pure (ni, Enum { .. })
 
 -- TODO: This may be a little fragile
 unitHandles :: GlobalDecls -> Vector (NodeInfo, Handle)
 unitHandles ds = fromList
-  [ (nodeInfo, Handle (CName (T.pack n)) NonDispatchable NoHandleLevel)
-  | (Ident n _ nodeInfo, TypeDef _ (PtrType (DirectType (TyComp (CompTypeRef (NamedRef (Ident nT _ _)) _ _)) _ _) _ _) _ _) <-
+  [ (ni, Handle (CName (T.pack n)) NonDispatchable NoHandleLevel)
+  | (Ident n _ ni, TypeDef _ (PtrType (DirectType (TyComp (CompTypeRef (NamedRef (Ident nT _ _)) _ _)) _ _) _ _) _ _) <-
     Map.toList $ gTypeDefs ds
   , n <> "_T" == nT
   ]
@@ -263,11 +263,11 @@ unitHandles ds = fromList
 unitFuncPointers
   :: HasErr r => GlobalDecls -> Sem r (Vector (NodeInfo, FuncPointer))
 unitFuncPointers ds = fromList <$> sequenceV
-  [ (nodeInfo, )
+  [ (ni, )
     .   FuncPointer (CName (T.pack n))
-    .   (\(_, _, t) -> t)
+    .   (\(_, _, t') -> t')
     <$> typeToCType t
-  | (Ident n _ nodeInfo, TypeDef _ t _ _) <- Map.toList $ gTypeDefs ds
+  | (Ident n _ ni, TypeDef _ t _ _) <- Map.toList $ gTypeDefs ds
   , "PFN_" `List.isPrefixOf` n
   ]
 
@@ -325,10 +325,10 @@ unitCommands ds =
   fmap (fromList . catMaybes)
     . forV [ d | Declaration d <- toList (gObjs ds) ]
     $ \d -> runNonDetMaybe . failToNonDet $ do
-        Decl (VarDecl (VarName (Ident name _ nodeInfo) _) attrs ty) _ <- pure d
+        Decl (VarDecl (VarName (Ident varname _ ni) _) attrs ty) _ <- pure d
         DeclAttrs _ (FunLinkage ExternalLinkage) _ <- pure attrs
         FunctionType (FunType ret params _) _ <- pure ty
-        let cName         = CName (T.pack name)
+        let cName         = CName (T.pack varname)
             cSuccessCodes = fromList $ case cName of
               "vmaDefragmentationBegin"   -> ["VK_NOT_READY"]
               "vmaDefragmentationPassEnd" -> ["VK_NOT_READY"]
@@ -338,9 +338,9 @@ unitCommands ds =
             cCanBlock   = False
         (_, _, cReturnType) <- typeToCType ret
         cParameters         <- fmap fromList . forV params $ \case
-          ParamDecl (VarDecl (VarName (Ident name _ _) _) _ ty) _ -> do
-            let pName = CName (T.pack name)
-            (lengths, opts, pType) <- typeToCType ty
+          ParamDecl (VarDecl (VarName (Ident varName _ _) _) _ pdTy) _ -> do
+            let pName = CName (T.pack varName)
+            (ls, opts, pType) <- typeToCType pdTy
             let
               pLengths = fromList $ case (cName, pName) of
                 ("vmaGetPoolName", "ppName") -> [NullTerminated]
@@ -349,7 +349,7 @@ unitCommands ds =
                 ("VmaAllocationInfo", "pName" ) -> [NullTerminated]
                 ("vmaGetBudget", "pBudget") ->
                   [NamedConstantLength "VK_MAX_MEMORY_HEAPS"]
-                _ -> lengths
+                _ -> ls
               pIsOptional = fromList $ case (cName, pName) of
                 -- allocations can only be null when 'allocationCount' is zero
                 ("vmaFlushAllocations", "allocations") -> [False]
@@ -361,19 +361,19 @@ unitCommands ds =
           ParamDecl (VarDecl NoName _ _) _ ->
             throw "Unhandled param with no name"
           AbstractParamDecl _ _ -> throw "Unhandled AbstractParamDecl"
-        pure (nodeInfo, Command { .. })
+        pure (ni, Command { .. })
 
 unitStructs
   :: HasErr r
   => TravState Identity s
   -> GlobalDecls
   -> Sem r (Vector (NodeInfo, Struct))
-unitStructs state ds = do
+unitStructs tState ds = do
   let sts =
         [ s | CompDef s@(CompType _ StructTag _ _ _) <- Map.elems (gTags ds) ]
   fmap fromList . forV sts $ \case
     CompType (AnonymousRef _) _ _ _ _ -> throw "Struct without a name"
-    t@(CompType (NamedRef (Ident n _ nodeInfo)) _ ms _ _) ->
+    t@(CompType (NamedRef (Ident n _ ni)) _ ms _ _) ->
       context (T.pack n) $ do
         let sName        = CName (T.pack n)
             sExtends     = mempty
@@ -381,10 +381,10 @@ unitStructs state ds = do
             sInherits    = mempty
             sInheritedBy = mempty
         sizedMembers <- forV ms $ \case
-          m@(MemberDecl (VarDecl (VarName (Ident n _ _) _) _ ty) Nothing _) ->
+          m@(MemberDecl (VarDecl (VarName (Ident vn _ _) _) _ ty) Nothing _) ->
             do
-              let smName = CName (T.pack n)
-              (lengths, optionality, smType) <- case (sName, smName) of
+              let smName = CName (T.pack vn)
+              (ls, optionality, smType) <- case (sName, smName) of
                 ("VmaTotalStatistics", "memoryType") -> pure
                   ( []
                   , []
@@ -401,9 +401,9 @@ unitStructs state ds = do
                   )
                 _ -> typeToCType ty
               let smValues  = mempty
-                  smLengths = if n == "pFilePath" || n == "pName"
+                  smLengths = if vn == "pFilePath" || vn == "pName"
                     then fromList [NullTerminated]
-                    else fromList lengths
+                    else fromList ls
                   smIsOptional = fromList $ case (sName, smName) of
                     -- pPools can only be null when allocationCount is zero
                     ("VmaDefragmentationInfo2", "pPools") -> [False]
@@ -411,7 +411,7 @@ unitStructs state ds = do
                     ("VmaDefragmentationInfo2", "pAllocations") -> [False]
                     _ -> optionality
                   smOffset = ()
-              (size, alignment) <- runTrav_' DoNotIgnoreWarnings state $ do
+              (size, alignment) <- runTrav_' DoNotIgnoreWarnings tState $ do
                 s <- fromIntegral <$> sizeofType x86_64 m ty
                 a <- fromIntegral <$> alignofType x86_64 m ty
                 pure (s, a)
@@ -428,12 +428,12 @@ unitStructs state ds = do
         let sMembers = fromList $ membersWithOffsets <&> \(s, o) ->
               s { smOffset = fromIntegral o }
         sSize <-
-          fmap fromIntegral . runTrav_' DoNotIgnoreWarnings state $ sizeofType
+          fmap fromIntegral . runTrav_' DoNotIgnoreWarnings tState $ sizeofType
             x86_64
             t
             (DirectType (typeOfCompDef t) noTypeQuals [])
         sAlignment <-
-          fmap fromIntegral . runTrav_' DoNotIgnoreWarnings state $ alignofType
+          fmap fromIntegral . runTrav_' DoNotIgnoreWarnings tState $ alignofType
             x86_64
             t
             (DirectType (typeOfCompDef t) noTypeQuals [])
@@ -441,7 +441,7 @@ unitStructs state ds = do
           $ throw ("Size mismatch " <> show sSize <> " vs " <> show size')
         unless (sAlignment == align') $ throw
           ("Align mismatch " <> show sAlignment <> " vs " <> show align')
-        pure (nodeInfo, Struct { .. })
+        pure (ni, Struct { .. })
 
 -- TODO: Make optionality part of the Ptr constructor
 typeToCType
@@ -483,7 +483,7 @@ typeToCType' = \case
         (_, _, t') <- typeToCType t
         let paramName = case n of
               NoName                  -> Nothing
-              VarName (Ident n _ _) _ -> Just (T.pack n)
+              VarName (Ident vn _ _) _ -> Just (T.pack vn)
         pure (paramName, t')
       AbstractParamDecl _ _ -> throw "Unhandled AbstractParamDecl"
     pure (NonConst, [], [], Proto ret' params')
@@ -500,8 +500,8 @@ typeToCType' = \case
     , attrName == lenAttrName
     , Just l <- pure $ case expr of
       CConst (CStrConst (CString x _) _) -> case T.splitOn "::" (T.pack x) of
-        [x]    -> Just $ NamedLength (CName x)
-        [x, y] -> Just $ NamedMemberLength (CName x) (CName y)
+        [xn]    -> Just $ NamedLength (CName xn)
+        [xn, yn] -> Just $ NamedMemberLength (CName xn) (CName yn)
         _      -> error "bad len attribute"
       CVar (Ident v _ _) _ -> Just $ NamedLength (CName (T.pack v))
       _                    -> error "bad len attribute"
@@ -583,7 +583,7 @@ fileDecls
 fileDecls iw incs f = do
   preprocessed <- cpp incs f
   transUnit <- fromEitherShow $ parseC (toStrict preprocessed) (initPos f)
-  (GlobalDecls objs tags typedefs, state) <- runTrav' iw
+  (GlobalDecls objs tags typedefs, travState) <- runTrav' iw
                                                       (initTravState ())
                                                       (withDefTable (const ((), builtins)) >> analyseAST transUnit)
   let isLocalIdent (Ident _ _ i) =
@@ -599,7 +599,7 @@ fileDecls iw incs f = do
         tags
       )
       (Map.filterWithKey (\k _ -> isLocalIdent k) typedefs)
-    , state
+    , travState
     )
 
 data IgnoreWarnings = DoIgnoreWarnings | DoNotIgnoreWarnings
@@ -643,9 +643,9 @@ runTrav'
   -> Sem r (a, TravState Identity s)
 runTrav' iw s t = case runIdentity $ runTravTWithTravState s t of
   Left es -> throwMany (show <$> es)
-  Right (r, s) | DoNotIgnoreWarnings <- iw ->
-    traverse_ (throw . show) (travErrors s) >> pure (r, s)
-  Right (r, s) -> pure (r, s)
+  Right (r, s') | DoNotIgnoreWarnings <- iw ->
+    traverse_ (throw . show) (travErrors s) >> pure (r, s')
+  Right (r, s') -> pure (r, s')
 
 ----------------------------------------------------------------
 -- Utils

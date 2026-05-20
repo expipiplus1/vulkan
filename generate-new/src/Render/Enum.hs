@@ -202,7 +202,7 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
   tellImportWith n      conName
   tellImportWith ''Show 'P.showsPrec
   tellImport (mkName (T.unpack modulePrefix <> ".Internal.Utils.enumShowsPrec"))
-  shows <- case eType of
+  shows' <- case eType of
     AnEnum -> do
       tellImport 'showsPrec
       pure ("(showsPrec 11)" :: Text)
@@ -212,8 +212,8 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
       pure "(\\x -> showString \"0x\" . showHex x)"
   tellDoc [qqi|
     instance Show {n} where
-      showsPrec = enumShowsPrec 
-        {prefixString} {showTableName} {conNameName} (\\({conName} x) -> x) {shows}
+      showsPrec = enumShowsPrec
+        {prefixString} {showTableName} {conNameName} (\\({conName} x) -> x) {shows'}
   |]
 
 renderReadInstance
@@ -232,7 +232,7 @@ renderReadInstance prefixString showTableName conNameName Enum {..} = do
   tellImport (mkName (T.unpack modulePrefix <> ".Internal.Utils.enumReadPrec"))
   tellDoc [qqi|
     instance Read {n} where
-      readPrec = enumReadPrec 
+      readPrec = enumReadPrec
         {prefixString} {showTableName} {conNameName} {conName}
   |]
 

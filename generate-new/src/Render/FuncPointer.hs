@@ -30,9 +30,9 @@ renderFuncPointer FuncPointer {..} = contextShow (unCName fpName) $ do
     tPtrDoc <- renderType (ConT ''FunPtr :@ ConT (typeName n))
     tellExport (EType p)
     tellExport (EType n)
-    tellDocWithHaddock $ \getDoc -> vsep
+    tellDocWithHaddock $ \getDoc_ -> vsep
       [ "type" <+> pretty n <+> "=" <+> tDoc
-      , getDoc (TopLevel fpName)
+      , getDoc_ (TopLevel fpName)
       , "type" <+> pretty p <+> "=" <+> tPtrDoc
       ]
 
@@ -40,4 +40,3 @@ stripPtr :: HasErr r => CType -> Sem r CType
 stripPtr = \case
   Ptr _ t -> pure t
   _ -> throw "trying to strip the pointer from a non-pointer type"
-
