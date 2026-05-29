@@ -335,7 +335,7 @@ commandOverrides' = \case
                                   Swapchain
                                -> io (Result, "images" ::: Vector a)
       enumerateSwapchainImages swapchain = liftIO . evalContT $ do
-        let xrEnumerateSwapchainImagesPtr = pXrEnumerateSwapchainImages (instanceCmds (swapchain :: Swapchain))
+        let xrEnumerateSwapchainImagesPtr = pXrEnumerateSwapchainImages (case swapchain of Swapchain\{instanceCmds} -> instanceCmds)
         lift $ unless (xrEnumerateSwapchainImagesPtr /= nullFunPtr) $
           throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateSwapchainImages is null" Nothing Nothing
         let xrEnumerateSwapchainImages' = mkXrEnumerateSwapchainImages xrEnumerateSwapchainImagesPtr
