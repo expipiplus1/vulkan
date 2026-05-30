@@ -8,6 +8,7 @@ packages:
 - VulkanMemoryAllocator
 - openxr
 - generate-new
+- vulkan-json-types
 
 extra-deps:
 - unification-fd-0.12.0.2

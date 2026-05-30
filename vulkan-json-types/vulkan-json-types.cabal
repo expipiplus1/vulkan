@@ -1,0 +1,114 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.39.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           vulkan-json-types
+version:        0.1.0.0
+synopsis:       Types and aeson instances for Vulkan JSON spec dumps.
+description:    Haskell records and FromJSON/ToJSON instances for the Khronos
+                vulkan_object.py JSON dump (vk.json and the vk-*.json shards).
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+
+library
+  exposed-modules:
+      Vulkan.JSON.Bitmask
+      Vulkan.JSON.Command
+      Vulkan.JSON.Constant
+      Vulkan.JSON.Enum
+      Vulkan.JSON.EnumField
+      Vulkan.JSON.Extension
+      Vulkan.JSON.FeatureRequirement
+      Vulkan.JSON.Flag
+      Vulkan.JSON.Flags
+      Vulkan.JSON.Format
+      Vulkan.JSON.FormatComponent
+      Vulkan.JSON.FormatPlane
+      Vulkan.JSON.FuncPointer
+      Vulkan.JSON.FuncPointerParam
+      Vulkan.JSON.Handle
+      Vulkan.JSON.Internal
+      Vulkan.JSON.Legacy
+      Vulkan.JSON.Member
+      Vulkan.JSON.Param
+      Vulkan.JSON.Ref
+      Vulkan.JSON.Spirv
+      Vulkan.JSON.SpirvEnables
+      Vulkan.JSON.Struct
+      Vulkan.JSON.SyncAccess
+      Vulkan.JSON.SyncEquivalent
+      Vulkan.JSON.SyncPipeline
+      Vulkan.JSON.SyncPipelineStage
+      Vulkan.JSON.SyncStage
+      Vulkan.JSON.SyncSupport
+      Vulkan.JSON.Version
+      Vulkan.JSON.VideoCodec
+      Vulkan.JSON.VideoFormat
+      Vulkan.JSON.VideoProfileMember
+      Vulkan.JSON.VideoProfiles
+      Vulkan.JSON.VideoRequiredCapabilities
+      Vulkan.JSON.VulkanObject
+  other-modules:
+      Paths_vulkan_json_types
+  autogen-modules:
+      Paths_vulkan_json_types
+  hs-source-dirs:
+      src
+  default-extensions:
+      DeriveGeneric
+      DerivingStrategies
+      DuplicateRecordFields
+      GeneralizedNewtypeDeriving
+      LambdaCase
+      OverloadedStrings
+      RecordWildCards
+      StandaloneDeriving
+      TemplateHaskell
+      TypeApplications
+  ghc-options: -Wall -Wcompat -Wno-name-shadowing
+  build-depends:
+      aeson >=2.0
+    , base >=4.14 && <5
+    , bytestring
+    , containers
+    , scientific
+    , text
+  default-language: Haskell2010
+
+test-suite vulkan-json-types-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_vulkan_json_types
+  autogen-modules:
+      Paths_vulkan_json_types
+  hs-source-dirs:
+      test
+  default-extensions:
+      DeriveGeneric
+      DerivingStrategies
+      DuplicateRecordFields
+      GeneralizedNewtypeDeriving
+      LambdaCase
+      OverloadedStrings
+      RecordWildCards
+      StandaloneDeriving
+      TemplateHaskell
+      TypeApplications
+  ghc-options: -Wall -Wcompat -Wno-name-shadowing
+  build-depends:
+      aeson
+    , base >=4.14 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , scientific
+    , tasty
+    , tasty-hunit
+    , text
+    , vulkan-json-types
+  default-language: Haskell2010

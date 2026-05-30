@@ -1,0 +1,18 @@
+module Vulkan.JSON.SyncStage (SyncStage (..)) where
+
+import           Data.Aeson.TH               (deriveJSON)
+import           GHC.Generics                (Generic)
+
+import           Vulkan.JSON.Flag            (Flag)
+import           Vulkan.JSON.Internal        (vkAesonOptions)
+import           Vulkan.JSON.SyncEquivalent  (SyncEquivalent)
+import           Vulkan.JSON.SyncSupport     (SyncSupport)
+
+data SyncStage = SyncStage
+  { flag       :: Flag
+  , support    :: SyncSupport
+  , equivalent :: SyncEquivalent
+  }
+  deriving stock (Eq, Show, Generic)
+
+$(deriveJSON vkAesonOptions ''SyncStage)

@@ -1,0 +1,52 @@
+name: vulkan-json-types
+version: 0.1.0.0
+synopsis: Types and aeson instances for Vulkan JSON spec dumps.
+description: |
+  Haskell records and FromJSON/ToJSON instances for the Khronos
+  vulkan_object.py JSON dump (vk.json and the vk-*.json shards).
+license: BSD-3-Clause
+author: ""
+maintainer: ""
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Wno-name-shadowing
+
+default-extensions:
+  - DeriveGeneric
+  - DerivingStrategies
+  - DuplicateRecordFields
+  - GeneralizedNewtypeDeriving
+  - LambdaCase
+  - OverloadedStrings
+  - RecordWildCards
+  - StandaloneDeriving
+  - TemplateHaskell
+  - TypeApplications
+
+dependencies:
+  - base >= 4.14 && < 5
+  - aeson >= 2.0
+  - bytestring
+  - containers
+  - scientific
+  - text
+
+library:
+  source-dirs: src
+
+tests:
+  vulkan-json-types-test:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+      - vulkan-json-types
+      - aeson
+      - bytestring
+      - containers
+      - directory
+      - filepath
+      - tasty
+      - tasty-hunit
+      - text
