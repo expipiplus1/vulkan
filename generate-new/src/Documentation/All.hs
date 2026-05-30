@@ -36,7 +36,7 @@ loadAllDocumentation
   -- ^ Directory where the documentation ".txt" or ".adoc" (asciidoc) files are
   -- located
   -> IO (Documentee -> Maybe Documentation)
-loadAllDocumentation specFlavor extensions vkDocs manDir = do
+loadAllDocumentation sf extensions vkDocs manDir = do
   let notDocs = ["apispec.txt", "copyright-ccby.txt", "footer.txt"]
   allDocs <-
     filter ((`notElem` notDocs) . takeFileName)
@@ -53,7 +53,7 @@ loadAllDocumentation specFlavor extensions vkDocs manDir = do
     partitionEithers
       <$> withProgress
             numDocumentationThreads
-            (runExceptT . loadDocumentation specFlavor extensions vkDocs)
+            (runExceptT . loadDocumentation sf extensions vkDocs)
             allDocs
   unless (null errors) $ do
     sayErr "Errors while loading documentation:"
@@ -71,13 +71,13 @@ loadDocumentation
   -> FilePath
   -- ^ The asciidoc .txt file to load
   -> ExceptT Text IO [Documentation]
-loadDocumentation specFlavor extensions vkDocs doc = do
-  docbook <- ExceptT $ manTxtToDocbook specFlavor extensions vkDocs doc
+loadDocumentation sf extensions vkDocs doc = do
+  docbook <- ExceptT $ manTxtToDocbook sf extensions vkDocs doc
   let name = takeBaseName doc
   withExceptT (("Error while parsing documentation for" <+> show doc) <+>)
     . ExceptT
     . pure
-    $ docBookToDocumentation specFlavor docbook (T.pack name)
+    $ docBookToDocumentation sf docbook (T.pack name)
 
 ----------------------------------------------------------------
 -- Utils

@@ -21,7 +21,7 @@ mergeElements
   => [(ModName, Vector RenderElement)]
   -> Sem r [Segment ModName RenderElement]
 mergeElements ss = do
-  noAggregateModules <- noAggregateModules
+  mods <- noAggregateModules
   let unpackedSegments = [ (m, rs) | (m, rs) <- ss, not (V.null rs) ] -- Don't write empty segments
       initialModNames  = nubOrd . fmap fst $ unpackedSegments
       allModNames      = nubOrd
@@ -37,7 +37,7 @@ mergeElements ss = do
           $ m
         ]
 
-      allReexportedModNames = allModNames \\ noAggregateModules
+      allReexportedModNames = allModNames \\ mods
       aggregates            = makeAggregateRenderElements allReexportedModNames
 
       -- Merge segments with the same module

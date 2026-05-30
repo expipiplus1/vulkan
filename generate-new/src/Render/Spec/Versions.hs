@@ -51,18 +51,18 @@ headerVersionComplete
   => Version
   -> SpecHeaderVersion SpecVk
   -> Sem r RenderElement
-headerVersionComplete lastFeatureVersion (VkVersion headerVersion) =
+headerVersionComplete lastFeatureVersion (VkVersion headerVersionN) =
   genRe "header version complete" $ do
     RenderParams {..} <- input
     tellExplicitModule =<< mkModuleName ["Version"]
     let pat               = mkPatternName "VK_HEADER_VERSION_COMPLETE"
         major : minor : _ = versionBranch lastFeatureVersion
-        makeVersion       = mkPatternName "VK_MAKE_API_VERSION"
+        makeVersionN       = mkPatternName "VK_MAKE_API_VERSION"
     tellExport (EPat pat)
     tellImport ''Word32
     tellDoc [qqi|
     pattern {pat} :: Word32
-    pattern {pat} = {makeVersion} {major} {minor} {headerVersion}
+    pattern {pat} = {makeVersionN} {major} {minor} {headerVersionN}
   |]
 
 featureVersion
@@ -98,9 +98,9 @@ versionConstruction = genRe "version construction" $ do
       patApiMinor = TermName ("_" <> unName (mkPatternName "VK_API_VERSION_MINOR"))
       patApiPatch = TermName ("_" <> unName (mkPatternName "VK_API_VERSION_PATCH"))
       makeApiVersion = mkPatternName "VK_MAKE_API_VERSION"
-      makeVersion = mkPatternName "VK_MAKE_VERSION"
+      makeVersionN = mkPatternName "VK_MAKE_VERSION"
   tellExport (EPat makeApiVersion)
-  tellExport (EPat makeVersion)
+  tellExport (EPat makeVersionN)
   tellExport (ETerm patMajor)
   tellExport (ETerm patMinor)
   tellExport (ETerm patPatch)
@@ -115,11 +115,11 @@ versionConstruction = genRe "version construction" $ do
 
     \{-# complete {makeApiVersion} #-}
 
-    \{-# deprecated {makeVersion} "This pattern is deprecated. {makeApiVersion} should be used instead." #-}
-    pattern {makeVersion} :: Word32 -> Word32 -> Word32 -> Word32
-    pattern {makeVersion} major minor patch = {makeApiVersion} major minor patch
+    \{-# deprecated {makeVersionN} "This pattern is deprecated. {makeApiVersion} should be used instead." #-}
+    pattern {makeVersionN} :: Word32 -> Word32 -> Word32 -> Word32
+    pattern {makeVersionN} major minor patch = {makeApiVersion} major minor patch
 
-    \{-# complete {makeVersion} #-}
+    \{-# complete {makeVersionN} #-}
 
     \{-# deprecated {patMajor} "This function is deprecated. {patApiMajor} should be used instead." #-}
     {patMajor} :: Word32 -> Word32

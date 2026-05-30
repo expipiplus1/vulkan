@@ -91,9 +91,9 @@ unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t
   preludeWords = ["filter", "id"]
 
 chooseAlign :: Int -> (Doc ann, TH.Name, Doc ann -> Doc ann)
-chooseAlign align = if align <= 8
+chooseAlign alignment = if alignment <= 8
   then ("allocaBytes", 'allocaBytes, id)
-  else ("allocaBytesAligned", 'allocaBytesAligned, (<+> viaShow align))
+  else ("allocaBytesAligned", 'allocaBytesAligned, (<+> viaShow alignment))
 
 #if MIN_VERSION_template_haskell(2,17,0)
 plainTVcompat :: TH.Name -> TH.TyVarBndr TH.Specificity

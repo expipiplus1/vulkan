@@ -1,3 +1,5 @@
+{-# language NamedFieldPuns #-}
+
 module Marshal.Scheme where
 
 import Data.Vector.Extra
@@ -189,17 +191,17 @@ instance Ord (CustomSchemeElided a) where
   compare = compare `on` cseName
 
 instance P.Show (CustomScheme a) where
-  showsPrec d (CustomScheme name _ _ _ _ _) =
+  showsPrec d CustomScheme{csName} =
     P.showParen (d > 10) $
       P.showString "CustomScheme "
-        . P.showsPrec 11 name
+        . P.showsPrec 11 csName
         . P.showString " _ _ _ _"
 
 instance P.Show (CustomSchemeElided a) where
-  showsPrec d (CustomSchemeElided name _ _) =
+  showsPrec d CustomSchemeElided{cseName} =
     P.showParen (d > 10) $
       P.showString "CustomSchemeElided "
-        . P.showsPrec 11 name
+        . P.showsPrec 11 cseName
         . P.showString " _ _"
 
 type ND r a =
@@ -543,10 +545,10 @@ dropPtrToStruct :: (HasMarshalParams r, HasSpecInfo r) => CType -> Sem r CType
 dropPtrToStruct t = do
   MarshalParams{..} <- input
   let stripConstPtr = \case
-        Ptr Const t -> stripConstPtr t
-        t -> t
+        Ptr Const t' -> stripConstPtr t'
+        t' -> t'
   case stripConstPtr t of
-    t | isForeignStruct t -> pure t
+    t' | isForeignStruct t' -> pure t'
     TypeName n ->
       (isJust <$> getStruct n) <||> (isJust <$> getUnion n) <&> \case
         True -> TypeName n

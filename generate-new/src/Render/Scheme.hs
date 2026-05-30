@@ -85,7 +85,7 @@ schemeTypeNegative' toHs s = do
       pure . Just $ ConT (typeName (TyConName "SomeChild")) :@ ConT
         (typeName (mkTyName n))
     Returned     _                 -> pure Nothing
-    InOutCount   s                 -> schemeTypeNegative' toHs s
+    InOutCount   s'                -> schemeTypeNegative' toHs s'
     OutCount     _                 -> pure Nothing
     Custom       CustomScheme {..} -> Just <$> csType
     ElidedCustom _                 -> pure Nothing

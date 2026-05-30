@@ -18,7 +18,7 @@ import           Spec.Parse
 
 marshalParams :: KnownSpecFlavor t => Spec t -> Sem r MarshalParams
 marshalParams spec@Spec {..} = do
-  bespokeSchemes <- bespokeSchemes spec
+  schemas <- bespokeSchemes spec
   let
     aliasMap :: Map.HashMap CName CName
     aliasMap = fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
@@ -73,7 +73,7 @@ marshalParams spec@Spec {..} = do
     , isPassAsPointerType = isPassAsPointerType'
     , isForeignStruct     = isForeignStruct'
     , getBespokeScheme    = \p a ->
-      asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
+      asum $ fmap (\(BespokeScheme f) -> f p a) schemas
     }
 
 ----------------------------------------------------------------

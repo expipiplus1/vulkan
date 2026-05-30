@@ -70,11 +70,11 @@ assignModules spec rs = do
   --
   -- Check that everything is exported
   --
-  unexportedNames <- unexportedNames spec
+  unexported <- unexportedNames spec
   forV_ indexed $ \(i, re) -> case IntMap.lookup i exports of
     Nothing -> do
       let exportedNames = exportName <$> toList (reExports re)
-      forV_ (List.nubOrd exportedNames List.\\ unexportedNames)
+      forV_ (List.nubOrd exportedNames List.\\ unexported)
         $ \n -> throw $ show n <> " is not exported from any module"
     Just _ -> pure ()
 
@@ -120,9 +120,9 @@ assignModules spec rs = do
     declaringRenderElements   <- traverseV lookupRe (fromList (Set.toList is))
     reexportingRenderElements <- case Map.lookup modname reexportingMap of
       Nothing -> pure mempty
-      Just is -> do
+      Just found -> do
         res <-
-          filter (getAll . reReexportable) <$> forV (Set.toList is) lookupRe
+          filter (getAll . reReexportable) <$> forV (Set.toList found) lookupRe
         pure
           $   reexportingRenderElement
           .   Data.Set.fromList
@@ -355,7 +355,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   -- belong to that later extension. This prevents cycles like:
   --   VK_EXT_shader_object (483) claiming vkCmdSetDepthClampRangeEXT
   --   before VK_EXT_depth_clamp_control (583) can.
-  forFeaturesAndExtensions $ \_ modname mExtNum ReqDeps {..} Require{rDepends, rTypeNames, rCommandNames, rEnumValueNames} ->
+  forFeaturesAndExtensions $ \_ modname mExtNum ReqDeps {..} Require{rDepends, rTypeNames} ->
     case mExtNum of
       Nothing -> -- Feature: export everything
         forV_ directExporters $ export modname

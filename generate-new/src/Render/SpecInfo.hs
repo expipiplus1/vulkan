@@ -10,7 +10,7 @@ import qualified Data.HashSet                  as Set
 import           Error
 import           Polysemy
 import           Polysemy.Input
-import           Relude                  hiding ( Handle )
+import           Relude                  hiding ( Handle, first )
 
 import           Data.List.Extra                ( nubOrd )
 import qualified Data.Vector                   as V
@@ -159,9 +159,8 @@ specSpecInfo Spec {..} siTypeSize =
           [ (exName, V.toList exDependencies)
           | Extension {..} <- toList specExtensions
           ]
-        get n = fromMaybe mempty (Map.lookup n depMap)
         close n =
-          let immediateDeps = get n
+          let immediateDeps = fromMaybe mempty (Map.lookup n depMap)
           in  concat (immediateDeps : (close <$> immediateDeps))
       in
         nubOrd . close

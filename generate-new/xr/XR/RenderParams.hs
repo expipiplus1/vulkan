@@ -137,13 +137,13 @@ renderParams handles = r
             <|> (mkIdiomaticType vulkanParams . dropVulkanModule $ t)
     , mkHsTypeOverride               = \_ structStyle preserve t ->
       case vulkanManifest structStyle vulkanParams t of
-        Just t -> Just $ do
-          t <- t
+        Just t' -> Just $ do
+          t'' <- t'
           case preserve of
-            DoNotPreserve -> case mkIdiomaticType r t of
+            DoNotPreserve -> case mkIdiomaticType r t'' of
               Just i  -> pure $ itType i
-              Nothing -> pure t
-            _ -> pure t
+              Nothing -> pure t''
+            _ -> pure t''
         Nothing -> pure <$> case preserve of
           DoNotPreserve -> Nothing
           _             -> case t of
@@ -230,13 +230,13 @@ vulkanManifest _structStyle RenderParams {..} =
       pure
         $  ConT (mkName (T.unpack vulkanTypesModule <> "." <> "SomeStruct"))
         :@ structTyCon
-    handle (CName t) = do
+    dispatchableHandle (CName t) = do
       t' <- T.stripPrefix "Vk" t
       pure . pure $ ConT ''Ptr :@ ConT
         (mkName (T.unpack vulkanTypesModule <> "." <> T.unpack t' <> "_T"))
   in
     \case
-      TypeName n | n `elem` vulkanDispatchableHandleNames -> handle n
+      TypeName n | n `elem` vulkanDispatchableHandleNames -> dispatchableHandle n
                  | n `elem` vulkanMonoNames               -> vk n
                  | n `elem` vulkanPolyNames               -> someVk n
       _ -> Nothing
@@ -320,7 +320,7 @@ commandOverrides' = \case
       (mkName (T.unpack modulePrefix <> ".Internal.Utils.traceAroundEvent"))
     traverse_ (tellImportWithAll . TyConName)
               ["ToCStruct", "Result", "OpenXrException", "InstanceCmds"]
-    tellDocWithHaddock $ \getDoc -> [qqi|
+    tellDocWithHaddock $ \getDoc_ -> [qqi|
       foreign import ccall
       #if !defined(SAFE_FOREIGN_CALLS)
         unsafe
@@ -328,14 +328,14 @@ commandOverrides' = \case
         "dynamic" mkXrEnumerateSwapchainImages
         :: FunPtr (Ptr Swapchain_T -> Word32 -> Ptr Word32 -> Ptr (SomeChild SwapchainImageBaseHeader) -> IO Result) -> Ptr Swapchain_T -> Word32 -> Ptr Word32 -> Ptr (SomeChild SwapchainImageBaseHeader) -> IO Result
 
-      {getDoc (TopLevel "xrEnumerateSwapchainImages")}
+      {getDoc_ (TopLevel "xrEnumerateSwapchainImages")}
       enumerateSwapchainImages :: forall a io
                                 . (Inherits SwapchainImageBaseHeader a, ToCStruct a, FromCStruct a, MonadIO io)
-                               => {getDoc (Nested "xrEnumerateSwapchainImages" "swapchain")}
+                               => {getDoc_ (Nested "xrEnumerateSwapchainImages" "swapchain")}
                                   Swapchain
                                -> io (Result, "images" ::: Vector a)
       enumerateSwapchainImages swapchain = liftIO . evalContT $ do
-        let xrEnumerateSwapchainImagesPtr = pXrEnumerateSwapchainImages (instanceCmds (swapchain :: Swapchain))
+        let xrEnumerateSwapchainImagesPtr = pXrEnumerateSwapchainImages (case swapchain of Swapchain\{instanceCmds} -> instanceCmds)
         lift $ unless (xrEnumerateSwapchainImagesPtr /= nullFunPtr) $
           throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateSwapchainImages is null" Nothing Nothing
         let xrEnumerateSwapchainImages' = mkXrEnumerateSwapchainImages xrEnumerateSwapchainImagesPtr

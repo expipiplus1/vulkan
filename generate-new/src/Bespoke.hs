@@ -124,12 +124,12 @@ assignBespokeModules
   => t RenderElement
   -> Sem r (t RenderElement)
 assignBespokeModules es = do
-  bespokeModules <- bespokeModules
+  mods <- bespokeModules
   forV es $ \case
     r@RenderElement {..}
       | exports <- fmap exportName . toList $ reExports
       , bespokeMods <-
-        List.nubOrd . mapMaybe (`List.lookup` bespokeModules) $ exports
+        List.nubOrd . mapMaybe (`List.lookup` mods) $ exports
       -> case bespokeMods of
         []  -> pure r
         [x] -> case reExplicitModule of
@@ -401,7 +401,7 @@ difficultLengths =
               addrRef
               (Ptr Const (Ptr Const (TypeName "VkSampleMask")))
             vecPeek <- renderSubStmtsIO $ do
-              addrRef          <- pureStmt (AddrDoc ptr)
+              addrRef'          <- pureStmt (AddrDoc ptr)
               ValueDoc samples <- useViaName "rasterizationSamples"
               let sampleTy = mkTyName "VkSampleCountFlagBits"
                   sampleCon =
@@ -422,7 +422,7 @@ difficultLengths =
               -- TODO: pass Nullable here and don't reimplement that logic
               vectorPeekWithLenRef @a "sampleMask"
                                       (Normal (TypeName "VkSampleMask"))
-                                      addrRef
+                                      addrRef'
                                       (TypeName "VkSampleMask")
                                       mempty
                                       len
@@ -525,10 +525,9 @@ difficultLengths =
             tellImport 'castPtr
             tellImport ''Word32
             tellImport ''CChar
-            let castPtr = "castPtr @Word32 @CChar" <+> ptr
             tellImport 'BS.packCStringLen
             pure . IOAction . ValueDoc $ "packCStringLen" <+> align (tupled
-              [castPtr, bytes])
+              ["castPtr @Word32 @CChar" <+> ptr, bytes])
         }
       _ -> Nothing
     _ -> const Nothing
@@ -600,10 +599,9 @@ difficultLengths =
                 tellImport 'castPtr
                 tellImport ''Word8
                 tellImport ''CChar
-                let castPtr = "castPtr @Word8 @CChar" <+> ptr
                 tellImport 'BS.packCStringLen
                 pure . IOAction . ValueDoc $ "packCStringLen" <+> align (tupled
-                  [castPtr, bytes])
+                  ["castPtr @Word8 @CChar" <+> ptr, bytes])
             }
         _ -> Nothing
     _ -> const Nothing
@@ -635,39 +633,38 @@ bitfields = BespokeScheme $ \case
     -> Int
     -> Ref s AddrDoc
     -> Stmt s r (Ref s ValueDoc)
-  peekBitfield name ty bitSize bitShift addr = do
+  peekBitfield cName ty szBits bitShift addr = do
     tyH     <- cToHsType DoNotPreserve ty
-    base    <- storablePeek name addr (Ptr Const ty)
+    base    <- storablePeek cName addr (Ptr Const ty)
     shifted <- if bitShift == 0
       then pure base
       else stmt Nothing Nothing $ do
-        ValueDoc base <- use base
+        ValueDoc base' <- use base
         tellImport (mkName "Data.Bits.shiftR")
         pure . Pure InlineOnce . ValueDoc $ parens
-          (base <+> "`shiftR`" <+> viaShow bitShift)
-    masked <- if bitSize == 32
+          (base' <+> "`shiftR`" <+> viaShow bitShift)
+    masked <- if szBits == 32
       then pure shifted
       else stmt Nothing Nothing $ do
-        ValueDoc shifted <- use shifted
+        ValueDoc shifted' <- use shifted
         tellImport (mkNameG_v "base" "Data.Bits" ".&.")
         tellImport 'coerce
         let mask = "coerce @Word32 0x"
-              <> pretty (showHex ((1 `shiftL` bitSize :: Int) - 1) "")
-        pure . Pure InlineOnce . ValueDoc $ parens (shifted <+> ".&." <+> mask)
-    stmt (Just tyH) (Just (unCName name)) $ do
-      masked <- use masked
-      pure . Pure NeverInline $ masked
+              <> pretty (showHex ((1 `shiftL` szBits :: Int) - 1) "")
+        pure . Pure InlineOnce . ValueDoc $ parens (shifted' <+> ".&." <+> mask)
+    stmt (Just tyH) (Just (unCName cName)) $
+      Pure NeverInline <$> use masked
 
   bitfieldSlave :: Marshalable a => Int -> a -> MarshalScheme a
   bitfieldSlave bitShift = \case
     p
-      | Bitfield ty bitSize <- type' p -> Custom CustomScheme
+      | Bitfield ty szBits <- type' p -> Custom CustomScheme
         { csName       = "bitfield slave " <> unCName (name p)
         , csZero       = Just "zero"
         , csZeroIsZero = True
         , csType       = cToHsType DoNotPreserve ty
         , csDirectPoke = NoPoke
-        , csPeek       = peekBitfield (name p) ty bitSize bitShift
+        , csPeek       = peekBitfield (name p) ty szBits bitShift
         }
       | otherwise -> error "bitfield slave type isn't a bitfield "
 
@@ -1209,19 +1206,6 @@ directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
 screen :: HasRenderParams r => [Sem r RenderElement]
 screen = [voidData "_screen_window", voidData "_screen_context", voidData "_screen_buffer"]
-
-nvscisyncUnsized :: HasRenderParams r => [Sem r RenderElement]
-nvscisyncUnsized = [voidData "NvSciSyncFence"]
-
-nvscisync :: HasRenderParams r => [BespokeAlias r]
-nvscisync = [ alias (APtr ''()) "NvSciSyncAttrList"
-            , alias (APtr ''()) "NvSciSyncObj"
-            ]
-
-nvscibuf :: HasRenderParams r => [BespokeAlias r]
-nvscibuf = [ alias (APtr ''()) "NvSciBufAttrList"
-           , alias (APtr ''()) "NvSciBufObj"
-           ]
 
 ----------------------------------------------------------------
 -- OpenXR platform stuff

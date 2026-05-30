@@ -148,7 +148,7 @@ renderStmtsIO
 renderStmtsIO badNames a =
   renderStmts' id (const (pure Nothing)) badNames a >>= \case
     ContTStmts _ -> throw "Rendering a ContTAction for IO"
-    IOStmts    a -> pure a
+    IOStmts    a' -> pure a'
 
 renderSubStmts
   :: forall r a s
@@ -170,21 +170,21 @@ renderSubStmtsIO
   -> Stmt s r (Doc ())
 renderSubStmtsIO a = renderSubStmts a >>= \case
   ContTStmts _ -> throw "Rendering a ContTAction for IO"
-  IOStmts    a -> pure a
+  IOStmts    a' -> pure a'
 
 renderStmts'
   :: forall r q a
    . (HasStmts q, HasErr r, HasRenderParams r, HasRenderElem r)
   => (forall x . Sem q x -> Sem r x)
   -- ^ Raise the generating context into the rending context, usually 'id'
-  -> (forall a . Typeable a => Text -> Sem q (Maybe a))
+  -> (forall b . Typeable b => Text -> Sem q (Maybe b))
   -- ^ Lookup a ref by name in the parent scope
   -> Set.Set Text
   -- ^ Names we should use for bound variables
   -> (forall s . Sem (StmtE s q ': q) (Ref s a))
   -> Sem r (RenderedStmts (Doc ()))
-renderStmts' lift parentRef badNames a = do
-  ActionsState {..} <- lift (runStmts badNames parentRef a)
+renderStmts' liftCtx parentRef badNames a = do
+  ActionsState {..} <- liftCtx (runStmts badNames parentRef a)
 
   let (con, r) = if any (isContTAction . snd) asStmts
         then (ContTStmts, renderStmtContT)
@@ -216,7 +216,7 @@ runStmts
    . HasStmts r
   => Set.Set Text
   -- ^ Names we should use for bound variables
-  -> (forall a . Typeable a => Text -> Sem r (Maybe a))
+  -> (forall b . Typeable b => Text -> Sem r (Maybe b))
   -- ^ Lookup a ref by name in the parent scope
   -> Sem (StmtE s r ': r) (Ref s a)
   -> Sem r (ActionsState s r)
@@ -508,13 +508,13 @@ deriving instance Ord (Ref s a)
 deriving instance Show (Ref s a)
 
 instance DMap.GEq (Ref s) where
-  geq :: forall s a b . Ref s a -> Ref s b -> Maybe (a :~: b)
+  geq :: forall t a b . Ref t a -> Ref t b -> Maybe (a :~: b)
   geq (Ref a) (Ref b) = case eqT @a @b of
     Just Refl | a == b -> Just Refl
     _                  -> Nothing
 
 instance DMap.GCompare (Ref s) where
-  gcompare :: forall s a b . Ref s a -> Ref s b -> DMap.GOrdering a b
+  gcompare :: forall t a b . Ref t a -> Ref t b -> DMap.GOrdering a b
   gcompare a@(Ref ai) b@(Ref bi) = case DMap.geq a b of
     Just Refl -> DMap.GEQ
     Nothing   -> case compare (ai, typeRep a) (bi, typeRep b) of

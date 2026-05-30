@@ -53,22 +53,22 @@ loadAllDocumentation docbookDir = do
 loadDocumentation
   :: (Member (Embed IO) r, HasErr r) => FilePath -> Sem r [Documentation]
 loadDocumentation f = do
-  let isValid = \case
+  let isValidDoc = \case
         TopLevel (CName n) -> "vma" `T.isPrefixOf` T.toLower n
-        Nested p _         -> isValid (TopLevel p)
+        Nested p _         -> isValidDoc (TopLevel p)
         Chapter _          -> True
   txt <- liftIO $ T.readFile f
-  fromEither (docBookStructToDocumentation isValid txt)
+  fromEither (docBookStructToDocumentation isValidDoc txt)
 
 loadHeaderDocumentation
   :: (Member (Embed IO) r, HasErr r) => FilePath -> Sem r [Documentation]
 loadHeaderDocumentation f = do
-  let isValid = \case
+  let isValidDoc = \case
         TopLevel (CName n) -> "vma" `T.isPrefixOf` T.toLower n
-        Nested p _         -> isValid (TopLevel p)
+        Nested p _         -> isValidDoc (TopLevel p)
         Chapter _          -> True
   txt <- liftIO $ T.readFile f
-  fromEither (docBookHeaderToDocumentation isValid txt)
+  fromEither (docBookHeaderToDocumentation isValidDoc txt)
 
 docBookHeaderToDocumentation
   :: (Documentee -> Bool)
@@ -76,10 +76,10 @@ docBookHeaderToDocumentation
   -> Text
   -- ^ The docbook string
   -> Either Text [Documentation]
-docBookHeaderToDocumentation isValid db = do
+docBookHeaderToDocumentation isValidDoc db = do
   let readerOptions = def
   pandoc <- first show $ runPure (readDocBook readerOptions db)
-  splitHeaderDocumentation isValid pandoc
+  splitHeaderDocumentation isValidDoc pandoc
 
 docBookStructToDocumentation
   :: (Documentee -> Bool)
@@ -87,11 +87,11 @@ docBookStructToDocumentation
   -> Text
   -- ^ The docbook string
   -> Either Text [Documentation]
-docBookStructToDocumentation isValid db = mdo
+docBookStructToDocumentation isValidDoc db = mdo
   let readerOptions = def
   pandoc             <- first show $ runPure (readDocBook readerOptions db)
   (removed, subDocs) <- splitStructDocumentation name pandoc
-  name               <- guessDocumentee isValid removed
+  name               <- guessDocumentee isValidDoc removed
   pure $ Documentation (TopLevel name) removed : subDocs
 
 -- | If the description is a bullet list of "enames" then remove those from the
@@ -106,7 +106,7 @@ splitStructDocumentation parent (Pandoc meta bs) =
       Header _ _ [Str s, Space, Str "Struct", Space, Str "Reference"] : Plain [Str s'] : t
         | s == s'
         -> Para [Str s] : t
-      bs -> bs
+      t -> t
 
     -- Doxygen+Pandoc results in some uninteresting type+member name garbage
     removeUninteresting = bottomUp $ \case
@@ -145,13 +145,13 @@ splitStructDocumentation parent (Pandoc meta bs) =
 
     extractMembers = iterateSuffixes $ \case
       xs
-        | Just (member, h, xs) <- isTypeMemberGarbage xs
-        , Section _ sectionBlocks rem <- (h : xs)
+        | Just (member, h, xs') <- isTypeMemberGarbage xs
+        , Section _ sectionBlocks remainder <- (h : xs')
         -> ( Just
              (Documentation (Nested parent (CName member))
                             (Pandoc meta sectionBlocks)
              )
-           , rem
+           , remainder
            )
       xs -> (Nothing, xs)
 
@@ -163,19 +163,19 @@ splitStructDocumentation parent (Pandoc meta bs) =
 -- for the documentation for a header. Extract them here.
 splitHeaderDocumentation
   :: (Documentee -> Bool) -> Pandoc -> Either Text [Documentation]
-splitHeaderDocumentation isValid (Pandoc meta bs) =
+splitHeaderDocumentation isValidDoc (Pandoc meta bs) =
   let
     takeDoc = \case
       -- An enum
-      NamedSection name sectionBlocks rem
+      NamedSection name sectionBlocks remainder
         | documentee <- TopLevel (CName name)
-        , isValid documentee
+        , isValidDoc documentee
         , Plain [Str name1] : Plain _ : Plain _ : Plain [Str name2] : Para [Code ("", [], []) enumName] : sectionRem <-
           sectionBlocks
         , name == name1
         , name == name2
-        , Just enumName <- T.dropPrefix "enum " enumName
-        , enumName == name1
+        , Just plainName <- T.dropPrefix "enum " enumName
+        , plainName == name1
         -> let
              removeEnumTable = \case
                x : xs | Just ds <- enumValuesFromTable (CName name) meta x ->
@@ -188,18 +188,18 @@ splitHeaderDocumentation isValid (Pandoc meta bs) =
                ( Documentation documentee (Pandoc meta withoutValueDocs)
                : concat valueDocs
                )
-             , rem
+             , remainder
              )
       -- A command
-      NamedSection nameWithParens sectionBlocks rem
+      NamedSection nameWithParens sectionBlocks remainder
         | Just name <- T.dropSuffix "()" nameWithParens
         , documentee <- TopLevel (CName name)
-        , isValid documentee
+        , isValidDoc documentee
         , Plain [Str name1] : Plain _ : Plain _ : Plain [Str name2] : Para [Code ("", [], []) _funDecl] : sectionRem <-
           sectionBlocks
         , name == name1
         , name == name2
-        -> (Just [Documentation documentee (Pandoc meta sectionRem)], rem)
+        -> (Just [Documentation documentee (Pandoc meta sectionRem)], remainder)
       -- A command
       xs -> (Nothing, xs)
   in  pure . concat . fst . iterateSuffixes takeDoc $ bs

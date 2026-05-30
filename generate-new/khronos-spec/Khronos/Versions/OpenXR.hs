@@ -38,14 +38,14 @@ currentVersion (XrVersion ma mi pa) = genRe "current version" $ do
   RenderParams {..} <- input
   tellExplicitModule =<< mkModuleName ["Version"]
   let pat         = mkPatternName "XR_CURRENT_API_VERSION"
-      makeVersion = mkPatternName "XR_MAKE_VERSION"
+      makeVersionN = mkPatternName "XR_MAKE_VERSION"
       ver         = mkTyName "XrVersion"
-  tellImport makeVersion
+  tellImport makeVersionN
   tellImport ver
   tellExport (EPat pat)
   tellDoc [qqi|
     pattern {pat} :: {ver}
-    pattern {pat} = {makeVersion} {ma} {mi} {pa}
+    pattern {pat} = {makeVersionN} {ma} {mi} {pa}
   |]
 
 

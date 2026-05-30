@@ -123,9 +123,9 @@ toCStructInstance MarshaledStruct {..} = do
   tellImportWithAll (TyConName "ToCStruct")
   let
     Struct {..} = msStruct
-    n           = mkTyName sName
+    tyName     = mkTyName sName
     aVar        = mkVar "a"
-    structT     = ConT (typeName n)
+    structT     = ConT (typeName tyName)
     mkCase :: MarshaledStructMember -> Sem r (Doc ())
     mkCase MarshaledStructMember {..} = do
       unless (smOffset msmStructMember == 0)
@@ -153,9 +153,9 @@ toCStructInstance MarshaledStruct {..} = do
             $   "castPtr @_ @"
             <>  pTyDoc
             <+> addrVar
-        ty       <- schemeTypeNegative msmScheme
+        stmtT <- schemeTypeNegative msmScheme
         valueRef <-
-          stmt ty Nothing . pure . Pure AlwaysInline . ValueDoc . pretty $ mVar
+          stmt stmtT Nothing . pure . Pure AlwaysInline . ValueDoc . pretty $ mVar
         getPokeIndirect msmStructMember msmScheme valueRef addrRef
 
       pokeDoc <- case pokeVal of
@@ -187,7 +187,7 @@ toCStructInstance MarshaledStruct {..} = do
   (size, alignment) <- getTypeSize (TypeName msName)
   let (a, an, af) = chooseAlign sAlignment
   tellImport an
-  tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
+  tellDoc $ "instance ToCStruct" <+> pretty tyName <+> "where" <> line <> indent
     2
     (vsep
       [ "withCStruct x f ="
@@ -229,7 +229,7 @@ zeroInstance MarshaledStruct {..} = do
     . \MarshaledStructMember {..} -> do
         (unionSize, _) <- getTypeSize (TypeName msName)
         let (numElems, elemScheme) = case msmScheme of
-              Tupled n e -> (n, e)
+              Tupled n' e -> (n', e)
               e          -> (1, e)
         zero <- zeroScheme elemScheme >>= \case
           Nothing -> empty
