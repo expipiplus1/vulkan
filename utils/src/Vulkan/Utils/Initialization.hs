@@ -10,6 +10,7 @@ module Vulkan.Utils.Initialization
     -- * macOS portability
   , portabilityRequirements
   , portabilityFlags
+  , devicePortabilityRequirements
 
     -- * Device creation
   , createDeviceFromRequirements
@@ -45,6 +46,8 @@ import           Vulkan.Core10.Enums.InstanceCreateFlagBits
                                                 ( pattern INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR )
 import           Vulkan.Extensions.VK_KHR_portability_enumeration
                                                 ( pattern KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME )
+import           Vulkan.Extensions.VK_KHR_portability_subset
+                                                ( pattern KHR_PORTABILITY_SUBSET_EXTENSION_NAME )
 #endif
 
 ----------------------------------------------------------------
@@ -146,15 +149,18 @@ createInstanceFromRequirements required optional baseCreateInfo = do
 -- macOS portability + windowing-friendly instance creation
 ----------------------------------------------------------------
 
-{- | Instance requirements needed on macOS to enumerate non-conformant drivers
-such as MoltenVK. Empty on every other platform.
--}
 portabilityRequirements :: [InstanceRequirement]
 
 {- | Instance create flag bits that pair with 'portabilityRequirements'.
 'zero' on every non-macOS platform.
 -}
 portabilityFlags :: InstanceCreateFlags
+
+{- | Device requirements needed on macOS: the Vulkan spec mandates that
+@VK_KHR_portability_subset@ be enabled whenever a physical device advertises
+it (as MoltenVK does). Empty on every other platform.
+-}
+devicePortabilityRequirements :: [DeviceRequirement]
 
 #if defined(darwin_HOST_OS)
 portabilityRequirements =
@@ -165,9 +171,17 @@ portabilityRequirements =
       }
   ]
 portabilityFlags = INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
+devicePortabilityRequirements =
+  [ RequireDeviceExtension
+      { deviceExtensionLayerName  = Nothing
+      , deviceExtensionName       = KHR_PORTABILITY_SUBSET_EXTENSION_NAME
+      , deviceExtensionMinVersion = minBound
+      }
+  ]
 #else
 portabilityRequirements = []
 portabilityFlags        = zero
+devicePortabilityRequirements = []
 #endif
 
 {- | Build a Vulkan 'Instance' from a backend-supplied extension list plus
@@ -225,7 +239,7 @@ createDeviceFromRequirements
 createDeviceFromRequirements required optional phys baseCreateInfo = do
   (mbDCI, rrs, ors) <-
     checkDeviceRequirements
-      required
+      (devicePortabilityRequirements <> required)
       optional
       phys
       baseCreateInfo

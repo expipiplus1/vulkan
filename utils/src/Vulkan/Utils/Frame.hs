@@ -254,13 +254,14 @@ queueSubmitFrame
   -> m ()
 {-# INLINE queueSubmitFrame #-}
 queueSubmitFrame vc Frame{..} cbs = liftIO . mask_ $ do
-  let
-    RecycledResources{rrImageAvailable, rrRenderFinished} = fRecycled
+  Vk.queueSubmit gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
+  atomicModifyIORef' fGPUWork $ \jobs -> ((fHostTimeline, fIndex) : jobs, ())
+  where
     gQ = snd (qGraphics (vcQueues vc))
     submitInfo =
       zero
         { Vk.waitSemaphores = [rrImageAvailable]
-        , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+        , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT]
         , Vk.commandBuffers = fmap Vk.commandBufferHandle cbs
         , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline]
         }
@@ -269,8 +270,7 @@ queueSubmitFrame vc Frame{..} cbs = liftIO . mask_ $ do
           , signalSemaphoreValues = [1, fIndex]
           }
           :& ()
-  Vk.queueSubmit gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
-  atomicModifyIORef' fGPUWork ((,()) . ((fHostTimeline, fIndex) :))
+    RecycledResources{rrImageAvailable, rrRenderFinished} = fRecycled
 
 {- | Acquire the next swapchain image for this frame, signalling the frame's
 image-available semaphore on completion.
@@ -313,9 +313,6 @@ recreates the swapchain.
 presentFrameImage :: (MonadIO m) => VulkanContext -> Frame -> Vk.Result -> Word32 -> m ()
 {-# INLINE presentFrameImage #-}
 presentFrameImage vc f acquireResult imageIndex = liftIO $ do
-  let
-    RecycledResources{rrRenderFinished} = fRecycled f
-    gQ = snd (qGraphics (vcQueues vc))
   presentResult <-
     KHR.queuePresentKHR
       gQ
@@ -326,6 +323,9 @@ presentFrameImage vc f acquireResult imageIndex = liftIO $ do
         }
   when (acquireResult == Vk.SUBOPTIMAL_KHR || presentResult == Vk.SUBOPTIMAL_KHR) $
     throwIO (VulkanException Vk.ERROR_OUT_OF_DATE_KHR)
+  where
+    RecycledResources{rrRenderFinished} = fRecycled f
+    gQ = snd (qGraphics (vcQueues vc))
 
 {- | Shutdown drain: spawn the unrendered current frame's wait/recycle thread,
 then block on the recycle channel until both this frame's and the previous
@@ -365,9 +365,6 @@ command pool keyed to the graphics queue family.
 -}
 mkRecycledResources :: (MonadResource m) => VulkanContext -> m RecycledResources
 mkRecycledResources vc = do
-  let
-    dev = vcDevice vc
-    QueueFamilyIndex qfi = fst (qGraphics (vcQueues vc))
   (_, rrImageAvailable) <-
     Vk.withSemaphore
       dev
@@ -387,6 +384,9 @@ mkRecycledResources vc = do
       Nothing
       allocate
   pure RecycledResources{..}
+  where
+    dev = vcDevice vc
+    (QueueFamilyIndex qfi, _) = qGraphics (vcQueues vc)
 
 {- | Wait for some semaphores; if the wait times out, give the device one
 more chance with a zero timeout. Catches the case where the host was
