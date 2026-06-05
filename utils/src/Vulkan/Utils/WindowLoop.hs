@@ -77,6 +77,16 @@ runWindowLoop vc initialSC getSize shouldQuit WindowLoop{..} = do
         if needsNew
           then do
             newSize <- liftIO getSize
+            -- A swapchain recreation retires the old swapchain. Drain the
+            -- graphics/present queue first so the old swapchain's pending
+            -- presents — and this frame's GPU work behind the old
+            -- per-swapchain state — all complete before we free the old
+            -- per-image present-wait semaphores, the old swapchain, and the
+            -- old state. A present-wait semaphore cannot otherwise be known
+            -- idle (its present has no host-visible completion without
+            -- VK_KHR_swapchain_maintenance1). Recreation is rare, so this
+            -- one-shot wait is cheap.
+            Vk.deviceWaitIdle (vcDevice vc)
             sc' <- recreateSwapchain (vcPhysicalDevice vc) (vcDevice vc) newSize currentSC
             (newSt, newKey) <- wlMkState sc'
             (_, oldKey) <- liftIO $ readIORef stRef

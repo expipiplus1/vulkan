@@ -85,7 +85,7 @@ drawTriangle vc pipeline f = do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
       Vk.cmdDraw cb 3 1 0 0
     cmdTransitionForPresent cb image
-  queueSubmitFrame vc f [commands]
+  queueSubmitFrame vc f imageIndex [commands]
   presentFrameImage vc f acquireResult imageIndex
   where
     Swapchain{sExtent, sImages, sImageViews} = fSwapchain f

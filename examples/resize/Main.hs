@@ -252,7 +252,7 @@ renderJulia vc jp computeSync bindings f = do
         blitOffscreen (sExtent sc) offscreen swapImage cb
         swapchainToPresent swapImage cb
 
-      queueSubmitFrame vc f [commands]
+      queueSubmitFrame vc f imageIndex [commands]
     AsyncCompute readyTimeline lastBlitDone -> do
       let
         QueueFamilyIndex graphicsFam = fst (qGraphics (vcQueues vc))
@@ -303,7 +303,7 @@ renderJulia vc jp computeSync bindings f = do
         blitOffscreen (sExtent sc) offscreen swapImage cb
         swapchainToPresent swapImage cb
 
-      submitAsync vc f readyTimeline lastBlitDone computeCb graphicsCb
+      submitAsync vc f imageIndex readyTimeline lastBlitDone computeCb graphicsCb
 
   presentFrameImage vc f acquireResult imageIndex
   where
@@ -522,12 +522,13 @@ submitAsync
   :: (MonadIO m)
   => VulkanContext
   -> Frame
+  -> Word32
   -> Vk.Semaphore
   -> IORef Word64
   -> Vk.CommandBuffer
   -> Vk.CommandBuffer
   -> m ()
-submitAsync vc Frame{..} readyTimeline lastBlitDone computeCb graphicsCb = liftIO . mask_ $ do
+submitAsync vc Frame{..} imageIndex readyTimeline lastBlitDone computeCb graphicsCb = liftIO . mask_ $ do
   prevBlitDone <- readIORef lastBlitDone
   let computeSubmit =
         zero
@@ -544,7 +545,8 @@ submitAsync vc Frame{..} readyTimeline lastBlitDone computeCb graphicsCb = liftI
   Vk.queueSubmit (snd $ qCompute (vcQueues vc)) [SomeStruct computeSubmit] Vk.NULL_HANDLE
 
   let
-    RecycledResources{rrImageAvailable, rrRenderFinished} = fRecycled
+    RecycledResources{rrImageAvailable} = fRecycled
+    renderFinished = sRenderFinished fSwapchain V.! fromIntegral imageIndex
     graphicsSubmit =
       zero
         { Vk.waitSemaphores = [rrImageAvailable, readyTimeline]
@@ -553,7 +555,7 @@ submitAsync vc Frame{..} readyTimeline lastBlitDone computeCb graphicsCb = liftI
             , Vk.PIPELINE_STAGE_TRANSFER_BIT
             ]
         , Vk.commandBuffers = [Vk.commandBufferHandle graphicsCb]
-        , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline]
+        , Vk.signalSemaphores = [renderFinished, fHostTimeline]
         }
         ::& zero
           { -- Binary semaphores ignore their value entry; the timeline ones use it.

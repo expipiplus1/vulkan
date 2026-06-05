@@ -3,9 +3,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 {-| Per-frame state and the recycling-Frame loop. Each frame owns a binary
-image-available semaphore, a binary render-finished semaphore, and a
-command pool — those three are 'RecycledResources' that get handed back
-to a channel in 'VulkanContext' once the frame's GPU work has completed.
+image-available semaphore and a command pool — those are 'RecycledResources'
+that get handed back to a channel in 'VulkanContext' once the frame's GPU work
+has completed. (The present-wait/render-finished semaphore is per swapchain
+image, on the 'Vulkan.Utils.Swapchain.Swapchain', because it is only safe to
+reuse once its image is re-acquired — not when the frame's render finishes.)
 
 The host-side timeline semaphore (@fHostTimeline@) lives across frames:
 each frame increments it to its own 'fIndex' on the GPU, and the host
@@ -65,8 +67,8 @@ data Frame = Frame
   in flight keeps its swapchain alive across recreation.
   -}
   , fRecycled :: RecycledResources
-  {- ^ This frame's image-available / render-finished / command-pool — all
-  borrowed from the recycle channel; returned at retire time.
+  {- ^ This frame's image-available semaphore + command pool — borrowed from
+  the recycle channel; returned at retire time.
   -}
   , fHostTimeline :: Vk.Semaphore
   {- ^ Long-lived timeline semaphore. Each frame increments it to 'fIndex'
@@ -238,9 +240,9 @@ recordCommands vc Frame{fRecycled} record = do
 bookkeeping the host wait thread will block on.
 
 Builds the standard frame submit from context/frame: waits on the frame's
-image-available semaphore at @COLOR_ATTACHMENT_OUTPUT@, signals its
-render-finished semaphore plus its timeline value, and submits on the
-graphics queue.
+image-available semaphore at @COLOR_ATTACHMENT_OUTPUT@, signals the
+swapchain's per-image render-finished semaphore (at @imageIndex@) plus its
+timeline value, and submits on the graphics queue.
 
 For a non-standard submit shape (multiple submit infos, different wait
 stage, extra signals), call 'Vk.queueSubmit' directly and append
@@ -250,27 +252,31 @@ queueSubmitFrame
   :: (MonadIO m)
   => VulkanContext
   -> Frame
+  -> Word32
+  -- ^ Acquired image index (from 'acquireFrameImage'); selects the per-image
+  -- present-wait semaphore to signal.
   -> V.Vector Vk.CommandBuffer
   -> m ()
 {-# INLINE queueSubmitFrame #-}
-queueSubmitFrame vc Frame{..} cbs = liftIO . mask_ $ do
+queueSubmitFrame vc Frame{..} imageIndex cbs = liftIO . mask_ $ do
   Vk.queueSubmit gQ [SomeStruct submitInfo] Vk.NULL_HANDLE
   atomicModifyIORef' fGPUWork $ \jobs -> ((fHostTimeline, fIndex) : jobs, ())
   where
     gQ = snd (qGraphics (vcQueues vc))
+    renderFinished = sRenderFinished fSwapchain V.! fromIntegral imageIndex
     submitInfo =
       zero
         { Vk.waitSemaphores = [rrImageAvailable]
         , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT]
         , Vk.commandBuffers = fmap Vk.commandBufferHandle cbs
-        , Vk.signalSemaphores = [rrRenderFinished, fHostTimeline]
+        , Vk.signalSemaphores = [renderFinished, fHostTimeline]
         }
         ::& zero
           { waitSemaphoreValues = [1]
           , signalSemaphoreValues = [1, fIndex]
           }
           :& ()
-    RecycledResources{rrImageAvailable, rrRenderFinished} = fRecycled
+    RecycledResources{rrImageAvailable} = fRecycled
 
 {- | Acquire the next swapchain image for this frame, signalling the frame's
 image-available semaphore on completion.
@@ -302,8 +308,8 @@ acquireFrameImage vc Frame{..} =
     oneSecond :: Word64
     oneSecond = 1000000000
 
-{- | Present this frame's acquired image, waiting on the frame's
-render-finished semaphore. Presents on the graphics queue
+{- | Present this frame's acquired image, waiting on the swapchain's per-image
+render-finished semaphore (at @imageIndex@). Presents on the graphics queue
 (@qGraphics . vcQueues@).
 
 If either the prior acquire (passed in) or this present reports
@@ -317,14 +323,14 @@ presentFrameImage vc f acquireResult imageIndex = liftIO $ do
     KHR.queuePresentKHR
       gQ
       zero
-        { KHR.waitSemaphores = [rrRenderFinished]
+        { KHR.waitSemaphores = [renderFinished]
         , KHR.swapchains = [sSwapchain (fSwapchain f)]
         , KHR.imageIndices = [imageIndex]
         }
   when (acquireResult == Vk.SUBOPTIMAL_KHR || presentResult == Vk.SUBOPTIMAL_KHR) $
     throwIO (VulkanException Vk.ERROR_OUT_OF_DATE_KHR)
   where
-    RecycledResources{rrRenderFinished} = fRecycled f
+    renderFinished = sRenderFinished (fSwapchain f) V.! fromIntegral imageIndex
     gQ = snd (qGraphics (vcQueues vc))
 
 {- | Shutdown drain: spawn the unrendered current frame's wait/recycle thread,
@@ -360,18 +366,13 @@ withTimelineSemaphore dev initial =
 -- Internals
 ----------------------------------------------------------------
 
-{- | Build one set of recycled resources: two binary semaphores + a
-command pool keyed to the graphics queue family.
+{- | Build one set of recycled resources: a binary image-available semaphore
++ a command pool keyed to the graphics queue family. (The present-wait
+semaphore is per swapchain image, on the 'Swapchain', not here.)
 -}
 mkRecycledResources :: (MonadResource m) => VulkanContext -> m RecycledResources
 mkRecycledResources vc = do
   (_, rrImageAvailable) <-
-    Vk.withSemaphore
-      dev
-      (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
-      Nothing
-      allocate
-  (_, rrRenderFinished) <-
     Vk.withSemaphore
       dev
       (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
