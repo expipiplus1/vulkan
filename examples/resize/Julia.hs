@@ -90,17 +90,17 @@ createJuliaPipeline dev = do
       , jpDescriptorSetLayout = descriptorSetLayout
       }
 
-{- | One descriptor set per swapchain image, bound to its image view. Allocated
-from a fresh descriptor pool so that releasing this scope frees the lot.
+{- | One descriptor set per supplied image view, bound to that view.
+Allocated from a fresh descriptor pool so that releasing this scope frees the lot.
 -}
 createJuliaDescriptorSets
   :: (MonadResource m)
   => Vk.Device
   -> Vk.DescriptorSetLayout
   -> Vector Vk.ImageView
-  -> m (Vector Vk.DescriptorSet)
+  -> m (ReleaseKey, Vector Vk.DescriptorSet)
 createJuliaDescriptorSets dev descriptorSetLayout imageViews = do
-  (_, descriptorPool) <-
+  (poolKey, descriptorPool) <-
     Vk.withDescriptorPool
       dev
       zero
@@ -147,7 +147,7 @@ createJuliaDescriptorSets dev descriptorSetLayout imageViews = do
     )
     []
 
-  pure descriptorSets
+  pure (poolKey, descriptorSets)
 
 juliaShader
   :: (MonadResource m)

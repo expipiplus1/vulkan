@@ -35,13 +35,17 @@ data VulkanContext = VulkanContext
   -}
   }
 
-{- | The bits of state recycled between frames: two binary semaphores used
-for image-acquire / render-done synchronisation, and the command pool the
-frame's commands are recorded into.
+{- | The bits of state recycled between frames: a binary image-available
+semaphore (signalled by image acquisition, waited on by the frame's submit)
+and the command pool the frame's commands are recorded into.
+
+The render-finished / present-wait semaphore is /not/ here — it is per
+swapchain image (see 'Vulkan.Utils.Swapchain.sRenderFinished'), because a
+present-wait semaphore is only safe to reuse once its image is re-acquired,
+not when the frame's render completes.
 -}
 data RecycledResources = RecycledResources
   { rrImageAvailable :: Vk.Semaphore
-  , rrRenderFinished :: Vk.Semaphore
   , rrCommandPool :: Vk.CommandPool
   }
 

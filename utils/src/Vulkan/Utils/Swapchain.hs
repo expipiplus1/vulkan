@@ -28,7 +28,9 @@ import Data.Foldable (for_, traverse_)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import GHC.Generics (Generic)
+import Vulkan.CStruct.Extends (pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreTypeCreateInfo (..), pattern SEMAPHORE_TYPE_BINARY)
 import Vulkan.Exception (VulkanException (..))
 import Vulkan.Extensions.VK_KHR_surface as SurfaceCapabilitiesKHR (SurfaceCapabilitiesKHR (..))
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
@@ -96,6 +98,13 @@ data Swapchain = Swapchain
   , sPresentMode :: KHR.PresentModeKHR
   , sImages :: Vector Vk.Image
   , sImageViews :: Vector Vk.ImageView
+  , sRenderFinished :: Vector Vk.Semaphore
+  {- ^ Per-image present-wait binary semaphore, indexed by the acquired image
+  index (@length == length sImages@). A frame's submit signals
+  @sRenderFinished ! imageIndex@ and the present waits on it; reusing it is
+  safe only once that image is re-acquired, which is why it lives here (per
+  image) rather than in the per-frame 'RecycledResources'. Freed by 'sRelease'.
+  -}
   , sRelease :: RefCounted
   -- ^ Held until no in-flight frame still uses this swapchain.
   , sConfig :: SwapchainConfig
@@ -128,8 +137,19 @@ allocSwapchain phys dev cfg oldSwapchain windowSize surface = do
     fmap V.unzip . V.forM sImages $ \image ->
       createImageView dev (SurfaceFormatKHR.format sFormat) image
 
+  -- One present-wait binary semaphore per swapchain image, indexed by the
+  -- acquired image index (see 'sRenderFinished').
+  (renderFinishedKeys, sRenderFinished) <-
+    fmap V.unzip . V.forM sImages $ \_image ->
+      Vk.withSemaphore
+        dev
+        (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_BINARY 0 :& ())
+        Nothing
+        allocate
+
   -- Released by the next 'recreateSwapchain' (when frames stop using it).
   sRelease <- newRefCounted $ do
+    traverse_ release renderFinishedKeys
     traverse_ release imageViewKeys
     release swapchainKey
 

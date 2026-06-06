@@ -117,7 +117,7 @@ renderFrame vc vma rs f = do
   commands <- recordCommands vc f \cb ->
     recordCommandBuffer cb rs sc descriptorSet imageIndex
 
-  queueSubmitFrame vc f [commands]
+  queueSubmitFrame vc f imageIndex [commands]
   presentFrameImage vc f acquireResult imageIndex
 
 ----------------------------------------------------------------

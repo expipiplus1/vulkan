@@ -27,8 +27,13 @@ module Vulkan.Utils.Queues
 
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
+import Data.Foldable (foldl', toList)
+import Data.List (sortOn)
+import Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map
+import Data.Traversable (mapAccumL)
 import qualified Data.Vector as V
-import Data.Word (Word64)
+import Data.Word (Word32, Word64)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core10.DeviceInitialization as DI
@@ -51,7 +56,7 @@ data Queues a = Queues
   , qTransfer :: a
   -- ^ transfer (prefers transfer-only family), priority 0.2
   }
-  deriving (Functor, Foldable, Traversable)
+  deriving (Show, Functor, Foldable, Traversable)
 
 -- | Elementwise zip — handy for combining priorities with family predicates.
 instance Applicative Queues where
@@ -89,10 +94,18 @@ withDevice inst mSurface extraReqs = do
     Nothing -> fail "No physical device with the required G/C/T queue families"
 
   let
+    prios = Queues 1.0 0.5 0.2
     mkSpec target prio = QueueSpec prio (\i _ -> pure (i == target))
-    specs = mkSpec <$> qFams <*> Queues 1.0 0.5 0.2
+    specs = mkSpec <$> qFams <*> prios
 
-  Just (qInfos, getQs) <- assignQueues phys specs
+  -- Prefer 'assignQueues', which hands each slot its own queue for maximum
+  -- parallelism. When the hardware can't supply that many distinct queues
+  -- (e.g. a lone graphics+compute family exposing a single queue, as some
+  -- mobile and translation-layer drivers do) fall back to sharing rather than
+  -- failing: the triple still works, just with serialized submission.
+  (qInfos, getQs) <- assignQueues phys specs >>= \case
+    Just qs -> pure qs
+    Nothing -> shareQueues phys ((,) <$> qFams <*> prios)
 
   dev <-
     createDeviceFromRequirements
@@ -155,3 +168,85 @@ discoverFamilies mSurf phys = do
       let score = sum (DI.size <$> heaps) :: Word64
       pure (Just (Queues gp cp tf, score))
     _ -> pure Nothing
+
+{- | Robust fallback for 'withDevice' when 'assignQueues' can't give every
+slot its own queue. Allocates as many distinct queues per family as the
+hardware exposes, then aliases the surplus slots onto them round-robin, so it
+always succeeds.
+
+A shared queue keeps every capability it was selected for — a graphics+compute
+family also handles transfer — so the result is correct, just less concurrent.
+Two slots that resolve to the same 'Vk.Queue' compare equal, so a caller who
+cares can detect aliasing. Callers submitting from multiple threads must
+externally synchronize a shared queue themselves; see
+'Vulkan.Utils.QueueAssignment'.
+-}
+shareQueues
+  :: (MonadIO m)
+  => Vk.PhysicalDevice
+  -> Queues (QueueFamilyIndex, Float)
+  -- ^ The resolved family and queue priority for each slot.
+  -> m
+       ( V.Vector (Vk.DeviceQueueCreateInfo '[])
+       , Vk.Device -> IO (Queues (QueueFamilyIndex, Vk.Queue))
+       )
+shareQueues phys famPrios = do
+  capacities <- familyCapacities phys
+  let
+    capOf fam = Map.findWithDefault 0 fam capacities
+
+    -- Hand each slot a queue index within its family, wrapping at the family's
+    -- capacity so surplus slots reuse (alias) earlier queues.
+    step counts (fam, prio) =
+      let
+        used = Map.findWithDefault 0 fam counts
+        idx = used `mod` max 1 (capOf fam)
+      in
+        (Map.insert fam (used + 1) counts, (fam, prio, idx))
+
+    slots :: Queues (QueueFamilyIndex, Float, Word32)
+    slots = snd (mapAccumL step Map.empty famPrios)
+
+    -- The highest requested priority wins for a queue shared by several slots.
+    priorityAt :: Map (QueueFamilyIndex, Word32) Float
+    priorityAt =
+      foldl'
+        (\acc (fam, prio, idx) -> Map.insertWith max (fam, idx) prio acc)
+        Map.empty
+        (toList slots)
+
+    -- One create-info per family, priorities ordered by queue index.
+    perFamily :: Map QueueFamilyIndex [(Word32, Float)]
+    perFamily =
+      Map.fromListWith
+        (<>)
+        [(fam, [(idx, prio)]) | ((fam, idx), prio) <- Map.toList priorityAt]
+
+    createInfos =
+      V.fromList
+        [ zero
+            { Vk.queueFamilyIndex = unQueueFamilyIndex fam
+            , Vk.queuePriorities = V.fromList (snd <$> sortOn fst idxPrios)
+            }
+        | (fam, idxPrios) <- Map.toList perFamily
+        ]
+
+    getQueues dev =
+      traverse
+        ( \(fam, _, idx) ->
+            (fam,) <$> Vk.getDeviceQueue dev (unQueueFamilyIndex fam) idx
+        )
+        slots
+
+  pure (createInfos, getQueues)
+
+-- | The number of queues each queue family of a 'Vk.PhysicalDevice' exposes.
+familyCapacities
+  :: (MonadIO m) => Vk.PhysicalDevice -> m (Map QueueFamilyIndex Word32)
+familyCapacities phys = do
+  props <- Vk.getPhysicalDeviceQueueFamilyProperties phys
+  pure $
+    Map.fromList
+      [ (QueueFamilyIndex (fromIntegral i), Vk.queueCount qfp)
+      | (i, qfp) <- zip [0 :: Int ..] (V.toList props)
+      ]
