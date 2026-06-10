@@ -1,10 +1,13 @@
 {-| GPU render targets for the offscreen examples: a colour target (colour
 attachment + transfer source, so it can be read back) and a depth attachment,
 each a VMA-allocated GPU-only image with a matching whole-image 2D view.
+'createTarget' is the general form for other usage combinations (e.g. storage
+images for compute post-processing).
 -}
 module RenderTarget
   ( createColorTarget
   , createDepthTarget
+  , createTarget
   ) where
 
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate)
@@ -58,6 +61,10 @@ createDepthTarget allocator dev format extent =
     Vk.IMAGE_ASPECT_DEPTH_BIT
     "GPU depth attachment"
 
+{- | The general form: a GPU-only image with the given usage and a whole-image
+2D view over the given aspect, debug-named with the given name. Keys as in
+'createColorTarget'.
+-}
 createTarget
   :: (MonadResource m)
   => VMA.Allocator
@@ -67,6 +74,7 @@ createTarget
   -> Vk.ImageUsageFlags
   -> Vk.ImageAspectFlags
   -> ByteString
+  -- ^ Debug name for the image.
   -> m ((ReleaseKey, ReleaseKey), (Vk.Image, Vk.ImageView))
 createTarget allocator dev format (Vk.Extent2D w h) usage aspect name = do
   (imageKey, (image, _, _)) <- VMA.withImage allocator imageCreateInfo gpuAlloc allocate
