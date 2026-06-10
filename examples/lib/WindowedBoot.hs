@@ -25,7 +25,7 @@ import qualified Data.Text.Encoding as Text
 import Say (sayErr)
 import qualified Vma
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Core12 (pattern API_VERSION_1_2)
+import Vulkan.Core13 (pattern API_VERSION_1_3)
 import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
@@ -78,7 +78,7 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
       ( Just
           zero
             { Vk.applicationName = Just (Text.encodeUtf8 wcAppName)
-            , Vk.apiVersion = API_VERSION_1_2
+            , Vk.apiVersion = API_VERSION_1_3
             }
       )
       ( RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME minBound
@@ -90,7 +90,7 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   (_, surf) <- waWithSurface inst
   (phys, dev, qs) <-
     withDevice inst (Just surf) (frameDeviceRequirements ++ wcDeviceReqs)
-  vma <- Vma.createVMA wcVmaFlags API_VERSION_1_2 inst phys dev
+  vma <- Vma.createVMA wcVmaFlags API_VERSION_1_3 inst phys dev
   props <- Vk.getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
   vc <- liftIO $ mkVulkanContext inst phys dev qs

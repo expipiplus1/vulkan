@@ -129,7 +129,7 @@ render allocator dev computeQueueFamilyIndex = do
     []
 
   -- Create our shader and compute pipeline
-  (_, shader) <- shaderStage dev Vk.SHADER_STAGE_COMPUTE_BIT compCode
+  (_, shader) <- shaderStage dev Vk.SHADER_STAGE_COMPUTE_BIT () compCode
   (_, pipelineLayout) <-
     Vk.withPipelineLayout
       dev

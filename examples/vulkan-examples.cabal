@@ -45,6 +45,7 @@ library
   exposed-modules:
       HeadlessBoot
       ImageReadback
+      RenderTarget
       Triangle
       Utils
       Vma
@@ -767,3 +768,117 @@ executable vrcube
     ghc-options: -optl-mconsole
   if !flag(vr)
     buildable: False
+
+test-suite depth-headless
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      depth-headless
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , resourcet
+    , vulkan
+    , vulkan-examples
+    , vulkan-utils
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
+test-suite triangle-headless-dynamic
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      triangle-headless-dynamic
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , resourcet
+    , vulkan
+    , vulkan-examples
+    , vulkan-utils
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole

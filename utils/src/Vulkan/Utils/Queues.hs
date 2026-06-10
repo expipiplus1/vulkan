@@ -103,9 +103,10 @@ withDevice inst mSurface extraReqs = do
   -- (e.g. a lone graphics+compute family exposing a single queue, as some
   -- mobile and translation-layer drivers do) fall back to sharing rather than
   -- failing: the triple still works, just with serialized submission.
-  (qInfos, getQs) <- assignQueues phys specs >>= \case
-    Just qs -> pure qs
-    Nothing -> shareQueues phys ((,) <$> qFams <*> prios)
+  (qInfos, getQs) <-
+    assignQueues phys specs >>= \case
+      Just qs -> pure qs
+      Nothing -> shareQueues phys ((,) <$> qFams <*> prios)
 
   dev <-
     createDeviceFromRequirements

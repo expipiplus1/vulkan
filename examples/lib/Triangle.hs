@@ -13,15 +13,17 @@ module Triangle
   , fragCode
   ) where
 
-import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT)
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, ResourceT, register, release)
 import Data.ByteString (ByteString)
+import Data.Foldable (traverse_)
 import Data.Vector (Vector)
 import qualified Data.Vector as V
+import UnliftIO (MonadUnliftIO)
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
+import Vulkan.Utils.DynamicState (fullScissor, fullViewport, minimalDynamicStates)
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
-import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..))
@@ -41,12 +43,13 @@ runTriangle
   -> ResourceT IO ()
 runTriangle vc initialSC getDrawableSize shouldQuit = do
   let dev = vcDevice vc
+  let colorFormat = KHR.format (sFormat initialSC)
   (_, renderPass) <-
     RenderPass.createColorRenderPass
       dev
-      (KHR.format (sFormat initialSC))
+      colorFormat
       Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
-  (_, pipeline) <- createGraphicsPipeline dev renderPass
+  (_, pipeline) <- createGraphicsPipeline dev renderPass colorFormat
 
   runWindowLoop
     vc
@@ -54,8 +57,11 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
     getDrawableSize
     shouldQuit
     WindowLoop
-      { wlMkState = \sc ->
-          Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
+      { wlMkState = \sc -> do
+          framebuffers <-
+            traverse (\iv -> Framebuffer.createFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
+          groupKey <- register (traverse_ (release . fst) framebuffers)
+          pure (fmap snd framebuffers, groupKey)
       , wlRender = drawTriangle vc renderPass pipeline
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
@@ -86,23 +92,8 @@ drawTriangle vc renderPass pipeline framebuffers f = do
             , Vk.clearValues = [Vk.Color (Vk.Float32 0.1 0.1 0.1 0)]
             }
     Vk.cmdUseRenderPass cb renderPassBeginInfo Vk.SUBPASS_CONTENTS_INLINE do
-      let Vk.Extent2D w h = sExtent sc
-      Vk.cmdSetViewport
-        cb
-        0
-        [ Vk.Viewport
-            { Vk.x = 0
-            , Vk.y = 0
-            , Vk.width = realToFrac w
-            , Vk.height = realToFrac h
-            , Vk.minDepth = 0
-            , Vk.maxDepth = 1
-            }
-        ]
-      Vk.cmdSetScissor
-        cb
-        0
-        [Vk.Rect2D{Vk.offset = Vk.Offset2D 0 0, Vk.extent = sExtent sc}]
+      Vk.cmdSetViewport cb 0 [fullViewport (sExtent sc)]
+      Vk.cmdSetScissor cb 0 [fullScissor (sExtent sc)]
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
       Vk.cmdDraw cb 3 1 0 0
 
@@ -114,14 +105,22 @@ drawTriangle vc renderPass pipeline framebuffers f = do
 ----------------------------------------------------------------
 
 createGraphicsPipeline
-  :: (MonadResource m, MonadFail m)
+  :: (MonadResource m, MonadUnliftIO m, MonadFail m)
   => Vk.Device
   -> Vk.RenderPass
+  -> Vk.Format
+  -- ^ Colour attachment format (matches the render pass).
   -> m (ReleaseKey, Vk.Pipeline)
-createGraphicsPipeline dev renderPass =
-  createColorPipelineFromShaders
+createGraphicsPipeline dev renderPass colorFormat =
+  RenderPass.createPipelineFromShaders
     dev
     renderPass
+    [colorFormat]
+    Nothing -- no depth attachment
+    zero -- no vertex input
+    (Just minimalDynamicStates) -- just viewport+scissor; set below with cmdSetViewport/Scissor
+    Nothing -- empty pipeline layout (no descriptor sets / push constants)
+    () -- no specialization constants
     [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
     , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)
     ]

@@ -5,13 +5,20 @@
 {-| Dynamic-rendering version of "Triangle". Same colored triangle, same
 recycling-Frame loop, but with no 'Vk.RenderPass' and no 'Vk.Framebuffer':
 the swapchain image's layout transitions are handled by explicit pipeline
-barriers from "Vulkan.Utils.ImageBarrier", and the rendering region is
-opened with 'Vk.cmdUseRendering' against a 'Vk.RenderingInfo' that points
-straight at the swapchain image view.
+barriers, and the rendering region is opened with 'Vk.cmdUseRendering'
+against a 'Vk.RenderingInfo' that points straight at the swapchain image
+view. Everything comes from the single "Vulkan.Utils.DynamicRendering" path
+module.
 
-The graphics pipeline is built with 'createColorPipelineDynamicFromShaders',
-which omits the render pass and instead carries a
-'Vk.PipelineRenderingCreateInfo' in its pNext chain.
+The graphics pipeline is built with
+'Vulkan.Utils.DynamicRendering.createPipelineFromShaders', which omits the render
+pass and instead carries a 'Vk.PipelineRenderingCreateInfo' in its pNext chain.
+
+It also passes 'Nothing' for the dynamic-state set, so the pipeline declares the
+full Vulkan-1.3 always-on set dynamic; every frame re-applies it in one call via
+'applyDynamicStates' 'allDynamicStates' over a 'dynamicStateFor' (the whole-extent
+viewport+scissor plus safe defaults). One pipeline object then covers any
+cull/depth/topology/size.
 -}
 module TriangleDynamic
   ( runTriangle
@@ -19,16 +26,14 @@ module TriangleDynamic
 
 import Control.Monad.Trans.Resource (ResourceT, register)
 import qualified Data.Vector as V
-import Data.Word (Word32)
 import qualified Triangle
-import Vulkan.CStruct.Extends (SomeStruct (..))
-import qualified Vulkan.Core10 as Rect2D (Rect2D (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core13 as Vk
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
+import qualified Vulkan.Utils.DynamicRendering as Dynamic
+import Vulkan.Utils.DynamicState (allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
-import Vulkan.Utils.ImageBarrier (cmdTransitionForColorAttachment, cmdTransitionForPresent)
-import Vulkan.Utils.Pipeline (createColorPipelineDynamicFromShaders)
+import Vulkan.Utils.Barrier (transitionColorAttachment, transitionPresent)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)
@@ -48,9 +53,14 @@ runTriangle
   -> ResourceT IO ()
 runTriangle vc initialSC getDrawableSize shouldQuit = do
   (_, pipeline) <-
-    createColorPipelineDynamicFromShaders
+    Dynamic.createPipelineFromShaders
       (vcDevice vc)
       [KHR.format (sFormat initialSC)]
+      Nothing -- no depth attachment
+      zero -- no vertex input
+      Nothing -- full always-on dynamic state; driven by 'applyDynamicStates' below
+      Nothing -- empty pipeline layout (no descriptor sets / push constants)
+      () -- no specialization constants
       [ (Vk.SHADER_STAGE_VERTEX_BIT, Triangle.vertCode)
       , (Vk.SHADER_STAGE_FRAGMENT_BIT, Triangle.fragCode)
       ]
@@ -77,37 +87,19 @@ drawTriangle :: VulkanContext -> Vk.Pipeline -> Frame -> ResourceT IO ()
 drawTriangle vc pipeline f = do
   (acquireResult, imageIndex) <- acquireFrameImage vc f
   commands <- recordCommands vc f \cb -> do
-    let image = sImages V.! fromIntegral imageIndex
-    cmdTransitionForColorAttachment cb image
-    Vk.cmdUseRendering cb (renderingInfo imageIndex) do
-      Vk.cmdSetViewport cb 0 [vp]
-      Vk.cmdSetScissor cb 0 [area]
+    let
+      image = sImages V.! fromIntegral imageIndex
+      imageView = sImageViews V.! fromIntegral imageIndex
+    transitionColorAttachment cb image
+    Vk.cmdUseRendering cb (renderingInfo imageView) do
+      applyDynamicStates allDynamicStates cb (dynamicStateFor sExtent)
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pipeline
       Vk.cmdDraw cb 3 1 0 0
-    cmdTransitionForPresent cb image
+    transitionPresent cb image
   queueSubmitFrame vc f imageIndex [commands]
   presentFrameImage vc f acquireResult imageIndex
   where
     Swapchain{sExtent, sImages, sImageViews} = fSwapchain f
-    area = zero{Rect2D.extent = sExtent}
-    renderingInfo :: Word32 -> Vk.RenderingInfo '[]
-    renderingInfo imageIndex =
-      zero
-        { Vk.renderArea = area
-        , Vk.layerCount = 1
-        , Vk.colorAttachments = [SomeStruct colorAttachment]
-        }
-      where
-        colorAttachment :: Vk.RenderingAttachmentInfo '[]
-        colorAttachment =
-          zero
-            { Vk.imageView = sImageViews V.! fromIntegral imageIndex
-            , Vk.imageLayout = Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-            , Vk.loadOp = Vk.ATTACHMENT_LOAD_OP_CLEAR
-            , Vk.storeOp = Vk.ATTACHMENT_STORE_OP_STORE
-            , Vk.clearValue = Vk.Color (Vk.Float32 0.1 0.1 0.1 0)
-            }
-    vp :: Vk.Viewport
-    vp = zero{Vk.width = realToFrac w, Vk.height = realToFrac h, Vk.maxDepth = 1}
-      where
-        Vk.Extent2D w h = sExtent
+    renderingInfo :: Vk.ImageView -> Vk.RenderingInfo '[]
+    renderingInfo imageView =
+      Dynamic.colorAttachmentRenderingInfo (fullScissor sExtent) imageView (Vk.Float32 0.1 0.1 0.1 0)

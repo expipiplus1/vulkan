@@ -26,7 +26,7 @@ import Say (sayErr)
 import qualified Vma
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Core12 (pattern API_VERSION_1_2)
+import Vulkan.Core13 (pattern API_VERSION_1_3)
 import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import qualified Vulkan.Utils.Init.Headless as Init
@@ -68,7 +68,7 @@ withHeadlessVk HeadlessConfig{..} = do
       ( Just
           zero
             { Vk.applicationName = Just (Text.encodeUtf8 hcAppName)
-            , Vk.apiVersion = API_VERSION_1_2
+            , Vk.apiVersion = API_VERSION_1_3
             }
       )
       ( RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME minBound
@@ -77,7 +77,7 @@ withHeadlessVk HeadlessConfig{..} = do
       [RequireInstanceLayer "VK_LAYER_KHRONOS_validation" minBound]
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   (phys, dev, qs) <- withDevice inst Nothing hcDeviceReqs
-  vma <- Vma.createVMA zero API_VERSION_1_2 inst phys dev
+  vma <- Vma.createVMA zero API_VERSION_1_3 inst phys dev
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   pure
     HeadlessVk
