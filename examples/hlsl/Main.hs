@@ -6,14 +6,16 @@
 module Main where
 
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, runResourceT)
+import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, register, release, runResourceT)
+import Data.Foldable (traverse_)
 import Render (renderFrame)
 import qualified SDL
+import UnliftIO (MonadUnliftIO)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (..))
+import Vulkan.Utils.DynamicState (minimalDynamicStates)
 import Vulkan.Utils.Frame (Frame (..))
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
-import Vulkan.Utils.Pipeline (createColorPipelineFromShaders)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..), defaultSwapchainConfig)
@@ -38,12 +40,9 @@ main = runResourceT $ do
         }
       (sdl2Adapter win)
   let dev = vcDevice vc
-  (_, renderPass) <-
-    RenderPass.createColorRenderPass
-      dev
-      (SurfaceFormatKHR.format (sFormat initialSC))
-      Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
-  (_, pipeline) <- createPipeline dev renderPass
+  let colorFormat = SurfaceFormatKHR.format (sFormat initialSC)
+  (_, renderPass) <- RenderPass.createColorRenderPass dev colorFormat Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+  (_, pipeline) <- createPipeline dev renderPass colorFormat
 
   SDL.showWindow win
   start <- SDL.time @Double
@@ -54,9 +53,13 @@ main = runResourceT $ do
     (drawableSize win)
     (shouldQuit win)
     WindowLoop
-      { wlMkState = \sc ->
-          Framebuffer.createFramebuffers dev renderPass (sImageViews sc) (sExtent sc)
-      , wlRender = \fbs f -> renderFrame vc renderPass pipeline fbs f
+      { wlMkState = \sc -> do
+          framebuffers <-
+            traverse (\iv -> Framebuffer.createFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
+          groupKey <- register (traverse_ (release . fst) framebuffers)
+          pure (fmap snd framebuffers, groupKey)
+      , wlRender = \fbs f ->
+          renderFrame vc renderPass pipeline fbs f
       , wlOnFrame = noOnFrame
       , wlOnExit = \f -> liftIO $ do
           end <- SDL.time
@@ -69,14 +72,21 @@ main = runResourceT $ do
 ----------------------------------------------------------------
 
 createPipeline
-  :: (MonadResource m, MonadFail m)
+  :: (MonadResource m, MonadUnliftIO m, MonadFail m)
   => Vk.Device
   -> Vk.RenderPass
+  -> Vk.Format
   -> m (ReleaseKey, Vk.Pipeline)
-createPipeline dev renderPass =
-  createColorPipelineFromShaders
+createPipeline dev renderPass colorFormat =
+  RenderPass.createPipelineFromShaders
     dev
     renderPass
+    [colorFormat]
+    Nothing
+    zero -- no vertex input
+    (Just minimalDynamicStates)
+    Nothing -- empty pipeline layout (no descriptor sets / push constants)
+    ()
     [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
     , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)
     ]

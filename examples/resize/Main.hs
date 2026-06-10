@@ -30,6 +30,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..))
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands, withTimelineSemaphore)
+import Vulkan.Utils.Barrier (imageBarrier)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
@@ -377,15 +378,13 @@ beginComputeWrite cb image srcStage =
     zero
     []
     []
-    [ SomeStruct
+    [ imageBarrier
+        Vk.IMAGE_ASPECT_COLOR_BIT
         zero
-          { Vk.srcAccessMask = zero
-          , Vk.dstAccessMask = Vk.ACCESS_SHADER_WRITE_BIT
-          , Vk.oldLayout = Vk.IMAGE_LAYOUT_UNDEFINED
-          , Vk.newLayout = Vk.IMAGE_LAYOUT_GENERAL
-          , Vk.image = image
-          , Vk.subresourceRange = colorSubresourceRange
-          }
+        Vk.ACCESS_SHADER_WRITE_BIT
+        Vk.IMAGE_LAYOUT_UNDEFINED
+        Vk.IMAGE_LAYOUT_GENERAL
+        image
     ]
 
 {- | Offscreen GENERAL → TRANSFER_SRC barrier, ready for the blit. The caller
@@ -415,16 +414,13 @@ offscreenToTransferSrc image srcAccess ownership =
 
 -- | Swapchain UNDEFINED → TRANSFER_DST barrier, ready to receive the blit.
 swapchainToTransferDst :: Vk.Image -> SomeStruct Vk.ImageMemoryBarrier
-swapchainToTransferDst image =
-  SomeStruct
+swapchainToTransferDst =
+  imageBarrier
+    Vk.IMAGE_ASPECT_COLOR_BIT
     zero
-      { Vk.srcAccessMask = zero
-      , Vk.dstAccessMask = Vk.ACCESS_TRANSFER_WRITE_BIT
-      , Vk.oldLayout = Vk.IMAGE_LAYOUT_UNDEFINED
-      , Vk.newLayout = Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-      , Vk.image = image
-      , Vk.subresourceRange = colorSubresourceRange
-      }
+    Vk.ACCESS_TRANSFER_WRITE_BIT
+    Vk.IMAGE_LAYOUT_UNDEFINED
+    Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 
 -- | Swapchain TRANSFER_DST → PRESENT barrier, after the blit.
 swapchainToPresent :: (MonadIO m) => Vk.Image -> Vk.CommandBuffer -> m ()
@@ -436,15 +432,13 @@ swapchainToPresent image cb =
     zero
     []
     []
-    [ SomeStruct
+    [ imageBarrier
+        Vk.IMAGE_ASPECT_COLOR_BIT
+        Vk.ACCESS_TRANSFER_WRITE_BIT
         zero
-          { Vk.srcAccessMask = Vk.ACCESS_TRANSFER_WRITE_BIT
-          , Vk.dstAccessMask = zero
-          , Vk.oldLayout = Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-          , Vk.newLayout = Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
-          , Vk.image = image
-          , Vk.subresourceRange = colorSubresourceRange
-          }
+        Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+        Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+        image
     ]
 
 -- | Blit the fractal onto the swapchain image (handles RGBA→BGRA).

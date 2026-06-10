@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
-{-# OPTIONS_GHC -Wno-missing-signatures #-}
 
 module Main
   ( main
@@ -12,6 +11,7 @@ import qualified Codec.Picture as JP
 import qualified Codec.Picture.Types as JP
 import Control.Monad.Trans.Resource
 import Data.Bits
+import Data.ByteString (ByteString)
 import Data.Word
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (peek, sizeOf)
@@ -23,7 +23,7 @@ import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core10.Image as Image
 import Vulkan.Utils.Debug (nameObject)
-import qualified Vulkan.Utils.Pipeline as Pipeline
+import Vulkan.Utils.DynamicState (minimalDynamicStates)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.RenderPass as RenderPass
@@ -178,10 +178,9 @@ render allocator dev graphicsQueueFamilyIndex = do
   (_, framebuffer) <- Vk.withFramebuffer dev framebufferCreateInfo Nothing allocate
 
   -- Create the most vanilla rendering pipeline
-  (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT vertCode
-  (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT fragCode
-  (_, graphicsPipeline) <-
-    Pipeline.createColorPipeline dev renderPass [vertStage, fragStage]
+  (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT () vertCode
+  (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT () fragCode
+  (_, graphicsPipeline) <- RenderPass.createPipeline dev renderPass [imageFormat] Nothing zero (Just minimalDynamicStates) Nothing [vertStage, fragStage]
   release vertKey
   release fragKey
 
@@ -355,6 +354,7 @@ render allocator dev graphicsQueueFamilyIndex = do
     (fromIntegral height)
     (\x y -> JP.unpackPixel @JP.PixelRGBA8 <$> peek (pixelAddr x y))
 
+vertCode :: ByteString
 vertCode =
   [vert|
     #version 450
@@ -379,6 +379,7 @@ vertCode =
     }
   |]
 
+fragCode :: ByteString
 fragCode =
   [frag|
     #version 450

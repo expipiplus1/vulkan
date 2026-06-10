@@ -32,16 +32,19 @@ custom-setup
 
 library
   exposed-modules:
+      Vulkan.Utils.Barrier
       Vulkan.Utils.CommandCheck
       Vulkan.Utils.Debug
+      Vulkan.Utils.DynamicRendering
+      Vulkan.Utils.DynamicState
       Vulkan.Utils.Frame
       Vulkan.Utils.Framebuffer
       Vulkan.Utils.FromGL
-      Vulkan.Utils.ImageBarrier
       Vulkan.Utils.Init.Headless
       Vulkan.Utils.Initialization
       Vulkan.Utils.Misc
-      Vulkan.Utils.Pipeline
+      Vulkan.Utils.Pipeline.Internal
+      Vulkan.Utils.Pipeline.Specialization
       Vulkan.Utils.QueueAssignment
       Vulkan.Utils.Queues
       Vulkan.Utils.RefCounted
@@ -124,6 +127,7 @@ library
     , transformers
     , typed-process
     , unagi-chan
+    , unliftio-core
     , unordered-containers
     , vector
     , vulkan >=3.6.14 && <3.28

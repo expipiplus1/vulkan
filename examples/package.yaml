@@ -247,6 +247,31 @@ executables:
     - condition: '!flag(vr)'
       buildable: false
 
+tests:
+  triangle-headless-dynamic:
+    main: Main.hs
+    source-dirs: triangle-headless-dynamic
+    dependencies:
+    - JuicyPixels
+    - VulkanMemoryAllocator
+    - base <5
+    - resourcet
+    - vulkan
+    - vulkan-examples
+    - vulkan-utils
+
+  depth-headless:
+    main: Main.hs
+    source-dirs: depth-headless
+    dependencies:
+    - JuicyPixels
+    - VulkanMemoryAllocator
+    - base <5
+    - resourcet
+    - vulkan
+    - vulkan-examples
+    - vulkan-utils
+
 when:
 - condition: os(windows)
   ghc-options: -optl-mconsole

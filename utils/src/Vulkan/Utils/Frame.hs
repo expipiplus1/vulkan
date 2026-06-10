@@ -253,8 +253,9 @@ queueSubmitFrame
   => VulkanContext
   -> Frame
   -> Word32
-  -- ^ Acquired image index (from 'acquireFrameImage'); selects the per-image
-  -- present-wait semaphore to signal.
+  {- ^ Acquired image index (from 'acquireFrameImage'); selects the per-image
+  present-wait semaphore to signal.
+  -}
   -> V.Vector Vk.CommandBuffer
   -> m ()
 {-# INLINE queueSubmitFrame #-}
