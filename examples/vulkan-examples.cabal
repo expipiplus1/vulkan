@@ -48,7 +48,6 @@ library
       RenderTarget
       Triangle
       Utils
-      Vma
       WindowedBoot
   other-modules:
       Paths_vulkan_examples

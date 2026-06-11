@@ -11,7 +11,9 @@ extra-source-files:
   - VulkanMemoryAllocator/include/vk_mem_alloc.h
 
 library:
-  source-dirs: src
+  source-dirs:
+    - src
+    - src-manual
   include-dirs:
     VulkanMemoryAllocator/include
 
