@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {-| Shared boot prelude for the windowed examples. Drives the standard
-@withInstance \/ withSurface \/ withDevice \/ createVMA \/ allocSwapchain@
+@withInstance \/ withSurface \/ withDevice \/ withAllocator \/ allocSwapchain@
 sequence so each main can open with a single call instead of a 20-line
 copy-paste.
 
@@ -23,7 +23,6 @@ import Data.Text (Text)
 import Data.Text.Encoding (decodeUtf8)
 import qualified Data.Text.Encoding as Text
 import Say (sayErr)
-import qualified Vma
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core13 (pattern API_VERSION_1_3)
 import Vulkan.Extensions.VK_EXT_debug_utils
@@ -36,6 +35,7 @@ import Vulkan.Utils.VulkanContext (VulkanContext, mkVulkanContext)
 import Vulkan.Utils.WindowAdapter (WindowAdapter (..))
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
+import VulkanMemoryAllocator.Utils (allocatorCreateInfo)
 
 -- | Per-example knobs the helper can't infer.
 data WindowedConfig = WindowedConfig
@@ -79,7 +79,10 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   surf <- waWithSurface inst
   (phys, dev, qs) <-
     withDevice inst (Just surf) (frameDeviceRequirements ++ wcDeviceReqs)
-  vma <- Vma.createVMA wcVmaFlags API_VERSION_1_3 inst phys dev
+  (_, vma) <-
+    VMA.withAllocator
+      (allocatorCreateInfo wcVmaFlags API_VERSION_1_3 inst phys dev)
+      allocate
   props <- Vk.getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
   vc <- liftIO $ mkVulkanContext inst phys dev qs

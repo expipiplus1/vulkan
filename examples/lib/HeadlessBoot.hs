@@ -23,7 +23,6 @@ import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Text (Text)
 import qualified Data.Text.Encoding as Text
 import Say (sayErr)
-import qualified Vma
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core13 (pattern API_VERSION_1_3)
@@ -35,6 +34,7 @@ import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
 import Vulkan.Utils.Queues (Queues, withDevice)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
+import VulkanMemoryAllocator.Utils (allocatorCreateInfo)
 import WindowedBoot (debugMessengerCreateInfo)
 
 {- | Per-example knobs for headless boot. No queue-family predicate here —
@@ -77,7 +77,8 @@ withHeadlessVk HeadlessConfig{..} = do
       [RequireInstanceLayer "VK_LAYER_KHRONOS_validation" minBound]
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   (phys, dev, qs) <- withDevice inst Nothing hcDeviceReqs
-  vma <- Vma.createVMA zero API_VERSION_1_3 inst phys dev
+  (_, vma) <-
+    VMA.withAllocator (allocatorCreateInfo zero API_VERSION_1_3 inst phys dev) allocate
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
   pure
     HeadlessVk
