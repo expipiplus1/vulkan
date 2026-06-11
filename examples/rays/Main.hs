@@ -16,12 +16,12 @@ import Scene (makeSceneBuffers)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo (..), getBufferDeviceAddress)
 import Vulkan.Utils.Frame (Frame (..))
+import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, noWindowState, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
-import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()
