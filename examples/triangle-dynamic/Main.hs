@@ -6,10 +6,10 @@ import Control.Monad.Trans.Resource (runResourceT)
 import Data.Text (Text)
 import qualified TriangleDynamic
 import Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (PhysicalDeviceDynamicRenderingFeatures)
+import qualified Vulkan.Utils.Init.GLFW.Window as Window
 import qualified Vulkan.Utils.Requirements.TH as U
 import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
 import Vulkan.Zero (zero)
-import qualified Window.GLFW as Window
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()

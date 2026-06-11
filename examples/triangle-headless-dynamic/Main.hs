@@ -30,9 +30,9 @@ import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core13 as Vk
 import Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (PhysicalDeviceDynamicRenderingFeatures)
+import Vulkan.Utils.Barrier (transitionColorAttachment)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.Barrier (transitionColorAttachment)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import qualified Vulkan.Utils.Requirements.TH as U
