@@ -1,9 +1,9 @@
 # Change Log
 
-## [3.27] - 2026-03-17
+## [3.27] - 2026-06-13
 
-Bump API version to v1.4.343 — first Vulkan 1.4 release, covering spec versions
-1.4.303 through 1.4.343.
+Bump API version to v1.4.351 — first Vulkan 1.4 release,
+covering spec versions 1.4.303 through 1.4.351.
 
 ### Vulkan 1.4 Core
 
@@ -51,15 +51,21 @@ Types like `BindDescriptorSetsInfoKHR` now have unprefixed core aliases
 
 - `VK_KHR_copy_memory_indirect`
 - `VK_KHR_depth_clamp_zero_one`
+- `VK_KHR_device_address_commands`
+- `VK_KHR_device_fault` (promoted from `VK_EXT_device_fault`)
 - `VK_KHR_internally_synchronized_queues`
 - `VK_KHR_maintenance8`
 - `VK_KHR_maintenance9`
 - `VK_KHR_maintenance10`
+- `VK_KHR_maintenance11`
+- `VK_KHR_opacity_micromap` (promoted from `VK_EXT_opacity_micromap`)
 - `VK_KHR_present_id2`
 - `VK_KHR_present_mode_fifo_latest_ready`
 - `VK_KHR_present_wait2`
 - `VK_KHR_robustness2`
+- `VK_KHR_shader_abort`
 - `VK_KHR_shader_bfloat16`
+- `VK_KHR_shader_constant_data`
 - `VK_KHR_shader_fma`
 - `VK_KHR_shader_untyped_pointers`
 - `VK_KHR_surface_maintenance1`
@@ -74,10 +80,12 @@ Types like `BindDescriptorSetsInfoKHR` now have unprefixed core aliases
 - `VK_EXT_fragment_density_map_offset`
 - `VK_EXT_memory_decompression`
 - `VK_EXT_present_timing`
+- `VK_EXT_primitive_restart_index`
 - `VK_EXT_ray_tracing_invocation_reorder`
 - `VK_EXT_shader_64bit_indexing`
 - `VK_EXT_shader_float8`
 - `VK_EXT_shader_long_vector`
+- `VK_EXT_shader_split_barrier`
 - `VK_EXT_shader_subgroup_partitioned`
 - `VK_EXT_shader_uniform_buffer_unsized_array`
 - `VK_EXT_texture_compression_astc_3d`
@@ -85,13 +93,17 @@ Types like `BindDescriptorSetsInfoKHR` now have unprefixed core aliases
 
 ### New Vendor Extensions
 
-- ARM: `tensors`, `data_graph`, `format_pack`, `pipeline_opacity_micromap`
+- AMD: `gpa_interface`
+- ARM: `tensors`, `data_graph`, `format_pack`, `pipeline_opacity_micromap`,
+  `data_graph_instruction_set_tosa`, `data_graph_neural_accelerator_statistics`,
+  `data_graph_optical_flow`, `shader_instrumentation`
 - AMDX: `dense_geometry_format`
 - NV: `cooperative_vector`, `external_compute_queue`, `ray_tracing_linear_swept_spheres`,
   `present_metering`, `push_constant_bank`, `compute_occupancy_priority`
-- QCOM: `tile_shading`, `tile_memory_heap`, `cooperative_matrix_conversion`, `data_graph_model`
-- SEC: `pipeline_cache_incremental_mode`
-- VALVE: `fragment_density_map_layered`
+- QCOM: `tile_shading`, `tile_memory_heap`, `cooperative_matrix_conversion`, `data_graph_model`,
+  `elapsed_timer_query`, `image_processing3`, `queue_perf_hint`, `shader_multiple_wait_queues`
+- SEC: `pipeline_cache_incremental_mode`, `throttle_hint`
+- VALVE: `fragment_density_map_layered`, `shader_mixed_float_dot_product`
 
 ### Other
 
