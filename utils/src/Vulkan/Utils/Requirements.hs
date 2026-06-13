@@ -22,15 +22,13 @@ import Control.Monad.IO.Class
 import Control.Monad.Trans.State
 import Data.Bifunctor
 import Data.ByteString (ByteString)
-import Data.Dependent.Map (DMap)
-import qualified Data.Dependent.Map as DMap
-import Data.Dependent.Sum (DSum ((:=>)))
 import Data.Foldable
 import Data.Functor.Product (Product (..))
 import qualified Data.HashMap.Strict as Map
 import Data.Kind (Type)
 import Data.List (intercalate, intersect)
 import Data.List.Extra (nubOrd)
+import qualified Data.Map.Strict as TRMap
 import Data.Proxy
 import Data.Semigroup (Endo (..))
 import Data.Traversable
@@ -285,10 +283,10 @@ makeDeviceCreateInfo
   :: [DeviceRequirement] -> DeviceCreateInfo '[] -> SomeStruct DeviceCreateInfo
 makeDeviceCreateInfo allReqs baseCreateInfo =
   let
-    featureSetters :: DMap TypeRep (Product (Has KnownFeatureStruct) Endo)
+    featureSetters :: DMap (Product (Has KnownFeatureStruct) Endo)
     featureSetters =
-      DMap.fromListWithKey
-        (\_ l r -> catProducts l r)
+      dmapFromListWith
+        catProducts
         [ typeRep :=> Pair Has (Endo enableFeature)
         | RequireDeviceFeature{enableFeature} <- allReqs
         ]
@@ -296,14 +294,14 @@ makeDeviceCreateInfo allReqs baseCreateInfo =
     makeZeroFeatureExts :: [Endo (SomeStruct DeviceCreateInfo)]
     makeZeroFeatureExts =
       [ Endo (extendSomeStruct s)
-      | _ :=> Pair Has (f :: Endo s) <- DMap.toList featureSetters
+      | _ :=> Pair Has (f :: Endo s) <- dmapToList featureSetters
       , ExtendedFeatureStruct <- pure $ sFeatureStruct @s
       , let s = appEndo f zero
       ]
 
     addBasicFeatures :: Endo (SomeStruct DeviceCreateInfo)
     addBasicFeatures =
-      case DMap.lookup (typeRep @PhysicalDeviceFeatures) featureSetters of
+      case dmapLookup (typeRep @PhysicalDeviceFeatures) featureSetters of
         Nothing -> mempty
         Just (Pair _ s) ->
           Endo
@@ -698,3 +696,52 @@ catProducts
   -> Product f g a
   -> Product f g a
 catProducts (Pair a1 b1) (Pair a2 b2) = Pair (a1 <> a2) (b1 <> b2)
+
+----------------------------------------------------------------
+-- A minimal dependent map keyed by 'TypeRep'
+--
+-- This is just enough to replace the uses of @dependent-map@ and
+-- @dependent-sum@ in 'makeDeviceCreateInfo':
+-- group the per-feature-struct setters by their
+-- (existentially quantified) struct type, recovering that type
+-- later to extend the chain.
+----------------------------------------------------------------
+
+{- | A dependent pair: a 'TypeRep' tag together with a value whose type is
+determined by the tag.
+-}
+data DSum f = forall a. (TypeRep a) :=> (f a)
+
+infixr 1 :=>
+
+{- | A map from a type (witnessed by its 'TypeRep') to a value whose type
+depends on that key.
+-}
+newtype DMap f = DMap (TRMap.Map SomeTypeRep (DSum f))
+
+{- | Build a 'DMap' from a list of dependent pairs, combining the values of
+any entries that share a key.
+-}
+dmapFromListWith :: (forall a. f a -> f a -> f a) -> [DSum f] -> DMap f
+dmapFromListWith combine =
+  DMap
+    . TRMap.fromListWith merge
+    . map (\d@(tr :=> _) -> (SomeTypeRep tr, d))
+  where
+    -- Both entries are stored under the same 'SomeTypeRep', so their tags
+    -- necessarily witness the same type; 'eqTypeRep' recovers that equality
+    -- so the values can be combined. The 'Nothing' case is unreachable.
+    merge (trNew :=> vNew) (trOld :=> vOld) = case eqTypeRep trNew trOld of
+      Just HRefl -> trNew :=> combine vNew vOld
+      Nothing -> trNew :=> vNew
+
+-- | The contents of a 'DMap', as dependent pairs.
+dmapToList :: DMap f -> [DSum f]
+dmapToList (DMap m) = TRMap.elems m
+
+-- | Look up the value stored under a given type.
+dmapLookup :: forall a f. TypeRep a -> DMap f -> Maybe (f a)
+dmapLookup tr (DMap m) = do
+  (trStored :=> v) <- TRMap.lookup (SomeTypeRep tr) m
+  HRefl <- eqTypeRep tr trStored
+  pure v
