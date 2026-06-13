@@ -1,13 +1,13 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_line_rasterizationRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap  ( cmdSetLineStipple
-                                                                     , PhysicalDeviceLineRasterizationFeatures(..)
-                                                                     , PhysicalDeviceLineRasterizationProperties(..)
-                                                                     , PipelineRasterizationLineStateCreateInfo(..)
-                                                                     , StructureType(..)
-                                                                     , DynamicState(..)
-                                                                     , LineRasterizationMode(..)
-                                                                     ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_line_rasterization"
+module Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization  ( cmdSetLineStipple
+                                                              , PhysicalDeviceLineRasterizationFeatures(..)
+                                                              , PhysicalDeviceLineRasterizationProperties(..)
+                                                              , PipelineRasterizationLineStateCreateInfo(..)
+                                                              , StructureType(..)
+                                                              , DynamicState(..)
+                                                              , LineRasterizationMode(..)
+                                                              ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)

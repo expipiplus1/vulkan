@@ -148,7 +148,7 @@ createDescriptorUpdateTemplate :: forall io
                                -> -- | @pCreateInfo@ is a pointer to a 'DescriptorUpdateTemplateCreateInfo'
                                   -- structure specifying the set of descriptors to update with a single call
                                   -- to
-                                  -- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSetWithTemplate'
+                                  -- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplate'
                                   -- or 'updateDescriptorSetWithTemplate'.
                                   DescriptorUpdateTemplateCreateInfo
                                -> -- | @pAllocator@ controls host memory allocation as described in the

@@ -33,7 +33,7 @@ type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 -- -   'DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT' specifies that
 --     descriptor sets /must/ not be allocated using this layout, and
 --     descriptors are instead pushed by
---     'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSet'.
+--     'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.cmdPushDescriptorSet'.
 --
 -- -   'DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT' specifies
 --     that descriptor sets using this layout /must/ be allocated from a

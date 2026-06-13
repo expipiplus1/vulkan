@@ -417,7 +417,7 @@ import Vulkan.Extensions.Handles (AccelerationStructureNV)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (BufferUsageFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (BufferUsageFlags2CreateInfo)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
@@ -2627,22 +2627,22 @@ instance Zero DescriptorAddressInfoEXT where
 -- = Description
 --
 -- If the @pNext@ chain includes a
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'::@usage@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'::@usage@
 -- from that structure is used instead of @usage@ from this structure.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09499# If the @pNext@
 --     chain does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-None-09500# If the @pNext@
 --     chain does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ not be 0
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-usage-10998# The @usage@ must
@@ -2697,7 +2697,7 @@ instance Zero DescriptorAddressInfoEXT where
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-pNext-pNext# Each @pNext@
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     or 'DescriptorBufferBindingPushDescriptorBufferHandleEXT'
 --
 -- -   #VUID-VkDescriptorBufferBindingInfoEXT-sType-unique# The @sType@

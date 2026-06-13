@@ -2594,11 +2594,11 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthInputAttachmentIndex-09595#
 --     Input attachment views accessed in a dynamic render pass with a
 --     @InputAttachmentIndex@ referenced by
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo',
 --     or no @InputAttachmentIndex@ if
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@pDepthInputAttachmentIndex@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@pDepthInputAttachmentIndex@
 --     or
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@pStencilInputAttachmentIndex@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@pStencilInputAttachmentIndex@
 --     are @NULL@, /must/ be created with a
 --     'Vulkan.Core10.Handles.ImageView' that is compatible with the
 --     corresponding color, depth, or stencil attachment in
@@ -2607,16 +2607,16 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthInputAttachmentIndex-09596#
 --     Input attachment views accessed in a dynamic render pass via a
 --     shader object /must/ have an @InputAttachmentIndex@ if both
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@pDepthInputAttachmentIndex@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@pDepthInputAttachmentIndex@
 --     and
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@pStencilInputAttachmentIndex@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@pStencilInputAttachmentIndex@
 --     are non-@NULL@
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-InputAttachmentIndex-09597# If
 --     an input attachment view accessed in a dynamic render pass via a
 --     shader object has an @InputAttachmentIndex@, the
 --     @InputAttachmentIndex@ /must/ match an index in
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-06537# Memory backing image
 --     subresources used as attachments in the current render pass /must/
@@ -4292,7 +4292,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-current-value current value>
 --     of @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     then
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.cmdSetLineStipple'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.cmdSetLineStipple'
 --     /must/ have been called and not subsequently
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dynamic-state-lifetime invalidated>
 --     in the current command buffer prior to this drawing command
@@ -5184,7 +5184,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     there is no shader object bound to any graphics stage, the value of
 --     each element of
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingAttachmentLocationInfo'::@pColorAttachmentLocations@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfo'::@pColorAttachmentLocations@
 --     in the bound pipeline /must/ match the value for the corresponding
 --     locations set currently in the current render pass instance
 --
@@ -5193,7 +5193,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     and there is no shader object bound to any graphics stage, the value
 --     of each element of
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@pColorAttachmentInputIndices@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@pColorAttachmentInputIndices@
 --     in the bound pipeline /must/ match the value for the corresponding
 --     index set currently in the current render pass instance
 --
@@ -5202,7 +5202,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     and there is no shader object bound to any graphics stage, the value
 --     of
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@pDepthInputAttachmentIndex@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@pDepthInputAttachmentIndex@
 --     in the bound pipeline /must/ match the value set currently in the
 --     current render pass instance
 --
@@ -5211,7 +5211,7 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     and there is no shader object bound to any graphics stage, the value
 --     of
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@pStencilInputAttachmentIndex@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@pStencilInputAttachmentIndex@
 --     in the bound pipeline /must/ match the value set currently in the
 --     current render pass instance
 --
@@ -5900,13 +5900,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-pNext-09461# If the bound
 --     graphics pipeline state was created with
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfo'
 --     in the @pNext@ chain of
 --     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
 --     any member of
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo'::@pVertexBindingDivisors@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfo'::@pVertexBindingDivisors@
 --     has a value other than @1@ in @divisor@, and
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --
@@ -5920,7 +5920,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     call that sets this dynamic state has a value other than @1@ in
 --     @divisor@, and
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --

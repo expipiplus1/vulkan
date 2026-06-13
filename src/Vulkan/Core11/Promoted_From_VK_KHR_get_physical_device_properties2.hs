@@ -74,7 +74,7 @@ import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.Format (Format(..))
 import Vulkan.Core10.DeviceInitialization (FormatProperties)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_format_feature_flags2 (FormatProperties3)
-import {-# SOURCE #-} Vulkan.Core14.PromotedStreamingTransfers' (HostImageCopyDevicePerformanceQuery)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (HostImageCopyDevicePerformanceQuery)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionPropertiesEXT)
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
@@ -182,7 +182,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_displacement_micromap (PhysicalDev
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_physical_device_drm (PhysicalDeviceDrmPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (PhysicalDeviceDynamicRenderingFeatures)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (PhysicalDeviceDynamicRenderingLocalReadFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (PhysicalDeviceDynamicRenderingLocalReadFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_dynamic_rendering_unused_attachments (PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_elapsed_timer_query (PhysicalDeviceElapsedTimerQueryFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
@@ -228,8 +228,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_gpa_interface (PhysicalDeviceGpaP
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_hdr_vivid (PhysicalDeviceHdrVividFeaturesHUAWEI)
-import {-# SOURCE #-} Vulkan.Core14.PromotedStreamingTransfers' (PhysicalDeviceHostImageCopyFeatures)
-import {-# SOURCE #-} Vulkan.Core14.PromotedStreamingTransfers' (PhysicalDeviceHostImageCopyProperties)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (PhysicalDeviceHostImageCopyFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (PhysicalDeviceHostImageCopyProperties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceIDProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_2d_view_of_3d (PhysicalDeviceImage2DViewOf3DFeaturesEXT)
@@ -248,7 +248,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_sliced_view_of_3d (Physical
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_filter_cubic (PhysicalDeviceImageViewImageFormatInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (PhysicalDeviceImageViewMinLodFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (PhysicalDeviceImagelessFramebufferFeatures)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap (PhysicalDeviceIndexTypeUint8Features)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8 (PhysicalDeviceIndexTypeUint8Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (PhysicalDeviceInheritedViewportScissorFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeatures)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockProperties)
@@ -259,8 +259,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_MSFT_layered_driver (PhysicalDeviceLa
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_legacy_dithering (PhysicalDeviceLegacyDitheringFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_legacy_vertex_attributes (PhysicalDeviceLegacyVertexAttributesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_legacy_vertex_attributes (PhysicalDeviceLegacyVertexAttributesPropertiesEXT)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PhysicalDeviceLineRasterizationFeatures)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PhysicalDeviceLineRasterizationProperties)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_linear_color_attachment (PhysicalDeviceLinearColorAttachmentFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance10 (PhysicalDeviceMaintenance10FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance10 (PhysicalDeviceMaintenance10PropertiesKHR)
@@ -268,10 +268,10 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance11 (PhysicalDeviceMain
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (PhysicalDeviceMaintenance3Properties)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Features)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Properties)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (PhysicalDeviceMaintenance5Features)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (PhysicalDeviceMaintenance5Properties)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality' (PhysicalDeviceMaintenance6Features)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality' (PhysicalDeviceMaintenance6Properties)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (PhysicalDeviceMaintenance5Features)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (PhysicalDeviceMaintenance5Properties)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance6 (PhysicalDeviceMaintenance6Features)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance6 (PhysicalDeviceMaintenance6Properties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance7 (PhysicalDeviceMaintenance7FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance7 (PhysicalDeviceMaintenance7PropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance8 (PhysicalDeviceMaintenance8FeaturesKHR)
@@ -319,9 +319,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (P
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_library_group_handles (PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_pipeline_opacity_micromap (PhysicalDevicePipelineOpacityMicromapFeaturesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_properties (PhysicalDevicePipelinePropertiesFeaturesEXT)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality' (PhysicalDevicePipelineProtectedAccessFeatures)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PhysicalDevicePipelineRobustnessFeatures)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PhysicalDevicePipelineRobustnessProperties)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_access (PhysicalDevicePipelineProtectedAccessFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PhysicalDevicePipelineRobustnessFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PhysicalDevicePipelineRobustnessProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PhysicalDevicePointClippingProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetPropertiesKHR)
@@ -344,7 +344,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceP
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_push_constant_bank (PhysicalDevicePushConstantBankFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_push_constant_bank (PhysicalDevicePushConstantBankPropertiesNV)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap (PhysicalDevicePushDescriptorProperties)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor (PhysicalDevicePushDescriptorProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_queue_perf_hint (PhysicalDeviceQueuePerfHintFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_queue_perf_hint (PhysicalDeviceQueuePerfHintPropertiesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rgba10x6_formats (PhysicalDeviceRGBA10X6FormatsFeaturesEXT)
@@ -397,10 +397,10 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters 
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMDX_shader_enqueue (PhysicalDeviceShaderEnqueueFeaturesAMDX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMDX_shader_enqueue (PhysicalDeviceShaderEnqueuePropertiesAMDX)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap (PhysicalDeviceShaderExpectAssumeFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assume (PhysicalDeviceShaderExpectAssumeFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8 (PhysicalDeviceShaderFloat16Int8Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_float8 (PhysicalDeviceShaderFloat8FeaturesEXT)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap (PhysicalDeviceShaderFloatControls2Features)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2 (PhysicalDeviceShaderFloatControls2Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_fma (PhysicalDeviceShaderFmaFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
@@ -428,7 +428,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_split_barrier (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_split_barrier (PhysicalDeviceShaderSplitBarrierPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types (PhysicalDeviceShaderSubgroupExtendedTypesFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_subgroup_partitioned (PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap (PhysicalDeviceShaderSubgroupRotateFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_shader_terminate_invocation (PhysicalDeviceShaderTerminateInvocationFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_tile_image (PhysicalDeviceShaderTileImageFeaturesEXT)
@@ -464,8 +464,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_unified_image_layouts (PhysicalDeviceUnifiedImageLayoutsFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout (PhysicalDeviceUniformBufferStandardLayoutFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers (PhysicalDeviceVariablePointersFeatures)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PhysicalDeviceVertexAttributeDivisorFeatures)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PhysicalDeviceVertexAttributeDivisorProperties)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeatures)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_robustness (PhysicalDeviceVertexAttributeRobustnessFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (PhysicalDeviceVertexInputDynamicStateFeaturesEXT)
@@ -762,7 +762,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetPhysicalDeviceImageFormatProperties2-pNext-09004# If the
 --     @pNext@ chain of @pImageFormatProperties@ includes a
---     'Vulkan.Core14.PromotedStreamingTransfers'.HostImageCopyDevicePerformanceQuery'
+--     'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.HostImageCopyDevicePerformanceQuery'
 --     structure, @pImageFormatInfo->usage@ /must/ contain
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT'
 --
@@ -1440,7 +1440,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_AMD_gpa_interface.PhysicalDeviceGpaProperties2AMD',
 --     'Vulkan.Extensions.VK_AMD_gpa_interface.PhysicalDeviceGpaPropertiesAMD',
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT',
---     'Vulkan.Core14.PromotedStreamingTransfers'.PhysicalDeviceHostImageCopyProperties',
+--     'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.PhysicalDeviceHostImageCopyProperties',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties',
 --     'Vulkan.Extensions.VK_MESA_image_alignment_control.PhysicalDeviceImageAlignmentControlPropertiesMESA',
 --     'Vulkan.Extensions.VK_QCOM_image_processing2.PhysicalDeviceImageProcessing2PropertiesQCOM',
@@ -1449,12 +1449,12 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_KHR_maintenance7.PhysicalDeviceLayeredApiPropertiesListKHR',
 --     'Vulkan.Extensions.VK_MSFT_layered_driver.PhysicalDeviceLayeredDriverPropertiesMSFT',
 --     'Vulkan.Extensions.VK_EXT_legacy_vertex_attributes.PhysicalDeviceLegacyVertexAttributesPropertiesEXT',
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PhysicalDeviceLineRasterizationProperties',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PhysicalDeviceLineRasterizationProperties',
 --     'Vulkan.Extensions.VK_KHR_maintenance10.PhysicalDeviceMaintenance10PropertiesKHR',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Properties',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PhysicalDeviceMaintenance5Properties',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PhysicalDeviceMaintenance5Properties',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PhysicalDeviceMaintenance6Properties',
 --     'Vulkan.Extensions.VK_KHR_maintenance7.PhysicalDeviceMaintenance7PropertiesKHR',
 --     'Vulkan.Extensions.VK_KHR_maintenance9.PhysicalDeviceMaintenance9PropertiesKHR',
 --     'Vulkan.Extensions.VK_EXT_map_memory_placed.PhysicalDeviceMapMemoryPlacedPropertiesEXT',
@@ -1473,13 +1473,13 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDevicePerformanceCountersByRegionPropertiesARM VkPhysicalDevicePerformanceCountersByRegionPropertiesARM>,
 --     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
 --     'Vulkan.Extensions.VK_KHR_pipeline_binary.PhysicalDevicePipelineBinaryPropertiesKHR',
---     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PhysicalDevicePipelineRobustnessProperties',
+--     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PhysicalDevicePipelineRobustnessProperties',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetPropertiesKHR',
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
 --     'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexPropertiesEXT',
 --     'Vulkan.Extensions.VK_NV_push_constant_bank.PhysicalDevicePushConstantBankPropertiesNV',
---     'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.PhysicalDevicePushDescriptorProperties',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.PhysicalDevicePushDescriptorProperties',
 --     'Vulkan.Extensions.VK_QCOM_queue_perf_hint.PhysicalDeviceQueuePerfHintPropertiesQCOM',
 --     'Vulkan.Extensions.VK_EXT_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderPropertiesEXT',
 --     'Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderPropertiesNV',
@@ -1516,7 +1516,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_QCOM_tile_shading.PhysicalDeviceTileShadingPropertiesQCOM',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.PhysicalDeviceTimelineSemaphoreProperties',
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackPropertiesEXT',
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorProperties',
 --     'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesEXT',
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Properties',
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Properties',
@@ -1828,7 +1828,7 @@ instance es ~ '[] => Zero (FormatProperties2 es) where
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferUsageANDROID',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties',
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FilterCubicImageViewImageFormatPropertiesEXT',
---     'Vulkan.Core14.PromotedStreamingTransfers'.HostImageCopyDevicePerformanceQuery',
+--     'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.HostImageCopyDevicePerformanceQuery',
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT',
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkNativeBufferUsageOHOS VkNativeBufferUsageOHOS>,
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties',

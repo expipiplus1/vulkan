@@ -258,11 +258,11 @@ import GHC.Show (Show(showsPrec))
 --
 -- -   'DYNAMIC_STATE_LINE_STIPPLE' specifies that the @lineStippleFactor@
 --     and @lineStipplePattern@ state in
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'
 --     will be ignored and /must/ be set dynamically with
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.cmdSetLineStipple'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.cmdSetLineStipple'
 --     before any draws are performed with a pipeline state with
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'
 --     member @stippledLineEnable@ set to
 --     'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
@@ -551,14 +551,14 @@ import GHC.Show (Show(showsPrec))
 --
 -- -   'DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT' specifies that the
 --     @lineRasterizationMode@ state in
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'
 --     will be ignored and /must/ be set dynamically with
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
 --     before any draw call.
 --
 -- -   'DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT' specifies that the
 --     @stippledLineEnable@ state in
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'
 --     will be ignored and /must/ be set dynamically with
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
 --     before any draw call.

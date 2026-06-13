@@ -1,16 +1,16 @@
 {-# language CPP #-}
--- No documentation found for Chapter "PromotedStreamingTransfers'"
-module Vulkan.Core14.PromotedStreamingTransfers'  ( CopyImageToImageInfo
-                                                  , CopyImageToMemoryInfo
-                                                  , CopyMemoryToImageInfo
-                                                  , HostImageCopyDevicePerformanceQuery
-                                                  , HostImageLayoutTransitionInfo
-                                                  , ImageToMemoryCopy
-                                                  , MemoryToImageCopy
-                                                  , PhysicalDeviceHostImageCopyFeatures
-                                                  , PhysicalDeviceHostImageCopyProperties
-                                                  , SubresourceHostMemcpySize
-                                                  ) where
+-- No documentation found for Chapter "Promoted_From_VK_EXT_host_image_copy"
+module Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy  ( CopyImageToImageInfo
+                                                           , CopyImageToMemoryInfo
+                                                           , CopyMemoryToImageInfo
+                                                           , HostImageCopyDevicePerformanceQuery
+                                                           , HostImageLayoutTransitionInfo
+                                                           , ImageToMemoryCopy
+                                                           , MemoryToImageCopy
+                                                           , PhysicalDeviceHostImageCopyFeatures
+                                                           , PhysicalDeviceHostImageCopyProperties
+                                                           , SubresourceHostMemcpySize
+                                                           ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

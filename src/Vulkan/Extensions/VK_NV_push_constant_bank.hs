@@ -70,8 +70,7 @@
 -- by allowing 'PushConstantBankInfoNV' structures to be chained to
 -- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
--- or
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo', or
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT'
 -- structures, specifying the hardware bank where push constants should be
 -- placed as part of the descriptor heap mapping configuration or push data
@@ -120,7 +119,7 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT',
 --     'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo',
 --     'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT':
 --
 --     -   'PushConstantBankInfoNV'
@@ -212,7 +211,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PUSH_CONS
 --
 -- This structure /can/ be chained to
 -- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT',
 -- and
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT'
@@ -225,9 +224,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PUSH_CONS
 --     data.
 --
 -- -   When chained to
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo',
 --     it specifies the hardware bank into which
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.cmdPushConstants2'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.cmdPushConstants2'
 --     pushes the constants.
 --
 -- -   When chained to
@@ -261,13 +260,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PUSH_CONS
 --     'PhysicalDevicePushConstantBankPropertiesNV'::@maxComputePushDataBanks@
 --
 -- -   #VUID-VkPushConstantBankInfoNV-bank-12344# When chained to
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo',
 --     if VkPushConstantsInfo::stageFlags includes a graphics stage then
 --     @bank@ /must/ be less than
 --     'PhysicalDevicePushConstantBankPropertiesNV'::@maxGraphicsPushConstantBanks@
 --
 -- -   #VUID-VkPushConstantBankInfoNV-bank-12345# When chained to
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo',
 --     if VkPushConstantsInfo::stageFlags includes a compute stage then
 --     @bank@ /must/ be less than
 --     'PhysicalDevicePushConstantBankPropertiesNV'::@maxComputePushConstantBanks@
@@ -295,7 +294,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PUSH_CONS
 --
 --     -   'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT'
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo'
 --
 --     -   'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT'
 --

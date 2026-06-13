@@ -1,6 +1,6 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_index_type_uint8Roadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap  (PhysicalDeviceIndexTypeUint8Features) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_index_type_uint8"
+module Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8  (PhysicalDeviceIndexTypeUint8Features) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

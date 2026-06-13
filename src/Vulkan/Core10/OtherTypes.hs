@@ -161,13 +161,13 @@ instance Zero PipelineCacheHeaderVersionOne where
 --
 -- -   #VUID-VkDrawIndirectCommand-pNext-09461# If the bound graphics
 --     pipeline state was created with
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfo'
 --     in the @pNext@ chain of
 --     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
 --     any member of
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo'::@pVertexBindingDivisors@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfo'::@pVertexBindingDivisors@
 --     has a value other than @1@ in @divisor@, and
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --
@@ -181,7 +181,7 @@ instance Zero PipelineCacheHeaderVersionOne where
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     call that sets this dynamic state has a value other than @1@ in
 --     @divisor@, and
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --
@@ -262,13 +262,13 @@ instance Zero DrawIndirectCommand where
 --
 -- -   #VUID-VkDrawIndexedIndirectCommand-pNext-09461# If the bound
 --     graphics pipeline state was created with
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfo'
 --     in the @pNext@ chain of
 --     'Vulkan.Core10.GraphicsPipeline.GraphicsPipelineCreateInfo'::@pVertexInputState@,
 --     any member of
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo'::@pVertexBindingDivisors@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfo'::@pVertexBindingDivisors@
 --     has a value other than @1@ in @divisor@, and
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --
@@ -282,7 +282,7 @@ instance Zero DrawIndirectCommand where
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     call that sets this dynamic state has a value other than @1@ in
 --     @divisor@, and
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorProperties'::@supportsNonZeroFirstInstance@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @firstInstance@
 --     /must/ be @0@
 --

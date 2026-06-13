@@ -185,10 +185,10 @@ module Vulkan.Extensions.VK_EXT_pipeline_robustness  ( pattern STRUCTURE_TYPE_PI
                                                      ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PhysicalDevicePipelineRobustnessFeatures)
-import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PhysicalDevicePipelineRobustnessProperties)
+import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PhysicalDevicePipelineRobustnessFeatures)
+import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PhysicalDevicePipelineRobustnessProperties)
 import Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior (PipelineRobustnessBufferBehavior)
-import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PipelineRobustnessCreateInfo)
+import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PipelineRobustnessCreateInfo)
 import Vulkan.Core14.Enums.PipelineRobustnessImageBehavior (PipelineRobustnessImageBehavior)
 import Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior (PipelineRobustnessBufferBehavior(PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT))
 import Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior (PipelineRobustnessBufferBehavior(PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED))

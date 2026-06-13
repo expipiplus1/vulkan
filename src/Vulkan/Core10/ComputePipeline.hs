@@ -95,10 +95,10 @@ import Vulkan.Core10.Handles (PipelineCache)
 import Vulkan.Core10.Handles (PipelineCache(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_pipeline_compiler_control (PipelineCompilerControlCreateInfoAMD)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (PipelineCreateFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (PipelineCreateFlags2CreateInfo)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core10.Handles (PipelineLayout)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PipelineRobustnessCreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PipelineRobustnessCreateInfo)
 import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits (PipelineShaderStageCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_module_identifier (PipelineShaderStageModuleIdentifierCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMDX_shader_enqueue (PipelineShaderStageNodeCreateInfoAMDX)
@@ -956,7 +956,7 @@ instance Zero SpecializationInfo where
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
---     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PipelineRobustnessCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_shader_module_identifier.PipelineShaderStageModuleIdentifierCreateInfoEXT',
 --     'Vulkan.Extensions.VK_AMDX_shader_enqueue.PipelineShaderStageNodeCreateInfoAMDX',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfo',
@@ -1109,16 +1109,16 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>.
 --
 -- If the @pNext@ chain includes a
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'::@flags@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'::@flags@
 -- from that structure is used instead of @flags@ from this structure.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkComputePipelineCreateInfo-None-09497# If the @pNext@ chain
 --     does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 --     structure, @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
@@ -1343,9 +1343,9 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_device_generated_commands_compute.ComputePipelineIndirectBufferInfoNV',
 --     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR',
 --     'Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo',
---     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PipelineRobustnessCreateInfo',
 --     or
 --     'Vulkan.Extensions.VK_HUAWEI_subpass_shading.SubpassShadingPipelineCreateInfoHUAWEI'
 --

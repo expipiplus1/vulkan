@@ -44,9 +44,9 @@ import GHC.Show (Show(showsPrec))
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_robustness VK_EXT_pipeline_robustness>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_4 VK_VERSION_1_4>,
--- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PhysicalDevicePipelineRobustnessProperties',
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PhysicalDevicePipelineRobustnessProperties',
 -- 'Vulkan.Core14.PhysicalDeviceVulkan14Properties',
--- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PipelineRobustnessCreateInfo'
 newtype PipelineRobustnessImageBehavior = PipelineRobustnessImageBehavior Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

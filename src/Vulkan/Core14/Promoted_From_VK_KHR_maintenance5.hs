@@ -1,24 +1,24 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_maintenance5Roadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap  ( getRenderingAreaGranularity
-                                                               , cmdBindIndexBuffer2
-                                                               , getImageSubresourceLayout2
-                                                               , getDeviceImageSubresourceLayout
-                                                               , BufferUsageFlags2CreateInfo(..)
-                                                               , PipelineCreateFlags2CreateInfo(..)
-                                                               , PhysicalDeviceMaintenance5Features(..)
-                                                               , PhysicalDeviceMaintenance5Properties(..)
-                                                               , RenderingAreaInfo(..)
-                                                               , ImageSubresource2(..)
-                                                               , SubresourceLayout2(..)
-                                                               , DeviceImageSubresourceInfo(..)
-                                                               , Format(..)
-                                                               , StructureType(..)
-                                                               , BufferUsageFlagBits2(..)
-                                                               , BufferUsageFlags2
-                                                               , PipelineCreateFlagBits2(..)
-                                                               , PipelineCreateFlags2
-                                                               ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_maintenance5"
+module Vulkan.Core14.Promoted_From_VK_KHR_maintenance5  ( getRenderingAreaGranularity
+                                                        , cmdBindIndexBuffer2
+                                                        , getImageSubresourceLayout2
+                                                        , getDeviceImageSubresourceLayout
+                                                        , BufferUsageFlags2CreateInfo(..)
+                                                        , PipelineCreateFlags2CreateInfo(..)
+                                                        , PhysicalDeviceMaintenance5Features(..)
+                                                        , PhysicalDeviceMaintenance5Properties(..)
+                                                        , RenderingAreaInfo(..)
+                                                        , ImageSubresource2(..)
+                                                        , SubresourceLayout2(..)
+                                                        , DeviceImageSubresourceInfo(..)
+                                                        , Format(..)
+                                                        , StructureType(..)
+                                                        , BufferUsageFlagBits2(..)
+                                                        , BufferUsageFlags2
+                                                        , PipelineCreateFlagBits2(..)
+                                                        , PipelineCreateFlags2
+                                                        ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
@@ -101,7 +101,7 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.CStruct.Extends (SomeStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import {-# SOURCE #-} Vulkan.Core14.PromotedStreamingTransfers' (SubresourceHostMemcpySize)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (SubresourceHostMemcpySize)
 import Vulkan.Core10.Image (SubresourceLayout)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO))
@@ -1134,7 +1134,7 @@ instance Zero ImageSubresource2 where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
 --     or
---     'Vulkan.Core14.PromotedStreamingTransfers'.SubresourceHostMemcpySize'
+--     'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.SubresourceHostMemcpySize'
 --
 -- -   #VUID-VkSubresourceLayout2-sType-unique# The @sType@ value of each
 --     structure in the @pNext@ chain /must/ be unique

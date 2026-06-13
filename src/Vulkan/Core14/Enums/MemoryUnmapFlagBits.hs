@@ -26,21 +26,19 @@ type MemoryUnmapFlags = MemoryUnmapFlagBits
 --
 -- -   'MEMORY_UNMAP_RESERVE_BIT_EXT' requests that virtual address range
 --     currently occupied by the memory map remain reserved after the
---     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.unmapMemory2'
---     call completes. Future system memory map operations or calls to
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.unmapMemory2' call
+--     completes. Future system memory map operations or calls to
 --     'Vulkan.Core10.Memory.mapMemory' or
---     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.mapMemory2'
---     will not return addresses in that range unless the range has since
---     been unreserved by the client or the mapping is explicitly placed in
---     that range by calling
---     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.mapMemory2'
---     with
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.mapMemory2' will not
+--     return addresses in that range unless the range has since been
+--     unreserved by the client or the mapping is explicitly placed in that
+--     range by calling
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.mapMemory2' with
 --     'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT',
 --     or doing the system memory map equivalent. When
 --     'MEMORY_UNMAP_RESERVE_BIT_EXT' is set, the memory unmap operation
 --     /may/ fail, in which case the memory object will remain host mapped
---     and
---     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.unmapMemory2'
+--     and 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.unmapMemory2'
 --     will return 'Vulkan.Core10.Enums.Result.ERROR_MEMORY_MAP_FAILED'.
 --
 -- = See Also

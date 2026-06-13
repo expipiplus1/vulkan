@@ -190,10 +190,10 @@ data PhysicalDevicePerStageDescriptorSetFeaturesNV = PhysicalDevicePerStageDescr
     perStageDescriptorSet :: Bool
   , -- | #features-dynamicPipelineLayout# @dynamicPipelineLayout@ indicates the
     -- implementation allows the @layout@ member of
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindDescriptorSetsInfo',
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetInfo',
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetWithTemplateInfo',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.BindDescriptorSetsInfo',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushDescriptorSetInfo',
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushDescriptorSetWithTemplateInfo',
     -- 'Vulkan.Extensions.VK_KHR_maintenance6.SetDescriptorBufferOffsetsInfoEXT'
     -- and
     -- 'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorBufferEmbeddedSamplersInfoEXT'

@@ -1,13 +1,13 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_map_memory2Roadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap  ( mapMemory2
-                                                              , unmapMemory2
-                                                              , MemoryMapInfo(..)
-                                                              , MemoryUnmapInfo(..)
-                                                              , StructureType(..)
-                                                              , MemoryUnmapFlagBits(..)
-                                                              , MemoryUnmapFlags
-                                                              ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_map_memory2"
+module Vulkan.Core14.Promoted_From_VK_KHR_map_memory2  ( mapMemory2
+                                                       , unmapMemory2
+                                                       , MemoryMapInfo(..)
+                                                       , MemoryUnmapInfo(..)
+                                                       , StructureType(..)
+                                                       , MemoryUnmapFlagBits(..)
+                                                       , MemoryUnmapFlags
+                                                       ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)

@@ -295,21 +295,21 @@ library
       Vulkan.Core14.Enums.PipelineRobustnessBufferBehavior
       Vulkan.Core14.Enums.PipelineRobustnessImageBehavior
       Vulkan.Core14.Enums.QueueGlobalPriority
-      Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality'
-      Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'
-      Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap
+      Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy
+      Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_access
+      Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness
+      Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read
       Vulkan.Core14.Promoted_From_VK_KHR_global_priority
-      Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'
-      Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap
-      Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap
-      Vulkan.Core14.PromotedStreamingTransfers'
+      Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8
+      Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization
+      Vulkan.Core14.Promoted_From_VK_KHR_maintenance5
+      Vulkan.Core14.Promoted_From_VK_KHR_maintenance6
+      Vulkan.Core14.Promoted_From_VK_KHR_map_memory2
+      Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor
+      Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assume
+      Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2
+      Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotate
+      Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor
       Vulkan.CStruct.Extends
       Vulkan.CStruct.Utils
       Vulkan.Dynamic

@@ -68,7 +68,7 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo':
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.MemoryMapInfo':
 --
 --     -   'MemoryMapPlacedInfoEXT'
 --
@@ -338,7 +338,7 @@ instance Zero PhysicalDeviceMapMemoryPlacedPropertiesEXT where
 --
 -- -   #VUID-VkMemoryMapPlacedInfoEXT-pPlacedAddress-09578# The address
 --     range specified by @pPlacedAddress@ and
---     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo'::@size@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.MemoryMapInfo'::@size@
 --     /must/ not overlap any existing Vulkan memory object mapping
 --
 -- == Valid Usage (Implicit)
@@ -350,7 +350,7 @@ instance Zero PhysicalDeviceMapMemoryPlacedPropertiesEXT where
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.MemoryMapInfo'
 --
 -- = See Also
 --
@@ -359,7 +359,7 @@ instance Zero PhysicalDeviceMapMemoryPlacedPropertiesEXT where
 data MemoryMapPlacedInfoEXT = MemoryMapPlacedInfoEXT
   { -- | @pPlacedAddress@ is the virtual address at which to place the address.
     -- If
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo'::@flags@
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.MemoryMapInfo'::@flags@
     -- does not contain
     -- 'Vulkan.Core10.Enums.MemoryMapFlagBits.MEMORY_MAP_PLACED_BIT_EXT', this
     -- value is ignored.

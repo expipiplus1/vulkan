@@ -53,14 +53,14 @@ import GHC.Show (Show(showsPrec))
 -- and possibly culled before these modes are applied.
 --
 -- If
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PhysicalDeviceMaintenance5Properties'::@polygonModePointSize@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PhysicalDeviceMaintenance5Properties'::@polygonModePointSize@
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE', the point size of the final
 -- rasterization of polygons is taken from @PointSize@ when
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-polygonmode polygon mode>
 -- is 'POLYGON_MODE_POINT'.
 --
 -- Otherwise, if
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PhysicalDeviceMaintenance5Properties'::@polygonModePointSize@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PhysicalDeviceMaintenance5Properties'::@polygonModePointSize@
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE', the point size of the final
 -- rasterization of polygons is 1.0 when
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-polygonmode polygon mode>

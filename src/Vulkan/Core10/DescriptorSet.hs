@@ -1861,10 +1861,10 @@ instance Zero DescriptorImageInfo where
 -- 'Vulkan.Core10.Handles.BufferView', 'DescriptorBufferInfo',
 -- 'DescriptorImageInfo', 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetInfo',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushDescriptorSetInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSet',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSet',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.cmdPushDescriptorSet',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.cmdPushDescriptorSet',
 -- 'updateDescriptorSets'
 data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
@@ -2592,7 +2592,7 @@ instance Zero DescriptorSetLayoutBinding where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT',
 --     then the total number of elements of all bindings /must/ be less
 --     than or equal to
---     'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.PhysicalDevicePushDescriptorProperties'::@maxPushDescriptors@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.PhysicalDevicePushDescriptorProperties'::@maxPushDescriptors@
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-04590# If @flags@
 --     contains
@@ -2806,7 +2806,7 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionImageFormatProperties'::@combinedImageSamplerDescriptorCount@.
 --
 -- For simplicity the application /can/ use the
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties'::@maxCombinedImageSamplerDescriptorCount@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PhysicalDeviceMaintenance6Properties'::@maxCombinedImageSamplerDescriptorCount@
 -- property, which is sized to accommodate any and all
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
 -- supported by the implementation.

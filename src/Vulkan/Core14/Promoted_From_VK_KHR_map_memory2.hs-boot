@@ -1,8 +1,8 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_map_memory2Roadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap  ( MemoryMapInfo
-                                                              , MemoryUnmapInfo
-                                                              ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_map_memory2"
+module Vulkan.Core14.Promoted_From_VK_KHR_map_memory2  ( MemoryMapInfo
+                                                       , MemoryUnmapInfo
+                                                       ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

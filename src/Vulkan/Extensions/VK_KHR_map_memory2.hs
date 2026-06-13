@@ -132,12 +132,12 @@ module Vulkan.Extensions.VK_KHR_map_memory2  ( pattern STRUCTURE_TYPE_MEMORY_MAP
                                              ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap (mapMemory2)
-import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap (unmapMemory2)
-import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap (MemoryMapInfo)
+import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2 (mapMemory2)
+import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2 (unmapMemory2)
+import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2 (MemoryMapInfo)
 import Vulkan.Core14.Enums.MemoryUnmapFlagBits (MemoryUnmapFlagBits)
 import Vulkan.Core14.Enums.MemoryUnmapFlagBits (MemoryUnmapFlags)
-import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap (MemoryUnmapInfo)
+import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2 (MemoryUnmapInfo)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_MAP_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_UNMAP_INFO))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_MEMORY_MAP_INFO_KHR"

@@ -1,10 +1,10 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap  ( PhysicalDeviceShaderSubgroupRotateFeatures(..)
-                                                                         , StructureType(..)
-                                                                         , SubgroupFeatureFlagBits(..)
-                                                                         , SubgroupFeatureFlags
-                                                                         ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_shader_subgroup_rotate"
+module Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotate  ( PhysicalDeviceShaderSubgroupRotateFeatures(..)
+                                                                  , StructureType(..)
+                                                                  , SubgroupFeatureFlagBits(..)
+                                                                  , SubgroupFeatureFlags
+                                                                  ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)

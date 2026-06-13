@@ -186,7 +186,7 @@ module Vulkan.Extensions.VK_KHR_descriptor_update_template  ( pattern DESCRIPTOR
                                                             ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap (cmdPushDescriptorSetWithTemplate)
+import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor (cmdPushDescriptorSetWithTemplate)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (createDescriptorUpdateTemplate)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (destroyDescriptorUpdateTemplate)
 import Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (updateDescriptorSetWithTemplate)

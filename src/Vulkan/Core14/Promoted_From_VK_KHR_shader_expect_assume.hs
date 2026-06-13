@@ -1,8 +1,8 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_shader_expect_assumeRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap  ( PhysicalDeviceShaderExpectAssumeFeatures(..)
-                                                                       , StructureType(..)
-                                                                       ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_shader_expect_assume"
+module Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assume  ( PhysicalDeviceShaderExpectAssumeFeatures(..)
+                                                                , StructureType(..)
+                                                                ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)

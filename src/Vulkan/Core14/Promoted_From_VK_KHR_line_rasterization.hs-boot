@@ -1,9 +1,9 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_line_rasterizationRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap  ( PhysicalDeviceLineRasterizationFeatures
-                                                                     , PhysicalDeviceLineRasterizationProperties
-                                                                     , PipelineRasterizationLineStateCreateInfo
-                                                                     ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_line_rasterization"
+module Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization  ( PhysicalDeviceLineRasterizationFeatures
+                                                              , PhysicalDeviceLineRasterizationProperties
+                                                              , PipelineRasterizationLineStateCreateInfo
+                                                              ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

@@ -4949,7 +4949,7 @@ instance Zero PhysicalDeviceShaderEnqueueFeaturesAMDX where
 --
 -- -   #VUID-VkExecutionGraphPipelineCreateInfoAMDX-None-09497# If the
 --     @pNext@ chain does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 --     structure, @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values

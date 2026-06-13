@@ -118,7 +118,7 @@ module Vulkan.Extensions.VK_KHR_shader_expect_assume  ( pattern STRUCTURE_TYPE_P
                                                       ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap (PhysicalDeviceShaderExpectAssumeFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assume (PhysicalDeviceShaderExpectAssumeFeatures)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES

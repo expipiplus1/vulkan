@@ -119,7 +119,7 @@ module Vulkan.Extensions.VK_EXT_pipeline_protected_access  ( pattern STRUCTURE_T
                                                            ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality' (PhysicalDevicePipelineProtectedAccessFeatures)
+import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_access (PhysicalDevicePipelineProtectedAccessFeatures)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT))
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)

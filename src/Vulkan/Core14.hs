@@ -5,38 +5,38 @@ module Vulkan.Core14  ( pattern API_VERSION_1_4
                       , PhysicalDeviceVulkan14Properties(..)
                       , StructureType(..)
                       , module Vulkan.Core14.Enums
-                      , module Vulkan.Core14.PromotedStreamingTransfers'
-                      , module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality'
-                      , module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap
+                      , module Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy
+                      , module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_access
+                      , module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read
                       , module Vulkan.Core14.Promoted_From_VK_KHR_global_priority
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap
-                      , module Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_maintenance5
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_maintenance6
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_map_memory2
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assume
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotate
+                      , module Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor
                       ) where
 import Vulkan.Core14.Enums
-import Vulkan.Core14.PromotedStreamingTransfers'
-import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality'
-import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'
-import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy
+import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_access
+import Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness
+import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read
 import Vulkan.Core14.Promoted_From_VK_KHR_global_priority
-import Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'
-import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assumeRoadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap
-import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap
+import Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization
+import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5
+import Vulkan.Core14.Promoted_From_VK_KHR_maintenance6
+import Vulkan.Core14.Promoted_From_VK_KHR_map_memory2
+import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor
+import Vulkan.Core14.Promoted_From_VK_KHR_shader_expect_assume
+import Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2
+import Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotate
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor
 import Vulkan.CStruct.Utils (FixedArray)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
@@ -174,7 +174,7 @@ data PhysicalDeviceVulkan14Features = PhysicalDeviceVulkan14Features
     vertexAttributeInstanceRateZeroDivisor :: Bool
   , -- | #features-indexTypeUint8# @indexTypeUint8@ indicates that
     -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8' can be used with
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2'
     -- and 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
     indexTypeUint8 :: Bool
   , -- | #features-dynamicRenderingLocalRead# @dynamicRenderingLocalRead@
@@ -197,10 +197,10 @@ data PhysicalDeviceVulkan14Features = PhysicalDeviceVulkan14Features
     --
     -- -   Creating a 'Vulkan.Core10.Handles.BufferView' with a subset of the
     --     associated 'Vulkan.Core10.Handles.Buffer' usage using
-    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'.
+    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'.
     --
     -- -   A new function
-    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2',
+    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2',
     --     allowing a range of memory to be bound as an index buffer.
     --
     -- -   'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr' will return
@@ -220,14 +220,14 @@ data PhysicalDeviceVulkan14Features = PhysicalDeviceVulkan14Features
     --     rather than having to create a shader module.
     --
     -- -   A function
-    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.getRenderingAreaGranularity'
+    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.getRenderingAreaGranularity'
     --     to query the optimal render area for a dynamic rendering instance.
     --
     -- -   A property to indicate that depth\/stencil texturing operations with
     --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ONE' have
     --     defined behavior.
     --
-    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.getDeviceImageSubresourceLayout'
+    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.getDeviceImageSubresourceLayout'
     --     allows an application to perform a
     --     'Vulkan.Core10.Image.getImageSubresourceLayout' query without having
     --     to create an image.
@@ -263,7 +263,7 @@ data PhysicalDeviceVulkan14Features = PhysicalDeviceVulkan14Features
     -- -   'Vulkan.Core10.APIConstants.NULL_HANDLE' /can/ be used when binding
     --     an index buffer
     --
-    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
+    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.BindMemoryStatus'
     --     /can/ be included in the @pNext@ chain of the
     --     'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo'
     --     and
@@ -272,21 +272,21 @@ data PhysicalDeviceVulkan14Features = PhysicalDeviceVulkan14Features
     --     'Vulkan.Core10.Enums.Result.Result' values for individual memory
     --     binding operations.
     --
-    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties'::@blockTexelViewCompatibleMultipleLayers@
+    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PhysicalDeviceMaintenance6Properties'::@blockTexelViewCompatibleMultipleLayers@
     --     property to indicate that the implementation supports creating image
     --     views with
     --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
     --     where the @layerCount@ member of @subresourceRange@ is greater than
     --     @1@.
     --
-    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties'::@maxCombinedImageSamplerDescriptorCount@
+    -- -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PhysicalDeviceMaintenance6Properties'::@maxCombinedImageSamplerDescriptorCount@
     --     property which indicates the maximum descriptor size required for
     --     any
     --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y′CBCR conversion>
     --     supported by the implementation.
     --
     -- -   A
-    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties'::@fragmentShadingRateClampCombinerInputs@
+    --     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PhysicalDeviceMaintenance6Properties'::@fragmentShadingRateClampCombinerInputs@
     --     property which indicates whether the implementation clamps the
     --     inputs to fragment shading rate combiner operations.
     maintenance6 :: Bool
@@ -299,11 +299,12 @@ data PhysicalDeviceVulkan14Features = PhysicalDeviceVulkan14Features
     pipelineRobustness :: Bool
   , -- | #features-hostImageCopy# @hostImageCopy@ indicates that the
     -- implementation supports copying from host memory to images using the
-    -- 'Vulkan.Core14.PromotedStreamingTransfers'.copyMemoryToImage' command,
-    -- copying from images to host memory using the
-    -- 'Vulkan.Core14.PromotedStreamingTransfers'.copyImageToMemory' command,
-    -- and copying between images using the
-    -- 'Vulkan.Core14.PromotedStreamingTransfers'.copyImageToImage' command.
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.copyMemoryToImage'
+    -- command, copying from images to host memory using the
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.copyImageToMemory'
+    -- command, and copying between images using the
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.copyImageToImage'
+    -- command.
     hostImageCopy :: Bool
   , -- | #features-pushDescriptor# @pushDescriptor@ indicates that the
     -- implementation supports push descriptors.
@@ -490,7 +491,7 @@ data PhysicalDeviceVulkan14Properties = PhysicalDeviceVulkan14Properties
     -- specifies whether a non-zero value for the @firstInstance@ parameter of
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing drawing commands>
     -- is supported when
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.VertexInputBindingDivisorDescription'::@divisor@
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.VertexInputBindingDivisorDescription'::@divisor@
     -- is not @1@.
     supportsNonZeroFirstInstance :: Bool
   , -- | #limits-maxPushDescriptors# @maxPushDescriptors@ is the maximum number

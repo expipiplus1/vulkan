@@ -4014,7 +4014,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- they will continue to work where they already did, but will fail to
     -- render on some platforms. For forward looking applications, this can be
     -- worked around by either making careful use of index remapping with
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'
     -- for dynamic rendering, or splitting a subpass with too many input
     -- attachments into multiple subpasses.
     maxPerStageDescriptorInputAttachments :: Word32
@@ -4642,11 +4642,12 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdCopyImageToBuffer2',
     -- and 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. This
     -- value is also the optimal host memory offset alignment in bytes for
-    -- 'Vulkan.Core14.PromotedStreamingTransfers'.copyMemoryToImage' and
-    -- 'Vulkan.Core14.PromotedStreamingTransfers'.copyImageToMemory'. The per
-    -- texel alignment requirements are enforced, but applications /should/ use
-    -- the optimal alignment for optimal performance and power use. The value
-    -- /must/ be a power of two.
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.copyMemoryToImage'
+    -- and
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.copyImageToMemory'.
+    -- The per texel alignment requirements are enforced, but applications
+    -- /should/ use the optimal alignment for optimal performance and power
+    -- use. The value /must/ be a power of two.
     optimalBufferCopyOffsetAlignment :: DeviceSize
   , -- | #limits-optimalBufferCopyRowPitchAlignment#
     -- @optimalBufferCopyRowPitchAlignment@ is the optimal buffer row pitch
@@ -4656,13 +4657,14 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdCopyImageToBuffer2',
     -- and 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. This
     -- value is also the optimal host memory row pitch alignment in bytes for
-    -- 'Vulkan.Core14.PromotedStreamingTransfers'.copyMemoryToImage' and
-    -- 'Vulkan.Core14.PromotedStreamingTransfers'.copyImageToMemory'. Row pitch
-    -- is the number of bytes between texels with the same X coordinate in
-    -- adjacent rows (Y coordinates differ by one). The per texel alignment
-    -- requirements are enforced, but applications /should/ use the optimal
-    -- alignment for optimal performance and power use. The value /must/ be a
-    -- power of two.
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.copyMemoryToImage'
+    -- and
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.copyImageToMemory'.
+    -- Row pitch is the number of bytes between texels with the same X
+    -- coordinate in adjacent rows (Y coordinates differ by one). The per texel
+    -- alignment requirements are enforced, but applications /should/ use the
+    -- optimal alignment for optimal performance and power use. The value
+    -- /must/ be a power of two.
     optimalBufferCopyRowPitchAlignment :: DeviceSize
   , -- | #limits-nonCoherentAtomSize# @nonCoherentAtomSize@ is the size and
     -- alignment in bytes that bounds concurrent access to

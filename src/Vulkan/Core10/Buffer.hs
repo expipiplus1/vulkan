@@ -61,7 +61,7 @@ import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (BufferDeviceAddressCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (BufferUsageFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (BufferUsageFlags2CreateInfo)
 import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationBufferCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
@@ -352,9 +352,9 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- @usage@ defines the effective usage flags for the buffer. If the @pNext@
 -- chain includes a
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'::@usage@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'::@usage@
 -- from that structure is used as the effective usage instead of @usage@
 -- from this structure.
 --
@@ -362,13 +362,13 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkBufferCreateInfo-None-09499# If the @pNext@ chain does not
 --     include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkBufferCreateInfo-None-09500# If the @pNext@ chain does not
 --     include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ not be 0
 --
 -- -   #VUID-VkBufferCreateInfo-size-00912# @size@ /must/ be greater than
@@ -694,7 +694,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',

@@ -45,7 +45,7 @@ import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (BufferUsageFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (BufferUsageFlags2CreateInfo)
 import Vulkan.Core10.Handles (BufferView)
 import Vulkan.Core10.Handles (BufferView(..))
 import Vulkan.Core10.Enums.BufferViewCreateFlags (BufferViewCreateFlags)
@@ -260,7 +260,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 -- The buffer view has a /buffer view usage/ identifying which descriptor
 -- types can be created from it. This usage /can/ be defined by including
 -- the
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 -- structure in the @pNext@ chain, and specifying the @usage@ value there.
 -- If this structure is not included, it is equal to the
 -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@ value used to create
@@ -356,7 +356,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkBufferViewCreateInfo-pNext-08780# If the @pNext@ chain
 --     includes a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo',
 --     its @usage@ /must/ not contain any other bit than
 --     'Vulkan.Core14.Enums.BufferUsageFlags2.BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT'
 --     or
@@ -364,10 +364,10 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkBufferViewCreateInfo-pNext-08781# If the @pNext@ chain
 --     includes a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo',
 --     its @usage@ /must/ be a subset of the
 --     'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@ specified or
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'::@usage@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'::@usage@
 --     from 'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@ when creating
 --     @buffer@
 --
@@ -388,7 +388,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferViewCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     or
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --

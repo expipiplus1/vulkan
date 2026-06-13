@@ -1,27 +1,27 @@
 {-# language CPP #-}
--- No documentation found for Chapter "PromotedStreamingTransfers'"
-module Vulkan.Core14.PromotedStreamingTransfers'  ( copyMemoryToImage
-                                                  , copyImageToMemory
-                                                  , copyImageToImage
-                                                  , transitionImageLayout
-                                                  , PhysicalDeviceHostImageCopyFeatures(..)
-                                                  , PhysicalDeviceHostImageCopyProperties(..)
-                                                  , MemoryToImageCopy(..)
-                                                  , ImageToMemoryCopy(..)
-                                                  , CopyMemoryToImageInfo(..)
-                                                  , CopyImageToMemoryInfo(..)
-                                                  , CopyImageToImageInfo(..)
-                                                  , HostImageLayoutTransitionInfo(..)
-                                                  , SubresourceHostMemcpySize(..)
-                                                  , HostImageCopyDevicePerformanceQuery(..)
-                                                  , StructureType(..)
-                                                  , ImageUsageFlagBits(..)
-                                                  , ImageUsageFlags
-                                                  , HostImageCopyFlagBits(..)
-                                                  , HostImageCopyFlags
-                                                  , FormatFeatureFlagBits2(..)
-                                                  , FormatFeatureFlags2
-                                                  ) where
+-- No documentation found for Chapter "Promoted_From_VK_EXT_host_image_copy"
+module Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy  ( copyMemoryToImage
+                                                           , copyImageToMemory
+                                                           , copyImageToImage
+                                                           , transitionImageLayout
+                                                           , PhysicalDeviceHostImageCopyFeatures(..)
+                                                           , PhysicalDeviceHostImageCopyProperties(..)
+                                                           , MemoryToImageCopy(..)
+                                                           , ImageToMemoryCopy(..)
+                                                           , CopyMemoryToImageInfo(..)
+                                                           , CopyImageToMemoryInfo(..)
+                                                           , CopyImageToImageInfo(..)
+                                                           , HostImageLayoutTransitionInfo(..)
+                                                           , SubresourceHostMemcpySize(..)
+                                                           , HostImageCopyDevicePerformanceQuery(..)
+                                                           , StructureType(..)
+                                                           , ImageUsageFlagBits(..)
+                                                           , ImageUsageFlags
+                                                           , HostImageCopyFlagBits(..)
+                                                           , HostImageCopyFlags
+                                                           , FormatFeatureFlagBits2(..)
+                                                           , FormatFeatureFlags2
+                                                           ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -2951,7 +2951,7 @@ instance Zero HostImageLayoutTransitionInfo where
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage-pNext Extends the structure>]
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.SubresourceLayout2'
 --
 -- = See Also
 --

@@ -187,11 +187,11 @@ module Vulkan.Extensions.VK_KHR_dynamic_rendering_local_read  ( pattern IMAGE_LA
                                                               ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (cmdSetRenderingAttachmentLocations)
-import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (cmdSetRenderingInputAttachmentIndices)
-import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (PhysicalDeviceDynamicRenderingLocalReadFeatures)
-import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (RenderingAttachmentLocationInfo)
-import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (RenderingInputAttachmentIndexInfo)
+import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (cmdSetRenderingAttachmentLocations)
+import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (cmdSetRenderingInputAttachmentIndices)
+import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (PhysicalDeviceDynamicRenderingLocalReadFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (RenderingAttachmentLocationInfo)
+import Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (RenderingInputAttachmentIndexInfo)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout(IMAGE_LAYOUT_RENDERING_LOCAL_READ))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDERING_ATTACHMENT_LOCATION_INFO))
