@@ -1,10 +1,10 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'"
-module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'  ( PhysicalDevicePipelineRobustnessFeatures(..)
-                                                                                       , PipelineRobustnessCreateInfo(..)
-                                                                                       , PhysicalDevicePipelineRobustnessProperties(..)
-                                                                                       , StructureType(..)
-                                                                                       ) where
+-- No documentation found for Chapter "Promoted_From_VK_EXT_pipeline_robustness"
+module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness  ( PhysicalDevicePipelineRobustnessFeatures(..)
+                                                               , PipelineRobustnessCreateInfo(..)
+                                                               , PhysicalDevicePipelineRobustnessProperties(..)
+                                                               , StructureType(..)
+                                                               ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)

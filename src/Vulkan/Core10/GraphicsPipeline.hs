@@ -146,7 +146,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_framebuffer_mixed_samples (Pipelin
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PipelineCoverageReductionStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_coverage_to_color (PipelineCoverageToColorStateCreateInfoNV)
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (PipelineCreateFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (PipelineCreateFlags2CreateInfo)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PipelineDiscardRectangleStateCreateInfoEXT)
@@ -160,19 +160,19 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_library (PipelineLibrary
 import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags (PipelineMultisampleStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conservative_rasterization (PipelineRasterizationConservativeStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PipelineRasterizationDepthClipStateCreateInfoEXT)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PipelineRasterizationLineStateCreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization (PipelineRasterizationLineStateCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PipelineRasterizationProvokingVertexStateCreateInfoEXT)
 import Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags (PipelineRasterizationStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_rasterization_order (PipelineRasterizationStateRasterizationOrderAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_transform_feedback (PipelineRasterizationStateStreamCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (PipelineRenderingCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_representative_fragment_test (PipelineRepresentativeFragmentTestStateCreateInfoNV)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PipelineRobustnessCreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PipelineRobustnessCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (PipelineSampleLocationsStateCreateInfoEXT)
 import Vulkan.Core10.ComputePipeline (PipelineShaderStageCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PipelineTessellationDomainOriginStateCreateInfo)
 import Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags (PipelineTessellationStateCreateFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PipelineVertexInputDivisorStateCreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfo)
 import Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags (PipelineVertexInputStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clamp_control (PipelineViewportDepthClampControlCreateInfoEXT)
@@ -188,8 +188,8 @@ import Vulkan.Core10.Enums.PolygonMode (PolygonMode)
 import Vulkan.Core10.Enums.PrimitiveTopology (PrimitiveTopology)
 import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Handles (RenderPass)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (RenderingAttachmentLocationInfo)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (RenderingInputAttachmentIndexInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (RenderingAttachmentLocationInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (RenderingInputAttachmentIndexInfo)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
@@ -852,7 +852,7 @@ instance Zero VertexInputAttributeDescription where
 --
 -- -   #VUID-VkPipelineVertexInputStateCreateInfo-pNext-pNext# @pNext@
 --     /must/ be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap.PipelineVertexInputDivisorStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor.PipelineVertexInputDivisorStateCreateInfo'
 --
 -- -   #VUID-VkPipelineVertexInputStateCreateInfo-sType-unique# The @sType@
 --     value of each structure in the @pNext@ chain /must/ be unique
@@ -1049,8 +1049,8 @@ data PipelineInputAssemblyStateCreateInfo = PipelineInputAssemblyStateCreateInfo
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect'), and the
     -- special index value is either 0xFFFFFFFF when the @indexType@ parameter
     -- of Vulkan 1.4 or
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
-    -- or 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer' is equal to
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2' or
+    -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer' is equal to
     -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32'; 0xFF when @indexType@
     -- is equal to 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8'; or 0xFFFF
     -- when @indexType@ is equal to
@@ -1467,7 +1467,7 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_depth_bias_control.DepthBiasRepresentationInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT',
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_provoking_vertex.PipelineRasterizationProvokingVertexStateCreateInfoEXT',
 --     'Vulkan.Extensions.VK_AMD_rasterization_order.PipelineRasterizationStateRasterizationOrderAMD',
 --     or
@@ -2865,7 +2865,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.PIPELINE_RASTERIZATION_STATE_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --     flag
 --
--- -   'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'
+-- -   'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'
 --
 -- -   Inclusion\/omission of the
 --     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE'
@@ -2929,7 +2929,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT'
 --     flag
 --
--- -   'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingAttachmentLocationInfo'
+-- -   'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfo'
 --
 -- If a pipeline specifies
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization state>
@@ -2992,16 +2992,16 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- with this union.
 --
 -- If the @pNext@ chain includes a
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'::@flags@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'::@flags@
 -- from that structure is used instead of @flags@ from this structure.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-09497# If the @pNext@ chain
 --     does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 --     structure, @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
@@ -3886,7 +3886,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and @pMultisampleState@ is not @NULL@, the @lineRasterizationMode@
 --     member of a
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'
 --     structure included in the @pNext@ chain of @pRasterizationState@ is
 --     'Vulkan.Core14.Enums.LineRasterizationMode.LINE_RASTERIZATION_MODE_BRESENHAM'
 --     or
@@ -3899,12 +3899,12 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     pipeline requires
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     the @stippledLineEnable@ member of
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'
 --     is 'Vulkan.Core10.FundamentalTypes.TRUE', and no element of the
 --     @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE', then
 --     the @lineStippleFactor@ member of
---     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'
 --     /must/ be in the range [1,256]
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-shaderMeshEnqueue-10187# If the
@@ -6387,9 +6387,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output state>,
 --     the value of @renderPass@ is
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'
 --     is included,
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'::@colorAttachmentCount@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'::@colorAttachmentCount@
 --     /must/ be equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --
@@ -6400,7 +6400,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output state>,
 --     the value of @renderPass@ is
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'
 --     is not included, the fragment shader /must/ not contain any input
 --     attachments with a @InputAttachmentIndex@ greater than or equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
@@ -6410,7 +6410,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output state>,
 --     and the value of @renderPass@ is
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingAttachmentLocationInfo'::@colorAttachmentCount@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfo'::@colorAttachmentCount@
 --     /must/ be equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --
@@ -6474,7 +6474,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.MultiviewPerViewAttributesInfoNVX',
 --     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR',
 --     'Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
 --     'Vulkan.Extensions.VK_VALVE_fragment_density_map_layered.PipelineFragmentDensityMapLayeredCreateInfoVALVE',
@@ -6483,10 +6483,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo',
 --     'Vulkan.Extensions.VK_NV_representative_fragment_test.PipelineRepresentativeFragmentTestStateCreateInfoNV',
---     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo',
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingAttachmentLocationInfo',
+--     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PipelineRobustnessCreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfo',
 --     or
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-sType-unique# The @sType@ value
 --     of each structure in the @pNext@ chain /must/ be unique

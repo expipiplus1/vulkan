@@ -135,7 +135,7 @@
 --     -   'PhysicalDeviceHostImageCopyPropertiesEXT'
 --
 -- -   Extending
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2':
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.SubresourceLayout2':
 --
 --     -   'SubresourceHostMemcpySizeEXT'
 --
@@ -321,25 +321,25 @@ module Vulkan.Extensions.VK_EXT_host_image_copy  ( pattern STRUCTURE_TYPE_PHYSIC
                                                  ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.PromotedStreamingTransfers' (copyImageToImage)
-import Vulkan.Core14.PromotedStreamingTransfers' (copyImageToMemory)
-import Vulkan.Core14.PromotedStreamingTransfers' (copyMemoryToImage)
-import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (getImageSubresourceLayout2)
-import Vulkan.Core14.PromotedStreamingTransfers' (transitionImageLayout)
-import Vulkan.Core14.PromotedStreamingTransfers' (CopyImageToImageInfo)
-import Vulkan.Core14.PromotedStreamingTransfers' (CopyImageToMemoryInfo)
-import Vulkan.Core14.PromotedStreamingTransfers' (CopyMemoryToImageInfo)
-import Vulkan.Core14.PromotedStreamingTransfers' (HostImageCopyDevicePerformanceQuery)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (copyImageToImage)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (copyImageToMemory)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (copyMemoryToImage)
+import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (getImageSubresourceLayout2)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (transitionImageLayout)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (CopyImageToImageInfo)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (CopyImageToMemoryInfo)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (CopyMemoryToImageInfo)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (HostImageCopyDevicePerformanceQuery)
 import Vulkan.Core14.Enums.HostImageCopyFlagBits (HostImageCopyFlagBits)
 import Vulkan.Core14.Enums.HostImageCopyFlagBits (HostImageCopyFlags)
-import Vulkan.Core14.PromotedStreamingTransfers' (HostImageLayoutTransitionInfo)
-import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (ImageSubresource2)
-import Vulkan.Core14.PromotedStreamingTransfers' (ImageToMemoryCopy)
-import Vulkan.Core14.PromotedStreamingTransfers' (MemoryToImageCopy)
-import Vulkan.Core14.PromotedStreamingTransfers' (PhysicalDeviceHostImageCopyFeatures)
-import Vulkan.Core14.PromotedStreamingTransfers' (PhysicalDeviceHostImageCopyProperties)
-import Vulkan.Core14.PromotedStreamingTransfers' (SubresourceHostMemcpySize)
-import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (SubresourceLayout2)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (HostImageLayoutTransitionInfo)
+import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (ImageSubresource2)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (ImageToMemoryCopy)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (MemoryToImageCopy)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (PhysicalDeviceHostImageCopyFeatures)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (PhysicalDeviceHostImageCopyProperties)
+import Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy (SubresourceHostMemcpySize)
+import Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (SubresourceLayout2)
 import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
 import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlagBits2(FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT))
 import Vulkan.Core14.Enums.HostImageCopyFlagBits (HostImageCopyFlags)

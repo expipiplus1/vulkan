@@ -1,13 +1,13 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'"
-module Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'  ( BindDescriptorSetsInfo
-                                                                                , BindMemoryStatus
-                                                                                , PhysicalDeviceMaintenance6Features
-                                                                                , PhysicalDeviceMaintenance6Properties
-                                                                                , PushConstantsInfo
-                                                                                , PushDescriptorSetInfo
-                                                                                , PushDescriptorSetWithTemplateInfo
-                                                                                ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_maintenance6"
+module Vulkan.Core14.Promoted_From_VK_KHR_maintenance6  ( BindDescriptorSetsInfo
+                                                        , BindMemoryStatus
+                                                        , PhysicalDeviceMaintenance6Features
+                                                        , PhysicalDeviceMaintenance6Properties
+                                                        , PushConstantsInfo
+                                                        , PushDescriptorSetInfo
+                                                        , PushDescriptorSetWithTemplateInfo
+                                                        ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

@@ -1,13 +1,13 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_push_descriptorRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap  ( cmdPushDescriptorSet
-                                                                  , cmdPushDescriptorSetWithTemplate
-                                                                  , PhysicalDevicePushDescriptorProperties(..)
-                                                                  , StructureType(..)
-                                                                  , DescriptorUpdateTemplateType(..)
-                                                                  , DescriptorSetLayoutCreateFlagBits(..)
-                                                                  , DescriptorSetLayoutCreateFlags
-                                                                  ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_push_descriptor"
+module Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor  ( cmdPushDescriptorSet
+                                                           , cmdPushDescriptorSetWithTemplate
+                                                           , PhysicalDevicePushDescriptorProperties(..)
+                                                           , StructureType(..)
+                                                           , DescriptorUpdateTemplateType(..)
+                                                           , DescriptorSetLayoutCreateFlagBits(..)
+                                                           , DescriptorSetLayoutCreateFlags
+                                                           ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)

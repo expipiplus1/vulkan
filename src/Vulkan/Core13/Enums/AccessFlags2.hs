@@ -91,7 +91,7 @@ type AccessFlags2 = AccessFlagBits2
 --
 -- -   'ACCESS_2_INDEX_READ_BIT' specifies read access to an index buffer
 --     as part of an indexed drawing command, bound by
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2'
 --     and 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'. Such
 --     access occurs in the
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INDEX_INPUT_BIT'

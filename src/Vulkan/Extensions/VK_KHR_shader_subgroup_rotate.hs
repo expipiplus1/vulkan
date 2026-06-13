@@ -137,7 +137,7 @@ module Vulkan.Extensions.VK_KHR_shader_subgroup_rotate  ( pattern STRUCTURE_TYPE
                                                         ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap (PhysicalDeviceShaderSubgroupRotateFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotate (PhysicalDeviceShaderSubgroupRotateFeatures)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_ROTATE_FEATURES))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ROTATE_BIT))

@@ -1,18 +1,18 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'"
-module Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'  ( cmdBindDescriptorSets2
-                                                                                , cmdPushConstants2
-                                                                                , cmdPushDescriptorSet2
-                                                                                , cmdPushDescriptorSetWithTemplate2
-                                                                                , PhysicalDeviceMaintenance6Features(..)
-                                                                                , PhysicalDeviceMaintenance6Properties(..)
-                                                                                , BindMemoryStatus(..)
-                                                                                , BindDescriptorSetsInfo(..)
-                                                                                , PushConstantsInfo(..)
-                                                                                , PushDescriptorSetInfo(..)
-                                                                                , PushDescriptorSetWithTemplateInfo(..)
-                                                                                , StructureType(..)
-                                                                                ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_maintenance6"
+module Vulkan.Core14.Promoted_From_VK_KHR_maintenance6  ( cmdBindDescriptorSets2
+                                                        , cmdPushConstants2
+                                                        , cmdPushDescriptorSet2
+                                                        , cmdPushDescriptorSetWithTemplate2
+                                                        , PhysicalDeviceMaintenance6Features(..)
+                                                        , PhysicalDeviceMaintenance6Properties(..)
+                                                        , BindMemoryStatus(..)
+                                                        , BindDescriptorSetsInfo(..)
+                                                        , PushConstantsInfo(..)
+                                                        , PushDescriptorSetInfo(..)
+                                                        , PushDescriptorSetWithTemplateInfo(..)
+                                                        , StructureType(..)
+                                                        ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)

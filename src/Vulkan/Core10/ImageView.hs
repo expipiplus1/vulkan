@@ -482,7 +482,7 @@ instance Zero ComponentMapping where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Core14.PromotedStreamingTransfers'.HostImageLayoutTransitionInfo',
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.HostImageLayoutTransitionInfo',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageMemoryBarrier',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
@@ -988,7 +988,7 @@ instance Zero ImageSubresourceRange where
 --     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 --     flag, the
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PhysicalDeviceMaintenance6Properties'::@blockTexelViewCompatibleMultipleLayers@
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PhysicalDeviceMaintenance6Properties'::@blockTexelViewCompatibleMultipleLayers@
 --     property is not 'Vulkan.Core10.FundamentalTypes.TRUE', and @format@
 --     is a non-compressed format, then the @layerCount@ member of
 --     @subresourceRange@ /must/ be @1@

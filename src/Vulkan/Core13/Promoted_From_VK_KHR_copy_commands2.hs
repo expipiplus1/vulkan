@@ -1211,7 +1211,7 @@ instance Zero BufferCopy2 where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
 -- 'CopyImageInfo2',
--- 'Vulkan.Core14.PromotedStreamingTransfers'.CopyImageToImageInfo',
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.CopyImageToImageInfo',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',

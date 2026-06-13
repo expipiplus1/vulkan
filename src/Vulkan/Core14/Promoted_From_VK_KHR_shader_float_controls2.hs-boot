@@ -1,6 +1,6 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_shader_float_controls2Roadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap  (PhysicalDeviceShaderFloatControls2Features) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_shader_float_controls2"
+module Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2  (PhysicalDeviceShaderFloatControls2Features) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

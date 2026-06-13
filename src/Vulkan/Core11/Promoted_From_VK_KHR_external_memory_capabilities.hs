@@ -59,7 +59,7 @@ import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (BufferUsageFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (BufferUsageFlags2CreateInfo)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -377,21 +377,21 @@ instance Zero ExternalImageFormatProperties where
 -- Only usage flags representable in
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' are
 -- returned in this structure’s @usage@. If the @pNext@ chain includes a
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 -- structure, all usage flags of the buffer are returned in
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'::@usage@.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'::@usage@.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09499# If the @pNext@
 --     chain does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-None-09500# If the @pNext@
 --     chain does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --     structure, @usage@ /must/ not be 0
 --
 -- == Valid Usage (Implicit)
@@ -402,7 +402,7 @@ instance Zero ExternalImageFormatProperties where
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-pNext-pNext# @pNext@ /must/
 --     be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.BufferUsageFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.BufferUsageFlags2CreateInfo'
 --
 -- -   #VUID-VkPhysicalDeviceExternalBufferInfo-sType-unique# The @sType@
 --     value of each structure in the @pNext@ chain /must/ be unique

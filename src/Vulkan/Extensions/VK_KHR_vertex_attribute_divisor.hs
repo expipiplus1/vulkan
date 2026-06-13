@@ -131,10 +131,10 @@ module Vulkan.Extensions.VK_KHR_vertex_attribute_divisor  ( pattern STRUCTURE_TY
                                                           ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PhysicalDeviceVertexAttributeDivisorFeatures)
-import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PhysicalDeviceVertexAttributeDivisorProperties)
-import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (PipelineVertexInputDivisorStateCreateInfo)
-import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap (VertexInputBindingDivisorDescription)
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor (PhysicalDeviceVertexAttributeDivisorProperties)
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor (PipelineVertexInputDivisorStateCreateInfo)
+import Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor (VertexInputBindingDivisorDescription)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO))

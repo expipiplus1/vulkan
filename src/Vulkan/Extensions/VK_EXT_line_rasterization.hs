@@ -177,11 +177,11 @@ module Vulkan.Extensions.VK_EXT_line_rasterization  ( pattern STRUCTURE_TYPE_PHY
                                                     ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (cmdSetLineStipple)
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization (cmdSetLineStipple)
 import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode)
-import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PhysicalDeviceLineRasterizationFeatures)
-import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PhysicalDeviceLineRasterizationProperties)
-import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap (PipelineRasterizationLineStateCreateInfo)
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationFeatures)
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization (PhysicalDeviceLineRasterizationProperties)
+import Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization (PipelineRasterizationLineStateCreateInfo)
 import Vulkan.Core10.Enums.DynamicState (DynamicState(DYNAMIC_STATE_LINE_STIPPLE))
 import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode(LINE_RASTERIZATION_MODE_BRESENHAM))
 import Vulkan.Core14.Enums.LineRasterizationMode (LineRasterizationMode(LINE_RASTERIZATION_MODE_DEFAULT))

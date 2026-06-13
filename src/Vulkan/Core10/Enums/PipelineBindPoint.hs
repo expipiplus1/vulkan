@@ -52,8 +52,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdBindPipelineShaderGroupNV',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSet',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap.cmdPushDescriptorSet',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.cmdPushDescriptorSet',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor.cmdPushDescriptorSet',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands_compute.cmdUpdatePipelineIndirectBufferNV'
 newtype PipelineBindPoint = PipelineBindPoint Int32

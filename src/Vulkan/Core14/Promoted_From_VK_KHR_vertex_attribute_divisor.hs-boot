@@ -1,10 +1,10 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap  ( PhysicalDeviceVertexAttributeDivisorFeatures
-                                                                           , PhysicalDeviceVertexAttributeDivisorProperties
-                                                                           , PipelineVertexInputDivisorStateCreateInfo
-                                                                           , VertexInputBindingDivisorDescription
-                                                                           ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_vertex_attribute_divisor"
+module Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor  ( PhysicalDeviceVertexAttributeDivisorFeatures
+                                                                    , PhysicalDeviceVertexAttributeDivisorProperties
+                                                                    , PipelineVertexInputDivisorStateCreateInfo
+                                                                    , VertexInputBindingDivisorDescription
+                                                                    ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

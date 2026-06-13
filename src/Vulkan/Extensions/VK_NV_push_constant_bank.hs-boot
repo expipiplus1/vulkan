@@ -70,8 +70,7 @@
 -- by allowing 'PushConstantBankInfoNV' structures to be chained to
 -- 'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT',
 -- 'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
--- or
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo', or
 -- 'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT'
 -- structures, specifying the hardware bank where push constants should be
 -- placed as part of the descriptor heap mapping configuration or push data
@@ -120,7 +119,7 @@
 -- -   Extending
 --     'Vulkan.Extensions.VK_EXT_descriptor_heap.DescriptorSetAndBindingMappingEXT',
 --     'Vulkan.Extensions.VK_EXT_descriptor_heap.PushDataInfoEXT',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo',
 --     'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutTokenEXT':
 --
 --     -   'PushConstantBankInfoNV'

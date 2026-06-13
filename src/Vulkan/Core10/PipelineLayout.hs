@@ -874,15 +874,15 @@ instance Zero PushConstantRange where
 --
 --     -   'Vulkan.Extensions.VK_KHR_maintenance6.BindDescriptorBufferEmbeddedSamplersInfoEXT'
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindDescriptorSetsInfo'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.BindDescriptorSetsInfo'
 --
 --     -   'Vulkan.Extensions.VK_EXT_device_generated_commands.IndirectCommandsLayoutCreateInfoEXT'
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushConstantsInfo'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushConstantsInfo'
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetInfo'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushDescriptorSetInfo'
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.PushDescriptorSetWithTemplateInfo'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.PushDescriptorSetWithTemplateInfo'
 --
 --     -   'Vulkan.Extensions.VK_KHR_maintenance6.SetDescriptorBufferOffsetsInfoEXT'
 --

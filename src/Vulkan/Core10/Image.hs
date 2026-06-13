@@ -603,7 +603,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- usage requirements.
 --
 -- If the implementation reports 'Vulkan.Core10.FundamentalTypes.TRUE' in
--- 'Vulkan.Core14.PromotedStreamingTransfers'.PhysicalDeviceHostImageCopyProperties'::@identicalMemoryTypeRequirements@,
+-- 'Vulkan.Core14.Promoted_From_VK_EXT_host_image_copy.PhysicalDeviceHostImageCopyProperties'::@identicalMemoryTypeRequirements@,
 -- usage of
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_HOST_TRANSFER_BIT'
 -- /must/ not affect the memory type requirements of the image as described
@@ -2055,7 +2055,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.DeviceImageMemoryRequirements',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.DeviceImageSubresourceInfo',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.DeviceImageSubresourceInfo',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
@@ -2329,7 +2329,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.SubresourceLayout2',
 -- 'getImageSubresourceLayout'
 data SubresourceLayout = SubresourceLayout
   { -- | @offset@ is the byte offset from the start of the image or the plane

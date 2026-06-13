@@ -1,9 +1,9 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_index_type_uint8Roadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap  ( PhysicalDeviceIndexTypeUint8Features(..)
-                                                                   , IndexType(..)
-                                                                   , StructureType(..)
-                                                                   ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_index_type_uint8"
+module Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8  ( PhysicalDeviceIndexTypeUint8Features(..)
+                                                            , IndexType(..)
+                                                            , StructureType(..)
+                                                            ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
@@ -69,7 +69,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 data PhysicalDeviceIndexTypeUint8Features = PhysicalDeviceIndexTypeUint8Features
   { -- | #extension-features-indexTypeUint8# @indexTypeUint8@ indicates that
     -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8' can be used with
-    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
+    -- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2'
     -- and 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
     indexTypeUint8 :: Bool }
   deriving (Typeable, Eq)

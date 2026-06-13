@@ -690,7 +690,7 @@ import Vulkan.Core10.Handles (Pipeline(..))
 import Vulkan.Core10.Handles (PipelineCache)
 import Vulkan.Core10.Handles (PipelineCache(..))
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (PipelineCreateFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (PipelineCreateFlags2CreateInfo)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.Core10.ComputePipeline (PipelineShaderStageCreateInfo)
@@ -3701,16 +3701,16 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>.
 --
 -- If the @pNext@ chain includes a
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'::@flags@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'::@flags@
 -- from that structure is used instead of @flags@ from this structure.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-None-09497# If the @pNext@
 --     chain does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 --     structure, @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
@@ -3944,7 +3944,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-pNext-pNext# Each @pNext@
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 --     or
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo'
 --

@@ -492,8 +492,8 @@ foreign import ccall
 -- as they are crucial to maintaining memory access ordering.
 --
 -- Calling 'mapMemory' is equivalent to calling
--- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.mapMemory2' with
--- an empty @pNext@ chain.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.mapMemory2' with an
+-- empty @pNext@ chain.
 --
 -- == Valid Usage
 --
@@ -630,8 +630,8 @@ foreign import ccall
 -- = Description
 --
 -- Calling 'unmapMemory' is equivalent to calling
--- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.unmapMemory2'
--- with an empty @pNext@ chain and @flags@ set to zero.
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.unmapMemory2' with an
+-- empty @pNext@ chain and @flags@ set to zero.
 --
 -- == Valid Usage
 --

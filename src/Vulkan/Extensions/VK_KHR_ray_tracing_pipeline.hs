@@ -856,12 +856,12 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_binary (PipelineBinaryIn
 import Vulkan.Core10.Handles (PipelineCache)
 import Vulkan.Core10.Handles (PipelineCache(..))
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap (PipelineCreateFlags2CreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance5 (PipelineCreateFlags2CreateInfo)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core10.GraphicsPipeline (PipelineDynamicStateCreateInfo)
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.Extensions.VK_KHR_pipeline_library (PipelineLibraryCreateInfoKHR)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality' (PipelineRobustnessCreateInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness (PipelineRobustnessCreateInfo)
 import Vulkan.Core10.ComputePipeline (PipelineShaderStageCreateInfo)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
@@ -4525,9 +4525,9 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 -- <https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#ray-tracing-pipeline-stack Ray Tracing Pipeline Stack>.
 --
 -- If the @pNext@ chain includes a
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 -- structure,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'::@flags@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'::@flags@
 -- from that structure is used instead of @flags@ from this structure.
 --
 -- If the @pNext@ chain includes a
@@ -4539,7 +4539,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-None-09497# If the @pNext@
 --     chain does not include a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 --     structure, @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
@@ -4883,7 +4883,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-10392# If the @pNext@
 --     chain includes a
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo'
 --     structure, @flags@ /must/ not include both
 --     'Vulkan.Core14.Enums.PipelineCreateFlags2.PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR'
 --     and
@@ -4929,9 +4929,9 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_pipeline_binary.PipelineBinaryInfoKHR',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.PipelineCreateFlags2CreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.PipelineCreateFlags2CreateInfo',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo',
---     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo',
+--     'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PipelineRobustnessCreateInfo',
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkRayTracingPipelineClusterAccelerationStructureCreateInfoNV VkRayTracingPipelineClusterAccelerationStructureCreateInfoNV>
 --

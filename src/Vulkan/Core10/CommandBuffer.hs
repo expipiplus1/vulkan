@@ -111,8 +111,8 @@ import Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits (QueryPipelineStatisticFlags)
 import Vulkan.Core10.Handles (RenderPass)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_tile_shading (RenderPassTileShadingCreateInfoQCOM)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (RenderingAttachmentLocationInfo)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap (RenderingInputAttachmentIndexInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (RenderingAttachmentLocationInfo)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read (RenderingInputAttachmentIndexInfo)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.CStruct.Extends (SomeStruct)
@@ -799,8 +799,8 @@ instance Zero CommandBufferAllocateInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkExternalFormatOHOS VkExternalFormatOHOS>,
 --     'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.MultiviewPerViewAttributesInfoNVX',
 --     'Vulkan.Extensions.VK_QCOM_tile_shading.RenderPassTileShadingCreateInfoQCOM',
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingAttachmentLocationInfo',
---     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap.RenderingInputAttachmentIndexInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingAttachmentLocationInfo',
+--     'Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read.RenderingInputAttachmentIndexInfo',
 --     or
 --     'Vulkan.Extensions.VK_QCOM_tile_memory_heap.TileMemoryBindInfoQCOM'
 --

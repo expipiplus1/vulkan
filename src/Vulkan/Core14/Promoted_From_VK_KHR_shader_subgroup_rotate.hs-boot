@@ -1,6 +1,6 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotateRoadmap  (PhysicalDeviceShaderSubgroupRotateFeatures) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_shader_subgroup_rotate"
+module Vulkan.Core14.Promoted_From_VK_KHR_shader_subgroup_rotate  (PhysicalDeviceShaderSubgroupRotateFeatures) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

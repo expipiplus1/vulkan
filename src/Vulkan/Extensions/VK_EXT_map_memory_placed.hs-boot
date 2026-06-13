@@ -68,7 +68,7 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2Roadmap.MemoryMapInfo':
+--     'Vulkan.Core14.Promoted_From_VK_KHR_map_memory2.MemoryMapInfo':
 --
 --     -   'MemoryMapPlacedInfoEXT'
 --

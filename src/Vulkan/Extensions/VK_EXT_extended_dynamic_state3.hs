@@ -2720,7 +2720,7 @@ foreign import ccall
 -- set in
 -- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'::@lineRasterizationMode@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'::@lineRasterizationMode@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage
@@ -2849,7 +2849,7 @@ foreign import ccall
 -- set in
 -- 'Vulkan.Core10.GraphicsPipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterizationRoadmap.PipelineRasterizationLineStateCreateInfo'::@stippledLineEnable@
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_line_rasterization.PipelineRasterizationLineStateCreateInfo'::@stippledLineEnable@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage

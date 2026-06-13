@@ -122,7 +122,7 @@ module Vulkan.Extensions.VK_KHR_shader_float_controls2  ( pattern STRUCTURE_TYPE
                                                         ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2Roadmap (PhysicalDeviceShaderFloatControls2Features)
+import Vulkan.Core14.Promoted_From_VK_KHR_shader_float_controls2 (PhysicalDeviceShaderFloatControls2Features)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT_CONTROLS_2_FEATURES

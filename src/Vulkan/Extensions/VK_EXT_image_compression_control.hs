@@ -86,7 +86,7 @@
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2',
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2':
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.SubresourceLayout2':
 --
 --     -   'ImageCompressionPropertiesEXT'
 --
@@ -438,7 +438,7 @@ instance Zero PhysicalDeviceImageCompressionControlFeaturesEXT where
 --
 --     -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2'
 --
---     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.SubresourceLayout2'
+--     -   'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.SubresourceLayout2'
 --
 --     -   'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR'
 --

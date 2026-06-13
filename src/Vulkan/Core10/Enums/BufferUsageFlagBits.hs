@@ -83,7 +83,7 @@ type BufferUsageFlags = BufferUsageFlagBits
 --
 -- -   'BUFFER_USAGE_INDEX_BUFFER_BIT' specifies that the buffer is
 --     suitable for passing as the @buffer@ parameter to
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2'
 --     and 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
 --
 -- -   'BUFFER_USAGE_VERTEX_BUFFER_BIT' specifies that the buffer is

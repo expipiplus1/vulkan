@@ -107,7 +107,7 @@ module Vulkan.Extensions.VK_KHR_index_type_uint8  ( pattern STRUCTURE_TYPE_PHYSI
                                                   ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8Roadmap (PhysicalDeviceIndexTypeUint8Features)
+import Vulkan.Core14.Promoted_From_VK_KHR_index_type_uint8 (PhysicalDeviceIndexTypeUint8Features)
 import Vulkan.Core10.Enums.IndexType (IndexType(INDEX_TYPE_UINT8))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES))
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_KHR"

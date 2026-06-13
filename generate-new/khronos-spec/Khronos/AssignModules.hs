@@ -505,8 +505,17 @@ featureCommentToModuleName prefix = \case
       . T.words
       . T.replace "Promoted from" "Promoted_From_"
       . T.replace "Originally based on" "Originally_Based_On_"
+      -- Collapse the runs of whitespace left behind by 'removeParens' so the
+      -- literal "Promoted from" replacements above still match comments like
+      -- "Promoted (as optional feature) from VK_EXT_host_image_copy ...".
+      . T.unwords
+      . T.words
       . T.takeWhile (/= ',')
       . removeParens
+      -- Drop the quoted descriptors the 1.4+ spec appends after the
+      -- @(extension N)@ token, e.g. 'Roadmap 2024' or 'additional
+      -- functionality', which would otherwise leak into the module name.
+      . T.takeWhile (/= '\'')
       . featureCommentMap
       $ t
 
@@ -559,9 +568,17 @@ getTyConName = \case
   TyConName n -> Just n
   _           -> Nothing
 
+-- | Remove every parenthesised span from a comment, keeping the text on
+-- both sides.  The previous implementation only kept the text before the
+-- first @(@ and after the last @)@, which discarded the extension name when
+-- it sat /between/ two parentheticals (as in "Promoted (as optional feature)
+-- from VK_EXT_host_image_copy (extension 271)").
 removeParens :: Text -> Text
-removeParens t =
-  let (x, y) = T.breakOn "(" t in x <> T.takeWhileEnd (/= ')') y
+removeParens t = case T.breakOn "(" t of
+  (before, rest)
+    | T.null rest -> before
+    | otherwise ->
+      before <> " " <> removeParens (T.drop 1 (T.dropWhile (/= ')') rest))
 
 replaceSymbols :: Text -> Text
 replaceSymbols = \case

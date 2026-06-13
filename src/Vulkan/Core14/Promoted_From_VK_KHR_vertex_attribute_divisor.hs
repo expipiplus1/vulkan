@@ -1,11 +1,11 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisorRoadmap  ( VertexInputBindingDivisorDescription(..)
-                                                                           , PipelineVertexInputDivisorStateCreateInfo(..)
-                                                                           , PhysicalDeviceVertexAttributeDivisorProperties(..)
-                                                                           , PhysicalDeviceVertexAttributeDivisorFeatures(..)
-                                                                           , StructureType(..)
-                                                                           ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_vertex_attribute_divisor"
+module Vulkan.Core14.Promoted_From_VK_KHR_vertex_attribute_divisor  ( VertexInputBindingDivisorDescription(..)
+                                                                    , PipelineVertexInputDivisorStateCreateInfo(..)
+                                                                    , PhysicalDeviceVertexAttributeDivisorProperties(..)
+                                                                    , PhysicalDeviceVertexAttributeDivisorFeatures(..)
+                                                                    , StructureType(..)
+                                                                    ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)

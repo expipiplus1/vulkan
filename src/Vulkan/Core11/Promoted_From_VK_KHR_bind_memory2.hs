@@ -49,7 +49,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_b
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2 (BindImageMemoryDeviceGroupInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (BindImageMemorySwapchainInfoKHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (BindImagePlaneMemoryInfo)
-import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality' (BindMemoryStatus)
+import {-# SOURCE #-} Vulkan.Core14.Promoted_From_VK_KHR_maintenance6 (BindMemoryStatus)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
@@ -105,7 +105,7 @@ foreign import ccall
 -- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
 -- If the 'bindBufferMemory2' command failed,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.BindMemoryStatus'
 -- structures were not included in the @pNext@ chains of each element of
 -- @pBindInfos@, and @bindInfoCount@ was greater than one, then the buffers
 -- referenced by @pBindInfos@ will be in an indeterminate state, and must
@@ -191,7 +191,7 @@ foreign import ccall
 -- did not return 'Vulkan.Core10.Enums.Result.SUCCESS'.
 --
 -- If the 'bindImageMemory2' command failed,
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.BindMemoryStatus'
 -- structures were not included in the @pNext@ chains of each element of
 -- @pBindInfos@, and @bindInfoCount@ was greater than one, then the images
 -- referenced by @pBindInfos@ will be in an indeterminate state, and must
@@ -476,7 +476,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
 --     or
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.BindMemoryStatus'
 --
 -- -   #VUID-VkBindBufferMemoryInfo-sType-unique# The @sType@ value of each
 --     structure in the @pNext@ chain /must/ be unique
@@ -896,7 +896,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo',
 --     or
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6AdditionalFunctionality'.BindMemoryStatus'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance6.BindMemoryStatus'
 --
 -- -   #VUID-VkBindImageMemoryInfo-sType-unique# The @sType@ value of each
 --     structure in the @pNext@ chain /must/ be unique

@@ -147,8 +147,8 @@ module Vulkan.Extensions.VK_KHR_push_descriptor  ( pattern STRUCTURE_TYPE_PHYSIC
                                                  ) where
 
 import Data.String (IsString)
-import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap (cmdPushDescriptorSet)
-import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptorRoadmap (PhysicalDevicePushDescriptorProperties)
+import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor (cmdPushDescriptorSet)
+import Vulkan.Core14.Promoted_From_VK_KHR_push_descriptor (PhysicalDevicePushDescriptorProperties)
 import Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits (DescriptorSetLayoutCreateFlags)
 import Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits (DescriptorSetLayoutCreateFlagBits(DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES))

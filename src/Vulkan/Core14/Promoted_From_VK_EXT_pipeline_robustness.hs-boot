@@ -1,9 +1,9 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'"
-module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'  ( PhysicalDevicePipelineRobustnessFeatures
-                                                                                       , PhysicalDevicePipelineRobustnessProperties
-                                                                                       , PipelineRobustnessCreateInfo
-                                                                                       ) where
+-- No documentation found for Chapter "Promoted_From_VK_EXT_pipeline_robustness"
+module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness  ( PhysicalDevicePipelineRobustnessFeatures
+                                                               , PhysicalDevicePipelineRobustnessProperties
+                                                               , PipelineRobustnessCreateInfo
+                                                               ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

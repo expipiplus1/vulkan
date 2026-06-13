@@ -1,10 +1,10 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality'"
-module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_accessAdditionalFunctionality'  ( PhysicalDevicePipelineProtectedAccessFeatures(..)
-                                                                                             , StructureType(..)
-                                                                                             , PipelineCreateFlagBits(..)
-                                                                                             , PipelineCreateFlags
-                                                                                             ) where
+-- No documentation found for Chapter "Promoted_From_VK_EXT_pipeline_protected_access"
+module Vulkan.Core14.Promoted_From_VK_EXT_pipeline_protected_access  ( PhysicalDevicePipelineProtectedAccessFeatures(..)
+                                                                     , StructureType(..)
+                                                                     , PipelineCreateFlagBits(..)
+                                                                     , PipelineCreateFlags
+                                                                     ) where
 
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)

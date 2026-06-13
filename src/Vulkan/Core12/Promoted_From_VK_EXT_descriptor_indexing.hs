@@ -505,7 +505,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- disabled. Similarly, if this property is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', robustness /must/ not be enabled
     -- through the
-    -- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustnessAdditionalFunctionality'.PipelineRobustnessCreateInfo'
+    -- 'Vulkan.Core14.Promoted_From_VK_EXT_pipeline_robustness.PipelineRobustnessCreateInfo'
     -- mechanism.
     robustBufferAccessUpdateAfterBind :: Bool
   , -- | #extension-limits-quadDivergentImplicitLod# @quadDivergentImplicitLod@

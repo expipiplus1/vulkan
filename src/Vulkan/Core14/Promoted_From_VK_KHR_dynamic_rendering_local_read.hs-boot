@@ -1,9 +1,9 @@
 {-# language CPP #-}
--- No documentation found for Chapter "Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap"
-module Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_readRoadmap  ( PhysicalDeviceDynamicRenderingLocalReadFeatures
-                                                                               , RenderingAttachmentLocationInfo
-                                                                               , RenderingInputAttachmentIndexInfo
-                                                                               ) where
+-- No documentation found for Chapter "Promoted_From_VK_KHR_dynamic_rendering_local_read"
+module Vulkan.Core14.Promoted_From_VK_KHR_dynamic_rendering_local_read  ( PhysicalDeviceDynamicRenderingLocalReadFeatures
+                                                                        , RenderingAttachmentLocationInfo
+                                                                        , RenderingInputAttachmentIndexInfo
+                                                                        ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)

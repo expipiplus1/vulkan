@@ -46,8 +46,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2',
--- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2',
+-- 'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2'
 newtype IndexType = IndexType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

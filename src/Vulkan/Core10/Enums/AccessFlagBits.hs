@@ -73,7 +73,7 @@ type AccessFlags = AccessFlagBits
 --
 -- -   'ACCESS_INDEX_READ_BIT' specifies read access to an index buffer as
 --     part of an indexed drawing command, bound by
---     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5Roadmap.cmdBindIndexBuffer2'
+--     'Vulkan.Core14.Promoted_From_VK_KHR_maintenance5.cmdBindIndexBuffer2'
 --     and 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'. Such
 --     access occurs in the
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_INPUT_BIT'
