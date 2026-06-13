@@ -1,6 +1,9 @@
 # Change Log
 
-## WIP
+## [0.11.1.0] - 2026-06-13
+- Bump VMA to 3.3.0
+  - Upstream updated, with no API changes.
+- Raise upper bound on `vulkan`
 
 ## [0.11.0.1] - 2023-10-17
 - Raise upper bound on `vulkan`
