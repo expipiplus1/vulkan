@@ -14,7 +14,7 @@ extra-deps:
 # generate-new
 - validation-selective-0.2.0.0
 - pl-synth-0.1.0.0
-- openal-ffi-0.0.1
+- openal-ffi-0.0.2
 
 # use ghcup, nix, setup actions
 system-ghc: true
