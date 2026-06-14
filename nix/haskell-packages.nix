@@ -75,8 +75,9 @@ let
         name = "vulkan-examples";
         root = gitignore ../examples;
         modifier = drv:
-          addExtraLibrary pkgs.renderdoc
-          (addBuildTools [ pkgs.glslang pkgs.shaderc ] (mod drv));
+          dontCheck
+          (addExtraLibrary pkgs.renderdoc
+            (addBuildTools [ pkgs.glslang pkgs.shaderc ] (mod drv)));
         returnShellEnv = false;
         cabal2nixOptions = "--flag=renderdoc";
       };

@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: "0.5.10.6"
+version: "0.5.11.0"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
@@ -26,8 +26,6 @@ library:
   - base <5
   - bytestring
   - containers
-  - dependent-map
-  - dependent-sum
   - extra
   - file-embed
   - filepath

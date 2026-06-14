@@ -3,9 +3,9 @@ module Main where
 import Control.Monad.Trans.Resource (runResourceT)
 import Data.Text (Text)
 import qualified Triangle
+import qualified Vulkan.Utils.Init.GLFW.Window as Window
 import Vulkan.Utils.Swapchain (defaultSwapchainConfig)
 import Vulkan.Zero (zero)
-import qualified Window.GLFW as Window
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()

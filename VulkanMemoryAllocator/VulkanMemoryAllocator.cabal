@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.36.1.
+-- This file has been generated from package.yaml by hpack version 0.39.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -47,8 +47,10 @@ flag vma-recording
 library
   exposed-modules:
       VulkanMemoryAllocator
+      VulkanMemoryAllocator.Utils
   hs-source-dirs:
       src
+      src-manual
   default-extensions:
       AllowAmbiguousTypes
       CPP

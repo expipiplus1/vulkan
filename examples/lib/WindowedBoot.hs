@@ -1,41 +1,41 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {-| Shared boot prelude for the windowed examples. Drives the standard
-@withInstance \/ withSurface \/ withDevice \/ createVMA \/ allocSwapchain@
+@withInstance \/ withSurface \/ withDevice \/ withAllocator \/ allocSwapchain@
 sequence so each main can open with a single call instead of a 20-line
 copy-paste.
 
-The window backend (SDL2 \/ GLFW) is plugged in via 'WindowAdapter' —
-'Window.SDL2.sdl2Adapter' or 'Window.GLFW.glfwAdapter' — keeping the helper
-itself oblivious to which library is in use.
+The window backend (SDL2 \/ GLFW) is plugged in via
+'Vulkan.Utils.WindowAdapter.WindowAdapter' — 'glfwAdapter' or 'sdl2Adapter'
+from the respective init package — keeping the helper itself oblivious to
+which library is in use.
 -}
 module WindowedBoot
   ( WindowedConfig (..)
-  , WindowAdapter (..)
   , withWindowedVk
   , debugMessengerCreateInfo
   ) where
 
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate)
+import Control.Monad.Trans.Resource (MonadResource, allocate)
 import Data.Bits ((.|.))
 import Data.Text (Text)
 import Data.Text.Encoding (decodeUtf8)
 import qualified Data.Text.Encoding as Text
 import Say (sayErr)
-import qualified Vma
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core13 (pattern API_VERSION_1_3)
 import Vulkan.Extensions.VK_EXT_debug_utils
-import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.Debug (debugCallbackPtr)
 import Vulkan.Utils.Frame (frameDeviceRequirements, frameInstanceRequirements)
 import Vulkan.Utils.Queues (withDevice)
 import Vulkan.Utils.Swapchain (Swapchain, SwapchainConfig, allocSwapchain)
 import Vulkan.Utils.VulkanContext (VulkanContext, mkVulkanContext)
+import Vulkan.Utils.WindowAdapter (WindowAdapter (..))
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
+import VulkanMemoryAllocator.Utils (allocatorCreateInfo)
 
 -- | Per-example knobs the helper can't infer.
 data WindowedConfig = WindowedConfig
@@ -51,17 +51,6 @@ data WindowedConfig = WindowedConfig
   {- ^ Knobs for the initial swapchain. Pass 'defaultSwapchainConfig' for the
   common case; compute-shader callers (e.g. @resize@) tweak the storage bits.
   -}
-  }
-
--- | Bridge between the helper and a particular window-library backend.
-data WindowAdapter m = WindowAdapter
-  { waWithInstance
-      :: Maybe Vk.ApplicationInfo
-      -> [InstanceRequirement]
-      -> [InstanceRequirement]
-      -> m Vk.Instance
-  , waWithSurface :: Vk.Instance -> m (ReleaseKey, SurfaceKHR)
-  , waDrawableSize :: m Vk.Extent2D
   }
 
 {- | Open a Vulkan instance + device + initial swapchain bound to the given
@@ -87,10 +76,13 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
       )
       [RequireInstanceLayer "VK_LAYER_KHRONOS_validation" minBound]
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-  (_, surf) <- waWithSurface inst
+  surf <- waWithSurface inst
   (phys, dev, qs) <-
     withDevice inst (Just surf) (frameDeviceRequirements ++ wcDeviceReqs)
-  vma <- Vma.createVMA wcVmaFlags API_VERSION_1_3 inst phys dev
+  (_, vma) <-
+    VMA.withAllocator
+      (allocatorCreateInfo wcVmaFlags API_VERSION_1_3 inst phys dev)
+      allocate
   props <- Vk.getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
   vc <- liftIO $ mkVulkanContext inst phys dev qs

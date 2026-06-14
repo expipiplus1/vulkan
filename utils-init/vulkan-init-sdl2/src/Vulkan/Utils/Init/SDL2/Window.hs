@@ -15,6 +15,7 @@ module Vulkan.Utils.Init.SDL2.Window
   , drawableSize
   , showWindow
   , shouldQuit
+  , sdl2Adapter
   ) where
 
 import Control.Monad (void)
@@ -24,6 +25,8 @@ import Data.Text (Text)
 import qualified SDL
 import qualified SDL.Video.Vulkan as SDL
 import Vulkan.Core10 (Extent2D (..))
+import qualified Vulkan.Utils.Init.SDL2 as Init
+import Vulkan.Utils.WindowAdapter (WindowAdapter (..))
 
 -- | Bring SDL up for the duration of the resource scope.
 withSDL :: (MonadResource m) => m ()
@@ -72,6 +75,15 @@ can be brought up first.
 -}
 showWindow :: (MonadIO m) => SDL.Window -> m ()
 showWindow = SDL.showWindow
+
+-- | The window's 'WindowAdapter', for backend-agnostic boot helpers.
+sdl2Adapter :: (MonadResource m) => SDL.Window -> WindowAdapter m
+sdl2Adapter w =
+  WindowAdapter
+    { waWithInstance = Init.withInstance w
+    , waWithSurface = \i -> Init.withSurface i w
+    , waDrawableSize = drawableSize w
+    }
 
 {- | Poll the event queue and report whether the user requested to quit
 (window close, Q, or Escape). The window argument is unused — SDL's event

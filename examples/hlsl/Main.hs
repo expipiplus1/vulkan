@@ -16,13 +16,13 @@ import Vulkan.Extensions.VK_KHR_surface as SurfaceFormatKHR (SurfaceFormatKHR (.
 import Vulkan.Utils.DynamicState (minimalDynamicStates)
 import Vulkan.Utils.Frame (Frame (..))
 import qualified Vulkan.Utils.Framebuffer as Framebuffer
+import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import qualified Vulkan.Utils.RenderPass as RenderPass
 import Vulkan.Utils.ShaderQQ.HLSL.Shaderc (frag, vert)
 import Vulkan.Utils.Swapchain (Swapchain (..), defaultSwapchainConfig)
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnFrame, runWindowLoop)
 import Vulkan.Zero (zero)
-import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()

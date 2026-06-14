@@ -1,6 +1,61 @@
 # Change Log
 
-## WIP
+## [0.5.11.0] - 2026-06-13
+
+A large additive release: helpers for dynamic rendering, dynamic pipeline
+state, specialization constants, synchronization, swapchain/frame management,
+and window abstraction. No existing API was removed.
+
+### Pipelines and dynamic rendering
+- `Vulkan.Utils.DynamicRendering`: `createPipeline` and
+  `createPipelineFromShaders` for render-pass-less pipelines, plus
+  `renderingInfo`, `colorAttachmentRenderingInfo`, and
+  `dynamicRenderingRequirements`.
+- `Vulkan.Utils.DynamicState`: a `DynamicState` record with
+  `defaultDynamicState`, `dynamicStateFor`, and `applyDynamicStates`, plus named
+  state sets (`allDynamicStates`, `minimalDynamicStates`, `noDynamicStates`,
+  `preRasterizationStates`, `fragmentTestStates`, `fragmentOutputStates`,
+  `depthOnlyDynamicStates`, `defaultDynamicStatesFor`) covering the dynamic
+  states available without vendor or experimental extensions.
+- `Vulkan.Utils.Pipeline.Specialization`: the `Specialization` and
+  `SpecializationConst` classes with `withSpecialization` /
+  `allocateSpecialization` for packing specialization constants into 32-bit
+  units.
+- `Vulkan.Utils.RenderPass`: `createRenderPass`, `createColorRenderPass`, and a
+  generic `createPipeline` / `createPipelineFromShaders`.
+- `Vulkan.Utils.Framebuffer`: `createFramebuffer`.
+- `Vulkan.Utils.Shader`: `shaderStage` and `shaderModuleStage`.
+
+### Synchronization and descriptors
+- `Vulkan.Utils.Barrier`: `imageBarrier`, `bufferBarrier`, and the common
+  transitions `transitionColorAttachment`, `transitionDepthAttachment`, and
+  `transitionPresent`.
+- `Vulkan.Utils.Descriptors`: `bufferWrite` and `imageWrite` for common
+  single-binding descriptor writes.
+- `Vulkan.Utils.RefCounted`: a reference-counted release primitive
+  (`newRefCounted`, `takeRefCounted`, `releaseRefCounted`,
+  `resourceTRefCount`).
+
+### Swapchain, frames, and windowing
+- `Vulkan.Utils.Swapchain`: `Swapchain` and `SwapchainConfig` with
+  `defaultSwapchainConfig`, `allocSwapchain`, `recreateSwapchain`, and
+  `threwSwapchainError`.
+- `Vulkan.Utils.Frame`: a `Frame` record driving frames-in-flight —
+  `advanceFrame`, `runFrame`, `recordCommands`, `queueSubmitFrame`,
+  `acquireFrameImage`, `presentFrameImage`, `drainFrames`,
+  `withTimelineSemaphore`, and the matching requirements helpers.
+- `Vulkan.Utils.VulkanContext`: `VulkanContext` and `RecycledResources` with
+  `mkVulkanContext`.
+- `Vulkan.Utils.WindowAdapter`: a backend-agnostic `WindowAdapter` record (the
+  `vulkan-init-sdl2` and `vulkan-init-glfw` packages provide instances).
+- `Vulkan.Utils.WindowLoop`: `runWindowLoop` with the `WindowLoop` record and
+  the `noWindowState` / `noOnFrame` / `noOnExit` defaults.
+- `Vulkan.Utils.Queues`: a `Queues` record and `withDevice`.
+- `Vulkan.Utils.Init.Headless`: `withInstance` for headless setup.
+
+### Dependencies
+- Now depends on `unagi-chan` and `unliftio-core`.
+- Raised the upper bound on `vulkan` to `< 3.28`.
 
 ## [0.5.10.6] - 2023-10-21
 

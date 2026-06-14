@@ -30,10 +30,10 @@ import qualified Triangle
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core13 as Vk
 import qualified Vulkan.Extensions.VK_KHR_surface as KHR
+import Vulkan.Utils.Barrier (transitionColorAttachment, transitionPresent)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
-import Vulkan.Utils.Barrier (transitionColorAttachment, transitionPresent)
 import Vulkan.Utils.Swapchain (Swapchain (..))
 import Vulkan.Utils.VulkanContext (VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, noOnFrame, runWindowLoop)

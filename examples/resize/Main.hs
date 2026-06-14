@@ -29,8 +29,9 @@ import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..))
 import Vulkan.Exception
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands, withTimelineSemaphore)
 import Vulkan.Utils.Barrier (imageBarrier)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands, withTimelineSemaphore)
+import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
@@ -39,7 +40,6 @@ import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
 import qualified VulkanMemoryAllocator as VMA
-import Window.SDL2 (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 main :: IO ()

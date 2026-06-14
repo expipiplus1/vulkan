@@ -13,6 +13,7 @@ module Vulkan.Utils.Init.GLFW.Window
   , drawableSize
   , showWindow
   , shouldQuit
+  , glfwAdapter
   ) where
 
 import Control.Monad (unless, void)
@@ -22,6 +23,8 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Graphics.UI.GLFW as GLFW
 import Vulkan.Core10 (Extent2D (..))
+import qualified Vulkan.Utils.Init.GLFW as Init
+import Vulkan.Utils.WindowAdapter (WindowAdapter (..))
 
 -- | Initialise GLFW and tear it down with the resource scope.
 withGLFW :: (MonadResource m) => m ()
@@ -65,6 +68,15 @@ drawableSize :: (MonadIO m) => GLFW.Window -> m Extent2D
 drawableSize win = do
   (w, h) <- liftIO $ GLFW.getFramebufferSize win
   pure $ Extent2D (fromIntegral w) (fromIntegral h)
+
+-- | The window's 'WindowAdapter', for backend-agnostic boot helpers.
+glfwAdapter :: (MonadResource m) => GLFW.Window -> WindowAdapter m
+glfwAdapter w =
+  WindowAdapter
+    { waWithInstance = Init.withInstance w
+    , waWithSurface = \i -> Init.withSurface i w
+    , waDrawableSize = drawableSize w
+    }
 
 {- | Poll events and report whether the user requested to close the window
 (X button, Q, or Escape).
