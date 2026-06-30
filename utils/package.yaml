@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: "0.6.0"
+version: "0.5.11.0"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: IC Rainbow <aenor.realm@gmail.com>, Ellie Hermaszewska <live.long.and.prosper@monoid.al>

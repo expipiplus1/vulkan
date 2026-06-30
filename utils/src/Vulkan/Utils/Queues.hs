@@ -22,7 +22,7 @@ custom priorities, …) reach for the lower-level
 -}
 module Vulkan.Utils.Queues
   ( Queues (..)
-  , withDevice
+  , allocateDevice
   ) where
 
 import Control.Monad.IO.Class
@@ -39,7 +39,7 @@ import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Core10.DeviceInitialization as DI
 import Vulkan.Extensions.VK_KHR_surface (SurfaceKHR)
 import Vulkan.Requirement (DeviceRequirement)
-import Vulkan.Utils.Initialization (createDeviceFromRequirements, pickPhysicalDevice)
+import Vulkan.Utils.Initialization (allocateDeviceFromRequirements, pickPhysicalDevice)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..), QueueSpec (..), assignQueues, isComputeQueueFamily, isGraphicsQueueFamily, isPresentQueueFamily, isTransferOnlyQueueFamily)
 import Vulkan.Zero (zero)
 
@@ -72,18 +72,18 @@ support presentation. Pass 'Nothing' for headless callers — any graphics
 family will do.
 
 Pass any extra device requirements (extensions, features, API version) in
-the third argument; they are forwarded to 'createDeviceFromRequirements'.
+the third argument; they are forwarded to 'allocateDeviceFromRequirements'.
 
 Fails (via 'MonadFail') when no physical device satisfies the family
 requirements.
 -}
-withDevice
+allocateDevice
   :: (MonadResource m, MonadFail m)
   => Vk.Instance
   -> Maybe SurfaceKHR
   -> [DeviceRequirement]
   -> m (Vk.PhysicalDevice, Vk.Device, Queues (QueueFamilyIndex, Vk.Queue))
-withDevice inst mSurface extraReqs = do
+allocateDevice inst mSurface extraReqs = do
   mPd <-
     pickPhysicalDevice
       inst
@@ -109,7 +109,7 @@ withDevice inst mSurface extraReqs = do
       Nothing -> shareQueues phys ((,) <$> qFams <*> prios)
 
   dev <-
-    createDeviceFromRequirements
+    allocateDeviceFromRequirements
       extraReqs
       []
       phys
@@ -170,7 +170,7 @@ discoverFamilies mSurf phys = do
       pure (Just (Queues gp cp tf, score))
     _ -> pure Nothing
 
-{- | Robust fallback for 'withDevice' when 'assignQueues' can't give every
+{- | Robust fallback for 'allocateDevice' when 'assignQueues' can't give every
 slot its own queue. Allocates as many distinct queues per family as the
 hardware exposes, then aliases the surplus slots onto them round-robin, so it
 always succeeds.

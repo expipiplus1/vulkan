@@ -15,8 +15,8 @@ the @dynamicRendering@ feature on the device.
 module Vulkan.Utils.DynamicRendering
   ( -- * Pipeline
     PipelineConfig (..)
-  , createPipeline
-  , createPipelineFromShaders
+  , allocatePipeline
+  , allocatePipelineFromShaders
 
     -- * Device requirements
   , dynamicRenderingRequirements
@@ -103,15 +103,15 @@ Stencil is out of scope: no @stencilAttachmentFormat@ is declared, matching
 without supplying it is invalid at draw time). For stencil, build the
 'PipelineRenderingCreateInfo' and 'Vk.RenderingInfo' by hand. The formats MUST
 match the views passed to 'Vk.cmdUseRendering' at draw time (see 'renderingInfo').
-Intended to be used qualified, e.g. @Dynamic.createPipeline@.
+Intended to be used qualified, e.g. @Dynamic.allocatePipeline@.
 -}
-createPipeline
+allocatePipeline
   :: (MonadResource m, MonadFail m)
   => Vk.Device
   -> PipelineConfig
   -> Vector (SomeStruct Vk.PipelineShaderStageCreateInfo)
   -> m (ReleaseKey, Vk.Pipeline)
-createPipeline dev PipelineConfig{..} stages =
+allocatePipeline dev PipelineConfig{..} stages =
   buildColorPipeline dev layout $ \resolvedLayout ->
     SomeStruct $
       basePipelineCreateInfo
@@ -132,10 +132,10 @@ createPipeline dev PipelineConfig{..} stages =
         , depthAttachmentFormat = fromMaybe Vk.FORMAT_UNDEFINED depthFormat
         }
 
-{- | 'createPipeline' from @(stage, SPIR-V)@ pairs: compile each into a shader
+{- | 'allocatePipeline' from @(stage, SPIR-V)@ pairs: compile each into a shader
 module, build the pipeline, then release the now-redundant module handles.
 -}
-createPipelineFromShaders
+allocatePipelineFromShaders
   :: (MonadResource m, MonadUnliftIO m, MonadFail m, Specialization spec)
   => Vk.Device
   -> PipelineConfig
@@ -143,9 +143,9 @@ createPipelineFromShaders
   -- ^ Specialization shared by every stage (see "Vulkan.Utils.Pipeline.Specialization"); @()@ for none.
   -> [(Vk.ShaderStageFlagBits, ByteString)]
   -> m (ReleaseKey, Vk.Pipeline)
-createPipelineFromShaders dev config spec shaders =
+allocatePipelineFromShaders dev config spec shaders =
   withCompiledStages dev spec shaders $
-    createPipeline dev config
+    allocatePipeline dev config
 
 {- | A 'Vk.RenderingInfo' targeting a single color attachment that is cleared
 on load and stored on completion. The attachment is expected to already be in
@@ -170,8 +170,8 @@ attachments are expected in @IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL@ and the dept
 attachment in @IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL@ (e.g. via
 'Vulkan.Utils.Barrier.transitionColorAttachment' /
 'Vulkan.Utils.Barrier.transitionDepthAttachment'). The attachment shape MUST
-match the pipeline ('createPipeline'). No stencil attachment is supplied,
-matching 'createPipeline' never declaring one.
+match the pipeline ('allocatePipeline'). No stencil attachment is supplied,
+matching 'allocatePipeline' never declaring one.
 -}
 renderingInfo
   :: Vk.Rect2D

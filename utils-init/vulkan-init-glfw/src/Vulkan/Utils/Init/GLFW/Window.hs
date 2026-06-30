@@ -73,8 +73,8 @@ drawableSize win = do
 glfwAdapter :: (MonadResource m) => GLFW.Window -> WindowAdapter m
 glfwAdapter w =
   WindowAdapter
-    { waWithInstance = Init.withInstance w
-    , waWithSurface = \i -> Init.withSurface i w
+    { waAllocateInstance = Init.allocateInstance w
+    , waAllocateSurface = \i -> Init.allocateSurface i w
     , waDrawableSize = drawableSize w
     }
 

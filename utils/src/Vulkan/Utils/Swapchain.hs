@@ -13,7 +13,7 @@ module Vulkan.Utils.Swapchain
   ( Swapchain (..)
   , SwapchainConfig (..)
   , defaultSwapchainConfig
-  , allocSwapchain
+  , allocateSwapchain
   , recreateSwapchain
   , threwSwapchainError
   ) where
@@ -117,7 +117,7 @@ data Swapchain = Swapchain
 ----------------------------------------------------------------
 
 -- | Allocate a new swapchain plus its image views.
-allocSwapchain
+allocateSwapchain
   :: (MonadResource m)
   => Vk.PhysicalDevice
   -> Vk.Device
@@ -128,14 +128,14 @@ allocSwapchain
   -- ^ Fallback size when the surface lets us pick
   -> KHR.SurfaceKHR
   -> m Swapchain
-allocSwapchain phys dev cfg oldSwapchain windowSize surface = do
+allocateSwapchain phys dev cfg oldSwapchain windowSize surface = do
   (sSwapchain, sFormat, sExtent, sPresentMode, swapchainKey) <-
-    createSwapchain phys dev cfg oldSwapchain windowSize surface
+    allocateSwapchainEx phys dev cfg oldSwapchain windowSize surface
 
   (_, sImages) <- KHR.getSwapchainImagesKHR dev sSwapchain
   (imageViewKeys, sImageViews) <-
     fmap V.unzip . V.forM sImages $ \image ->
-      createImageView dev (SurfaceFormatKHR.format sFormat) image
+      allocateImageView dev (SurfaceFormatKHR.format sFormat) image
 
   -- One present-wait binary semaphore per swapchain image, indexed by the
   -- acquired image index (see 'sRenderFinished').
@@ -167,7 +167,7 @@ recreateSwapchain
   -> Swapchain
   -> m Swapchain
 recreateSwapchain phys dev newSize old = do
-  fresh <- allocSwapchain phys dev (sConfig old) (sSwapchain old) newSize (sSurface old)
+  fresh <- allocateSwapchain phys dev (sConfig old) (sSwapchain old) newSize (sSurface old)
   releaseRefCounted (sRelease old)
   pure fresh
 
@@ -175,7 +175,7 @@ recreateSwapchain phys dev newSize old = do
 -- Internals
 ----------------------------------------------------------------
 
-createSwapchain
+allocateSwapchainEx
   :: (MonadResource m)
   => Vk.PhysicalDevice
   -> Vk.Device
@@ -184,7 +184,7 @@ createSwapchain
   -> Vk.Extent2D
   -> KHR.SurfaceKHR
   -> m (KHR.SwapchainKHR, SurfaceFormatKHR, Vk.Extent2D, KHR.PresentModeKHR, ReleaseKey)
-createSwapchain phys dev cfg oldSwapchain explicitSize surf = do
+allocateSwapchainEx phys dev cfg oldSwapchain explicitSize surf = do
   surfaceCaps <- KHR.getPhysicalDeviceSurfaceCapabilitiesKHR phys surf
 
   -- Sanity-check that the surface advertises the usages we need.
@@ -250,13 +250,13 @@ createSwapchain phys dev cfg oldSwapchain explicitSize surf = do
   pure (swapchain, surfaceFormat, imageExtent, presentMode, key)
 
 -- | 2D color image view covering the whole image.
-createImageView
+allocateImageView
   :: (MonadResource m)
   => Vk.Device
   -> Vk.Format
   -> Vk.Image
   -> m (ReleaseKey, Vk.ImageView)
-createImageView dev format image =
+allocateImageView dev format image =
   Vk.withImageView dev imageViewCreateInfo Nothing allocate
   where
     imageViewCreateInfo =

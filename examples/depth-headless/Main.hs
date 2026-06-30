@@ -186,7 +186,7 @@ render allocator dev graphicsQueueFamilyIndex = do
               ]
           }
   (_, pipeline) <-
-    Dynamic.createPipelineFromShaders
+    Dynamic.allocatePipelineFromShaders
       dev
       zero
         { Dynamic.colorFormats = [imageFormat]

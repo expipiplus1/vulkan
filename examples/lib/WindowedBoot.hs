@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {-| Shared boot prelude for the windowed examples. Drives the standard
-@withInstance \/ withSurface \/ withDevice \/ withAllocator \/ allocSwapchain@
+@allocateInstance \/ allocateSurface \/ allocateDevice \/ withAllocator \/ allocateSwapchain@
 sequence so each main can open with a single call instead of a 20-line
 copy-paste.
 
@@ -29,8 +29,8 @@ import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import Vulkan.Utils.Debug (debugCallbackPtr)
 import Vulkan.Utils.Frame (frameDeviceRequirements, frameInstanceRequirements)
-import Vulkan.Utils.Queues (withDevice)
-import Vulkan.Utils.Swapchain (Swapchain, SwapchainConfig, allocSwapchain)
+import Vulkan.Utils.Queues (allocateDevice)
+import Vulkan.Utils.Swapchain (Swapchain, SwapchainConfig, allocateSwapchain)
 import Vulkan.Utils.VulkanContext (VulkanContext, mkVulkanContext)
 import Vulkan.Utils.WindowAdapter (WindowAdapter (..))
 import Vulkan.Zero (zero)
@@ -63,7 +63,7 @@ withWindowedVk
   -> m (VulkanContext, VMA.Allocator, Swapchain)
 withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
   inst <-
-    waWithInstance
+    waAllocateInstance
       ( Just
           zero
             { Vk.applicationName = Just (Text.encodeUtf8 wcAppName)
@@ -76,9 +76,9 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
       )
       [RequireInstanceLayer "VK_LAYER_KHRONOS_validation" minBound]
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-  surf <- waWithSurface inst
+  surf <- waAllocateSurface inst
   (phys, dev, qs) <-
-    withDevice inst (Just surf) (frameDeviceRequirements ++ wcDeviceReqs)
+    allocateDevice inst (Just surf) (frameDeviceRequirements ++ wcDeviceReqs)
   (_, vma) <-
     VMA.withAllocator
       (allocatorCreateInfo wcVmaFlags API_VERSION_1_3 inst phys dev)
@@ -89,7 +89,7 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
 
   initialSize <- waDrawableSize
   initialSC <-
-    allocSwapchain phys dev wcSwapchainConfig Vk.NULL_HANDLE initialSize surf
+    allocateSwapchain phys dev wcSwapchainConfig Vk.NULL_HANDLE initialSize surf
   pure (vc, vma, initialSC)
 
 {- | Standard validation/perf debug messenger create info, shared with

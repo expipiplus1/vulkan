@@ -10,13 +10,13 @@ needs neither a render pass nor framebuffers. Pick one and import only it.
 -}
 module Vulkan.Utils.RenderPass
   ( -- * Render pass
-    createRenderPass
-  , createColorRenderPass
+    allocateRenderPass
+  , allocateColorRenderPass
 
     -- * Pipeline
   , PipelineConfig (..)
-  , createPipeline
-  , createPipelineFromShaders
+  , allocatePipeline
+  , allocatePipelineFromShaders
   ) where
 
 import Control.Monad.IO.Unlift (MonadUnliftIO)
@@ -41,7 +41,7 @@ depth attachment at @N@ — the colour-then-depth order the framebuffer's
 dependency synchronizes colour output and, when present, the
 depth fragment tests.
 -}
-createRenderPass
+allocateRenderPass
   :: (MonadResource m)
   => Vk.Device
   -> Vector (Vk.Format, Vk.ImageLayout)
@@ -49,7 +49,7 @@ createRenderPass
   -> Maybe Vk.Format
   -- ^ Optional depth attachment format.
   -> m (ReleaseKey, Vk.RenderPass)
-createRenderPass dev colors depth =
+allocateRenderPass dev colors depth =
   Vk.withRenderPass
     dev
     zero
@@ -154,9 +154,9 @@ depthAttachmentDescription imageFormat =
 {- | The single-colour render pass: one attachment cleared on load and stored,
 ending in @finalLayout@ (e.g. @PRESENT_SRC_KHR@ for swapchains,
 @TRANSFER_SRC_OPTIMAL@ for offscreen images). The common special case of
-'createRenderPass'.
+'allocateRenderPass'.
 -}
-createColorRenderPass
+allocateColorRenderPass
   :: (MonadResource m)
   => Vk.Device
   -> Vk.Format
@@ -164,8 +164,8 @@ createColorRenderPass
   -> Vk.ImageLayout
   -- ^ Final layout.
   -> m (ReleaseKey, Vk.RenderPass)
-createColorRenderPass dev imageFormat finalLayout =
-  createRenderPass dev [(imageFormat, finalLayout)] Nothing
+allocateColorRenderPass dev imageFormat finalLayout =
+  allocateRenderPass dev [(imageFormat, finalLayout)] Nothing
 
 {- | Attachment + fixed-function knobs for a render-pass pipeline.
 
@@ -204,16 +204,16 @@ instance Zero PipelineConfig where
 {- | A vanilla vertex+fragment pipeline targeting @renderPass@ (subpass 0). The
 'PipelineConfig' attachment shape MUST match @renderPass@. Whatever dynamic state
 is selected MUST be set before drawing. Intended to be used qualified, e.g.
-@RenderPass.createPipeline@.
+@RenderPass.allocatePipeline@.
 -}
-createPipeline
+allocatePipeline
   :: (MonadResource m, MonadFail m)
   => Vk.Device
   -> Vk.RenderPass
   -> PipelineConfig
   -> Vector (SomeStruct Vk.PipelineShaderStageCreateInfo)
   -> m (ReleaseKey, Vk.Pipeline)
-createPipeline dev renderPass PipelineConfig{..} stages =
+allocatePipeline dev renderPass PipelineConfig{..} stages =
   buildColorPipeline dev layout $ \resolvedLayout ->
     SomeStruct
       ( basePipelineCreateInfo
@@ -226,13 +226,13 @@ createPipeline dev renderPass PipelineConfig{..} stages =
           stages
       )
 
-{- | 'createPipeline' from @(stage, SPIR-V)@ pairs: compile each into a shader
+{- | 'allocatePipeline' from @(stage, SPIR-V)@ pairs: compile each into a shader
 module, build the pipeline, then release the now-redundant module handles.
 
 @spec@ is one specialization shared by every stage (see
 'Vulkan.Utils.Pipeline.Specialization'); pass @()@ for none.
 -}
-createPipelineFromShaders
+allocatePipelineFromShaders
   :: (MonadResource m, MonadUnliftIO m, MonadFail m, Specialization spec)
   => Vk.Device
   -> Vk.RenderPass
@@ -241,5 +241,5 @@ createPipelineFromShaders
   -- ^ Specialization shared by every stage; @()@ for none.
   -> [(Vk.ShaderStageFlagBits, ByteString)]
   -> m (ReleaseKey, Vk.Pipeline)
-createPipelineFromShaders dev renderPass config spec shaders =
-  withCompiledStages dev spec shaders (createPipeline dev renderPass config)
+allocatePipelineFromShaders dev renderPass config spec shaders =
+  withCompiledStages dev spec shaders (allocatePipeline dev renderPass config)

@@ -110,7 +110,7 @@ render allocator dev graphicsQueueFamilyIndex = do
 
   -- One pipeline, full always-on dynamic state (Nothing).
   (_, pipeline) <-
-    Dynamic.createPipelineFromShaders
+    Dynamic.allocatePipelineFromShaders
       dev
       zero{Dynamic.colorFormats = [imageFormat]}
       () -- no specialization constants

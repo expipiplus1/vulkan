@@ -159,7 +159,7 @@ render allocator dev graphicsQueueFamilyIndex = do
   (_, imageView) <- Vk.withImageView dev imageViewCreateInfo Nothing allocate
 
   (_, renderPass) <-
-    RenderPass.createColorRenderPass
+    RenderPass.allocateColorRenderPass
       dev
       imageFormat
       Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
@@ -180,7 +180,7 @@ render allocator dev graphicsQueueFamilyIndex = do
   -- Create the most vanilla rendering pipeline
   (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT () vertCode
   (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT () fragCode
-  (_, graphicsPipeline) <- RenderPass.createPipeline dev renderPass zero{RenderPass.colorFormats = [imageFormat], RenderPass.dynamicStates = Just minimalDynamicStates} [vertStage, fragStage]
+  (_, graphicsPipeline) <- RenderPass.allocatePipeline dev renderPass zero{RenderPass.colorFormats = [imageFormat], RenderPass.dynamicStates = Just minimalDynamicStates} [vertStage, fragStage]
   release vertKey
   release fragKey
 

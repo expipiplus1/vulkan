@@ -1,16 +1,20 @@
 # Change Log
 
-## [0.6.0] - 2026-06-30
+## [0.5.11.0] - 2026-07-01
 
 A large additive release: helpers for dynamic rendering, dynamic pipeline
 state, specialization constants, synchronization, swapchain/frame management,
 and window abstraction.
 
-No existing API was removed, but the baseline is vulkan-3.27 and GHC-9.2.
+Resource-managing helpers follow the `create`/`with`/`allocate` naming
+convention: anything that slots a `ResourceT.allocate` into a `withXxx` is named
+`allocate*`. The three pre-existing `Initialization` helpers were renamed to
+match, with the old names kept as deprecated aliases (see Deprecations); no
+existing API was removed. The baseline is vulkan-3.27 and GHC-9.2.
 
 ### Pipelines and dynamic rendering
-- `Vulkan.Utils.DynamicRendering`: `createPipeline` and
-  `createPipelineFromShaders` for render-pass-less pipelines, plus
+- `Vulkan.Utils.DynamicRendering`: `allocatePipeline` and
+  `allocatePipelineFromShaders` for render-pass-less pipelines, plus
   `renderingInfo`, `colorAttachmentRenderingInfo`, and
   `dynamicRenderingRequirements`.
 - `Vulkan.Utils.DynamicState`: a `DynamicState` record with
@@ -22,9 +26,9 @@ No existing API was removed, but the baseline is vulkan-3.27 and GHC-9.2.
 - `Vulkan.Utils.Pipeline.Specialization`: the `Specialization` and
   `SpecializationConst` classes with `withSpecialization` /
   `allocateSpecialization` for packing specialization constants.
-- `Vulkan.Utils.RenderPass`: `createRenderPass`, `createColorRenderPass`, and a
-  generic `createPipeline` / `createPipelineFromShaders`.
-- `Vulkan.Utils.Framebuffer`: `createFramebuffer`.
+- `Vulkan.Utils.RenderPass`: `allocateRenderPass`, `allocateColorRenderPass`, and
+  a generic `allocatePipeline` / `allocatePipelineFromShaders`.
+- `Vulkan.Utils.Framebuffer`: `allocateFramebuffer`.
 - `Vulkan.Utils.Shader`: `shaderStage` and `shaderModuleStage`.
 
 ### Synchronization and descriptors
@@ -39,23 +43,30 @@ No existing API was removed, but the baseline is vulkan-3.27 and GHC-9.2.
 
 ### Swapchain, frames, and windowing
 - `Vulkan.Utils.Swapchain`: `Swapchain` and `SwapchainConfig` with
-  `defaultSwapchainConfig`, `allocSwapchain`, `recreateSwapchain`, and
+  `defaultSwapchainConfig`, `allocateSwapchain`, `recreateSwapchain`, and
   `threwSwapchainError`.
 - `Vulkan.Utils.Frame`: a `Frame` record driving frames-in-flight —
   `advanceFrame`, `runFrame`, `recordCommands`, `queueSubmitFrame`,
   `acquireFrameImage`, `presentFrameImage`, `drainFrames`,
-  `withTimelineSemaphore`, and the matching requirements helpers.
+  `allocateTimelineSemaphore`, and the matching requirements helpers.
 - `Vulkan.Utils.VulkanContext`: `VulkanContext` and `RecycledResources` with
   `mkVulkanContext`.
 - `Vulkan.Utils.WindowAdapter`: a backend-agnostic `WindowAdapter` record (the
   `vulkan-init-sdl2` and `vulkan-init-glfw` packages provide instances).
 - `Vulkan.Utils.WindowLoop`: `runWindowLoop` with the `WindowLoop` record and
   the `noWindowState` / `noOnFrame` / `noOnExit` defaults.
-- `Vulkan.Utils.Queues`: a `Queues` record and `withDevice`.
-- `Vulkan.Utils.Init.Headless`: `withInstance` for headless setup.
+- `Vulkan.Utils.Queues`: a `Queues` record and `allocateDevice`.
+- `Vulkan.Utils.Init.Headless`: `allocateInstance` for headless setup.
 
 ### Dependencies
 - Now depends on `unagi-chan` and `unliftio-core`.
+
+### Deprecations
+- `Vulkan.Utils.Initialization`: `createInstanceFromRequirements`,
+  `createDebugInstanceFromRequirements`, and `createDeviceFromRequirements` are
+  renamed to `allocateInstanceFromRequirements`,
+  `allocateDebugInstanceFromRequirements`, and `allocateDeviceFromRequirements`.
+  The old names remain as deprecated aliases.
 
 ## [0.5.10.6] - 2023-10-21
 

@@ -15,7 +15,7 @@ import Vulkan.Requirement (InstanceRequirement)
 
 -- | The window-library operations a boot sequence needs.
 data WindowAdapter m = WindowAdapter
-  { waWithInstance
+  { waAllocateInstance
       :: Maybe Vk.ApplicationInfo
       -> [InstanceRequirement]
       -> [InstanceRequirement]
@@ -23,7 +23,7 @@ data WindowAdapter m = WindowAdapter
   {- ^ Create an instance satisfying the window library's requirements
   plus the given required and optional ones.
   -}
-  , waWithSurface :: Vk.Instance -> m SurfaceKHR
+  , waAllocateSurface :: Vk.Instance -> m SurfaceKHR
   -- ^ Create a surface for the window, destroyed with the resource scope.
   , waDrawableSize :: m Vk.Extent2D
   -- ^ The window's current drawable size, for the swapchain extent.

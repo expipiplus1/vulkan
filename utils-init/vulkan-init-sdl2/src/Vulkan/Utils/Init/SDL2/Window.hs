@@ -80,8 +80,8 @@ showWindow = SDL.showWindow
 sdl2Adapter :: (MonadResource m) => SDL.Window -> WindowAdapter m
 sdl2Adapter w =
   WindowAdapter
-    { waWithInstance = Init.withInstance w
-    , waWithSurface = \i -> Init.withSurface i w
+    { waAllocateInstance = Init.allocateInstance w
+    , waAllocateSurface = \i -> Init.allocateSurface i w
     , waDrawableSize = drawableSize w
     }
 

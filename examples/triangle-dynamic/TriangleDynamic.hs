@@ -11,7 +11,7 @@ view. Everything comes from the single "Vulkan.Utils.DynamicRendering" path
 module.
 
 The graphics pipeline is built with
-'Vulkan.Utils.DynamicRendering.createPipelineFromShaders', which omits the render
+'Vulkan.Utils.DynamicRendering.allocatePipelineFromShaders', which omits the render
 pass and instead carries a 'Vk.PipelineRenderingCreateInfo' in its pNext chain.
 
 It also passes 'Nothing' for the dynamic-state set, so the pipeline declares the
@@ -53,7 +53,7 @@ runTriangle
   -> ResourceT IO ()
 runTriangle vc initialSC getDrawableSize shouldQuit = do
   (_, pipeline) <-
-    Dynamic.createPipelineFromShaders
+    Dynamic.allocatePipelineFromShaders
       (vcDevice vc)
       zero{Dynamic.colorFormats = [KHR.format (sFormat initialSC)]}
       () -- no specialization constants
