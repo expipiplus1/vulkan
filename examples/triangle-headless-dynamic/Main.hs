@@ -112,11 +112,7 @@ render allocator dev graphicsQueueFamilyIndex = do
   (_, pipeline) <-
     Dynamic.createPipelineFromShaders
       dev
-      [imageFormat]
-      Nothing -- no depth attachment
-      zero -- no vertex input
-      Nothing -- full always-on dynamic state
-      Nothing -- empty pipeline layout (no descriptor sets / push constants)
+      zero{Dynamic.colorFormats = [imageFormat]}
       () -- no specialization constants
       [(Vk.SHADER_STAGE_VERTEX_BIT, vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)]
 

@@ -1,10 +1,12 @@
 # Change Log
 
-## [0.5.11.0] - 2026-06-13
+## [0.6.0] - 2026-06-30
 
 A large additive release: helpers for dynamic rendering, dynamic pipeline
 state, specialization constants, synchronization, swapchain/frame management,
-and window abstraction. No existing API was removed.
+and window abstraction.
+
+No existing API was removed, but the baseline is vulkan-3.27 and GHC-9.2.
 
 ### Pipelines and dynamic rendering
 - `Vulkan.Utils.DynamicRendering`: `createPipeline` and
@@ -19,8 +21,7 @@ and window abstraction. No existing API was removed.
   states available without vendor or experimental extensions.
 - `Vulkan.Utils.Pipeline.Specialization`: the `Specialization` and
   `SpecializationConst` classes with `withSpecialization` /
-  `allocateSpecialization` for packing specialization constants into 32-bit
-  units.
+  `allocateSpecialization` for packing specialization constants.
 - `Vulkan.Utils.RenderPass`: `createRenderPass`, `createColorRenderPass`, and a
   generic `createPipeline` / `createPipelineFromShaders`.
 - `Vulkan.Utils.Framebuffer`: `createFramebuffer`.
@@ -55,7 +56,6 @@ and window abstraction. No existing API was removed.
 
 ### Dependencies
 - Now depends on `unagi-chan` and `unliftio-core`.
-- Raised the upper bound on `vulkan` to `< 3.28`.
 
 ## [0.5.10.6] - 2023-10-21
 

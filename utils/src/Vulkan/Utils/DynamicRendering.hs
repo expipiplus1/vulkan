@@ -14,7 +14,8 @@ the @dynamicRendering@ feature on the device.
 -}
 module Vulkan.Utils.DynamicRendering
   ( -- * Pipeline
-    createPipeline
+    PipelineConfig (..)
+  , createPipeline
   , createPipelineFromShaders
 
     -- * Device requirements
@@ -40,7 +41,7 @@ import Vulkan.Utils.DynamicState (defaultDynamicStatesFor)
 import Vulkan.Utils.Pipeline.Internal (basePipelineCreateInfo, buildColorPipeline, withCompiledStages)
 import Vulkan.Utils.Pipeline.Specialization (Specialization)
 import qualified Vulkan.Utils.Requirements.TH as U
-import Vulkan.Zero (zero)
+import Vulkan.Zero (Zero (..))
 
 {- | The device requirements for this path: the @VK_KHR_dynamic_rendering@
 extension (core since Vulkan 1.3) and the @dynamicRendering@ feature it gates.
@@ -54,55 +55,72 @@ dynamicRenderingRequirements =
     PhysicalDeviceDynamicRenderingFeatures.dynamicRendering
   |]
 
-{- | Build a graphics pipeline for the dynamic-rendering path: no render pass, the
-attachment formats carried in a 'PipelineRenderingCreateInfo' on the pNext chain.
-The attachment shape — colour formats and optional depth — selects the pipeline
-kind:
+{- | Attachment + fixed-function knobs for a dynamic-rendering pipeline.
 
-  * @[fmt] Nothing@ — a single-colour pipeline (as the classic path).
-  * @[fmt] (Just d)@ — colour + depth (depth driven dynamically).
-  * @[] (Just d)@ — depth-only (e.g. a shadow map / z-prepass).
-  * @[f0, f1, …] mDepth@ — multiple colour attachments (MRT / G-buffer).
-
-Stencil is out of scope: no @stencilAttachmentFormat@ is declared, matching
-'renderingInfo', which never supplies a stencil attachment (declaring one
-without supplying it is invalid at draw time). Use a depth-only @depth@ format;
-for stencil, build the 'PipelineRenderingCreateInfo' and 'Vk.RenderingInfo' by
-hand. The formats MUST match the views passed to 'Vk.cmdUseRendering' at draw
-time (see 'renderingInfo'). Intended to be used qualified, e.g.
-@Dynamic.createPipeline@.
+Construct with 'zero' and override what differs, e.g.
+@zero { Dynamic.colorFormats = [fmt], Dynamic.depthFormat = Just d }@.
 -}
-createPipeline
-  :: (MonadResource m, MonadFail m)
-  => Vk.Device
-  -> Vector Vk.Format
-  -- ^ Colour attachment formats (@0@..@N@).
-  -> Maybe Vk.Format
+data PipelineConfig = PipelineConfig
+  { colorFormats :: [Vk.Format]
+  -- ^ Colour attachment formats (@0@..@N@); @[]@ for a depth-only pipeline.
+  , depthFormat :: Maybe Vk.Format
   -- ^ Optional depth attachment format.
-  -> Vk.PipelineVertexInputStateCreateInfo '[]
-  -- ^ Vertex input (bindings + attributes); @zero@ for none.
-  -> Maybe (Vector Vk.DynamicState)
+  , vertexInput :: Vk.PipelineVertexInputStateCreateInfo '[]
+  -- ^ Vertex input (bindings + attributes); 'zero' for none.
+  , dynamicStates :: Maybe (Vector Vk.DynamicState)
   {- ^ Dynamic states; 'Nothing' defaults layout-aware to
   'Vulkan.Utils.DynamicState.depthOnlyDynamicStates' (no colour) or
   'allDynamicStates'. Drive with 'Vulkan.Utils.DynamicState.applyDynamicStates'.
   -}
-  -> Maybe Vk.PipelineLayout
+  , layout :: Maybe Vk.PipelineLayout
   {- ^ Pipeline layout for descriptor sets \/ push constants; 'Nothing' uses a
   transient empty layout (shaders take no resources). A supplied layout stays
   owned by the caller, who must keep it alive for the pipeline's lifetime.
   -}
+  }
+
+instance Zero PipelineConfig where
+  zero =
+    PipelineConfig
+      { colorFormats = []
+      , depthFormat = Nothing
+      , vertexInput = zero
+      , dynamicStates = Nothing
+      , layout = Nothing
+      }
+
+{- | Build a graphics pipeline for the dynamic-rendering path: no render pass, the
+attachment formats carried in a 'PipelineRenderingCreateInfo' on the pNext chain.
+The attachment shape — 'colorFormats' and 'depthFormat' — selects the pipeline kind:
+
+  * @[fmt]@ + 'Nothing' — a single-colour pipeline (as the classic path).
+  * @[fmt]@ + @Just d@ — colour + depth (depth driven dynamically).
+  * @[]@ + @Just d@ — depth-only (e.g. a shadow map / z-prepass).
+  * @[f0, f1, …]@ — multiple colour attachments (MRT / G-buffer).
+
+Stencil is out of scope: no @stencilAttachmentFormat@ is declared, matching
+'renderingInfo', which never supplies a stencil attachment (declaring one
+without supplying it is invalid at draw time). For stencil, build the
+'PipelineRenderingCreateInfo' and 'Vk.RenderingInfo' by hand. The formats MUST
+match the views passed to 'Vk.cmdUseRendering' at draw time (see 'renderingInfo').
+Intended to be used qualified, e.g. @Dynamic.createPipeline@.
+-}
+createPipeline
+  :: (MonadResource m, MonadFail m)
+  => Vk.Device
+  -> PipelineConfig
   -> Vector (SomeStruct Vk.PipelineShaderStageCreateInfo)
   -> m (ReleaseKey, Vk.Pipeline)
-createPipeline dev colorFormats depthFormat vertexInput dynamicStates pipelineLayout stages =
-  buildColorPipeline dev pipelineLayout $ \layout ->
+createPipeline dev PipelineConfig{..} stages =
+  buildColorPipeline dev layout $ \resolvedLayout ->
     SomeStruct $
       basePipelineCreateInfo
-        layout
+        resolvedLayout
         Nothing
-        (V.length colorFormats)
+        (length colorFormats)
         (isJust depthFormat)
         vertexInput
-        (fromMaybe (defaultDynamicStatesFor (not (V.null colorFormats))) dynamicStates)
+        (fromMaybe (defaultDynamicStatesFor (not (null colorFormats))) dynamicStates)
         stages
         ::& renderingCreateInfo
           :& ()
@@ -110,7 +128,7 @@ createPipeline dev colorFormats depthFormat vertexInput dynamicStates pipelineLa
     renderingCreateInfo :: PipelineRenderingCreateInfo
     renderingCreateInfo =
       zero
-        { colorAttachmentFormats = colorFormats
+        { colorAttachmentFormats = V.fromList colorFormats
         , depthAttachmentFormat = fromMaybe Vk.FORMAT_UNDEFINED depthFormat
         }
 
@@ -120,23 +138,14 @@ module, build the pipeline, then release the now-redundant module handles.
 createPipelineFromShaders
   :: (MonadResource m, MonadUnliftIO m, MonadFail m, Specialization spec)
   => Vk.Device
-  -> [Vk.Format]
-  -- ^ Colour attachment formats.
-  -> Maybe Vk.Format
-  -- ^ Optional depth attachment format.
-  -> Vk.PipelineVertexInputStateCreateInfo '[]
-  -- ^ Vertex input (bindings + attributes); @zero@ for none.
-  -> Maybe (Vector Vk.DynamicState)
-  -- ^ Dynamic states (see 'createPipeline').
-  -> Maybe Vk.PipelineLayout
-  -- ^ Pipeline layout (see 'createPipeline'); 'Nothing' for an empty one.
+  -> PipelineConfig
   -> spec
   -- ^ Specialization shared by every stage (see "Vulkan.Utils.Pipeline.Specialization"); @()@ for none.
   -> [(Vk.ShaderStageFlagBits, ByteString)]
   -> m (ReleaseKey, Vk.Pipeline)
-createPipelineFromShaders dev colorFormats depthFormat vertexInput dynamicStates pipelineLayout spec shaders =
+createPipelineFromShaders dev config spec shaders =
   withCompiledStages dev spec shaders $
-    createPipeline dev (V.fromList colorFormats) depthFormat vertexInput dynamicStates pipelineLayout
+    createPipeline dev config
 
 {- | A 'Vk.RenderingInfo' targeting a single color attachment that is cleared
 on load and stored on completion. The attachment is expected to already be in

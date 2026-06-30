@@ -3,8 +3,8 @@ version: "3.27"
 synopsis: Bindings to the Vulkan graphics API.
 description: Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category: Graphics
-maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
-github: expipiplus1/vulkan
+maintainer: IC Rainbow <aenor.realm@gmail.com>, Ellie Hermaszewska <live.long.and.prosper@monoid.al>
+github: haskell-game/vulkan
 extra-source-files:
 - readme.md
 - changelog.md

@@ -81,11 +81,10 @@ createPipeline dev renderPass colorFormat =
   RenderPass.createPipelineFromShaders
     dev
     renderPass
-    [colorFormat]
-    Nothing
-    zero -- no vertex input
-    (Just minimalDynamicStates)
-    Nothing -- empty pipeline layout (no descriptor sets / push constants)
+    zero
+      { RenderPass.colorFormats = [colorFormat]
+      , RenderPass.dynamicStates = Just minimalDynamicStates
+      }
     ()
     [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
     , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)

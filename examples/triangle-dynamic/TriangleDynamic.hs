@@ -55,11 +55,7 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
   (_, pipeline) <-
     Dynamic.createPipelineFromShaders
       (vcDevice vc)
-      [KHR.format (sFormat initialSC)]
-      Nothing -- no depth attachment
-      zero -- no vertex input
-      Nothing -- full always-on dynamic state; driven by 'applyDynamicStates' below
-      Nothing -- empty pipeline layout (no descriptor sets / push constants)
+      zero{Dynamic.colorFormats = [KHR.format (sFormat initialSC)]}
       () -- no specialization constants
       [ (Vk.SHADER_STAGE_VERTEX_BIT, Triangle.vertCode)
       , (Vk.SHADER_STAGE_FRAGMENT_BIT, Triangle.fragCode)
