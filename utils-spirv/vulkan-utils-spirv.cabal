@@ -1,0 +1,143 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.39.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           vulkan-utils-spirv
+version:        0.1.0.0
+synopsis:       Generate Haskell types and Vulkan descriptor/pipeline layouts from SPIR-V reflection
+category:       Graphics
+homepage:       https://github.com/expipiplus1/vulkan#readme
+bug-reports:    https://github.com/expipiplus1/vulkan/issues
+maintainer:     Ellie Hermaszewska <live.long.and.prosper@monoid.al>
+build-type:     Simple
+extra-source-files:
+    README.md
+    package.yaml
+    test/fixtures/array-field.comp.spv
+    test/fixtures/array2d.comp.spv
+    test/fixtures/julia.comp.spv
+    test/fixtures/mesh.frag.spv
+    test/fixtures/mesh.vert.spv
+    test/fixtures/nested.comp.spv
+    test/fixtures/push.comp.spv
+    test/fixtures/spec.comp.spv
+    test/fixtures/ssbo-struct.comp.spv
+    test/fixtures/tri.vert.spv
+    test/fixtures/wide.comp.spv
+
+source-repository head
+  type: git
+  location: https://github.com/expipiplus1/vulkan
+
+library
+  exposed-modules:
+      Vulkan.Utils.SpirV.Array
+      Vulkan.Utils.SpirV.Block
+      Vulkan.Utils.SpirV.Buffer
+      Vulkan.Utils.SpirV.Descriptors
+      Vulkan.Utils.SpirV.DeviceAddress
+      Vulkan.Utils.SpirV.Layout
+      Vulkan.Utils.SpirV.Pipeline
+      Vulkan.Utils.SpirV.Reflect
+      Vulkan.Utils.SpirV.Reflect.OffsetMaps
+      Vulkan.Utils.SpirV.Signature
+      Vulkan.Utils.SpirV.Specialization
+      Vulkan.Utils.SpirV.Stage
+      Vulkan.Utils.SpirV.TH
+      Vulkan.Utils.SpirV.Types
+      Vulkan.Utils.SpirV.VertexInput
+  other-modules:
+      Paths_vulkan_utils_spirv
+  hs-source-dirs:
+      src
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DeriveAnyClass
+      DeriveGeneric
+      DerivingStrategies
+      DerivingVia
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      ImportQualifiedPost
+      LambdaCase
+      NamedFieldPuns
+      OverloadedRecordDot
+      OverloadedStrings
+      PatternSynonyms
+      RecordWildCards
+      ScopedTypeVariables
+      TemplateHaskell
+      TupleSections
+      TypeApplications
+      TypeOperators
+      ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      base >=4.16 && <5
+    , bytestring
+    , containers
+    , gl-block
+    , ptrdiff
+    , resourcet
+    , spirv-enum
+    , spirv-reflect-ffi
+    , spirv-reflect-types
+    , template-haskell
+    , text
+    , unliftio-core
+    , vector
+    , vulkan ==3.27.*
+    , vulkan-utils
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      LayoutSpec
+      Paths_vulkan_utils_spirv
+  hs-source-dirs:
+      test
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DeriveAnyClass
+      DeriveGeneric
+      DerivingStrategies
+      DerivingVia
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      ImportQualifiedPost
+      LambdaCase
+      NamedFieldPuns
+      OverloadedRecordDot
+      OverloadedStrings
+      PatternSynonyms
+      RecordWildCards
+      ScopedTypeVariables
+      TemplateHaskell
+      TupleSections
+      TypeApplications
+      TypeOperators
+      ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      base <5
+    , containers
+    , geomancy
+    , gl-block
+    , spirv-reflect-ffi
+    , spirv-reflect-types
+    , tasty
+    , tasty-hunit
+    , template-haskell
+    , text
+    , vector
+    , vulkan
+    , vulkan-utils-spirv
+  default-language: Haskell2010

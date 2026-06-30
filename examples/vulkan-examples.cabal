@@ -177,6 +177,72 @@ executable compute
   if os(windows)
     ghc-options: -optl-mconsole
 
+executable compute-reflect
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      compute-reflect
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , bytestring
+    , file-embed
+    , geomancy
+    , gl-block
+    , resourcet
+    , safe-exceptions
+    , say
+    , text
+    , transformers
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-utils
+    , vulkan-utils-spirv
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
 executable hlsl
   main-is: Main.hs
   other-modules:
@@ -293,6 +359,135 @@ executable info
       base <5
     , pretty-simple >=3.3
     , vulkan
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
+executable mesh-reflect
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      mesh-reflect
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , bytestring
+    , file-embed
+    , geomancy
+    , gl-block
+    , resourcet
+    , say
+    , spirv-reflect-ffi
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-utils
+    , vulkan-utils-spirv
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
+executable pathtrace-reflect
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      pathtrace-reflect
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , bytestring
+    , file-embed
+    , geomancy
+    , gl-block
+    , optparse-applicative
+    , random
+    , resourcet
+    , transformers
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-utils
+    , vulkan-utils-spirv
   default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole
@@ -437,6 +632,68 @@ executable resize
     , vulkan-examples
     , vulkan-init-sdl2
     , vulkan-utils
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
+executable texture-reflect
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      texture-reflect
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , bytestring
+    , file-embed
+    , gl-block
+    , resourcet
+    , spirv-reflect-ffi
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-utils
+    , vulkan-utils-spirv
   default-language: Haskell2010
   if os(windows)
     ghc-options: -optl-mconsole

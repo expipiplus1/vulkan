@@ -1,0 +1,261 @@
+#version 460
+#extension GL_EXT_buffer_reference : require
+
+// A single-frame procedural compute path tracer whose *entire* shader interface
+// is reflected at build time by vulkan-utils-spirv. Scene intersection walks a
+// BVH whose nodes are linked by 64-bit buffer_reference device addresses (BDA):
+//
+//   * Camera UBO        (std140) -> generated Haskell record (Geomancy.Vec3);
+//   * Scene input SSBO  (binding 1, readonly)  -> leaf sphere geometry, indexed
+//       by a BVH leaf's `sphereIndex`. Its element `Sphere` is hand-written;
+//   * Image output SSBO (binding 2, writeonly) -> descriptor set layout;
+//   * BvhNode (buffer_reference) -> generated record with DeviceAddress children;
+//   * Frame push constants (std430) carry the root BvhNode device address;
+//   * SAMPLES / MAX_BOUNCES spec constants -> the pipeline's SpecializationInfo.
+//
+// NOTE: buffer_reference needs SPIR-V 1.3+, so build-shaders.sh compiles this
+// with --target-env vulkan1.2.
+
+layout(local_size_x = 16, local_size_y = 16) in;
+
+// Compile-time tunables, specialized at pipeline creation.
+layout(constant_id = 0) const uint SAMPLES = 16u;
+layout(constant_id = 1) const uint MAX_BOUNCES = 8u;
+
+// All members are vec3, so they share std140 base alignment 16 (the gl-block
+// layout guardrail wants non-increasing alignments).
+layout(set = 0, binding = 0, std140) uniform Camera {
+  vec3 origin;
+  vec3 lowerLeft;
+  vec3 horizontal;
+  vec3 vertical;
+  vec3 skyTop;
+  vec3 skyBottom;
+} cam;
+
+struct Sphere {
+  vec4 centerRadius; // xyz: center, w: radius
+  vec4 albedo;       // rgb: albedo
+  vec4 material;     // x: type (0 lambertian, 1 metal, 2 dielectric), y: fuzz, z: ior
+};
+
+layout(set = 0, binding = 1, std430) readonly buffer Scene {
+  Sphere spheres[];
+};
+
+layout(set = 0, binding = 2, std430) writeonly buffer Image {
+  vec4 pixels[];
+};
+
+// A BVH node reached by device address. Internal nodes have child addresses and
+// sphereIndex < 0; leaves have sphereIndex >= 0 (into the Scene buffer) and null
+// children. Fields are ordered by non-increasing alignment (16,16,8,8,4).
+layout(buffer_reference) buffer BvhNode;          // fwd decl enables self-reference
+layout(buffer_reference, std430) buffer BvhNode {
+  vec4 boundsMin;   // xyz AABB min
+  vec4 boundsMax;   // xyz AABB max
+  BvhNode left;     // child device address (null for a leaf)
+  BvhNode right;    // child device address (null for a leaf)
+  int sphereIndex;  // >= 0: leaf sphere index; < 0: internal node
+};
+
+layout(push_constant, std430) uniform Frame {
+  BvhNode root;      // entry address into the BVH
+  uvec2 resolution;  // image size in pixels
+  uint  seed;        // varies sampling between runs
+  uint  rowOffset;   // first image row this dispatch (band) covers
+} frame;
+
+struct Ray {
+  vec3 o;
+  vec3 d;
+};
+
+struct Hit {
+  float t;
+  vec3 p;
+  vec3 n;
+  bool front;
+  vec4 albedo;
+  vec4 material;
+};
+
+// PCG hash RNG, advanced in place.
+uint pcg(inout uint s) {
+  s = s * 747796405u + 2891336453u;
+  uint w = ((s >> ((s >> 28u) + 4u)) ^ s) * 277803737u;
+  return (w >> 22u) ^ w;
+}
+
+float rnd(inout uint s) {
+  return float(pcg(s)) * (1.0 / 4294967296.0);
+}
+
+// Uniformly distributed point on the unit sphere.
+vec3 rndUnit(inout uint s) {
+  float z = rnd(s) * 2.0 - 1.0;
+  float a = rnd(s) * 6.28318530718;
+  float r = sqrt(max(0.0, 1.0 - z * z));
+  return vec3(r * cos(a), r * sin(a), z);
+}
+
+bool hitSphere(Sphere sp, Ray ray, float tmin, float tmax, inout Hit h) {
+  vec3 center = sp.centerRadius.xyz;
+  float radius = sp.centerRadius.w;
+  vec3 oc = ray.o - center;
+  float a = dot(ray.d, ray.d);
+  float halfB = dot(oc, ray.d);
+  float c = dot(oc, oc) - radius * radius;
+  float disc = halfB * halfB - a * c;
+  if (disc < 0.0) {
+    return false;
+  }
+  float sq = sqrt(disc);
+  float t = (-halfB - sq) / a;
+  if (t < tmin || t > tmax) {
+    t = (-halfB + sq) / a;
+    if (t < tmin || t > tmax) {
+      return false;
+    }
+  }
+  h.t = t;
+  h.p = ray.o + t * ray.d;
+  vec3 outwardN = (h.p - center) / radius;
+  h.front = dot(ray.d, outwardN) < 0.0;
+  h.n = h.front ? outwardN : -outwardN;
+  h.albedo = sp.albedo;
+  h.material = sp.material;
+  return true;
+}
+
+// Ray vs AABB slab test, gated to [tmin, tmax].
+bool aabbHit(vec3 bmin, vec3 bmax, Ray ray, float tmin, float tmax) {
+  vec3 inv = 1.0 / ray.d;
+  vec3 t0 = (bmin - ray.o) * inv;
+  vec3 t1 = (bmax - ray.o) * inv;
+  vec3 tsmall = min(t0, t1);
+  vec3 tbig = max(t0, t1);
+  float lo = max(max(tsmall.x, tsmall.y), max(tsmall.z, tmin));
+  float hi = min(min(tbig.x, tbig.y), min(tbig.z, tmax));
+  return hi >= lo;
+}
+
+// Max BVH traversal depth. A balanced median-split BVH of N leaves is ~log2(N)
+// deep, so this covers far more spheres than the host will ever generate; the
+// bound guards against a pathologically deep tree (a subtree is skipped rather
+// than overflowing the stack).
+const int BVH_STACK = 64;
+
+// Walk the BVH from the root device address, hopping pointers to find the
+// closest sphere hit. An explicit stack stands in for recursion.
+bool worldHit(Ray ray, float tmin, float tmax, out Hit h) {
+  bool hitAny = false;
+  float closest = tmax;
+
+  BvhNode stack[BVH_STACK];
+  int sp = 0;
+  stack[sp++] = frame.root;
+
+  while (sp > 0) {
+    BvhNode node = stack[--sp];
+    if (!aabbHit(node.boundsMin.xyz, node.boundsMax.xyz, ray, tmin, closest)) {
+      continue;
+    }
+    if (node.sphereIndex >= 0) {
+      Hit tmp;
+      if (hitSphere(spheres[node.sphereIndex], ray, tmin, closest, tmp)) {
+        hitAny = true;
+        closest = tmp.t;
+        h = tmp;
+      }
+    } else if (sp + 2 <= BVH_STACK) {
+      stack[sp++] = node.left;
+      stack[sp++] = node.right;
+    }
+  }
+  return hitAny;
+}
+
+vec3 skyColor(vec3 dir) {
+  float t = 0.5 * (normalize(dir).y + 1.0);
+  return mix(cam.skyBottom, cam.skyTop, t);
+}
+
+float schlick(float cosine, float ref) {
+  float r0 = (1.0 - ref) / (1.0 + ref);
+  r0 = r0 * r0;
+  return r0 + (1.0 - r0) * pow(1.0 - cosine, 5.0);
+}
+
+vec3 rayColor(Ray ray, inout uint s) {
+  vec3 attenuation = vec3(1.0);
+  for (uint bounce = 0u; bounce < MAX_BOUNCES; ++bounce) {
+    Hit h;
+    if (!worldHit(ray, 0.001, 1e30, h)) {
+      return attenuation * skyColor(ray.d);
+    }
+
+    int mat = int(h.material.x + 0.5);
+    if (mat == 0) {
+      // Lambertian: scatter about the normal.
+      vec3 dir = h.n + rndUnit(s);
+      if (dot(dir, dir) < 1e-8) {
+        dir = h.n;
+      }
+      ray = Ray(h.p, dir);
+      attenuation *= h.albedo.rgb;
+    } else if (mat == 1) {
+      // Metal: reflect, perturbed by fuzz.
+      vec3 refl = reflect(normalize(ray.d), h.n);
+      vec3 dir = refl + h.material.y * rndUnit(s);
+      if (dot(dir, h.n) <= 0.0) {
+        return vec3(0.0);
+      }
+      ray = Ray(h.p, dir);
+      attenuation *= h.albedo.rgb;
+    } else {
+      // Dielectric: refract or reflect (Schlick).
+      float ior = h.material.z;
+      float ratio = h.front ? (1.0 / ior) : ior;
+      vec3 ud = normalize(ray.d);
+      float cosT = min(dot(-ud, h.n), 1.0);
+      float sinT = sqrt(max(0.0, 1.0 - cosT * cosT));
+      vec3 dir;
+      if (ratio * sinT > 1.0 || schlick(cosT, ratio) > rnd(s)) {
+        dir = reflect(ud, h.n);
+      } else {
+        dir = refract(ud, h.n, ratio);
+      }
+      ray = Ray(h.p, dir);
+    }
+  }
+  return vec3(0.0); // exceeded the bounce budget
+}
+
+void main() {
+  // gl_GlobalInvocationID.y is relative to this band; rowOffset places it into
+  // the full image. The host splits the render into horizontal bands so no single
+  // compute submission runs long enough to trip the GPU's hang-recovery watchdog.
+  uvec2 gid = uvec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y + frame.rowOffset);
+  if (gid.x >= frame.resolution.x || gid.y >= frame.resolution.y) {
+    return;
+  }
+
+  uint s = (gid.x * 1973u + gid.y * 9277u + frame.seed * 26699u) | 1u;
+
+  vec3 color = vec3(0.0);
+  for (uint i = 0u; i < SAMPLES; ++i) {
+    float u = (float(gid.x) + rnd(s)) / float(frame.resolution.x);
+    float v = (float(gid.y) + rnd(s)) / float(frame.resolution.y);
+    // Image rows grow downward; flip v so the top row maps to the top of the
+    // viewport.
+    vec3 dir =
+      cam.lowerLeft + u * cam.horizontal + (1.0 - v) * cam.vertical - cam.origin;
+    color += rayColor(Ray(cam.origin, dir), s);
+  }
+  color /= float(SAMPLES);
+  color = sqrt(color); // gamma 2.0
+
+  uint idx = gid.y * frame.resolution.x + gid.x;
+  pixels[idx] = vec4(color, 1.0);
+}

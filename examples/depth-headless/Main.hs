@@ -107,17 +107,18 @@ main = runResourceT $ do
   HeadlessVk{..} <-
     withHeadlessVk
       HeadlessConfig
-        { hcAppName = "Haskell Vulkan depth + vertex-buffer (headless) test"
-        , hcInstanceReqs = []
-        , hcDeviceReqs =
+        { appName = "Haskell Vulkan depth + vertex-buffer (headless) test"
+        , instanceReqs = []
+        , deviceReqs =
             [U.reqs|
               VK_KHR_dynamic_rendering
               PhysicalDeviceDynamicRenderingFeatures.dynamicRendering
             |]
+        , vmaFlags = zero
         }
-  let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics hvQueues)
-  results <- render hvAllocator hvDevice graphicsQueueFamilyIndex
-  Vk.deviceWaitIdle hvDevice
+  let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics queues)
+  results <- render allocator device graphicsQueueFamilyIndex
+  Vk.deviceWaitIdle device
 
   centres <- forM results $ \(name, image) -> do
     savePng ("depth-headless-" <> name <> ".png") image
@@ -192,7 +193,7 @@ render allocator dev graphicsQueueFamilyIndex = do
         , Dynamic.depthFormat = Just depthFormat
         , Dynamic.vertexInput = vertexInput
         }
-      () -- no specialization constants
+      ()
       [(Vk.SHADER_STAGE_VERTEX_BIT, vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)]
 
   let poolCreateInfo = zero{CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex}

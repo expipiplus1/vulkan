@@ -56,7 +56,7 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
     Dynamic.allocatePipelineFromShaders
       (vcDevice vc)
       zero{Dynamic.colorFormats = [KHR.format (sFormat initialSC)]}
-      () -- no specialization constants
+      ()
       [ (Vk.SHADER_STAGE_VERTEX_BIT, Triangle.vertCode)
       , (Vk.SHADER_STAGE_FRAGMENT_BIT, Triangle.fragCode)
       ]

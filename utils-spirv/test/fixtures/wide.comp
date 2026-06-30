@@ -1,0 +1,27 @@
+#version 460
+#extension GL_EXT_shader_explicit_arithmetic_types_int64 : require
+
+// 64-bit integer block members. A uint64_t/int64_t occupies an 8-byte std430
+// slot (alignment 8), exactly like a double — the regression fixture for
+// scalar-width-faithful classification, so a 64-bit int is never laid out as a
+// 4-byte int. Fields are ordered by non-increasing alignment (8, 8, 4) to keep
+// gl-block's Generic layout valid.
+//
+// NOTE: int64 needs the Int64 capability; compile with
+//   glslangValidator -V --target-env vulkan1.1 wide.comp -o wide.comp.spv
+
+layout(local_size_x = 1) in;
+
+layout(push_constant, std430) uniform Wide {
+  uint64_t hi;  // align 8 @0,  size 8
+  int64_t  lo;  // align 8 @8,  size 8
+  uint     tag; // align 4 @16, size 4
+} wide;
+
+layout(set = 0, binding = 0, std430) writeonly buffer Out {
+  uint sink[];
+};
+
+void main() {
+  sink[0] = uint(wide.hi) + uint(wide.lo) + wide.tag;
+}

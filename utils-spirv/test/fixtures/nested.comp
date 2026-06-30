@@ -1,0 +1,31 @@
+#version 450
+
+// Fixture exercising nested structs as fields, plus cross-layout sharing. The
+// `Material` struct is all-vec4 (every member 16-byte aligned), so std140 and
+// std430 lay it out identically: it is used both as a field of the std140
+// `Scene` UBO and as the element of the std430 `Mats` SSBO, and a single
+// generated record is shared ("promoted") across both.
+
+layout(local_size_x = 1) in;
+
+struct Material {
+  vec4 albedo;
+  vec4 emission;
+};
+
+layout(set = 0, binding = 0, std140) uniform Scene {
+  Material sun;  // nested struct field @0 (size 32)
+  vec4     tint; // @32
+} scene;
+
+layout(set = 0, binding = 1, std430) buffer Mats {
+  Material mats[];
+};
+
+layout(set = 0, binding = 2, std430) writeonly buffer O {
+  vec4 o[];
+};
+
+void main() {
+  o[0] = scene.sun.albedo + scene.sun.emission + scene.tint + mats[0].emission;
+}

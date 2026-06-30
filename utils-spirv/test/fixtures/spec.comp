@@ -1,0 +1,21 @@
+#version 450
+
+// Fixture exercising specialization-constant reflection. The ids are
+// deliberately non-contiguous (0 and 3) to show that map entries follow the
+// shader's actual constant_ids while values pack tightly (offsets 0, 4).
+
+layout(local_size_x = 64) in;
+
+layout(constant_id = 0) const uint  count = 1u;
+layout(constant_id = 3) const float scale = 1.0;
+
+layout(set = 0, binding = 0, std430) buffer Output {
+  float xs[];
+};
+
+void main() {
+  uint i = gl_GlobalInvocationID.x;
+  if (i < count) {
+    xs[i] = scale;
+  }
+}

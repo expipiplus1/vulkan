@@ -16,11 +16,11 @@ main = runResourceT $ do
   (vc, _vma, initialSC) <-
     withWindowedVk
       WindowedConfig
-        { wcAppName = appName
-        , wcInstanceReqs = []
-        , wcDeviceReqs = []
-        , wcVmaFlags = zero
-        , wcSwapchainConfig = defaultSwapchainConfig
+        { appName = appName
+        , instanceReqs = []
+        , deviceReqs = []
+        , vmaFlags = zero
+        , swapchainConfig = defaultSwapchainConfig
         }
       (Window.sdl2Adapter window)
   Triangle.runTriangle

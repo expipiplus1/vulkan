@@ -20,15 +20,15 @@ main = runResourceT $ do
   (vc, _vma, initialSC) <-
     withWindowedVk
       WindowedConfig
-        { wcAppName = appName
-        , wcInstanceReqs = []
-        , wcDeviceReqs =
+        { appName = appName
+        , instanceReqs = []
+        , deviceReqs =
             [U.reqs|
               VK_KHR_dynamic_rendering
               PhysicalDeviceDynamicRenderingFeatures.dynamicRendering
             |]
-        , wcVmaFlags = zero
-        , wcSwapchainConfig = defaultSwapchainConfig
+        , vmaFlags = zero
+        , swapchainConfig = defaultSwapchainConfig
         }
       (Window.glfwAdapter window)
   TriangleDynamic.runTriangle

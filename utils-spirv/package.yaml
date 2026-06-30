@@ -1,0 +1,85 @@
+name: vulkan-utils-spirv
+version: "0.1.0.0"
+synopsis: Generate Haskell types and Vulkan descriptor/pipeline layouts from SPIR-V reflection
+category: Graphics
+maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
+github: expipiplus1/vulkan
+extra-source-files:
+- README.md
+- package.yaml
+- test/fixtures/array-field.comp.spv
+- test/fixtures/array2d.comp.spv
+- test/fixtures/julia.comp.spv
+- test/fixtures/mesh.frag.spv
+- test/fixtures/mesh.vert.spv
+- test/fixtures/nested.comp.spv
+- test/fixtures/push.comp.spv
+- test/fixtures/spec.comp.spv
+- test/fixtures/ssbo-struct.comp.spv
+- test/fixtures/tri.vert.spv
+- test/fixtures/wide.comp.spv
+
+library:
+  source-dirs: src
+  dependencies:
+  - base >= 4.16 && <5
+  - bytestring
+  - containers
+  - gl-block
+  - ptrdiff
+  - resourcet
+  - spirv-enum
+  - spirv-reflect-ffi
+  - spirv-reflect-types
+  - template-haskell
+  - text
+  - unliftio-core
+  - vector
+  - vulkan >= 3.27 && < 3.28
+  - vulkan-utils
+
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+    - base <5
+    - containers
+    - geomancy
+    - gl-block
+    - spirv-reflect-ffi
+    - spirv-reflect-types
+    - tasty
+    - tasty-hunit
+    - template-haskell
+    - text
+    - vector
+    - vulkan
+    - vulkan-utils-spirv
+
+ghc-options:
+- -Wall
+
+default-extensions:
+- BlockArguments
+- DataKinds
+- DeriveAnyClass
+- DeriveGeneric
+- DerivingStrategies
+- DerivingVia
+- DuplicateRecordFields
+- FlexibleContexts
+- FlexibleInstances
+- ImportQualifiedPost
+- LambdaCase
+- NamedFieldPuns
+- OverloadedRecordDot
+- OverloadedStrings
+- PatternSynonyms
+- RecordWildCards
+- ScopedTypeVariables
+- TemplateHaskell
+- TupleSections
+- TypeApplications
+- TypeOperators
+- ViewPatterns

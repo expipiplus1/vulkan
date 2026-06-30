@@ -3,6 +3,7 @@ packages:
   ./openxr
   ./VulkanMemoryAllocator
   ./utils
+  ./utils-spirv
   ./utils-init/vulkan-init-sdl2
   ./utils-init/vulkan-init-glfw
   ./examples

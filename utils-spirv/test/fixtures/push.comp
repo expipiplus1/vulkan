@@ -1,0 +1,28 @@
+#version 450
+
+// Fixture exercising push-constant reflection: the `Push` block becomes a
+// Haskell record with a gl-block std430 Storable, and `pushConstantRanges`
+// derives the VkPushConstantRange. Fields are ordered by non-increasing
+// alignment (mat4 = 16, vec2 = 8, float/int = 4) to satisfy the gl-block
+// layout guardrail.
+
+layout(local_size_x = 64) in;
+
+layout(push_constant, std430) uniform Push {
+  mat4  transform;
+  vec2  offset;
+  float scale;
+  int   count;
+} push;
+
+layout(set = 0, binding = 0, std430) buffer Output {
+  vec4 data[];
+};
+
+void main() {
+  uint i = gl_GlobalInvocationID.x;
+  if (i >= uint(push.count)) {
+    return;
+  }
+  data[i] = push.transform * vec4(push.offset * push.scale, 0.0, 1.0);
+}

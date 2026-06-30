@@ -1,0 +1,39 @@
+#version 460
+#extension GL_EXT_buffer_reference : require
+
+// A self-referential buffer_reference (BDA) type: a BVH-ish node whose children
+// are 64-bit device addresses back to Node. Reflection-driven codegen maps the
+// pointer members to DeviceAddress Node (8-byte address), not an inlined struct,
+// and generates Node once despite the cycle.
+//
+// NOTE: buffer_reference needs SPIR-V 1.3+, so compile with
+//   glslangValidator -V --target-env vulkan1.2 bda.comp -o bda.comp.spv
+
+layout(local_size_x = 64) in;
+
+layout(buffer_reference) buffer Node;            // fwd decl enables self-reference
+layout(buffer_reference, std430) buffer Node {
+  vec4 boundsMin;
+  vec4 boundsMax;
+  Node left;                                     // BDA pointer -> cycle
+  Node right;                                    // BDA pointer -> cycle
+  uint primCount;
+};
+
+layout(push_constant, std430) uniform Bvh {
+  Node root;                                     // entry address into the graph
+} bvh;
+
+layout(set = 0, binding = 0, std430) writeonly buffer Out {
+  uint hits[];
+};
+
+void main() {
+  Node n = bvh.root;
+  uint count = 0u;
+  for (int i = 0; i < 8; ++i) {
+    count += n.primCount;
+    n = n.left;
+  }
+  hits[gl_GlobalInvocationID.x] = count;
+}

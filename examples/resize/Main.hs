@@ -86,11 +86,11 @@ main = prettyError . runResourceT $ do
 windowConfig :: WindowedConfig
 windowConfig =
   WindowedConfig
-    { wcAppName = "Haskell ❤️ Vulkan"
-    , wcInstanceReqs = []
-    , wcDeviceReqs = []
-    , wcVmaFlags = zero
-    , wcSwapchainConfig =
+    { appName = "Haskell ❤️ Vulkan"
+    , instanceReqs = []
+    , deviceReqs = []
+    , vmaFlags = zero
+    , swapchainConfig =
         defaultSwapchainConfig
           { scRequiredUsageFlags =
               -- TRANSFER_DST for the blit; COLOR_ATTACHMENT so the

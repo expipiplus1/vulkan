@@ -1,0 +1,25 @@
+#version 450
+
+// Fixture exercising fixed-size array fields, mapped to `Array n a`. The same
+// fields appear in a std140 UBO and a std430 SSBO to show the stride difference:
+// std140 rounds every element up to 16 bytes, std430 packs tightly.
+
+layout(local_size_x = 1) in;
+
+layout(set = 0, binding = 0, std140) uniform Kernel140 {
+  vec4  taps[4];    // stride 16 in both
+  float weights[4]; // stride 16 in std140
+} k140;
+
+layout(set = 0, binding = 1, std430) buffer Kernel430 {
+  vec4  taps[4];    // stride 16
+  float weights[4]; // stride 4 in std430
+} k430;
+
+layout(set = 0, binding = 2, std430) writeonly buffer O {
+  vec4 o[];
+};
+
+void main() {
+  o[0] = k140.taps[0] * k140.weights[0] + k430.taps[0] * k430.weights[0];
+}

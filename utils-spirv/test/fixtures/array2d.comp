@@ -1,0 +1,25 @@
+#version 450
+
+// Fixture exercising a multi-dimensional array field: float grid[3][4] maps to
+// Array 3 (Array 4 Float). In std430 the inner stride is 4 (outer 16); in std140
+// the inner stride is 16 (outer 64).
+
+layout(local_size_x = 1) in;
+
+layout(set = 0, binding = 0, std430) buffer Grid430 {
+  vec4  head;        // @0
+  float grid[3][4];  // @16, inner stride 4, outer stride 16
+} g430;
+
+layout(set = 0, binding = 1, std140) uniform Grid140 {
+  vec4  head;        // @0
+  float grid[3][4];  // @16, inner stride 16, outer stride 64
+} g140;
+
+layout(set = 0, binding = 2, std430) writeonly buffer O {
+  vec4 o[];
+};
+
+void main() {
+  o[0] = g430.head + g140.head + vec4(g430.grid[0][0] + g140.grid[0][0]);
+}

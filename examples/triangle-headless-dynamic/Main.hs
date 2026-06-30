@@ -49,17 +49,18 @@ main = runResourceT $ do
   HeadlessVk{..} <-
     withHeadlessVk
       HeadlessConfig
-        { hcAppName = "Haskell Vulkan dynamic-state (headless) test"
-        , hcInstanceReqs = []
-        , hcDeviceReqs =
+        { appName = "Haskell Vulkan dynamic-state (headless) test"
+        , instanceReqs = []
+        , deviceReqs =
             [U.reqs|
               VK_KHR_dynamic_rendering
               PhysicalDeviceDynamicRenderingFeatures.dynamicRendering
             |]
+        , vmaFlags = zero
         }
-  let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics hvQueues)
-  results <- render hvAllocator hvDevice graphicsQueueFamilyIndex
-  Vk.deviceWaitIdle hvDevice
+  let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics queues)
+  results <- render allocator device graphicsQueueFamilyIndex
+  Vk.deviceWaitIdle device
 
   centres <- forM results $ \(name, image) -> do
     savePng ("headless-dynamic-" <> name <> ".png") image
@@ -105,12 +106,12 @@ render allocator dev graphicsQueueFamilyIndex = do
 
   (cpuImage, readback) <- makeReadbackImage allocator dev imageFormat extent
 
-  -- One pipeline, full always-on dynamic state (Nothing).
+  -- One pipeline; dynamic states default to full always-on.
   (_, pipeline) <-
     Dynamic.allocatePipelineFromShaders
       dev
       zero{Dynamic.colorFormats = [imageFormat]}
-      () -- no specialization constants
+      ()
       [(Vk.SHADER_STAGE_VERTEX_BIT, vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)]
 
   let poolCreateInfo = zero{CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex}

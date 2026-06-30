@@ -1,0 +1,24 @@
+#version 450
+
+// Fixture exercising SSBO arrays of structs: the `Particle` element type is
+// generated as a std430 record even though the wrapping `Particles` block is a
+// runtime array (not itself representable as a flat record). Fields are ordered
+// by non-increasing alignment (vec3 = 16, vec2 = 8, float/uint = 4).
+
+layout(local_size_x = 64) in;
+
+struct Particle {
+  vec3  position; // align 16 @0
+  vec2  velocity; // align 8  @16
+  float mass;     // align 4  @24
+  uint  flags;    // align 4  @28
+};
+
+layout(set = 0, binding = 0, std430) buffer Particles {
+  Particle items[];
+};
+
+void main() {
+  uint i = gl_GlobalInvocationID.x;
+  items[i].position += vec3(items[i].velocity, 0.0) * items[i].mass;
+}

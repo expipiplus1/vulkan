@@ -34,14 +34,15 @@ main = runResourceT $ do
   HeadlessVk{..} <-
     withHeadlessVk
       HeadlessConfig
-        { hcAppName = "Haskell Vulkan compute example"
-        , hcInstanceReqs = []
-        , hcDeviceReqs = []
+        { appName = "Haskell Vulkan compute example"
+        , instanceReqs = []
+        , deviceReqs = []
+        , vmaFlags = zero
         }
-  let QueueFamilyIndex computeQueueFamilyIndex = fst (qCompute hvQueues)
+  let QueueFamilyIndex computeQueueFamilyIndex = fst (qCompute queues)
 
-  image <- render hvAllocator hvDevice computeQueueFamilyIndex
-  Vk.deviceWaitIdle hvDevice
+  image <- render allocator device computeQueueFamilyIndex
+  Vk.deviceWaitIdle device
   savePng "julia.png" image
 
 -- | Render the Julia set
