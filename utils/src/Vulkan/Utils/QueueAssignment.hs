@@ -190,7 +190,6 @@ assignQueues phys specs = runMaybeT $ do
         , not (null ps)
         ]
 
-    -- Get
     extractQueues :: Device -> n (f (QueueFamilyIndex, Queue))
     extractQueues dev =
       for specsWithQueueIndex $

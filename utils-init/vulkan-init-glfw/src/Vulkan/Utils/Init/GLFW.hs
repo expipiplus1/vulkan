@@ -1,6 +1,7 @@
 {-| Vulkan initialization glue for GLFW windows. Compose with
-'Vulkan.Utils.Init.withVulkanInstance' (or just call 'withInstance' here)
-and the rest of @vulkan-utils@ to get a ready-to-render setup.
+'Vulkan.Utils.Initialization.allocateVulkanInstance' (or just call
+'allocateInstance' here) and the rest of @vulkan-utils@ to get a
+ready-to-render setup.
 -}
 module Vulkan.Utils.Init.GLFW
   ( -- * Required extensions
@@ -10,10 +11,10 @@ module Vulkan.Utils.Init.GLFW
     -- * Surface
   , createSurface
   , destroySurface
-  , withSurface
+  , allocateSurface
 
     -- * Instance
-  , withInstance
+  , allocateInstance
   ) where
 
 import Control.Exception (throwIO)
@@ -44,7 +45,7 @@ import Vulkan.Extensions.VK_KHR_swapchain
   ( pattern KHR_SWAPCHAIN_EXTENSION_NAME
   )
 import Vulkan.Requirement (InstanceRequirement)
-import Vulkan.Utils.Initialization (withVulkanInstance)
+import Vulkan.Utils.Initialization (allocateVulkanInstance)
 
 {- | Vulkan instance extensions GLFW requires. The window argument is unused
 (GLFW's API is global) but kept for symmetry with the SDL2 module.
@@ -74,22 +75,22 @@ createSurface inst w = alloca $ \surfPtr -> do
 destroySurface :: Instance -> SurfaceKHR -> IO ()
 destroySurface inst s = destroySurfaceKHR inst s Nothing
 
--- | Bracketed surface creation in 'MonadResource'.
-withSurface :: (MonadResource m) => Instance -> GLFW.Window -> m SurfaceKHR
-withSurface inst w =
+-- | Allocate a surface in 'MonadResource', released with the resource scope.
+allocateSurface :: (MonadResource m) => Instance -> GLFW.Window -> m SurfaceKHR
+allocateSurface inst w =
   snd <$> allocate (createSurface inst w) (destroySurface inst)
 
 {- | Build a Vulkan 'Instance' wired up with GLFW's required extensions.
 Composes 'getRequiredInstanceExtensions' and
-'Vulkan.Utils.Init.withVulkanInstance'.
+'Vulkan.Utils.Initialization.allocateVulkanInstance'.
 -}
-withInstance
+allocateInstance
   :: (MonadResource m)
   => GLFW.Window
   -> Maybe ApplicationInfo
   -> [InstanceRequirement]
   -> [InstanceRequirement]
   -> m Instance
-withInstance w appInfo reqs optReqs = do
+allocateInstance w appInfo reqs optReqs = do
   exts <- getRequiredInstanceExtensions w
-  withVulkanInstance exts appInfo reqs optReqs
+  allocateVulkanInstance exts appInfo reqs optReqs

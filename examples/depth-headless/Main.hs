@@ -155,7 +155,6 @@ render allocator dev graphicsQueueFamilyIndex = do
   (_, (image, imageView)) <- createColorTarget allocator dev imageFormat extent
   (_, (depthImage, depthView)) <- createDepthTarget allocator dev depthFormat extent
 
-  -- CPU readback image + its reader.
   (cpuImage, readback) <- makeReadbackImage allocator dev imageFormat extent
 
   -- Vertex buffer: host-visible, mapped, filled with the 6 vertices.
@@ -186,13 +185,13 @@ render allocator dev graphicsQueueFamilyIndex = do
               ]
           }
   (_, pipeline) <-
-    Dynamic.createPipelineFromShaders
+    Dynamic.allocatePipelineFromShaders
       dev
-      [imageFormat]
-      (Just depthFormat)
-      vertexInput
-      Nothing -- full always-on dynamic state
-      Nothing -- empty pipeline layout (no descriptor sets / push constants)
+      zero
+        { Dynamic.colorFormats = [imageFormat]
+        , Dynamic.depthFormat = Just depthFormat
+        , Dynamic.vertexInput = vertexInput
+        }
       () -- no specialization constants
       [(Vk.SHADER_STAGE_VERTEX_BIT, vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)]
 

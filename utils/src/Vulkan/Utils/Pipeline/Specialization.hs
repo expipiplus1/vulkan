@@ -1,13 +1,6 @@
 {-|
 Specialization constants, normalized to stacks of 32-bit units.
 
-32 bits is both the minimal and the maximal size of a Vulkan specialization
-constant (they may only be scalar @int@/@uint@/@float@/@bool@; @double@ is the
-lone exception and is not supported here), so every constant maps to exactly one
-'Word32' slot. That makes the layout trivial: the @n@th value packs into
-@constantID = n@ at @offset = n * 4@ with @size = 4@. Shaders therefore declare
-their constants with matching @constant_id@s counting from zero, in the same
-order as the Haskell tuple/list passed here.
 
 @
 data MySpec = MySpec { width :: Word32, height :: Word32, scale :: Float }

@@ -3,9 +3,9 @@
 
 module Vulkan.Utils.Initialization
   ( -- * Instance creation
-    createInstanceFromRequirements
-  , createDebugInstanceFromRequirements
-  , withVulkanInstance
+    allocateInstanceFromRequirements
+  , allocateDebugInstanceFromRequirements
+  , allocateVulkanInstance
 
     -- * macOS portability
   , portabilityRequirements
@@ -13,11 +13,16 @@ module Vulkan.Utils.Initialization
   , devicePortabilityRequirements
 
     -- * Device creation
-  , createDeviceFromRequirements
+  , allocateDeviceFromRequirements
 
     -- * Physical device selection
   , pickPhysicalDevice
   , physicalDeviceName
+
+    -- * Deprecated aliases
+  , createInstanceFromRequirements
+  , createDebugInstanceFromRequirements
+  , createDeviceFromRequirements
   ) where
 
 import Control.Monad.IO.Class
@@ -54,14 +59,14 @@ import           Vulkan.Extensions.VK_KHR_portability_subset
 -- Instance
 ----------------------------------------------------------------
 
-{- | Like 'createInstanceFromRequirements' except it will create a debug utils
+{- | Like 'allocateInstanceFromRequirements' except it will create a debug utils
 messenger (from the @VK_EXT_debug_utils@ extension).
 
 If the @VK_EXT_validation_features@ extension (from the
 @VK_LAYER_KHRONOS_validation@ layer) is available is it will be enabled and
 best practices messages enabled.
 -}
-createDebugInstanceFromRequirements
+allocateDebugInstanceFromRequirements
   :: forall m es
    . (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
   => [InstanceRequirement]
@@ -70,7 +75,7 @@ createDebugInstanceFromRequirements
   -- ^ Optional
   -> InstanceCreateInfo es
   -> m Instance
-createDebugInstanceFromRequirements required optional baseCreateInfo = do
+allocateDebugInstanceFromRequirements required optional baseCreateInfo = do
   let
     debugMessengerCreateInfo =
       zero
@@ -114,7 +119,7 @@ createDebugInstanceFromRequirements required optional baseCreateInfo = do
           }
       ]
   inst <-
-    createInstanceFromRequirements
+    allocateInstanceFromRequirements
       (additionalRequirements <> toList required)
       (additionalOptionalRequirements <> toList optional)
       instanceCreateInfo
@@ -126,7 +131,7 @@ createDebugInstanceFromRequirements required optional baseCreateInfo = do
 Will throw an 'IOError in the case of unsatisfied non-optional requirements.
 Unsatisfied requirements will be listed on stderr.
 -}
-createInstanceFromRequirements
+allocateInstanceFromRequirements
   :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
   => [InstanceRequirement]
   -- ^ Required
@@ -134,7 +139,7 @@ createInstanceFromRequirements
   -- ^ Optional
   -> InstanceCreateInfo es
   -> m Instance
-createInstanceFromRequirements required optional baseCreateInfo = do
+allocateInstanceFromRequirements required optional baseCreateInfo = do
   (mbICI, rrs, ors) <-
     checkInstanceRequirements
       required
@@ -190,9 +195,9 @@ into the required list and 'portabilityFlags' into the create flags so
 macOS apps work without per-call plumbing.
 
 Pass 'mempty' for the extension list when running headless; or call
-'Vulkan.Utils.Init.Headless.withInstance' which does so.
+'Vulkan.Utils.Init.Headless.allocateInstance' which does so.
 -}
-withVulkanInstance
+allocateVulkanInstance
   :: (MonadResource m)
   => Vector ByteString
   {- ^ Backend-required instance extensions (e.g. from
@@ -205,8 +210,8 @@ withVulkanInstance
   -> [InstanceRequirement]
   -- ^ Caller's optional requirements
   -> m Instance
-withVulkanInstance exts appInfo reqs optReqs =
-  createInstanceFromRequirements
+allocateVulkanInstance exts appInfo reqs optReqs =
+  allocateInstanceFromRequirements
     (portabilityRequirements <> reqs)
     optReqs
     zero
@@ -226,7 +231,7 @@ withVulkanInstance exts appInfo reqs optReqs =
 Will throw an 'IOError in the case of unsatisfied non-optional requirements.
 Unsatisfied requirements will be listed on stderr.
 -}
-createDeviceFromRequirements
+allocateDeviceFromRequirements
   :: forall m
    . (MonadResource m)
   => [DeviceRequirement]
@@ -236,7 +241,7 @@ createDeviceFromRequirements
   -> PhysicalDevice
   -> DeviceCreateInfo '[]
   -> m Device
-createDeviceFromRequirements required optional phys baseCreateInfo = do
+allocateDeviceFromRequirements required optional phys baseCreateInfo = do
   (mbDCI, rrs, ors) <-
     checkDeviceRequirements
       (devicePortabilityRequirements <> required)
@@ -307,3 +312,35 @@ physicalDeviceName =
 
 maximumBy_ :: (Foldable t) => (a -> a -> Ordering) -> t a -> Maybe a
 maximumBy_ f xs = if null xs then Nothing else Just (maximumBy f xs)
+
+----------------------------------------------------------------
+-- Deprecated aliases
+----------------------------------------------------------------
+
+{-# DEPRECATED createInstanceFromRequirements "Renamed to allocateInstanceFromRequirements" #-}
+createInstanceFromRequirements
+  :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
+  => [InstanceRequirement]
+  -> [InstanceRequirement]
+  -> InstanceCreateInfo es
+  -> m Instance
+createInstanceFromRequirements = allocateInstanceFromRequirements
+
+{-# DEPRECATED createDebugInstanceFromRequirements "Renamed to allocateDebugInstanceFromRequirements" #-}
+createDebugInstanceFromRequirements
+  :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
+  => [InstanceRequirement]
+  -> [InstanceRequirement]
+  -> InstanceCreateInfo es
+  -> m Instance
+createDebugInstanceFromRequirements = allocateDebugInstanceFromRequirements
+
+{-# DEPRECATED createDeviceFromRequirements "Renamed to allocateDeviceFromRequirements" #-}
+createDeviceFromRequirements
+  :: (MonadResource m)
+  => [DeviceRequirement]
+  -> [DeviceRequirement]
+  -> PhysicalDevice
+  -> DeviceCreateInfo '[]
+  -> m Device
+createDeviceFromRequirements = allocateDeviceFromRequirements

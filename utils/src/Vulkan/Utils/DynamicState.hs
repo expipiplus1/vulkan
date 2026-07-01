@@ -3,8 +3,8 @@
 {-| The Vulkan-1.3-core "always-on" dynamic state: the set of pipeline state
 that can be made dynamic without any vendor or experimental extension, so a
 single pipeline object serves every combination instead of permuting into one
-'Vk.Pipeline' per variation. See 'Vulkan.Utils.RenderPass.createPipeline'
-and 'Vulkan.Utils.DynamicRendering.createPipeline'.
+'Vk.Pipeline' per variation. See 'Vulkan.Utils.RenderPass.allocatePipeline'
+and 'Vulkan.Utils.DynamicRendering.allocatePipeline'.
 
 Because these states are declared dynamic, the matching @cmdSet*@ MUST be issued
 before each draw (an unset dynamic state is undefined behaviour). The
@@ -159,7 +159,6 @@ dynamicStateFor ext =
 -- The state set (single source of truth)
 ----------------------------------------------------------------
 
--- | Pre-rasterization dynamic states.
 preRasterizationStates :: Vector Vk.DynamicState
 preRasterizationStates =
   [ Vk.DYNAMIC_STATE_VIEWPORT_WITH_COUNT
@@ -189,7 +188,6 @@ fragmentTestStates =
   , Vk.DYNAMIC_STATE_STENCIL_REFERENCE
   ]
 
--- | Fragment-output dynamic states.
 fragmentOutputStates :: Vector Vk.DynamicState
 fragmentOutputStates = [Vk.DYNAMIC_STATE_BLEND_CONSTANTS]
 

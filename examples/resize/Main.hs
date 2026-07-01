@@ -30,7 +30,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..))
 import Vulkan.Exception
 import Vulkan.Utils.Barrier (imageBarrier)
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands, withTimelineSemaphore)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, allocateTimelineSemaphore, presentFrameImage, queueSubmitFrame, recordCommands)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -67,7 +67,7 @@ main = prettyError . runResourceT $ do
     if fst (qGraphics (vcQueues vc)) == fst (qCompute (vcQueues vc))
       then pure SharedQueue
       else do
-        (_, readyTimeline) <- withTimelineSemaphore dev 0
+        (_, readyTimeline) <- allocateTimelineSemaphore dev 0
         lastBlitDone <- liftIO (newIORef 0)
         pure (AsyncCompute readyTimeline lastBlitDone)
 
@@ -139,9 +139,7 @@ data Bindings = Bindings
   the frame acquires.
   -}
   , bOffscreenView :: Vk.ImageView
-  -- ^ View of 'bOffscreenImage', bound into 'bJuliaDescriptorSet'.
   , bJuliaDescriptorSet :: Vk.DescriptorSet
-  -- ^ Storage-image descriptor pointing at 'bOffscreenView'.
   }
 
 createBindings

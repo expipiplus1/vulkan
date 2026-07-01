@@ -29,10 +29,6 @@ import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
-----------------------------------------------------------------
--- The program
-----------------------------------------------------------------
-
 main :: IO ()
 main = runResourceT $ do
   HeadlessVk{..} <-
@@ -77,7 +73,6 @@ render allocator dev computeQueueFamilyIndex = do
         }
       allocate
 
-  -- Create a descriptor set and layout for this buffer
   (descriptorSet, descriptorSetLayout) <- do
     (_, descriptorPool) <-
       Vk.withDescriptorPool
@@ -128,7 +123,6 @@ render allocator dev computeQueueFamilyIndex = do
     ]
     []
 
-  -- Create our shader and compute pipeline
   (_, shader) <- shaderStage dev Vk.SHADER_STAGE_COMPUTE_BIT () compCode
   (_, pipelineLayout) <-
     Vk.withPipelineLayout
@@ -152,7 +146,6 @@ render allocator dev computeQueueFamilyIndex = do
       Nothing
       allocate
 
-  -- Create a command buffer
   let commandPoolCreateInfo =
         zero
           { CommandPoolCreateInfo.queueFamilyIndex = computeQueueFamilyIndex
@@ -166,7 +159,6 @@ render allocator dev computeQueueFamilyIndex = do
           }
   (_, [cb]) <- Vk.withCommandBuffers dev commandBufferAllocateInfo allocate
 
-  -- Fill command buffer
   Vk.useCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} do
     Vk.cmdBindPipeline
       cb

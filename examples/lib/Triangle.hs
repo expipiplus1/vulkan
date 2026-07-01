@@ -45,7 +45,7 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
   let dev = vcDevice vc
   let colorFormat = KHR.format (sFormat initialSC)
   (_, renderPass) <-
-    RenderPass.createColorRenderPass
+    RenderPass.allocateColorRenderPass
       dev
       colorFormat
       Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
@@ -59,7 +59,7 @@ runTriangle vc initialSC getDrawableSize shouldQuit = do
     WindowLoop
       { wlMkState = \sc -> do
           framebuffers <-
-            traverse (\iv -> Framebuffer.createFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
+            traverse (\iv -> Framebuffer.allocateFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
           groupKey <- register (traverse_ (release . fst) framebuffers)
           pure (fmap snd framebuffers, groupKey)
       , wlRender = drawTriangle vc renderPass pipeline
@@ -112,14 +112,13 @@ createGraphicsPipeline
   -- ^ Colour attachment format (matches the render pass).
   -> m (ReleaseKey, Vk.Pipeline)
 createGraphicsPipeline dev renderPass colorFormat =
-  RenderPass.createPipelineFromShaders
+  RenderPass.allocatePipelineFromShaders
     dev
     renderPass
-    [colorFormat]
-    Nothing -- no depth attachment
-    zero -- no vertex input
-    (Just minimalDynamicStates) -- just viewport+scissor; set below with cmdSetViewport/Scissor
-    Nothing -- empty pipeline layout (no descriptor sets / push constants)
+    zero
+      { RenderPass.colorFormats = [colorFormat]
+      , RenderPass.dynamicStates = Just minimalDynamicStates -- just viewport+scissor; set below with cmdSetViewport/Scissor
+      }
     () -- no specialization constants
     [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
     , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)

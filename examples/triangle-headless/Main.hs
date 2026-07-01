@@ -133,7 +133,6 @@ render allocator dev graphicsQueueFamilyIndex = do
       allocate
   nameObject dev cpuImage "CPU side image"
 
-  -- Create an image view
   let
     imageSubresourceRange =
       Vk.ImageSubresourceRange
@@ -159,12 +158,11 @@ render allocator dev graphicsQueueFamilyIndex = do
   (_, imageView) <- Vk.withImageView dev imageViewCreateInfo Nothing allocate
 
   (_, renderPass) <-
-    RenderPass.createColorRenderPass
+    RenderPass.allocateColorRenderPass
       dev
       imageFormat
       Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
 
-  -- Create a framebuffer
   let
     framebufferCreateInfo :: Vk.FramebufferCreateInfo '[]
     framebufferCreateInfo =
@@ -177,14 +175,12 @@ render allocator dev graphicsQueueFamilyIndex = do
         }
   (_, framebuffer) <- Vk.withFramebuffer dev framebufferCreateInfo Nothing allocate
 
-  -- Create the most vanilla rendering pipeline
   (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT () vertCode
   (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT () fragCode
-  (_, graphicsPipeline) <- RenderPass.createPipeline dev renderPass [imageFormat] Nothing zero (Just minimalDynamicStates) Nothing [vertStage, fragStage]
+  (_, graphicsPipeline) <- RenderPass.allocatePipeline dev renderPass zero{RenderPass.colorFormats = [imageFormat], RenderPass.dynamicStates = Just minimalDynamicStates} [vertStage, fragStage]
   release vertKey
   release fragKey
 
-  -- Create a command buffer
   let commandPoolCreateInfo =
         zero
           { CommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex
@@ -198,11 +194,6 @@ render allocator dev graphicsQueueFamilyIndex = do
           }
   (_, [commandBuffer]) <- Vk.withCommandBuffers dev commandBufferAllocateInfo allocate
 
-  -- Fill command buffer
-  --
-  -- - Execute the renderpass
-  -- - Transition the images to be able to perform the copy
-  -- - Copy the image to CPU mapped memory
   Vk.useCommandBuffer commandBuffer zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} do
     let renderPassBeginInfo =
           zero
@@ -272,7 +263,6 @@ render allocator dev graphicsQueueFamilyIndex = do
             }
       ]
 
-    -- Copy the image
     Vk.cmdCopyImage
       commandBuffer
       image

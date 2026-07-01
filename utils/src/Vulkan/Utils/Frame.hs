@@ -27,7 +27,7 @@ module Vulkan.Utils.Frame
   , acquireFrameImage
   , presentFrameImage
   , drainFrames
-  , withTimelineSemaphore
+  , allocateTimelineSemaphore
   , frameInstanceRequirements
   , frameDeviceRequirements
   ) where
@@ -58,7 +58,6 @@ import Vulkan.Utils.Swapchain (Swapchain (..), sRelease)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
 
--- | Per-frame state.
 data Frame = Frame
   { fIndex :: Word64
   -- ^ Monotonic, used as the timeline-semaphore signal value for this frame.
@@ -101,8 +100,8 @@ frameInstanceRequirements =
   ]
 
 {- | The device-level requirements needed by 'runFrame' / 'queueSubmitFrame' /
-'withTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
-calling 'Vulkan.Utils.Initialization.createDeviceFromRequirements'.
+'allocateTimelineSemaphore'. Merge into your other 'DeviceRequirement's when
+calling 'Vulkan.Utils.Initialization.allocateDeviceFromRequirements'.
 -}
 frameDeviceRequirements :: [DeviceRequirement]
 frameDeviceRequirements =
@@ -125,7 +124,7 @@ initialFrame vc fSwapchain = do
   fRecycled <- mkRecycledResources vc
   spare <- mkRecycledResources vc
   liftIO (vcRecycleBin vc spare)
-  (_, fHostTimeline) <- withTimelineSemaphore (vcDevice vc) 0
+  (_, fHostTimeline) <- allocateTimelineSemaphore (vcDevice vc) 0
   fGPUWork <- liftIO $ newIORef mempty
   fResources <- allocate createInternalState closeInternalState
   liftIO $ runInternalState (resourceTRefCount (sRelease fSwapchain)) (snd fResources)
@@ -355,8 +354,8 @@ drainFrames vc f = do
 ----------------------------------------------------------------
 
 -- | Allocate a timeline semaphore initialised to the given value.
-withTimelineSemaphore :: (MonadResource m) => Vk.Device -> Word64 -> m (ReleaseKey, Vk.Semaphore)
-withTimelineSemaphore dev initial =
+allocateTimelineSemaphore :: (MonadResource m) => Vk.Device -> Word64 -> m (ReleaseKey, Vk.Semaphore)
+allocateTimelineSemaphore dev initial =
   Vk.withSemaphore
     dev
     (zero ::& SemaphoreTypeCreateInfo SEMAPHORE_TYPE_TIMELINE initial :& ())

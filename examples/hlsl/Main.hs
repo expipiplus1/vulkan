@@ -41,7 +41,7 @@ main = runResourceT $ do
       (sdl2Adapter win)
   let dev = vcDevice vc
   let colorFormat = SurfaceFormatKHR.format (sFormat initialSC)
-  (_, renderPass) <- RenderPass.createColorRenderPass dev colorFormat Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
+  (_, renderPass) <- RenderPass.allocateColorRenderPass dev colorFormat Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
   (_, pipeline) <- createPipeline dev renderPass colorFormat
 
   SDL.showWindow win
@@ -55,7 +55,7 @@ main = runResourceT $ do
     WindowLoop
       { wlMkState = \sc -> do
           framebuffers <-
-            traverse (\iv -> Framebuffer.createFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
+            traverse (\iv -> Framebuffer.allocateFramebuffer dev renderPass iv (sExtent sc)) (sImageViews sc)
           groupKey <- register (traverse_ (release . fst) framebuffers)
           pure (fmap snd framebuffers, groupKey)
       , wlRender = \fbs f ->
@@ -78,14 +78,13 @@ createPipeline
   -> Vk.Format
   -> m (ReleaseKey, Vk.Pipeline)
 createPipeline dev renderPass colorFormat =
-  RenderPass.createPipelineFromShaders
+  RenderPass.allocatePipelineFromShaders
     dev
     renderPass
-    [colorFormat]
-    Nothing
-    zero -- no vertex input
-    (Just minimalDynamicStates)
-    Nothing -- empty pipeline layout (no descriptor sets / push constants)
+    zero
+      { RenderPass.colorFormats = [colorFormat]
+      , RenderPass.dynamicStates = Just minimalDynamicStates
+      }
     ()
     [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)
     , (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)

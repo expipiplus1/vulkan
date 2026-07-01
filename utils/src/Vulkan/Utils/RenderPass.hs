@@ -10,12 +10,13 @@ needs neither a render pass nor framebuffers. Pick one and import only it.
 -}
 module Vulkan.Utils.RenderPass
   ( -- * Render pass
-    createRenderPass
-  , createColorRenderPass
+    allocateRenderPass
+  , allocateColorRenderPass
 
     -- * Pipeline
-  , createPipeline
-  , createPipelineFromShaders
+  , PipelineConfig (..)
+  , allocatePipeline
+  , allocatePipelineFromShaders
   ) where
 
 import Control.Monad.IO.Unlift (MonadUnliftIO)
@@ -30,7 +31,7 @@ import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.DynamicState (defaultDynamicStatesFor)
 import Vulkan.Utils.Pipeline.Internal (basePipelineCreateInfo, buildColorPipeline, withCompiledStages)
 import Vulkan.Utils.Pipeline.Specialization (Specialization)
-import Vulkan.Zero (zero)
+import Vulkan.Zero (Zero (..))
 
 {- | A render pass with @colors@ colour attachments (each @(format, finalLayout)@)
 and an optional depth attachment, all cleared on load and stored on completion, in
@@ -40,7 +41,7 @@ depth attachment at @N@ — the colour-then-depth order the framebuffer's
 dependency synchronizes colour output and, when present, the
 depth fragment tests.
 -}
-createRenderPass
+allocateRenderPass
   :: (MonadResource m)
   => Vk.Device
   -> Vector (Vk.Format, Vk.ImageLayout)
@@ -48,7 +49,7 @@ createRenderPass
   -> Maybe Vk.Format
   -- ^ Optional depth attachment format.
   -> m (ReleaseKey, Vk.RenderPass)
-createRenderPass dev colors depth =
+allocateRenderPass dev colors depth =
   Vk.withRenderPass
     dev
     zero
@@ -153,9 +154,9 @@ depthAttachmentDescription imageFormat =
 {- | The single-colour render pass: one attachment cleared on load and stored,
 ending in @finalLayout@ (e.g. @PRESENT_SRC_KHR@ for swapchains,
 @TRANSFER_SRC_OPTIMAL@ for offscreen images). The common special case of
-'createRenderPass'.
+'allocateRenderPass'.
 -}
-createColorRenderPass
+allocateColorRenderPass
   :: (MonadResource m)
   => Vk.Device
   -> Vk.Format
@@ -163,67 +164,82 @@ createColorRenderPass
   -> Vk.ImageLayout
   -- ^ Final layout.
   -> m (ReleaseKey, Vk.RenderPass)
-createColorRenderPass dev imageFormat finalLayout =
-  createRenderPass dev [(imageFormat, finalLayout)] Nothing
+allocateColorRenderPass dev imageFormat finalLayout =
+  allocateRenderPass dev [(imageFormat, finalLayout)] Nothing
 
-{- | A vanilla vertex+fragment pipeline targeting @renderPass@ (subpass 0). The
-attachment shape — @colorFormats@ count and whether @depthFormat@ is present — MUST
-match @renderPass@; the formats themselves live in the render pass, so only the
-count and depth presence are read here (taking the same vectors keeps one
-description shared with 'createRenderPass'). The dynamic-state set is layout-aware
-when 'Nothing' (see "Vulkan.Utils.DynamicState"); whatever is dynamic MUST be set
-before drawing. Intended to be used qualified, e.g. @RenderPass.createPipeline@.
+{- | Attachment + fixed-function knobs for a render-pass pipeline.
+
+Construct with 'zero' and override what differs, e.g.
+@zero { RenderPass.colorFormats = [fmt], RenderPass.depthFormat = Just d }@. The
+attachment shape — 'colorFormats' count and whether 'depthFormat' is present — MUST
+match the render pass; the formats themselves live in the render pass, so only the
+count and depth presence are read here.
 -}
-createPipeline
-  :: (MonadResource m, MonadFail m)
-  => Vk.Device
-  -> Vk.RenderPass
-  -> Vector Vk.Format
-  -- ^ Colour attachment formats (count must match the render pass).
-  -> Maybe Vk.Format
-  -- ^ Optional depth attachment (presence must match the render pass).
-  -> Vk.PipelineVertexInputStateCreateInfo '[]
-  -- ^ Vertex input (bindings + attributes); @zero@ for none.
-  -> Maybe (Vector Vk.DynamicState)
-  -> Maybe Vk.PipelineLayout
+data PipelineConfig = PipelineConfig
+  { colorFormats :: [Vk.Format]
+  -- ^ Colour attachment formats; only the count is read (must match the render pass).
+  , depthFormat :: Maybe Vk.Format
+  -- ^ Optional depth attachment; only its presence is read (must match the render pass).
+  , vertexInput :: Vk.PipelineVertexInputStateCreateInfo '[]
+  -- ^ Vertex input (bindings + attributes); 'zero' for none.
+  , dynamicStates :: Maybe (Vector Vk.DynamicState)
+  -- ^ Dynamic states; 'Nothing' defaults layout-aware (see "Vulkan.Utils.DynamicState").
+  , layout :: Maybe Vk.PipelineLayout
   {- ^ Pipeline layout for descriptor sets \/ push constants; 'Nothing' uses a
   transient empty layout (shaders take no resources). A supplied layout stays
   owned by the caller, who must keep it alive for the pipeline's lifetime.
   -}
+  }
+
+instance Zero PipelineConfig where
+  zero =
+    PipelineConfig
+      { colorFormats = []
+      , depthFormat = Nothing
+      , vertexInput = zero
+      , dynamicStates = Nothing
+      , layout = Nothing
+      }
+
+{- | A vanilla vertex+fragment pipeline targeting @renderPass@ (subpass 0). The
+'PipelineConfig' attachment shape MUST match @renderPass@. Whatever dynamic state
+is selected MUST be set before drawing. Intended to be used qualified, e.g.
+@RenderPass.allocatePipeline@.
+-}
+allocatePipeline
+  :: (MonadResource m, MonadFail m)
+  => Vk.Device
+  -> Vk.RenderPass
+  -> PipelineConfig
   -> Vector (SomeStruct Vk.PipelineShaderStageCreateInfo)
   -> m (ReleaseKey, Vk.Pipeline)
-createPipeline dev renderPass colorFormats depthFormat vertexInput dynamicStates pipelineLayout stages =
-  buildColorPipeline dev pipelineLayout $ \layout ->
+allocatePipeline dev renderPass PipelineConfig{..} stages =
+  buildColorPipeline dev layout $ \resolvedLayout ->
     SomeStruct
       ( basePipelineCreateInfo
-          layout
+          resolvedLayout
           (Just renderPass)
-          (V.length colorFormats)
+          (length colorFormats)
           (isJust depthFormat)
           vertexInput
-          (fromMaybe (defaultDynamicStatesFor (not (V.null colorFormats))) dynamicStates)
+          (fromMaybe (defaultDynamicStatesFor (not (null colorFormats))) dynamicStates)
           stages
       )
 
-{- | 'createPipeline' from @(stage, SPIR-V)@ pairs: compile each into a shader
+{- | 'allocatePipeline' from @(stage, SPIR-V)@ pairs: compile each into a shader
 module, build the pipeline, then release the now-redundant module handles.
 
 @spec@ is one specialization shared by every stage (see
 'Vulkan.Utils.Pipeline.Specialization'); pass @()@ for none.
 -}
-createPipelineFromShaders
+allocatePipelineFromShaders
   :: (MonadResource m, MonadUnliftIO m, MonadFail m, Specialization spec)
   => Vk.Device
   -> Vk.RenderPass
-  -> Vector Vk.Format
-  -> Maybe Vk.Format
-  -> Vk.PipelineVertexInputStateCreateInfo '[]
-  -> Maybe (Vector Vk.DynamicState)
-  -> Maybe Vk.PipelineLayout
-  -- ^ Pipeline layout (see 'createPipeline'); 'Nothing' for an empty one.
+  -> PipelineConfig
   -> spec
+  -- ^ Specialization shared by every stage; @()@ for none.
   -> [(Vk.ShaderStageFlagBits, ByteString)]
   -> m (ReleaseKey, Vk.Pipeline)
-createPipelineFromShaders dev renderPass colorFormats depthFormat vertexInput dynamicStates pipelineLayout spec shaders =
-  withCompiledStages dev spec shaders $ \stages ->
-    createPipeline dev renderPass colorFormats depthFormat vertexInput dynamicStates pipelineLayout stages
+allocatePipelineFromShaders dev renderPass config spec shaders =
+  withCompiledStages dev spec shaders (allocatePipeline dev renderPass config)

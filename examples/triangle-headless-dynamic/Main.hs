@@ -61,7 +61,6 @@ main = runResourceT $ do
   results <- render hvAllocator hvDevice graphicsQueueFamilyIndex
   Vk.deviceWaitIdle hvDevice
 
-  -- Save each variant and report its centre pixel.
   centres <- forM results $ \(name, image) -> do
     savePng ("headless-dynamic-" <> name <> ".png") image
     let
@@ -102,21 +101,15 @@ render allocator dev graphicsQueueFamilyIndex = do
     imageFormat = Vk.FORMAT_R8G8B8A8_UNORM
     extent = Vk.Extent2D width height
 
-  -- GPU render target (color attachment + transfer source) with its view.
   (_, (image, imageView)) <- createColorTarget allocator dev imageFormat extent
 
-  -- CPU readback image + its reader.
   (cpuImage, readback) <- makeReadbackImage allocator dev imageFormat extent
 
   -- One pipeline, full always-on dynamic state (Nothing).
   (_, pipeline) <-
-    Dynamic.createPipelineFromShaders
+    Dynamic.allocatePipelineFromShaders
       dev
-      [imageFormat]
-      Nothing -- no depth attachment
-      zero -- no vertex input
-      Nothing -- full always-on dynamic state
-      Nothing -- empty pipeline layout (no descriptor sets / push constants)
+      zero{Dynamic.colorFormats = [imageFormat]}
       () -- no specialization constants
       [(Vk.SHADER_STAGE_VERTEX_BIT, vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, fragCode)]
 

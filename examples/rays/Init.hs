@@ -53,7 +53,6 @@ deviceRequirements =
   |]
     ++ frameDeviceRequirements
 
--- | Information for ray tracing (queried from device properties).
 data RTInfo = RTInfo
   { rtiShaderGroupHandleSize :: Word32
   , rtiShaderGroupBaseAlignment :: Word32

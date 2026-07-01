@@ -31,7 +31,7 @@ import Vulkan.Requirement (DeviceRequirement, InstanceRequirement (..))
 import qualified Vulkan.Utils.Init.Headless as Init
 import Vulkan.Utils.Initialization (physicalDeviceName)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex)
-import Vulkan.Utils.Queues (Queues, withDevice)
+import Vulkan.Utils.Queues (Queues, allocateDevice)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 import VulkanMemoryAllocator.Utils (allocatorCreateInfo)
@@ -64,7 +64,7 @@ withHeadlessVk
   -> m HeadlessVk
 withHeadlessVk HeadlessConfig{..} = do
   inst <-
-    Init.withInstance
+    Init.allocateInstance
       ( Just
           zero
             { Vk.applicationName = Just (Text.encodeUtf8 hcAppName)
@@ -76,7 +76,7 @@ withHeadlessVk HeadlessConfig{..} = do
       )
       [RequireInstanceLayer "VK_LAYER_KHRONOS_validation" minBound]
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-  (phys, dev, qs) <- withDevice inst Nothing hcDeviceReqs
+  (phys, dev, qs) <- allocateDevice inst Nothing hcDeviceReqs
   (_, vma) <-
     VMA.withAllocator (allocatorCreateInfo zero API_VERSION_1_3 inst phys dev) allocate
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
@@ -98,7 +98,6 @@ submitAndWait
   -> Vk.Queue
   -> Vk.CommandBuffer
   -> String
-  -- ^ Message to throw if the wait times out.
   -> m ()
 submitAndWait dev queue commandBuffer timeoutMessage = do
   (_, fence) <- Vk.withFence dev zero Nothing allocate
