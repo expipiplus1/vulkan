@@ -80,6 +80,7 @@ default-extensions:
 - MagicHash
 - NamedFieldPuns
 - NoMonomorphismRestriction
+- OverloadedRecordDot
 - OverloadedStrings
 - PartialTypeSignatures
 - PatternSynonyms

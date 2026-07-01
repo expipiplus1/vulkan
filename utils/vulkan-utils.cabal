@@ -94,6 +94,7 @@ library
       MagicHash
       NamedFieldPuns
       NoMonomorphismRestriction
+      OverloadedRecordDot
       OverloadedStrings
       PartialTypeSignatures
       PatternSynonyms
@@ -160,6 +161,7 @@ test-suite doctests
       MagicHash
       NamedFieldPuns
       NoMonomorphismRestriction
+      OverloadedRecordDot
       OverloadedStrings
       PartialTypeSignatures
       PatternSynonyms
