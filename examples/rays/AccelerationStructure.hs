@@ -40,9 +40,6 @@ createTLAS
   -> m (ReleaseKey, RT.AccelerationStructureKHR)
 createTLAS vc vma sceneBuffers = do
   let dev = vcDevice vc
-  --
-  -- Create the bottom level acceleration structure.
-  --
   (_blasReleaseKey, blas) <- createBLAS vc vma sceneBuffers
   blasAddress <-
     RT.getAccelerationStructureDeviceAddressKHR

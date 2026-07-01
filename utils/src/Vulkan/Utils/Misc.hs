@@ -99,7 +99,6 @@ showBits a =
     then "zeroBits"
     else intercalate " .|. " $ fmap show (setBits a)
 
--- | The list of bits which are set
 setBits :: (FiniteBits a) => a -> [a]
 setBits a =
   [ b

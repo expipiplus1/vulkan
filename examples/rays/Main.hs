@@ -42,11 +42,9 @@ main = runResourceT $ do
     phys = vcPhysicalDevice vc
     dev = vcDevice vc
 
-  -- Scene + acceleration structure
   sceneBuffers <- makeSceneBuffers vma
   (_, tlas) <- createTLAS vc vma sceneBuffers
 
-  -- RT pipeline + descriptor sets
   rtInfo <- getDeviceRTProps phys
   (_, descSetLayout) <- Pipeline.createRTDescriptorSetLayout dev
   (_, pipelineLayout) <- Pipeline.createRTPipelineLayout dev descSetLayout

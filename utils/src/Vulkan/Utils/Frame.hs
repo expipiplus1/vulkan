@@ -58,7 +58,6 @@ import Vulkan.Utils.Swapchain (Swapchain (..), sRelease)
 import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Zero (zero)
 
--- | Per-frame state.
 data Frame = Frame
   { fIndex :: Word64
   -- ^ Monotonic, used as the timeline-semaphore signal value for this frame.

@@ -159,7 +159,6 @@ dynamicStateFor ext =
 -- The state set (single source of truth)
 ----------------------------------------------------------------
 
--- | Pre-rasterization dynamic states.
 preRasterizationStates :: Vector Vk.DynamicState
 preRasterizationStates =
   [ Vk.DYNAMIC_STATE_VIEWPORT_WITH_COUNT
@@ -189,7 +188,6 @@ fragmentTestStates =
   , Vk.DYNAMIC_STATE_STENCIL_REFERENCE
   ]
 
--- | Fragment-output dynamic states.
 fragmentOutputStates :: Vector Vk.DynamicState
 fragmentOutputStates = [Vk.DYNAMIC_STATE_BLEND_CONSTANTS]
 

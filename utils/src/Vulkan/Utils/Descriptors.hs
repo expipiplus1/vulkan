@@ -20,7 +20,6 @@ import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Zero (zero)
 
--- | A whole-buffer descriptor write.
 bufferWrite
   :: Vk.DescriptorSet
   -> Word32
@@ -39,7 +38,6 @@ bufferWrite set binding descriptorType buffer =
       , Vk.bufferInfo = [Vk.DescriptorBufferInfo buffer 0 Vk.WHOLE_SIZE]
       }
 
--- | A samplerless image descriptor write.
 imageWrite
   :: Vk.DescriptorSet
   -> Word32

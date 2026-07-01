@@ -98,7 +98,6 @@ submitAndWait
   -> Vk.Queue
   -> Vk.CommandBuffer
   -> String
-  -- ^ Message to throw if the wait times out.
   -> m ()
 submitAndWait dev queue commandBuffer timeoutMessage = do
   (_, fence) <- Vk.withFence dev zero Nothing allocate

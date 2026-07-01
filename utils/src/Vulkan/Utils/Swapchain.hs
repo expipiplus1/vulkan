@@ -73,7 +73,6 @@ data SwapchainConfig = SwapchainConfig
   }
   deriving (Generic)
 
--- | Sensible defaults: color-attachment swapchain, FIFO_RELAXED preferred.
 defaultSwapchainConfig :: SwapchainConfig
 defaultSwapchainConfig =
   SwapchainConfig

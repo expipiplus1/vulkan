@@ -155,7 +155,6 @@ render allocator dev graphicsQueueFamilyIndex = do
   (_, (image, imageView)) <- createColorTarget allocator dev imageFormat extent
   (_, (depthImage, depthView)) <- createDepthTarget allocator dev depthFormat extent
 
-  -- CPU readback image + its reader.
   (cpuImage, readback) <- makeReadbackImage allocator dev imageFormat extent
 
   -- Vertex buffer: host-visible, mapped, filled with the 6 vertices.

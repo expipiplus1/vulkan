@@ -318,8 +318,6 @@ maximumBy_ f xs = if null xs then Nothing else Just (maximumBy f xs)
 ----------------------------------------------------------------
 
 {-# DEPRECATED createInstanceFromRequirements "Renamed to allocateInstanceFromRequirements" #-}
-
--- | Deprecated alias for 'allocateInstanceFromRequirements'.
 createInstanceFromRequirements
   :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
   => [InstanceRequirement]
@@ -329,8 +327,6 @@ createInstanceFromRequirements
 createInstanceFromRequirements = allocateInstanceFromRequirements
 
 {-# DEPRECATED createDebugInstanceFromRequirements "Renamed to allocateDebugInstanceFromRequirements" #-}
-
--- | Deprecated alias for 'allocateDebugInstanceFromRequirements'.
 createDebugInstanceFromRequirements
   :: (MonadResource m, Extendss InstanceCreateInfo es, PokeChain es)
   => [InstanceRequirement]
@@ -340,8 +336,6 @@ createDebugInstanceFromRequirements
 createDebugInstanceFromRequirements = allocateDebugInstanceFromRequirements
 
 {-# DEPRECATED createDeviceFromRequirements "Renamed to allocateDeviceFromRequirements" #-}
-
--- | Deprecated alias for 'allocateDeviceFromRequirements'.
 createDeviceFromRequirements
   :: (MonadResource m)
   => [DeviceRequirement]

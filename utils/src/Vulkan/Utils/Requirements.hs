@@ -338,9 +338,7 @@ checkDeviceRequest
      )
   -- ^ Lookup an extension
   -> DeviceRequirement
-  -- ^ The requirement to test
   -> RequirementResult
-  -- ^ The result
 checkDeviceRequest mbFeats mbProps lookupExtension = \case
   RequireDeviceVersion minVersion
     | Just props <- mbProps

@@ -139,9 +139,7 @@ data Bindings = Bindings
   the frame acquires.
   -}
   , bOffscreenView :: Vk.ImageView
-  -- ^ View of 'bOffscreenImage', bound into 'bJuliaDescriptorSet'.
   , bJuliaDescriptorSet :: Vk.DescriptorSet
-  -- ^ Storage-image descriptor pointing at 'bOffscreenView'.
   }
 
 createBindings

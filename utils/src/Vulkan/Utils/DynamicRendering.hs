@@ -64,7 +64,6 @@ data PipelineConfig = PipelineConfig
   { colorFormats :: [Vk.Format]
   -- ^ Colour attachment formats (@0@..@N@); @[]@ for a depth-only pipeline.
   , depthFormat :: Maybe Vk.Format
-  -- ^ Optional depth attachment format.
   , vertexInput :: Vk.PipelineVertexInputStateCreateInfo '[]
   -- ^ Vertex input (bindings + attributes); 'zero' for none.
   , dynamicStates :: Maybe (Vector Vk.DynamicState)

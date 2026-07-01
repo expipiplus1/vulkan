@@ -27,7 +27,6 @@ compileShaderQ
   :: Maybe String
   -- ^ Argument to pass to `--target-env`
   -> ShaderType
-  -- ^ Argument to specify between glsl/hlsl shader
   -> String
   -- ^ stage
   -> Maybe String
@@ -50,7 +49,6 @@ compileShader
   -> Maybe String
   -- ^ Argument to pass to `--target-env`
   -> ShaderType
-  -- ^ Argument to specify between glsl/hlsl shader
   -> String
   -- ^ stage
   -> Maybe String
