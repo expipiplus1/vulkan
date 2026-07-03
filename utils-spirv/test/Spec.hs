@@ -38,7 +38,7 @@ import Test.Tasty.HUnit
 
 import Vulkan.Core10 qualified as Vk
 
-import Data.SpirV.Reflect.FFI (load)
+import Data.SpirV.Reflect.FFI (loadBytes)
 import Vulkan.Utils.SpirV.Array qualified as Array
 import Vulkan.Utils.SpirV.Buffer (allocArrayBuffer, newBuffer, readBuffer, readBufferElem, writeBufferElem)
 import Vulkan.Utils.SpirV.Descriptors (descriptorSetLayoutInfos, mergedDescriptorSetLayoutInfos, mergedPushConstantRanges, pushConstantRanges)
@@ -47,46 +47,47 @@ import Vulkan.Utils.SpirV.Layout (ArraySize (..), FieldType (..), fromFields, no
 import Vulkan.Utils.SpirV.Layout qualified
 import Vulkan.Utils.SpirV.Signature (ArrayOf, Fits, Sig, knownLayoutInstance, layoutSig)
 import Vulkan.Utils.SpirV.Specialization (specializationConstants, specializationMapEntries)
-import Vulkan.Utils.SpirV.Stage (CompatibleResources, KnownLayoutSig (..), MatchInterface, linkStages, matchInterface, mergeLayout, reflectPipelineLayoutSig, reflectStageSig, stageInfoOf)
+import Vulkan.Utils.SpirV.Stage (CompatibleResources, KnownLayoutSig (..), MatchInterface, linkStages, matchInterface, mergeLayout, reflectPipelineLayoutSigBytes, reflectStageSigBytes, stageInfoOf)
 import Vulkan.Utils.SpirV.Stage qualified
 import Vulkan.Utils.SpirV.Stage qualified as StageInfo (StageInfo (..))
-import Vulkan.Utils.SpirV.TH (reflectShaderTypes)
+import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
 import Vulkan.Utils.SpirV.Types (LayoutMode (..), MemberShape (..), NumericType (..), ScalarType (..), geomancyTypeMap, linearTypeMap)
 import Vulkan.Utils.SpirV.VertexInput (vertexInputAttributes, vertexInputBinding, vertexInputState)
 
+import Fixtures qualified
 import LayoutSpec qualified
 
--- Generate the @Params@ record from the committed compute fixture.
-reflectShaderTypes "test/fixtures/julia.comp.spv"
+-- Generate the @Params@ record from the quasiquoted compute fixture.
+reflectShaderTypesBytes Fixtures.juliaComp
 
 -- Generate the @Push@ push-constant record (std430) from its fixture.
-reflectShaderTypes "test/fixtures/push.comp.spv"
+reflectShaderTypesBytes Fixtures.pushComp
 
 -- Generate the @Particle@ element record of an SSBO array of structs. The
 -- wrapping @Particles@ runtime-array block is (correctly) not generated.
-reflectShaderTypes "test/fixtures/ssbo-struct.comp.spv"
+reflectShaderTypesBytes Fixtures.ssboStructComp
 
 -- Generate @Material@ (shared across a std140 UBO field and a std430 SSBO array,
 -- safe because all members are 16-byte aligned) and @Scene@, which has the
 -- nested @Material@ as a field.
-reflectShaderTypes "test/fixtures/nested.comp.spv"
+reflectShaderTypesBytes Fixtures.nestedComp
 
 -- Generate @Kernel140@ / @Kernel430@: records with fixed-size @Array n a@ fields
 -- under std140 (element stride 16) and std430 (tight) layouts.
-reflectShaderTypes "test/fixtures/array-field.comp.spv"
+reflectShaderTypesBytes Fixtures.arrayFieldComp
 
 -- Generate @Grid430@ / @Grid140@: a 2D array field @float grid[3][4]@ maps to
 -- @Array 3 (Array 4 Float)@.
-reflectShaderTypes "test/fixtures/array2d.comp.spv"
+reflectShaderTypesBytes Fixtures.array2dComp
 
 -- Generate @Node@ (a self-referential @buffer_reference@ struct) and @Bvh@ (a
 -- push-constant block holding a @Node@ device address). The pointer members map
 -- to @DeviceAddress Node@; @Node@ is generated once despite the cycle.
-reflectShaderTypes "test/fixtures/bda.comp.spv"
+reflectShaderTypesBytes Fixtures.bdaComp
 
 -- Generate @Wide@: a std430 push-constant block with 64-bit integer members
 -- (@uint64_t hi@ / @int64_t lo@), which must occupy 8-byte slots like a double.
-reflectShaderTypes "test/fixtures/wide.comp.spv"
+reflectShaderTypesBytes Fixtures.wideComp
 
 -- A std430 element whose array stride (32) exceeds its packed size (20): vec4 @0
 -- + float @16 -> size 20, rounded up to its 16-byte alignment for the stride.
@@ -161,11 +162,11 @@ pure
 
 -- Stage signatures for a matched vertex+fragment pair (shared Scene UBO, vertex
 -- push constant, fragment SSBO). Phase 1 exercises only the interface.
-reflectStageSig "MeshVert" "test/fixtures/mesh.vert.spv"
-reflectStageSig "MeshFrag" "test/fixtures/mesh.frag.spv"
+reflectStageSigBytes "MeshVert" Fixtures.meshVert
+reflectStageSigBytes "MeshFrag" Fixtures.meshFrag
 
 -- The merged pipeline-layout signature of the same pair, promoted to the type level.
-reflectPipelineLayoutSig "MeshLayout" ["test/fixtures/mesh.vert.spv", "test/fixtures/mesh.frag.spv"]
+reflectPipelineLayoutSigBytes "MeshLayout" [Fixtures.meshVert, Fixtures.meshFrag]
 
 -- Compile-time witness: only type-checks if the vertex→fragment interface matches.
 meshInterfaceOk :: (MatchInterface MeshVert MeshFrag) => Bool
@@ -251,7 +252,7 @@ main =
               (rt.offset, rt.scale, rt.count) @?= (pushc.offset, pushc.scale, pushc.count)
           ]
       , testCase "push-constant range from reflection" $ do
-          m <- load "test/fixtures/push.comp.spv"
+          m <- loadBytes Fixtures.pushComp
           case pushConstantRanges m of
             [r] -> do
               r.offset @?= 0
@@ -279,7 +280,7 @@ main =
           , testCase "push-constant range from reflection ends at 20" $ do
               -- 16 + 4: tag (a uint) ends at 20, so each int64 before it took 8
               -- bytes — a 4-byte misclassification would put the end at 12.
-              m <- load "test/fixtures/wide.comp.spv"
+              m <- loadBytes Fixtures.wideComp
               case pushConstantRanges m of
                 [r] -> (r.offset, r.size) @?= (0, 20)
                 other -> assertFailure ("expected one range, got " <> show (length other))
@@ -318,7 +319,7 @@ main =
                 (,) <$> (peekByteOff p 32 :: IO Word64) <*> (peekByteOff p 40 :: IO Word64)
               (a32, a40) @?= (0xCAFE, 0xBEEF)
           , testCase "push-constant block is a single 8-byte device address" $ do
-              m <- load "test/fixtures/bda.comp.spv"
+              m <- loadBytes Fixtures.bdaComp
               case pushConstantRanges m of
                 [r] -> (r.offset, r.size) @?= (0, 8)
                 other -> assertFailure ("expected one range, got " <> show (length other))
@@ -462,17 +463,17 @@ main =
       , testGroup
           "specialization constants from reflection"
           [ testCase "reflects ids and names (ascending, non-contiguous)" $ do
-              m <- load "test/fixtures/spec.comp.spv"
+              m <- loadBytes Fixtures.specComp
               specializationConstants m
                 @?= [(0, Just "count"), (3, Just "scale")]
           , testCase "map entries keep real ids but pack tightly" $ do
-              m <- load "test/fixtures/spec.comp.spv"
+              m <- loadBytes Fixtures.specComp
               let es = toL (specializationMapEntries m)
               map (\e -> (e.constantID, e.offset, e.size)) es
                 @?= [(0, 0, 4), (3, 4, 4)]
           ]
       , testCase "descriptor set layout from reflection" $ do
-          m <- load "test/fixtures/julia.comp.spv"
+          m <- loadBytes Fixtures.juliaComp
           case descriptorSetLayoutInfos m of
             [(setNo, info)] -> do
               setNo @?= 0
@@ -485,7 +486,7 @@ main =
       , testGroup
           "vertex input from reflection"
           [ testCase "attributes: format + tightly-packed offset" $ do
-              m <- load "test/fixtures/tri.vert.spv"
+              m <- loadBytes Fixtures.triVert
               let attrs = vertexInputAttributes m
               map (\a -> (a.location, a.format, a.offset)) attrs
                 @?= [ (0, Vk.FORMAT_R32G32B32_SFLOAT, 0)
@@ -493,15 +494,15 @@ main =
                     , (2, Vk.FORMAT_R32G32B32A32_SFLOAT, 20)
                     ]
           , testCase "binding stride is packed size" $ do
-              m <- load "test/fixtures/tri.vert.spv"
+              m <- loadBytes Fixtures.triVert
               (vertexInputBinding m).stride @?= 36
           , testCase "vertexInputState packs the reflected binding + attributes" $ do
-              m <- load "test/fixtures/tri.vert.spv"
+              m <- loadBytes Fixtures.triVert
               let vis = vertexInputState m
               map (.stride) (toL vis.vertexBindingDescriptions) @?= [36]
               map (.offset) (toL vis.vertexAttributeDescriptions) @?= [0, 12, 20]
           , testCase "vertexInputState is empty when a module declares no vertex inputs" $ do
-              m <- load "test/fixtures/julia.comp.spv"
+              m <- loadBytes Fixtures.juliaComp
               let vis = vertexInputState m
               null (toL vis.vertexBindingDescriptions) @? "no bindings"
               null (toL vis.vertexAttributeDescriptions) @? "no attributes"
@@ -569,17 +570,17 @@ main =
       , testGroup
           "stage interface matching"
           [ testCase "vertex outputs reflect at locations 0 (vec3) and 1 (vec2)" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
+              vm <- loadBytes Fixtures.meshVert
               let outs = (stageInfoOf vm).outputs
               map fst outs @?= [0, 1]
               map (length . (.slots) . snd) outs @?= [3, 2]
           , testCase "vertex outputs match fragment inputs (value oracle)" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
-              fm <- load "test/fixtures/mesh.frag.spv"
+              vm <- loadBytes Fixtures.meshVert
+              fm <- loadBytes Fixtures.meshFrag
               matchInterface (stageInfoOf vm) (stageInfoOf fm) @?= Right ()
           , testCase "a mismatched interface is rejected (value oracle)" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
-              fm <- load "test/fixtures/mesh.frag.spv"
+              vm <- loadBytes Fixtures.meshVert
+              fm <- loadBytes Fixtures.meshFrag
               -- frag outputs (vec4 @loc0) cannot satisfy the vertex's own inputs.
               assertBool "should not match" (isLeft (matchInterface (stageInfoOf fm) (stageInfoOf vm)))
           , testCase "MatchInterface holds at the type level" $
@@ -588,13 +589,13 @@ main =
       , testGroup
           "stage resource linking (shared UBO)"
           [ testCase "the Scene UBO reflects identically from both stages" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
-              fm <- load "test/fixtures/mesh.frag.spv"
+              vm <- loadBytes Fixtures.meshVert
+              fm <- loadBytes Fixtures.meshFrag
               lookup (0, 0) (stageInfoOf vm).resources
                 @?= lookup (0, 0) (stageInfoOf fm).resources
           , testCase "linking unions resources, push and the external interface" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
-              fm <- load "test/fixtures/mesh.frag.spv"
+              vm <- loadBytes Fixtures.meshVert
+              fm <- loadBytes Fixtures.meshFrag
               case linkStages (stageInfoOf vm) (stageInfoOf fm) of
                 Left e -> assertFailure e
                 Right linked -> do
@@ -603,8 +604,8 @@ main =
                   map fst linked.inputs @?= [0, 1, 2] -- vertex attributes
                   map fst linked.outputs @?= [0] -- fragment colour output
           , testCase "a conflicting shared binding is rejected" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
-              fm <- load "test/fixtures/mesh.frag.spv"
+              vm <- loadBytes Fixtures.meshVert
+              fm <- loadBytes Fixtures.meshFrag
               let bad =
                     (stageInfoOf fm)
                       { StageInfo.resources = [((0, 0), normalize (fromFields Std140Layout Nothing [("x", Vector STFloat 2)]))]
@@ -613,8 +614,8 @@ main =
           , testCase "CompatibleResources holds at the type level" $
               meshResourcesOk @?= True
           , testCase "the merged layout signature round-trips to the value-level merge" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
-              fm <- load "test/fixtures/mesh.frag.spv"
+              vm <- loadBytes Fixtures.meshVert
+              fm <- loadBytes Fixtures.meshFrag
               let info = layoutSigVal (Proxy @MeshLayout) -- reflected from the promoted type
               mergeLayout [vm, fm] @?= Right info -- equals the value-level merge
               map fst info.resources @?= [(0, 0), (0, 1)] -- Scene (shared) + Materials
@@ -623,14 +624,14 @@ main =
       , testGroup
           "pipeline layout (depth-only vs depth+color from one vertex shader)"
           [ testCase "depth-only: the vertex stage alone" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
+              vm <- loadBytes Fixtures.meshVert
               -- Only the vertex-visible resources: Scene UBO at (0,0), vertex stage.
               stageBindings [vm]
                 @?= [(0, Vk.SHADER_STAGE_VERTEX_BIT)]
               fmap length (mergedPushConstantRanges [vm]) @?= Right 1 -- the Model push constant
           , testCase "depth+color: vertex+fragment, Scene gains the fragment stage" $ do
-              vm <- load "test/fixtures/mesh.vert.spv"
-              fm <- load "test/fixtures/mesh.frag.spv"
+              vm <- loadBytes Fixtures.meshVert
+              fm <- loadBytes Fixtures.meshFrag
               stageBindings [vm, fm]
                 @?= [ (0, Vk.SHADER_STAGE_VERTEX_BIT .|. Vk.SHADER_STAGE_FRAGMENT_BIT) -- Scene, shared
                     , (1, Vk.SHADER_STAGE_FRAGMENT_BIT) -- Materials, frag-only

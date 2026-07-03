@@ -180,6 +180,9 @@ executable compute
 executable compute-reflect
   main-is: Main.hs
   other-modules:
+      Julia
+      Julia.Shader
+      Render
       Paths_vulkan_examples
   autogen-modules:
       Paths_vulkan_examples
@@ -226,7 +229,6 @@ executable compute-reflect
     , VulkanMemoryAllocator
     , base <5
     , bytestring
-    , file-embed
     , geomancy
     , gl-block
     , resourcet
@@ -366,6 +368,9 @@ executable info
 executable mesh-reflect
   main-is: Main.hs
   other-modules:
+      Mesh
+      Mesh.Shader
+      Render
       Paths_vulkan_examples
   autogen-modules:
       Paths_vulkan_examples
@@ -412,7 +417,6 @@ executable mesh-reflect
     , VulkanMemoryAllocator
     , base <5
     , bytestring
-    , file-embed
     , geomancy
     , gl-block
     , resourcet
@@ -430,6 +434,10 @@ executable mesh-reflect
 executable pathtrace-reflect
   main-is: Main.hs
   other-modules:
+      Pathtracer
+      Pathtracer.Shader
+      Render
+      Scene
       Paths_vulkan_examples
   autogen-modules:
       Paths_vulkan_examples
@@ -476,7 +484,6 @@ executable pathtrace-reflect
     , VulkanMemoryAllocator
     , base <5
     , bytestring
-    , file-embed
     , geomancy
     , gl-block
     , optparse-applicative
@@ -639,6 +646,11 @@ executable resize
 executable texture-reflect
   main-is: Main.hs
   other-modules:
+      Cube
+      Cube.Shader
+      Render
+      Tri
+      Tri.Shader
       Paths_vulkan_examples
   autogen-modules:
       Paths_vulkan_examples
@@ -685,7 +697,6 @@ executable texture-reflect
     , VulkanMemoryAllocator
     , base <5
     , bytestring
-    , file-embed
     , gl-block
     , resourcet
     , spirv-reflect-ffi

@@ -51,9 +51,12 @@ module Vulkan.Utils.SpirV.Stage
 
     -- * Generation
   , reflectStageSig
+  , reflectStageSigBytes
   , reflectPipelineLayoutSig
+  , reflectPipelineLayoutSigBytes
   ) where
 
+import Data.ByteString (ByteString)
 import Data.Kind (Constraint)
 import Data.List (foldl', sortOn)
 import Data.Proxy (Proxy (..))
@@ -69,7 +72,7 @@ import Data.SpirV.Reflect.Module qualified
 import Data.SpirV.Reflect.TypeDescription (TypeDescription)
 
 import Vulkan.Utils.SpirV.Layout (OffsetMap, fromFields, leafFieldType, normalize)
-import Vulkan.Utils.SpirV.Reflect (reflectFileQ)
+import Vulkan.Utils.SpirV.Reflect (reflectBytes, reflectFileQ)
 import Vulkan.Utils.SpirV.Reflect.OffsetMaps (pushOffsetMap, resourceOffsetMaps)
 import Vulkan.Utils.SpirV.Signature (KnownKeyedSigs (..), KnownMaybeSig (..), SigOffsetMap, natT, promoteList, promoteMaybe, promoteOffsetMap)
 import Vulkan.Utils.SpirV.Types (LayoutMode (..), classifyType)
@@ -328,6 +331,15 @@ reflectStageSig name path = do
   m <- reflectFileQ path
   pure [TySynD (mkName name) [] (promoteStageInfo (stageInfoOf m))]
 
+{- | As 'reflectStageSig', but from SPIR-V bytecode already in hand — e.g. a
+quasiquoted shader imported from another module (the Template Haskell stage
+restriction applies).
+-}
+reflectStageSigBytes :: String -> ByteString -> Q [Dec]
+reflectStageSigBytes name bytes = do
+  m <- runIO (reflectBytes bytes)
+  pure [TySynD (mkName name) [] (promoteStageInfo (stageInfoOf m))]
+
 promoteStageInfo :: StageInfo -> Type
 promoteStageInfo si =
   PromotedT 'ShaderSig
@@ -363,6 +375,14 @@ reflectPipelineLayoutSig name paths = do
   modules <- traverse reflectFileQ paths
   case mergeLayout modules of
     Left err -> fail ("reflectPipelineLayoutSig: " <> err)
+    Right info -> pure [TySynD (mkName name) [] (promoteLayoutSig info)]
+
+-- | As 'reflectPipelineLayoutSig', but from SPIR-V bytecode already in hand.
+reflectPipelineLayoutSigBytes :: String -> [ByteString] -> Q [Dec]
+reflectPipelineLayoutSigBytes name bytess = do
+  modules <- runIO (traverse reflectBytes bytess)
+  case mergeLayout modules of
+    Left err -> fail ("reflectPipelineLayoutSigBytes: " <> err)
     Right info -> pure [TySynD (mkName name) [] (promoteLayoutSig info)]
 
 promoteLayoutSig :: LayoutInfo -> Type

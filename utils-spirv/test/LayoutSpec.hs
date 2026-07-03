@@ -15,7 +15,7 @@ import Test.Tasty.HUnit
 
 import Data.SpirV.Reflect.BlockVariable qualified
 import Data.SpirV.Reflect.DescriptorBinding qualified
-import Data.SpirV.Reflect.FFI (load)
+import Data.SpirV.Reflect.FFI (loadBytes)
 import Data.SpirV.Reflect.Module (Module)
 import Data.SpirV.Reflect.Module qualified
 import Data.SpirV.Reflect.TypeDescription (TypeDescription)
@@ -23,6 +23,8 @@ import Data.SpirV.Reflect.TypeDescription (TypeDescription)
 import Vulkan.Utils.SpirV.Layout
 import Vulkan.Utils.SpirV.Layout qualified as OffsetMap (OffsetMap (..))
 import Vulkan.Utils.SpirV.Types (LayoutMode (..), ScalarType (..))
+
+import Fixtures qualified
 
 tests :: TestTree
 tests =
@@ -176,19 +178,19 @@ reflectionTests =
   testGroup
     "built from reflected SPIR-V"
     [ testCase "push.comp Push has std430 offsets 0/64/72/76, size 80" $ do
-        m <- load "test/fixtures/push.comp.spv"
+        m <- loadBytes Fixtures.pushComp
         td <- maybe (assertFailure "no push constant block") pure (pushBlock m)
         l <- either (assertFailure . ("layoutOf: " <>)) pure (layoutOf Std430Layout td)
         map snd (offsets l) @?= [0, 64, 72, 76]
         l.size @?= Just 80
     , testCase "push.comp Output (vec4 data[]) is an open offset map with stride 16" $ do
-        m <- load "test/fixtures/push.comp.spv"
+        m <- loadBytes Fixtures.pushComp
         td <- maybe (assertFailure "no SSBO binding") pure (firstBinding m)
         g <- either (assertFailure . ("offsetMapOf: " <>)) pure (offsetMapOf Std430Layout td)
         g.size @?= Nothing
         fmap (.stride) g.tail @?= Just 16
     , testCase "ssbo-struct Particle[] tail unifies with a concrete Particle[2]" $ do
-        m <- load "test/fixtures/ssbo-struct.comp.spv"
+        m <- loadBytes Fixtures.ssboStructComp
         td <- maybe (assertFailure "no SSBO binding") pure (firstBinding m)
         open <- either (assertFailure . ("offsetMapOf: " <>)) pure (offsetMapOf Std430Layout td)
         -- Particle = vec3 @0, vec2 @16, float @24, uint @28 (stride 32).

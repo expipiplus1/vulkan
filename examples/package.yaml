@@ -140,7 +140,6 @@ executables:
     - vulkan-examples
     - base <5
     - bytestring
-    - file-embed
     - geomancy
     - gl-block
     - resourcet
@@ -162,7 +161,6 @@ executables:
     - vulkan-examples
     - base <5
     - bytestring
-    - file-embed
     - geomancy
     - gl-block
     - optparse-applicative
@@ -183,7 +181,6 @@ executables:
     - vulkan-examples
     - base <5
     - bytestring
-    - file-embed
     - geomancy
     - gl-block
     - resourcet
@@ -203,7 +200,6 @@ executables:
     - vulkan-examples
     - base <5
     - bytestring
-    - file-embed
     - gl-block
     - resourcet
     - spirv-reflect-ffi

@@ -15,17 +15,6 @@ build-type:     Simple
 extra-source-files:
     README.md
     package.yaml
-    test/fixtures/array-field.comp.spv
-    test/fixtures/array2d.comp.spv
-    test/fixtures/julia.comp.spv
-    test/fixtures/mesh.frag.spv
-    test/fixtures/mesh.vert.spv
-    test/fixtures/nested.comp.spv
-    test/fixtures/push.comp.spv
-    test/fixtures/spec.comp.spv
-    test/fixtures/ssbo-struct.comp.spv
-    test/fixtures/tri.vert.spv
-    test/fixtures/wide.comp.spv
 
 source-repository head
   type: git
@@ -98,6 +87,7 @@ test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Fixtures
       LayoutSpec
       Paths_vulkan_utils_spirv
   hs-source-dirs:
@@ -128,6 +118,7 @@ test-suite spec
   ghc-options: -Wall
   build-depends:
       base <5
+    , bytestring
     , containers
     , geomancy
     , gl-block
@@ -139,5 +130,6 @@ test-suite spec
     , text
     , vector
     , vulkan
+    , vulkan-utils
     , vulkan-utils-spirv
   default-language: Haskell2010
