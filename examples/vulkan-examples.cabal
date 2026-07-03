@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.39.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -425,6 +425,86 @@ executable mesh-reflect
     , vector
     , vulkan
     , vulkan-examples
+    , vulkan-utils
+    , vulkan-utils-spirv
+  default-language: Haskell2010
+  if os(windows)
+    ghc-options: -optl-mconsole
+
+executable pathtrace-box3d
+  main-is: Main.hs
+  other-modules:
+      Pathtracer
+      Pathtracer.Shader
+      Physics
+      Present
+      Present.Shader
+      Render
+      Scene
+      Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      pathtrace-box3d
+  default-extensions:
+      BlockArguments
+      DataKinds
+      DefaultSignatures
+      DeriveFoldable
+      DeriveFunctor
+      DeriveTraversable
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      NumDecimals
+      OverloadedStrings
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TupleSections
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      ViewPatterns
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      Box3D
+    , JuicyPixels
+    , VulkanMemoryAllocator
+    , base <5
+    , bytestring
+    , directory
+    , filepath
+    , geomancy
+    , gl-block
+    , linear
+    , optparse-applicative
+    , process
+    , random
+    , resourcet
+    , say
+    , sdl2
+    , transformers
+    , unliftio
+    , vector
+    , vulkan
+    , vulkan-examples
+    , vulkan-init-sdl2
     , vulkan-utils
     , vulkan-utils-spirv
   default-language: Haskell2010

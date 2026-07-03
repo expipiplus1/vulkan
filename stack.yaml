@@ -21,6 +21,11 @@ extra-deps:
 - spirv-reflect-ffi-0.4
 - spirv-reflect-types-0.4
 - webcolor-labels-0.1.0.0
+- git: https://gitlab.com/dpwiz/box-nd
+  commit: d962162c67fa33d53b943d2446a30b4f3742e343
+  subdirs:
+  - Box2D
+  - Box3D
 
 # use ghcup, nix, setup actions
 system-ghc: true

@@ -172,6 +172,35 @@ executables:
     - vulkan-utils
     - vulkan-utils-spirv
 
+  pathtrace-box3d:
+    main: Main.hs
+    source-dirs: pathtrace-box3d
+    dependencies:
+    - Box3D
+    - JuicyPixels
+    - VulkanMemoryAllocator
+    - vulkan-examples
+    - base <5
+    - bytestring
+    - directory
+    - filepath
+    - geomancy
+    - gl-block
+    - linear
+    - optparse-applicative
+    - process
+    - random
+    - resourcet
+    - say
+    - sdl2
+    - transformers
+    - unliftio
+    - vector
+    - vulkan
+    - vulkan-init-sdl2
+    - vulkan-utils
+    - vulkan-utils-spirv
+
   mesh-reflect:
     main: Main.hs
     source-dirs: mesh-reflect

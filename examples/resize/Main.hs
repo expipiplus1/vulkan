@@ -29,6 +29,7 @@ import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..))
 import Vulkan.Exception
+import qualified Vulkan.Extensions.VK_KHR_surface as KHR
 import Vulkan.Utils.Barrier (imageBarrier)
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, allocateTimelineSemaphore, presentFrameImage, queueSubmitFrame, recordCommands)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
@@ -100,8 +101,29 @@ windowConfig =
               , Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT
               ]
           , scRequiredFormatFeatures = [Vk.FORMAT_FEATURE_BLIT_DST_BIT]
+          , -- Prefer the offscreen format itself (a conversion-free blit),
+            -- then any other non-sRGB format: blitting the shader's UNORM
+            -- texels into an sRGB image re-encodes them, washing the fractal
+            -- out.
+            scSurfaceFormatPreferences =
+              [ (== offscreenFormat) . KHR.format
+              , not . srgbFormat . KHR.format
+              ]
           }
     }
+
+{- | Whether attachment writes to the format apply the sRGB transfer encoding —
+a blit into it would re-encode the offscreen UNORM texels.
+-}
+srgbFormat :: Vk.Format -> Bool
+srgbFormat f = f `elem` srgbFormats
+  where
+    srgbFormats :: [Vk.Format]
+    srgbFormats =
+      [ Vk.FORMAT_R8G8B8A8_SRGB
+      , Vk.FORMAT_B8G8R8A8_SRGB
+      , Vk.FORMAT_A8B8G8R8_SRGB_PACK32
+      ]
 
 prettyError :: IO () -> IO ()
 prettyError =
