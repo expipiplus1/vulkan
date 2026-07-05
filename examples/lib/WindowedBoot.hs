@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoFieldSelectors #-}
 
 {-| Shared boot prelude for the windowed examples. Drives the standard
 @allocateInstance \/ allocateSurface \/ allocateDevice \/ withAllocator \/ allocateSwapchain@
@@ -39,15 +40,15 @@ import VulkanMemoryAllocator.Utils (allocatorCreateInfo)
 
 -- | Per-example knobs the helper can't infer.
 data WindowedConfig = WindowedConfig
-  { wcAppName :: Text
+  { appName :: Text
   -- ^ Shows up in the application info; also used as the window title.
-  , wcInstanceReqs :: [InstanceRequirement]
+  , instanceReqs :: [InstanceRequirement]
   -- ^ Extra instance requirements (frame's defaults are added automatically).
-  , wcDeviceReqs :: [DeviceRequirement]
+  , deviceReqs :: [DeviceRequirement]
   -- ^ Extra device requirements (frame's defaults are added automatically).
-  , wcVmaFlags :: VMA.AllocatorCreateFlags
+  , vmaFlags :: VMA.AllocatorCreateFlags
   -- ^ VMA flags (e.g. @ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT@ for rays).
-  , wcSwapchainConfig :: SwapchainConfig
+  , swapchainConfig :: SwapchainConfig
   {- ^ Knobs for the initial swapchain. Pass 'defaultSwapchainConfig' for the
   common case; compute-shader callers (e.g. @resize@) tweak the storage bits.
   -}
@@ -66,30 +67,29 @@ withWindowedVk WindowedConfig{..} WindowAdapter{..} = do
     waAllocateInstance
       ( Just
           zero
-            { Vk.applicationName = Just (Text.encodeUtf8 wcAppName)
+            { Vk.applicationName = Just (Text.encodeUtf8 appName)
             , Vk.apiVersion = API_VERSION_1_3
             }
       )
       ( RequireInstanceExtension Nothing EXT_DEBUG_UTILS_EXTENSION_NAME minBound
           : frameInstanceRequirements
-          ++ wcInstanceReqs
+          ++ instanceReqs
       )
       [RequireInstanceLayer "VK_LAYER_KHRONOS_validation" minBound]
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   surf <- waAllocateSurface inst
   (phys, dev, qs) <-
-    allocateDevice inst (Just surf) (frameDeviceRequirements ++ wcDeviceReqs)
+    allocateDevice inst (Just surf) (frameDeviceRequirements ++ deviceReqs)
   (_, vma) <-
     VMA.withAllocator
-      (allocatorCreateInfo wcVmaFlags API_VERSION_1_3 inst phys dev)
+      (allocatorCreateInfo vmaFlags API_VERSION_1_3 inst phys dev)
       allocate
   props <- Vk.getPhysicalDeviceProperties phys
   sayErr $ "Using device: " <> decodeUtf8 (Vk.deviceName props)
   vc <- liftIO $ mkVulkanContext inst phys dev qs
 
   initialSize <- waDrawableSize
-  initialSC <-
-    allocateSwapchain phys dev wcSwapchainConfig Vk.NULL_HANDLE initialSize surf
+  initialSC <- allocateSwapchain phys dev swapchainConfig Vk.NULL_HANDLE initialSize surf
   pure (vc, vma, initialSC)
 
 {- | Standard validation/perf debug messenger create info, shared with

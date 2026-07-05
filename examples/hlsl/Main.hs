@@ -32,11 +32,11 @@ main = runResourceT $ do
   (vc, _vma, initialSC) <-
     withWindowedVk
       WindowedConfig
-        { wcAppName = "Vulkan 🚀 Haskell"
-        , wcInstanceReqs = []
-        , wcDeviceReqs = []
-        , wcVmaFlags = zero
-        , wcSwapchainConfig = defaultSwapchainConfig
+        { appName = "Vulkan 🚀 Haskell"
+        , instanceReqs = []
+        , deviceReqs = []
+        , vmaFlags = zero
+        , swapchainConfig = defaultSwapchainConfig
         }
       (sdl2Adapter win)
   let dev = vcDevice vc

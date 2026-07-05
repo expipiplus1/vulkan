@@ -263,6 +263,7 @@ jobs:
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A VulkanMemoryAllocator
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-utils
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-utils-spirv
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A openxr
     - run: nix-build --arg compiler '${{ matrix.ghc }}' ./nix/haskell-packages.nix --arg openxrNoVulkan true -A openxr
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-examples
@@ -328,7 +329,8 @@ jobs:
         sudo apt-get install fd-find
     - name: Check scripts with shellcheck
       run: |
-        fdfind .sh$ . \
+        fdfind '\.sh$' . \
+          --type f \
           --exclude VulkanMemoryAllocator/VulkanMemoryAllocator \
           --exclude generate-new/Vulkan-Docs \
           --exclude generate-new/OpenXR-Docs \

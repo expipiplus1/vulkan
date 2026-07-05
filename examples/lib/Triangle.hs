@@ -117,7 +117,7 @@ createGraphicsPipeline dev renderPass colorFormat =
     renderPass
     zero
       { RenderPass.colorFormats = [colorFormat]
-      , RenderPass.dynamicStates = Just minimalDynamicStates -- just viewport+scissor; set below with cmdSetViewport/Scissor
+      , RenderPass.dynamicStates = Just minimalDynamicStates -- just viewport+scissor; set with cmdSetViewport/Scissor
       }
     () -- no specialization constants
     [ (Vk.SHADER_STAGE_VERTEX_BIT, vertCode)

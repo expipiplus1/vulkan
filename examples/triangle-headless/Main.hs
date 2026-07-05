@@ -37,13 +37,14 @@ main = runResourceT $ do
   HeadlessVk{..} <-
     withHeadlessVk
       HeadlessConfig
-        { hcAppName = "Haskell Vulkan triangle (headless) example"
-        , hcInstanceReqs = []
-        , hcDeviceReqs = []
+        { appName = "Haskell Vulkan triangle (headless) example"
+        , instanceReqs = []
+        , deviceReqs = []
+        , vmaFlags = zero
         }
-  let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics hvQueues)
-  image <- render hvAllocator hvDevice graphicsQueueFamilyIndex
-  Vk.deviceWaitIdle hvDevice
+  let QueueFamilyIndex graphicsQueueFamilyIndex = fst (qGraphics queues)
+  image <- render allocator device graphicsQueueFamilyIndex
+  Vk.deviceWaitIdle device
   savePng "triangle.png" image
 
 {- | This function renders a triangle and reads the image on the CPU
@@ -177,7 +178,12 @@ render allocator dev graphicsQueueFamilyIndex = do
 
   (vertKey, vertStage) <- shaderStage dev Vk.SHADER_STAGE_VERTEX_BIT () vertCode
   (fragKey, fragStage) <- shaderStage dev Vk.SHADER_STAGE_FRAGMENT_BIT () fragCode
-  (_, graphicsPipeline) <- RenderPass.allocatePipeline dev renderPass zero{RenderPass.colorFormats = [imageFormat], RenderPass.dynamicStates = Just minimalDynamicStates} [vertStage, fragStage]
+  (_, graphicsPipeline) <-
+    RenderPass.allocatePipeline
+      dev
+      renderPass
+      zero{RenderPass.colorFormats = [imageFormat], RenderPass.dynamicStates = Just minimalDynamicStates}
+      [vertStage, fragStage]
   release vertKey
   release fragKey
 
