@@ -45,7 +45,8 @@ import qualified Vulkan.Core13 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.FrameGraph.Image (ImageDesc (..), Usage (..), newManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (Usage (..), importManagedImage, newManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, newRecorder, recorderCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
 import qualified VulkanMemoryAllocator as VMA
@@ -89,7 +90,7 @@ data Shared = Shared
   , set0Layout :: Vk.DescriptorSetLayout
   , set1Layout :: Vk.DescriptorSetLayout
   , descriptorPool :: Vk.DescriptorPool
-  , graph :: FG.FrameGraph Vk.CommandBuffer ()
+  , graph :: FG.FrameGraph Recorder ()
   }
 
 render
@@ -120,10 +121,11 @@ render allocator device graphicsQueueFamilyIndex = do
   graphicsQueue <- Vk.getDeviceQueue device graphicsQueueFamilyIndex 0
   cb <- oneCommandBuffer device commandPool
 
+  recorder <- newRecorder cb
   let oneShot = zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
   Vk.useCommandBuffer cb oneShot $ do
     -- Records both passes, firing the transition hooks in between.
-    FG.execute graph cb ()
+    FG.execute graph recorder ()
     -- Scene is left in COLOR_ATTACHMENT_OPTIMAL; the readback issues its own
     -- colour->transfer-src barrier.
     copyImageToHost cb extent sceneImage cpuImage
@@ -145,7 +147,8 @@ offscreenTrianglePass shared globalsSet = do
 
   tri <- Tri.allocatePipeline shared.device colorFormat shared.set0Layout
 
-  offscreenColored <- FG.addPass shared.graph "offscreen-triangle" mkHandle \_handle _resources cb -> do
+  offscreenColored <- FG.addPass shared.graph "offscreen-triangle" mkHandle \_handle _resources recorder -> do
+    cb <- recorderCommandBuffer recorder
     let dri = Dynamic.renderingInfo (fullScissor extent) [(offscreenView, Vk.Float32 0 0 0 1)] Nothing
     Vk.cmdUseRendering cb dri do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS tri.pipeline
@@ -181,7 +184,8 @@ cubePass shared offscreenView offscreenColored = do
   samplerSet <- allocateSamplerSet shared.device shared.descriptorPool shared.set1Layout sampler offscreenView
   cubeBuffer <- cubeVertexBuffer shared.allocator
 
-  void $ FG.addPass shared.graph "cube" mkHandles \_handles _resources cb -> do
+  void $ FG.addPass shared.graph "cube" mkHandles \_handles _resources recorder -> do
+    cb <- recorderCommandBuffer recorder
     let dri = Dynamic.renderingInfo (fullScissor extent) [(sceneView, Vk.Float32 0.30 0.32 0.38 1)] (Just (depthView, 1))
     Vk.cmdUseRendering cb dri do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS cube.pipeline
@@ -195,11 +199,11 @@ cubePass shared offscreenView offscreenColored = do
 
   pure sceneImage
 
--- | Import an image into the graph as a layout-tracked 'ManagedImage'.
-importImage :: FG.FrameGraph Vk.CommandBuffer () -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO FG.Handle
+-- | Import a raw image into the graph as a layout-tracked 'ManagedImage'.
+importImage :: FG.FrameGraph Recorder () -> Text -> Vk.Image -> Vk.ImageAspectFlags -> ResourceT IO FG.Handle
 importImage graph name image aspect = do
   managed <- newManagedImage image aspect
-  FG.importResource graph name (ImageDesc name) managed
+  importManagedImage graph name managed
 
 {- | The set 0 (Globals UBO, all stages) and set 1 (sampler) layouts, merged
 across all four shaders. One layout object per set, reused across both pipeline

@@ -10,21 +10,20 @@ packages:
 - VulkanMemoryAllocator
 - openxr
 - generate-new
-# temporary local-path while iterating on the fragr integration; re-pin to a
-# fragr commit (with the GHC 9.6 `foldl'` import fix) before release
-- ../fragr
 
 extra-deps:
 - unification-fd-0.12.0.2
 # generate-new
 - validation-selective-0.2.0.0
-- geomancy-0.3.0.1
+- geomancy-0.3.1.0
 - gl-block-1.1
 - ptrdiff-0
 - spirv-enum-1.104.350.0
 - spirv-reflect-ffi-0.4
 - spirv-reflect-types-0.4
 - webcolor-labels-0.1.0.0
+- git: https://gitlab.com/dpwiz/fragr
+  commit: c8e42fb07bbbdda121dfbae5d2803ff6d55ec4b1
 
 # use ghcup, nix, setup actions
 system-ghc: true

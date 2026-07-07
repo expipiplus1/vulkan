@@ -191,6 +191,29 @@ executables:
     - vulkan-utils
     - vulkan-utils-spirv
 
+  visibility-buffer:
+    main: Main.hs
+    source-dirs: visibility-buffer
+    dependencies:
+    - JuicyPixels
+    - VulkanMemoryAllocator
+    - base <5
+    - bytestring
+    - fragr
+    - geomancy
+    - gl-block
+    - resourcet
+    - say
+    - text
+    - unliftio
+    - vector
+    - vulkan
+    - vulkan-examples
+    - vulkan-init-glfw
+    - vulkan-utils
+    - vulkan-utils-framegraph
+    - vulkan-utils-spirv
+
   texture-reflect:
     main: Main.hs
     source-dirs: texture-reflect
@@ -393,6 +416,7 @@ default-extensions:
 - LambdaCase
 - MagicHash
 - NamedFieldPuns
+- NegativeLiterals
 - NoMonomorphismRestriction
 - NumDecimals
 - OverloadedStrings

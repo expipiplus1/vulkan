@@ -13,7 +13,11 @@ the allocation (see the package README).
 module Vulkan.Utils.FrameGraph.Image
   ( ManagedImage (..)
   , newManagedImage
+  , newManagedImageMip
+  , newManagedImageLayer
+  , newManagedImageSlice
   , ImageDesc (..)
+  , importManagedImage
   , ImageState (..)
   , undefinedState
   , Usage (..)
@@ -25,28 +29,61 @@ module Vulkan.Utils.FrameGraph.Image
 
 import Control.Monad (when)
 import Control.Monad.IO.Class (MonadIO (..))
-import Data.Bits ((.|.))
+import Data.Bits ((.&.), (.|.))
+import Data.Coerce (coerce)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Text (Text)
+import Data.Word (Word32)
 
 import Fragr qualified as FG
+import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.Barrier (imageBarrier)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recorderCommandBuffer)
 import Vulkan.Zero (zero)
 
--- | An image whose layout/stage/access the frame graph tracks and transitions.
+{- | An image, or an arbitrary @(mip × array-layer)@ slice of it, whose
+layout/stage/access the frame graph tracks and transitions.
+
+The @range@ is the barrier's subresource range, so any slicing granularity is one
+'ManagedImage' per slice over the same 'Vk.Image', each tracked independently — the
+intra-image barriers fall out of that. A whole-image wrapper ('newManagedImage')
+covers all mips+layers as one unit (e.g. a multiview render); per-mip
+('newManagedImageMip', a bloom pyramid) or per-layer ('newManagedImageLayer', a
+cubemap face / array element) wrappers give finer control. Slices tracked
+separately must not overlap.
+-}
 data ManagedImage = ManagedImage
   { image :: Vk.Image
-  , aspect :: Vk.ImageAspectFlags
+  , range :: Vk.ImageSubresourceRange
   , stateRef :: IORef ImageState
   }
 
--- | Wrap an image, starting from 'undefinedState' (contents undefined).
+-- | Wrap a whole image (all mips + layers, monolithic), starting from 'undefinedState'.
 newManagedImage :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
 {-# INLINE newManagedImage #-}
-newManagedImage image aspect = do
+newManagedImage image aspect = newManaged image (Vk.ImageSubresourceRange aspect 0 Vk.REMAINING_MIP_LEVELS 0 Vk.REMAINING_ARRAY_LAYERS)
+
+-- | Wrap a single mip level (all its layers), tracked independently of the others.
+newManagedImageMip :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
+{-# INLINE newManagedImageMip #-}
+newManagedImageMip image aspect mip = newManaged image (Vk.ImageSubresourceRange aspect mip 1 0 1)
+
+-- | Wrap a single array layer / cubemap face (mip 0), tracked independently.
+newManagedImageLayer :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
+{-# INLINE newManagedImageLayer #-}
+newManagedImageLayer image aspect layer = newManaged image (Vk.ImageSubresourceRange aspect 0 1 layer 1)
+
+-- | Wrap an arbitrary @(mip × layer)@ slice (e.g. one light's 6 cube faces in an array).
+newManagedImageSlice :: (MonadIO m) => Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> Word32 -> Word32 -> m ManagedImage
+{-# INLINE newManagedImageSlice #-}
+newManagedImageSlice image aspect baseMip levelCount baseLayer layerCount =
+  newManaged image (Vk.ImageSubresourceRange aspect baseMip levelCount baseLayer layerCount)
+
+newManaged :: (MonadIO m) => Vk.Image -> Vk.ImageSubresourceRange -> m ManagedImage
+{-# INLINE newManaged #-}
+newManaged image range = do
   stateRef <- liftIO (newIORef undefinedState)
-  pure ManagedImage{image, aspect, stateRef}
+  pure ManagedImage{image, range, stateRef}
 
 -- | The synchronization state an image is currently left in.
 data ImageState = ImageState
@@ -75,8 +112,10 @@ data Usage
   | TransferSrc
   | TransferDst
   | Present
-  | StorageWrite
-  deriving stock (Eq, Ord, Enum, Bounded, Show)
+  | -- | Storage read/write in the given shader stage (compute, fragment, …).
+    StorageRead Vk.PipelineStageFlags
+  | StorageWrite Vk.PipelineStageFlags
+  deriving stock (Eq, Ord, Show)
 
 {- | The target state each 'Usage' requires. Stage/access mirror the
 @Vulkan.Utils.Barrier@ @transition*@ helpers.
@@ -113,19 +152,49 @@ usageState = \case
       Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
       Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
       zero
-  StorageWrite ->
-    ImageState
-      Vk.IMAGE_LAYOUT_GENERAL
-      Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
-      Vk.ACCESS_SHADER_WRITE_BIT
+  StorageRead stage ->
+    ImageState Vk.IMAGE_LAYOUT_GENERAL stage Vk.ACCESS_SHADER_READ_BIT
+  StorageWrite stage ->
+    ImageState Vk.IMAGE_LAYOUT_GENERAL stage Vk.ACCESS_SHADER_WRITE_BIT
 
--- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
+{- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
+The six fixed usages are small tags; the storage usages set the high marker bit
+and pack their read/write bit and shader stage into the rest — so the all-ones
+'FG.flagsIgnored' sentinel is never produced.
+-}
 usageFlags :: Usage -> FG.Flags
-usageFlags = FG.Flags . fromIntegral . fromEnum
+usageFlags = \case
+  ColorAttachment -> FG.Flags 0
+  DepthAttachment -> FG.Flags 1
+  SampledFragment -> FG.Flags 2
+  TransferSrc -> FG.Flags 3
+  TransferDst -> FG.Flags 4
+  Present -> FG.Flags 5
+  StorageRead stage -> FG.Flags (storageMarker .|. stageBits stage)
+  StorageWrite stage -> FG.Flags (storageMarker .|. writeBit .|. stageBits stage)
 
 -- | Decode 'FG.Flags' produced by 'usageFlags'.
 flagsUsage :: FG.Flags -> Usage
-flagsUsage (FG.Flags w) = toEnum (fromIntegral w)
+flagsUsage (FG.Flags w)
+  | w .&. storageMarker /= 0 =
+      let stage = coerce (w .&. stageMask)
+      in if w .&. writeBit /= 0 then StorageWrite stage else StorageRead stage
+  | otherwise = case w of
+      0 -> ColorAttachment
+      1 -> DepthAttachment
+      2 -> SampledFragment
+      3 -> TransferSrc
+      4 -> TransferDst
+      _ -> Present
+
+-- Bit layout packing a storage usage's stage into the 32-bit 'FG.Flags'.
+storageMarker, writeBit, stageMask :: Word32
+storageMarker = 0x80000000
+writeBit = 0x40000000
+stageMask = 0x3FFFFFFF
+
+stageBits :: Vk.PipelineStageFlags -> Word32
+stageBits stage = coerce stage .&. stageMask
 
 {- | Record the barrier bringing the image into the 'Usage''s state, if it is
 not already in it, and update the tracked state. Standalone counterpart to the
@@ -144,23 +213,46 @@ transitionImageTo cb mi usage = do
       zero
       []
       []
-      [imageBarrier mi.aspect cur.access next.access cur.layout next.layout mi.image]
+      [ SomeStruct
+          zero
+            { Vk.srcAccessMask = cur.access
+            , Vk.dstAccessMask = next.access
+            , Vk.oldLayout = cur.layout
+            , Vk.newLayout = next.layout
+            , -- IGNORED (not 0) so the barrier is a plain transition, valid for
+              -- both EXCLUSIVE and CONCURRENT images (no ownership transfer).
+              Vk.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
+            , Vk.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
+            , Vk.image = mi.image
+            , Vk.subresourceRange = mi.range
+            }
+      ]
     liftIO (writeIORef mi.stateRef next)
 
 -- | Descriptor for a 'ManagedImage'; carries a label for visualization output.
 newtype ImageDesc = ImageDesc {label :: Text}
 
+{- | Import a 'ManagedImage' under @name@, labelling the graph node with the same
+name (so the label never drifts from the handle).
+-}
+importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
+importManagedImage graph name mi = FG.importResource graph name (ImageDesc name) mi
+
 instance FG.Resource ManagedImage where
   type Desc ManagedImage = ImageDesc
   type Alloc ManagedImage = ()
-  type Ctx ManagedImage = Vk.CommandBuffer
+  type Ctx ManagedImage = Recorder
 
   createResource _ _ =
     error "ManagedImage is import-only: allocate the image and use importResource"
 
   destroyResource _ _ _ = pure ()
 
-  preRead _ flags cb mi = transitionImageTo cb mi (flagsUsage flags)
-  preWrite _ flags cb mi = transitionImageTo cb mi (flagsUsage flags)
+  preRead _ flags rec mi = do
+    cb <- recorderCommandBuffer rec
+    transitionImageTo cb mi (flagsUsage flags)
+  preWrite _ flags rec mi = do
+    cb <- recorderCommandBuffer rec
+    transitionImageTo cb mi (flagsUsage flags)
 
   describeDesc d = d.label

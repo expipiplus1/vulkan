@@ -2,43 +2,46 @@
 {-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-{-| Julia-set viewer, driven by a per-frame 'FG.FrameGraph'.
+{-| Julia-set viewer, driven by a per-frame 'FG.FrameGraph' the same way
+regardless of queue topology.
 
 The fractal only changes when the window resizes or the cursor moves; its
 steady state is "re-present the same image". Each frame declares a graph of up
 to three passes — @julia@ (compute → offscreen), @blit@ (offscreen → swapchain)
-and @present@ (swapchain → PRESENT_SRC) — but adds @julia@ only when the fractal
+and @present@ (swapchain → PRESENT_SRC) — adding @julia@ only when the fractal
 parameters changed and @blit@ only when the acquired swapchain image does not
-already hold the current fractal. fragr then places exactly the barriers the
+already hold the current fractal. fragr places exactly the barriers the
 surviving passes need: a fully idle frame records /nothing/ and just re-presents.
 
-Because the offscreen and swapchain images are imported 'ManagedImage's whose
-tracked layout persists across frames, an unchanged image needs no barrier at
-all — the pruning of unused nodes prunes their transitions with them. (The
-cross-frame write-after-read fence on the shared offscreen image also falls out
-for free: a dirty frame's compute transition carries the previous blit's
-TRANSFER source stage, ordering the overwrite after that read.)
-
-Single graphics queue for now; the same declaration is ready to 'FG.setQueue'
-the compute pass onto an async-compute queue and drive it with
-'FG.executeQueued'.
+The one topology-dependent line is @'FG.setQueue' b computeQueueId@ on the
+@julia@ pass, where @computeQueueId@ is chosen once at startup: the graphics
+queue when compute shares its family, an async-compute queue when it doesn't.
+Everything else — pruning, barrier placement, and the per-queue routing of
+commands — falls out of 'FG.executeQueued': on shared hardware every pass lands
+on one queue and it degenerates to a single command buffer and submit; on async
+hardware @executeAdaptive@ submits the compute buffer signalling a timeline the
+graphics submit waits on. The offscreen image is CONCURRENT across the two
+families, so no queue-family ownership transfer is needed — only the timeline
+handshake, and only on the (rare) frames that recompute.
 -}
 module Main
   ( main
   ) where
 
-import Control.Exception (handle)
+import Blit (blitImage)
+import Control.Exception (handle, mask_)
 import Control.Lens.Getter ((^.))
 import Control.Monad (when)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Bits ((.|.))
-import Data.IORef (IORef, modifyIORef', newIORef, readIORef, writeIORef)
+import Data.IORef (IORef, atomicModifyIORef', modifyIORef', newIORef, readIORef, writeIORef)
 import Data.IntSet (IntSet)
 import qualified Data.IntSet as IntSet
+import Data.List.NonEmpty (NonEmpty ((:|)))
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import Data.Word (Word64)
+import Data.Word (Word32, Word64)
 import qualified Fragr as FG
 import Julia (JuliaPipeline (..), createJuliaDescriptorSets, createJuliaPipeline, juliaWorkgroupX, juliaWorkgroupY)
 import Linear.Affine (Point (..))
@@ -48,13 +51,20 @@ import qualified SDL
 import Say (sayErrString)
 import UnliftIO.Exception (displayException)
 import UnliftIO.Foreign (allocaBytes, plusPtr, poke)
+import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
+import qualified Vulkan.Core10 as CommandBufferBeginInfo (CommandBufferBeginInfo (..))
+import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (..))
 import qualified Vulkan.Core10 as Vk
+import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo (..))
 import Vulkan.Exception
-import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame, recordCommands)
-import Vulkan.Utils.FrameGraph.Image (ImageDesc (..), ManagedImage (..), Usage (..), newManagedImage, usageFlags)
+import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, allocateTimelineSemaphore, presentFrameImage)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, usageFlags)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recorderCommandBuffer)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
+import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig)
-import Vulkan.Utils.VulkanContext (VulkanContext (..))
+import Vulkan.Utils.VulkanContext (RecycledResources (..), VulkanContext (..))
 import Vulkan.Utils.WindowLoop (WindowLoop (..), noOnExit, runWindowLoop)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
@@ -77,14 +87,23 @@ main = prettyError . runResourceT $ do
 
   juliaPL <- createJuliaPipeline dev
 
+  -- One startup decision: does compute get its own queue family? If so, the
+  -- julia pass runs on QueueId 1 and hands the offscreen image over with a
+  -- timeline semaphore; otherwise everything stays on the graphics queue.
+  topology <- detectTopology vc
+  let sharedFamilies = fmap (\as -> (as.asGraphicsFamily, as.asComputeFamily)) topology
+
+  -- Colour phase, advanced once per recompute; global so it survives resizes.
+  colorRef <- liftIO (newIORef 0)
+
   runWindowLoop
     vc
     initialSC
     (drawableSize sdlWindow)
     (shouldQuit sdlWindow)
     WindowLoop
-      { wlMkState = createBindings dev vma juliaPL
-      , wlRender = \bindings f -> renderJulia vc juliaPL bindings f
+      { wlMkState = createBindings dev vma juliaPL sharedFamilies
+      , wlRender = \bindings f -> renderJulia vc juliaPL topology colorRef bindings f
       , wlOnFrame = \start end -> reportFrameTime (end - start)
       , wlOnExit = noOnExit
       }
@@ -114,6 +133,54 @@ prettyError =
   handle (\e@(VulkanException _) -> sayErrString (displayException e))
 
 ----------------------------------------------------------------
+-- Queue topology
+----------------------------------------------------------------
+
+{- | Everything the async-compute path needs, decided once from the queue
+layout. Absent (the frame stays single-queue) when compute shares the graphics
+family.
+-}
+data AsyncSetup = AsyncSetup
+  { asGraphicsFamily :: Word32
+  , asComputeFamily :: Word32
+  , asComputeQueue :: Vk.Queue
+  , asReadyTimeline :: Vk.Semaphore
+  -- ^ Compute signals this at the frame index; the graphics blit waits on it.
+  , asLastBlitDone :: IORef Word64
+  {- ^ Frame index of the last blit that read the shared offscreen image; the
+  next compute waits for it before overwriting (cross-frame write-after-read).
+  -}
+  }
+
+detectTopology :: (MonadResource m) => VulkanContext -> m (Maybe AsyncSetup)
+detectTopology vc = do
+  let
+    QueueFamilyIndex graphicsFamily = fst (qGraphics (vcQueues vc))
+    QueueFamilyIndex computeFamily = fst (qCompute (vcQueues vc))
+  if graphicsFamily == computeFamily
+    then pure Nothing
+    else do
+      (_, readyTimeline) <- allocateTimelineSemaphore (vcDevice vc) 0
+      lastBlitDone <- liftIO (newIORef 0)
+      pure $
+        Just
+          AsyncSetup
+            { asGraphicsFamily = graphicsFamily
+            , asComputeFamily = computeFamily
+            , asComputeQueue = snd (qCompute (vcQueues vc))
+            , asReadyTimeline = readyTimeline
+            , asLastBlitDone = lastBlitDone
+            }
+
+-- | The queue the julia pass runs on under an async topology (see 'computeQueueId').
+computeQueue :: FG.QueueId
+computeQueue = FG.QueueId 1
+
+-- | The queue the julia pass is assigned to (async family, or the graphics queue).
+computeQueueId :: Maybe AsyncSetup -> FG.QueueId
+computeQueueId = maybe FG.defaultQueue (const computeQueue)
+
+----------------------------------------------------------------
 -- Per-swapchain bindings
 ----------------------------------------------------------------
 
@@ -135,13 +202,15 @@ createBindings
   :: Vk.Device
   -> VMA.Allocator
   -> JuliaPipeline
+  -> Maybe (Word32, Word32)
+  -- ^ (graphics, compute) families to share the offscreen image across, if async.
   -> Swapchain
   -> ResourceT IO (Bindings, ReleaseKey)
-createBindings dev allocator jp sc = do
+createBindings dev allocator jp sharedFamilies sc = do
   -- A single offscreen RGBA8 storage image (+ view). Compute writes here; a
   -- blit then copies (and converts RGBA→BGRA) to the acquired swapchain image.
   (imageKey, (image, _, _)) <-
-    VMA.withImage allocator (offscreenImageInfo (sExtent sc)) offscreenAllocInfo allocate
+    VMA.withImage allocator (offscreenImageInfo sharedFamilies (sExtent sc)) offscreenAllocInfo allocate
   (viewKey, view) <- Vk.withImageView dev (offscreenViewInfo image) Nothing allocate
 
   (poolKey, juliaSets) <-
@@ -171,8 +240,8 @@ createBindings dev allocator jp sc = do
 offscreenFormat :: Vk.Format
 offscreenFormat = Vk.FORMAT_R8G8B8A8_UNORM
 
-offscreenImageInfo :: Vk.Extent2D -> Vk.ImageCreateInfo '[]
-offscreenImageInfo (Vk.Extent2D w h) =
+offscreenImageInfo :: Maybe (Word32, Word32) -> Vk.Extent2D -> Vk.ImageCreateInfo '[]
+offscreenImageInfo sharedFamilies (Vk.Extent2D w h) =
   zero
     { Vk.imageType = Vk.IMAGE_TYPE_2D
     , Vk.format = offscreenFormat
@@ -184,6 +253,10 @@ offscreenImageInfo (Vk.Extent2D w h) =
     , Vk.usage =
         Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT
     , Vk.initialLayout = Vk.IMAGE_LAYOUT_UNDEFINED
+    , -- Shared across the compute and graphics families (async path) so the
+      -- handover needs only a timeline wait, no ownership transfer.
+      Vk.sharingMode = maybe Vk.SHARING_MODE_EXCLUSIVE (const Vk.SHARING_MODE_CONCURRENT) sharedFamilies
+    , Vk.queueFamilyIndices = maybe [] (\(g, c) -> [g, c]) sharedFamilies
     }
 
 offscreenAllocInfo :: VMA.AllocationCreateInfo
@@ -215,10 +288,13 @@ colorSubresourceRange =
 renderJulia
   :: VulkanContext
   -> JuliaPipeline
+  -> Maybe AsyncSetup
+  -> IORef Float
+  -- ^ colour-scheme phase, shared across swapchains so it survives resizes
   -> Bindings
   -> Frame
   -> ResourceT IO ()
-renderJulia vc jp bindings f = do
+renderJulia vc jp topology colorRef bindings f = do
   constants <- computeConstants (sExtent sc)
   lastConstants <- liftIO (readIORef bindings.bLastConstants)
   let dirty = Just constants /= lastConstants
@@ -233,42 +309,183 @@ renderJulia vc jp bindings f = do
     swapManaged = bSwapImages bindings V.! ix
 
   graph <- FG.newFrameGraph
-  offscreenH <- FG.importResource graph "offscreen" (ImageDesc "offscreen") bindings.bOffscreen
-  swapchainH <- FG.importResource graph "swapchain" (ImageDesc "swapchain") swapManaged
+  offscreenH <- importManagedImage graph "offscreen" bindings.bOffscreen
+  swapchainH <- importManagedImage graph "swapchain" swapManaged
 
+  colorPhase <- liftIO (readIORef colorRef)
   offscreenReady <-
     if dirty
-      then FG.addPass graph "julia" (\b -> FG.writeWith b offscreenH (usageFlags StorageWrite)) \_written _resources cb ->
-        dispatchJulia jp (sExtent sc) constants bindings.bJuliaDescriptorSet cb
+      then FG.addPass graph "julia" (juliaSetup offscreenH) \_written _resources recorder -> do
+        cb <- recorderCommandBuffer recorder
+        dispatchJulia jp (sExtent sc) constants colorPhase bindings.bJuliaDescriptorSet cb
       else pure offscreenH
 
   swapchainReady <-
     if needBlit
-      then FG.addPass graph "blit" (mkBlitHandles offscreenReady swapchainH) \_blitted _resources cb ->
-        blitOffscreen (sExtent sc) bindings.bOffscreen.image swapManaged.image cb
+      then FG.addPass graph "blit" (blitSetup offscreenReady swapchainH) \_blitted _resources recorder -> do
+        cb <- recorderCommandBuffer recorder
+        blitImage (sExtent sc) bindings.bOffscreen.image swapManaged.image cb
       else pure swapchainH
 
   -- Always present: writing the imported swapchain marks a side effect, so the
   -- pass survives culling and its hook brings the image to PRESENT_SRC (a no-op
   -- barrier when it is already there, i.e. an idle re-present).
-  _present <- FG.addPass graph "present" (\b -> FG.writeWith b swapchainReady (usageFlags Present)) \_presented _resources _cb ->
+  _present <- FG.addPass graph "present" (\b -> FG.writeWith b swapchainReady (usageFlags Present)) \_presented _resources _recorder ->
     pure ()
 
   FG.compile graph
-  commands <- recordCommands vc f \cb -> FG.execute graph cb ()
-  queueSubmitFrame vc f imageIndex [commands]
+  executeAdaptive vc f imageIndex topology dirty needBlit graph
   presentFrameImage vc f acquireResult imageIndex
 
   liftIO $ do
-    when dirty $ writeIORef bindings.bLastConstants (Just constants)
+    when dirty $ do
+      writeIORef bindings.bLastConstants (Just constants)
+      -- Advance the colour phase once per recompute, so the palette visibly
+      -- rotates exactly on the frames that render (and freezes when idle).
+      modifyIORef' colorRef (+ colorStep)
     when needBlit $
       modifyIORef' bindings.bFreshImages $
         if dirty then const (IntSet.singleton ix) else IntSet.insert ix
   where
     sc = fSwapchain f
-    mkBlitHandles offscreenReady swapchainH b = do
+    juliaSetup offscreenH b = do
+      FG.setQueue b (computeQueueId topology)
+      FG.writeWith b offscreenH (usageFlags (StorageWrite Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT))
+    blitSetup offscreenReady swapchainH b = do
       _ <- FG.readWith b offscreenReady (usageFlags TransferSrc)
       FG.writeWith b swapchainH (usageFlags TransferDst)
+
+----------------------------------------------------------------
+-- Windowed submit bridge (Layer 2) + app policy (Layer 3)
+--
+-- The topology-agnostic 'recordingBackend' (route each pass to its queue's
+-- buffer) now lives in "Vulkan.Utils.FrameGraph.Image"; only the submit policy
+-- below is app-specific.
+----------------------------------------------------------------
+
+{- | Record the compiled graph across its queues and submit. On a single-queue
+schedule this is one command buffer and one graphics submit; when the julia pass
+landed on a distinct compute queue, the compute work is recorded into its own
+buffer and submitted signalling @asReadyTimeline@, which the graphics submit
+then waits on.
+
+The command-buffer allocation and the two-submit shape (Layer 2, windowed) plus
+the cross-frame WAR fence (Layer 3, specific to reusing one offscreen image) stay
+here; only 'recordingBackend' above is topology-agnostic mechanism.
+-}
+executeAdaptive
+  :: VulkanContext
+  -> Frame
+  -> Word32
+  -> Maybe AsyncSetup
+  -> Bool
+  -- ^ whether the julia (compute) pass ran this frame
+  -> Bool
+  -- ^ whether this frame blits (reads the offscreen image) — for the WAR fence
+  -> FG.FrameGraph Recorder ()
+  -> ResourceT IO ()
+executeAdaptive vc f imageIndex topology dirty didBlit graph = do
+  let dev = vcDevice vc
+
+  graphicsCb <- beginPrimary dev (rrCommandPool (fRecycled f))
+  -- The julia pass is the only compute-queue pass, added iff @dirty@ (and dirty
+  -- implies needBlit, so it always survives culling): compute runs exactly when
+  -- an async topology is present and the frame is dirty. Its buffer travels with
+  -- the 'AsyncSetup' that submits it.
+  computePair <- case topology of
+    Just as | dirty -> do
+      (_, computePool) <-
+        Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = as.asComputeFamily} Nothing allocate
+      cb <- beginPrimary dev computePool
+      pure (Just (as, cb))
+    _ -> pure Nothing
+
+  let
+    -- Route each pass's commands to its queue's buffer (see 'FG.setQueue').
+    cbFor q = case computePair of
+      Just (_, cb) | q == computeQueue -> cb
+      _ -> graphicsCb
+    buffers = graphicsCb :| maybe [] (pure . snd) computePair
+  recordGraph cbFor buffers graph
+
+  liftIO . mask_ $ submitFrame vc f imageIndex didBlit graphicsCb computePair
+
+-- | Allocate a primary command buffer from the pool and begin it, one-time-submit.
+beginPrimary :: (MonadResource m, MonadFail m) => Vk.Device -> Vk.CommandPool -> m Vk.CommandBuffer
+beginPrimary dev pool = do
+  (_, [cb]) <-
+    Vk.withCommandBuffers
+      dev
+      zero{Vk.commandPool = pool, Vk.level = Vk.COMMAND_BUFFER_LEVEL_PRIMARY, Vk.commandBufferCount = 1}
+      allocate
+  Vk.beginCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
+  pure cb
+
+{- | The submit(s): a compute submit (when the compute buffer exists) signalling
+the ready timeline at this frame index and waiting on the last blit, then the
+graphics submit waiting on image-available (and the ready timeline, when compute
+ran) and signalling render-finished plus the host timeline.
+-}
+submitFrame
+  :: VulkanContext
+  -> Frame
+  -> Word32
+  -> Bool
+  -> Vk.CommandBuffer
+  -> Maybe (AsyncSetup, Vk.CommandBuffer)
+  -> IO ()
+submitFrame vc Frame{..} imageIndex didBlit graphicsCb computePair = do
+  case computePair of
+    Just (as, cb) -> do
+      prevBlitDone <- readIORef as.asLastBlitDone
+      let computeSubmit =
+            zero
+              { Vk.waitSemaphores = [fHostTimeline]
+              , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT]
+              , Vk.commandBuffers = [Vk.commandBufferHandle cb]
+              , Vk.signalSemaphores = [as.asReadyTimeline]
+              }
+              ::& zero{waitSemaphoreValues = [prevBlitDone], signalSemaphoreValues = [fIndex]}
+                :& ()
+      Vk.queueSubmit as.asComputeQueue [SomeStruct computeSubmit] Vk.NULL_HANDLE
+    Nothing -> pure ()
+
+  let
+    renderFinished = sRenderFinished fSwapchain V.! fromIntegral imageIndex
+    RecycledResources{rrImageAvailable} = fRecycled
+    graphicsQueue = snd (qGraphics (vcQueues vc))
+    -- Only the wait side differs by whether compute ran; the buffer and signals
+    -- (render-finished + host timeline) are the same either way.
+    (waitSemaphores, waitStages, waitValues) = case computePair of
+      Just (as, _) ->
+        ( [rrImageAvailable, as.asReadyTimeline]
+        , [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, Vk.PIPELINE_STAGE_TRANSFER_BIT]
+        , [0, fIndex]
+        )
+      Nothing ->
+        ( [rrImageAvailable]
+        , [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT]
+        , [0]
+        )
+    graphicsSubmit =
+      zero
+        { Vk.waitSemaphores = waitSemaphores
+        , Vk.waitDstStageMask = waitStages
+        , Vk.commandBuffers = [Vk.commandBufferHandle graphicsCb]
+        , Vk.signalSemaphores = [renderFinished, fHostTimeline]
+        }
+        ::& zero{waitSemaphoreValues = waitValues, signalSemaphoreValues = [0, fIndex]}
+          :& ()
+  Vk.queueSubmit graphicsQueue [SomeStruct graphicsSubmit] Vk.NULL_HANDLE
+
+  -- Host-side wait bookkeeping: the graphics timeline always, the compute
+  -- timeline when it ran; record the blit for the next frame's compute fence.
+  atomicModifyIORef' fGPUWork (\jobs -> ((fHostTimeline, fIndex) : jobs, ()))
+  case computePair of
+    Just (as, _) -> do
+      atomicModifyIORef' fGPUWork (\jobs -> ((as.asReadyTimeline, fIndex) : jobs, ()))
+      when didBlit $ writeIORef as.asLastBlitDone fIndex
+    Nothing -> pure ()
 
 ----------------------------------------------------------------
 -- Julia dispatch
@@ -303,24 +520,31 @@ computeConstants (Vk.Extent2D imageWidth imageHeight) = do
       , jcEscapeRadius = 12
       }
 
+-- | Palette phase added per recompute; a full colour cycle every @1/colorStep@ renders.
+colorStep :: Float
+colorStep = 0.01
+
 -- | Bind the Julia pipeline, push the constants, and dispatch over the image.
 dispatchJulia
   :: (MonadUnliftIO m)
   => JuliaPipeline
   -> Vk.Extent2D
   -> JuliaConstants
+  -> Float
+  -- ^ colour-scheme phase, advanced once per dispatch (see 'colorStep')
   -> Vk.DescriptorSet
   -> Vk.CommandBuffer
   -> m ()
-dispatchJulia jp (Vk.Extent2D imageWidth imageHeight) constants descriptorSet cb = do
+dispatchJulia jp (Vk.Extent2D imageWidth imageHeight) constants colorPhase descriptorSet cb = do
   Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE (jpPipeline jp)
 
-  let constantBytes = 4 * (2 + 2 + 2 + 1) :: Int
+  let constantBytes = 4 * (2 + 2 + 2 + 1 + 1) :: Int
   allocaBytes constantBytes $ \p -> do
     liftIO $ poke (p `plusPtr` 0) constants.jcScale
     liftIO $ poke (p `plusPtr` 8) constants.jcOffset
     liftIO $ poke (p `plusPtr` 16) constants.jcC
     liftIO $ poke (p `plusPtr` 24) constants.jcEscapeRadius
+    liftIO $ poke (p `plusPtr` 28) colorPhase
     Vk.cmdPushConstants cb (jpPipelineLayout jp) Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral constantBytes) p
 
   Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE (jpPipelineLayout jp) 0 [descriptorSet] []
@@ -329,38 +553,6 @@ dispatchJulia jp (Vk.Extent2D imageWidth imageHeight) constants descriptorSet cb
     ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)
     ((imageHeight + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
     1
-
--- | Blit the fractal onto the swapchain image (handles RGBA→BGRA).
-blitOffscreen
-  :: (MonadIO m) => Vk.Extent2D -> Vk.Image -> Vk.Image -> Vk.CommandBuffer -> m ()
-blitOffscreen extent offscreen swapImage cb =
-  Vk.cmdBlitImage
-    cb
-    offscreen
-    Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-    swapImage
-    Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-    [ Vk.ImageBlit
-        { Vk.srcSubresource = colorSubresourceLayers
-        , Vk.srcOffsets = fullExtentOffsets extent
-        , Vk.dstSubresource = colorSubresourceLayers
-        , Vk.dstOffsets = fullExtentOffsets extent
-        }
-    ]
-    Vk.FILTER_NEAREST
-
-colorSubresourceLayers :: Vk.ImageSubresourceLayers
-colorSubresourceLayers =
-  Vk.ImageSubresourceLayers
-    { Vk.aspectMask = Vk.IMAGE_ASPECT_COLOR_BIT
-    , Vk.mipLevel = 0
-    , Vk.baseArrayLayer = 0
-    , Vk.layerCount = 1
-    }
-
-fullExtentOffsets :: Vk.Extent2D -> (Vk.Offset3D, Vk.Offset3D)
-fullExtentOffsets (Vk.Extent2D w h) =
-  (Vk.Offset3D 0 0 0, Vk.Offset3D (fromIntegral w) (fromIntegral h) 1)
 
 ----------------------------------------------------------------
 -- Frame timing

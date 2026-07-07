@@ -23,6 +23,7 @@ source-repository head
 library
   exposed-modules:
       Vulkan.Utils.FrameGraph.Image
+      Vulkan.Utils.FrameGraph.Recorder
   other-modules:
       Paths_vulkan_utils_framegraph
   hs-source-dirs:

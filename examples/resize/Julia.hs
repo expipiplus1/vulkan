@@ -62,7 +62,7 @@ createJuliaPipeline dev = do
             [ Vk.PushConstantRange
                 Vk.SHADER_STAGE_COMPUTE_BIT
                 0
-                ((2 + 2 + 2 + 1) * 4)
+                ((2 + 2 + 2 + 1 + 1) * 4)
             ]
         }
       Nothing
@@ -182,17 +182,20 @@ juliaShader dev = do
           vec2 offset;
           vec2 c;
           float escapeRadius;
+          float time;
         } frame;
 
         // From https://iquilezles.org/www/articles/palettes/palettes.htm
         //
-        // Traditional Julia blue and orange
+        // Traditional Julia blue and orange, with the whole palette rotated by
+        // frame.time (advanced once per compute so the colours move exactly when
+        // — and only when — the image is recomputed).
         vec3 color(const float t) {
           const vec3 a = vec3(0.5);
           const vec3 b = vec3(0.5);
           const vec3 c = vec3(8);
           const vec3 d = vec3(0.5, 0.6, 0.7);
-          return a + b * cos(6.28318530718 * (c * t + d));
+          return a + b * cos(6.28318530718 * (c * t + d + frame.time));
         }
 
         // complex multiplication
