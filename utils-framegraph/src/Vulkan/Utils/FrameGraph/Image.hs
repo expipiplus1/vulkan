@@ -75,6 +75,7 @@ data Usage
   | TransferSrc
   | TransferDst
   | Present
+  | StorageWrite
   deriving stock (Eq, Ord, Enum, Bounded, Show)
 
 {- | The target state each 'Usage' requires. Stage/access mirror the
@@ -112,6 +113,11 @@ usageState = \case
       Vk.IMAGE_LAYOUT_PRESENT_SRC_KHR
       Vk.PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
       zero
+  StorageWrite ->
+    ImageState
+      Vk.IMAGE_LAYOUT_GENERAL
+      Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
+      Vk.ACCESS_SHADER_WRITE_BIT
 
 -- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
 usageFlags :: Usage -> FG.Flags

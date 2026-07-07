@@ -219,7 +219,9 @@ executables:
     - vulkan-examples
     - base <5
     - bytestring
+    - containers
     - extra
+    - fragr
     - lens
     - linear
     - resourcet >= 1.2.4
@@ -233,6 +235,7 @@ executables:
     - vulkan-examples
     - vulkan-init-sdl2
     - vulkan-utils
+    - vulkan-utils-framegraph
 
   hlsl:
     main: Main.hs
