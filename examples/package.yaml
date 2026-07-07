@@ -197,15 +197,18 @@ executables:
     dependencies:
     - JuicyPixels
     - VulkanMemoryAllocator
+    - fragr
     - vulkan-examples
     - base <5
     - bytestring
     - gl-block
     - resourcet
     - spirv-reflect-ffi
+    - text
     - vector
     - vulkan
     - vulkan-utils
+    - vulkan-utils-framegraph
     - vulkan-utils-spirv
 
   resize:

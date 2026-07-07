@@ -3,12 +3,16 @@ packages:
 - .
 - utils
 - utils-spirv
+- utils-framegraph
 - utils-init/vulkan-init-sdl2
 - utils-init/vulkan-init-glfw
 - examples
 - VulkanMemoryAllocator
 - openxr
 - generate-new
+# temporary local-path while iterating on the fragr integration; re-pin to a
+# fragr commit (with the GHC 9.6 `foldl'` import fix) before release
+- ../fragr
 
 extra-deps:
 - unification-fd-0.12.0.2

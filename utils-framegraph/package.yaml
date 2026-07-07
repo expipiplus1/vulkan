@@ -1,0 +1,37 @@
+name: vulkan-utils-framegraph
+version: "0.1.0.0"
+synopsis: Vulkan barrier-placement and resource adapter for the fragr frame graph
+category: Graphics
+maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
+github: expipiplus1/vulkan
+extra-source-files:
+- README.md
+- package.yaml
+
+library:
+  source-dirs: src
+  dependencies:
+  - base >= 4.16 && <5
+  - fragr
+  - text
+  - transformers
+  - vulkan >= 3.27 && < 3.28
+  - vulkan-utils
+
+ghc-options:
+- -Wall
+
+default-extensions:
+- BlockArguments
+- DerivingStrategies
+- DuplicateRecordFields
+- ImportQualifiedPost
+- LambdaCase
+- NamedFieldPuns
+- NoFieldSelectors
+- OverloadedLists
+- OverloadedRecordDot
+- OverloadedStrings
+- ScopedTypeVariables
+- TypeApplications
+- TypeFamilies

@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.39.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -697,13 +697,16 @@ executable texture-reflect
     , VulkanMemoryAllocator
     , base <5
     , bytestring
+    , fragr
     , gl-block
     , resourcet
     , spirv-reflect-ffi
+    , text
     , vector
     , vulkan
     , vulkan-examples
     , vulkan-utils
+    , vulkan-utils-framegraph
     , vulkan-utils-spirv
   default-language: Haskell2010
   if os(windows)
