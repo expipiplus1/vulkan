@@ -14,6 +14,7 @@ module Vulkan.Utils.FrameGraph.Recorder
   , newRecorder
   , setRecorder
   , recorderCommandBuffer
+  , recorderQueue
   , recordingBackend
   , recordGraph
   ) where
@@ -28,24 +29,30 @@ import Fragr qualified as FG
 import Vulkan.Core10 qualified as Vk
 
 {- | The command buffer the barrier hooks (and a pass's exec callback) record
-into. For single-queue 'FG.execute' it holds one buffer for the whole frame;
-the multi-queue 'FG.executeQueued' driver swaps it per pass so each queue's
-work lands in that queue's buffer.
+into, tagged with its queue so resource adapters can tell when consecutive
+accesses cross queues. For single-queue 'FG.execute' it holds one buffer for
+the whole frame; the multi-queue 'FG.executeQueued' driver swaps it per pass so
+each queue's work lands in that queue's buffer.
 -}
-newtype Recorder = Recorder (IORef Vk.CommandBuffer)
+newtype Recorder = Recorder (IORef (FG.QueueId, Vk.CommandBuffer))
 
--- | A recorder pointed at an initial buffer; swap it with 'setRecorder'.
+-- | A recorder pointed at an initial buffer on queue 0; swap it with 'setRecorder'.
 newRecorder :: (MonadIO m) => Vk.CommandBuffer -> m Recorder
-newRecorder cb = Recorder <$> liftIO (newIORef cb)
+newRecorder cb = Recorder <$> liftIO (newIORef (FG.QueueId 0, cb))
 
--- | Point the recorder at the command buffer the next passes record into.
-setRecorder :: (MonadIO m) => Recorder -> Vk.CommandBuffer -> m ()
-setRecorder (Recorder ref) cb = liftIO (writeIORef ref cb)
+-- | Point the recorder at the queue's command buffer the next passes record into.
+setRecorder :: (MonadIO m) => Recorder -> FG.QueueId -> Vk.CommandBuffer -> m ()
+setRecorder (Recorder ref) queue cb = liftIO (writeIORef ref (queue, cb))
 
 -- | The command buffer currently selected.
 recorderCommandBuffer :: (MonadIO m) => Recorder -> m Vk.CommandBuffer
 {-# INLINE recorderCommandBuffer #-}
-recorderCommandBuffer (Recorder ref) = liftIO (readIORef ref)
+recorderCommandBuffer (Recorder ref) = liftIO (snd <$> readIORef ref)
+
+-- | The queue the current pass records on.
+recorderQueue :: (MonadIO m) => Recorder -> m FG.QueueId
+{-# INLINE recorderQueue #-}
+recorderQueue (Recorder ref) = liftIO (fst <$> readIORef ref)
 
 {- | A 'FG.QueueBackend' that routes each pass's recording to its queue's command
 buffer (via @cbFor@) and does nothing else.
@@ -60,7 +67,7 @@ recording everything into one buffer.
 recordingBackend :: Recorder -> (FG.QueueId -> Vk.CommandBuffer) -> FG.QueueBackend
 recordingBackend recorder cbFor =
   FG.QueueBackend
-    { FG.beforePass = \psync -> setRecorder recorder (cbFor psync.queue)
+    { FG.beforePass = \psync -> setRecorder recorder psync.queue (cbFor psync.queue)
     , FG.afterPass = \_ -> pure ()
     , FG.completed = pure []
     }

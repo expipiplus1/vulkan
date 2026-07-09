@@ -4,8 +4,11 @@ automatically.
 A 'ManagedImage' carries the image plus its tracked 'ImageState' (layout,
 stage, access). A pass declares an access with a 'Usage' (encoded into
 'FG.Flags' by 'usageFlags'); the 'FG.preRead' / 'FG.preWrite' hooks diff the
-tracked state against the usage's target and, when they differ, record the
-'Vk.cmdPipelineBarrier' and update the tracked state.
+tracked state against the usage's target and record the
+'Vk.cmdPipelineBarrier' and update the tracked state. Only a read of an
+already-matching state skips the barrier; a write always records one (WAW).
+Accesses that hop queues chain to the driver's semaphore instead (see
+'transitionImageTo').
 
 Import-only: the graph tracks the layout and places barriers but does not own
 the allocation (see the package README).
@@ -38,7 +41,7 @@ import Data.Word (Word32)
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recorderCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recorderCommandBuffer, recorderQueue)
 import Vulkan.Zero (zero)
 
 {- | An image, or an arbitrary @(mip × array-layer)@ slice of it, whose
@@ -56,6 +59,7 @@ data ManagedImage = ManagedImage
   { image :: Vk.Image
   , range :: Vk.ImageSubresourceRange
   , stateRef :: IORef ImageState
+  , queueRef :: IORef FG.QueueId
   }
 
 -- | Wrap a whole image (all mips + layers, monolithic), starting from 'undefinedState'.
@@ -83,7 +87,8 @@ newManaged :: (MonadIO m) => Vk.Image -> Vk.ImageSubresourceRange -> m ManagedIm
 {-# INLINE newManaged #-}
 newManaged image range = do
   stateRef <- liftIO (newIORef undefinedState)
-  pure ManagedImage{image, range, stateRef}
+  queueRef <- liftIO (newIORef (FG.QueueId 0))
+  pure ManagedImage{image, range, stateRef, queueRef}
 
 -- | The synchronization state an image is currently left in.
 data ImageState = ImageState
@@ -196,31 +201,71 @@ stageMask = 0x3FFFFFFF
 stageBits :: Vk.PipelineStageFlags -> Word32
 stageBits stage = coerce stage .&. stageMask
 
-{- | Record the barrier bringing the image into the 'Usage''s state, if it is
-not already in it, and update the tracked state. Standalone counterpart to the
-hook path, for barriers recorded outside a pass.
+{- | Whether the 'Usage' writes the image (and so needs a barrier even when the
+state is unchanged — only read-after-read can skip it).
+-}
+usageWrites :: Usage -> Bool
+usageWrites = \case
+  ColorAttachment -> True
+  DepthAttachment -> True
+  TransferDst -> True
+  StorageWrite _ -> True
+  SampledFragment -> False
+  TransferSrc -> False
+  Present -> False
+  StorageRead _ -> False
+
+{- | Record the barrier bringing the image into the 'Usage''s state and update
+the tracked state. Standalone counterpart to the hook path, for barriers
+recorded outside a pass; treats the access as same-queue.
+
+A write 'Usage' records the barrier even when the state is unchanged — a
+same-state write still needs the execution+memory dependency against the
+previous access. Only a read of an already-matching state skips it.
 -}
 transitionImageTo :: (MonadIO m) => Vk.CommandBuffer -> ManagedImage -> Usage -> m ()
 {-# INLINE transitionImageTo #-}
 transitionImageTo cb mi usage = do
+  lastQueue <- liftIO (readIORef mi.queueRef)
+  transitionOnQueue cb lastQueue mi usage
+
+{- | The hook path: like 'transitionImageTo', but when the access lands on a
+different queue than the previous one the barrier is chained to the driver's
+inter-queue semaphore instead — source scope becomes the destination stage with
+no access mask, since the semaphore already provides execution ordering and
+memory availability. The driver's wait @dstStageMask@ must cover the usage's
+stage (both then chain), and cross-family access needs CONCURRENT sharing: no
+ownership release/acquire pair is emitted, so an EXCLUSIVE image's contents are
+undefined on the new family.
+-}
+transitionOnQueue :: (MonadIO m) => Vk.CommandBuffer -> FG.QueueId -> ManagedImage -> Usage -> m ()
+transitionOnQueue cb queue mi usage = do
   cur <- liftIO (readIORef mi.stateRef)
-  let next = usageState usage
-  when (cur /= next) do
+  lastQueue <- liftIO (readIORef mi.queueRef)
+  let
+    next = usageState usage
+    cross = queue /= lastQueue
+    srcStage = if cross then next.stage else cur.stage
+    srcAccess = if cross then zero else cur.access
+    -- Cross-queue same-state accesses are ordered by the semaphore alone;
+    -- same-queue writes need the barrier even with the state unchanged.
+    needed = cur /= next || (usageWrites usage && not cross)
+  when needed do
     Vk.cmdPipelineBarrier
       cb
-      cur.stage
+      srcStage
       next.stage
       zero
       []
       []
       [ SomeStruct
           zero
-            { Vk.srcAccessMask = cur.access
+            { Vk.srcAccessMask = srcAccess
             , Vk.dstAccessMask = next.access
             , Vk.oldLayout = cur.layout
             , Vk.newLayout = next.layout
-            , -- IGNORED (not 0) so the barrier is a plain transition, valid for
-              -- both EXCLUSIVE and CONCURRENT images (no ownership transfer).
+            , -- IGNORED (not 0) so the barrier is a plain transition, no
+              -- ownership transfer: cross-family access needs CONCURRENT sharing.
               Vk.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
             , Vk.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
             , Vk.image = mi.image
@@ -228,6 +273,7 @@ transitionImageTo cb mi usage = do
             }
       ]
     liftIO (writeIORef mi.stateRef next)
+  liftIO (writeIORef mi.queueRef queue)
 
 -- | Descriptor for a 'ManagedImage'; carries a label for visualization output.
 newtype ImageDesc = ImageDesc {label :: Text}
@@ -250,9 +296,11 @@ instance FG.Resource ManagedImage where
 
   preRead _ flags rec mi = do
     cb <- recorderCommandBuffer rec
-    transitionImageTo cb mi (flagsUsage flags)
+    queue <- recorderQueue rec
+    transitionOnQueue cb queue mi (flagsUsage flags)
   preWrite _ flags rec mi = do
     cb <- recorderCommandBuffer rec
-    transitionImageTo cb mi (flagsUsage flags)
+    queue <- recorderQueue rec
+    transitionOnQueue cb queue mi (flagsUsage flags)
 
   describeDesc d = d.label

@@ -6,11 +6,11 @@ module RenderTarget
   ( createColorTarget
   , createDepthTarget
   , allocateImage
-  , createTarget
-  , createMipChain
-  , createCubeArray
-  , createArrayTarget
-  , linearSampler
+  , allocateTarget
+  , allocateMipChain
+  , allocateCubeArray
+  , allocateArrayTarget
+  , allocateLinearSampler
   ) where
 
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate)
@@ -37,7 +37,7 @@ createColorTarget
   -> Vk.Extent2D
   -> m ((ReleaseKey, ReleaseKey), (Vk.Image, Vk.ImageView))
 createColorTarget allocator dev format extent =
-  createTarget
+  allocateTarget
     allocator
     dev
     format
@@ -58,7 +58,7 @@ createDepthTarget
   -> Vk.Extent2D
   -> m ((ReleaseKey, ReleaseKey), (Vk.Image, Vk.ImageView))
 createDepthTarget allocator dev format extent =
-  createTarget
+  allocateTarget
     allocator
     dev
     format
@@ -72,7 +72,7 @@ createDepthTarget allocator dev format extent =
 
 For transfer-only images: 'Vk.IMAGE_USAGE_TRANSFER_SRC_BIT' / @_DST_BIT@ alone do not
 admit an image view, so a target that is only ever copied wants this instead of
-'createTarget'.
+'allocateTarget'.
 -}
 allocateImage
   :: (MonadResource m)
@@ -110,7 +110,7 @@ allocateImage allocator dev format (Vk.Extent2D w h) usage sharedFamilies name =
 @sharedFamilies@ makes it CONCURRENT across those queue families (for a
 cross-queue read with no ownership transfer); 'Nothing' leaves it EXCLUSIVE.
 -}
-createTarget
+allocateTarget
   :: (MonadResource m)
   => VMA.Allocator
   -> Vk.Device
@@ -122,7 +122,7 @@ createTarget
   -- ^ Queue families to share the image across (CONCURRENT), or 'Nothing' (EXCLUSIVE).
   -> ByteString
   -> m ((ReleaseKey, ReleaseKey), (Vk.Image, Vk.ImageView))
-createTarget allocator dev format extent usage aspect sharedFamilies name = do
+allocateTarget allocator dev format extent usage aspect sharedFamilies name = do
   (imageKey, image) <- allocateImage allocator dev format extent usage sharedFamilies name
   (viewKey, view) <- Vk.withImageView dev (viewCreateInfo image) Nothing allocate
   pure ((imageKey, viewKey), (image, view))
@@ -140,7 +140,7 @@ one single-level 2D colour view per mip. For a bloom pyramid: each view is bound
 both a storage image (write) and a sampled image (read), and imported into the frame
 graph as its own subresource.
 -}
-createMipChain
+allocateMipChain
   :: (MonadResource m)
   => VMA.Allocator
   -> Vk.Device
@@ -150,7 +150,7 @@ createMipChain
   -> Vk.ImageUsageFlags
   -> ByteString
   -> m (ReleaseKey, (Vk.Image, V.Vector Vk.ImageView))
-createMipChain allocator dev format (Vk.Extent2D w h) mipLevels usage name = do
+allocateMipChain allocator dev format (Vk.Extent2D w h) mipLevels usage name = do
   (imageKey, (image, _, _)) <- VMA.withImage allocator imageCreateInfo gpuAlloc allocate
   nameObject dev image name
   views <- V.generateM (fromIntegral mipLevels) \i -> snd <$> Vk.withImageView dev (viewCreateInfo image (fromIntegral i)) Nothing allocate
@@ -183,7 +183,7 @@ sampled view of the whole thing and one @2D_ARRAY@ render view per cube (its six
 faces, for a multiview render). Square @res@ per face; needs the @imageCubeArray@
 device feature to sample.
 -}
-createCubeArray
+allocateCubeArray
   :: (MonadResource m)
   => VMA.Allocator
   -> Vk.Device
@@ -197,7 +197,7 @@ createCubeArray
   -- ^ queue families to share across (CONCURRENT, for a cross-queue read), or 'Nothing'
   -> ByteString
   -> m (ReleaseKey, (Vk.Image, Vk.ImageView, V.Vector Vk.ImageView))
-createCubeArray allocator dev format res nCubes usage sharedFamilies name = do
+allocateCubeArray allocator dev format res nCubes usage sharedFamilies name = do
   (imageKey, (image, _, _)) <- VMA.withImage allocator imageCreateInfo gpuAlloc allocate
   nameObject dev image name
   (_, cubeView) <- Vk.withImageView dev (cubeViewInfo image) Nothing allocate
@@ -238,7 +238,7 @@ createCubeArray allocator dev format res nCubes usage sharedFamilies name = do
 {- | A GPU-only 2D-array image (@layers@ layers) with a single @2D_ARRAY@ view —
 e.g. a multiview depth cube (6 layers). EXCLUSIVE.
 -}
-createArrayTarget
+allocateArrayTarget
   :: (MonadResource m)
   => VMA.Allocator
   -> Vk.Device
@@ -251,7 +251,7 @@ createArrayTarget
   -> Vk.ImageAspectFlags
   -> ByteString
   -> m (ReleaseKey, (Vk.Image, Vk.ImageView))
-createArrayTarget allocator dev format res layers usage aspect name = do
+allocateArrayTarget allocator dev format res layers usage aspect name = do
   (imageKey, (image, _, _)) <- VMA.withImage allocator imageCreateInfo gpuAlloc allocate
   nameObject dev image name
   (_, view) <- Vk.withImageView dev (viewCreateInfo image) Nothing allocate
@@ -280,8 +280,8 @@ createArrayTarget allocator dev format res layers usage aspect name = do
         }
 
 -- | A linear, clamp-to-edge sampler (bilinear taps for the bloom down/upsample).
-linearSampler :: (MonadResource m) => Vk.Device -> m (ReleaseKey, Vk.Sampler)
-linearSampler dev = Vk.withSampler dev info Nothing allocate
+allocateLinearSampler :: (MonadResource m) => Vk.Device -> m (ReleaseKey, Vk.Sampler)
+allocateLinearSampler dev = Vk.withSampler dev info Nothing allocate
   where
     info =
       zero

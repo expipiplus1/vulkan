@@ -18,6 +18,7 @@ module Scene.Cave
   , sideDistance
   , hallRadius
   , caveRadius
+  , maxCubes
   , sideCentres
   ) where
 
@@ -41,7 +42,7 @@ Low enough (89% rock) that the sponge is light-tight: seal the halls and under 1
 the central chamber can see a side chamber's lamp, so the halls are the only way in.
 -}
 rockThreshold :: Float
-rockThreshold = 1/64
+rockThreshold = 1 / 64
 
 {- | Over how many metres a chamber's threshold bias decays to 'rockThreshold'.
 
@@ -79,6 +80,20 @@ hallRadius = 1.5
 -- | The rock ball everything is hollowed from; beyond it is the outer void.
 caveRadius :: Float
 caveRadius = sideDistance * 2
+
+{- | Upper bound on generator-emitted cave cubes: the 'caveRadius' ball's cell
+volume, padded by a cell.
+
+Every solid cell's centre lies inside the ball, so this bounds the surface
+shell without a GPU-side clamp — and keeps the object table ~20x under the
+@gridN³@ worst case (which at 96 B\/object is a 1.5 GiB buffer, past
+@maxStorageBufferRange@ on common hardware).
+-}
+maxCubes :: Word32
+maxCubes = ceiling (4 / 3 * pi * r ^ (3 :: Int))
+  where
+    cellSize = 2 * worldScale / fromIntegral gridN
+    r = caveRadius / cellSize + 1
 
 -- | The six backroom centres, on the axes — where the glowstones hang ("Lights").
 sideCentres :: [Vec3]

@@ -25,10 +25,10 @@ import Data.Word (Word32)
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (Storable, sizeOf)
 import UnliftIO.Foreign (with)
-import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Shader (shaderModuleStage)
-import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges, singleDescriptorSetLayoutInfo)
+import Vulkan.Utils.Descriptors (combinedImageSamplerWrite, imageWrite)
+import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
+import qualified Vulkan.Utils.SpirV.Pipeline
 import Vulkan.Utils.SpirV.Reflect (reflectBytes)
 import Vulkan.Zero (zero)
 
@@ -55,18 +55,10 @@ allocateBloom dev = do
 buildCompute :: Vk.Device -> ByteString -> ResourceT IO Pipeline
 buildCompute dev code = do
   reflected <- reflectBytes code
-  setLayoutInfo <- either fail pure (singleDescriptorSetLayoutInfo reflected)
-  (_, descriptorSetLayout) <- Vk.withDescriptorSetLayout dev setLayoutInfo Nothing allocate
-  (_, pipelineLayout) <-
-    Vk.withPipelineLayout
-      dev
-      zero{Vk.setLayouts = [descriptorSetLayout], Vk.pushConstantRanges = V.fromList (pushConstantRanges reflected)}
-      Nothing
-      allocate
-  (_, stage) <- shaderModuleStage dev Vk.SHADER_STAGE_COMPUTE_BIT Nothing code
-  let createInfo = zero{Vk.layout = pipelineLayout, Vk.stage = stage} :: Vk.ComputePipelineCreateInfo '[]
-  (_, (_, [pipeline])) <- Vk.withComputePipelines dev zero [SomeStruct createInfo] Nothing allocate
-  pure Pipeline{pipeline, pipelineLayout, descriptorSetLayout}
+  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
+  descriptorSetLayout <- singleSetLayout reflectedLayout
+  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
+  pure Pipeline{pipeline, pipelineLayout = reflectedLayout.pipelineLayout, descriptorSetLayout}
 
 {- | A descriptor set for one down/upsample step.
 
@@ -92,22 +84,8 @@ allocateSet dev pl sampler srcView dstView = do
   let set = V.head sets
   Vk.updateDescriptorSets
     dev
-    [ SomeStruct
-        zero
-          { Vk.dstSet = set
-          , Vk.dstBinding = 0
-          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
-          , Vk.descriptorCount = 1
-          , Vk.imageInfo = [zero{Vk.sampler = sampler, Vk.imageView = srcView, Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL} :: Vk.DescriptorImageInfo]
-          }
-    , SomeStruct
-        zero
-          { Vk.dstSet = set
-          , Vk.dstBinding = 1
-          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
-          , Vk.descriptorCount = 1
-          , Vk.imageInfo = [zero{Vk.imageView = dstView, Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL} :: Vk.DescriptorImageInfo]
-          }
+    [ combinedImageSamplerWrite set 0 sampler srcView Vk.IMAGE_LAYOUT_GENERAL
+    , imageWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE Vk.IMAGE_LAYOUT_GENERAL dstView
     ]
     []
   pure set

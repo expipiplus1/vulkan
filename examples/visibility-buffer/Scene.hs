@@ -70,7 +70,7 @@ import Vulkan.Utils.FrameGraph.Recorder (Recorder, recorderCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
-import Buffer (deviceBuffer, mappedStagingBuffer, mappedStorageBuffer)
+import Buffer (deviceBuffer, stagingBuffer, storageBuffer)
 import Driver (beginPrimary, commandPool)
 import qualified Pipeline.Bloom as Bloom
 import qualified Pipeline.Gamma as Gamma
@@ -82,7 +82,7 @@ import qualified Pipeline.Shadow as Shadow
 import Pipeline.Shadow.Params (Params (..))
 import qualified Pipeline.Tonemap as Tonemap
 import qualified Pipeline.Voxels as Voxels
-import RenderTarget (allocateImage, createArrayTarget, createCubeArray, createMipChain, createTarget, linearSampler)
+import RenderTarget (allocateArrayTarget, allocateCubeArray, allocateImage, allocateLinearSampler, allocateMipChain, allocateTarget)
 import qualified Scene.Cave as Cave
 import qualified Scene.Lights as Lights
 import qualified Scene.Materials as Materials
@@ -231,7 +231,10 @@ data SceneStatic = SceneStatic
   , sampler :: Vk.Sampler
   -- ^ Shared linear sampler (resolve, tonemap, bloom).
   , lumBuffer :: Vk.Buffer
+  , lumAllocation :: VMA.Allocation
   , lumMapped :: Ptr ()
+  , allocator :: VMA.Allocator
+  -- ^ For host-cache invalidation before the luminance readback.
   , shadowMoments :: Vk.Image
   -- ^ EVSM moments cube array: one cube (6 faces) per light.
   , shadowCubeView :: Vk.ImageView
@@ -328,10 +331,9 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   -- compute families.
   let
     shared = fmap (\(g, c) -> [g, c]) sharedFamilies
-    voxels = fromIntegral Cave.gridN ^ (3 :: Int) :: Vk.DeviceSize
-    objLayout = Objects.layout (fromIntegral voxels) -- reserve one object slot per cell (worst case)
-    -- The unified vertex SSBO (cube + knot), object table and draw commands are read by
-    -- the resolve (compute) and the mesh/shadow passes (graphics), so they are shared.
+    objLayout = Objects.layout Cave.maxCubes
+  -- The unified vertex SSBO (cube + knot), object table and draw commands are read by
+  -- the resolve (compute) and the mesh/shadow passes (graphics), so they are shared.
   (_, vertexBuffer) <- deviceBuffer allocator Meshes.vertexBufferSize (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   (_, meshTableBuffer) <- deviceBuffer allocator Meshes.meshTableBytes (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   (_, objectsBuffer) <- deviceBuffer allocator (Objects.objectBufferBytes objLayout) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
@@ -344,21 +346,21 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   -- Material table (read by the resolve on the async compute queue).
   (_, materialsBuf) <- deviceBuffer allocator Materials.bufferBytes (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   -- Auto-exposure readback: the luminance pass writes it, the host reads it.
-  (_, (lumBuffer, lumMapped)) <- mappedStorageBuffer allocator Luminance.bufferBytes
+  (_, (lumBuffer, lumAllocation, lumMapped)) <- storageBuffer allocator Luminance.bufferBytes
   -- Staging for the bulk CPU meshes (cube + sphere), copied into the vertex buffer.
-  (_, (staging, stagingPtr)) <- mappedStagingBuffer allocator Meshes.cpuVertexBytes
+  (_, (staging, stagingPtr)) <- stagingBuffer allocator Meshes.cpuVertexBytes
 
   genSet <- Voxels.allocateGenSets dev pls.generator bufs
   meshSet <- Mesh.allocateSet dev pls.mesh vertexBuffer meshTableBuffer objectsBuffer
   -- Shared linear sampler (resolve, tonemap, bloom).
-  (_, sampler) <- linearSampler dev
+  (_, sampler) <- allocateLinearSampler dev
 
   -- EVSM shadow cube array: one cube per light (moments) + a shared depth cube.
   -- The resolve (async compute) samples the moments, so the array is CONCURRENT.
   (_, (shadowMoments, shadowCubeView, shadowRenderViews)) <-
-    createCubeArray allocator dev shadowFormat shadowRes Lights.slots (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) shared "shadow-moments"
+    allocateCubeArray allocator dev shadowFormat shadowRes Lights.slots (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) shared "shadow-moments"
   (_, (shadowDepthImage, shadowDepthView)) <-
-    createArrayTarget allocator dev depthFormat shadowRes 6 Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT Vk.IMAGE_ASPECT_DEPTH_BIT "shadow-depth"
+    allocateArrayTarget allocator dev depthFormat shadowRes 6 Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT Vk.IMAGE_ASPECT_DEPTH_BIT "shadow-depth"
   (_, viewProjBuffer) <- deviceBuffer allocator (fromIntegral (Lights.slots * cubeFaces) * fromIntegral viewProjBytes) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   shadowSet <- Shadow.allocateSet dev pls.shadow vertexBuffer meshTableBuffer objectsBuffer viewProjBuffer
   knotGenSet <- Knot.allocateKnotSet dev pls.knot vertexBuffer
@@ -366,6 +368,9 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   -- One setup submit: upload the meshes/objects/lights/view-projections, generate the
   -- cave + knot, then render the EVSM shadow cubes (the lighting is fully runtime now).
   oneShot dev genQueue \cb -> do
+    -- Seed the luminance readback so the first frame's peek is a defined 0
+    -- (which the exposure guard maps to a deterministic max), not VMA garbage.
+    Vk.cmdFillBuffer cb lumBuffer 0 Vk.WHOLE_SIZE 0
     Meshes.stageVertices cb stagingPtr staging vertexBuffer
     Meshes.uploadMeshTable cb meshTableBuffer
     Objects.uploadStaticObjects cb objectsBuffer objLayout
@@ -389,7 +394,9 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       , materialsBuffer = materialsBuf
       , sampler
       , lumBuffer
+      , lumAllocation
       , lumMapped
+      , allocator
       , shadowMoments
       , shadowCubeView
       , shadowRenderViews
@@ -421,18 +428,18 @@ allocateTargets
 allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- vis + depth also get TRANSFER_SRC so the headless driver can dump them.
   (_, (visImage, visView)) <-
-    createTarget allocator dev visFormat extent (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "visibility"
+    allocateTarget allocator dev visFormat extent (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "visibility"
   (_, (depthImage, depthView)) <-
-    createTarget allocator dev depthFormat extent (Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_DEPTH_BIT Nothing "depth"
+    allocateTarget allocator dev depthFormat extent (Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_DEPTH_BIT Nothing "depth"
   -- The post chain: shade → colorHDR → tone → display. Only tone (windowed blit)
   -- and display (headless readback) need TRANSFER_SRC.
   -- colorHDR is sampled by the first bloom downsample, so it needs SAMPLED too.
   (_, (colorHDRImage, colorHDRView)) <-
-    createTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "colorHDR"
+    allocateTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "colorHDR"
   (_, (toneImage, toneView)) <-
-    createTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "tone"
+    allocateTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "tone"
   (_, (displayImage, displayView)) <-
-    createTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "display"
+    allocateTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "display"
   vis <- newManagedImage visImage Vk.IMAGE_ASPECT_COLOR_BIT
   depth <- newManagedImage depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
   colorHDR <- newManagedImage colorHDRImage Vk.IMAGE_ASPECT_COLOR_BIT
@@ -450,7 +457,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
     bloomUsage = Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. (if wantProbe then Vk.IMAGE_USAGE_TRANSFER_SRC_BIT else zero)
     lumMip = lumMipFor mipCount
   (_, (bloomImage, bloomViews)) <-
-    createMipChain allocator dev hdrFormat halfExtent (fromIntegral mipCount) bloomUsage "bloom"
+    allocateMipChain allocator dev hdrFormat halfExtent (fromIntegral mipCount) bloomUsage "bloom"
   bloomMips <- V.generateM mipCount \i -> newManagedImageMip bloomImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
   -- The luminance probe: a snapshot of the metered mip, taken before the upsample
   -- overwrites it. Written on the compute queue and read back on the graphics one, so
@@ -734,6 +741,10 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
         pushCamera cb pls.mesh.pipelineLayout eye extent
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipelineLayout 0 [scene.static.meshSet] []
         Vk.cmdDrawIndirect cb scene.static.indirect Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
+      -- Producer-side transition for the (possibly async-compute) shade pass:
+      -- done here so the COLOR_ATTACHMENT_OUTPUT source stage stays on a queue
+      -- that supports it. The driver's semaphore wait must then cover
+      -- 'shadeStage' (see the Headless submit) for the hand-off to be ordered.
       transitionImageTo cb vis (StorageRead shadeStage)
 
   colorWritten <-
@@ -946,7 +957,10 @@ bloomMipCount (Vk.Extent2D w h) =
 
 {- | Read back the last frame's geometric-mean luminance.
 
-The luminance pass wrote it; the driver derives an exposure from it.
+The luminance pass wrote it; the driver derives an exposure from it. GPU→CPU
+memory may be non-coherent, so the host cache is invalidated before the peek.
 -}
 readLuminance :: (MonadIO m) => Scene -> m Float
-readLuminance scene = liftIO (peek (castPtr (scene.static.lumMapped `plusPtr` 4)))
+readLuminance scene = liftIO do
+  VMA.invalidateAllocation scene.static.allocator scene.static.lumAllocation 0 Vk.WHOLE_SIZE
+  peek (castPtr (scene.static.lumMapped `plusPtr` 4))

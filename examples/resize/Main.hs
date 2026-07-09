@@ -35,6 +35,7 @@ import Control.Monad (when)
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Resource
 import Data.Bits ((.|.))
+import Data.Foldable (for_)
 import Data.IORef (IORef, atomicModifyIORef', modifyIORef', newIORef, readIORef, writeIORef)
 import Data.IntSet (IntSet)
 import qualified Data.IntSet as IntSet
@@ -102,7 +103,7 @@ main = prettyError . runResourceT $ do
     (drawableSize sdlWindow)
     (shouldQuit sdlWindow)
     WindowLoop
-      { wlMkState = createBindings dev vma juliaPL sharedFamilies
+      { wlMkState = allocateBindings dev vma juliaPL sharedFamilies
       , wlRender = \bindings f -> renderJulia vc juliaPL topology colorRef bindings f
       , wlOnFrame = \start end -> reportFrameTime (end - start)
       , wlOnExit = noOnExit
@@ -198,7 +199,7 @@ data Bindings = Bindings
   -- ^ Swapchain image indices that already hold the current fractal.
   }
 
-createBindings
+allocateBindings
   :: Vk.Device
   -> VMA.Allocator
   -> JuliaPipeline
@@ -206,7 +207,7 @@ createBindings
   -- ^ (graphics, compute) families to share the offscreen image across, if async.
   -> Swapchain
   -> ResourceT IO (Bindings, ReleaseKey)
-createBindings dev allocator jp sharedFamilies sc = do
+allocateBindings dev allocator jp sharedFamilies sc = do
   -- A single offscreen RGBA8 storage image (+ view). Compute writes here; a
   -- blit then copies (and converts RGBA→BGRA) to the acquired swapchain image.
   (imageKey, (image, _, _)) <-
@@ -408,7 +409,13 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
     buffers = graphicsCb :| maybe [] (pure . snd) computePair
   recordGraph cbFor buffers graph
 
-  liftIO . mask_ $ submitFrame vc f imageIndex didBlit graphicsCb computePair
+  liftIO . mask_ $ do
+    submitFrame vc f imageIndex graphicsCb computePair
+    -- The WAR fence must see every blit, not just dirty frames': a clean frame
+    -- re-blitting a stale swapchain image still reads the offscreen image, and
+    -- the next compute waits the timeline only up to the last recorded value.
+    for_ topology \as ->
+      when didBlit $ writeIORef as.asLastBlitDone (fIndex f)
 
 -- | Allocate a primary command buffer from the pool and begin it, one-time-submit.
 beginPrimary :: (MonadResource m, MonadFail m) => Vk.Device -> Vk.CommandPool -> m Vk.CommandBuffer
@@ -430,11 +437,10 @@ submitFrame
   :: VulkanContext
   -> Frame
   -> Word32
-  -> Bool
   -> Vk.CommandBuffer
   -> Maybe (AsyncSetup, Vk.CommandBuffer)
   -> IO ()
-submitFrame vc Frame{..} imageIndex didBlit graphicsCb computePair = do
+submitFrame vc Frame{..} imageIndex graphicsCb computePair = do
   case computePair of
     Just (as, cb) -> do
       prevBlitDone <- readIORef as.asLastBlitDone
@@ -479,13 +485,10 @@ submitFrame vc Frame{..} imageIndex didBlit graphicsCb computePair = do
   Vk.queueSubmit graphicsQueue [SomeStruct graphicsSubmit] Vk.NULL_HANDLE
 
   -- Host-side wait bookkeeping: the graphics timeline always, the compute
-  -- timeline when it ran; record the blit for the next frame's compute fence.
+  -- timeline when it ran. The blit's WAR fence is the caller's, per frame.
   atomicModifyIORef' fGPUWork (\jobs -> ((fHostTimeline, fIndex) : jobs, ()))
-  case computePair of
-    Just (as, _) -> do
-      atomicModifyIORef' fGPUWork (\jobs -> ((as.asReadyTimeline, fIndex) : jobs, ()))
-      when didBlit $ writeIORef as.asLastBlitDone fIndex
-    Nothing -> pure ()
+  for_ computePair \(as, _) ->
+    atomicModifyIORef' fGPUWork (\jobs -> ((as.asReadyTimeline, fIndex) : jobs, ()))
 
 ----------------------------------------------------------------
 -- Julia dispatch

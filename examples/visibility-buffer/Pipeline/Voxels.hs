@@ -32,11 +32,11 @@ import Foreign.Ptr (castPtr)
 import Foreign.Storable (sizeOf)
 import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
-import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as MemoryBarrier (MemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Shader (shaderModuleStage)
-import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges, singleDescriptorSetLayoutInfo)
+import Vulkan.Utils.Descriptors (bufferWrite)
+import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
+import qualified Vulkan.Utils.SpirV.Pipeline
 import Vulkan.Utils.SpirV.Reflect (reflectBytes)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
 import Vulkan.Zero (zero)
@@ -61,18 +61,10 @@ allocateGenerator dev = buildCompute dev Gen.code
 buildCompute :: Vk.Device -> ByteString -> ResourceT IO ComputePipeline
 buildCompute dev code = do
   reflected <- reflectBytes code
-  setLayoutInfo <- either fail pure (singleDescriptorSetLayoutInfo reflected)
-  (_, setLayout) <- Vk.withDescriptorSetLayout dev setLayoutInfo Nothing allocate
-  (_, layout) <-
-    Vk.withPipelineLayout
-      dev
-      zero{Vk.setLayouts = [setLayout], Vk.pushConstantRanges = V.fromList (pushConstantRanges reflected)}
-      Nothing
-      allocate
-  (_, stage) <- shaderModuleStage dev Vk.SHADER_STAGE_COMPUTE_BIT Nothing code
-  let createInfo = zero{Vk.layout = layout, Vk.stage = stage} :: Vk.ComputePipelineCreateInfo '[]
-  (_, (_, pipelines)) <- Vk.withComputePipelines dev zero [SomeStruct createInfo] Nothing allocate
-  pure ComputePipeline{pipeline = V.head pipelines, layout, setLayout}
+  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
+  setLayout <- singleSetLayout reflectedLayout
+  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
+  pure ComputePipeline{pipeline, layout = reflectedLayout.pipelineLayout, setLayout}
 
 -- | The two device buffers the generator appends into.
 data GenBuffers = GenBuffers
@@ -94,21 +86,11 @@ allocateGenSets dev gen bufs = do
   let set = V.head sets
   Vk.updateDescriptorSets
     dev
-    [ ssbo set 0 bufs.objects
-    , ssbo set 1 bufs.indirect
+    [ bufferWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.objects
+    , bufferWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.indirect
     ]
     []
   pure set
-  where
-    ssbo set binding buffer =
-      SomeStruct
-        zero
-          { Vk.dstSet = set
-          , Vk.dstBinding = binding
-          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER
-          , Vk.descriptorCount = 1
-          , Vk.bufferInfo = [Vk.DescriptorBufferInfo buffer 0 Vk.WHOLE_SIZE]
-          }
 
 {- | Record generation into @cb@.
 

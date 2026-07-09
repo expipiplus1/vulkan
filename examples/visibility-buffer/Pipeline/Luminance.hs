@@ -17,10 +17,10 @@ module Pipeline.Luminance
 
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import qualified Data.Vector as V
-import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Shader (shaderModuleStage)
-import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges, singleDescriptorSetLayoutInfo)
+import Vulkan.Utils.Descriptors (bufferWrite, imageWrite)
+import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
+import qualified Vulkan.Utils.SpirV.Pipeline
 import Vulkan.Utils.SpirV.Reflect (reflectBytes)
 import Vulkan.Zero (zero)
 
@@ -39,18 +39,10 @@ data Pipeline = Pipeline
 allocatePipeline :: Vk.Device -> ResourceT IO Pipeline
 allocatePipeline dev = do
   reflected <- reflectBytes Shader.code
-  setLayoutInfo <- either fail pure (singleDescriptorSetLayoutInfo reflected)
-  (_, descriptorSetLayout) <- Vk.withDescriptorSetLayout dev setLayoutInfo Nothing allocate
-  (_, pipelineLayout) <-
-    Vk.withPipelineLayout
-      dev
-      zero{Vk.setLayouts = [descriptorSetLayout], Vk.pushConstantRanges = V.fromList (pushConstantRanges reflected)}
-      Nothing
-      allocate
-  (_, stage) <- shaderModuleStage dev Vk.SHADER_STAGE_COMPUTE_BIT Nothing Shader.code
-  let createInfo = zero{Vk.layout = pipelineLayout, Vk.stage = stage} :: Vk.ComputePipelineCreateInfo '[]
-  (_, (_, [pipeline])) <- Vk.withComputePipelines dev zero [SomeStruct createInfo] Nothing allocate
-  pure Pipeline{pipeline, pipelineLayout, descriptorSetLayout}
+  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
+  descriptorSetLayout <- singleSetLayout reflectedLayout
+  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, Shader.code)
+  pure Pipeline{pipeline, pipelineLayout = reflectedLayout.pipelineLayout, descriptorSetLayout}
 
 -- | A descriptor set binding the source image (0) and the output SSBO (1).
 allocateSet :: Vk.Device -> Pipeline -> Vk.ImageView -> Vk.Buffer -> ResourceT IO Vk.DescriptorSet
@@ -71,22 +63,8 @@ allocateSet dev pl srcView lumBuffer = do
   let set = V.head sets
   Vk.updateDescriptorSets
     dev
-    [ SomeStruct
-        zero
-          { Vk.dstSet = set
-          , Vk.dstBinding = 0
-          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
-          , Vk.descriptorCount = 1
-          , Vk.imageInfo = [zero{Vk.imageView = srcView, Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL} :: Vk.DescriptorImageInfo]
-          }
-    , SomeStruct
-        zero
-          { Vk.dstSet = set
-          , Vk.dstBinding = 1
-          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER
-          , Vk.descriptorCount = 1
-          , Vk.bufferInfo = [Vk.DescriptorBufferInfo lumBuffer 0 Vk.WHOLE_SIZE]
-          }
+    [ imageWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE Vk.IMAGE_LAYOUT_GENERAL srcView
+    , bufferWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER lumBuffer
     ]
     []
   pure set

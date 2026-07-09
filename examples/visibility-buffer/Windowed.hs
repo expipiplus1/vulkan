@@ -85,7 +85,7 @@ main = prettyError . runResourceT $ do
     (Window.drawableSize window)
     (Window.shouldQuit window)
     WindowLoop
-      { wlMkState = createBindings vma dev pls sceneStatic
+      { wlMkState = allocateBindings vma dev pls sceneStatic
       , wlRender = \bindings f -> renderScene vc pls window camRef prevRef startTime bindings f
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
@@ -127,14 +127,14 @@ Registered in an internal resource state (via the returned key) so recreating th
 swapchain frees the old extent's targets instead of leaking them; the static
 geometry/shadows are untouched.
 -}
-createBindings
+allocateBindings
   :: VMA.Allocator
   -> Vk.Device
   -> Scene.ScenePipelines
   -> Scene.SceneStatic
   -> Swapchain
   -> ResourceT IO (Bindings, ReleaseKey)
-createBindings allocator dev pls sceneStatic sc = do
+allocateBindings allocator dev pls sceneStatic sc = do
   exposure <- liftIO (newIORef 1.0)
   st <- createInternalState
   bindings <-

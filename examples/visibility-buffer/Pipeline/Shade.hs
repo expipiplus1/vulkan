@@ -12,9 +12,9 @@
 {-| The shade (deferred resolve) compute pipeline.
 
 Maps visibility-buffer ids to HDR colour ("Pipeline.Shade.Shader"). The set-0 layout
-is reflected from 'Shade.Shader.code' via 'singleDescriptorSetLayoutInfo', so it
-can't drift from the shader. Callers allocate one descriptor set per render target
-with 'allocateDescriptorSet'.
+is reflected from 'Shade.Shader.code' via 'allocateReflectedLayout', so it can't
+drift from the shader. Callers allocate one descriptor set per render target with
+'allocateDescriptorSet'.
 -}
 module Pipeline.Shade
   ( Pipeline (..)
@@ -34,13 +34,12 @@ import qualified Data.Vector as V
 import Data.Word (Word32)
 import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
-import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite, imageWrite)
-import Vulkan.Utils.Shader (shaderModuleStage)
-import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges, singleDescriptorSetLayoutInfo)
+import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges)
+import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
+import qualified Vulkan.Utils.SpirV.Pipeline
 import Vulkan.Utils.SpirV.Reflect (reflectBytes)
-import Vulkan.Utils.SpirV.Specialization (allocateSpecializationInfo)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
 import Vulkan.Zero (zero)
 
@@ -102,21 +101,11 @@ data Pipeline = Pipeline
 allocatePipeline :: Vk.Device -> Params -> ResourceT IO Pipeline
 allocatePipeline dev params = do
   reflected <- reflectBytes Shader.code
-  setLayoutInfo <- either fail pure (singleDescriptorSetLayoutInfo reflected)
-  (_, descriptorSetLayout) <- Vk.withDescriptorSetLayout dev setLayoutInfo Nothing allocate
-  let ranges = pushConstantRanges reflected
-  (_, pipelineLayout) <-
-    Vk.withPipelineLayout
-      dev
-      zero{Vk.setLayouts = [descriptorSetLayout], Vk.pushConstantRanges = V.fromList ranges}
-      Nothing
-      allocate
-  specialization <- allocateSpecializationInfo reflected params
-  (_, stage) <- shaderModuleStage dev Vk.SHADER_STAGE_COMPUTE_BIT specialization Shader.code
-  let createInfo = zero{Vk.layout = pipelineLayout, Vk.stage = stage} :: Vk.ComputePipelineCreateInfo '[]
-  (_, (_, [pipeline])) <- Vk.withComputePipelines dev zero [SomeStruct createInfo] Nothing allocate
-  let cameraPushSize = maximum (0 : [r.offset + r.size | r <- ranges])
-  pure Pipeline{pipeline, pipelineLayout, descriptorSetLayout, cameraPushSize}
+  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
+  descriptorSetLayout <- singleSetLayout reflectedLayout
+  (_, pipeline) <- allocateComputePipeline dev reflectedLayout params (reflected, Shader.code)
+  let cameraPushSize = maximum (0 : [r.offset + r.size | r <- pushConstantRanges reflected])
+  pure Pipeline{pipeline, pipelineLayout = reflectedLayout.pipelineLayout, descriptorSetLayout, cameraPushSize}
 
 {- | A descriptor set for the resolve.
 

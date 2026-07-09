@@ -1060,6 +1060,7 @@ executable visibility-buffer
     , VulkanMemoryAllocator
     , base <5
     , bytestring
+    , containers
     , fragr
     , geomancy
     , gl-block

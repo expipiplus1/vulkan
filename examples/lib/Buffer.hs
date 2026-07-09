@@ -1,14 +1,14 @@
-{-| VMA buffer helpers for the examples: a GPU-only device buffer, CPU-mapped
-readback/storage buffers, and a CPU→GPU staging buffer.
--}
+-- | VMA buffer helpers for the examples
+
 module Buffer
   ( deviceBuffer
-  , mappedReadbackBuffer
-  , mappedStorageBuffer
-  , mappedStagingBuffer
+  , readbackBuffer
+  , storageBuffer
+  , stagingBuffer
   ) where
 
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate)
+import Data.Bits ((.|.))
 import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Ptr (Ptr)
@@ -36,13 +36,11 @@ deviceBuffer allocator size usage sharedFamilies = do
         :: Vk.BufferCreateInfo '[]
     gpuAlloc = zero{AllocationCreateInfo.usage = VMA.MEMORY_USAGE_GPU_ONLY}
 
-{- | A CPU-visible, mapped @TRANSFER_DST@ buffer for reading device data back to
-the host; returns the buffer and a pointer to its mapped memory.
--}
-mappedReadbackBuffer :: (MonadResource m) => VMA.Allocator -> Vk.DeviceSize -> m (ReleaseKey, (Vk.Buffer, Ptr ()))
-mappedReadbackBuffer allocator size = do
-  (key, (buffer, _, info)) <- VMA.withBuffer allocator bufferInfo hostAlloc allocate
-  pure (key, (buffer, VMA.mappedData info))
+-- | A CPU-visible, @TRANSFER_DST@ buffer for reading device data back to the host.
+readbackBuffer :: (MonadResource m) => VMA.Allocator -> Vk.DeviceSize -> m (ReleaseKey, (Vk.Buffer, VMA.Allocation, Ptr ()))
+readbackBuffer allocator size = do
+  (key, (buffer, allocation, info)) <- VMA.withBuffer allocator bufferInfo hostAlloc allocate
+  pure (key, (buffer, allocation, VMA.mappedData info))
   where
     bufferInfo = zero{Vk.size = size, Vk.usage = Vk.BUFFER_USAGE_TRANSFER_DST_BIT} :: Vk.BufferCreateInfo '[]
     hostAlloc =
@@ -52,14 +50,17 @@ mappedReadbackBuffer allocator size = do
         }
 
 {- | A CPU-visible, mapped @STORAGE@ buffer a compute shader writes and the host
-reads back directly; returns the buffer and a pointer to its mapped memory.
+reads back directly; returns the buffer, its allocation (GPU→CPU memory may be
+non-coherent — 'VMA.invalidateAllocation' before host reads) and a pointer to
+its mapped memory.
 -}
-mappedStorageBuffer :: (MonadResource m) => VMA.Allocator -> Vk.DeviceSize -> m (ReleaseKey, (Vk.Buffer, Ptr ()))
-mappedStorageBuffer allocator size = do
-  (key, (buffer, _, info)) <- VMA.withBuffer allocator bufferInfo hostAlloc allocate
-  pure (key, (buffer, VMA.mappedData info))
+storageBuffer :: (MonadResource m) => VMA.Allocator -> Vk.DeviceSize -> m (ReleaseKey, (Vk.Buffer, VMA.Allocation, Ptr ()))
+storageBuffer allocator size = do
+  (key, (buffer, allocation, info)) <- VMA.withBuffer allocator bufferInfo hostAlloc allocate
+  pure (key, (buffer, allocation, VMA.mappedData info))
   where
-    bufferInfo = zero{Vk.size = size, Vk.usage = Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT} :: Vk.BufferCreateInfo '[]
+    -- TRANSFER_DST so the buffer can be seeded (cmdFillBuffer) before first use.
+    bufferInfo = zero{Vk.size = size, Vk.usage = Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT} :: Vk.BufferCreateInfo '[]
     hostAlloc =
       zero
         { AllocationCreateInfo.flags = VMA.ALLOCATION_CREATE_MAPPED_BIT
@@ -70,8 +71,8 @@ mappedStorageBuffer allocator size = do
 (host-poke the mapped memory, then 'Vk.cmdCopyBuffer' into a GPU-only buffer).
 Returns the buffer and a pointer to its mapped memory.
 -}
-mappedStagingBuffer :: (MonadResource m) => VMA.Allocator -> Vk.DeviceSize -> m (ReleaseKey, (Vk.Buffer, Ptr ()))
-mappedStagingBuffer allocator size = do
+stagingBuffer :: (MonadResource m) => VMA.Allocator -> Vk.DeviceSize -> m (ReleaseKey, (Vk.Buffer, Ptr ()))
+stagingBuffer allocator size = do
   (key, (buffer, _, info)) <- VMA.withBuffer allocator bufferInfo hostAlloc allocate
   pure (key, (buffer, VMA.mappedData info))
   where

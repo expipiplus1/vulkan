@@ -33,5 +33,15 @@ work — that needs `FG.executeQueued` + a `RecycleQueue`, since single-queue
 `execute` would free a transient during recording, before the GPU has run.
 
 The layout-diff model inserts a barrier whenever the target `ImageState`
-differs from the tracked one. It does not (yet) insert write-after-write /
-read-after-write barriers when the layout, stage and access are all unchanged.
+differs from the tracked one, and also for every write access with the state
+unchanged (same-state WAW); only read-after-read skips the barrier.
+
+When consecutive accesses land on different queues the barrier's source scope
+is replaced by the destination stage with no access mask: execution ordering
+and memory availability must come from the driver's inter-queue semaphore, and
+the barrier chains to its wait. Two caveats follow: the submit wait's
+`dstStageMask` must cover the consuming usage's stage, and cross-queue-family
+access is only supported for CONCURRENT-shared images — no ownership
+release/acquire pair is emitted (`PassSync` acquires/releases are dropped by
+`recordingBackend`), so an EXCLUSIVE image's contents are undefined on the new
+family.
