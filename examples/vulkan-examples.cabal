@@ -1050,7 +1050,8 @@ executable visibility-buffer
       ViewPatterns
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      JuicyPixels
+      GLFW-b
+    , JuicyPixels
     , VulkanMemoryAllocator
     , base <5
     , bytestring

@@ -134,7 +134,7 @@ render allocator dev queues async = do
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
       runMode debugMode = do
         graph <- FG.newFrameGraph
-        outs <- Scene.addScenePasses graph pls scene (computeQueueId async) fixedExtent defaultExposure debugMode
+        outs <- Scene.addScenePasses graph pls scene (computeQueueId async) fixedExtent Scene.cameraEye defaultExposure debugMode
         _ <-
           FG.addPass graph "readback" (readbackSetup outs.displayOut) \_ _ recorder -> do
             cb <- recorderCommandBuffer recorder

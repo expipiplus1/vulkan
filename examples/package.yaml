@@ -195,6 +195,7 @@ executables:
     main: Main.hs
     source-dirs: visibility-buffer
     dependencies:
+    - GLFW-b
     - JuicyPixels
     - VulkanMemoryAllocator
     - base <5

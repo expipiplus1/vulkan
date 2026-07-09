@@ -33,6 +33,8 @@ module Scene
   , readLuminance
   , debugImages
   , shadowImage
+  , cameraEye
+  , cameraTarget
   ) where
 
 import Control.Monad (forM_, when, zipWithM_)
@@ -47,7 +49,7 @@ import Foreign.Ptr (Ptr, castPtr, plusPtr)
 import Foreign.Storable (peek, poke, sizeOf)
 import qualified Fragr as FG
 import qualified Geomancy.Mat4 as Mat4
-import Geomancy.Transform (unTransform)
+import Geomancy.Transform (scale3, unTransform)
 import Geomancy.Vec3 (Vec3, vec3, withVec3)
 import Geomancy.Vec4 (vec4)
 import qualified Geomancy.Vulkan.Projection as Projection
@@ -128,14 +130,21 @@ square per face.
 shadowViewProjs :: [Mat4.Mat4]
 shadowViewProjs = concat [lightShadowViewProjs (vec3 px py pz) | (px, py, pz) <- [p | Lights.Light p _ _ _ <- Lights.lights]]
 
--- | The six shadow-cube view-projections for a light at @pos@ (reverse-Z, 90° square).
+{- | The six shadow-cube view-projections for a light at @pos@ (reverse-Z, 90° square).
+
+'shadowFaces' are the GL cube-face view vectors (Y-up NDC), but geomancy's Vulkan
+projection is Y-down, so each face renders vertically flipped versus what the hardware
+cube sampler reads. @flipY@ negates clip-space Y to realign them (cull is NONE, so the
+inverted winding is harmless).
+-}
 lightShadowViewProjs :: Vec3 -> [Mat4.Mat4]
 lightShadowViewProjs pos =
-  [ Mat4.matrixProduct (unTransform proj) (unTransform (View.lookAtRH pos (pos + dir) up))
+  [ Mat4.matrixProduct flipY (Mat4.matrixProduct (unTransform proj) (unTransform (View.lookAtRH pos (pos + dir) up)))
   | (dir, up) <- shadowFaces
   ]
   where
     proj = Projection.reverseDepthRH (pi / 2) 0.02 (fromIntegral shadowRes) (fromIntegral shadowRes)
+    flipY = unTransform (scale3 1 (-1) 1)
 
 {- | Voxel grid resolution per axis.
 
@@ -637,11 +646,13 @@ addScenePasses
   -> Scene
   -> FG.QueueId
   -> Vk.Extent2D
+  -> Vec3
+  -- ^ camera eye position
   -> Float
   -> Word32
   -- ^ debug mode (0 = beauty; 1 albedo, 2 metalness, 3 roughness, 4 normal)
   -> ResourceT IO PassOutputs
-addScenePasses graph pls scene computeQueue extent exposure debugMode = do
+addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
   let SceneTargets{vis, visView, depth, depthView, colorHDR, tone, display} = scene.targets
   visH <- importManagedImage graph "visibility" vis
   depthH <- importManagedImage graph "depth" depth
@@ -661,7 +672,7 @@ addScenePasses graph pls scene computeQueue extent exposure debugMode = do
         -- Every mesh (glowstones + cave cubes, the knot, the orb sphere) in one
         -- multi-draw: the pipeline pulls geometry + per-object transforms from the tables.
         Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipeline
-        pushCamera cb pls.mesh.pipelineLayout extent
+        pushCamera cb pls.mesh.pipelineLayout eye extent
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipelineLayout 0 [scene.static.meshSet] []
         Vk.cmdDrawIndirect cb scene.static.indirect Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
       -- Producer-side transition to GENERAL (see the graphics→compute note).
@@ -671,7 +682,7 @@ addScenePasses graph pls scene computeQueue extent exposure debugMode = do
     FG.addPass graph "shade" (shadeSetup visWritten colorH) \_ _ recorder -> do
       cb <- recorderCommandBuffer recorder
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipeline
-      pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize extent debugMode
+      pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize eye extent debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipelineLayout 0 [scene.shadeSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
@@ -777,37 +788,41 @@ frames it.
 cameraEye :: Vec3
 cameraEye = vec3 0.03 0.10 0.31
 
-{- | The camera view-projection for @extent@ (geomancy, Vulkan-native reverse-Z).
+-- | The point the camera looks at and orbits.
+cameraTarget :: Vec3
+cameraTarget = vec3 0 0 0
+
+{- | The camera view-projection for @eye@ at @extent@ (geomancy, reverse-Z).
 
 Near maps to 1, infinite far to 0 — depth clears to 0 and the test is GREATER (see
 'geometrySetup').
 -}
-viewProjFor :: Vk.Extent2D -> Mat4.Mat4
-viewProjFor (Vk.Extent2D w h) = Mat4.matrixProduct (unTransform proj) (unTransform view)
+viewProjFor :: Vec3 -> Vk.Extent2D -> Mat4.Mat4
+viewProjFor eye (Vk.Extent2D w h) = Mat4.matrixProduct (unTransform proj) (unTransform view)
   where
     proj = Projection.reverseDepthRH (70 * pi / 180) 0.01 (fromIntegral w) (fromIntegral h)
-    view = View.lookAtRH cameraEye (vec3 0 0 0) (vec3 0 1 0)
+    view = View.lookAtRH eye cameraTarget (vec3 0 1 0)
 
 -- | Push the camera view-projection (the mesh pipeline's sole push constant).
-pushCamera :: Vk.CommandBuffer -> Vk.PipelineLayout -> Vk.Extent2D -> IO ()
-pushCamera cb layout extent =
+pushCamera :: Vk.CommandBuffer -> Vk.PipelineLayout -> Vec3 -> Vk.Extent2D -> IO ()
+pushCamera cb layout eye extent =
   with camera \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_VERTEX_BIT 0 (fromIntegral (sizeOf camera)) (castPtr p)
   where
-    camera = Mesh.Camera{Mesh.viewProj = viewProjFor extent}
+    camera = Mesh.Camera{Mesh.viewProj = viewProjFor eye extent}
 
 -- | Push the resolve's view-projection + eye position (DAIS + specular V).
-pushResolve :: Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Vk.Extent2D -> Word32 -> IO ()
-pushResolve cb layout pushSize extent debugMode =
+pushResolve :: Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Vec3 -> Vk.Extent2D -> Word32 -> IO ()
+pushResolve cb layout pushSize eyePos extent debugMode =
   -- Push the reflected range extent ('pushSize'), which is < the std430 'Storable'
   -- size (it trailing-pads to 16) — every real field lives below it.
   with camera \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 pushSize (castPtr p)
   where
-    eye = withVec3 cameraEye \x y z -> vec4 x y z 1
+    eye = withVec3 eyePos \x y z -> vec4 x y z 1
     camera =
       Shade.Camera
-        { Shade.viewProj = viewProjFor extent
+        { Shade.viewProj = viewProjFor eyePos extent
         , Shade.camPos = eye
         , Shade.debugMode = debugMode
         }
