@@ -5,7 +5,7 @@
 {-| Windowed driver (GLFW).
 
 Presents the shaded scene, re-rendering every frame at the native window resolution.
-Arrow keys orbit the camera; @-@/@+@ dolly ('updateOrbit').
+Arrow keys orbit the camera and @-@/@+@ dolly ('Camera.update'); @.@ dumps the view.
 
 Runs the /same/ 'Scene.addScenePasses' graph as the headless driver, but keeps it
 single-queue — @cbFor@ maps every pass (geometry, shade) to the graphics command
@@ -18,6 +18,7 @@ module Windowed
   ) where
 
 import Control.Exception (handle)
+import Control.Monad (when)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ReleaseKey, ResourceT, closeInternalState, createInternalState, register, runInternalState, runResourceT)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
@@ -26,7 +27,6 @@ import Data.Vector (Vector)
 import qualified Data.Vector as V
 import qualified Fragr as FG
 import GHC.Clock (getMonotonicTime)
-import Geomancy.Vec3 (Vec3, vec3, withVec3)
 import qualified Graphics.UI.GLFW as GLFW
 import Say (sayErrString)
 import UnliftIO.Exception (displayException)
@@ -48,8 +48,10 @@ import WindowedBoot (WindowedConfig (..), withWindowedVk)
 
 import Blit (blitImage)
 import Driver (beginPrimary)
+import qualified Exposure
 import Requirements (deviceRequirements)
 import qualified Scene
+import qualified Scene.Camera as Camera
 
 main :: IO ()
 main = prettyError . runResourceT $ do
@@ -70,8 +72,12 @@ main = prettyError . runResourceT $ do
   -- Animation clock, seeded once so resize (which rebuilds the targets) doesn't reset it.
   startTime <- liftIO getMonotonicTime
   -- Orbit camera + previous-frame time, both program-lifetime so resize keeps the view.
-  camRef <- liftIO (newIORef initialOrbit)
+  camRef <- liftIO (newIORef Camera.initial)
   prevRef <- liftIO (newIORef startTime)
+  -- '.' dumps the current view (discrete, so a key callback rather than the poll loop).
+  liftIO $ GLFW.setKeyCallback window $ Just \_ key _ state _ ->
+    when (key == GLFW.Key'Period && state == GLFW.KeyState'Pressed) $
+      Camera.dump =<< readIORef camRef
 
   runWindowLoop
     vc
@@ -121,13 +127,19 @@ Registered in an internal resource state (via the returned key) so recreating th
 swapchain frees the old extent's targets instead of leaking them; the static
 geometry/shadows are untouched.
 -}
-createBindings :: VMA.Allocator -> Vk.Device -> Scene.ScenePipelines -> Scene.SceneStatic -> Swapchain -> ResourceT IO (Bindings, ReleaseKey)
+createBindings
+  :: VMA.Allocator
+  -> Vk.Device
+  -> Scene.ScenePipelines
+  -> Scene.SceneStatic
+  -> Swapchain
+  -> ResourceT IO (Bindings, ReleaseKey)
 createBindings allocator dev pls sceneStatic sc = do
   exposure <- liftIO (newIORef 1.0)
   st <- createInternalState
   bindings <-
     liftIO . flip runInternalState st $ do
-      scene <- Scene.allocateTargets allocator dev pls sceneStatic sc.sExtent Nothing
+      scene <- Scene.allocateTargets allocator dev pls sceneStatic sc.sExtent Nothing False
       swapImages <- traverse (\img -> newManagedImage img Vk.IMAGE_ASPECT_COLOR_BIT) sc.sImages
       pure Bindings{scene, swapImages, exposure}
   key <- register (closeInternalState st)
@@ -137,30 +149,38 @@ createBindings allocator dev pls sceneStatic sc = do
 -- Per-frame rendering
 ----------------------------------------------------------------
 
-renderScene :: VulkanContext -> Scene.ScenePipelines -> GLFW.Window -> IORef Orbit -> IORef Double -> Double -> Bindings -> Frame -> ResourceT IO ()
+renderScene
+  :: VulkanContext
+  -> Scene.ScenePipelines
+  -> GLFW.Window
+  -> IORef Camera.Orbit
+  -> IORef Double
+  -> Double
+  -> Bindings
+  -> Frame
+  -> ResourceT IO ()
 renderScene vc pls window camRef prevRef startTime bindings f = do
   (acquireResult, imageIndex) <- acquireFrameImage vc f
   now <- liftIO getMonotonicTime
   let t = realToFrac (now - startTime) :: Float
-  -- Advance the orbit camera from held keys over this frame's delta.
-  orbit <- liftIO $ do
+  dt <- liftIO $ do
     prev <- readIORef prevRef
     writeIORef prevRef now
-    updateOrbit window (realToFrac (now - prev)) camRef
+    pure (realToFrac (now - prev) :: Float)
+  -- Advance the orbit camera from held keys over this frame's delta.
+  orbit <- liftIO (Camera.update window dt camRef)
   let
-    eye = orbitEye orbit
+    eye = Camera.eye orbit
     sc = fSwapchain f
     extent = sc.sExtent
     swapManaged = bindings.swapImages V.! fromIntegral imageIndex
 
-  -- Auto-exposure: smooth toward middle-grey over the previous frame's mean
-  -- luminance (the readback lags a frame; the smoothing hides it).
+  -- Auto-exposure over the previous frame's mean luminance (the readback lags a
+  -- frame; the adaptation hides it).
   exposure <- liftIO $ do
     prevLum <- Scene.readLuminance bindings.scene
     e <- readIORef bindings.exposure
-    let
-      target = if prevLum > 1e-5 then max 0.05 (min 20 (0.18 / prevLum)) else e
-      e' = e + (target - e) * 0.05
+    let e' = Exposure.adapt dt e (Exposure.target prevLum)
     writeIORef bindings.exposure e'
     pure e'
 
@@ -192,58 +212,3 @@ renderScene vc pls window camRef prevRef startTime bindings f = do
     blitSetup toneOut swapchainH b = do
       _ <- FG.readWith b toneOut (usageFlags TransferSrc)
       FG.writeWith b swapchainH (usageFlags TransferDst)
-
-----------------------------------------------------------------
--- Orbit camera
-----------------------------------------------------------------
-
--- | Orbit camera: spherical coordinates about 'Scene.cameraTarget'.
-data Orbit = Orbit
-  { azimuth :: Float
-  , elevation :: Float
-  , distance :: Float
-  }
-
-initialOrbit :: Orbit
-initialOrbit = Orbit{azimuth = 1.474, elevation = 0.311, distance = 0.327}
-
--- | Eye position for an orbit state.
-orbitEye :: Orbit -> Vec3
-orbitEye o =
-  withVec3 Scene.cameraTarget \tx ty tz ->
-    vec3 (tx + o.distance * ce * ca) (ty + o.distance * se) (tz + o.distance * ce * sa)
-  where
-    ca = cos o.azimuth
-    sa = sin o.azimuth
-    ce = cos o.elevation
-    se = sin o.elevation
-
-{- | Advance the orbit from held keys over @dt@ seconds.
-
-Arrows orbit (left/right azimuth, up/down elevation), @-@/@+@ dolly. Elevation is
-clamped shy of the poles; distance to a sane range.
--}
-updateOrbit :: GLFW.Window -> Float -> IORef Orbit -> IO Orbit
-updateOrbit window dt ref = do
-  o <- readIORef ref
-  l <- held GLFW.Key'Left
-  r <- held GLFW.Key'Right
-  u <- held GLFW.Key'Up
-  d <- held GLFW.Key'Down
-  outward <- (||) <$> held GLFW.Key'Minus <*> held GLFW.Key'PadSubtract
-  inward <- (||) <$> held GLFW.Key'Equal <*> held GLFW.Key'PadAdd
-  let
-    rot = 1.6 * dt
-    axis neg pos = (if pos then rot else 0) - (if neg then rot else 0)
-    o' =
-      Orbit
-        { azimuth = o.azimuth + axis l r
-        , elevation = clamp (-1.45) 1.45 (o.elevation + axis d u)
-        , distance = clamp 0.15 3.0 (o.distance * exp (0.9 * dt * (bit outward - bit inward)))
-        }
-  writeIORef ref o'
-  pure o'
-  where
-    held k = (== GLFW.KeyState'Pressed) <$> GLFW.getKey window k
-    clamp lo hi = max lo . min hi
-    bit b = if b then 1 else 0

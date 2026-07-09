@@ -3,6 +3,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -21,6 +22,8 @@ module Pipeline.Shade
   , Light (..)
   , Vertex (..)
   , Material (..)
+  , Tuning (..)
+  , defaultTuning
   , allocatePipeline
   , allocateDescriptorSet
   , workgroup
@@ -37,10 +40,12 @@ import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite, imageWr
 import Vulkan.Utils.Shader (shaderModuleStage)
 import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges, singleDescriptorSetLayoutInfo)
 import Vulkan.Utils.SpirV.Reflect (reflectBytes)
+import Vulkan.Utils.SpirV.Specialization (allocateSpecializationInfo)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
 import Vulkan.Zero (zero)
 
 import qualified Pipeline.Shade.Shader as Shader
+import Pipeline.Shadow.Params (Params)
 
 -- Generate geomancy-backed records (with std140/std430 'Storable') for the shader's
 -- blocks — notably the @Camera@ push constant — from the same SPIR-V the runtime loads.
@@ -49,6 +54,39 @@ reflectShaderTypesBytes Shader.code
 -- | Workgroup size on each axis (matches @local_size_x\/y@ in the shader).
 workgroup :: Word32
 workgroup = 8
+
+{- | The receiver-side shading knobs of the @Camera@ push.
+
+Nothing is baked against them (unlike 'Params'), so they are free to change per frame.
+-}
+data Tuning = Tuning
+  { ambient :: Float
+  -- ^ Uniform environment radiance.
+  , indirect :: Float
+  -- ^ Crude indirect bounce: the fraction of irradiance seen as environment.
+  , bleed :: Float
+  -- ^ Light-bleed reduction: the Chebyshev bound below this reads as fully shadowed.
+  , shadowBias :: Float
+  -- ^ Receiver bias in normalized distance, against self-shadow acne.
+  , normalBias :: Float
+  -- ^ Offset along the normal, in metres, before the cube lookup.
+  }
+  deriving (Eq, Ord, Show)
+
+{- | Tuned for the cave.
+
+'normalBias' is about a third of the knot's tube radius; 'shadowBias' is in distance
+already normalized by @Params.far@, so a change of scene scale leaves it alone.
+-}
+defaultTuning :: Tuning
+defaultTuning =
+  Tuning
+    { ambient = 1 / 256
+    , indirect = 0.65
+    , bleed = 0.15
+    , shadowBias = 0.0012
+    , normalBias = 0.025
+    }
 
 data Pipeline = Pipeline
   { pipeline :: Vk.Pipeline
@@ -60,9 +98,9 @@ data Pipeline = Pipeline
   -}
   }
 
--- | The pipeline; its set 0 layout reflected from 'Shader.code'.
-allocatePipeline :: Vk.Device -> ResourceT IO Pipeline
-allocatePipeline dev = do
+-- | The pipeline; its set 0 layout reflected from 'Shader.code', @params@ specialized in.
+allocatePipeline :: Vk.Device -> Params -> ResourceT IO Pipeline
+allocatePipeline dev params = do
   reflected <- reflectBytes Shader.code
   setLayoutInfo <- either fail pure (singleDescriptorSetLayoutInfo reflected)
   (_, descriptorSetLayout) <- Vk.withDescriptorSetLayout dev setLayoutInfo Nothing allocate
@@ -73,7 +111,8 @@ allocatePipeline dev = do
       zero{Vk.setLayouts = [descriptorSetLayout], Vk.pushConstantRanges = V.fromList ranges}
       Nothing
       allocate
-  (_, stage) <- shaderModuleStage dev Vk.SHADER_STAGE_COMPUTE_BIT Nothing Shader.code
+  specialization <- allocateSpecializationInfo reflected params
+  (_, stage) <- shaderModuleStage dev Vk.SHADER_STAGE_COMPUTE_BIT specialization Shader.code
   let createInfo = zero{Vk.layout = pipelineLayout, Vk.stage = stage} :: Vk.ComputePipelineCreateInfo '[]
   (_, (_, [pipeline])) <- Vk.withComputePipelines dev zero [SomeStruct createInfo] Nothing allocate
   let cameraPushSize = maximum (0 : [r.offset + r.size | r <- ranges])

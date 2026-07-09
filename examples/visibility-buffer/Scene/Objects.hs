@@ -8,17 +8,17 @@ CPU-known objects at fixed leading slots and the GPU generator appending after a
 base ('caveBase'), so every draw command's @firstInstance@ is static:
 
 @
-[ glowstones (fixed) | cave cubes (GPU) | (unused) ][ knot i0 i1 ][ orb ]
+[ glowstones (fixed) | cave cubes (GPU) | (unused) ][ knot i0 i1 ][ orbs.. ]
   0            G-1     G                    K-1          K   K+1     O
 @
 
 The indirect buffer holds five 'Vk.DrawIndirectCommand's: @mainCube mainKnot
 mainSphere@ (the camera pass draws these three) then @occCube occKnot@ (the shadow
-pass draws these two, @occCube@ skipping the non-occluder glowstones; the orb sphere
-is not an occluder). The gen bumps the two cube @instanceCount@s; every other field
+pass draws these two, @occCube@ skipping the non-occluder glowstones; the orb spheres
+are not occluders). The gen bumps the two cube @instanceCount@s; every other field
 is CPU-static.
 -}
-module Objects
+module Scene.Objects
   ( Layout (..)
   , layout
   , objectBufferBytes
@@ -30,28 +30,25 @@ module Objects
   , occluderDrawCount
   , uploadDrawCommands
   , uploadStaticObjects
-  , writeOrbObject
+  , writeOrbObjects
   ) where
 
-import Control.Monad.IO.Class (MonadIO, liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Word (Word32)
-import Foreign.Marshal.Array (pokeArray)
-import Foreign.Ptr (castPtr)
-import Foreign.Storable (poke, sizeOf)
-import Geomancy.Transform (rotateY, scale, translateV, unTransform)
-import Geomancy.Vec3 (vec3)
-import Geomancy.Vec4 (vec4)
-import UnliftIO.Foreign (allocaBytes)
+import Foreign.Storable (sizeOf)
+import Geomancy (vec4, withVec4)
+import Geomancy.Transform (rotateY, scale, translate, unTransform)
 import qualified Vulkan.Core10 as Vk
 
-import qualified Lights
-import qualified Materials
-import qualified Meshes
 import Pipeline.Mesh (Object (..))
+import qualified Scene.Lights as Lights
+import qualified Scene.Materials as Materials
+import qualified Scene.Meshes as Meshes
+import qualified Upload
 
--- | Number of CPU-known glowstone cubes (every light except the dynamic orb).
+-- | Number of CPU-known glowstone cubes (one per static light).
 glowstoneCount :: Word32
-glowstoneCount = Lights.orbIndex
+glowstoneCount = fromIntegral (length Lights.glowstones)
 
 knotObjectCount :: Word32
 knotObjectCount = 2
@@ -63,7 +60,7 @@ data Layout = Layout
   , knotBase :: Word32
   -- ^ First knot-object slot.
   , orbBase :: Word32
-  -- ^ The (single) dynamic orb sphere slot.
+  -- ^ First dynamic orb sphere slot ('Lights.orbCount' of them).
   , total :: Word32
   }
 
@@ -73,7 +70,7 @@ layout maxCubes =
     { caveBase = glowstoneCount
     , knotBase = glowstoneCount + maxCubes
     , orbBase = glowstoneCount + maxCubes + knotObjectCount
-    , total = glowstoneCount + maxCubes + knotObjectCount + 1
+    , total = glowstoneCount + maxCubes + knotObjectCount + Lights.orbCount
     }
 
 objectStride :: Int
@@ -105,76 +102,65 @@ The cube @instanceCount@s (main starts at 'glowstoneCount', occluder at 0) are t
 generator's atomic counters; the rest are static.
 -}
 uploadDrawCommands :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m ()
-uploadDrawCommands cb buffer l =
-  liftIO $ allocaBytes (fromIntegral indirectBytes) $ \p -> do
-    pokeArray
-      (castPtr p)
-      -- vertexCount, instanceCount, firstVertex, firstInstance
+uploadDrawCommands cb buffer l = Upload.slice cb buffer 0 commands
+  where
+    -- vertexCount, instanceCount, firstVertex, firstInstance
+    commands =
       [ Vk.DrawIndirectCommand Meshes.cubeVertexCount glowstoneCount 0 0 -- mainCube (+ cave cubes)
       , Vk.DrawIndirectCommand Meshes.knotVertexCount knotObjectCount 0 l.knotBase -- mainKnot
-      , Vk.DrawIndirectCommand Meshes.sphereVertexCount 1 0 l.orbBase -- mainSphere (orb)
+      , Vk.DrawIndirectCommand Meshes.sphereVertexCount Lights.orbCount 0 l.orbBase -- mainSphere (orbs)
       , Vk.DrawIndirectCommand Meshes.cubeVertexCount 0 0 l.caveBase -- occCube (cave cubes only)
       , Vk.DrawIndirectCommand Meshes.knotVertexCount knotObjectCount 0 l.knotBase -- occKnot
       ]
-    Vk.cmdUpdateBuffer cb buffer 0 indirectBytes p
 
 {- | Write the CPU-known objects.
 
 The glowstone cubes (emissive, @[0..G)@) and the two knot instances (at 'knotBase').
 -}
 uploadStaticObjects :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m ()
-uploadStaticObjects cb buffer l = liftIO $ do
-  allocaBytes (glow * objectStride) $ \p -> do
-    pokeArray (castPtr p) glowstones
-    Vk.cmdUpdateBuffer cb buffer 0 (fromIntegral (glow * objectStride)) p
-  allocaBytes (2 * objectStride) $ \p -> do
-    pokeArray (castPtr p) knots
-    Vk.cmdUpdateBuffer cb buffer (fromIntegral l.knotBase * fromIntegral objectStride) (fromIntegral (2 * objectStride)) p
+uploadStaticObjects cb buffer l = do
+  Upload.slice cb buffer 0 glowstones
+  Upload.slice cb buffer l.knotBase knots
   where
-    glow = fromIntegral glowstoneCount
-    glowstones =
-      [ Object
-          { transform = unTransform (translateV (vec3 px py pz) <> scale hs)
-          , emissive = vec4 (r * 4) (g * 4) (b * 4) 0
+    glowstones = do
+      Lights.Light pos color <- Lights.glowstones
+      pure
+        Object
+          { transform = unTransform $ withVec4 pos \x y z hs -> translate x y z <> scale hs
+          , emissive = color * vec4 4 4 4 0
           , meshId = Meshes.cube
           , materialId = 0
           , flags = 0
           , pad = 0
           }
-      | Lights.Light (px, py, pz) hs (r, g, b) _ <- take glow Lights.lights
-      ]
-    knots =
-      [ Object
-          { transform = unTransform (if k == 0 then scale 1 else rotateY (pi / 2))
+    knots = do
+      k <- [0, 1]
+      pure
+        Object
+          { transform = unTransform $ if k == 0 then mempty else rotateY (pi / 2)
           , emissive = vec4 0 0 0 0
           , meshId = Meshes.knot
           , materialId = Materials.knotBase + k
           , flags = 0
           , pad = 0
           }
-      | k <- [0, 1]
-      ]
 
-{- | (Re)write the dynamic orb sphere object at 'orbBase' for time @t@.
+{- | (Re)write the dynamic orb spheres (from 'orbBase') for time @t@.
 
-An emissive sphere placed by 'Lights.orbPosition' / 'Lights.orbRadius'.
+Emissive spheres placed by 'Lights.orbLight'.
 -}
-writeOrbObject :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> Float -> m ()
-writeOrbObject cb buffer l t =
-  liftIO $ allocaBytes objectStride $ \p -> do
-    poke (castPtr p) (orbObject t)
-    Vk.cmdUpdateBuffer cb buffer (fromIntegral l.orbBase * fromIntegral objectStride) (fromIntegral objectStride) p
+writeOrbObjects :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> Float -> m ()
+writeOrbObjects cb buffer l t = Upload.slice cb buffer l.orbBase (map (`orbObject` t) Lights.orbs)
 
-orbObject :: Float -> Object
-orbObject t =
+orbObject :: Lights.Orb -> Float -> Object
+orbObject o t =
   Object
-    { transform = unTransform (translateV (vec3 px py pz) <> scale Lights.orbRadius)
-    , emissive = vec4 (r * 5) (g * 5) (b * 5) 0
+    { transform = unTransform $ withVec4 pos \x y z size -> translate x y z <> scale size
+    , emissive = color * vec4 5 5 5 0
     , meshId = Meshes.sphere
     , materialId = 0
     , flags = 0
     , pad = 0
     }
   where
-    (px, py, pz) = Lights.orbPosition t
-    Lights.Light _ _ (r, g, b) _ = Lights.orbLight 0
+    Lights.Light pos color = Lights.orbLight o t

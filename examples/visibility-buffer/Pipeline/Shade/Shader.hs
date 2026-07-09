@@ -7,8 +7,12 @@ same way (DAIS): fetch the object's transform + mesh, fetch the hit triangle fro
 shared vertex SSBO, and barycentric-interpolate world position + normal at the pixel.
 Emissive objects (glowstones, the orb) output their stored emissive; lit objects
 shade PBR-lite (albedo + metalness + roughness) with per-light @N·L / dist²@ × an
-EVSM soft-shadow lookup ("Pipeline.Shadow") plus a Blinn-Phong glint. A @debugMode@
-push overrides the output with a raw material/geometry channel.
+EVSM soft-shadow lookup ("Pipeline.Shadow") plus a normalized Blinn-Phong glint under
+the same shadow. A @debugMode@ push overrides the output with a raw material/geometry
+channel.
+
+The @Camera@ push carries the receiver-side knobs ('Pipeline.Shade.Tuning'); the EVSM
+encoding the shadow cubes were baked with is specialized in.
 -}
 module Pipeline.Shade.Shader
   ( code
@@ -42,14 +46,17 @@ code =
       mat4 viewProj;
       vec4 camPos;
       uint debugMode;
+      uint lightCount;
+      float ambient;
+      float indirect;
+      float bleed;
+      float shadowBias;
+      float normalBias;
     } cam;
 
-    const float AMBIENT = 0.05;
-    const float SHADOW_C = 30.0;    // exponential warp; must match Pipeline.Shadow.Occluder
-    const float SHADOW_FAR = 3.0;   // must match Scene.shadowFar
-    const float BLEED = 0.15;        // light-bleed reduction
-    const float SHADOW_BIAS = 0.0012; // receiver bias (normalized dist) vs self-shadow acne
-    const float NORMAL_BIAS = 0.007;  // world normal offset (~⅓ tube radius)
+    // The EVSM encoding the moment cubes were baked with (Pipeline.Shadow.Params).
+    layout(constant_id = 0) const float SHADOW_FAR = 3.0;
+    layout(constant_id = 1) const float SHADOW_C = 30.0;
 
     // NDC of pixel p (centre-sampled), matching the raster's clip space.
     vec2 pixelNdc(ivec2 p, ivec2 size) { return ((vec2(p) + 0.5) / vec2(size)) * 2.0 - 1.0; }
@@ -66,58 +73,61 @@ code =
       float var = max(m.y - m.x * m.x, 2e-5);
       float d = t - m.x;
       float pmax = var / (var + d * d);
-      return (t <= m.x) ? 1.0 : linstep(BLEED, 1.0, pmax);
+      return (t <= m.x) ? 1.0 : linstep(cam.bleed, 1.0, pmax);
     }
 
     // Filtered EVSM visibility of @wpos@ (normal @n@) from light @li@ (1 = lit).
     float shadowVis(uint li, vec3 wpos, vec3 n) {
-      vec3 dir = (wpos + n * NORMAL_BIAS) - lights[li].posHalf.xyz;
-      float dist = max(0.0, length(dir) / SHADOW_FAR - SHADOW_BIAS);
+      vec3 dir = (wpos + n * cam.normalBias) - lights[li].posHalf.xyz;
+      float dist = max(0.0, length(dir) / SHADOW_FAR - cam.shadowBias);
       vec4 mo = texture(shadowCube, vec4(normalize(dir), float(li)));
       float posR = exp(SHADOW_C * dist);
       float negR = -exp(-SHADOW_C * dist);
       return min(chebyshev(mo.xy, posR), chebyshev(mo.zw, negR));
     }
 
-    // Shadowed diffuse irradiance from every light at @wpos@ with normal @n@.
-    vec3 directLighting(vec3 wpos, vec3 n) {
-      vec3 sum = vec3(0.0);
-      for (int i = 0; i < lights.length(); ++i) {
+    // Shadowed direct light at wpos: diffuse irradiance and the unscaled Blinn glint,
+    // sharing one shadow lookup per light. The glint is normalized by (shininess+8)/8π
+    // so the lobe keeps its energy as it tightens. Lights below the horizon give
+    // neither term. Bounded by cam.lightCount, not lights.length(): an unlit scene
+    // still binds a one-slot placeholder buffer that must never be read.
+    void directShading(vec3 wpos, vec3 n, float shininess, out vec3 irr, out vec3 spec) {
+      vec3 V = normalize(cam.camPos.xyz - wpos);
+      float norm = (shininess + 8.0) / (8.0 * 3.14159265);
+      irr = vec3(0.0);
+      spec = vec3(0.0);
+      for (uint i = 0u; i < cam.lightCount; ++i) {
         vec3 dv = lights[i].posHalf.xyz - wpos;
-        float ndl = max(0.0, dot(n, normalize(dv)));
+        vec3 L = normalize(dv);
+        float ndl = max(0.0, dot(n, L));
         if (ndl <= 0.0) continue;
         float atten = lights[i].colInt.w / (dot(dv, dv) + 0.001);
-        sum += lights[i].colInt.rgb * (ndl * atten * shadowVis(uint(i), wpos, n));
+        vec3 radiance = lights[i].colInt.rgb * (atten * shadowVis(i, wpos, n));
+        irr += radiance * ndl;
+        spec += radiance * (pow(max(0.0, dot(n, normalize(L + V))), shininess) * norm);
       }
-      return sum;
-    }
-
-    // Blinn-Phong glint; exponent/strength derived from roughness/metalness.
-    vec3 specular(vec3 wpos, vec3 n, float shininess, float strength) {
-      vec3 V = normalize(cam.camPos.xyz - wpos);
-      vec3 s = vec3(0.0);
-      for (int i = 0; i < lights.length(); ++i) {
-        vec3 dv = lights[i].posHalf.xyz - wpos;
-        vec3 H = normalize(normalize(dv) + V);
-        float atten = 1.0 / (dot(dv, dv) + 0.001);
-        s += lights[i].colInt.rgb * (pow(max(0.0, dot(n, H)), shininess) * atten);
-      }
-      return s * strength;
     }
 
     // PBR-lite shade: diffuse (metalness kills it) + Blinn glint (tinted by metal
-    // albedo) + a cheap fresnel environment term for metals.
+    // albedo) + ambient specular. Metals get no diffuse, so the ambient specular is
+    // their whole response to indirect light; it scales with the environment radiance,
+    // which is why an unlit scene leaves them nearly black rather than glowing.
     vec3 shadeSurface(Material mat, vec3 wpos, vec3 n) {
       vec3 alb = mat.albedo.rgb;
       float metal = mat.pbr.x, rough = mat.pbr.y;
       float shininess = exp2(1.0 + (1.0 - rough) * 10.0);
       float strength = mix(0.04, 1.0, metal) * (1.0 - rough);
-      vec3 irr = directLighting(wpos, n);
+      vec3 irr, glint;
+      directShading(wpos, n, shininess, irr, glint);
       vec3 V = normalize(cam.camPos.xyz - wpos);
-      float fres = pow(1.0 - max(0.0, dot(n, V)), 5.0);
-      vec3 diffuse = alb * (AMBIENT + irr) * (1.0 - metal);
-      vec3 spec = specular(wpos, n, shininess, strength) * mix(vec3(1.0), alb, metal);
-      vec3 env = metal * alb * (0.06 + 0.5 * fres) * (0.35 + 0.65 * length(irr));
+      // Schlick fresnel about the normal-incidence reflectance: dielectrics 4%, metals tint.
+      vec3 F0 = mix(vec3(0.04), alb, metal);
+      vec3 F = F0 + (1.0 - F0) * pow(1.0 - max(0.0, dot(n, V)), 5.0);
+      // Uniform environment radiance the surface reflects: constant ambient + a bounce.
+      vec3 ambient = cam.ambient + cam.indirect * irr;
+      vec3 diffuse = alb * (cam.ambient + irr) * (1.0 - metal);
+      vec3 spec = glint * strength * mix(vec3(1.0), alb, metal);
+      vec3 env = ambient * F;
       return diffuse + spec + env;
     }
 

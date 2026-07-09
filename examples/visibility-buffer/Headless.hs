@@ -13,13 +13,18 @@ signals a semaphore the compute buffer waits on, fenced at the end. On shared
 hardware everything collapses to one buffer and one fenced submit.
 -}
 module Headless
-  ( main
+  ( View (..)
+  , interiorView
+  , outsideView
+  , main
   ) where
 
 import qualified Codec.Picture as JP
 import Control.Monad (foldM, forM_, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate, runResourceT)
+import qualified Data.ByteString.Lazy as BSL
+import Data.IORef (writeIORef)
 import qualified Data.List as List
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.Text.IO as TIO
@@ -31,12 +36,13 @@ import qualified Fragr as FG
 import qualified Fragr.Dot as Dot
 import HeadlessBoot (HeadlessConfig (..), HeadlessVk (..), withHeadlessVk)
 import ImageReadback (makeReadbackImage, savePng)
+import Numeric.Half (Half)
 import System.Exit (exitFailure)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as ImageMemoryBarrier (ImageMemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), usageFlags, usageState)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recorderCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -45,16 +51,37 @@ import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreate
 import qualified VulkanMemoryAllocator as VMA
 
 import Driver (beginPrimary, commandPool)
+import qualified Exposure
+import Geomancy.Vec3 (Vec3)
 import qualified Pipeline.Mesh as Mesh
 import Requirements (deviceRequirements)
 import qualified Scene
+import qualified Scene.Camera as Camera
 
 -- | A convenient square for deterministic development renders.
 fixedExtent :: Vk.Extent2D
 fixedExtent = Vk.Extent2D 256 256
 
-main :: IO ()
-main = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
+-- | A headless viewpoint: where to put the camera, and where the PNG lands.
+data View = View
+  { orbit :: Camera.Orbit
+  , pngPath :: FilePath
+  }
+
+-- | The default regression render: inside the chamber.
+interiorView :: View
+interiorView = View{orbit = Camera.initial, pngPath = "visibility-buffer.png"}
+
+{- | The auto-exposure bench (@--headless --outside@).
+
+Outside the grid, so the frame is ambient-lit rock with the chamber glaring through
+a tunnel — a dark mean over a huge dynamic range, where the meter over-brightens.
+-}
+outsideView :: View
+outsideView = View{orbit = Camera.outside, pngPath = "visibility-buffer-outside.png"}
+
+main :: View -> IO ()
+main view = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
   let
     QueueFamilyIndex graphicsFamily = fst (qGraphics queues)
     QueueFamilyIndex computeFamily = fst (qCompute queues)
@@ -64,12 +91,12 @@ main = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
       | graphicsFamily == computeFamily = Nothing
       | otherwise = Just computeFamily
 
-  (image, visImage, depthImage, lum) <- render allocator device queues async
+  (image, visImage, depthImage, lum) <- render (Camera.eye view.orbit) allocator device queues async
   Vk.deviceWaitIdle device
 
   -- The gamma pass already encoded sRGB into the display image, so the PNG is
   -- saved as-is. The checks run on it directly.
-  savePng "visibility-buffer.png" image
+  savePng view.pngPath image
 
   -- Dump the intermediate buffers (vis instance/triangle ids, depth); the depth
   -- buffer also yields the ray-miss count directly — no colour heuristics.
@@ -78,8 +105,9 @@ main = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
   let
     distinct = List.nub [JP.pixelAt image x y | y <- [0 .. fromIntegral height - 1], x <- [0 .. fromIntegral width - 1]]
     total = fromIntegral width * fromIntegral height :: Int
-    -- Middle-grey (0.18) over the scene's geometric-mean luminance.
-    suggestedExposure = 0.18 / max 1e-4 lum
+    -- What the viewer would settle on, and what it wanted before the gain clamp.
+    autoExposure = Exposure.target lum
+    unclamped = Exposure.key / max 1e-5 lum
     checks :: [(String, Bool)]
     checks =
       [ ("mesh pipeline composes (compile-time)", Mesh.composes)
@@ -89,7 +117,7 @@ main = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
       ]
   liftIO $ do
     putStrLn $ "ray-miss (void) pixels: " <> show voidPixels <> "/" <> show total <> "; distinct colours: " <> show (length distinct)
-    putStrLn $ "avg luminance: " <> show lum <> "; suggested exposure (key 0.18): " <> show suggestedExposure
+    putStrLn $ "avg luminance: " <> show lum <> "; exposure: " <> show autoExposure <> " (unclamped " <> show unclamped <> ")"
     mapM_ (\(label, ok) -> putStrLn $ "[" <> (if ok then "PASS" else "FAIL") <> "] " <> label) checks
     unless (all snd checks) exitFailure
     putStrLn "All visibility-buffer checks passed."
@@ -114,12 +142,13 @@ runHeadless k =
 ----------------------------------------------------------------
 
 render
-  :: VMA.Allocator
+  :: Vec3
+  -> VMA.Allocator
   -> Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> Maybe Word32
   -> ResourceT IO (JP.Image JP.PixelRGBA8, Vk.Image, Vk.Image, Float)
-render allocator dev queues async = do
+render eye allocator dev queues async = do
   -- The two families share the visibility buffer when compute is async.
   let
     (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
@@ -127,14 +156,14 @@ render allocator dev queues async = do
 
   pls <- Scene.allocatePipelines dev
   sceneStatic <- Scene.allocateStatic allocator dev (graphicsQueue, graphicsFamily) pls sharedFamilies
-  scene <- Scene.allocateTargets allocator dev pls sceneStatic fixedExtent sharedFamilies
+  scene <- Scene.allocateTargets allocator dev pls sceneStatic fixedExtent sharedFamilies True
   (cpuImage, readback) <- makeReadbackImage allocator dev Scene.colorFormat fixedExtent
 
   let -- Build + run a fresh graph for one debug mode; returns the read-back image.
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
-      runMode debugMode = do
+      runMode exposure debugMode = do
         graph <- FG.newFrameGraph
-        outs <- Scene.addScenePasses graph pls scene (computeQueueId async) fixedExtent Scene.cameraEye defaultExposure debugMode
+        outs <- Scene.addScenePasses graph pls scene (computeQueueId async) fixedExtent eye exposure debugMode
         _ <-
           FG.addPass graph "readback" (readbackSetup outs.displayOut) \_ _ recorder -> do
             cb <- recorderCommandBuffer recorder
@@ -144,11 +173,16 @@ render allocator dev queues async = do
         runGraph dev queues async graph
         readback
 
-  img <- runMode 0
+  -- Meter, then re-render at the exposure the viewer would settle on. The luminance
+  -- pass reads the pre-exposure HDR, so the metering pass's own exposure is moot.
+  _ <- runMode meterExposure 0
   lum <- Scene.readLuminance scene
+  img <- runMode (Exposure.target lum) 0
+  -- Before the debug modes below overwrite the HDR target (and thus the probe).
+  forM_ (Scene.lumProbe scene) $ uncurry (dumpLumProbe allocator dev (graphicsQueue, graphicsFamily))
   -- Material/geometry debug views (each re-runs the graph with a debug mode).
   forM_ (zip [1 :: Word32 ..] ["albedo", "metalness", "roughness", "normal"]) \(mode, name) -> do
-    dbg <- runMode mode
+    dbg <- runMode meterExposure mode
     liftIO $ savePng ("debug-mat-" <> name <> ".png") dbg
   -- Last, since the copy leaves the moments cube in TRANSFER_SRC (nothing samples
   -- it after this).
@@ -161,13 +195,13 @@ render allocator dev queues async = do
       FG.setSideEffect b
       FG.readWith b displayOut (usageFlags TransferSrc)
 
-{- | Headless uses a fixed exposure.
+{- | Exposure for the metering and debug passes.
 
-One frame — no temporal feedback; the luminance pass still runs and prints a
-suggested value.
+Debug channels bypass exposure entirely, and the luminance pass reads the
+pre-exposure HDR, so this only scales an image nothing looks at.
 -}
-defaultExposure :: Float
-defaultExposure = 1.5
+meterExposure :: Float
+meterExposure = 1
 
 -- | The compute-and-readback queue (async family, or the graphics queue).
 computeQueue :: FG.QueueId
@@ -308,6 +342,60 @@ dumpDebug allocator dev qf visImage depthImage extent@(Vk.Extent2D w h) = do
         let v = round (255 * max 0 (min 1 (d / maxDepth)))
         pure (JP.PixelRGBA8 v v v 255)
     pure voidPixels
+
+{- | Dump the luminance probe: the exact mip the auto-exposure reduction averaged.
+
+Two views of the same @rgba16f@ snapshot. @debug-luminance.hdr@ keeps the linear
+radiance verbatim (float RGB, no clamp) — the artifact to measure. @debug-luminance.png@
+is a 16-bit grey ramp of the per-pixel @log2@ luminance the reduction sums, over
+'probeEvRange'. Prints the extent, the luminance range, and a host-side geometric mean
+that must agree with the GPU's.
+
+The readback leaves the image in @TRANSFER_SRC_OPTIMAL@, so the graph's tracked state
+is resynced — the debug-mode reruns below copy into this probe again.
+-}
+dumpLumProbe :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> ManagedImage -> Vk.Extent2D -> ResourceT IO ()
+dumpLumProbe allocator dev qf probe extent@(Vk.Extent2D w h) = do
+  ptr <- copyImageToHostBuffer allocator dev qf probe.image Vk.IMAGE_ASPECT_COLOR_BIT Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL extent 8
+  liftIO $ writeIORef probe.stateRef (usageState TransferSrc)
+  liftIO $ do
+    let
+      wi = fromIntegral w
+      hi = fromIntegral h
+      -- rgba16f: four halfs per texel.
+      channel i c = realToFrac <$> (peek (castPtr (ptr `plusPtr` (i * 8 + c * 2))) :: IO Half) :: IO Float
+      rgbAt i = (,,) <$> channel i 0 <*> channel i 1 <*> channel i 2
+      lumaOf (r, g, b) = 0.2126 * r + 0.7152 * g + 0.0722 * b
+      (evLo, evHi) = probeEvRange
+    rgbs <- V.generateM (wi * hi) rgbAt
+    let
+      lums = V.map lumaOf rgbs
+      toPixelf x y = pure $ JP.PixelRGBF r g b
+        where
+          (r, g, b) = rgbs V.! (y * wi + x)
+      toPixel16 x y = pure (round (65535 * max 0 (min 1 t)) :: JP.Pixel16)
+        where
+          l = max 1e-4 (lums V.! (y * wi + x))
+          t = (logBase 2 l - evLo) / (evHi - evLo)
+      -- The reduction's own formula, on the host: it must match `avg luminance`.
+      geoMean = exp (V.sum (V.map (log . max 1e-4) lums) / fromIntegral (V.length lums))
+    JP.withImage wi hi toPixelf >>= BSL.writeFile "debug-luminance.hdr" . JP.encodeHDR
+    JP.withImage wi hi toPixel16 >>= JP.writePng "debug-luminance.png"
+    putStrLn $
+      "luminance probe: "
+        <> show wi
+        <> "x"
+        <> show hi
+        <> " px; luminance "
+        <> show (V.minimum lums)
+        <> " .. "
+        <> show (V.maximum lums)
+        <> "; geoMean(cpu) "
+        <> show geoMean
+
+-- | EV window the probe's grey ramp spans; wide enough for cave dark to emitter core.
+probeEvRange :: (Float, Float)
+probeEvRange = (-14, 2)
 
 {- | Dump the +X face of light 0's EVSM shadow cube (array layer 0).
 

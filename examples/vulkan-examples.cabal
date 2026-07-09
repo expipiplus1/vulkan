@@ -980,11 +980,8 @@ executable visibility-buffer
   main-is: Main.hs
   other-modules:
       Driver
+      Exposure
       Headless
-      Lights
-      Materials
-      Meshes
-      Objects
       Pipeline.Bloom
       Pipeline.Bloom.Downsample
       Pipeline.Bloom.Upsample
@@ -1000,12 +997,20 @@ executable visibility-buffer
       Pipeline.Shade.Shader
       Pipeline.Shadow
       Pipeline.Shadow.Occluder
+      Pipeline.Shadow.Params
       Pipeline.Tonemap
       Pipeline.Tonemap.Shader
       Pipeline.Voxels
       Pipeline.Voxels.Gen
       Requirements
       Scene
+      Scene.Camera
+      Scene.Cave
+      Scene.Lights
+      Scene.Materials
+      Scene.Meshes
+      Scene.Objects
+      Upload
       Windowed
       Paths_vulkan_examples
   autogen-modules:
@@ -1058,6 +1063,7 @@ executable visibility-buffer
     , fragr
     , geomancy
     , gl-block
+    , half
     , resourcet
     , say
     , text

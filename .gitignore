@@ -1,6 +1,7 @@
 triangle.png
 julia.png
 headless-*.png
+debug-*.png
 
 stack.yaml.lock
 dist

@@ -5,6 +5,7 @@ each a VMA-allocated GPU-only image with a matching whole-image 2D view.
 module RenderTarget
   ( createColorTarget
   , createDepthTarget
+  , allocateImage
   , createTarget
   , createMipChain
   , createCubeArray
@@ -67,27 +68,27 @@ createDepthTarget allocator dev format extent =
     Nothing
     "GPU depth attachment"
 
-{- | A GPU-only 2D image (+ whole-image 2D view) with the given usage and aspect.
-@sharedFamilies@ makes it CONCURRENT across those queue families (for a
-cross-queue read with no ownership transfer); 'Nothing' leaves it EXCLUSIVE.
+{- | A GPU-only 2D image with the given usage, and no view.
+
+For transfer-only images: 'Vk.IMAGE_USAGE_TRANSFER_SRC_BIT' / @_DST_BIT@ alone do not
+admit an image view, so a target that is only ever copied wants this instead of
+'createTarget'.
 -}
-createTarget
+allocateImage
   :: (MonadResource m)
   => VMA.Allocator
   -> Vk.Device
   -> Vk.Format
   -> Vk.Extent2D
   -> Vk.ImageUsageFlags
-  -> Vk.ImageAspectFlags
   -> Maybe [Word32]
   -- ^ Queue families to share the image across (CONCURRENT), or 'Nothing' (EXCLUSIVE).
   -> ByteString
-  -> m ((ReleaseKey, ReleaseKey), (Vk.Image, Vk.ImageView))
-createTarget allocator dev format (Vk.Extent2D w h) usage aspect sharedFamilies name = do
+  -> m (ReleaseKey, Vk.Image)
+allocateImage allocator dev format (Vk.Extent2D w h) usage sharedFamilies name = do
   (imageKey, (image, _, _)) <- VMA.withImage allocator imageCreateInfo gpuAlloc allocate
   nameObject dev image name
-  (viewKey, view) <- Vk.withImageView dev (viewCreateInfo image) Nothing allocate
-  pure ((imageKey, viewKey), (image, view))
+  pure (imageKey, image)
   where
     gpuAlloc = zero{AllocationCreateInfo.usage = VMA.MEMORY_USAGE_GPU_ONLY}
     imageCreateInfo =
@@ -104,6 +105,28 @@ createTarget allocator dev format (Vk.Extent2D w h) usage aspect sharedFamilies 
         , Vk.sharingMode = maybe Vk.SHARING_MODE_EXCLUSIVE (const Vk.SHARING_MODE_CONCURRENT) sharedFamilies
         , Vk.queueFamilyIndices = maybe V.empty V.fromList sharedFamilies
         }
+
+{- | A GPU-only 2D image (+ whole-image 2D view) with the given usage and aspect.
+@sharedFamilies@ makes it CONCURRENT across those queue families (for a
+cross-queue read with no ownership transfer); 'Nothing' leaves it EXCLUSIVE.
+-}
+createTarget
+  :: (MonadResource m)
+  => VMA.Allocator
+  -> Vk.Device
+  -> Vk.Format
+  -> Vk.Extent2D
+  -> Vk.ImageUsageFlags
+  -> Vk.ImageAspectFlags
+  -> Maybe [Word32]
+  -- ^ Queue families to share the image across (CONCURRENT), or 'Nothing' (EXCLUSIVE).
+  -> ByteString
+  -> m ((ReleaseKey, ReleaseKey), (Vk.Image, Vk.ImageView))
+createTarget allocator dev format extent usage aspect sharedFamilies name = do
+  (imageKey, image) <- allocateImage allocator dev format extent usage sharedFamilies name
+  (viewKey, view) <- Vk.withImageView dev (viewCreateInfo image) Nothing allocate
+  pure ((imageKey, viewKey), (image, view))
+  where
     viewCreateInfo image =
       zero
         { Vk.image = image

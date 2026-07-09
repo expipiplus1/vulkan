@@ -203,6 +203,7 @@ executables:
     - fragr
     - geomancy
     - gl-block
+    - half
     - resourcet
     - say
     - text

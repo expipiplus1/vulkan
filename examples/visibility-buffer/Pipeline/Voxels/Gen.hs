@@ -2,8 +2,10 @@
 
 {-| Surface-shell cave generation.
 
-One invocation per cell, occupancy (rock vs. air) evaluated directly from a
-billow-fbm field carved by a central chamber.
+One invocation per cell, occupancy (rock vs. air) evaluated directly from a billow-fbm
+field, hollowed by the seven rooms and the halls joining them (see "Cave"). The rooms
+bias the field's threshold rather than cutting it, so they have no walls of their own:
+the noise decides where the rock ends, and the rooms only say where it cannot begin.
 
 A cell survives if it is solid and any of its 6 face-neighbours is air (out-of-bounds
 counts as air), so only the visible shell is drawn. Each survivor atomically appends
@@ -31,11 +33,18 @@ code =
     // the glowstone count), cmd[13] = occCube.instanceCount (starts at 0).
     layout(set = 0, binding = 1, std430) buffer Indirect { uint cmd[]; };
 
+    // Radii and distances in metres (see Cave).
     layout(push_constant, std430) uniform Params {
       uint gridN;
       float worldScale;
+      float rockThreshold;
       float chamberRadius;
-      float outerRadius;
+      float sideRadius;
+      float sideDistance;
+      float hallRadius;
+      float caveRadius;
+      float carveBand;
+      float hallBand;
       uint greyCount;
     } pc;
 
@@ -65,14 +74,46 @@ code =
       return s;
     }
 
+    // World-space centre of cell @c@, in metres.
+    vec3 cellWorld(ivec3 c) {
+      return ((vec3(c) + 0.5) / float(pc.gridN) - 0.5) * 2.0 * pc.worldScale;
+    }
+
+    // 1.0 (above the field's ceiling, so no rock) at a room's surface, decaying to
+    // rockThreshold over @band@ metres outside it.
+    float carveThreshold(float sd, float band) {
+      return mix(1.0, pc.rockThreshold, smoothstep(0.0, band, sd));
+    }
+
+    float smax(float x, float y) {
+      float xmy = float (x - y);
+      return (x + y + sqrt(xmy*xmy + 0.1)) * 0.5;
+    }
+
+    // The rock threshold at @w@: the strongest claim of any room. Rooms and halls carry
+    // their own bands, so the chambers dissolve over metres while the halls stay narrow.
+    float rockThresholdAt(vec3 w) {
+      float thr = carveThreshold(length(w) - pc.chamberRadius, pc.carveBand);
+      for (int a = 0; a < 3; ++a) {
+        vec3 c = vec3(0.0);
+        c[a] = pc.sideDistance;
+        thr = max(thr, carveThreshold(length(w - c) - pc.sideRadius, pc.carveBand));
+        thr = max(thr, carveThreshold(length(w + c) - pc.sideRadius, pc.carveBand));
+        vec2 perp = vec2(w[(a + 1) % 3], w[(a + 2) % 3]);
+        float hall = max(length(perp) - pc.hallRadius, abs(w[a]) - pc.sideDistance);
+        thr = smax(thr, carveThreshold(hall, pc.hallBand));
+      }
+      return thr;
+    }
+
     bool solidAt(ivec3 c) {
       if (any(lessThan(c, ivec3(0))) || any(greaterThanEqual(c, ivec3(pc.gridN)))) return false;
       vec3 pos = (vec3(c) + 0.5) / float(pc.gridN); // [0,1]
-      float dist = length(pos - 0.5);
-      bool rock = billow(pos * float(pc.gridN) * 0.07) > 0.34;
-      bool chamber = dist < pc.chamberRadius; // clear central void for the knots
-      bool bounded = dist < pc.outerRadius;   // beyond this is the outer void
-      return rock && bounded && !chamber;
+      vec3 w = cellWorld(c);
+      if (length(w) >= pc.caveRadius) return false; // beyond the rock ball is the outer void
+      // The rooms cut no walls: they lift the rock threshold and let the billow field say
+      // where the rock ends, so it closes ragged rather than along a sphere.
+      return billow(pos * float(pc.gridN) * 0.07) > rockThresholdAt(w);
     }
 
     void main() {
@@ -89,7 +130,7 @@ code =
 
       uint slot = atomicAdd(cmd[1], 1u);  // camera cube count (starts at glowstone count) → object slot
       atomicAdd(cmd[13], 1u);             // shadow (cave-only) cube count
-      vec3 centre = ((vec3(uc) + 0.5) / float(pc.gridN) - 0.5) * 2.0 * pc.worldScale;
+      vec3 centre = cellWorld(c);
       float hs = pc.worldScale / float(pc.gridN);
       uint cellId = uint(c.x) + pc.gridN * (uint(c.y) + pc.gridN * uint(c.z));
 

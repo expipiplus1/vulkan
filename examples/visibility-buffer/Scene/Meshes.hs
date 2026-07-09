@@ -7,7 +7,7 @@ CPU constants uploaded once; the knot is compute-generated into its slice (see
 "Pipeline.Knot", which writes at 'knotBase'). The mesh table SSBO holds
 @{baseVertex, vertexCount}@ per mesh, indexed by an object's @meshId@.
 -}
-module Meshes
+module Scene.Meshes
   ( MeshId
   , cube
   , knot
@@ -32,10 +32,12 @@ import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Marshal.Array (pokeArray)
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
-import UnliftIO.Foreign (allocaBytes)
+import Foreign.Storable (sizeOf)
 import qualified Vulkan.Core10 as Vk
 
 import qualified Pipeline.Knot as Knot
+import qualified Pipeline.Mesh as Mesh
+import qualified Upload
 
 -- | A mesh's slot in the mesh table (an object's @meshId@).
 type MeshId = Word32
@@ -81,16 +83,24 @@ totalVertexCount = cubeVertexCount + knotVertexCount + sphereVertexCount
 vertexBufferSize :: Vk.DeviceSize
 vertexBufferSize = fromIntegral totalVertexCount * vertexStride
 
--- | Mesh table size: @{uint baseVertex; uint vertexCount;}@ per mesh.
-meshTableBytes :: Vk.DeviceSize
-meshTableBytes = fromIntegral meshCount * 8
+-- | The mesh table stride: one @{uint baseVertex; uint vertexCount;}@.
+meshEntryBytes :: Int
+meshEntryBytes = sizeOf (undefined :: Mesh.MeshEntry)
 
--- | Fill the mesh table SSBO (base + count per mesh) via 'Vk.cmdUpdateBuffer'.
+meshTableBytes :: Vk.DeviceSize
+meshTableBytes = fromIntegral meshCount * fromIntegral meshEntryBytes
+
+-- | The mesh table, indexed by 'MeshId'.
+meshTable :: [Mesh.MeshEntry]
+meshTable =
+  [ Mesh.MeshEntry cubeBase cubeVertexCount
+  , Mesh.MeshEntry knotBase knotVertexCount
+  , Mesh.MeshEntry sphereBase sphereVertexCount
+  ]
+
+-- | Fill the mesh table SSBO (base + count per mesh).
 uploadMeshTable :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> m ()
-uploadMeshTable cb buffer =
-  liftIO $ allocaBytes (fromIntegral meshTableBytes) $ \p -> do
-    pokeArray (castPtr p) [cubeBase, cubeVertexCount, knotBase, knotVertexCount, sphereBase, sphereVertexCount]
-    Vk.cmdUpdateBuffer cb buffer 0 meshTableBytes p
+uploadMeshTable cb buffer = Upload.slice cb buffer 0 meshTable
 
 cubeBytes, sphereBytes :: Int
 cubeBytes = fromIntegral cubeVertexCount * fromIntegral vertexStride

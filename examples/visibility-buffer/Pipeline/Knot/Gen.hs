@@ -3,9 +3,10 @@
 {-| Torus-knot tube mesh generation.
 
 One invocation per @(i,j)@ quad of a @segments × ring@ grid: sweep a circle of radius
-@tubeR@ around a @(2,3)@ torus-knot curve, framed by Gram-Schmidt against the radial
-direction (smooth, no frame-flip seam), and emit the quad's two triangles (6
-vertices, position + outward normal) into the shared vertex SSBO.
+@tubeR@ around a @(2,3)@ torus-knot curve of outer radius @scale@, framed by
+Gram-Schmidt against the radial direction (smooth, no frame-flip seam), and emit the
+quad's two triangles (6 vertices, position + outward normal) into the shared vertex
+SSBO. The mesh's outer radius is @scale + tubeR@.
 -}
 module Pipeline.Knot.Gen
   ( code
@@ -35,10 +36,13 @@ code =
     const float KP = 2.0; // knot winds around the axis
     const float KQ = 3.0; // knot winds around the tube
 
+    // Radii sum to 1, so the curve's outer radius is exactly pc.scale.
+    const float KR = 5.0 / 7.0;
+    const float Kr = 2.0 / 7.0;
+
     vec3 curve(float t) {
-      float R = 0.4, r = 0.16;
-      float a = R + r * cos(KQ * t);
-      return vec3(a * cos(KP * t), a * sin(KP * t), r * sin(KQ * t)) * pc.scale;
+      float a = KR + Kr * cos(KQ * t);
+      return vec3(a * cos(KP * t), a * sin(KP * t), Kr * sin(KQ * t)) * pc.scale;
     }
 
     // Smooth Frenet-ish frame: tangent by finite difference, normal by

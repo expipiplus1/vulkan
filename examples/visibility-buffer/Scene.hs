@@ -6,9 +6,13 @@
 
 {-| The visibility-buffer scene.
 
-A voxel cave, a compute-generated knot and a dynamic orb, all drawn as one unified
-mesh (shared vertex/mesh/object tables) and rasterized through an
+A voxel cave ("Cave"), a compute-generated knot and a dynamic orb, all drawn as one
+unified mesh (shared vertex/mesh/object tables) and rasterized through an
 @(objectId, triangleId)@ visibility buffer, then resolved by a single DAIS path.
+
+The knot, the orb and the six glowstones share the lit central stage; the six side
+chambers are dim backrooms, reached by halls and lit only by the colour that spills down
+them — so the stage meters near middle grey and a backroom pins the auto-exposure ceiling.
 
 'allocateStatic' builds the shared SSBOs, runs the "Pipeline.Voxels" generator, and
 bakes the shadows — once, surviving resize. 'allocateTargets' allocates the
@@ -32,12 +36,12 @@ module Scene
   , recordOrbFrame
   , readLuminance
   , debugImages
+  , lumProbe
   , shadowImage
-  , cameraEye
   , cameraTarget
   ) where
 
-import Control.Monad (forM_, when, zipWithM_)
+import Control.Monad (forM_, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Bits (shiftR, (.|.))
@@ -46,15 +50,13 @@ import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
-import Foreign.Storable (peek, poke, sizeOf)
+import Foreign.Storable (peek, sizeOf)
 import qualified Fragr as FG
+import Geomancy (Vec3, vec3, vec4, withVec3)
 import qualified Geomancy.Mat4 as Mat4
 import Geomancy.Transform (scale3, unTransform)
-import Geomancy.Vec3 (Vec3, vec3, withVec3)
-import Geomancy.Vec4 (vec4)
 import qualified Geomancy.Vulkan.Projection as Projection
 import qualified Geomancy.Vulkan.View as View
-import UnliftIO.Foreign (allocaBytes)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as ImageMemoryBarrier (ImageMemoryBarrier (..))
 import qualified Vulkan.Core10 as MemoryBarrier (MemoryBarrier (..))
@@ -70,10 +72,6 @@ import qualified VulkanMemoryAllocator as VMA
 
 import Buffer (deviceBuffer, mappedStagingBuffer, mappedStorageBuffer)
 import Driver (beginPrimary, commandPool)
-import qualified Lights
-import qualified Materials
-import qualified Meshes
-import qualified Objects
 import qualified Pipeline.Bloom as Bloom
 import qualified Pipeline.Gamma as Gamma
 import qualified Pipeline.Knot as Knot
@@ -81,9 +79,16 @@ import qualified Pipeline.Luminance as Luminance
 import qualified Pipeline.Mesh as Mesh
 import qualified Pipeline.Shade as Shade
 import qualified Pipeline.Shadow as Shadow
+import Pipeline.Shadow.Params (Params (..))
 import qualified Pipeline.Tonemap as Tonemap
 import qualified Pipeline.Voxels as Voxels
-import RenderTarget (createArrayTarget, createCubeArray, createMipChain, createTarget, linearSampler)
+import RenderTarget (allocateImage, createArrayTarget, createCubeArray, createMipChain, createTarget, linearSampler)
+import qualified Scene.Cave as Cave
+import qualified Scene.Lights as Lights
+import qualified Scene.Materials as Materials
+import qualified Scene.Meshes as Meshes
+import qualified Scene.Objects as Objects
+import qualified Upload
 
 visFormat :: Vk.Format
 visFormat = Vk.FORMAT_R32G32_UINT
@@ -107,9 +112,13 @@ shadowFormat = Vk.FORMAT_R32G32B32A32_SFLOAT
 shadowRes :: Word32
 shadowRes = 256
 
--- | Far plane for the shadow cubes; light-space distance is normalized by it.
-shadowFar :: Float
-shadowFar = 3.0
+{- | The EVSM encoding, specialized into the occluder and the resolve alike.
+
+'far' spans a stage lamp to the far side of the rock ball (@stageRadius + caveRadius@ =
+68 m) with room to spare; the fp32 ceiling on the moments only bites past @1.48 * far@.
+-}
+shadowParams :: Params
+shadowParams = Params{far = 90, warpC = 30.0}
 
 -- | The six cube-face directions + up vectors (standard cube-map convention).
 shadowFaces :: [(Vec3, Vec3)]
@@ -127,8 +136,8 @@ shadowFaces =
 Light-major, so the vertex shader indexes @light*6 + gl_ViewIndex@; reverse-Z, 90°
 square per face.
 -}
-shadowViewProjs :: [Mat4.Mat4]
-shadowViewProjs = concat [lightShadowViewProjs (vec3 px py pz) | (px, py, pz) <- [p | Lights.Light p _ _ _ <- Lights.lights]]
+shadowViewProjs :: Float -> [Mat4.Mat4]
+shadowViewProjs t = concatMap (lightShadowViewProjs . Lights.position) (Lights.lights t)
 
 {- | The six shadow-cube view-projections for a light at @pos@ (reverse-Z, 90° square).
 
@@ -138,40 +147,48 @@ cube sampler reads. @flipY@ negates clip-space Y to realign them (cull is NONE, 
 inverted winding is harmless).
 -}
 lightShadowViewProjs :: Vec3 -> [Mat4.Mat4]
-lightShadowViewProjs pos =
-  [ Mat4.matrixProduct flipY (Mat4.matrixProduct (unTransform proj) (unTransform (View.lookAtRH pos (pos + dir) up)))
-  | (dir, up) <- shadowFaces
-  ]
+lightShadowViewProjs pos = do
+  (dir, up) <- shadowFaces
+  pure . unTransform $
+    flipY <> proj <> View.lookAtRH pos (pos + dir) up
   where
-    proj = Projection.reverseDepthRH (pi / 2) 0.02 (fromIntegral shadowRes) (fromIntegral shadowRes)
-    flipY = unTransform (scale3 1 (-1) 1)
+    proj = Projection.reverseDepthRH (pi / 2) 0.07 (fromIntegral shadowRes) (fromIntegral shadowRes)
+    flipY = scale3 1 (-1) 1
 
-{- | Voxel grid resolution per axis.
-
-Cube world size is @worldScale / gridN@, so the grid and 'worldScale' scale together
-to grow the cave with same-size cubes.
--}
-gridN :: Word32
-gridN = 56
-
--- | World half-size the grid maps to (grid @[0,1]³@ → world @[-worldScale, worldScale]³@).
-worldScale :: Float
-worldScale = 1.4
-
-{- | Generation parameters.
-
-A hollow rock shell (normalized radii) the camera sits inside;
-@chamberRadius@..@outerRadius@ is the solid shell.
--}
+-- | Generation parameters: the cave layout ("Cave"), in metres.
 genParams :: Voxels.Params
-genParams = Voxels.Params{Voxels.gridN = gridN, Voxels.worldScale = worldScale, Voxels.chamberRadius = 0.14, Voxels.outerRadius = 0.82, Voxels.greyCount = Materials.greyCount}
+genParams =
+  Voxels.Params
+    { Voxels.gridN = Cave.gridN
+    , Voxels.worldScale = Cave.worldScale
+    , Voxels.rockThreshold = Cave.rockThreshold
+    , Voxels.chamberRadius = Cave.chamberRadius
+    , Voxels.sideRadius = Cave.sideRadius
+    , Voxels.sideDistance = Cave.sideDistance
+    , Voxels.hallRadius = Cave.hallRadius
+    , Voxels.caveRadius = Cave.caveRadius
+    , Voxels.carveBand = Cave.carveBand
+    , Voxels.hallBand = Cave.hallBand
+    , Voxels.greyCount = Materials.greyCount
+    }
+
+{- | The knot's outer radius, in metres — the scene's reference length.
+
+Every other distance here is chosen against a knot you could pick up.
+-}
+knotRadius :: Float
+knotRadius = 0.5
+
+-- | The knot tube's radius, in metres.
+knotTubeR :: Float
+knotTubeR = 0.07
 
 {- | Knot mesh-gen parameters.
 
-Tube radius (world) and overall scale, sized to float inside the chamber.
+@scale@ is the swept curve's outer radius, so the mesh reaches 'knotRadius'.
 -}
 knotParams :: Knot.GenParams
-knotParams = Knot.GenParams{Knot.tubeR = 0.02, Knot.scale = 0.22}
+knotParams = Knot.GenParams{Knot.tubeR = knotTubeR, Knot.scale = knotRadius - knotTubeR}
 
 -- | Shade reads/writes its storage images from the compute stage.
 shadeStage :: Vk.PipelineStageFlags
@@ -250,6 +267,8 @@ data Scene = Scene
   , bloomExtents :: V.Vector Vk.Extent2D
   , downSets :: V.Vector Vk.DescriptorSet
   , upSets :: V.Vector Vk.DescriptorSet
+  , probe :: Maybe ManagedImage
+  -- ^ Snapshot of the mip the luminance pass reduces ('lumProbe'); headless only.
   }
 
 {- | The two graph outputs a driver can consume.
@@ -279,12 +298,12 @@ data ScenePipelines = ScenePipelines
 allocatePipelines :: Vk.Device -> ResourceT IO ScenePipelines
 allocatePipelines dev = do
   mesh <- Mesh.allocatePipeline dev visFormat depthFormat
-  shade <- Shade.allocatePipeline dev
+  shade <- Shade.allocatePipeline dev shadowParams
   luminance <- Luminance.allocatePipeline dev
   tonemap <- Tonemap.allocatePipeline dev
   gamma <- Gamma.allocatePipeline dev
   bloom <- Bloom.allocateBloom dev
-  shadow <- Shadow.allocateShadow dev shadowFormat depthFormat
+  shadow <- Shadow.allocateShadow dev shadowParams shadowFormat depthFormat
   generator <- Voxels.allocateGenerator dev
   knot <- Knot.allocateKnot dev
   pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot}
@@ -309,7 +328,7 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   -- compute families.
   let
     shared = fmap (\(g, c) -> [g, c]) sharedFamilies
-    voxels = fromIntegral gridN ^ (3 :: Int) :: Vk.DeviceSize
+    voxels = fromIntegral Cave.gridN ^ (3 :: Int) :: Vk.DeviceSize
     objLayout = Objects.layout (fromIntegral voxels) -- reserve one object slot per cell (worst case)
     -- The unified vertex SSBO (cube + knot), object table and draw commands are read by
     -- the resolve (compute) and the mesh/shadow passes (graphics), so they are shared.
@@ -337,10 +356,10 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   -- EVSM shadow cube array: one cube per light (moments) + a shared depth cube.
   -- The resolve (async compute) samples the moments, so the array is CONCURRENT.
   (_, (shadowMoments, shadowCubeView, shadowRenderViews)) <-
-    createCubeArray allocator dev shadowFormat shadowRes Lights.count (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) shared "shadow-moments"
+    createCubeArray allocator dev shadowFormat shadowRes Lights.slots (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) shared "shadow-moments"
   (_, (shadowDepthImage, shadowDepthView)) <-
     createArrayTarget allocator dev depthFormat shadowRes 6 Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT Vk.IMAGE_ASPECT_DEPTH_BIT "shadow-depth"
-  (_, viewProjBuffer) <- deviceBuffer allocator (fromIntegral (length shadowViewProjs) * 64) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
+  (_, viewProjBuffer) <- deviceBuffer allocator (fromIntegral (Lights.slots * cubeFaces) * fromIntegral viewProjBytes) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   shadowSet <- Shadow.allocateSet dev pls.shadow vertexBuffer meshTableBuffer objectsBuffer viewProjBuffer
   knotGenSet <- Knot.allocateKnotSet dev pls.knot vertexBuffer
 
@@ -350,11 +369,11 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
     Meshes.stageVertices cb stagingPtr staging vertexBuffer
     Meshes.uploadMeshTable cb meshTableBuffer
     Objects.uploadStaticObjects cb objectsBuffer objLayout
-    Objects.writeOrbObject cb objectsBuffer objLayout 0
+    Objects.writeOrbObjects cb objectsBuffer objLayout 0
     Objects.uploadDrawCommands cb indirect objLayout
-    Lights.upload cb lights
+    Lights.upload cb lights 0
     Materials.upload cb materialsBuf
-    uploadViewProjs cb viewProjBuffer
+    uploadViewProjs cb viewProjBuffer 0
     Voxels.recordGenerate pls.generator genSet genParams cb
     Knot.recordGenerate pls.knot knotGenSet Meshes.knotBase knotParams cb
     recordShadows cb pls shadowSet (shadowMoments, shadowDepthImage) shadowRenderViews shadowDepthView indirect
@@ -386,6 +405,9 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
 The render targets, the bloom pyramid, and the descriptor sets binding extent-sized
 views. No GPU submit — cheap enough to rerun on every resize. The visibility buffer is
 CONCURRENT across @sharedFamilies@ (the async graphics + compute pair).
+
+@wantProbe@ adds the debug-only luminance probe ('lumProbe'), which costs a copy per
+frame; the windowed driver never reads it.
 -}
 allocateTargets
   :: VMA.Allocator
@@ -394,8 +416,9 @@ allocateTargets
   -> SceneStatic
   -> Vk.Extent2D
   -> Maybe (Word32, Word32)
+  -> Bool
   -> ResourceT IO Scene
-allocateTargets allocator dev pls static extent sharedFamilies = do
+allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- vis + depth also get TRANSFER_SRC so the headless driver can dump them.
   (_, (visImage, visView)) <-
     createTarget allocator dev visFormat extent (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "visibility"
@@ -423,14 +446,27 @@ allocateTargets allocator dev pls static extent sharedFamilies = do
     halfExtent = Vk.Extent2D (max 1 (w0 `div` 2)) (max 1 (h0 `div` 2))
     mipCount = bloomMipCount extent
     bloomExtents = V.generate mipCount \i -> Vk.Extent2D (max 1 ((w0 `div` 2) `shiftR` i)) (max 1 ((h0 `div` 2) `shiftR` i))
+    -- The probe copies off the metered mip, so the chain needs TRANSFER_SRC for it.
+    bloomUsage = Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. (if wantProbe then Vk.IMAGE_USAGE_TRANSFER_SRC_BIT else zero)
+    lumMip = lumMipFor mipCount
   (_, (bloomImage, bloomViews)) <-
-    createMipChain allocator dev hdrFormat halfExtent (fromIntegral mipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "bloom"
+    createMipChain allocator dev hdrFormat halfExtent (fromIntegral mipCount) bloomUsage "bloom"
   bloomMips <- V.generateM mipCount \i -> newManagedImageMip bloomImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
+  -- The luminance probe: a snapshot of the metered mip, taken before the upsample
+  -- overwrites it. Written on the compute queue and read back on the graphics one, so
+  -- it is CONCURRENT — the graph places plain transitions, never ownership transfers.
+  probe <-
+    if not wantProbe
+      then pure Nothing
+      else do
+        (_, probeImage) <-
+          allocateImage allocator dev hdrFormat (bloomExtents V.! lumMip) (Vk.IMAGE_USAGE_TRANSFER_DST_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) (fmap (\(g, c) -> [g, c]) sharedFamilies) "lumProbe"
+        Just <$> newManagedImage probeImage Vk.IMAGE_ASPECT_COLOR_BIT
   downSets <- V.generateM mipCount \i -> Bloom.allocateSet dev pls.bloom.down static.sampler (if i == 0 then colorHDRView else bloomViews V.! (i - 1)) (bloomViews V.! i)
   upSets <- V.generateM (mipCount - 1) \i -> Bloom.allocateSet dev pls.bloom.up static.sampler (bloomViews V.! (i + 1)) (bloomViews V.! i)
 
   shadeSet <- Shade.allocateDescriptorSet dev pls.shade visView colorHDRView static.vertexBuffer static.lightsBuffer static.sampler static.shadowCubeView static.objectsBuffer static.materialsBuffer static.meshTableBuffer
-  lumSet <- Luminance.allocateSet dev pls.luminance colorHDRView static.lumBuffer
+  lumSet <- Luminance.allocateSet dev pls.luminance (bloomViews V.! lumMip) static.lumBuffer
   toneSet <- Tonemap.allocateSet dev pls.tonemap colorHDRView toneView static.sampler (bloomViews V.! 0)
   gammaSet <- Gamma.allocateSet dev pls.gamma toneView displayView
 
@@ -446,6 +482,7 @@ allocateTargets allocator dev pls static extent sharedFamilies = do
       , bloomExtents
       , downSets
       , upSets
+      , probe
       }
 
 {- | The visibility and depth images after a frame, for headless debug dumps.
@@ -459,24 +496,32 @@ debugImages scene = (scene.targets.vis.image, scene.targets.depth.image)
 shadowImage :: Scene -> Vk.Image
 shadowImage scene = scene.static.shadowMoments
 
--- | Fill the view-projection SSBO (one @mat4@ per @(light, face)@) via cmdUpdateBuffer.
-uploadViewProjs :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> m ()
-uploadViewProjs cb buffer =
-  liftIO $ allocaBytes bytes $ \p -> do
-    zipWithM_ (\i m -> poke (castPtr (p `plusPtr` (i * 64))) m) [0 ..] shadowViewProjs
-    Vk.cmdUpdateBuffer cb buffer 0 (fromIntegral bytes) p
-  where
-    bytes = length shadowViewProjs * 64
+{- | The luminance probe after a frame (in @TRANSFER_DST_OPTIMAL@), with its extent.
 
--- | Rewrite just the orb's six view-projections (at 'Lights.orbIndex') for time @t@.
+Exactly the pixels the reduction averaged: 'lumMipIndex' of the downsample chain,
+snapshotted before the upsample overwrote it. 'Nothing' unless the scene was allocated
+with @wantProbe@.
+-}
+lumProbe :: Scene -> Maybe (ManagedImage, Vk.Extent2D)
+lumProbe scene = fmap (\p -> (p, scene.bloomExtents V.! lumMipFor (V.length scene.bloomExtents))) scene.probe
+
+-- | The SSBO stride: one @mat4@ view-projection.
+viewProjBytes :: Int
+viewProjBytes = sizeOf (undefined :: Mat4.Mat4)
+
+-- | View-projections per light: one per shadow-cube face.
+cubeFaces :: Word32
+cubeFaces = 6
+
+-- | Fill the view-projection SSBO (one @mat4@ per @(light, face)@) for time @t@.
+uploadViewProjs :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Float -> m ()
+uploadViewProjs cb buffer t = Upload.slice cb buffer 0 (shadowViewProjs t)
+
+-- | Rewrite just the orbs' view-projections (from 'Lights.orbBase') for time @t@.
 uploadOrbViewProjs :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Float -> m ()
 uploadOrbViewProjs cb buffer t =
-  liftIO $ allocaBytes bytes $ \p -> do
-    zipWithM_ (\i m -> poke (castPtr (p `plusPtr` (i * 64))) m) [0 ..] (lightShadowViewProjs pos)
-    Vk.cmdUpdateBuffer cb buffer (fromIntegral Lights.orbIndex * 6 * 64) bytes p
-  where
-    bytes = 6 * 64
-    pos = let (px, py, pz) = Lights.orbPosition t in vec3 px py pz
+  Upload.slice cb buffer (Lights.orbBase * cubeFaces) $
+    concatMap (lightShadowViewProjs . Lights.position . (`Lights.orbLight` t)) Lights.orbs
 
 {- | Render the EVSM shadow cubes.
 
@@ -506,7 +551,7 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
     [ transition moments Vk.IMAGE_ASPECT_COLOR_BIT allLayers zero Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_UNDEFINED Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
     , transition depthImg Vk.IMAGE_ASPECT_DEPTH_BIT 6 zero Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_UNDEFINED Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
     ]
-  forM_ (zip [0 ..] lightPositions) \(l, pos) -> do
+  forM_ (zip [0 ..] (Lights.lights 0)) \(l, light) -> do
     {-
       Each light's shadow pass has two attachments:
       - Moments (R32G32B32A32_SFLOAT, the EVSM output): written to that light's own cube slice
@@ -525,7 +570,7 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
       Vk.cmdSetViewport cb 0 [Vk.Viewport 0 0 (fromIntegral shadowRes) (fromIntegral shadowRes) 0 1]
       Vk.cmdSetScissor cb 0 [Vk.Rect2D (Vk.Offset2D 0 0) (Vk.Extent2D shadowRes shadowRes)]
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipeline
-      Shadow.pushShadow cb pls.shadow.pipelineLayout pos shadowFar (fromIntegral l * 6)
+      Shadow.pushShadow cb pls.shadow light (fromIntegral l * cubeFaces)
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipelineLayout 0 [shadowSet] []
       Vk.cmdDrawIndirect cb indirect Objects.occluderDrawOffset Objects.occluderDrawCount Objects.drawStride
   Vk.cmdPipelineBarrier
@@ -537,8 +582,7 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
     []
     [transition moments Vk.IMAGE_ASPECT_COLOR_BIT allLayers Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.ACCESS_SHADER_READ_BIT Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL]
   where
-    allLayers = Lights.count * 6
-    lightPositions = [p | Lights.Light p _ _ _ <- Lights.lights]
+    allLayers = Lights.slots * cubeFaces
     transition img aspect n srcA dstA old new =
       SomeStruct
         zero
@@ -552,22 +596,24 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
           , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 0 n
           }
 
-{- | Move the orb and re-render its shadow-cube slice for time @t@.
+{- | Move the orbs and re-render their shadow-cube slices for time @t@.
 
-Recorded into the frame's graphics buffer before the scene graph. The four static
-glowstones never move, so only the orb's six moment layers are
-refreshed — the rest of the EVSM array stays baked ('recordShadows'). Updates the
-orb's lights-SSBO entry and its shadow view-projections, opens its moment slice as
-a colour attachment, draws the cave-cube + knot occluders through the multiview
-pass, then hands the slice back as a sampled texture for the resolve.
+Recorded into the frame's graphics buffer before the scene graph. The glowstones never
+move, so only the orbs' moment layers are refreshed — the rest of the EVSM array stays
+baked ('recordShadows'). Updates the orbs' lights-SSBO entries and their shadow
+view-projections, opens their moment slices as colour attachments, draws the cave-cube
++ knot occluders through each orb's multiview pass, then hands the slices back as a
+sampled texture for the resolve.
+
+The orbs share one scratch depth cube, so consecutive passes need a WAW barrier.
 -}
 recordOrbFrame :: (MonadIO m) => Vk.CommandBuffer -> ScenePipelines -> Scene -> Float -> m ()
-recordOrbFrame cb pls scene t = liftIO do
-  Lights.updateOrb cb scene.static.lightsBuffer t
+recordOrbFrame cb pls scene t = liftIO $ unless (null Lights.orbs) do
+  Lights.updateOrbs cb scene.static.lightsBuffer t
   uploadOrbViewProjs cb scene.static.viewProjBuffer t
-  Objects.writeOrbObject cb scene.static.objectsBuffer scene.static.objLayout t
+  Objects.writeOrbObjects cb scene.static.objectsBuffer scene.static.objLayout t
   -- Transfer writes (lights + view-projs) → the shaders that read them, and open
-  -- the orb's moment slice + shared depth for rendering.
+  -- the orbs' moment slices + shared depth for rendering.
   Vk.cmdPipelineBarrier
     cb
     (Vk.PIPELINE_STAGE_TRANSFER_BIT .|. Vk.PIPELINE_STAGE_FRAGMENT_SHADER_BIT .|. Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT)
@@ -575,17 +621,29 @@ recordOrbFrame cb pls scene t = liftIO do
     zero
     [zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_TRANSFER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_SHADER_READ_BIT} :: Vk.MemoryBarrier]
     []
-    [ momentSlice Vk.ACCESS_SHADER_READ_BIT Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+    [ momentSlices Vk.ACCESS_SHADER_READ_BIT Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
     , depthSlice zero Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_UNDEFINED Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
     ]
-  Vk.cmdUseRendering cb (shadowRenderingInfo (scene.static.shadowRenderViews V.! fromIntegral Lights.orbIndex) scene.static.shadowDepthView) do
-    Vk.cmdSetViewport cb 0 [Vk.Viewport 0 0 (fromIntegral shadowRes) (fromIntegral shadowRes) 0 1]
-    Vk.cmdSetScissor cb 0 [Vk.Rect2D (Vk.Offset2D 0 0) (Vk.Extent2D shadowRes shadowRes)]
-    Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipeline
-    Shadow.pushShadow cb pls.shadow.pipelineLayout pos shadowFar base
-    Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipelineLayout 0 [scene.static.shadowSet] []
-    Vk.cmdDrawIndirect cb scene.static.indirect Objects.occluderDrawOffset Objects.occluderDrawCount Objects.drawStride
-  -- Hand the refreshed slice back to the resolve as a sampled texture.
+  forM_ (zip [0 ..] Lights.orbs) \(i, orb) -> do
+    -- The shared depth cube is rewritten per orb: WAW between passes.
+    when (i > 0) $
+      Vk.cmdPipelineBarrier
+        cb
+        Vk.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
+        Vk.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+        zero
+        []
+        []
+        [depthSlice Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT (Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT .|. Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT) Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL]
+    let light = Lights.orbBase + i
+    Vk.cmdUseRendering cb (shadowRenderingInfo (scene.static.shadowRenderViews V.! fromIntegral light) scene.static.shadowDepthView) do
+      Vk.cmdSetViewport cb 0 [Vk.Viewport 0 0 (fromIntegral shadowRes) (fromIntegral shadowRes) 0 1]
+      Vk.cmdSetScissor cb 0 [Vk.Rect2D (Vk.Offset2D 0 0) (Vk.Extent2D shadowRes shadowRes)]
+      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipeline
+      Shadow.pushShadow cb pls.shadow (Lights.orbLight orb t) (light * cubeFaces)
+      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipelineLayout 0 [scene.static.shadowSet] []
+      Vk.cmdDrawIndirect cb scene.static.indirect Objects.occluderDrawOffset Objects.occluderDrawCount Objects.drawStride
+  -- Hand the refreshed slices back to the resolve as a sampled texture.
   Vk.cmdPipelineBarrier
     cb
     Vk.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
@@ -593,16 +651,16 @@ recordOrbFrame cb pls scene t = liftIO do
     zero
     []
     []
-    [momentSlice Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.ACCESS_SHADER_READ_BIT Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL]
+    [momentSlices Vk.ACCESS_COLOR_ATTACHMENT_WRITE_BIT Vk.ACCESS_SHADER_READ_BIT Vk.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL]
   where
-    base = Lights.orbIndex * 6
-    pos = Lights.orbPosition t
-    momentSlice srcA dstA old new = layerBarrier scene.static.shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT base srcA dstA old new
-    depthSlice srcA dstA old new = layerBarrier scene.static.shadowDepthImage Vk.IMAGE_ASPECT_DEPTH_BIT 0 srcA dstA old new
+    momentSlices srcA dstA old new =
+      layerBarrier scene.static.shadowMoments Vk.IMAGE_ASPECT_COLOR_BIT (Lights.orbBase * cubeFaces) (Lights.orbCount * cubeFaces) srcA dstA old new
+    depthSlice srcA dstA old new =
+      layerBarrier scene.static.shadowDepthImage Vk.IMAGE_ASPECT_DEPTH_BIT 0 cubeFaces srcA dstA old new
 
--- | An image-memory barrier over a 6-layer slice starting at @baseLayer@.
-layerBarrier :: Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Vk.AccessFlags -> Vk.AccessFlags -> Vk.ImageLayout -> Vk.ImageLayout -> SomeStruct Vk.ImageMemoryBarrier
-layerBarrier img aspect baseLayer srcA dstA old new =
+-- | An image-memory barrier over @layerCount@ layers starting at @baseLayer@.
+layerBarrier :: Vk.Image -> Vk.ImageAspectFlags -> Word32 -> Word32 -> Vk.AccessFlags -> Vk.AccessFlags -> Vk.ImageLayout -> Vk.ImageLayout -> SomeStruct Vk.ImageMemoryBarrier
+layerBarrier img aspect baseLayer layerCount srcA dstA old new =
   SomeStruct
     zero
       { ImageMemoryBarrier.srcAccessMask = srcA
@@ -612,13 +670,15 @@ layerBarrier img aspect baseLayer srcA dstA old new =
       , ImageMemoryBarrier.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
       , ImageMemoryBarrier.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
       , ImageMemoryBarrier.image = img
-      , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 baseLayer 6
+      , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 baseLayer layerCount
       }
 
 -- | Multiview rendering info for one light's shadow cube (all six faces, viewMask 0x3F).
 shadowRenderingInfo :: Vk.ImageView -> Vk.ImageView -> Vk.RenderingInfo '[]
 shadowRenderingInfo colorView depthView =
-  (Dynamic.renderingInfo (fullScissor (Vk.Extent2D shadowRes shadowRes)) [(colorView, Vk.Float32 0 0 0 0)] (Just (depthView, 0.0))){RenderingInfo.viewMask = 0x3F}
+  (Dynamic.renderingInfo (fullScissor (Vk.Extent2D shadowRes shadowRes)) [(colorView, Vk.Float32 0 0 0 0)] (Just (depthView, 0.0)))
+    { RenderingInfo.viewMask = 0x3F
+    }
 
 -- | Record @record@ into a fresh primary buffer and submit it, blocking until done.
 oneShot :: Vk.Device -> (Vk.Queue, Word32) -> (Vk.CommandBuffer -> ResourceT IO ()) -> ResourceT IO ()
@@ -663,7 +723,6 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
   visWritten <-
     FG.addPass graph "geometry" (geometrySetup visH depthH) \_ _ recorder -> do
       cb <- recorderCommandBuffer recorder
-      -- Reverse-Z: clear depth to 0 (far), test GREATER, write enabled.
       let
         info = Dynamic.renderingInfo (fullScissor extent) [(visView, Vk.Uint32 0 0 0 0)] (Just (depthView, 0.0))
         dyn = (dynamicStateFor extent){depthTest = True, depthWrite = True, depthCompareOp = Vk.COMPARE_OP_GREATER}
@@ -675,7 +734,6 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
         pushCamera cb pls.mesh.pipelineLayout eye extent
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipelineLayout 0 [scene.static.meshSet] []
         Vk.cmdDrawIndirect cb scene.static.indirect Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
-      -- Producer-side transition to GENERAL (see the graphics→compute note).
       transitionImageTo cb vis (StorageRead shadeStage)
 
   colorWritten <-
@@ -685,16 +743,6 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
       pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize eye extent debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipelineLayout 0 [scene.shadeSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
-
-  -- Auto-exposure: one workgroup reduces the HDR image to average log-luminance.
-  _ <-
-    FG.addPass graph "luminance" (luminanceSetup colorWritten) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipeline
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipelineLayout 0 [scene.lumSet] []
-      Vk.cmdDispatch cb 1 1 1
-      -- Make the write host-visible for the CPU readback.
-      Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
 
   -- Bloom pyramid: progressively downsample the HDR image through
   -- the mip chain, then additively upsample. Each mip is its own tracked
@@ -724,6 +772,37 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
     chainUp blur i
       | i < 0 = pure blur
       | otherwise = do hnd <- upPass blur i; chainUp hnd (i - 1)
+  -- Auto-exposure: one workgroup reduces a bloom mip to average log-luminance. Taken
+  -- off the downsample chain, before the upsample renames the handle.
+  let lumMip = lumMipFor mipCount
+  _ <-
+    FG.addPass graph "luminance" (luminanceSetup (downHs !! lumMip)) \_ _ recorder -> do
+      cb <- recorderCommandBuffer recorder
+      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipeline
+      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipelineLayout 0 [scene.lumSet] []
+      Vk.cmdDispatch cb 1 1 1
+      -- Make the write host-visible for the CPU readback.
+      Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
+
+  forM_ scene.probe \probe -> do
+    probeH <- importManagedImage graph "lumProbe" probe
+    FG.addPass graph "lumProbe" (probeSetup (downHs !! lumMip) probeH) \_ _ recorder -> do
+      cb <- recorderCommandBuffer recorder
+      let Vk.Extent2D pw ph = scene.bloomExtents V.! lumMip
+      Vk.cmdCopyImage
+        cb
+        (scene.bloomMips V.! lumMip).image
+        Vk.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+        probe.image
+        Vk.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+        [ Vk.ImageCopy
+            (Vk.ImageSubresourceLayers Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral lumMip) 0 1)
+            (Vk.Offset3D 0 0 0)
+            (Vk.ImageSubresourceLayers Vk.IMAGE_ASPECT_COLOR_BIT 0 0 1)
+            (Vk.Offset3D 0 0 0)
+            (Vk.Extent3D pw ph 1)
+        ]
+
   bloom0 <- chainUp (downHs !! (mipCount - 1)) (mipCount - 2)
 
   toneWritten <-
@@ -754,10 +833,16 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
       FG.setQueue b computeQueue
       _ <- FG.readWith b visWritten (usageFlags (StorageRead shadeStage))
       FG.writeWith b colorH (usageFlags (StorageWrite shadeStage))
-    luminanceSetup colorWritten b = do
+    luminanceSetup srcH b = do
       FG.setQueue b computeQueue
       FG.setSideEffect b
-      FG.readWith b colorWritten (usageFlags (StorageRead shadeStage))
+      FG.readWith b srcH (usageFlags (StorageRead shadeStage))
+    -- Probe snapshot: transfer-copy the metered mip into its own image.
+    probeSetup srcH probeH b = do
+      FG.setQueue b computeQueue
+      FG.setSideEffect b
+      _ <- FG.readWith b srcH (usageFlags TransferSrc)
+      FG.writeWith b probeH (usageFlags TransferDst)
     -- Downsample: read the source mip, write the target mip.
     bloomSetup src dstH b = do
       FG.setQueue b computeQueue
@@ -780,14 +865,6 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
       _ <- FG.readWith b toneWritten (usageFlags (StorageRead shadeStage))
       FG.writeWith b displayH (usageFlags (StorageWrite shadeStage))
 
-{- | Eye position.
-
-Inside the chamber, pulled back from the knot at the world origin so more of the cave
-frames it.
--}
-cameraEye :: Vec3
-cameraEye = vec3 0.03 0.10 0.31
-
 -- | The point the camera looks at and orbits.
 cameraTarget :: Vec3
 cameraTarget = vec3 0 0 0
@@ -800,7 +877,7 @@ Near maps to 1, infinite far to 0 — depth clears to 0 and the test is GREATER 
 viewProjFor :: Vec3 -> Vk.Extent2D -> Mat4.Mat4
 viewProjFor eye (Vk.Extent2D w h) = Mat4.matrixProduct (unTransform proj) (unTransform view)
   where
-    proj = Projection.reverseDepthRH (70 * pi / 180) 0.01 (fromIntegral w) (fromIntegral h)
+    proj = Projection.reverseDepthRH (70 * pi / 180) 0.05 (fromIntegral w) (fromIntegral h)
     view = View.lookAtRH eye cameraTarget (vec3 0 1 0)
 
 -- | Push the camera view-projection (the mesh pipeline's sole push constant).
@@ -811,7 +888,7 @@ pushCamera cb layout eye extent =
   where
     camera = Mesh.Camera{Mesh.viewProj = viewProjFor eye extent}
 
--- | Push the resolve's view-projection + eye position (DAIS + specular V).
+-- | Push the resolve's view-projection + eye position (DAIS + specular V) + shading knobs.
 pushResolve :: Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Vec3 -> Vk.Extent2D -> Word32 -> IO ()
 pushResolve cb layout pushSize eyePos extent debugMode =
   -- Push the reflected range extent ('pushSize'), which is < the std430 'Storable'
@@ -820,11 +897,18 @@ pushResolve cb layout pushSize eyePos extent debugMode =
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 pushSize (castPtr p)
   where
     eye = withVec3 eyePos \x y z -> vec4 x y z 1
+    tuning = Shade.defaultTuning
     camera =
       Shade.Camera
         { Shade.viewProj = viewProjFor eyePos extent
         , Shade.camPos = eye
         , Shade.debugMode = debugMode
+        , Shade.lightCount = Lights.count
+        , Shade.ambient = tuning.ambient
+        , Shade.indirect = tuning.indirect
+        , Shade.bleed = tuning.bleed
+        , Shade.shadowBias = tuning.shadowBias
+        , Shade.normalBias = tuning.normalBias
         }
 
 -- | Push the tonemap's exposure + bloom strength + debug mode (COMPUTE stage).
@@ -839,6 +923,18 @@ pushTonemap cb layout exposure debugMode =
 bloomStrength, bloomRadius :: Float
 bloomStrength = 0.04
 bloomRadius = 0.005
+
+{- | Bloom mip the luminance pass reduces.
+
+Mip 0 is already half-resolution, so mip 2 is ⅛ of the scene extent — few enough
+pixels for one workgroup, pre-averaged, and still wide enough to bin later.
+-}
+lumMipIndex :: Int
+lumMipIndex = 2
+
+-- | 'lumMipIndex', clamped to a chain of @mipCount@ mips.
+lumMipFor :: Int -> Int
+lumMipFor mipCount = min lumMipIndex (mipCount - 1)
 
 {- | Bloom mip count for an extent.
 

@@ -23,8 +23,8 @@ import Data.ByteString (ByteString)
 import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Ptr (castPtr)
-import Foreign.Storable (poke)
-import UnliftIO.Foreign (allocaBytes)
+import Foreign.Storable (Storable, sizeOf)
+import UnliftIO.Foreign (with)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Shader (shaderModuleStage)
@@ -115,13 +115,14 @@ allocateSet dev pl sampler srcView dstView = do
 -- | Push the Karis flag (1 on the first, full-resolution downsample).
 pushDownsample :: Vk.CommandBuffer -> Vk.PipelineLayout -> Bool -> IO ()
 pushDownsample cb layout karis =
-  allocaBytes 4 $ \p -> do
-    poke (castPtr p) (if karis then 1 else 0 :: Word32)
-    Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 4 p
+  pushCompute cb layout (if karis then 1 else 0 :: Word32)
 
 -- | Push the upsample tent-filter radius (in the source mip's texture coordinates).
 pushUpsample :: Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> IO ()
-pushUpsample cb layout radius =
-  allocaBytes 4 $ \p -> do
-    poke (castPtr p) radius
-    Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 4 p
+pushUpsample cb layout radius = pushCompute cb layout radius
+
+-- | Push a single scalar to the compute stage at offset 0.
+pushCompute :: (Storable a) => Vk.CommandBuffer -> Vk.PipelineLayout -> a -> IO ()
+pushCompute cb layout x =
+  with x \p ->
+    Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral $ sizeOf x) (castPtr p)

@@ -4,9 +4,9 @@
 
 {-| The luminance-reduction compute pipeline.
 
-HDR image → average log-luminance buffer ("Pipeline.Luminance.Shader"), for
-auto-exposure. Set 0 is the HDR storage image (0) and the output SSBO (1); dispatch a
-single workgroup.
+Bloom mip → average log-luminance buffer ("Pipeline.Luminance.Shader"), for
+auto-exposure. Set 0 is the source storage image (0) and the output SSBO (1); dispatch
+a single workgroup.
 -}
 module Pipeline.Luminance
   ( Pipeline (..)
@@ -52,9 +52,9 @@ allocatePipeline dev = do
   (_, (_, [pipeline])) <- Vk.withComputePipelines dev zero [SomeStruct createInfo] Nothing allocate
   pure Pipeline{pipeline, pipelineLayout, descriptorSetLayout}
 
--- | A descriptor set binding the HDR input image (0) and the output SSBO (1).
+-- | A descriptor set binding the source image (0) and the output SSBO (1).
 allocateSet :: Vk.Device -> Pipeline -> Vk.ImageView -> Vk.Buffer -> ResourceT IO Vk.DescriptorSet
-allocateSet dev pl hdrView lumBuffer = do
+allocateSet dev pl srcView lumBuffer = do
   (_, pool) <-
     Vk.withDescriptorPool
       dev
@@ -77,7 +77,7 @@ allocateSet dev pl hdrView lumBuffer = do
           , Vk.dstBinding = 0
           , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
           , Vk.descriptorCount = 1
-          , Vk.imageInfo = [zero{Vk.imageView = hdrView, Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL} :: Vk.DescriptorImageInfo]
+          , Vk.imageInfo = [zero{Vk.imageView = srcView, Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL} :: Vk.DescriptorImageInfo]
           }
     , SomeStruct
         zero

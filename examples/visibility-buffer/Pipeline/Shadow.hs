@@ -14,7 +14,8 @@ The multiview occluder render (shaders in "Pipeline.Shadow.Occluder"), hand-buil
 because 'Dynamic.PipelineConfig' has no @viewMask@: 'basePipelineCreateInfo' is
 grafted with a 'PipelineRenderingCreateInfo' carrying the @0x3F@ view mask on its
 pNext chain. The push range spans VERTEX+FRAGMENT (the vertex indexes the
-view-projections, the fragment reads the light position).
+view-projections, the fragment reads the light position); the EVSM encoding
+('Params') is specialized in.
 -}
 module Pipeline.Shadow
   ( Pipeline (..)
@@ -29,57 +30,57 @@ import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr (castPtr)
+import Geomancy (vec4, withVec4)
 import qualified Geomancy
-import Geomancy.Vec4 (vec4)
 import Graphics.Gl.Block (Std430 (..))
 import Vulkan.CStruct.Extends (SomeStruct (..), pattern (:&), pattern (::&))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (PipelineRenderingCreateInfo (..))
 import Vulkan.Utils.Descriptors (bufferWrite)
 import Vulkan.Utils.Pipeline.Internal (basePipelineCreateInfo, buildColorPipeline, withCompiledStages)
-import Vulkan.Utils.SpirV.Descriptors (singleDescriptorSetLayoutInfo)
+import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges, singleDescriptorSetLayoutInfo)
 import Vulkan.Utils.SpirV.Reflect (reflectBytes)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
 import Vulkan.Zero (zero)
 
+import qualified Pipeline.Shade as Shade
 import qualified Pipeline.Shadow.Occluder as Occluder
+import Pipeline.Shadow.Params (Params)
 
--- Generate the @PC@ push-constant record (light position+far, view-projection base).
+-- Generate the @PC@ push-constant record (light position, view-projection base).
 reflectShaderTypesBytes Occluder.vertCode
-
-{- | Push-constant byte extent.
-
-@vec4 lightPosFar + uint lightBase@. The std430 'Storable' trailing-pads to 32; the
-range (and this push) span only the 20 real bytes, so vertex+fragment both see the
-data.
--}
-pushBytes :: Word32
-pushBytes = 20
 
 data Pipeline = Pipeline
   { pipeline :: Vk.Pipeline
   , pipelineLayout :: Vk.PipelineLayout
   , descriptorSetLayout :: Vk.DescriptorSetLayout
+  , pushSize :: Word32
+  {- ^ Reflected @PC@ range size (< the std430 'Storable' size, which trailing-pads to
+  32) — push exactly this many bytes to satisfy the layout.
+  -}
   }
 
 -- | The occluder pipeline, rendering into @shadowFormat@ moments + @depthFormat@ depth.
-allocateShadow :: Vk.Device -> Vk.Format -> Vk.Format -> ResourceT IO Pipeline
-allocateShadow dev shadowFormat depthFormat = do
+allocateShadow :: Vk.Device -> Params -> Vk.Format -> Vk.Format -> ResourceT IO Pipeline
+allocateShadow dev params shadowFormat depthFormat = do
   reflected <- reflectBytes Occluder.vertCode
   setLayoutInfo <- either fail pure (singleDescriptorSetLayoutInfo reflected)
   (_, descriptorSetLayout) <- Vk.withDescriptorSetLayout dev setLayoutInfo Nothing allocate
+  -- Reflected from the vertex stage alone, so widen the range to the stages that read it.
+  let pushSize = maximum (0 : [r.offset + r.size | r <- pushConstantRanges reflected])
   (_, pipelineLayout) <-
     Vk.withPipelineLayout
       dev
-      zero{Vk.setLayouts = [descriptorSetLayout], Vk.pushConstantRanges = [Vk.PushConstantRange (Vk.SHADER_STAGE_VERTEX_BIT .|. Vk.SHADER_STAGE_FRAGMENT_BIT) 0 pushBytes]}
+      zero{Vk.setLayouts = [descriptorSetLayout], Vk.pushConstantRanges = [Vk.PushConstantRange (Vk.SHADER_STAGE_VERTEX_BIT .|. Vk.SHADER_STAGE_FRAGMENT_BIT) 0 pushSize]}
       Nothing
       allocate
-  pipeline <- buildPipeline dev shadowFormat depthFormat pipelineLayout
-  pure Pipeline{pipeline, pipelineLayout, descriptorSetLayout}
+  pipeline <- buildPipeline dev params shadowFormat depthFormat pipelineLayout
+  pure Pipeline{pipeline, pipelineLayout, descriptorSetLayout, pushSize}
 
-buildPipeline :: Vk.Device -> Vk.Format -> Vk.Format -> Vk.PipelineLayout -> ResourceT IO Vk.Pipeline
-buildPipeline dev shadowFormat depthFormat layout =
-  withCompiledStages dev () [(Vk.SHADER_STAGE_VERTEX_BIT, Occluder.vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, Occluder.fragCode)] \stages ->
+-- The vertex stage declares no spec constants; its map entries are ignored.
+buildPipeline :: Vk.Device -> Params -> Vk.Format -> Vk.Format -> Vk.PipelineLayout -> ResourceT IO Vk.Pipeline
+buildPipeline dev params shadowFormat depthFormat layout =
+  withCompiledStages dev params [(Vk.SHADER_STAGE_VERTEX_BIT, Occluder.vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, Occluder.fragCode)] \stages ->
     fmap snd $ buildColorPipeline dev (Just layout) \resolvedLayout ->
       SomeStruct $
         (basePipelineCreateInfo resolvedLayout Nothing 1 True (zero :: Vk.PipelineVertexInputStateCreateInfo '[]) dynStates stages)
@@ -112,14 +113,17 @@ allocateSet dev pl verts meshes objects viewProj = do
     []
   pure set
 
-{- | Push the shadow light + view-projection base (20 bytes).
+{- | Push the shadow light + view-projection base.
 
-The light position + far plane (fragment) and the view-projection base offset
-@light*6@ (vertex).
+The light position (fragment) and the view-projection base offset @light*6@ (vertex).
 -}
-pushShadow :: Vk.CommandBuffer -> Vk.PipelineLayout -> (Float, Float, Float) -> Float -> Word32 -> IO ()
-pushShadow cb layout (x, y, z) far base =
+pushShadow :: Vk.CommandBuffer -> Pipeline -> Shade.Light -> Word32 -> IO ()
+pushShadow cb pl (Shade.Light pos _col) base =
   with pc \p ->
-    Vk.cmdPushConstants cb layout (Vk.SHADER_STAGE_VERTEX_BIT .|. Vk.SHADER_STAGE_FRAGMENT_BIT) 0 pushBytes (castPtr p)
+    Vk.cmdPushConstants cb pl.pipelineLayout (Vk.SHADER_STAGE_VERTEX_BIT .|. Vk.SHADER_STAGE_FRAGMENT_BIT) 0 pl.pushSize (castPtr p)
   where
-    pc = PC{lightPosFar = vec4 x y z far, lightBase = base}
+    pc =
+      PC
+        { lightPos = withVec4 pos \x y z _sz -> vec4 x y z 0
+        , lightBase = base
+        }
