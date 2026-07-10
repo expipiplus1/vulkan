@@ -990,6 +990,8 @@ executable visibility-buffer
       Pipeline.Cull.Shader
       Pipeline.Gamma
       Pipeline.Gamma.Shader
+      Pipeline.HiZ
+      Pipeline.HiZ.Shader
       Pipeline.Knot
       Pipeline.Knot.Gen
       Pipeline.Luminance

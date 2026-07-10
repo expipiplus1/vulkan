@@ -35,7 +35,7 @@ import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
 import qualified Vulkan.Core10 as MemoryBarrier (MemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Descriptors (bufferWrite)
+import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
 import Vulkan.Utils.SpirV.Descriptors (pushConstantsSize)
 import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
 import qualified Vulkan.Utils.SpirV.Pipeline
@@ -78,12 +78,19 @@ data CullBuffers = CullBuffers
   -- ^ the occluder instance remap, refilled from the orb-reach test.
   }
 
-allocateSet :: Vk.Device -> Pipeline -> CullBuffers -> ResourceT IO Vk.DescriptorSet
-allocateSet dev cull bufs = do
+-- | The set: 'CullBuffers' at bindings 0-3, the depth pyramid sampled at 4.
+allocateSet :: Vk.Device -> Pipeline -> CullBuffers -> Vk.Sampler -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
+allocateSet dev cull bufs sampler hizView = do
   (_, pool) <-
     Vk.withDescriptorPool
       dev
-      zero{Vk.maxSets = 1, Vk.poolSizes = [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 4]}
+      zero
+        { Vk.maxSets = 1
+        , Vk.poolSizes =
+            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 4
+            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
+            ]
+        }
       Nothing
       allocate
   sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [cull.setLayout]}
@@ -94,6 +101,7 @@ allocateSet dev cull bufs = do
     , bufferWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.indirect
     , bufferWrite set 2 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.visMain
     , bufferWrite set 3 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.visOcc
+    , combinedImageSamplerWrite set 4 sampler hizView Vk.IMAGE_LAYOUT_GENERAL
     ]
     []
   pure set

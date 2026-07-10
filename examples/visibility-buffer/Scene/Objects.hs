@@ -21,8 +21,8 @@ is CPU-static.
 The vertex shaders don't index the table by @gl_InstanceIndex@ directly: each draw
 family goes through an instance remap (camera @visMain@, occluder @visOcc@) holding
 one object id per drawn instance. The never-culled slots are identity
-('uploadStaticRemap', and the gen seeds its cubes likewise); the windowed cull
-compacts the cave range per frame ("Pipeline.Cull").
+('uploadStaticRemap', and the gen seeds its cubes likewise); the per-frame cull
+compacts the cave range ("Pipeline.Cull").
 -}
 module Scene.Objects
   ( Layout (..)
@@ -122,7 +122,7 @@ remapBytes l = fromIntegral l.total * 4
 {- | Initialise the five draw commands.
 
 The cube @instanceCount@s (main starts at 'glowstoneCount', occluder at 0) are
-append counters — the generator's at bake, then the windowed cull's each frame
+append counters — the generator's at bake, then the cull's each frame
 ("Pipeline.Cull" resets and refills them); the rest are static.
 -}
 uploadDrawCommands :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m ()

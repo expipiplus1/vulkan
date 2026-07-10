@@ -44,10 +44,11 @@ module Scene
   , cameraTarget
   ) where
 
-import Control.Monad (forM_, unless, when)
+import Control.Monad (foldM_, forM_, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Bits (shiftR, (.|.))
+import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import qualified Data.Text as T
 import qualified Data.Vector as V
 import Data.Word (Word32)
@@ -80,6 +81,7 @@ import Driver (beginPrimary, commandPool)
 import qualified Pipeline.Bloom as Bloom
 import qualified Pipeline.Cull as Cull
 import qualified Pipeline.Gamma as Gamma
+import qualified Pipeline.HiZ as HiZ
 import qualified Pipeline.Knot as Knot
 import qualified Pipeline.Luminance as Luminance
 import qualified Pipeline.Mesh as Mesh
@@ -88,7 +90,7 @@ import qualified Pipeline.Shadow as Shadow
 import Pipeline.Shadow.Params (Params (..))
 import qualified Pipeline.Tonemap as Tonemap
 import qualified Pipeline.Voxels as Voxels
-import RenderTarget (allocateArrayTarget, allocateCubeArray, allocateImage, allocateLinearSampler, allocateMipChain, allocateTarget)
+import RenderTarget (allocateArrayTarget, allocateCubeArray, allocateImage, allocateLinearSampler, allocateMipChain, allocateNearestSampler, allocateTarget)
 import qualified Scene.Cave as Cave
 import qualified Scene.Lights as Lights
 import qualified Scene.Materials as Materials
@@ -236,6 +238,8 @@ data SceneStatic = SceneStatic
   , materialsBuffer :: Vk.Buffer
   , sampler :: Vk.Sampler
   -- ^ Shared linear sampler (resolve, tonemap, bloom).
+  , nearestSampler :: Vk.Sampler
+  -- ^ Shared nearest sampler with the full mip range (hiz build + cull).
   , lumBuffer :: Vk.Buffer
   , lumAllocation :: VMA.Allocation
   , lumMapped :: Ptr ()
@@ -257,8 +261,10 @@ data SceneStatic = SceneStatic
   -- ^ Shadow view-projections SSBO (one @mat4@ per @(light, face)@).
   , shadowSet :: Vk.DescriptorSet
   -- ^ Occluder set for the shadow render (shared vertex/mesh/object tables + view-projs).
-  , cullSet :: Vk.DescriptorSet
-  -- ^ Set for the per-frame cave-cube cull ("Pipeline.Cull").
+  , visMain :: Vk.Buffer
+  -- ^ Camera instance remap (see "Scene.Objects"); the cull set binds it.
+  , visOcc :: Vk.Buffer
+  -- ^ Occluder instance remap, as 'visMain'.
   , caveCount :: Word32
   -- ^ Generated cave cubes, read back once for the cull dispatch.
   }
@@ -282,6 +288,16 @@ data Scene = Scene
   , upSets :: V.Vector Vk.DescriptorSet
   , probe :: Maybe ManagedImage
   -- ^ Snapshot of the mip the luminance pass reduces ('lumProbe'); headless only.
+  , hizMips :: V.Vector ManagedImage
+  -- ^ Depth-pyramid mips ("Pipeline.HiZ"), each a tracked subresource.
+  , hizExtents :: V.Vector Vk.Extent2D
+  , hizSets :: V.Vector Vk.DescriptorSet
+  , cullSet :: Vk.DescriptorSet
+  -- ^ The cull's buffers + the whole pyramid, sampled ("Pipeline.Cull").
+  , hizPrimed :: IORef Bool
+  {- ^ False until the first 'recordCull'; gates the occlusion test off the
+  not-yet-built pyramid.
+  -}
   }
 
 {- | The two graph outputs a driver can consume.
@@ -307,6 +323,7 @@ data ScenePipelines = ScenePipelines
   , generator :: Voxels.ComputePipeline
   , knot :: Knot.Knot
   , cull :: Cull.Pipeline
+  , hiz :: HiZ.Pipeline
   }
 
 allocatePipelines :: Vk.Device -> ResourceT IO ScenePipelines
@@ -321,7 +338,8 @@ allocatePipelines dev = do
   generator <- Voxels.allocateGenerator dev
   knot <- Knot.allocateKnot dev
   cull <- Cull.allocatePipeline dev
-  pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot, cull}
+  hiz <- HiZ.allocatePipeline dev
+  pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot, cull, hiz}
 
 {- | Allocate the extent-independent scene.
 
@@ -369,9 +387,10 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
 
   genSet <- Voxels.allocateGenSets dev pls.generator bufs
   meshSet <- Mesh.allocateSet dev pls.mesh vertexBuffer meshTableBuffer objectsBuffer visMain
-  cullSet <- Cull.allocateSet dev pls.cull Cull.CullBuffers{Cull.objects = objectsBuffer, Cull.indirect = indirect, Cull.visMain = visMain, Cull.visOcc = visOcc}
   -- Shared linear sampler (resolve, tonemap, bloom).
   (_, sampler) <- allocateLinearSampler dev
+  -- NEAREST for the pyramid: the occlusion test needs actual texels, not blends.
+  (_, nearestSampler) <- allocateNearestSampler dev
 
   -- EVSM shadow cube array: one cube per light (moments) + a shared depth cube.
   -- The resolve (async compute) samples the moments, so the array is CONCURRENT.
@@ -430,6 +449,7 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       , meshTableBuffer
       , materialsBuffer = materialsBuf
       , sampler
+      , nearestSampler
       , lumBuffer
       , lumAllocation
       , lumMapped
@@ -442,7 +462,8 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       , lightsBuffer = lights
       , viewProjBuffer
       , shadowSet
-      , cullSet
+      , visMain
+      , visOcc
       , caveCount
       }
 
@@ -468,8 +489,9 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- vis + depth also get TRANSFER_SRC so the headless driver can dump them.
   (_, (visImage, visView)) <-
     allocateTarget allocator dev visFormat extent (Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "visibility"
+  -- SAMPLED so the windowed driver's depth-pyramid build can read it.
   (_, (depthImage, depthView)) <-
-    allocateTarget allocator dev depthFormat extent (Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_DEPTH_BIT Nothing "depth"
+    allocateTarget allocator dev depthFormat extent (Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_DEPTH_BIT Nothing "depth"
   -- The post chain: shade → colorHDR → tone → display. Only tone (windowed blit)
   -- and display (headless readback) need TRANSFER_SRC.
   -- colorHDR is sampled by the first bloom downsample, so it needs SAMPLED too.
@@ -490,8 +512,10 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   let
     Vk.Extent2D w0 h0 = extent
     halfExtent = Vk.Extent2D (max 1 (w0 `div` 2)) (max 1 (h0 `div` 2))
+    -- Level sizes of a 'halfExtent'-based pyramid (bloom and hiz alike).
+    mipExtents n = V.generate n \i -> Vk.Extent2D (max 1 ((w0 `div` 2) `shiftR` i)) (max 1 ((h0 `div` 2) `shiftR` i))
     mipCount = bloomMipCount extent
-    bloomExtents = V.generate mipCount \i -> Vk.Extent2D (max 1 ((w0 `div` 2) `shiftR` i)) (max 1 ((h0 `div` 2) `shiftR` i))
+    bloomExtents = mipExtents mipCount
     -- The probe copies off the metered mip, so the chain needs TRANSFER_SRC for it.
     bloomUsage = Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. (if wantProbe then Vk.IMAGE_USAGE_TRANSFER_SRC_BIT else zero)
     lumMip = lumMipFor mipCount
@@ -511,6 +535,33 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   downSets <- V.generateM mipCount \i -> Bloom.allocateSet dev pls.bloom.down static.sampler (if i == 0 then colorHDRView else bloomViews V.! (i - 1)) (bloomViews V.! i)
   upSets <- V.generateM (mipCount - 1) \i -> Bloom.allocateSet dev pls.bloom.up static.sampler (bloomViews V.! (i + 1)) (bloomViews V.! i)
 
+  -- Depth pyramid for the cull's occlusion test: half-res base, min-reduced to 1×1
+  -- ('HiZ.mipCount'). Fed by the reduce passes in 'addScenePasses', sampled by
+  -- 'recordCull' a frame later.
+  let
+    hizMipCount = HiZ.mipCount halfExtent
+    hizExtents = mipExtents hizMipCount
+  (_, (hizImage, hizViews)) <-
+    allocateMipChain allocator dev HiZ.format halfExtent (fromIntegral hizMipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "hiz"
+  hizMips <- V.generateM hizMipCount \i -> newManagedImageMip hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
+  -- The cull samples across levels ('textureLod'), so it gets a whole-chain view.
+  hizFullView <- HiZ.allocateChainView dev hizImage hizMipCount
+  hizSets <- V.generateM hizMipCount \i ->
+    HiZ.allocateSet dev pls.hiz static.nearestSampler (if i == 0 then depthView else hizViews V.! (i - 1)) (hizViews V.! i)
+  cullSet <-
+    Cull.allocateSet
+      dev
+      pls.cull
+      Cull.CullBuffers
+        { Cull.objects = static.objectsBuffer
+        , Cull.indirect = static.indirect
+        , Cull.visMain = static.visMain
+        , Cull.visOcc = static.visOcc
+        }
+      static.nearestSampler
+      hizFullView
+  hizPrimed <- liftIO (newIORef False)
+
   shadeSet <- Shade.allocateDescriptorSet dev pls.shade visView colorHDRView static.vertexBuffer static.lightsBuffer static.sampler static.shadowCubeView static.objectsBuffer static.materialsBuffer static.meshTableBuffer
   lumSet <- Luminance.allocateSet dev pls.luminance (bloomViews V.! lumMip) static.lumBuffer
   toneSet <- Tonemap.allocateSet dev pls.tonemap colorHDRView toneView static.sampler (bloomViews V.! 0)
@@ -529,11 +580,17 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       , downSets
       , upSets
       , probe
+      , hizMips
+      , hizExtents
+      , hizSets
+      , cullSet
+      , hizPrimed
       }
 
 {- | The visibility and depth images after a frame, for headless debug dumps.
 
-Their layouts are @GENERAL@ (vis) and @DEPTH_ATTACHMENT_OPTIMAL@ (depth).
+Both end a frame in @GENERAL@ (the shade pass reads vis, the depth-pyramid
+build reads depth).
 -}
 debugImages :: Scene -> (Vk.Image, Vk.Image)
 debugImages scene = (scene.targets.vis.image, scene.targets.depth.image)
@@ -638,23 +695,30 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
           , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 0 n
           }
 
-{- | Compact this frame's draws: frustum-cull the cave cubes for the camera at @eye@
-and reach-cull them around the orbs for the shadow refresh.
+{- | Compact this frame's draws: frustum- and occlusion-cull the cave cubes for the
+camera at @eye@, and reach-cull them around the orbs for the shadow refresh.
 
 Recorded at the top of the frame, before 'recordOrbFrame' and the graph. The
-headless driver skips it — the generator seeds identity remaps and full counts, so
-an unculled frame is simply complete.
+occlusion test skips the first recording after 'allocateTargets' (the pyramid
+holds no frame yet — and a resize resets this), then self-arms: every recording
+is followed by a same-queue submit whose graph rebuilds the pyramid.
 -}
 recordCull :: (MonadIO m) => Vk.CommandBuffer -> ScenePipelines -> Scene -> Vec3 -> Vk.Extent2D -> Float -> m ()
-recordCull cb pls scene eye extent t =
-  Cull.record pls.cull scene.static.cullSet scene.static.indirect params cb
+recordCull cb pls scene eye extent t = do
+  hizValid <- liftIO (readIORef scene.hizPrimed)
+  -- Declare the pyramid read: the cull samples the mips outside the graph, so
+  -- the tracker must place the write→read barrier (and the first transition).
+  V.mapM_ (\m -> transitionImageTo cb m (StorageRead shadeStage)) scene.hizMips
+  Cull.record pls.cull scene.cullSet scene.static.indirect (params hizValid) cb
+  liftIO (writeIORef scene.hizPrimed True)
   where
-    params =
+    params hizValid =
       Cull.Params
         { Cull.viewProj = viewProjFor eye extent
         , Cull.orbSphere = orbCullSphere t
         , Cull.caveBase = scene.static.objLayout.caveBase
         , Cull.caveCount = scene.static.caveCount
+        , Cull.hizValid = if hizValid then 1 else 0
         }
 
 {- | One sphere covering every orb's shadow 'Lights.reach' at time @t@ (@w < 0@ when
@@ -793,7 +857,7 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   toneH <- importManagedImage graph "tone" tone
   displayH <- importManagedImage graph "display" display
 
-  visWritten <-
+  (visWritten, depthWritten) <-
     FG.addPass graph "geometry" (geometrySetup visH depthH) \_ -> do
       cb <- recordingCommandBuffer
       let
@@ -896,6 +960,19 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipelineLayout 0 [scene.gammaSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
+  -- Depth pyramid for the next frame's cull ("Pipeline.HiZ"): min-reduce the
+  -- depth buffer down the chain, on the default (graphics) queue — depth stays
+  -- EXCLUSIVE to the family that rendered it. Side-effect passes: nothing in
+  -- this graph reads the mips; the next 'recordCull' samples them.
+  hizHs <- V.imapM (\i m -> importManagedImage graph (T.pack ("hiz.mip" <> show i)) m) scene.hizMips
+  let hizPass src (i, dstH) =
+        FG.addPass graph (T.pack ("hiz." <> show i)) (hizSetup src dstH) \_ -> do
+          cb <- recordingCommandBuffer
+          Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.pipeline
+          Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.layout 0 [scene.hizSets V.! i] []
+          dispatchMip cb (scene.hizExtents V.! i)
+  foldM_ hizPass depthWritten (V.indexed hizHs)
+
   pure PassOutputs{toneOut = toneWritten, displayOut = displayWritten}
   where
     Vk.Extent2D w h = extent
@@ -903,8 +980,9 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
     dispatchMip cb (Vk.Extent2D mw mh) = Vk.cmdDispatch cb (groups mw) (groups mh) 1
     hostVisible = zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_HOST_READ_BIT} :: Vk.MemoryBarrier
     geometrySetup visH depthH = do
-      FG.writeWith_ depthH (usageFlags DepthAttachment)
-      FG.writeWith visH (usageFlags ColorAttachment)
+      depthWritten <- FG.writeWith depthH (usageFlags DepthAttachment)
+      visWritten <- FG.writeWith visH (usageFlags ColorAttachment)
+      pure (visWritten, depthWritten)
     shadeSetup visWritten colorH = do
       FG.setQueue computeQueue
       FG.readWith visWritten (usageFlags (StorageRead shadeStage))
@@ -940,6 +1018,10 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       FG.setQueue computeQueue
       FG.readWith toneWritten (usageFlags (StorageRead shadeStage))
       FG.writeWith displayH (usageFlags (StorageWrite shadeStage))
+    hizSetup src dstH = do
+      FG.setSideEffect
+      FG.readWith src (usageFlags (StorageRead shadeStage))
+      FG.writeWith dstH (usageFlags (StorageWrite shadeStage))
 
 -- | The point the camera looks at and orbits.
 cameraTarget :: Vec3

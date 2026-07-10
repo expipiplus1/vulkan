@@ -143,6 +143,9 @@ render opts allocator dev queues async = do
 
   let -- Build + run a fresh graph for one debug mode; returns the read-back image.
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
+      -- The cull prologue runs the same compaction as the windowed frame — the
+      -- second execution onwards is occlusion-culled against the previous one's
+      -- pyramid (same camera), so the depth-void check covers the culling too.
       runMode exposure debugMode = do
         graph <- FG.newFrameGraph
         outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye exposure debugMode
@@ -151,7 +154,7 @@ render opts allocator dev queues async = do
           copyToHost cb extent scene.targets.display.image cpuImage
         FG.compile graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
-        runGraph dev queues async graph
+        runGraph dev queues async (\cb -> Scene.recordCull cb pls scene eye extent 0) graph
         readback
 
   -- Meter, then re-render at the exposure the viewer would settle on. The luminance
@@ -194,19 +197,23 @@ computeQueueId = maybe FG.defaultQueue (const computeQueue)
 
 {- | Record the graph across its queues and wait for completion.
 
-Single queue: one buffer, one fenced submit. Async: geometry on the graphics queue
-signals a semaphore the compute buffer (shade + readback) waits on, fenced at the end.
+@prologue@ records into the graphics buffer ahead of the graph (the cull, whose
+consumers all draw on the graphics queue). Single queue: one buffer, one fenced
+submit. Async: geometry on the graphics queue signals a semaphore the compute
+buffer (shade + readback) waits on, fenced at the end.
 -}
 runGraph
   :: Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> Maybe Word32
+  -> (Vk.CommandBuffer -> ResourceT IO ())
   -> FG.FrameGraph Recorder ()
   -> ResourceT IO ()
-runGraph dev queues async graph = do
+runGraph dev queues async prologue graph = do
   let (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
   graphicsPool <- commandPool dev graphicsFamily
   graphicsCb <- beginPrimary dev graphicsPool
+  prologue graphicsCb
 
   computePair <- case async of
     Just computeFamily -> do
@@ -303,7 +310,8 @@ pixels where reverse-Z depth is still the cleared @0@ (nothing was drawn).
 dumpDebug :: VMA.Allocator -> Vk.Device -> (Vk.Queue, Word32) -> Vk.Image -> Vk.Image -> Vk.Extent2D -> ResourceT IO Int
 dumpDebug allocator dev qf visImage depthImage extent@(Vk.Extent2D w h) = do
   visPtr <- copyImageToHostBuffer allocator dev qf visImage Vk.IMAGE_ASPECT_COLOR_BIT Vk.IMAGE_LAYOUT_GENERAL extent 8
-  depthPtr <- copyImageToHostBuffer allocator dev qf depthImage Vk.IMAGE_ASPECT_DEPTH_BIT Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL extent 4
+  -- Depth ends the frame in GENERAL: the depth-pyramid build sampled it.
+  depthPtr <- copyImageToHostBuffer allocator dev qf depthImage Vk.IMAGE_ASPECT_DEPTH_BIT Vk.IMAGE_LAYOUT_GENERAL extent 4
   liftIO $ do
     let
       wi = fromIntegral w

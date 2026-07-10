@@ -11,6 +11,7 @@ module RenderTarget
   , allocateCubeArray
   , allocateArrayTarget
   , allocateLinearSampler
+  , allocateNearestSampler
   ) where
 
 import Control.Monad.Trans.Resource (MonadResource, ReleaseKey, allocate)
@@ -291,4 +292,25 @@ allocateLinearSampler dev = Vk.withSampler dev info Nothing allocate
         , Vk.addressModeU = Vk.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
         , Vk.addressModeV = Vk.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
         , Vk.addressModeW = Vk.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+        }
+
+{- | A nearest, clamp-to-edge sampler with the full mip range.
+
+For reads that must return an actual texel (a depth-pyramid occlusion test, say):
+bilinear taps would blend neighbours and unmake a min/max reduction. @maxLod@ is
+unclamped — the zero default of @0@ silently pins every @textureLod@ to the base
+level.
+-}
+allocateNearestSampler :: (MonadResource m) => Vk.Device -> m (ReleaseKey, Vk.Sampler)
+allocateNearestSampler dev = Vk.withSampler dev info Nothing allocate
+  where
+    info =
+      zero
+        { Vk.magFilter = Vk.FILTER_NEAREST
+        , Vk.minFilter = Vk.FILTER_NEAREST
+        , Vk.mipmapMode = Vk.SAMPLER_MIPMAP_MODE_NEAREST
+        , Vk.addressModeU = Vk.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+        , Vk.addressModeV = Vk.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+        , Vk.addressModeW = Vk.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+        , Vk.maxLod = Vk.LOD_CLAMP_NONE
         }

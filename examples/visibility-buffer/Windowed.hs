@@ -224,7 +224,8 @@ renderScene opts vc pls window camRef prevRef startTime bindings f = do
 
   let dev = vcDevice vc
   graphicsCb <- beginPrimary dev (rrCommandPool f.fRecycled)
-  -- Compact this frame's draws: camera-frustum cave cubes + orb-reach occluders.
+  -- Compact this frame's draws: frustum + last-frame occlusion for the camera,
+  -- orb reach for the shadow refresh.
   Scene.recordCull graphicsCb pls bindings.scene eye extent t
   -- Move the orb + refresh its shadow slice ahead of the scene graph (same buffer).
   Scene.recordOrbFrame graphicsCb pls bindings.scene t
