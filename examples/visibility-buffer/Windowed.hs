@@ -10,8 +10,9 @@ Arrow keys orbit the camera and @-@/@+@ dolly ('Camera.update'); @.@ dumps the v
 Runs the /same/ 'Scene.addScenePasses' graph as the headless driver, but keeps it
 single-queue — @cbFor@ maps every pass (geometry, shade) to the graphics command
 buffer, so 'FG.executeQueued' degenerates to one buffer and one submit — then
-appends a @blit@ (colour → swapchain) finalized to PRESENT_SRC. The
-per-swapchain scene targets are recreated on resize by 'runWindowLoop'.
+appends a @blit@ (colour → swapchain) finalized to PRESENT_SRC. The blit source
+follows the swapchain format ('srgbEncoding'). The per-swapchain scene targets
+are recreated on resize by 'runWindowLoop'.
 -}
 module Windowed
   ( main
@@ -32,6 +33,7 @@ import Say (sayErrString)
 import UnliftIO.Exception (displayException)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Exception (VulkanException (..))
+import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR (..), SurfaceFormatKHR (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, usageFlags)
@@ -104,8 +106,20 @@ windowConfig =
         defaultSwapchainConfig
           { scRequiredUsageFlags = [Vk.IMAGE_USAGE_TRANSFER_DST_BIT, Vk.IMAGE_USAGE_COLOR_ATTACHMENT_BIT]
           , scRequiredFormatFeatures = [Vk.FORMAT_FEATURE_BLIT_DST_BIT]
+          , scSurfaceFormatPreferences = [srgbEncoding]
           }
     }
+
+{- | Does presenting through this surface format sRGB-encode blitted-in linear colour?
+
+Preferred, so the linear @tone@ target blits straight to the swapchain. Surfaces
+that offer no such format (MoltenVK leads with UNORM) get the gamma pass's
+@display@ target instead — 'renderScene' checks the picked format either way.
+-}
+srgbEncoding :: SurfaceFormatKHR -> Bool
+srgbEncoding sf =
+  sf.format `elem` ([Vk.FORMAT_B8G8R8A8_SRGB, Vk.FORMAT_R8G8B8A8_SRGB, Vk.FORMAT_A8B8G8R8_SRGB_PACK32] :: [Vk.Format])
+    && sf.colorSpace == COLOR_SPACE_SRGB_NONLINEAR_KHR
 
 prettyError :: IO () -> IO ()
 prettyError = handle (\e@(VulkanException _) -> sayErrString (displayException e))
@@ -137,6 +151,7 @@ allocateBindings
   -> Swapchain
   -> ResourceT IO (Bindings, ReleaseKey)
 allocateBindings allocator dev pls sceneStatic sc = do
+  sayErrString $ "swapchain " <> show sc.sFormat <> if srgbEncoding sc.sFormat then " (blit encodes)" else " (gamma pass encodes)"
   exposure <- liftIO (newIORef 1.0)
   st <- createInternalState
   bindings <-
@@ -188,15 +203,21 @@ renderScene opts vc pls window camRef prevRef startTime bindings f = do
     pure e'
 
   graph <- FG.newFrameGraph
-  -- Single-queue: the compute passes stay on the default (graphics) queue. This
-  -- reads toneOut, so the sRGB swapchain encodes gamma on blit (see "Scene").
+  -- Single-queue: the compute passes stay on the default (graphics) queue.
   outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye exposure opts.debugMode
   swapchainH <- importManagedImage graph "swapchain" swapManaged
 
+  -- An sRGB swapchain encodes on the blit from the linear @tone@ target; a UNORM
+  -- pick blits the gamma pass's @display@ target verbatim. Reading only one output
+  -- lets the graph cull the other path (see "Scene").
+  let (blitSrc, blitSrcImage)
+        | srgbEncoding sc.sFormat = (outs.toneOut, bindings.scene.targets.tone.image)
+        | otherwise = (outs.displayOut, bindings.scene.targets.display.image)
+
   blitted <-
-    FG.addPass graph "blit" (blitSetup outs.toneOut swapchainH) \_ -> do
+    FG.addPass graph "blit" (blitSetup blitSrc swapchainH) \_ -> do
       cb <- recordingCommandBuffer
-      blitImage extent bindings.scene.targets.tone.image swapManaged.image cb
+      blitImage extent blitSrcImage swapManaged.image cb
   FG.finalize graph blitted (usageFlags Present)
 
   FG.compile graph
