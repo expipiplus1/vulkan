@@ -15,6 +15,7 @@ library:
   - fragr
   - text
   - transformers
+  - vector
   - vulkan >= 3.27 && < 3.28
   - vulkan-utils
 

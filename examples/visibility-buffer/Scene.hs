@@ -71,7 +71,7 @@ import qualified Vulkan.Core13 as RenderingInfo (RenderingInfo (..))
 import qualified Vulkan.Core13 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, newManagedImageMip, transitionImageTo, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, newManagedImageMip, transitionImageTo, transitionImagesTo, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -728,7 +728,7 @@ recordCull cb pls scene eye extent t = do
   hizValid <- liftIO (readIORef scene.hizPrimed)
   -- Declare the pyramid read: the cull samples the mips outside the graph, so
   -- the tracker must place the write→read barrier (and the first transition).
-  V.mapM_ (\m -> transitionImageTo cb m (StorageRead shadeStage)) scene.hizMips
+  transitionImagesTo cb [(m, StorageRead shadeStage) | m <- V.toList scene.hizMips]
   Cull.record pls.cull scene.cullSet scene.static.indirect (params hizValid) cb
   liftIO (writeIORef scene.hizPrimed True)
   where

@@ -4,7 +4,8 @@ automatically.
 A 'ManagedImage' carries the image plus its tracked 'ImageState' (layout,
 stage, access). A pass declares an access with a 'Usage' (encoded into
 'FG.Flags' by 'usageFlags'); the 'FG.preRead' / 'FG.preWrite' hooks diff the
-tracked state against the usage's target and record the barrier — the
+tracked state against the usage's target and queue the barrier into the
+'Recorder''s per-pass batch, one @vkCmdPipelineBarrier@ per pass — the
 'transitionImageTo' rules, plus semaphore chaining when the access hops
 queues.
 
@@ -26,20 +27,23 @@ module Vulkan.Utils.FrameGraph.Image
   , usageFlags
   , flagsUsage
   , transitionImageTo
+  , transitionImagesTo
   ) where
 
-import Control.Monad (when)
+import Control.Monad (foldM, unless, when)
 import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.&.), (.|.))
 import Data.Coerce (coerce)
+import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Text (Text)
+import Data.Vector qualified as V
 import Data.Word (Word32, Word64)
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import Vulkan.Core10 qualified as Vk
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recorderCommandBuffer, recorderQueue)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, flushBarriers, queueBarrier, recorderQueue)
 import Vulkan.Zero (zero)
 
 {- | An image, or an arbitrary @(mip × array-layer)@ slice of it, whose
@@ -98,14 +102,8 @@ instance FG.Resource ManagedImage where
 
   destroyResource _ _ _ = pure ()
 
-  preRead _ flags rec mi = do
-    cb <- recorderCommandBuffer rec
-    queue <- recorderQueue rec
-    transitionOnQueue cb queue mi (flagsUsage flags)
-  preWrite _ flags rec mi = do
-    cb <- recorderCommandBuffer rec
-    queue <- recorderQueue rec
-    transitionOnQueue cb queue mi (flagsUsage flags)
+  preRead _ flags rec mi = queueTransition rec mi (flagsUsage flags)
+  preWrite _ flags rec mi = queueTransition rec mi (flagsUsage flags)
 
   describeDesc d = d.label
 
@@ -243,23 +241,59 @@ previous access. Only a read of an already-matching state skips it.
 -}
 transitionImageTo :: (MonadIO m) => Vk.CommandBuffer -> ManagedImage -> Usage -> m ()
 {-# INLINE transitionImageTo #-}
-transitionImageTo cb mi usage = do
-  lastQueue <- liftIO (readIORef mi.queueRef)
-  transitionOnQueue cb lastQueue mi usage
+transitionImageTo cb mi usage = transitionImagesTo cb [(mi, usage)]
 
-{- | The hook path: like 'transitionImageTo', but when the access lands on a
-different queue than the previous one the barrier is chained to the driver's
-inter-queue semaphore instead — source scope becomes the destination stage with
-no access mask, since the semaphore already provides execution ordering and
-memory availability. The driver's wait @dstStageMask@ must cover the usage's
-stage (both then chain), and cross-family access needs CONCURRENT sharing: no
-ownership release/acquire pair is emitted, so an EXCLUSIVE image's contents are
+{- | 'transitionImageTo' over a batch: one @vkCmdPipelineBarrier@, OR-ed stage masks.
+
+The images must be tracked separately (distinct non-overlapping slices):
+barriers in one command are unordered, so two entries for the same slice
+would race.
+-}
+transitionImagesTo :: (MonadIO m) => Vk.CommandBuffer -> [(ManagedImage, Usage)] -> m ()
+transitionImagesTo cb accesses = do
+  (srcs, dsts, barriers) <- foldM collect (zero, zero, []) accesses
+  unless (null barriers) $
+    Vk.cmdPipelineBarrier cb srcs dsts zero [] [] (V.fromList barriers)
+  where
+    collect acc@(srcs, dsts, barriers) (mi, usage) = do
+      lastQueue <- liftIO (readIORef mi.queueRef)
+      nextTransition lastQueue mi usage >>= \case
+        Nothing -> pure acc
+        Just (src, dst, barrier) -> pure (srcs .|. src, dsts .|. dst, barrier : barriers)
+
+{- | The hook path: 'transitionImageTo' rules, but queued and queue-aware.
+
+The barrier goes into the 'Recorder''s per-pass batch (flushed before the
+exec callback), and when the access lands on a different queue than the
+previous one it is chained to the driver's inter-queue semaphore instead —
+source scope becomes the destination stage with no access mask, since the
+semaphore already provides execution ordering and memory availability. The
+driver's wait @dstStageMask@ must cover the usage's stage (both then chain),
+and cross-family access needs CONCURRENT sharing: no ownership
+release/acquire pair is emitted, so an EXCLUSIVE image's contents are
 undefined on the new family.
 -}
-transitionOnQueue :: (MonadIO m) => Vk.CommandBuffer -> FG.QueueId -> ManagedImage -> Usage -> m ()
-transitionOnQueue cb queue mi usage = do
-  cur <- liftIO (readIORef mi.stateRef)
-  lastQueue <- liftIO (readIORef mi.queueRef)
+queueTransition :: (MonadIO m) => Recorder -> ManagedImage -> Usage -> m ()
+queueTransition rec mi usage = do
+  queue <- recorderQueue rec
+  nextTransition queue mi usage >>= traverse_ \(srcStage, dstStage, barrier) ->
+    queueBarrier rec srcStage dstStage barrier
+
+{- | Diff the tracked state against the 'Usage''s target and advance it.
+
+Hands back the @(srcStage, dstStage, barrier)@ still to be recorded — the
+caller commits to recording it (immediately or batched) before the access
+runs.
+-}
+nextTransition
+  :: (MonadIO m)
+  => FG.QueueId
+  -> ManagedImage
+  -> Usage
+  -> m (Maybe (Vk.PipelineStageFlags, Vk.PipelineStageFlags, SomeStruct Vk.ImageMemoryBarrier))
+nextTransition queue mi usage = liftIO do
+  cur <- readIORef mi.stateRef
+  lastQueue <- readIORef mi.queueRef
   let
     next = usageState usage
     cross = queue /= lastQueue
@@ -268,36 +302,41 @@ transitionOnQueue cb queue mi usage = do
     -- Cross-queue same-state accesses are ordered by the semaphore alone;
     -- same-queue writes need the barrier even with the state unchanged.
     needed = cur /= next || (usageWrites usage && not cross)
-  when needed do
-    Vk.cmdPipelineBarrier
-      cb
-      srcStage
-      next.stage
-      zero
-      []
-      []
-      [ SomeStruct
-          zero
-            { Vk.srcAccessMask = srcAccess
-            , Vk.dstAccessMask = next.access
-            , Vk.oldLayout = cur.layout
-            , Vk.newLayout = next.layout
-            , -- IGNORED (not 0) so the barrier is a plain transition, no
-              -- ownership transfer: cross-family access needs CONCURRENT sharing.
-              Vk.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-            , Vk.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
-            , Vk.image = mi.image
-            , Vk.subresourceRange = mi.range
-            }
-      ]
-    liftIO (writeIORef mi.stateRef next)
-  liftIO (writeIORef mi.queueRef queue)
+  when cross (writeIORef mi.queueRef queue)
+  if needed
+    then do
+      writeIORef mi.stateRef next
+      pure $
+        Just
+          ( srcStage
+          , next.stage
+          , SomeStruct
+              zero
+                { Vk.srcAccessMask = srcAccess
+                , Vk.dstAccessMask = next.access
+                , Vk.oldLayout = cur.layout
+                , Vk.newLayout = next.layout
+                , -- IGNORED (not 0) so the barrier is a plain transition, no
+                  -- ownership transfer: cross-family access needs CONCURRENT sharing.
+                  Vk.srcQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
+                , Vk.dstQueueFamilyIndex = Vk.QUEUE_FAMILY_IGNORED
+                , Vk.image = mi.image
+                , Vk.subresourceRange = mi.range
+                }
+          )
+    else pure Nothing
 
 -- | Descriptor for a 'ManagedImage'; carries a label for visualization output.
 newtype ImageDesc = ImageDesc {label :: Text}
 
 {- | Import a 'ManagedImage' under @name@, labelling the graph node with the same
 name (so the label never drifts from the handle).
+
+Also claims the graph's 'FG.setPreExec' slot for 'flushBarriers', so the
+hook-queued barriers are recorded under any driver — the adapter owns that
+slot; wrap the flush rather than replacing it.
 -}
 importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
-importManagedImage graph name mi = FG.importResource graph name (ImageDesc name) mi
+importManagedImage graph name mi = do
+  FG.setPreExec graph flushBarriers
+  FG.importResource graph name (ImageDesc name) mi
