@@ -18,14 +18,22 @@ module Pipeline.HiZ
   , allocateSet
   , allocateTailSet
   , allocateChainView
+  , pushTail
   , format
   , mipCount
   , tailFits
+  , tailMax
   ) where
 
+import Control.Monad (when)
+import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.ByteString (ByteString)
 import qualified Data.Vector as V
+import Data.Word (Word32)
+import Foreign.Marshal.Utils (with)
+import Foreign.Ptr (castPtr)
+import Foreign.Storable (sizeOf)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (combinedImageSamplerWrite, imageWrite)
@@ -88,11 +96,14 @@ allocateSet dev pl sampler srcView dstView = do
   pure set
 
 {- | The fused-tail set: the last reduced level sampled (0), the remaining mips
-stored (1, an array of 5 — pad short chains with any valid view; @levels@ guards
-the writes).
+stored (1). At most 'tailMax' views; short chains are padded internally (the
+shader's @levels@ push guards the writes, so the pad entries just need validity).
 -}
 allocateTailSet :: Vk.Device -> Pipeline -> Vk.Sampler -> Vk.ImageView -> V.Vector Vk.ImageView -> ResourceT IO Vk.DescriptorSet
-allocateTailSet dev pl sampler srcView dstViews = do
+allocateTailSet dev pl sampler srcView views = do
+  when (V.length views > tailMax) $
+    error ("HiZ.allocateTailSet: " <> show (V.length views) <> " tail mips exceed tailMax")
+  let dstViews = views <> V.replicate (tailMax - V.length views) (V.last views)
   (_, pool) <-
     Vk.withDescriptorPool
       dev
@@ -122,9 +133,23 @@ allocateTailSet dev pl sampler srcView dstViews = do
     []
   pure set
 
--- | Does a level fit the fused tail's shared-memory tile?
+-- | Push the fused tail's populated-mip count.
+pushTail :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Word32 -> m ()
+pushTail cb pl levels =
+  liftIO $ with levels \p ->
+    Vk.cmdPushConstants cb pl.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral (sizeOf levels)) (castPtr p)
+
+{- | Does a level fit the fused tail's shared-memory tile?
+
+The @32@ is the tile edge in 'Pipeline.HiZ.Shader.tailCode' (@tile[32 * 32]@),
+and 'tailMax' is its log2 — change all three together.
+-}
 tailFits :: Vk.Extent2D -> Bool
 tailFits (Vk.Extent2D w h) = w <= 32 && h <= 32
+
+-- | Most mips below a 'tailFits' level — the shader's @dst[]@ arity.
+tailMax :: Int
+tailMax = 5
 
 -- | Pyramid texel format: one reverse-Z depth per texel (@r32f@ in the shaders).
 format :: Vk.Format

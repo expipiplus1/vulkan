@@ -38,8 +38,7 @@ gridN = 256
 
 {- | Rock where the billow field exceeds the (room-biased) threshold.
 
-Low enough that the sponge is light-tight: seal the halls and no chamber sees
-another's lamp, so the halls are the only way in.
+Lower values -> more rocks.
 -}
 rockThreshold :: Float
 rockThreshold = 1 / 64

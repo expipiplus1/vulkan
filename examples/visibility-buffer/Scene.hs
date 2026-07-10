@@ -49,7 +49,6 @@ import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Bits (shiftR, (.|.))
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
-import Data.Maybe (fromMaybe)
 import qualified Data.Text as T
 import qualified Data.Vector as V
 import Data.Word (Word32)
@@ -292,6 +291,7 @@ data Scene = Scene
   , hizMips :: V.Vector ManagedImage
   -- ^ Depth-pyramid mips ("Pipeline.HiZ"), each a tracked subresource.
   , hizExtents :: V.Vector Vk.Extent2D
+  -- ^ Dispatch extents of the per-level reduces only; the tail sizes itself.
   , hizSets :: V.Vector Vk.DescriptorSet
   -- ^ One per per-level reduce; the remaining mips are the fused tail's.
   , hizTailSet :: Maybe Vk.DescriptorSet
@@ -393,7 +393,6 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   meshSet <- Mesh.allocateSet dev pls.mesh vertexBuffer meshTableBuffer objectsBuffer visMain
   -- Shared linear sampler (resolve, tonemap, bloom).
   (_, sampler) <- allocateLinearSampler dev
-  -- NEAREST for the pyramid: the occlusion test needs actual texels, not blends.
   (_, nearestSampler) <- allocateNearestSampler dev
 
   -- EVSM shadow cube array: one cube per light (moments) + a shared depth cube.
@@ -545,8 +544,10 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- sampled by 'recordCull' a frame later.
   let
     hizMipCount = HiZ.mipCount halfExtent
-    hizExtents = mipExtents hizMipCount
-    hizReduceCount = 1 + fromMaybe (hizMipCount - 1) (V.findIndex HiZ.tailFits hizExtents)
+    hizAllExtents = mipExtents hizMipCount
+    -- All the non-fitting levels, plus the first fitting one (1×1 always fits).
+    hizReduceCount = 1 + V.length (V.takeWhile (not . HiZ.tailFits) hizAllExtents)
+    hizExtents = V.take hizReduceCount hizAllExtents
     hizTailCount = hizMipCount - hizReduceCount
   (_, (hizImage, hizViews)) <-
     allocateMipChain allocator dev HiZ.format halfExtent (fromIntegral hizMipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "hiz"
@@ -558,15 +559,14 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   hizTailSet <-
     if hizTailCount <= 0
       then pure Nothing
-      else do
-        let dstViews = V.slice hizReduceCount hizTailCount hizViews
+      else
         Just
           <$> HiZ.allocateTailSet
             dev
             pls.hiz.tail
             static.nearestSampler
             (hizViews V.! (hizReduceCount - 1))
-            (dstViews <> V.replicate (5 - hizTailCount) (V.last dstViews))
+            (V.slice hizReduceCount hizTailCount hizViews)
   cullSet <-
     Cull.allocateSet
       dev
@@ -995,12 +995,12 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
         dispatchMip cb (scene.hizExtents V.! i)
   hizLast <- foldM hizPass depthWritten (V.indexed (V.take nReduce hizHs))
   -- The fused tail: every remaining mip from the last reduced level, one dispatch.
+  let tailHs = V.drop nReduce hizHs
   forM_ scene.hizTailSet \tailSet ->
-    FG.addPass_ graph "hiz.tail" (hizTailSetup hizLast (V.drop nReduce hizHs)) do
+    FG.addPass_ graph "hiz.tail" (hizTailSetup hizLast tailHs) do
       cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.pipeline
-      liftIO $ with (fromIntegral (V.length scene.hizMips - nReduce) :: Word32) \p ->
-        Vk.cmdPushConstants cb pls.hiz.tail.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 4 (castPtr p)
+      HiZ.pushTail cb pls.hiz.tail (fromIntegral (V.length tailHs))
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.layout 0 [tailSet] []
       Vk.cmdDispatch cb 1 1 1
 

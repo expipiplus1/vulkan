@@ -62,6 +62,7 @@ tailCode =
     layout(local_size_x = 64) in;
 
     layout(set = 0, binding = 0) uniform sampler2D src;
+    // dst arity = HiZ.tailMax; tile edge = HiZ.tailFits' bound. Change together.
     layout(set = 0, binding = 1, r32f) writeonly uniform image2D dst[5];
     layout(push_constant, std430) uniform Tail {
       uint levels;  // populated entries of dst[]

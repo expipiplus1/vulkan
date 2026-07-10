@@ -59,8 +59,10 @@ code =
     // Occupancy field: billow-fbm value noise above a threshold, carved by a
     // central chamber and bounded by an outer radius.
 
-    // Hoskins hash13. The per-axis constants and .yxz swizzle keep it asymmetric;
-    // a component-symmetric hash mirrors the cave across the diagonal planes.
+    // A hash13-style hash (Hoskins), varied with per-axis constants + a .yxz
+    // swizzle. The variation is load-bearing: a component-symmetric hash mirrors
+    // the cave across the diagonal planes (measured no worse than the canonical
+    // form at breaking that mirror — don't "fix" it back to the original).
     float hash(vec3 p) {
       p = fract(p * vec3(0.1031, 0.1030, 0.0973));
       p += dot(p, p.yxz + 33.33);

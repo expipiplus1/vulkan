@@ -10,9 +10,11 @@ the occluder remap and bumps @occCube.instanceCount@. The other objects
 (glowstones, knot, orbs) are never culled — their remap entries are identity and
 their draw commands untouched.
 
-The pyramid lags a frame, so a freshly disoccluded cube can pop in one frame late;
-the test is otherwise conservative (near-plane crossers and everything the pyramid
-can't prove hidden are kept).
+The pyramid lags a frame, so the occlusion test is conservative only for the
+camera that rendered it: a freshly disoccluded cube pops in one frame late, and
+camera motion can transiently cull a cube whose new screen rect still holds old,
+closer depths. Near-plane crossers and everything the pyramid can't prove hidden
+are kept.
 -}
 module Pipeline.Cull.Shader
   ( code
