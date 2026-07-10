@@ -29,6 +29,8 @@ module Scene
   , Scene (..)
   , ScenePipelines (..)
   , PassOutputs (..)
+  , Tweaks (..)
+  , defaultTweaks
   , allocatePipelines
   , allocateStatic
   , allocateTargets
@@ -710,6 +712,7 @@ reads whichever it presents.
 addScenePasses
   :: FG.FrameGraph Recorder ()
   -> ScenePipelines
+  -> Tweaks
   -> Scene
   -> FG.QueueId
   -> Vk.Extent2D
@@ -719,7 +722,7 @@ addScenePasses
   -> Word32
   -- ^ debug mode (0 = beauty; 1 albedo, 2 metalness, 3 roughness, 4 normal)
   -> ResourceT IO PassOutputs
-addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
+addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode = do
   let SceneTargets{vis, visView, depth, depthView, colorHDR, tone, display} = scene.targets
   visH <- importManagedImage graph "visibility" vis
   depthH <- importManagedImage graph "depth" depth
@@ -751,7 +754,7 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
     FG.addPass graph "shade" (shadeSetup visWritten colorH) \_ _ recorder -> do
       cb <- recorderCommandBuffer recorder
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipeline
-      pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize eye extent debugMode
+      pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize tweaks.tuning eye extent debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipelineLayout 0 [scene.shadeSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
@@ -777,7 +780,7 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
       FG.addPass graph (T.pack ("bloom.up." <> show i)) (upSetup blur (downHs !! i)) \_ _ recorder -> do
         cb <- recorderCommandBuffer recorder
         Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.up.pipeline
-        Bloom.pushUpsample cb pls.bloom.up.pipelineLayout bloomRadius
+        Bloom.pushUpsample cb pls.bloom.up.pipelineLayout tweaks.bloomRadius
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.up.pipelineLayout 0 [scene.upSets V.! i] []
         dispatchMip cb (scene.bloomExtents V.! i)
     chainUp blur i
@@ -820,7 +823,7 @@ addScenePasses graph pls scene computeQueue extent eye exposure debugMode = do
     FG.addPass graph "tonemap" (tonemapSetup colorWritten bloom0 toneH) \_ _ recorder -> do
       cb <- recorderCommandBuffer recorder
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipeline
-      pushTonemap cb pls.tonemap.pipelineLayout exposure debugMode
+      pushTonemap cb pls.tonemap.pipelineLayout exposure tweaks.bloomStrength debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipelineLayout 0 [scene.toneSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
@@ -900,15 +903,14 @@ pushCamera cb layout eye extent =
     camera = Mesh.Camera{Mesh.viewProj = viewProjFor eye extent}
 
 -- | Push the resolve's view-projection + eye position (DAIS + specular V) + shading knobs.
-pushResolve :: Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Vec3 -> Vk.Extent2D -> Word32 -> IO ()
-pushResolve cb layout pushSize eyePos extent debugMode =
+pushResolve :: Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Shade.Tuning -> Vec3 -> Vk.Extent2D -> Word32 -> IO ()
+pushResolve cb layout pushSize tuning eyePos extent debugMode =
   -- Push the reflected range extent ('pushSize'), which is < the std430 'Storable'
   -- size (it trailing-pads to 16) — every real field lives below it.
   with camera \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 pushSize (castPtr p)
   where
     eye = withVec3 eyePos \x y z -> vec4 x y z 1
-    tuning = Shade.defaultTuning
     camera =
       Shade.Camera
         { Shade.viewProj = viewProjFor eyePos extent
@@ -923,17 +925,30 @@ pushResolve cb layout pushSize eyePos extent debugMode =
         }
 
 -- | Push the tonemap's exposure + bloom strength + debug mode (COMPUTE stage).
-pushTonemap :: Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Word32 -> IO ()
-pushTonemap cb layout exposure debugMode =
+pushTonemap :: Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Float -> Word32 -> IO ()
+pushTonemap cb layout exposure bloomStrength debugMode =
   with pc \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral (sizeOf pc)) (castPtr p)
   where
     pc = Tonemap.PC{Tonemap.exposure = exposure, Tonemap.bloomStrength = bloomStrength, Tonemap.debugMode = debugMode}
 
--- | Bloom mix bias toward the pyramid (Jimenez's ~0.04) and upsample tent radius.
-bloomStrength, bloomRadius :: Float
-bloomStrength = 0.04
-bloomRadius = 0.005
+{- | The run-constant shading knobs, threaded from the command line.
+
+Nothing is baked against them; they only feed pushes ('pushResolve', 'pushTonemap',
+the bloom upsample).
+-}
+data Tweaks = Tweaks
+  { tuning :: Shade.Tuning
+  , bloomStrength :: Float
+  -- ^ Bloom mix bias toward the pyramid.
+  , bloomRadius :: Float
+  -- ^ Bloom upsample tent radius, in UV.
+  }
+  deriving (Eq, Ord, Show)
+
+-- | Bloom pair tuned for the cave: Jimenez's ~0.04 mix, a tight tent.
+defaultTweaks :: Tweaks
+defaultTweaks = Tweaks{tuning = Shade.defaultTuning, bloomStrength = 0.04, bloomRadius = 0.005}
 
 {- | Bloom mip the luminance pass reduces.
 

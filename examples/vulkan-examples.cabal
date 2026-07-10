@@ -982,6 +982,7 @@ executable visibility-buffer
       Driver
       Exposure
       Headless
+      Options
       Pipeline.Bloom
       Pipeline.Bloom.Downsample
       Pipeline.Bloom.Upsample
@@ -1065,6 +1066,7 @@ executable visibility-buffer
     , geomancy
     , gl-block
     , half
+    , optparse-applicative
     , resourcet
     , say
     , text

@@ -49,14 +49,16 @@ import WindowedBoot (WindowedConfig (..), withWindowedVk)
 import Blit (blitImage)
 import Driver (beginPrimary)
 import qualified Exposure
+import Options (Options)
+import qualified Options
 import Requirements (deviceRequirements)
 import qualified Scene
 import qualified Scene.Camera as Camera
 
-main :: IO ()
-main = prettyError . runResourceT $ do
+main :: Options -> IO ()
+main opts = prettyError . runResourceT $ do
   Window.withGLFW
-  window <- Window.createWindow "Haskell Vulkan 👀 Visibility Buffer 🖼 Frame Graph" 1024 1024
+  window <- Window.createWindow "Haskell Vulkan 👀 Visibility Buffer 🖼 Frame Graph" opts.width opts.height
   Window.showWindow window
 
   (vc, vma, initialSC) <- withWindowedVk windowConfig (Window.glfwAdapter window)
@@ -72,7 +74,7 @@ main = prettyError . runResourceT $ do
   -- Animation clock, seeded once so resize (which rebuilds the targets) doesn't reset it.
   startTime <- liftIO getMonotonicTime
   -- Orbit camera + previous-frame time, both program-lifetime so resize keeps the view.
-  camRef <- liftIO (newIORef Camera.initial)
+  camRef <- liftIO (newIORef opts.orbit)
   prevRef <- liftIO (newIORef startTime)
   -- '.' dumps the current view (discrete, so a key callback rather than the poll loop).
   liftIO $ GLFW.setKeyCallback window $ Just \_ key _ state _ ->
@@ -86,7 +88,7 @@ main = prettyError . runResourceT $ do
     (Window.shouldQuit window)
     WindowLoop
       { wlMkState = allocateBindings vma dev pls sceneStatic
-      , wlRender = \bindings f -> renderScene vc pls window camRef prevRef startTime bindings f
+      , wlRender = \bindings f -> renderScene opts vc pls window camRef prevRef startTime bindings f
       , wlOnFrame = noOnFrame
       , wlOnExit = noOnExit
       }
@@ -150,7 +152,8 @@ allocateBindings allocator dev pls sceneStatic sc = do
 ----------------------------------------------------------------
 
 renderScene
-  :: VulkanContext
+  :: Options
+  -> VulkanContext
   -> Scene.ScenePipelines
   -> GLFW.Window
   -> IORef Camera.Orbit
@@ -159,7 +162,7 @@ renderScene
   -> Bindings
   -> Frame
   -> ResourceT IO ()
-renderScene vc pls window camRef prevRef startTime bindings f = do
+renderScene opts vc pls window camRef prevRef startTime bindings f = do
   (acquireResult, imageIndex) <- acquireFrameImage vc f
   now <- liftIO getMonotonicTime
   let t = realToFrac (now - startTime) :: Float
@@ -180,14 +183,14 @@ renderScene vc pls window camRef prevRef startTime bindings f = do
   exposure <- liftIO $ do
     prevLum <- Scene.readLuminance bindings.scene
     e <- readIORef bindings.exposure
-    let e' = Exposure.adapt dt e (Exposure.target prevLum)
+    let e' = Exposure.adapt opts.meter dt e (Exposure.target opts.meter prevLum)
     writeIORef bindings.exposure e'
     pure e'
 
   graph <- FG.newFrameGraph
   -- Single-queue: the compute passes stay on the default (graphics) queue. This
   -- reads toneOut, so the sRGB swapchain encodes gamma on blit (see "Scene").
-  outs <- Scene.addScenePasses graph pls bindings.scene FG.defaultQueue extent eye exposure 0
+  outs <- Scene.addScenePasses graph pls opts.tweaks bindings.scene FG.defaultQueue extent eye exposure opts.debugMode
   swapchainH <- importManagedImage graph "swapchain" swapManaged
 
   blitted <-

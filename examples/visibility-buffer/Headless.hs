@@ -13,10 +13,7 @@ signals a semaphore the compute buffer waits on, fenced at the end. On shared
 hardware everything collapses to one buffer and one fenced submit.
 -}
 module Headless
-  ( View (..)
-  , interiorView
-  , outsideView
-  , main
+  ( main
   ) where
 
 import qualified Codec.Picture as JP
@@ -52,37 +49,17 @@ import qualified VulkanMemoryAllocator as VMA
 import Buffer (readbackBuffer)
 import Driver (beginPrimary, commandPool)
 import qualified Exposure
-import Geomancy.Vec3 (Vec3)
+import Options (Options)
+import qualified Options
 import qualified Pipeline.Mesh as Mesh
 import Requirements (deviceRequirements)
 import qualified Scene
 import qualified Scene.Camera as Camera
 
--- | A convenient square for deterministic development renders.
-fixedExtent :: Vk.Extent2D
-fixedExtent = Vk.Extent2D 256 256
-
--- | A headless viewpoint: where to put the camera, and where the PNG lands.
-data View = View
-  { orbit :: Camera.Orbit
-  , pngPath :: FilePath
-  }
-
--- | The default regression render: inside the chamber.
-interiorView :: View
-interiorView = View{orbit = Camera.initial, pngPath = "visibility-buffer.png"}
-
-{- | The auto-exposure bench (@--headless --outside@).
-
-Outside the grid, so the frame is ambient-lit rock with the chamber glaring through
-a tunnel — a dark mean over a huge dynamic range, where the meter over-brightens.
--}
-outsideView :: View
-outsideView = View{orbit = Camera.outside, pngPath = "visibility-buffer-outside.png"}
-
-main :: View -> IO ()
-main view = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
+main :: Options -> IO ()
+main opts = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
   let
+    extent@(Vk.Extent2D width height) = opts.extent
     QueueFamilyIndex graphicsFamily = fst (qGraphics queues)
     QueueFamilyIndex computeFamily = fst (qCompute queues)
     -- Nothing when compute shares the graphics family: the whole graph then runs
@@ -91,16 +68,16 @@ main view = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
       | graphicsFamily == computeFamily = Nothing
       | otherwise = Just computeFamily
 
-  (image, visImage, depthImage, lum) <- render (Camera.eye view.orbit) allocator device queues async
+  (image, visImage, depthImage, lum) <- render opts allocator device queues async
   Vk.deviceWaitIdle device
 
   -- The gamma pass already encoded sRGB into the display image, so the PNG is
   -- saved as-is. The checks run on it directly.
-  savePng view.pngPath image
+  savePng opts.output image
 
   -- Dump the intermediate buffers (vis instance/triangle ids, depth); the depth
   -- buffer also yields the ray-miss count directly — no colour heuristics.
-  voidPixels <- dumpDebug allocator device (snd (qGraphics queues), graphicsFamily) visImage depthImage fixedExtent
+  voidPixels <- dumpDebug allocator device (snd (qGraphics queues), graphicsFamily) visImage depthImage extent
 
   let
     packPixel (JP.PixelRGBA8 r g b a) =
@@ -108,8 +85,8 @@ main view = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
     distinct = IntSet.size $ IntSet.fromList [packPixel (JP.pixelAt image x y) | y <- [0 .. fromIntegral height - 1], x <- [0 .. fromIntegral width - 1]]
     total = fromIntegral width * fromIntegral height :: Int
     -- What the viewer would settle on, and what it wanted before the gain clamp.
-    autoExposure = Exposure.target lum
-    unclamped = Exposure.key / max 1e-5 lum
+    autoExposure = Exposure.target opts.meter lum
+    unclamped = opts.meter.key / max 1e-5 lum
     checks :: [(String, Bool)]
     checks =
       [ ("mesh pipeline composes (compile-time)", Mesh.composes)
@@ -126,8 +103,6 @@ main view = runHeadless $ \HeadlessVk{allocator, device, queues} -> do
     mapM_ (\(label, ok) -> putStrLn $ "[" <> (if ok then "PASS" else "FAIL") <> "] " <> label) checks
     unless (all snd checks) exitFailure
     putStrLn "All visibility-buffer checks passed."
-  where
-    Vk.Extent2D width height = fixedExtent
 
 runHeadless :: (HeadlessVk -> ResourceT IO ()) -> IO ()
 runHeadless k =
@@ -147,32 +122,34 @@ runHeadless k =
 ----------------------------------------------------------------
 
 render
-  :: Vec3
+  :: Options
   -> VMA.Allocator
   -> Vk.Device
   -> Queues (QueueFamilyIndex, Vk.Queue)
   -> Maybe Word32
   -> ResourceT IO (JP.Image JP.PixelRGBA8, Vk.Image, Vk.Image, Float)
-render eye allocator dev queues async = do
+render opts allocator dev queues async = do
   -- The two families share the visibility buffer when compute is async.
   let
+    extent = opts.extent
+    eye = Camera.eye opts.orbit
     (QueueFamilyIndex graphicsFamily, graphicsQueue) = qGraphics queues
     sharedFamilies = fmap (graphicsFamily,) async
 
   pls <- Scene.allocatePipelines dev
   sceneStatic <- Scene.allocateStatic allocator dev (graphicsQueue, graphicsFamily) pls sharedFamilies
-  scene <- Scene.allocateTargets allocator dev pls sceneStatic fixedExtent sharedFamilies True
-  (cpuImage, readback) <- makeReadbackImage allocator dev Scene.colorFormat fixedExtent
+  scene <- Scene.allocateTargets allocator dev pls sceneStatic extent sharedFamilies True
+  (cpuImage, readback) <- makeReadbackImage allocator dev Scene.colorFormat extent
 
   let -- Build + run a fresh graph for one debug mode; returns the read-back image.
       -- Reading displayOut keeps the gamma pass alive (windowed reads toneOut).
       runMode exposure debugMode = do
         graph <- FG.newFrameGraph
-        outs <- Scene.addScenePasses graph pls scene (computeQueueId async) fixedExtent eye exposure debugMode
+        outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye exposure debugMode
         _ <-
           FG.addPass graph "readback" (readbackSetup outs.displayOut) \_ _ recorder -> do
             cb <- recorderCommandBuffer recorder
-            copyToHost cb fixedExtent scene.targets.display.image cpuImage
+            copyToHost cb extent scene.targets.display.image cpuImage
         FG.compile graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
         runGraph dev queues async graph
@@ -182,7 +159,7 @@ render eye allocator dev queues async = do
   -- pass reads the pre-exposure HDR, so the metering pass's own exposure is moot.
   _ <- runMode meterExposure 0
   lum <- Scene.readLuminance scene
-  img <- runMode (Exposure.target lum) 0
+  img <- runMode (Exposure.target opts.meter lum) 0
   -- Before the debug modes below overwrite the HDR target (and thus the probe).
   forM_ (Scene.lumProbe scene) $ uncurry (dumpLumProbe allocator dev (graphicsQueue, graphicsFamily))
   -- Material/geometry debug views (each re-runs the graph with a debug mode).
