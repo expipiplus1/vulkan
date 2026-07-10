@@ -10,8 +10,8 @@ Arrow keys orbit the camera and @-@/@+@ dolly ('Camera.update'); @.@ dumps the v
 Runs the /same/ 'Scene.addScenePasses' graph as the headless driver, but keeps it
 single-queue — @cbFor@ maps every pass (geometry, shade) to the graphics command
 buffer, so 'FG.executeQueued' degenerates to one buffer and one submit — then
-appends a @blit@ (colour → swapchain) and a @present@ pass. The per-swapchain
-scene targets are recreated on resize by 'runWindowLoop'.
+appends a @blit@ (colour → swapchain) finalized to PRESENT_SRC. The
+per-swapchain scene targets are recreated on resize by 'runWindowLoop'.
 -}
 module Windowed
   ( main
@@ -35,7 +35,7 @@ import Vulkan.Exception (VulkanException (..))
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, presentFrameImage, queueSubmitFrame)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, usageFlags)
-import Vulkan.Utils.FrameGraph.Recorder (recordGraph, recorderCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (recordGraph, recordingCommandBuffer)
 import qualified Vulkan.Utils.Init.GLFW.Window as Window
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -194,12 +194,10 @@ renderScene opts vc pls window camRef prevRef startTime bindings f = do
   swapchainH <- importManagedImage graph "swapchain" swapManaged
 
   blitted <-
-    FG.addPass graph "blit" (blitSetup outs.toneOut swapchainH) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
+    FG.addPass graph "blit" (blitSetup outs.toneOut swapchainH) \_ -> do
+      cb <- recordingCommandBuffer
       blitImage extent bindings.scene.targets.tone.image swapManaged.image cb
-  _ <-
-    FG.addPass graph "present" (\b -> FG.writeWith b blitted (usageFlags Present)) \_ _ _ ->
-      pure ()
+  FG.finalize graph blitted (usageFlags Present)
 
   FG.compile graph
 
@@ -212,6 +210,6 @@ renderScene opts vc pls window camRef prevRef startTime bindings f = do
   queueSubmitFrame vc f imageIndex [graphicsCb]
   presentFrameImage vc f acquireResult imageIndex
   where
-    blitSetup toneOut swapchainH b = do
-      _ <- FG.readWith b toneOut (usageFlags TransferSrc)
-      FG.writeWith b swapchainH (usageFlags TransferDst)
+    blitSetup toneOut swapchainH = do
+      FG.readWith toneOut (usageFlags TransferSrc)
+      FG.writeWith swapchainH (usageFlags TransferDst)

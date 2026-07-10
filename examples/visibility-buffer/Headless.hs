@@ -40,7 +40,7 @@ import qualified Vulkan.Core10 as ImageMemoryBarrier (ImageMemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), usageFlags, usageState)
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recorderCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recordingCommandBuffer)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Zero (zero)
@@ -146,10 +146,9 @@ render opts allocator dev queues async = do
       runMode exposure debugMode = do
         graph <- FG.newFrameGraph
         outs <- Scene.addScenePasses graph pls opts.tweaks scene (computeQueueId async) extent eye exposure debugMode
-        _ <-
-          FG.addPass graph "readback" (readbackSetup outs.displayOut) \_ _ recorder -> do
-            cb <- recorderCommandBuffer recorder
-            copyToHost cb extent scene.targets.display.image cpuImage
+        FG.addPass_ graph "readback" (readbackSetup outs.displayOut) do
+          cb <- recordingCommandBuffer
+          copyToHost cb extent scene.targets.display.image cpuImage
         FG.compile graph
         when (debugMode == 0) $ liftIO . TIO.writeFile "visibility-buffer.dot" =<< liftIO (Dot.dump graph)
         runGraph dev queues async graph
@@ -172,10 +171,10 @@ render opts allocator dev queues async = do
   let (visImage, depthImage) = Scene.debugImages scene
   pure (img, visImage, depthImage, lum)
   where
-    readbackSetup displayOut b = do
-      FG.setQueue b computeQueue
-      FG.setSideEffect b
-      FG.readWith b displayOut (usageFlags TransferSrc)
+    readbackSetup displayOut = do
+      FG.setQueue computeQueue
+      FG.setSideEffect
+      FG.readWith displayOut (usageFlags TransferSrc)
 
 {- | Exposure for the metering and debug passes.
 

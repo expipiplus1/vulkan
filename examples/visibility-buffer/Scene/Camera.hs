@@ -23,7 +23,6 @@ import qualified Graphics.UI.GLFW as GLFW
 
 import qualified Scene
 
--- | Orbit camera: spherical coordinates about 'Scene.cameraTarget'.
 data Orbit = Orbit
   { azimuth :: Float
   , elevation :: Float

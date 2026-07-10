@@ -61,7 +61,6 @@ count = fromIntegral (length materials)
 materialBytes :: Int
 materialBytes = sizeOf (undefined :: Shade.Material)
 
--- | Bytes for the SSBO: two @vec4@ (albedo+pad, metal/rough+pad) per material.
 bufferBytes :: Vk.DeviceSize
 bufferBytes = fromIntegral (length materials * materialBytes)
 

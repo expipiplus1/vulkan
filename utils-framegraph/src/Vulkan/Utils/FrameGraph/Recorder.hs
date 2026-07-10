@@ -15,6 +15,7 @@ module Vulkan.Utils.FrameGraph.Recorder
   , setRecorder
   , recorderCommandBuffer
   , recorderQueue
+  , recordingCommandBuffer
   , recordingBackend
   , recordGraph
   ) where
@@ -54,6 +55,11 @@ recorderQueue :: (MonadIO m) => Recorder -> m FG.QueueId
 {-# INLINE recorderQueue #-}
 recorderQueue (Recorder ref) = liftIO (fst <$> readIORef ref)
 
+-- | The command buffer the executing pass records into ('recorderCommandBuffer' of the 'FG.Exec' context).
+recordingCommandBuffer :: FG.Exec Recorder alloc Vk.CommandBuffer
+{-# INLINE recordingCommandBuffer #-}
+recordingCommandBuffer = recorderCommandBuffer =<< FG.askCtx
+
 {- | A 'FG.QueueBackend' that routes each pass's recording to its queue's command
 buffer (via @cbFor@) and does nothing else.
 
@@ -77,7 +83,7 @@ fresh recorder at the first buffer, drive 'FG.executeQueued' (routing each pass
 to @cbFor@), then end every buffer. The caller supplies only the submit that
 follows.
 
-The 'FG.RecycleQueue' is internal and inert: import-only adapters never retire a
+Runs without a 'FG.RecycleQueue': import-only adapters never retire a
 resource, so there is nothing to reclaim (allocate transients in the frame's own
 resource scope instead). The first buffer is the primary the recorder starts on;
 all buffers are ended.
@@ -90,6 +96,5 @@ recordGraph
   -> m ()
 recordGraph cbFor buffers graph = do
   recorder <- newRecorder (NE.head buffers)
-  recycle <- FG.newRecycleQueue
-  FG.executeQueued graph (recordingBackend recorder cbFor) recycle recorder ()
+  FG.executeQueued graph (recordingBackend recorder cbFor) Nothing recorder ()
   traverse_ Vk.endCommandBuffer buffers

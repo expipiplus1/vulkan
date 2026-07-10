@@ -22,7 +22,6 @@ module Render
   ) where
 
 import qualified Codec.Picture as JP
-import Control.Monad
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Bits ((.|.))
@@ -46,7 +45,7 @@ import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import Vulkan.Utils.FrameGraph.Image (Usage (..), importManagedImage, newManagedImage, usageFlags)
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, newRecorder, recorderCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, newRecorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreateInfo (..))
 import qualified VulkanMemoryAllocator as VMA
@@ -143,12 +142,12 @@ offscreenTrianglePass shared globalsSet = do
   (offscreenImage, offscreenView) <- createSampledColorTarget shared.allocator shared.device colorFormat extent
 
   offscreenH <- importImage shared.graph "offscreen" offscreenImage Vk.IMAGE_ASPECT_COLOR_BIT
-  let mkHandle b = FG.writeWith b offscreenH (usageFlags ColorAttachment)
+  let mkHandle = FG.writeWith offscreenH (usageFlags ColorAttachment)
 
   tri <- Tri.allocatePipeline shared.device colorFormat shared.set0Layout
 
-  offscreenColored <- FG.addPass shared.graph "offscreen-triangle" mkHandle \_handle _resources recorder -> do
-    cb <- recorderCommandBuffer recorder
+  offscreenColored <- FG.addPass shared.graph "offscreen-triangle" mkHandle \_handle -> do
+    cb <- recordingCommandBuffer
     let dri = Dynamic.renderingInfo (fullScissor extent) [(offscreenView, Vk.Float32 0 0 0 1)] Nothing
     Vk.cmdUseRendering cb dri do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS tri.pipeline
@@ -173,19 +172,18 @@ cubePass shared offscreenView offscreenColored = do
 
   sceneH <- importImage shared.graph "scene" sceneImage Vk.IMAGE_ASPECT_COLOR_BIT
   depthH <- importImage shared.graph "depth" depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
-  let mkHandles b =
-        (,,)
-          <$> FG.readWith b offscreenColored (usageFlags SampledFragment)
-          <*> FG.writeWith b sceneH (usageFlags ColorAttachment)
-          <*> FG.writeWith b depthH (usageFlags DepthAttachment)
+  let cubeSetup = do
+        FG.readWith offscreenColored (usageFlags SampledFragment)
+        FG.writeWith_ sceneH (usageFlags ColorAttachment)
+        FG.writeWith_ depthH (usageFlags DepthAttachment)
 
   cube <- Cube.allocatePipeline shared.device colorFormat depthFormat shared.set0Layout shared.set1Layout
   (_, sampler) <- Vk.withSampler shared.device samplerInfo Nothing allocate
   samplerSet <- allocateSamplerSet shared.device shared.descriptorPool shared.set1Layout sampler offscreenView
   cubeBuffer <- cubeVertexBuffer shared.allocator
 
-  void $ FG.addPass shared.graph "cube" mkHandles \_handles _resources recorder -> do
-    cb <- recorderCommandBuffer recorder
+  FG.addPass_ shared.graph "cube" cubeSetup do
+    cb <- recordingCommandBuffer
     let dri = Dynamic.renderingInfo (fullScissor extent) [(sceneView, Vk.Float32 0.30 0.32 0.38 1)] (Just (depthView, 1))
     Vk.cmdUseRendering cb dri do
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS cube.pipeline

@@ -10,9 +10,9 @@
 
 {-| The tonemap compute pipeline.
 
-HDR radiance → display-linear, via exposure + the Uchimura curve
-("Pipeline.Tonemap.Shader"). Set 0 is two storage images (hdr in, tone out); the
-exposure push range is reflected from the shader.
+HDR radiance + bloom → display-linear, via exposure + the Uchimura curve
+("Pipeline.Tonemap.Shader"). The push-constant record is reflected from the
+shader.
 -}
 module Pipeline.Tonemap
   ( Pipeline (..)

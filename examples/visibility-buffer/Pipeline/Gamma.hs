@@ -4,8 +4,7 @@
 
 {-| The gamma (output-encode) compute pipeline.
 
-Display-linear → sRGB ("Pipeline.Gamma.Shader"). Set 0 is two storage images (linear
-in, sRGB out).
+Display-linear → sRGB ("Pipeline.Gamma.Shader").
 -}
 module Pipeline.Gamma
   ( Pipeline (..)

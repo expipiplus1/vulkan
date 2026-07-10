@@ -23,7 +23,7 @@ extra-deps:
 - spirv-reflect-types-0.4
 - webcolor-labels-0.1.0.0
 - git: https://gitlab.com/dpwiz/fragr
-  commit: c8e42fb07bbbdda121dfbae5d2803ff6d55ec4b1
+  commit: 9845b76fd1eea1de19f3a987822b3212765946e5
 
 # use ghcup, nix, setup actions
 system-ghc: true

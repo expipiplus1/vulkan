@@ -24,6 +24,7 @@ import qualified Data.Vector as V
 import Data.Word (Word32)
 import Foreign.Ptr (castPtr)
 import Foreign.Storable (Storable, sizeOf)
+import UnliftIO (MonadUnliftIO)
 import UnliftIO.Foreign (with)
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (combinedImageSamplerWrite, imageWrite)
@@ -91,16 +92,16 @@ allocateSet dev pl sampler srcView dstView = do
   pure set
 
 -- | Push the Karis flag (1 on the first, full-resolution downsample).
-pushDownsample :: Vk.CommandBuffer -> Vk.PipelineLayout -> Bool -> IO ()
+pushDownsample :: (MonadUnliftIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Bool -> m ()
 pushDownsample cb layout karis =
   pushCompute cb layout (if karis then 1 else 0 :: Word32)
 
 -- | Push the upsample tent-filter radius (in the source mip's texture coordinates).
-pushUpsample :: Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> IO ()
+pushUpsample :: (MonadUnliftIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> m ()
 pushUpsample cb layout radius = pushCompute cb layout radius
 
 -- | Push a single scalar to the compute stage at offset 0.
-pushCompute :: (Storable a) => Vk.CommandBuffer -> Vk.PipelineLayout -> a -> IO ()
+pushCompute :: (MonadUnliftIO m, Storable a) => Vk.CommandBuffer -> Vk.PipelineLayout -> a -> m ()
 pushCompute cb layout x =
   with x \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral $ sizeOf x) (castPtr p)

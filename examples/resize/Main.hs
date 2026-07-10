@@ -8,12 +8,12 @@ regardless of queue topology.
 The fractal only changes when the window resizes or the cursor moves; its
 steady state is "re-present the same image". Each frame declares a graph of up
 to three passes — @julia@ (compute → offscreen), @blit@ (offscreen → swapchain)
-and @present@ (swapchain → PRESENT_SRC) — adding @julia@ only when the fractal
+and a terminal 'FG.finalize' (swapchain → PRESENT_SRC) — adding @julia@ only when the fractal
 parameters changed and @blit@ only when the acquired swapchain image does not
 already hold the current fractal. fragr places exactly the barriers the
 surviving passes need: a fully idle frame records /nothing/ and just re-presents.
 
-The one topology-dependent line is @'FG.setQueue' b computeQueueId@ on the
+The one topology-dependent line is @'FG.setQueue' computeQueueId@ on the
 @julia@ pass, where @computeQueueId@ is chosen once at startup: the graphics
 queue when compute shares its family, an async-compute queue when it doesn't.
 Everything else — pruning, barrier placement, and the per-queue routing of
@@ -60,7 +60,7 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreS
 import Vulkan.Exception
 import Vulkan.Utils.Frame (Frame (..), acquireFrameImage, allocateTimelineSemaphore, presentFrameImage)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, usageFlags)
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recorderCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recordingCommandBuffer)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
@@ -316,23 +316,23 @@ renderJulia vc jp topology colorRef bindings f = do
   colorPhase <- liftIO (readIORef colorRef)
   offscreenReady <-
     if dirty
-      then FG.addPass graph "julia" (juliaSetup offscreenH) \_written _resources recorder -> do
-        cb <- recorderCommandBuffer recorder
+      then FG.addPass graph "julia" (juliaSetup offscreenH) \_written -> do
+        cb <- recordingCommandBuffer
         dispatchJulia jp (sExtent sc) constants colorPhase bindings.bJuliaDescriptorSet cb
       else pure offscreenH
 
   swapchainReady <-
     if needBlit
-      then FG.addPass graph "blit" (blitSetup offscreenReady swapchainH) \_blitted _resources recorder -> do
-        cb <- recorderCommandBuffer recorder
+      then FG.addPass graph "blit" (blitSetup offscreenReady swapchainH) \_blitted -> do
+        cb <- recordingCommandBuffer
         blitImage (sExtent sc) bindings.bOffscreen.image swapManaged.image cb
       else pure swapchainH
 
-  -- Always present: writing the imported swapchain marks a side effect, so the
-  -- pass survives culling and its hook brings the image to PRESENT_SRC (a no-op
-  -- barrier when it is already there, i.e. an idle re-present).
-  _present <- FG.addPass graph "present" (\b -> FG.writeWith b swapchainReady (usageFlags Present)) \_presented _resources _recorder ->
-    pure ()
+  -- Always present: finalizing the imported swapchain registers a
+  -- side-effecting terminal pass, so the chain survives culling and the write
+  -- hook brings the image to PRESENT_SRC (a no-op barrier when it is already
+  -- there, i.e. an idle re-present).
+  FG.finalize graph swapchainReady (usageFlags Present)
 
   FG.compile graph
   executeAdaptive vc f imageIndex topology dirty needBlit graph
@@ -349,12 +349,12 @@ renderJulia vc jp topology colorRef bindings f = do
         if dirty then const (IntSet.singleton ix) else IntSet.insert ix
   where
     sc = fSwapchain f
-    juliaSetup offscreenH b = do
-      FG.setQueue b (computeQueueId topology)
-      FG.writeWith b offscreenH (usageFlags (StorageWrite Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT))
-    blitSetup offscreenReady swapchainH b = do
-      _ <- FG.readWith b offscreenReady (usageFlags TransferSrc)
-      FG.writeWith b swapchainH (usageFlags TransferDst)
+    juliaSetup offscreenH = do
+      FG.setQueue (computeQueueId topology)
+      FG.writeWith offscreenH (usageFlags (StorageWrite Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT))
+    blitSetup offscreenReady swapchainH = do
+      FG.readWith offscreenReady (usageFlags TransferSrc)
+      FG.writeWith swapchainH (usageFlags TransferDst)
 
 ----------------------------------------------------------------
 -- Windowed submit bridge (Layer 2) + app policy (Layer 3)

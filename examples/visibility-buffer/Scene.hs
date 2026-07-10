@@ -68,7 +68,7 @@ import qualified Vulkan.Core13 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, newManagedImageMip, transitionImageTo, usageFlags)
-import Vulkan.Utils.FrameGraph.Recorder (Recorder, recorderCommandBuffer)
+import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -549,7 +549,7 @@ recordShadows
   -> Vk.Buffer
   -> m ()
 recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirect = liftIO do
-  -- Wait for both writes and transfers to finish before rendering shadows.
+  -- Generation (compute) + upload (transfer) writes → the shadow render's reads.
   Vk.cmdPipelineBarrier
     cb
     (Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT .|. Vk.PIPELINE_STAGE_TRANSFER_BIT)
@@ -561,11 +561,7 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
     , transition depthImg Vk.IMAGE_ASPECT_DEPTH_BIT 6 zero Vk.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT Vk.IMAGE_LAYOUT_UNDEFINED Vk.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
     ]
   forM_ (zip [0 ..] (Lights.lights 0)) \(l, light) -> do
-    {-
-      Each light's shadow pass has two attachments:
-      - Moments (R32G32B32A32_SFLOAT, the EVSM output): written to that light's own cube slice
-      - Depth (D32_SFLOAT): a shared scratch buffer. Reusing the same buffer needs a manual barrier to avoid WAW hazard.
-    -}
+    -- Every light rewrites the shared scratch depth cube: WAW between passes.
     when (l > 0) $
       Vk.cmdPipelineBarrier
         cb
@@ -609,12 +605,7 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
 
 Recorded into the frame's graphics buffer before the scene graph. The glowstones never
 move, so only the orbs' moment layers are refreshed — the rest of the EVSM array stays
-baked ('recordShadows'). Updates the orbs' lights-SSBO entries and their shadow
-view-projections, opens their moment slices as colour attachments, draws the cave-cube
-+ knot occluders through each orb's multiview pass, then hands the slices back as a
-sampled texture for the resolve.
-
-The orbs share one scratch depth cube, so consecutive passes need a WAW barrier.
+baked ('recordShadows').
 -}
 recordOrbFrame :: (MonadIO m) => Vk.CommandBuffer -> ScenePipelines -> Scene -> Float -> m ()
 recordOrbFrame cb pls scene t = liftIO $ unless (null Lights.orbs) do
@@ -731,8 +722,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   displayH <- importManagedImage graph "display" display
 
   visWritten <-
-    FG.addPass graph "geometry" (geometrySetup visH depthH) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
+    FG.addPass graph "geometry" (geometrySetup visH depthH) \_ -> do
+      cb <- recordingCommandBuffer
       let
         info = Dynamic.renderingInfo (fullScissor extent) [(visView, Vk.Uint32 0 0 0 0)] (Just (depthView, 0.0))
         dyn = (dynamicStateFor extent){depthTest = True, depthWrite = True, depthCompareOp = Vk.COMPARE_OP_GREATER}
@@ -751,8 +742,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       transitionImageTo cb vis (StorageRead shadeStage)
 
   colorWritten <-
-    FG.addPass graph "shade" (shadeSetup visWritten colorH) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
+    FG.addPass graph "shade" (shadeSetup visWritten colorH) \_ -> do
+      cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipeline
       pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize tweaks.tuning eye extent debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipelineLayout 0 [scene.shadeSet] []
@@ -765,8 +756,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   let
     mipCount = length mipHs
     downPass src i =
-      FG.addPass graph (T.pack ("bloom.down." <> show i)) (bloomSetup src (mipHs !! i)) \_ _ recorder -> do
-        cb <- recorderCommandBuffer recorder
+      FG.addPass graph (T.pack ("bloom.down." <> show i)) (bloomSetup src (mipHs !! i)) \_ -> do
+        cb <- recordingCommandBuffer
         Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.down.pipeline
         Bloom.pushDownsample cb pls.bloom.down.pipelineLayout (i == 0)
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.down.pipelineLayout 0 [scene.downSets V.! i] []
@@ -777,8 +768,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   downHs <- chainDown colorWritten 0
   let
     upPass blur i =
-      FG.addPass graph (T.pack ("bloom.up." <> show i)) (upSetup blur (downHs !! i)) \_ _ recorder -> do
-        cb <- recorderCommandBuffer recorder
+      FG.addPass graph (T.pack ("bloom.up." <> show i)) (upSetup blur (downHs !! i)) \_ -> do
+        cb <- recordingCommandBuffer
         Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.up.pipeline
         Bloom.pushUpsample cb pls.bloom.up.pipelineLayout tweaks.bloomRadius
         Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.up.pipelineLayout 0 [scene.upSets V.! i] []
@@ -789,19 +780,18 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   -- Auto-exposure: one workgroup reduces a bloom mip to average log-luminance. Taken
   -- off the downsample chain, before the upsample renames the handle.
   let lumMip = lumMipFor mipCount
-  _ <-
-    FG.addPass graph "luminance" (luminanceSetup (downHs !! lumMip)) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipeline
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipelineLayout 0 [scene.lumSet] []
-      Vk.cmdDispatch cb 1 1 1
-      -- Make the write host-visible for the CPU readback.
-      Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
+  FG.addPass_ graph "luminance" (luminanceSetup (downHs !! lumMip)) do
+    cb <- recordingCommandBuffer
+    Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipeline
+    Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipelineLayout 0 [scene.lumSet] []
+    Vk.cmdDispatch cb 1 1 1
+    -- Make the write host-visible for the CPU readback.
+    Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
 
   forM_ scene.probe \probe -> do
     probeH <- importManagedImage graph "lumProbe" probe
-    FG.addPass graph "lumProbe" (probeSetup (downHs !! lumMip) probeH) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
+    FG.addPass_ graph "lumProbe" (probeSetup (downHs !! lumMip) probeH) do
+      cb <- recordingCommandBuffer
       let Vk.Extent2D pw ph = scene.bloomExtents V.! lumMip
       Vk.cmdCopyImage
         cb
@@ -820,16 +810,16 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   bloom0 <- chainUp (downHs !! (mipCount - 1)) (mipCount - 2)
 
   toneWritten <-
-    FG.addPass graph "tonemap" (tonemapSetup colorWritten bloom0 toneH) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
+    FG.addPass graph "tonemap" (tonemapSetup colorWritten bloom0 toneH) \_ -> do
+      cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipeline
       pushTonemap cb pls.tonemap.pipelineLayout exposure tweaks.bloomStrength debugMode
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipelineLayout 0 [scene.toneSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
   displayWritten <-
-    FG.addPass graph "gamma" (gammaSetup toneWritten displayH) \_ _ recorder -> do
-      cb <- recorderCommandBuffer recorder
+    FG.addPass graph "gamma" (gammaSetup toneWritten displayH) \_ -> do
+      cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipeline
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipelineLayout 0 [scene.gammaSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
@@ -840,44 +830,44 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
     groups n = (n + 7) `div` 8
     dispatchMip cb (Vk.Extent2D mw mh) = Vk.cmdDispatch cb (groups mw) (groups mh) 1
     hostVisible = zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_HOST_READ_BIT} :: Vk.MemoryBarrier
-    geometrySetup visH depthH b = do
-      _ <- FG.writeWith b depthH (usageFlags DepthAttachment)
-      FG.writeWith b visH (usageFlags ColorAttachment)
-    shadeSetup visWritten colorH b = do
-      FG.setQueue b computeQueue
-      _ <- FG.readWith b visWritten (usageFlags (StorageRead shadeStage))
-      FG.writeWith b colorH (usageFlags (StorageWrite shadeStage))
-    luminanceSetup srcH b = do
-      FG.setQueue b computeQueue
-      FG.setSideEffect b
-      FG.readWith b srcH (usageFlags (StorageRead shadeStage))
+    geometrySetup visH depthH = do
+      FG.writeWith_ depthH (usageFlags DepthAttachment)
+      FG.writeWith visH (usageFlags ColorAttachment)
+    shadeSetup visWritten colorH = do
+      FG.setQueue computeQueue
+      FG.readWith visWritten (usageFlags (StorageRead shadeStage))
+      FG.writeWith colorH (usageFlags (StorageWrite shadeStage))
+    luminanceSetup srcH = do
+      FG.setQueue computeQueue
+      FG.setSideEffect
+      FG.readWith srcH (usageFlags (StorageRead shadeStage))
     -- Probe snapshot: transfer-copy the metered mip into its own image.
-    probeSetup srcH probeH b = do
-      FG.setQueue b computeQueue
-      FG.setSideEffect b
-      _ <- FG.readWith b srcH (usageFlags TransferSrc)
-      FG.writeWith b probeH (usageFlags TransferDst)
+    probeSetup srcH probeH = do
+      FG.setQueue computeQueue
+      FG.setSideEffect
+      FG.readWith srcH (usageFlags TransferSrc)
+      FG.writeWith_ probeH (usageFlags TransferDst)
     -- Downsample: read the source mip, write the target mip.
-    bloomSetup src dstH b = do
-      FG.setQueue b computeQueue
-      _ <- FG.readWith b src (usageFlags (StorageRead shadeStage))
-      FG.writeWith b dstH (usageFlags (StorageWrite shadeStage))
+    bloomSetup src dstH = do
+      FG.setQueue computeQueue
+      FG.readWith src (usageFlags (StorageRead shadeStage))
+      FG.writeWith dstH (usageFlags (StorageWrite shadeStage))
     -- Upsample: read the blur source (next-smaller mip) and read+write the
     -- destination mip in place (the read+write is the intra-image barrier).
-    upSetup blur destH b = do
-      FG.setQueue b computeQueue
-      _ <- FG.readWith b blur (usageFlags (StorageRead shadeStage))
-      _ <- FG.readWith b destH (usageFlags (StorageRead shadeStage))
-      FG.writeWith b destH (usageFlags (StorageWrite shadeStage))
-    tonemapSetup colorWritten bloom0 toneH b = do
-      FG.setQueue b computeQueue
-      _ <- FG.readWith b colorWritten (usageFlags (StorageRead shadeStage))
-      _ <- FG.readWith b bloom0 (usageFlags (StorageRead shadeStage))
-      FG.writeWith b toneH (usageFlags (StorageWrite shadeStage))
-    gammaSetup toneWritten displayH b = do
-      FG.setQueue b computeQueue
-      _ <- FG.readWith b toneWritten (usageFlags (StorageRead shadeStage))
-      FG.writeWith b displayH (usageFlags (StorageWrite shadeStage))
+    upSetup blur destH = do
+      FG.setQueue computeQueue
+      FG.readWith blur (usageFlags (StorageRead shadeStage))
+      FG.readWith destH (usageFlags (StorageRead shadeStage))
+      FG.writeWith destH (usageFlags (StorageWrite shadeStage))
+    tonemapSetup colorWritten bloom0 toneH = do
+      FG.setQueue computeQueue
+      FG.readWith colorWritten (usageFlags (StorageRead shadeStage))
+      FG.readWith bloom0 (usageFlags (StorageRead shadeStage))
+      FG.writeWith toneH (usageFlags (StorageWrite shadeStage))
+    gammaSetup toneWritten displayH = do
+      FG.setQueue computeQueue
+      FG.readWith toneWritten (usageFlags (StorageRead shadeStage))
+      FG.writeWith displayH (usageFlags (StorageWrite shadeStage))
 
 -- | The point the camera looks at and orbits.
 cameraTarget :: Vec3
@@ -895,19 +885,19 @@ viewProjFor eye (Vk.Extent2D w h) = Mat4.matrixProduct (unTransform proj) (unTra
     view = View.lookAtRH eye cameraTarget (vec3 0 1 0)
 
 -- | Push the camera view-projection (the mesh pipeline's sole push constant).
-pushCamera :: Vk.CommandBuffer -> Vk.PipelineLayout -> Vec3 -> Vk.Extent2D -> IO ()
+pushCamera :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Vec3 -> Vk.Extent2D -> m ()
 pushCamera cb layout eye extent =
-  with camera \p ->
+  liftIO $ with camera \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_VERTEX_BIT 0 (fromIntegral (sizeOf camera)) (castPtr p)
   where
     camera = Mesh.Camera{Mesh.viewProj = viewProjFor eye extent}
 
 -- | Push the resolve's view-projection + eye position (DAIS + specular V) + shading knobs.
-pushResolve :: Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Shade.Tuning -> Vec3 -> Vk.Extent2D -> Word32 -> IO ()
+pushResolve :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Shade.Tuning -> Vec3 -> Vk.Extent2D -> Word32 -> m ()
 pushResolve cb layout pushSize tuning eyePos extent debugMode =
   -- Push the reflected range extent ('pushSize'), which is < the std430 'Storable'
   -- size (it trailing-pads to 16) — every real field lives below it.
-  with camera \p ->
+  liftIO $ with camera \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 pushSize (castPtr p)
   where
     eye = withVec3 eyePos \x y z -> vec4 x y z 1
@@ -925,9 +915,9 @@ pushResolve cb layout pushSize tuning eyePos extent debugMode =
         }
 
 -- | Push the tonemap's exposure + bloom strength + debug mode (COMPUTE stage).
-pushTonemap :: Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Float -> Word32 -> IO ()
+pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Float -> Word32 -> m ()
 pushTonemap cb layout exposure bloomStrength debugMode =
-  with pc \p ->
+  liftIO $ with pc \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral (sizeOf pc)) (castPtr p)
   where
     pc = Tonemap.PC{Tonemap.exposure = exposure, Tonemap.bloomStrength = bloomStrength, Tonemap.debugMode = debugMode}

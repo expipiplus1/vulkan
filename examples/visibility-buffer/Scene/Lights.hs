@@ -42,7 +42,7 @@ import qualified Upload
 position :: Shade.Light -> Vec3
 position (Shade.Light posHalf _colInt) = withVec4 posHalf \x y z _half -> vec3 x y z
 
-{- | The static glowstones: one 2 m block at the centre of each backroom.
+{- | The static glowing blocks
 
 At a room's centre a lamp has no rock beside it, so its nearest lit surface is the whole
 wall and nothing hot-spots. Nothing else reaches a backroom — 40 m of falloff through a
@@ -65,7 +65,7 @@ glowstones = zipWith stone Cave.sideCentres hues
       , vec3 0.45 1.00 0.95 -- -Z teal
       ]
 
--- | Half-edge of a glowstone block: a 2 m block, at its backroom's centre.
+-- | Half-edge of a glowstone block, in metres.
 glowstoneHalf :: Float
 glowstoneHalf = 0.25
 
@@ -149,14 +149,13 @@ slots = max 1 count
 lightBytes :: Int
 lightBytes = sizeOf (undefined :: Shade.Light)
 
--- | Bytes for the SSBO: two @vec4@ (@posHalf@, @colInt@) per light.
+-- | Bytes for the SSBO: 'slots' entries, so never zero-sized.
 bufferBytes :: Vk.DeviceSize
 bufferBytes = fromIntegral (fromIntegral slots * lightBytes)
 
 {- | Fill the lights SSBO for time @t@.
 
-@Light { vec4 posHalf; vec4 colInt; }[]@ — the block half-size rides in @posHalf.w@,
-intensity in @colInt.w@.
+The block half-size rides in @posHalf.w@, intensity in @colInt.w@.
 -}
 upload :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Float -> m ()
 upload cb buffer t = Upload.slice cb buffer 0 (lights t)

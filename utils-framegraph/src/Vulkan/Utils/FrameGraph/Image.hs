@@ -4,11 +4,9 @@ automatically.
 A 'ManagedImage' carries the image plus its tracked 'ImageState' (layout,
 stage, access). A pass declares an access with a 'Usage' (encoded into
 'FG.Flags' by 'usageFlags'); the 'FG.preRead' / 'FG.preWrite' hooks diff the
-tracked state against the usage's target and record the
-'Vk.cmdPipelineBarrier' and update the tracked state. Only a read of an
-already-matching state skips the barrier; a write always records one (WAW).
-Accesses that hop queues chain to the driver's semaphore instead (see
-'transitionImageTo').
+tracked state against the usage's target and record the barrier — the
+'transitionImageTo' rules, plus semaphore chaining when the access hops
+queues.
 
 Import-only: the graph tracks the layout and places barriers but does not own
 the allocation (see the package README).
@@ -36,7 +34,7 @@ import Data.Bits ((.&.), (.|.))
 import Data.Coerce (coerce)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Text (Text)
-import Data.Word (Word32)
+import Data.Word (Word32, Word64)
 
 import Fragr qualified as FG
 import Vulkan.CStruct.Extends (SomeStruct (..))
@@ -89,6 +87,27 @@ newManaged image range = do
   stateRef <- liftIO (newIORef undefinedState)
   queueRef <- liftIO (newIORef (FG.QueueId 0))
   pure ManagedImage{image, range, stateRef, queueRef}
+
+instance FG.Resource ManagedImage where
+  type Desc ManagedImage = ImageDesc
+  type Alloc ManagedImage = ()
+  type Ctx ManagedImage = Recorder
+
+  createResource _ _ =
+    error "ManagedImage is import-only: allocate the image and use importResource"
+
+  destroyResource _ _ _ = pure ()
+
+  preRead _ flags rec mi = do
+    cb <- recorderCommandBuffer rec
+    queue <- recorderQueue rec
+    transitionOnQueue cb queue mi (flagsUsage flags)
+  preWrite _ flags rec mi = do
+    cb <- recorderCommandBuffer rec
+    queue <- recorderQueue rec
+    transitionOnQueue cb queue mi (flagsUsage flags)
+
+  describeDesc d = d.label
 
 -- | The synchronization state an image is currently left in.
 data ImageState = ImageState
@@ -164,8 +183,7 @@ usageState = \case
 
 {- | Encode a 'Usage' as the 'FG.Flags' passed to 'FG.readWith' / 'FG.writeWith'.
 The six fixed usages are small tags; the storage usages set the high marker bit
-and pack their read/write bit and shader stage into the rest — so the all-ones
-'FG.flagsIgnored' sentinel is never produced.
+and pack their read/write bit and shader stage into the low half.
 -}
 usageFlags :: Usage -> FG.Flags
 usageFlags = \case
@@ -182,7 +200,7 @@ usageFlags = \case
 flagsUsage :: FG.Flags -> Usage
 flagsUsage (FG.Flags w)
   | w .&. storageMarker /= 0 =
-      let stage = coerce (w .&. stageMask)
+      let stage = coerce (fromIntegral (w .&. stageMask) :: Word32)
       in if w .&. writeBit /= 0 then StorageWrite stage else StorageRead stage
   | otherwise = case w of
       0 -> ColorAttachment
@@ -192,14 +210,14 @@ flagsUsage (FG.Flags w)
       4 -> TransferDst
       _ -> Present
 
--- Bit layout packing a storage usage's stage into the 32-bit 'FG.Flags'.
-storageMarker, writeBit, stageMask :: Word32
-storageMarker = 0x80000000
-writeBit = 0x40000000
-stageMask = 0x3FFFFFFF
+-- Bit layout packing a storage usage's stage into the 64-bit 'FG.Flags'.
+storageMarker, writeBit, stageMask :: Word64
+storageMarker = 0x8000000000000000
+writeBit = 0x4000000000000000
+stageMask = 0x00000000FFFFFFFF
 
-stageBits :: Vk.PipelineStageFlags -> Word32
-stageBits stage = coerce stage .&. stageMask
+stageBits :: Vk.PipelineStageFlags -> Word64
+stageBits stage = fromIntegral (coerce stage :: Word32)
 
 {- | Whether the 'Usage' writes the image (and so needs a barrier even when the
 state is unchanged — only read-after-read can skip it).
@@ -283,24 +301,3 @@ name (so the label never drifts from the handle).
 -}
 importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
 importManagedImage graph name mi = FG.importResource graph name (ImageDesc name) mi
-
-instance FG.Resource ManagedImage where
-  type Desc ManagedImage = ImageDesc
-  type Alloc ManagedImage = ()
-  type Ctx ManagedImage = Recorder
-
-  createResource _ _ =
-    error "ManagedImage is import-only: allocate the image and use importResource"
-
-  destroyResource _ _ _ = pure ()
-
-  preRead _ flags rec mi = do
-    cb <- recorderCommandBuffer rec
-    queue <- recorderQueue rec
-    transitionOnQueue cb queue mi (flagsUsage flags)
-  preWrite _ flags rec mi = do
-    cb <- recorderCommandBuffer rec
-    queue <- recorderQueue rec
-    transitionOnQueue cb queue mi (flagsUsage flags)
-
-  describeDesc d = d.label

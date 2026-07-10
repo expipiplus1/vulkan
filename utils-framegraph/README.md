@@ -17,8 +17,8 @@ import Vulkan.Utils.FrameGraph.Image (ImageDesc (..), Usage (..), newManagedImag
 
 offscreen <- newManagedImage image Vk.IMAGE_ASPECT_COLOR_BIT
 h <- FG.importResource g "offscreen" (ImageDesc "offscreen") offscreen
-h' <- -- in a pass setup: FG.writeWith b h (usageFlags ColorAttachment)
-      -- a later pass: FG.readWith b h' (usageFlags SampledFragment)
+h' <- -- in a pass setup: FG.writeWith h (usageFlags ColorAttachment)
+      -- a later pass: FG.readWith h' (usageFlags SampledFragment)
 ```
 
 `Ctx ManagedImage` is the `CommandBuffer` the barriers record into; run the

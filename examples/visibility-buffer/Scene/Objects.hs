@@ -79,7 +79,6 @@ objectStride = sizeOf (undefined :: Object)
 objectBufferBytes :: Layout -> Vk.DeviceSize
 objectBufferBytes l = fromIntegral l.total * fromIntegral objectStride
 
--- Five commands: mainCube, mainKnot, mainSphere (camera), occCube, occKnot (shadow).
 drawStride :: Word32
 drawStride = fromIntegral (sizeOf (undefined :: Vk.DrawIndirectCommand))
 

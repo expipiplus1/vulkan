@@ -1,5 +1,4 @@
 -- | VMA buffer helpers for the examples
-
 module Buffer
   ( deviceBuffer
   , readbackBuffer

@@ -5,8 +5,7 @@
 {-| The luminance-reduction compute pipeline.
 
 Bloom mip → average log-luminance buffer ("Pipeline.Luminance.Shader"), for
-auto-exposure. Set 0 is the source storage image (0) and the output SSBO (1); dispatch
-a single workgroup.
+auto-exposure; dispatch a single workgroup.
 -}
 module Pipeline.Luminance
   ( Pipeline (..)
