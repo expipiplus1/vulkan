@@ -44,11 +44,12 @@ module Scene
   , cameraTarget
   ) where
 
-import Control.Monad (foldM_, forM_, unless, when)
+import Control.Monad (foldM, forM_, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
 import Data.Bits (shiftR, (.|.))
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
+import Data.Maybe (fromMaybe)
 import qualified Data.Text as T
 import qualified Data.Vector as V
 import Data.Word (Word32)
@@ -292,6 +293,9 @@ data Scene = Scene
   -- ^ Depth-pyramid mips ("Pipeline.HiZ"), each a tracked subresource.
   , hizExtents :: V.Vector Vk.Extent2D
   , hizSets :: V.Vector Vk.DescriptorSet
+  -- ^ One per per-level reduce; the remaining mips are the fused tail's.
+  , hizTailSet :: Maybe Vk.DescriptorSet
+  -- ^ 'Nothing' when the chain ends at the last per-level reduce.
   , cullSet :: Vk.DescriptorSet
   -- ^ The cull's buffers + the whole pyramid, sampled ("Pipeline.Cull").
   , hizPrimed :: IORef Bool
@@ -323,7 +327,7 @@ data ScenePipelines = ScenePipelines
   , generator :: Voxels.ComputePipeline
   , knot :: Knot.Knot
   , cull :: Cull.Pipeline
-  , hiz :: HiZ.Pipeline
+  , hiz :: HiZ.HiZ
   }
 
 allocatePipelines :: Vk.Device -> ResourceT IO ScenePipelines
@@ -338,7 +342,7 @@ allocatePipelines dev = do
   generator <- Voxels.allocateGenerator dev
   knot <- Knot.allocateKnot dev
   cull <- Cull.allocatePipeline dev
-  hiz <- HiZ.allocatePipeline dev
+  hiz <- HiZ.allocateHiZ dev
   pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot, cull, hiz}
 
 {- | Allocate the extent-independent scene.
@@ -536,18 +540,33 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   upSets <- V.generateM (mipCount - 1) \i -> Bloom.allocateSet dev pls.bloom.up static.sampler (bloomViews V.! (i + 1)) (bloomViews V.! i)
 
   -- Depth pyramid for the cull's occlusion test: half-res base, min-reduced to 1×1
-  -- ('HiZ.mipCount'). Fed by the reduce passes in 'addScenePasses', sampled by
-  -- 'recordCull' a frame later.
+  -- ('HiZ.mipCount'). Fed by the passes in 'addScenePasses' — per-level reduces
+  -- down to the first tail-sized mip, one fused dispatch for the rest — and
+  -- sampled by 'recordCull' a frame later.
   let
     hizMipCount = HiZ.mipCount halfExtent
     hizExtents = mipExtents hizMipCount
+    hizReduceCount = 1 + fromMaybe (hizMipCount - 1) (V.findIndex HiZ.tailFits hizExtents)
+    hizTailCount = hizMipCount - hizReduceCount
   (_, (hizImage, hizViews)) <-
     allocateMipChain allocator dev HiZ.format halfExtent (fromIntegral hizMipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "hiz"
   hizMips <- V.generateM hizMipCount \i -> newManagedImageMip hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
   -- The cull samples across levels ('textureLod'), so it gets a whole-chain view.
   hizFullView <- HiZ.allocateChainView dev hizImage hizMipCount
-  hizSets <- V.generateM hizMipCount \i ->
-    HiZ.allocateSet dev pls.hiz static.nearestSampler (if i == 0 then depthView else hizViews V.! (i - 1)) (hizViews V.! i)
+  hizSets <- V.generateM hizReduceCount \i ->
+    HiZ.allocateSet dev pls.hiz.reduce static.nearestSampler (if i == 0 then depthView else hizViews V.! (i - 1)) (hizViews V.! i)
+  hizTailSet <-
+    if hizTailCount <= 0
+      then pure Nothing
+      else do
+        let dstViews = V.slice hizReduceCount hizTailCount hizViews
+        Just
+          <$> HiZ.allocateTailSet
+            dev
+            pls.hiz.tail
+            static.nearestSampler
+            (hizViews V.! (hizReduceCount - 1))
+            (dstViews <> V.replicate (5 - hizTailCount) (V.last dstViews))
   cullSet <-
     Cull.allocateSet
       dev
@@ -583,6 +602,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       , hizMips
       , hizExtents
       , hizSets
+      , hizTailSet
       , cullSet
       , hizPrimed
       }
@@ -965,13 +985,24 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   -- EXCLUSIVE to the family that rendered it. Side-effect passes: nothing in
   -- this graph reads the mips; the next 'recordCull' samples them.
   hizHs <- V.imapM (\i m -> importManagedImage graph (T.pack ("hiz.mip" <> show i)) m) scene.hizMips
-  let hizPass src (i, dstH) =
-        FG.addPass graph (T.pack ("hiz." <> show i)) (hizSetup src dstH) \_ -> do
-          cb <- recordingCommandBuffer
-          Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.pipeline
-          Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.layout 0 [scene.hizSets V.! i] []
-          dispatchMip cb (scene.hizExtents V.! i)
-  foldM_ hizPass depthWritten (V.indexed hizHs)
+  let
+    nReduce = V.length scene.hizSets
+    hizPass src (i, dstH) =
+      FG.addPass graph (T.pack ("hiz." <> show i)) (hizSetup src dstH) \_ -> do
+        cb <- recordingCommandBuffer
+        Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.pipeline
+        Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.layout 0 [scene.hizSets V.! i] []
+        dispatchMip cb (scene.hizExtents V.! i)
+  hizLast <- foldM hizPass depthWritten (V.indexed (V.take nReduce hizHs))
+  -- The fused tail: every remaining mip from the last reduced level, one dispatch.
+  forM_ scene.hizTailSet \tailSet ->
+    FG.addPass_ graph "hiz.tail" (hizTailSetup hizLast (V.drop nReduce hizHs)) do
+      cb <- recordingCommandBuffer
+      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.pipeline
+      liftIO $ with (fromIntegral (V.length scene.hizMips - nReduce) :: Word32) \p ->
+        Vk.cmdPushConstants cb pls.hiz.tail.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 4 (castPtr p)
+      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.layout 0 [tailSet] []
+      Vk.cmdDispatch cb 1 1 1
 
   pure PassOutputs{toneOut = toneWritten, displayOut = displayWritten}
   where
@@ -1022,6 +1053,10 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       FG.setSideEffect
       FG.readWith src (usageFlags (StorageRead shadeStage))
       FG.writeWith dstH (usageFlags (StorageWrite shadeStage))
+    hizTailSetup src dstHs = do
+      FG.setSideEffect
+      FG.readWith src (usageFlags (StorageRead shadeStage))
+      mapM_ (\h -> FG.writeWith_ h (usageFlags (StorageWrite shadeStage))) dstHs
 
 -- | The point the camera looks at and orbits.
 cameraTarget :: Vec3

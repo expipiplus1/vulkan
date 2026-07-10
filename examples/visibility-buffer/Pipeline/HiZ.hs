@@ -1,25 +1,32 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedRecordDot #-}
+{-# LANGUAGE NoFieldSelectors #-}
 
-{-| The depth-pyramid pipeline.
+{-| The depth-pyramid pipelines.
 
-Wraps the "Pipeline.HiZ.Shader" min-reduce: one dispatch per mip, each reading the
-previous level (the depth attachment for mip 0) and writing its own. The finished
-pyramid feeds the next frame's occlusion test ("Pipeline.Cull"). All views stay in
-@GENERAL@, like the bloom chain.
+Wraps the "Pipeline.HiZ.Shader" min-reduces: one dispatch per mip while the levels
+are big, then 'tail' finishes everything from a ≤32×32 level in a single dispatch
+(a serial tail of tiny levels costs a pipeline drain each and no work). The
+finished pyramid feeds the next frame's occlusion test ("Pipeline.Cull"). All
+views stay in @GENERAL@, like the bloom chain.
 -}
 module Pipeline.HiZ
   ( Pipeline (..)
-  , allocatePipeline
+  , HiZ (..)
+  , allocateHiZ
   , allocateSet
+  , allocateTailSet
   , allocateChainView
   , format
   , mipCount
+  , tailFits
   ) where
 
 import Control.Monad.Trans.Resource (ResourceT, allocate)
+import Data.ByteString (ByteString)
 import qualified Data.Vector as V
+import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (combinedImageSamplerWrite, imageWrite)
 import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
@@ -35,12 +42,24 @@ data Pipeline = Pipeline
   , setLayout :: Vk.DescriptorSetLayout
   }
 
-allocatePipeline :: Vk.Device -> ResourceT IO Pipeline
-allocatePipeline dev = do
-  reflected <- reflectBytes Shader.code
+-- | The per-level reduce and the fused tail.
+data HiZ = HiZ
+  { reduce :: Pipeline
+  , tail :: Pipeline
+  }
+
+allocateHiZ :: Vk.Device -> ResourceT IO HiZ
+allocateHiZ dev = do
+  reduce <- buildCompute dev Shader.code
+  tail_ <- buildCompute dev Shader.tailCode
+  pure HiZ{reduce, tail = tail_}
+
+buildCompute :: Vk.Device -> ByteString -> ResourceT IO Pipeline
+buildCompute dev code = do
+  reflected <- reflectBytes code
   (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
   setLayout <- singleSetLayout reflectedLayout
-  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, Shader.code)
+  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
   pure Pipeline{pipeline, layout = reflectedLayout.pipelineLayout, setLayout}
 
 -- | A set for one reduce step: the source sampled (0), the target mip stored (1).
@@ -67,6 +86,45 @@ allocateSet dev pl sampler srcView dstView = do
     ]
     []
   pure set
+
+{- | The fused-tail set: the last reduced level sampled (0), the remaining mips
+stored (1, an array of 5 — pad short chains with any valid view; @levels@ guards
+the writes).
+-}
+allocateTailSet :: Vk.Device -> Pipeline -> Vk.Sampler -> Vk.ImageView -> V.Vector Vk.ImageView -> ResourceT IO Vk.DescriptorSet
+allocateTailSet dev pl sampler srcView dstViews = do
+  (_, pool) <-
+    Vk.withDescriptorPool
+      dev
+      zero
+        { Vk.maxSets = 1
+        , Vk.poolSizes =
+            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
+            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE (fromIntegral (V.length dstViews))
+            ]
+        }
+      Nothing
+      allocate
+  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [pl.setLayout]}
+  let set = V.head sets
+  Vk.updateDescriptorSets
+    dev
+    [ combinedImageSamplerWrite set 0 sampler srcView Vk.IMAGE_LAYOUT_GENERAL
+    , SomeStruct
+        zero
+          { Vk.dstSet = set
+          , Vk.dstBinding = 1
+          , Vk.descriptorCount = fromIntegral (V.length dstViews)
+          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
+          , Vk.imageInfo = V.map (\v -> zero{Vk.imageView = v, Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL}) dstViews
+          }
+    ]
+    []
+  pure set
+
+-- | Does a level fit the fused tail's shared-memory tile?
+tailFits :: Vk.Extent2D -> Bool
+tailFits (Vk.Extent2D w h) = w <= 32 && h <= 32
 
 -- | Pyramid texel format: one reverse-Z depth per texel (@r32f@ in the shaders).
 format :: Vk.Format
