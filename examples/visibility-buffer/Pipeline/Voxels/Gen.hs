@@ -11,7 +11,8 @@ A cell survives if it is solid and any of its 6 face-neighbours is air (out-of-b
 counts as air), so only the visible shell is drawn. Each survivor atomically appends
 a cube 'Object' (transform from cell centre/half-size, grey material by cell hash)
 after the object table's cave base, and bumps both cube draw commands' @instanceCount@
-(the camera pass's, and the shadow pass's cave-only one).
+(the camera pass's, and the shadow pass's cave-only one). It also seeds both instance
+remaps with identity, so a frame without a "Pipeline.Cull" run draws everything.
 -}
 module Pipeline.Voxels.Gen
   ( code
@@ -32,6 +33,8 @@ code =
     // The indirect buffer as raw words: cmd[1] = mainCube.instanceCount (starts at
     // the glowstone count), cmd[13] = occCube.instanceCount (starts at 0).
     layout(set = 0, binding = 1, std430) buffer Indirect { uint cmd[]; };
+    layout(set = 0, binding = 2, std430) writeonly buffer VisibleMain { uint visMain[]; };
+    layout(set = 0, binding = 3, std430) writeonly buffer VisibleOcc { uint visOcc[]; };
 
     // Radii and distances in metres (see Cave).
     layout(push_constant, std430) uniform Params {
@@ -146,5 +149,7 @@ code =
       o.flags = 0u;  // reserved
       o.pad = 0u;
       objects[slot] = o;
+      visMain[slot] = slot;
+      visOcc[slot] = slot;
     }
   |]

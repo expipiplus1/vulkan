@@ -35,6 +35,7 @@ module Scene
   , allocateStatic
   , allocateTargets
   , addScenePasses
+  , recordCull
   , recordOrbFrame
   , readLuminance
   , debugImages
@@ -54,11 +55,13 @@ import Foreign.Marshal.Utils (with)
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
 import Foreign.Storable (peek, sizeOf)
 import qualified Fragr as FG
-import Geomancy (Vec3, vec3, vec4, withVec3)
+import Geomancy (Vec3, Vec4, vec3, vec4, withVec3)
 import qualified Geomancy.Mat4 as Mat4
 import Geomancy.Transform (scale3, unTransform)
+import qualified Geomancy.Vec3 as Vec3
 import qualified Geomancy.Vulkan.Projection as Projection
 import qualified Geomancy.Vulkan.View as View
+import Say (sayErrString)
 import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as ImageMemoryBarrier (ImageMemoryBarrier (..))
 import qualified Vulkan.Core10 as MemoryBarrier (MemoryBarrier (..))
@@ -72,9 +75,10 @@ import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
-import Buffer (deviceBuffer, stagingBuffer, storageBuffer)
+import Buffer (deviceBuffer, readbackBuffer, stagingBuffer, storageBuffer)
 import Driver (beginPrimary, commandPool)
 import qualified Pipeline.Bloom as Bloom
+import qualified Pipeline.Cull as Cull
 import qualified Pipeline.Gamma as Gamma
 import qualified Pipeline.Knot as Knot
 import qualified Pipeline.Luminance as Luminance
@@ -253,6 +257,10 @@ data SceneStatic = SceneStatic
   -- ^ Shadow view-projections SSBO (one @mat4@ per @(light, face)@).
   , shadowSet :: Vk.DescriptorSet
   -- ^ Occluder set for the shadow render (shared vertex/mesh/object tables + view-projs).
+  , cullSet :: Vk.DescriptorSet
+  -- ^ Set for the per-frame cave-cube cull ("Pipeline.Cull").
+  , caveCount :: Word32
+  -- ^ Generated cave cubes, read back once for the cull dispatch.
   }
 
 {- | The extent-dependent scene.
@@ -298,6 +306,7 @@ data ScenePipelines = ScenePipelines
   , shadow :: Shadow.Pipeline
   , generator :: Voxels.ComputePipeline
   , knot :: Knot.Knot
+  , cull :: Cull.Pipeline
   }
 
 allocatePipelines :: Vk.Device -> ResourceT IO ScenePipelines
@@ -311,7 +320,8 @@ allocatePipelines dev = do
   shadow <- Shadow.allocateShadow dev shadowParams shadowFormat depthFormat
   generator <- Voxels.allocateGenerator dev
   knot <- Knot.allocateKnot dev
-  pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot}
+  cull <- Cull.allocatePipeline dev
+  pure ScenePipelines{mesh, shade, luminance, tonemap, gamma, bloom, shadow, generator, knot, cull}
 
 {- | Allocate the extent-independent scene.
 
@@ -339,9 +349,14 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   (_, vertexBuffer) <- deviceBuffer allocator Meshes.vertexBufferSize (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   (_, meshTableBuffer) <- deviceBuffer allocator Meshes.meshTableBytes (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
   (_, objectsBuffer) <- deviceBuffer allocator (Objects.objectBufferBytes objLayout) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
+  -- TRANSFER_SRC for the one-shot cube-count readback below.
   (_, indirect) <-
-    deviceBuffer allocator Objects.indirectBytes (Vk.BUFFER_USAGE_INDIRECT_BUFFER_BIT .|. Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
-  let bufs = Voxels.GenBuffers{Voxels.objects = objectsBuffer, Voxels.indirect = indirect}
+    deviceBuffer allocator Objects.indirectBytes (Vk.BUFFER_USAGE_INDIRECT_BUFFER_BIT .|. Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT .|. Vk.BUFFER_USAGE_TRANSFER_SRC_BIT) shared
+  -- Per-draw instance remaps (an object id per drawn instance): identity except the
+  -- cave range, which the per-frame cull compacts ("Pipeline.Cull").
+  (_, visMain) <- deviceBuffer allocator (Objects.remapBytes objLayout) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
+  (_, visOcc) <- deviceBuffer allocator (Objects.remapBytes objLayout) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
+  let bufs = Voxels.GenBuffers{Voxels.objects = objectsBuffer, Voxels.indirect = indirect, Voxels.visMain = visMain, Voxels.visOcc = visOcc}
 
   -- The single lights buffer: orb draw (graphics), shadow render, resolve.
   (_, lights) <- deviceBuffer allocator Lights.bufferBytes (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
@@ -353,7 +368,8 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   (_, (staging, stagingPtr)) <- stagingBuffer allocator Meshes.cpuVertexBytes
 
   genSet <- Voxels.allocateGenSets dev pls.generator bufs
-  meshSet <- Mesh.allocateSet dev pls.mesh vertexBuffer meshTableBuffer objectsBuffer
+  meshSet <- Mesh.allocateSet dev pls.mesh vertexBuffer meshTableBuffer objectsBuffer visMain
+  cullSet <- Cull.allocateSet dev pls.cull Cull.CullBuffers{Cull.objects = objectsBuffer, Cull.indirect = indirect, Cull.visMain = visMain, Cull.visOcc = visOcc}
   -- Shared linear sampler (resolve, tonemap, bloom).
   (_, sampler) <- allocateLinearSampler dev
 
@@ -364,8 +380,9 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
   (_, (shadowDepthImage, shadowDepthView)) <-
     allocateArrayTarget allocator dev depthFormat shadowRes 6 Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT Vk.IMAGE_ASPECT_DEPTH_BIT "shadow-depth"
   (_, viewProjBuffer) <- deviceBuffer allocator (fromIntegral (Lights.slots * cubeFaces) * fromIntegral viewProjBytes) (Vk.BUFFER_USAGE_STORAGE_BUFFER_BIT .|. Vk.BUFFER_USAGE_TRANSFER_DST_BIT) shared
-  shadowSet <- Shadow.allocateSet dev pls.shadow vertexBuffer meshTableBuffer objectsBuffer viewProjBuffer
+  shadowSet <- Shadow.allocateSet dev pls.shadow vertexBuffer meshTableBuffer objectsBuffer viewProjBuffer visOcc
   knotGenSet <- Knot.allocateKnotSet dev pls.knot vertexBuffer
+  (_, (countBuffer, countAlloc, countMapped)) <- readbackBuffer allocator 4
 
   -- One setup submit: upload the meshes/objects/lights/view-projections, generate the
   -- cave + knot, then render the EVSM shadow cubes (the lighting is fully runtime now).
@@ -378,12 +395,30 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
     Objects.uploadStaticObjects cb objectsBuffer objLayout
     Objects.writeOrbObjects cb objectsBuffer objLayout 0
     Objects.uploadDrawCommands cb indirect objLayout
+    Objects.uploadStaticRemap cb visMain objLayout
+    Objects.uploadStaticRemap cb visOcc objLayout
     Lights.upload cb lights 0
     Materials.upload cb materialsBuf
     uploadViewProjs cb viewProjBuffer 0
     Voxels.recordGenerate pls.generator genSet genParams cb
     Knot.recordGenerate pls.knot knotGenSet Meshes.knotBase knotParams cb
+    -- Snapshot the generated cube total (glowstones + cave cubes) for 'caveCount'.
+    Vk.cmdPipelineBarrier
+      cb
+      Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT
+      Vk.PIPELINE_STAGE_TRANSFER_BIT
+      zero
+      [zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_SHADER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_TRANSFER_READ_BIT} :: Vk.MemoryBarrier]
+      []
+      []
+    Vk.cmdCopyBuffer cb indirect countBuffer [Vk.BufferCopy Objects.mainCubeCountOffset 0 4]
     recordShadows cb pls shadowSet (shadowMoments, shadowDepthImage) shadowRenderViews shadowDepthView indirect
+
+  caveCount <- liftIO do
+    VMA.invalidateAllocation allocator countAlloc 0 Vk.WHOLE_SIZE
+    total <- peek (castPtr countMapped :: Ptr Word32)
+    pure (total - objLayout.caveBase)
+  sayErrString $ "cave cubes: " <> show caveCount <> " / " <> show Cave.maxCubes
 
   pure
     SceneStatic
@@ -407,6 +442,8 @@ allocateStatic allocator dev genQueue pls sharedFamilies = do
       , lightsBuffer = lights
       , viewProjBuffer
       , shadowSet
+      , cullSet
+      , caveCount
       }
 
 {- | Allocate the extent-dependent scene over a shared 'SceneStatic'.
@@ -600,6 +637,41 @@ recordShadows cb pls shadowSet (moments, depthImg) renderViews depthView indirec
           , ImageMemoryBarrier.image = img
           , ImageMemoryBarrier.subresourceRange = Vk.ImageSubresourceRange aspect 0 1 0 n
           }
+
+{- | Compact this frame's draws: frustum-cull the cave cubes for the camera at @eye@
+and reach-cull them around the orbs for the shadow refresh.
+
+Recorded at the top of the frame, before 'recordOrbFrame' and the graph. The
+headless driver skips it — the generator seeds identity remaps and full counts, so
+an unculled frame is simply complete.
+-}
+recordCull :: (MonadIO m) => Vk.CommandBuffer -> ScenePipelines -> Scene -> Vec3 -> Vk.Extent2D -> Float -> m ()
+recordCull cb pls scene eye extent t =
+  Cull.record pls.cull scene.static.cullSet scene.static.indirect params cb
+  where
+    params =
+      Cull.Params
+        { Cull.viewProj = viewProjFor eye extent
+        , Cull.orbSphere = orbCullSphere t
+        , Cull.caveBase = scene.static.objLayout.caveBase
+        , Cull.caveCount = scene.static.caveCount
+        }
+
+{- | One sphere covering every orb's shadow 'Lights.reach' at time @t@ (@w < 0@ when
+there are no orbs).
+
+A single occluder set serves all orb slices, so multiple orbs cull to their
+union's bound.
+-}
+orbCullSphere :: Float -> Vec4
+orbCullSphere t =
+  case [(Lights.position light, Lights.reach light) | orb <- Lights.orbs, let light = orb `Lights.orbLight` t] of
+    [] -> vec4 0 0 0 (-1)
+    spheres@((c0, _) : _) ->
+      let radius = maximum [dist c0 c + r | (c, r) <- spheres]
+      in withVec3 c0 \x y z -> vec4 x y z radius
+  where
+    dist a b = let d = a - b in sqrt (Vec3.dot d d)
 
 {- | Move the orbs and re-render their shadow-cube slices for time @t@.
 

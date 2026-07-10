@@ -66,12 +66,16 @@ buildCompute dev code = do
   (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
   pure ComputePipeline{pipeline, layout = reflectedLayout.pipelineLayout, setLayout}
 
--- | The two device buffers the generator appends into.
+-- | The device buffers the generator appends into.
 data GenBuffers = GenBuffers
   { objects :: Vk.Buffer
   -- ^ the shared object table; the gen appends cube objects after 'Objects.caveBase'.
   , indirect :: Vk.Buffer
-  -- ^ the four draw commands ("Objects"); the gen bumps the two cube @instanceCount@s.
+  -- ^ the draw commands ("Objects"); the gen bumps the two cube @instanceCount@s.
+  , visMain :: Vk.Buffer
+  -- ^ the camera instance remap, identity-seeded per emitted cube ("Pipeline.Cull").
+  , visOcc :: Vk.Buffer
+  -- ^ the occluder instance remap, as 'visMain'.
   }
 
 allocateGenSets :: Vk.Device -> ComputePipeline -> GenBuffers -> ResourceT IO Vk.DescriptorSet
@@ -79,7 +83,7 @@ allocateGenSets dev gen bufs = do
   (_, pool) <-
     Vk.withDescriptorPool
       dev
-      zero{Vk.maxSets = 1, Vk.poolSizes = [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 2]}
+      zero{Vk.maxSets = 1, Vk.poolSizes = [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 4]}
       Nothing
       allocate
   sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [gen.setLayout]}
@@ -88,6 +92,8 @@ allocateGenSets dev gen bufs = do
     dev
     [ bufferWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.objects
     , bufferWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.indirect
+    , bufferWrite set 2 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.visMain
+    , bufferWrite set 3 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.visOcc
     ]
     []
   pure set

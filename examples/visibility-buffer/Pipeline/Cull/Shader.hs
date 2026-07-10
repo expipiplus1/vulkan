@@ -1,0 +1,77 @@
+{-# LANGUAGE QuasiQuotes #-}
+
+{-| Per-frame cave-cube culling.
+
+One invocation per generated cave cube. Two independent tests refill the compacted
+draws the caller just reset: the camera frustum (bounding sphere vs. the
+view-projection's planes) appends to the camera remap and bumps
+@mainCube.instanceCount@; the orb shadow reach (sphere vs. sphere) appends to the
+occluder remap and bumps @occCube.instanceCount@. The other objects (glowstones,
+knot, orbs) are never culled — their remap entries are identity and their draw
+commands untouched.
+-}
+module Pipeline.Cull.Shader
+  ( code
+  ) where
+
+import Data.ByteString (ByteString)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
+
+code :: ByteString
+code =
+  [comp|
+    #version 450
+    layout(local_size_x = 256) in;
+
+    struct Object { mat4 transform; vec4 emissive; uint meshId; uint materialId; uint flags; uint pad; };
+
+    layout(set = 0, binding = 0, std430) readonly buffer Objects { Object objects[]; };
+    // The indirect buffer as raw words, as in the generator: cmd[1] =
+    // mainCube.instanceCount, cmd[13] = occCube.instanceCount.
+    layout(set = 0, binding = 1, std430) buffer Indirect { uint cmd[]; };
+    layout(set = 0, binding = 2, std430) writeonly buffer VisibleMain { uint visMain[]; };
+    layout(set = 0, binding = 3, std430) writeonly buffer VisibleOcc { uint visOcc[]; };
+
+    layout(push_constant, std430) uniform Params {
+      mat4 viewProj;
+      vec4 orbSphere;   // xyz = centre, w = shadow reach (< 0 when there are no orbs)
+      uint caveBase;
+      uint caveCount;
+    } pc;
+
+    // Is the sphere entirely behind the (unnormalized) clip plane?
+    bool outside(vec4 plane, vec3 c, float r) {
+      return dot(plane.xyz, c) + plane.w < -r * length(plane.xyz);
+    }
+
+    void main() {
+      uint i = gl_GlobalInvocationID.x;
+      if (i >= pc.caveCount) return;
+      uint slot = pc.caveBase + i;
+
+      mat4 m = objects[slot].transform;
+      vec3 centre = m[3].xyz;
+      float radius = m[0][0] * 1.7320508; // uniform cube scale × √3
+
+      // Gribb-Hartmann planes from the view-projection rows, for the Vulkan clip
+      // volume (|x|,|y| <= w, 0 <= z <= w). Reverse-Z: near is z = w, and the
+      // infinite far plane z >= 0 is row 2 alone.
+      vec4 r0 = vec4(pc.viewProj[0][0], pc.viewProj[1][0], pc.viewProj[2][0], pc.viewProj[3][0]);
+      vec4 r1 = vec4(pc.viewProj[0][1], pc.viewProj[1][1], pc.viewProj[2][1], pc.viewProj[3][1]);
+      vec4 r2 = vec4(pc.viewProj[0][2], pc.viewProj[1][2], pc.viewProj[2][2], pc.viewProj[3][2]);
+      vec4 r3 = vec4(pc.viewProj[0][3], pc.viewProj[1][3], pc.viewProj[2][3], pc.viewProj[3][3]);
+      bool culled =
+           outside(r3 + r0, centre, radius) || outside(r3 - r0, centre, radius)
+        || outside(r3 + r1, centre, radius) || outside(r3 - r1, centre, radius)
+        || outside(r3 - r2, centre, radius) || outside(r2, centre, radius);
+      if (!culled) {
+        uint n = atomicAdd(cmd[1], 1u);
+        visMain[n] = slot;
+      }
+
+      if (pc.orbSphere.w >= 0.0 && distance(centre, pc.orbSphere.xyz) <= pc.orbSphere.w + radius) {
+        uint n = atomicAdd(cmd[13], 1u);
+        visOcc[pc.caveBase + n] = slot;
+      }
+    }
+  |]

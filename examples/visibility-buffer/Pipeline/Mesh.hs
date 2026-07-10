@@ -78,13 +78,13 @@ allocatePipeline dev visFormat depthFormat = do
       [(Vk.SHADER_STAGE_VERTEX_BIT, Shader.vertCode), (Vk.SHADER_STAGE_FRAGMENT_BIT, Shader.fragCode)]
   pure Pipeline{pipeline, pipelineLayout, descriptorSetLayout}
 
--- | A set binding the vertex (0), mesh-table (1) and object-table (2) SSBOs.
-allocateSet :: Vk.Device -> Pipeline -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> ResourceT IO Vk.DescriptorSet
-allocateSet dev pl verts meshes objects = do
+-- | A set binding the vertex (0), mesh-table (1), object-table (2) and instance-remap (3) SSBOs.
+allocateSet :: Vk.Device -> Pipeline -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> ResourceT IO Vk.DescriptorSet
+allocateSet dev pl verts meshes objects visible = do
   (_, pool) <-
     Vk.withDescriptorPool
       dev
-      zero{Vk.maxSets = 1, Vk.poolSizes = [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 3]}
+      zero{Vk.maxSets = 1, Vk.poolSizes = [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 4]}
       Nothing
       allocate
   sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [pl.descriptorSetLayout]}
@@ -94,6 +94,7 @@ allocateSet dev pl verts meshes objects = do
     [ bufferWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER verts
     , bufferWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER meshes
     , bufferWrite set 2 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER objects
+    , bufferWrite set 3 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER visible
     ]
     []
   pure set

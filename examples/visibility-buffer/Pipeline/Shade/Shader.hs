@@ -101,7 +101,14 @@ code =
         vec3 L = normalize(dv);
         float ndl = max(0.0, dot(n, L));
         if (ndl <= 0.0) continue;
-        float atten = lights[i].colInt.w / (dot(dv, dv) + 0.001);
+        float d2 = dot(dv, dv);
+        // Fade to zero over the last 20% of the light's reach (Scene.Lights.reach:
+        // reach² = intensity / 0.0125). The shadow refresh culls occluders at that
+        // same reach, so the light must be spent there or culled shadows would leak.
+        float reach2 = lights[i].colInt.w * 80.0;
+        float win = 1.0 - smoothstep(0.64 * reach2, reach2, d2);
+        if (win <= 0.0) continue;
+        float atten = win * lights[i].colInt.w / (d2 + 0.001);
         vec3 radiance = lights[i].colInt.rgb * (atten * shadowVis(i, wpos, n));
         irr += radiance * ndl;
         spec += radiance * (pow(max(0.0, dot(n, normalize(L + V))), shininess) * norm);

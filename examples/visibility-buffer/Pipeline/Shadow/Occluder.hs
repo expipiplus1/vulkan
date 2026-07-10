@@ -32,12 +32,13 @@ vertCode =
     layout(set = 0, binding = 1, std430) readonly buffer Meshes { MeshEntry meshes[]; };
     layout(set = 0, binding = 2, std430) readonly buffer Objects { Object objects[]; };
     layout(set = 0, binding = 3, std430) readonly buffer ViewProj { mat4 vp[]; };
+    layout(set = 0, binding = 4, std430) readonly buffer Visible { uint visible[]; };
     layout(push_constant, std430) uniform PC { vec4 lightPos; uint lightBase; } pc;
 
     layout(location = 0) out vec3 vWorld;
 
     void main() {
-      Object obj = objects[gl_InstanceIndex];
+      Object obj = objects[visible[gl_InstanceIndex]];
       MeshEntry m = meshes[obj.meshId];
       Vertex vtx = verts[m.baseVertex + uint(gl_VertexIndex)];
       vec3 world = (obj.transform * vec4(vtx.position.xyz, 1.0)).xyz;

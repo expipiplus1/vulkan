@@ -36,7 +36,7 @@ import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite, imageWrite)
-import Vulkan.Utils.SpirV.Descriptors (pushConstantRanges)
+import Vulkan.Utils.SpirV.Descriptors (pushConstantsSize)
 import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
 import qualified Vulkan.Utils.SpirV.Pipeline
 import Vulkan.Utils.SpirV.Reflect (reflectBytes)
@@ -104,7 +104,7 @@ allocatePipeline dev params = do
   (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
   descriptorSetLayout <- singleSetLayout reflectedLayout
   (_, pipeline) <- allocateComputePipeline dev reflectedLayout params (reflected, Shader.code)
-  let cameraPushSize = maximum (0 : [r.offset + r.size | r <- pushConstantRanges reflected])
+  let cameraPushSize = pushConstantsSize reflected
   pure Pipeline{pipeline, pipelineLayout = reflectedLayout.pipelineLayout, descriptorSetLayout, cameraPushSize}
 
 {- | A descriptor set for the resolve.

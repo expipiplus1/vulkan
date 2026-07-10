@@ -7,6 +7,7 @@ module Vulkan.Utils.SpirV.Descriptors
   ( descriptorSetLayoutInfos
   , singleDescriptorSetLayoutInfo
   , pushConstantRanges
+  , pushConstantsSize
   , mergedDescriptorSetLayoutInfos
   , mergedPushConstantRanges
   , moduleStageFlags
@@ -80,6 +81,16 @@ pushConstantRanges m =
   ]
   where
     stage = moduleStageFlags m
+
+{- | Total extent of a module's push-constant ranges — the size to pass to
+@cmdPushConstants@.
+
+This is the /reflected/ extent, which is smaller than a generated record's
+'Foreign.Storable.sizeOf' whenever std430 trailing-pads the block; pushing the
+padded size overruns the declared range.
+-}
+pushConstantsSize :: Module -> Word32
+pushConstantsSize m = maximum (0 : [r.offset + r.size | r <- pushConstantRanges m])
 
 {- | Descriptor set layouts for a /pipeline/ built from several stages: bindings
 are collected across all modules and each binding's @stageFlags@ is the OR of the

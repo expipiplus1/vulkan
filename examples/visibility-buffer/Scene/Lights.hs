@@ -12,6 +12,7 @@ suffix (from 'orbBase') is rewritten every frame.
 module Scene.Lights
   ( Shade.Light (..)
   , position
+  , reach
   , glowstones
   , Orb (..)
   , orbs
@@ -41,6 +42,16 @@ import qualified Upload
 -- | A light's world position (its @posHalf.xyz@).
 position :: Shade.Light -> Vec3
 position (Shade.Light posHalf _colInt) = withVec4 posHalf \x y z _half -> vec3 x y z
+
+{- | Where a light is spent: the resolve fades its contribution to zero here.
+
+The @0.0125@ floor is mirrored as @reach² = intensity * 80@ in the resolve's
+falloff window ("Pipeline.Shade.Shader") — that window is what makes culling
+shadow occluders at this radius exact rather than approximate. For the
+intensity-20 orb it lands at 40 m, matching the 'glowstones' doc's figure.
+-}
+reach :: Shade.Light -> Float
+reach (Shade.Light _posHalf colInt) = withVec4 colInt \_r _g _b i -> sqrt (i / 0.0125)
 
 {- | The static glowing blocks
 
@@ -102,7 +113,10 @@ data Orb = Orb
 {- | The scene's dynamic orbs — any number, including none.
 
 Each takes an object slot, a lights-SSBO entry and its own shadow-cube slice, all
-refreshed per frame — so the orb's shadows are the only ones that move.
+refreshed per frame — so the orb's shadows are the only ones that move. The shadow
+refresh culls occluders to one sphere covering every orb's 'reach' (a shared
+occluder set), so far-apart orbs degrade its effectiveness — see @orbCullSphere@
+in "Scene".
 -}
 orbs :: [Orb]
 orbs =

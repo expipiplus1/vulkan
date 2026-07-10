@@ -986,6 +986,8 @@ executable visibility-buffer
       Pipeline.Bloom
       Pipeline.Bloom.Downsample
       Pipeline.Bloom.Upsample
+      Pipeline.Cull
+      Pipeline.Cull.Shader
       Pipeline.Gamma
       Pipeline.Gamma.Shader
       Pipeline.Knot

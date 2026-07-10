@@ -17,22 +17,33 @@ mainSphere@ (the camera pass draws these three) then @occCube occKnot@ (the shad
 pass draws these two, @occCube@ skipping the non-occluder glowstones; the orb spheres
 are not occluders). The gen bumps the two cube @instanceCount@s; every other field
 is CPU-static.
+
+The vertex shaders don't index the table by @gl_InstanceIndex@ directly: each draw
+family goes through an instance remap (camera @visMain@, occluder @visOcc@) holding
+one object id per drawn instance. The never-culled slots are identity
+('uploadStaticRemap', and the gen seeds its cubes likewise); the windowed cull
+compacts the cave range per frame ("Pipeline.Cull").
 -}
 module Scene.Objects
   ( Layout (..)
   , layout
   , objectBufferBytes
   , indirectBytes
+  , remapBytes
   , mainDrawOffset
+  , mainCubeCountOffset
   , occluderDrawOffset
+  , occCubeCountOffset
   , drawStride
   , mainDrawCount
   , occluderDrawCount
   , uploadDrawCommands
   , uploadStaticObjects
+  , uploadStaticRemap
   , writeOrbObjects
   ) where
 
+import Control.Monad (when)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Word (Word32)
 import Foreign.Storable (sizeOf)
@@ -92,13 +103,27 @@ mainDrawOffset = 0
 occluderDrawOffset :: Vk.DeviceSize
 occluderDrawOffset = fromIntegral mainDrawCount * fromIntegral drawStride
 
+{- | Byte offsets of the two cube @instanceCount@s — the gen's and the cull's counters.
+
+The shaders hardcode them as word indices (@cmd[1]@, @cmd[13]@ in
+"Pipeline.Voxels.Gen" and "Pipeline.Cull.Shader"); keep all three in step.
+-}
+mainCubeCountOffset, occCubeCountOffset :: Vk.DeviceSize
+mainCubeCountOffset = mainDrawOffset + 4
+occCubeCountOffset = occluderDrawOffset + 4
+
 indirectBytes :: Vk.DeviceSize
 indirectBytes = fromIntegral (mainDrawCount + occluderDrawCount) * fromIntegral drawStride
 
+-- | Bytes for an instance remap: one @uint@ object id per drawable slot.
+remapBytes :: Layout -> Vk.DeviceSize
+remapBytes l = fromIntegral l.total * 4
+
 {- | Initialise the five draw commands.
 
-The cube @instanceCount@s (main starts at 'glowstoneCount', occluder at 0) are the
-generator's atomic counters; the rest are static.
+The cube @instanceCount@s (main starts at 'glowstoneCount', occluder at 0) are
+append counters — the generator's at bake, then the windowed cull's each frame
+("Pipeline.Cull" resets and refills them); the rest are static.
 -}
 uploadDrawCommands :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m ()
 uploadDrawCommands cb buffer l = Upload.slice cb buffer 0 commands
@@ -143,6 +168,16 @@ uploadStaticObjects cb buffer l = do
           , flags = 0
           , pad = 0
           }
+
+{- | Seed a remap's never-culled entries with identity.
+
+The glowstones, knots and orbs always draw as themselves; the cave range is seeded
+by the generator and rewritten per frame by the cull.
+-}
+uploadStaticRemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.Buffer -> Layout -> m ()
+uploadStaticRemap cb buffer l = do
+  when (l.caveBase > 0) $ Upload.slice cb buffer 0 [0 .. l.caveBase - 1 :: Word32]
+  Upload.slice cb buffer l.knotBase [l.knotBase .. l.total - 1]
 
 {- | (Re)write the dynamic orb spheres (from 'orbBase') for time @t@.
 
