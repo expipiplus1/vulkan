@@ -1,4 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 {-| Per-frame cave-cube culling.
 
@@ -21,16 +22,19 @@ module Pipeline.Cull.Shader
   ) where
 
 import Data.ByteString (ByteString)
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
+
+import Pipeline.Common (objectStruct)
+import qualified Pipeline.Common as Common
 
 code :: ByteString
 code =
-  [comp|
+  $( Common.comp
+       [glsl|
     #version 450
     layout(local_size_x = 256) in;
 
-    struct Object { mat4 transform; vec4 emissive; uint meshId; uint materialId; uint flags; uint pad; };
-
+    $objectStruct
     layout(set = 0, binding = 0, std430) readonly buffer Objects { Object objects[]; };
     // The indirect buffer as raw words, as in the generator: cmd[1] =
     // mainCube.instanceCount, cmd[13] = occCube.instanceCount.
@@ -118,3 +122,4 @@ code =
       }
     }
   |]
+   )

@@ -1,4 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 {-| Surface-shell cave generation.
 
@@ -19,16 +20,19 @@ module Pipeline.Voxels.Gen
   ) where
 
 import Data.ByteString (ByteString)
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
+
+import Pipeline.Common (objectStruct)
+import qualified Pipeline.Common as Common
 
 code :: ByteString
 code =
-  [comp|
+  $( Common.comp
+       [glsl|
     #version 450
     layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
 
-    struct Object { mat4 transform; vec4 emissive; uint meshId; uint materialId; uint flags; uint pad; };
-
+    $objectStruct
     layout(set = 0, binding = 0, std430) writeonly buffer Objects { Object objects[]; };
     // The indirect buffer as raw words: cmd[1] = mainCube.instanceCount (starts at
     // the glowstone count), cmd[13] = occCube.instanceCount (starts at 0).
@@ -158,3 +162,4 @@ code =
       visOcc[slot] = slot;
     }
   |]
+   )

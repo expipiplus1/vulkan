@@ -986,9 +986,9 @@ executable visibility-buffer
       Pipeline.Bloom
       Pipeline.Bloom.Downsample
       Pipeline.Bloom.Upsample
+      Pipeline.Common
       Pipeline.Cull
       Pipeline.Cull.Shader
-      Pipeline.Dais
       Pipeline.Gamma
       Pipeline.Gamma.Shader
       Pipeline.HiZ
@@ -1076,6 +1076,7 @@ executable visibility-buffer
     , optparse-applicative
     , resourcet
     , say
+    , template-haskell
     , text
     , unliftio
     , vector

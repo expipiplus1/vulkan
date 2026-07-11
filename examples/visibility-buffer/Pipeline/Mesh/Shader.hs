@@ -1,4 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 {-| The unified mesh visibility-pass shaders.
 
@@ -16,17 +17,18 @@ module Pipeline.Mesh.Shader
   ) where
 
 import Data.ByteString (ByteString)
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, vert)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (frag, glsl)
+
+import Pipeline.Common (pullVertex, tables)
+import qualified Pipeline.Common as Common
 
 vertCode :: ByteString
 vertCode =
-  [vert|
+  $( Common.vert
+       [glsl|
     #version 450
 
-    struct Vertex { vec4 position; vec4 normal; };
-    struct MeshEntry { uint baseVertex; uint vertexCount; };
-    struct Object { mat4 transform; vec4 emissive; uint meshId; uint materialId; uint flags; uint pad; };
-
+    $tables
     layout(set = 0, binding = 0, std430) readonly buffer Vertices { Vertex verts[]; };
     layout(set = 0, binding = 1, std430) readonly buffer Meshes { MeshEntry meshes[]; };
     layout(set = 0, binding = 2, std430) readonly buffer Objects { Object objects[]; };
@@ -36,17 +38,17 @@ vertCode =
     layout(location = 0) flat out uint vObject;
     layout(location = 1) flat out uint vTriangle;
 
+    $pullVertex
+
     void main() {
-      uint objId = visible[gl_InstanceIndex];
-      Object obj = objects[objId];
-      MeshEntry m = meshes[obj.meshId];
-      Vertex vtx = verts[m.baseVertex + uint(gl_VertexIndex)];
-      vec3 world = (obj.transform * vec4(vtx.position.xyz, 1.0)).xyz;
+      uint objId;
+      vec3 world = pullVertex(objId);
       gl_Position = cam.viewProj * vec4(world, 1.0);
       vObject = objId + 1u; // 0 = background
       vTriangle = uint(gl_VertexIndex) / 3u;
     }
   |]
+   )
 
 fragCode :: ByteString
 fragCode =

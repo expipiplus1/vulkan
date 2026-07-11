@@ -4,7 +4,7 @@
 {-| The SSAO compute shaders.
 
 @normalsCode@ resolves half-res world normals + view depth from the visibility
-buffer — the same DAIS reconstruction the shade pass runs ("Pipeline.Dais").
+buffer — the same DAIS reconstruction the shade pass runs ("Pipeline.Common").
 @aoCode@ centres on that exact-texel depth (the min-reduced pyramid would pair
 a background depth with a foreground normal at silhouettes) and gathers
 Alchemy-style obscurance over a spiral of taps into the depth pyramid
@@ -21,16 +21,14 @@ module Pipeline.Ssao.Shader
   ) where
 
 import Data.ByteString (ByteString)
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang (compileShaderQ, glsl)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
 
-import Pipeline.Dais (dais, daisTypes)
+import Pipeline.Common (dais, tables)
+import qualified Pipeline.Common as Common
 
 normalsCode :: ByteString
 normalsCode =
-  $( compileShaderQ
-       Nothing
-       "comp"
-       Nothing
+  $( Common.comp
        [glsl|
     #version 450
     layout(local_size_x = 8, local_size_y = 8) in;
@@ -38,7 +36,7 @@ normalsCode =
     layout(set = 0, binding = 0, rg32ui) uniform readonly uimage2D visBuffer;
     layout(set = 0, binding = 1, rgba16f) uniform writeonly image2D outNormal;
 
-    $daisTypes
+    $tables
     layout(set = 0, binding = 2, std430) readonly buffer Vertices { Vertex verts[]; };
     layout(set = 0, binding = 3, std430) readonly buffer Objects { Object objects[]; };
     layout(set = 0, binding = 4, std430) readonly buffer Meshes { MeshEntry meshes[]; };
@@ -76,10 +74,7 @@ normalsCode =
 
 aoCode :: ByteString
 aoCode =
-  $( compileShaderQ
-       Nothing
-       "comp"
-       Nothing
+  $( Common.comp
        [glsl|
     #version 450
     layout(local_size_x = 8, local_size_y = 8) in;
@@ -157,10 +152,7 @@ aoCode =
 
 blurCode :: ByteString
 blurCode =
-  $( compileShaderQ
-       Nothing
-       "comp"
-       Nothing
+  $( Common.comp
        [glsl|
     #version 450
     layout(local_size_x = 8, local_size_y = 8) in;

@@ -208,6 +208,7 @@ executables:
     - optparse-applicative
     - resourcet
     - say
+    - template-haskell
     - text
     - unliftio
     - vector

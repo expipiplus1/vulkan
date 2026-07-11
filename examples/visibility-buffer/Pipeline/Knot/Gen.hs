@@ -1,4 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 {-| Torus-knot tube mesh generation.
 
@@ -13,15 +14,19 @@ module Pipeline.Knot.Gen
   ) where
 
 import Data.ByteString (ByteString)
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
+
+import Pipeline.Common (vertexStruct)
+import qualified Pipeline.Common as Common
 
 code :: ByteString
 code =
-  [comp|
+  $( Common.comp
+       [glsl|
     #version 450
     layout(local_size_x = 64) in;
 
-    struct Vertex { vec4 position; vec4 normal; };
+    $vertexStruct
     layout(set = 0, binding = 0, std430) writeonly buffer Verts { Vertex verts[]; };
 
     layout(push_constant, std430) uniform Params {
@@ -90,3 +95,4 @@ code =
       verts[o + 5u] = Vertex(vec4(p01, 1.0), vec4(n01, 0.0));
     }
   |]
+   )

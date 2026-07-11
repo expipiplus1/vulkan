@@ -4,7 +4,7 @@
 {-| The shade-pass (deferred resolve) compute shader.
 
 Reads the visibility buffer and writes linear HDR. Every surface reconstructs the
-same way (DAIS, "Pipeline.Dais"): fetch the object's transform + mesh, fetch the hit
+same way (DAIS, "Pipeline.Common"): fetch the object's transform + mesh, fetch the hit
 triangle from the shared vertex SSBO, and barycentric-interpolate world position +
 normal at the pixel. Emissive objects (glowstones, the orb) output their stored
 emissive; lit objects shade PBR-lite (albedo + metalness + roughness) with per-light
@@ -21,16 +21,14 @@ module Pipeline.Shade.Shader
   ) where
 
 import Data.ByteString (ByteString)
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang (compileShaderQ, glsl)
+import Vulkan.Utils.ShaderQQ.GLSL.Glslang (glsl)
 
-import Pipeline.Dais (dais, daisTypes)
+import Pipeline.Common (dais, evsm, tables)
+import qualified Pipeline.Common as Common
 
 code :: ByteString
 code =
-  $( compileShaderQ
-       Nothing
-       "comp"
-       Nothing
+  $( Common.comp
        [glsl|
     #version 450
     layout(local_size_x = 8, local_size_y = 8) in;
@@ -38,7 +36,7 @@ code =
     layout(set = 0, binding = 0, rg32ui) uniform readonly uimage2D visBuffer;
     layout(set = 0, binding = 1, rgba16f) uniform writeonly image2D outColor;
 
-    $daisTypes
+    $tables
     layout(set = 0, binding = 2, std430) readonly buffer Vertices { Vertex verts[]; };
     struct Light { vec4 posHalf; vec4 colInt; };
     layout(set = 0, binding = 3, std430) readonly buffer Lights { Light lights[]; };
@@ -62,8 +60,7 @@ code =
     } cam;
 
     // The EVSM encoding the moment cubes were baked with (Pipeline.Shadow.Params).
-    layout(constant_id = 0) const float SHADOW_FAR = 3.0;
-    layout(constant_id = 1) const float SHADOW_C = 30.0;
+    $evsm
 
     vec3 objColor(uint id) {
       uint h = id * 2654435761u;
@@ -85,9 +82,8 @@ code =
       vec3 dir = (wpos + n * cam.normalBias) - lights[li].posHalf.xyz;
       float dist = max(0.0, length(dir) / SHADOW_FAR - cam.shadowBias);
       vec4 mo = texture(shadowCube, vec4(normalize(dir), float(li)));
-      float posR = exp(SHADOW_C * dist);
-      float negR = -exp(-SHADOW_C * dist);
-      return min(chebyshev(mo.xy, posR), chebyshev(mo.zw, negR));
+      vec2 w = evsmWarp(dist);
+      return min(chebyshev(mo.xy, w.x), chebyshev(mo.zw, w.y));
     }
 
     // Shadowed direct light at wpos: diffuse irradiance and the unscaled Blinn glint,
