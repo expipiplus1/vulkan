@@ -259,17 +259,17 @@ newtype BufferDesc = BufferDesc {info :: Text}
 
 {- | Import a 'ManagedBuffer' under @name@, as an observed resource.
 
-Claims the graph's 'FG.setPreExec' slot for 'flushBarriers' like the image
+Claims the graph's 'FG.addPreExec slot for 'flushBarriers' like the image
 imports do — the adapters share that slot; wrap the flush rather than
 replacing it.
 -}
 importManagedBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m FG.Handle
 importManagedBuffer graph name mb = do
-  FG.setPreExec graph flushBarriers
+  FG.addPreExec graph flushBarriers
   FG.importResource graph name (BufferDesc mb.info) mb
 
 -- | 'importManagedBuffer' via 'FG.importScratch', keeping writers subject to demand culling.
 importScratchBuffer :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedBuffer -> m FG.Handle
 importScratchBuffer graph name mb = do
-  FG.setPreExec graph flushBarriers
+  FG.addPreExec graph flushBarriers
   FG.importScratch graph name (BufferDesc mb.info) mb

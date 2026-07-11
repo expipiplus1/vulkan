@@ -351,7 +351,7 @@ newtype ImageDesc = ImageDesc {info :: Text}
 
 {- | Import a 'ManagedImage' under @name@, as an observed resource.
 
-Also claims the graph's 'FG.setPreExec' slot for 'flushBarriers', so the
+Also claims the graph's 'FG.addPreExec slot for 'flushBarriers', so the
 hook-queued barriers are recorded under any driver — the adapter owns that
 slot; wrap the flush rather than replacing it.
 
@@ -362,7 +362,7 @@ sampler). For targets only this graph's passes consume, use
 -}
 importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
 importManagedImage graph name mi = do
-  FG.setPreExec graph flushBarriers
+  FG.addPreExec graph flushBarriers
   FG.importResource graph name (ImageDesc mi.info) mi
 
 {- | 'importManagedImage' via 'FG.importScratch', keeping writers subject to demand culling.
@@ -373,5 +373,5 @@ consumer must say 'FG.setSideEffect' themselves.
 -}
 importScratchImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
 importScratchImage graph name mi = do
-  FG.setPreExec graph flushBarriers
+  FG.addPreExec graph flushBarriers
   FG.importScratch graph name (ImageDesc mi.info) mi

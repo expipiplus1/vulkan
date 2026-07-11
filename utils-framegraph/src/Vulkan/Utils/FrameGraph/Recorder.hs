@@ -3,7 +3,7 @@
 A 'Recorder' is a mutable slot holding the command buffer the current pass — and
 the barrier hooks it fires — record into, plus the batch of barriers those hooks
 have queued for the pass ('queueBarrier', emitted as one command by
-'flushBarriers' from the graph's 'FG.setPreExec' point). 'recordingBackend' is
+'flushBarriers' from the graph's 'FG.addPreExec point). 'recordingBackend' is
 the topology-agnostic 'FG.QueueBackend' that points the recorder at each pass's
 queue buffer; 'recordGraph' wraps the whole record step (fresh recorder, flush
 installed, run, close every buffer), leaving each driver to supply only its own
@@ -89,7 +89,7 @@ reading then writing one image) is a dependent chain of layout transitions
 that needs the command split to stay ordered.
 
 The batch is emitted by 'flushBarriers', which the graph must fire between
-the hooks and the exec callback (installed via 'FG.setPreExec' by the image
+the hooks and the exec callback (installed via 'FG.addPreExec by the image
 adapter's import and by 'recordGraph') — a driver whose resources queue
 through another path must install it itself, or the queued barriers are
 never recorded.
@@ -192,6 +192,6 @@ recordGraph
   -> m ()
 recordGraph cbFor buffers graph = do
   recorder <- newRecorder (NE.head buffers)
-  FG.setPreExec graph flushBarriers
+  FG.addPreExec graph flushBarriers
   FG.executeQueued graph (recordingBackend recorder cbFor) Nothing recorder ()
   traverse_ Vk.endCommandBuffer buffers
