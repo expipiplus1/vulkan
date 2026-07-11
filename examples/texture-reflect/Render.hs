@@ -51,6 +51,8 @@ import qualified VulkanMemoryAllocator as AllocationCreateInfo (AllocationCreate
 import qualified VulkanMemoryAllocator as VMA
 
 import Data.SpirV.Reflect.FFI (loadBytes)
+import Vulkan.Utils.Pipeline (Set)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Utils.SpirV.Descriptors (mergedDescriptorSetLayoutInfos)
 
 import qualified Cube
@@ -86,9 +88,8 @@ from, and the graph they register into.
 data Shared = Shared
   { allocator :: VMA.Allocator
   , device :: Vk.Device
-  , set0Layout :: Vk.DescriptorSetLayout
-  , set1Layout :: Vk.DescriptorSetLayout
-  , descriptorPool :: Vk.DescriptorPool
+  , set0 :: Set
+  , set1 :: Set
   , graph :: FG.FrameGraph Recorder ()
   }
 
@@ -98,14 +99,13 @@ render
   -> Word32
   -> ResourceT IO (JP.Image JP.PixelRGBA8)
 render allocator device graphicsQueueFamilyIndex = do
-  -- Shared wiring: the merged set layouts, the pool, and the Globals UBO with
-  -- its set 0 (read by both pipelines).
-  (set0Layout, set1Layout) <- mergedSetLayouts device
-  descriptorPool <- allocateDescriptorPool device
-  globalsSet <- allocateGlobals allocator device descriptorPool set0Layout
+  -- Shared wiring: the merged set layouts and the Globals UBO with its set 0
+  -- (read by both pipelines).
+  (set0, set1) <- mergedSetLayouts device
+  globalsSet <- allocateGlobals allocator device set0
 
   graph <- FG.newFrameGraph
-  let shared = Shared{allocator, device, set0Layout, set1Layout, descriptorPool, graph}
+  let shared = Shared{allocator, device, set0, set1, graph}
 
   -- Each pass owns its targets and pipeline; the offscreen handle and view flow
   -- into the cube pass (which samples the drawn image and reads it back).
@@ -145,15 +145,15 @@ offscreenTrianglePass shared globalsSet = do
   (_, offscreenH) <- importImage shared.graph "offscreen" offscreenImage Vk.IMAGE_ASPECT_COLOR_BIT
   let mkHandle = FG.writeWith offscreenH (usageFlags ColorAttachment)
 
-  tri <- Tri.allocatePipeline shared.device colorFormat shared.set0Layout
+  tri <- Tri.allocatePipeline shared.device colorFormat shared.set0
 
   offscreenColored <- FG.addPass shared.graph "offscreen-triangle" mkHandle \_handle -> do
     cb <- recordingCommandBuffer
     let dri = Dynamic.renderingInfo (fullScissor extent) [(offscreenView, Vk.Float32 0 0 0 1)] Nothing
     Vk.cmdUseRendering cb dri do
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS tri.pipeline
+      Pipeline.bind cb tri
       applyDynamicStates allDynamicStates cb (dynamicStateFor extent)
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS tri.pipelineLayout 0 [globalsSet] []
+      Pipeline.bindSet cb tri 0 globalsSet
       Vk.cmdDraw cb 3 1 0 0
 
   pure (offscreenView, offscreenColored)
@@ -178,21 +178,21 @@ cubePass shared offscreenView offscreenColored = do
         FG.writeWith_ sceneH (usageFlags ColorAttachment)
         FG.writeWith_ depthH (usageFlags DepthAttachment)
 
-  cube <- Cube.allocatePipeline shared.device colorFormat depthFormat shared.set0Layout shared.set1Layout
+  cube <- Cube.allocatePipeline shared.device colorFormat depthFormat shared.set0 shared.set1
   (_, sampler) <- Vk.withSampler shared.device samplerInfo Nothing allocate
-  samplerSet <- allocateSamplerSet shared.device shared.descriptorPool shared.set1Layout sampler offscreenView
+  samplerSet <- allocateSamplerSet shared.device shared.set1 sampler offscreenView
   cubeBuffer <- cubeVertexBuffer shared.allocator
 
   FG.addPass_ shared.graph "cube" cubeSetup do
     cb <- recordingCommandBuffer
     let dri = Dynamic.renderingInfo (fullScissor extent) [(sceneView, Vk.Float32 0.30 0.32 0.38 1)] (Just (depthView, 1))
     Vk.cmdUseRendering cb dri do
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS cube.pipeline
+      Pipeline.bind cb cube
       applyDynamicStates
         allDynamicStates
         cb
         (dynamicStateFor extent){depthTest = True, depthWrite = True, depthCompareOp = Vk.COMPARE_OP_LESS}
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS cube.pipelineLayout 1 [samplerSet] []
+      Pipeline.bindSet cb cube 1 samplerSet
       Vk.cmdBindVertexBuffers cb 0 [cubeBuffer] [0]
       Vk.cmdDraw cb cubeVertexCount 1 0 0
 
@@ -206,43 +206,23 @@ importImage graph name image aspect = do
   pure (managed, handle)
 
 {- | The set 0 (Globals UBO, all stages) and set 1 (sampler) layouts, merged
-across all four shaders. One layout object per set, reused across both pipeline
+across all four shaders. One 'Set' per number, reused across both pipeline
 layouts, makes them compatible for set 0.
 -}
-mergedSetLayouts :: Vk.Device -> ResourceT IO (Vk.DescriptorSetLayout, Vk.DescriptorSetLayout)
+mergedSetLayouts :: Vk.Device -> ResourceT IO (Set, Set)
 mergedSetLayouts dev = do
   modules <-
     traverse
       loadBytes
       [Tri.Shader.vertCode, Tri.Shader.fragCode, Cube.Shader.vertCode, Cube.Shader.fragCode]
   setInfos <- orDie (mergedDescriptorSetLayoutInfos modules)
-  setLayouts <-
-    mapM
-      (\(setNo, info) -> do (_, l) <- Vk.withDescriptorSetLayout dev info Nothing allocate; pure (setNo, l))
-      setInfos
-  let layoutFor n = maybe (error ("missing descriptor set " <> show n)) id (lookup n setLayouts)
-  pure (layoutFor 0, layoutFor 1)
-
--- | A pool for the two descriptor sets: the Globals UBO and the sampler.
-allocateDescriptorPool :: Vk.Device -> ResourceT IO Vk.DescriptorPool
-allocateDescriptorPool dev = do
-  (_, pool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 2
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_UNIFORM_BUFFER 1
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
-            ]
-        }
-      Nothing
-      allocate
-  pure pool
+  sets <- mapM (\(setNo, info) -> (,) setNo <$> Pipeline.allocateSetLayout dev info) setInfos
+  let setFor n = maybe (error ("missing descriptor set " <> show n)) id (lookup n sets)
+  pure (setFor 0, setFor 1)
 
 -- | The Globals UBO (host-visible, mapped) and its set 0 descriptor.
-allocateGlobals :: VMA.Allocator -> Vk.Device -> Vk.DescriptorPool -> Vk.DescriptorSetLayout -> ResourceT IO Vk.DescriptorSet
-allocateGlobals allocator dev pool set0Layout = do
+allocateGlobals :: VMA.Allocator -> Vk.Device -> Set -> ResourceT IO Vk.DescriptorSet
+allocateGlobals allocator dev set0 = do
   (_, (uboBuffer, _, uboInfo)) <-
     VMA.withBuffer
       allocator
@@ -250,16 +230,14 @@ allocateGlobals allocator dev pool set0Layout = do
       mappedAlloc
       allocate
   liftIO $ poke (castPtr (VMA.mappedData uboInfo)) globalsValue
-  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [set0Layout]}
-  let globalsSet = V.head sets
+  globalsSet <- Pipeline.allocateDescriptorSet dev set0
   Vk.updateDescriptorSets dev [bufferWrite globalsSet 0 Vk.DESCRIPTOR_TYPE_UNIFORM_BUFFER uboBuffer] []
   pure globalsSet
 
 -- | Set 1: the offscreen image sampled through @sampler@.
-allocateSamplerSet :: Vk.Device -> Vk.DescriptorPool -> Vk.DescriptorSetLayout -> Vk.Sampler -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
-allocateSamplerSet dev pool set1Layout sampler view = do
-  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [set1Layout]}
-  let samplerSet = V.head sets
+allocateSamplerSet :: Vk.Device -> Set -> Vk.Sampler -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
+allocateSamplerSet dev set1 sampler view = do
+  samplerSet <- Pipeline.allocateDescriptorSet dev set1
   Vk.updateDescriptorSets
     dev
     [combinedImageSamplerWrite samplerSet 0 sampler view Vk.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL]

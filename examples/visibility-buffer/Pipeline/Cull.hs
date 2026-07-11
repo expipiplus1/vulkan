@@ -17,8 +17,7 @@ with the cave cubes that pass this frame's tests. Two graph passes at the top of
 consume the refill are the graph tracker's.
 -}
 module Pipeline.Cull
-  ( Pipeline (..)
-  , allocatePipeline
+  ( allocatePipeline
   , CullBuffers (..)
   , allocateSet
   , Params (..)
@@ -28,21 +27,16 @@ module Pipeline.Cull
 
 import Control.Monad (forM_)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Trans.Resource (ResourceT, allocate)
-import qualified Data.Vector as V
+import Control.Monad.Trans.Resource (ResourceT)
 import Data.Word (Word32)
-import Foreign.Marshal.Utils (with)
-import Foreign.Ptr (castPtr)
 import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite)
-import Vulkan.Utils.SpirV.Descriptors (pushConstantsSize)
-import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
-import qualified Vulkan.Utils.SpirV.Pipeline
-import Vulkan.Utils.SpirV.Reflect (reflectBytes)
+import Vulkan.Utils.Pipeline (Pipeline)
+import qualified Vulkan.Utils.Pipeline as Pipeline
+import Vulkan.Utils.SpirV.Pipeline (allocateCompute)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
-import Vulkan.Zero (zero)
 
 import qualified Pipeline.Cull.Shader as Shader
 import qualified Scene.Objects as Objects
@@ -50,22 +44,8 @@ import qualified Scene.Objects as Objects
 -- Generate the @Params@ cull push-constant record.
 reflectShaderTypesBytes Shader.code
 
-data Pipeline = Pipeline
-  { pipeline :: Vk.Pipeline
-  , layout :: Vk.PipelineLayout
-  , setLayout :: Vk.DescriptorSetLayout
-  , pushSize :: Word32
-  -- ^ Reflected @Params@ range size (< the std430 'Storable' size, which trailing-pads).
-  }
-
 allocatePipeline :: Vk.Device -> ResourceT IO Pipeline
-allocatePipeline dev = do
-  reflected <- reflectBytes Shader.code
-  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
-  setLayout <- singleSetLayout reflectedLayout
-  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, Shader.code)
-  let pushSize = pushConstantsSize reflected
-  pure Pipeline{pipeline, layout = reflectedLayout.pipelineLayout, setLayout, pushSize}
+allocatePipeline dev = allocateCompute dev () Shader.code
 
 -- | The buffers the cull reads and refills.
 data CullBuffers = CullBuffers
@@ -84,20 +64,7 @@ data CullBuffers = CullBuffers
 -- | The set: 'CullBuffers' at bindings 0-3 and 5, the depth pyramid sampled at 4.
 allocateSet :: Vk.Device -> Pipeline -> CullBuffers -> Vk.Sampler -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
 allocateSet dev cull bufs sampler hizView = do
-  (_, pool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 1
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 5
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
-            ]
-        }
-      Nothing
-      allocate
-  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [cull.setLayout]}
-  let set = V.head sets
+  set <- Pipeline.allocateSet dev cull 0
   Vk.updateDescriptorSets
     dev
     [ bufferWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.objects
@@ -124,8 +91,7 @@ reset cb indirect caveBase = do
 -- | Record the cull dispatch, refilling the reset draws from this frame's tests.
 record :: (MonadIO m) => Pipeline -> Vk.DescriptorSet -> Params -> Vk.CommandBuffer -> m ()
 record cull set params cb = liftIO do
-  Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE cull.pipeline
-  with params \p ->
-    Vk.cmdPushConstants cb cull.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 cull.pushSize (castPtr p)
-  Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE cull.layout 0 [set] []
+  Pipeline.bind cb cull
+  Pipeline.push cb cull params
+  Pipeline.bindSet cb cull 0 set
   Vk.cmdDispatch cb ((params.caveCount + 255) `div` 256) 1 1

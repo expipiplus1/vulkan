@@ -18,8 +18,7 @@ as a separable cross-bilateral pair before the resolve samples the factor.
 Set layouts are reflected from the shaders, so they can't drift.
 -}
 module Pipeline.Ssao
-  ( Pipeline (..)
-  , Ssao (..)
+  ( Ssao (..)
   , Prepass (..)
   , Ao (..)
   , Blur (..)
@@ -27,27 +26,17 @@ module Pipeline.Ssao
   , allocateNormalsSet
   , allocateAoSet
   , allocateBlurSet
-  , push
   ) where
 
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Trans.Resource (ResourceT, allocate)
-import Data.ByteString (ByteString)
-import qualified Data.Vector as V
-import Data.Word (Word32)
-import Foreign.Marshal.Utils (with)
-import Foreign.Ptr (castPtr)
-import Foreign.Storable (Storable)
+import Control.Monad.Trans.Resource (ResourceT)
 import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite, combinedImageSamplerWrite, imageWrite)
-import Vulkan.Utils.SpirV.Descriptors (pushConstantsSize)
-import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
-import qualified Vulkan.Utils.SpirV.Pipeline
-import Vulkan.Utils.SpirV.Reflect (reflectBytes)
+import Vulkan.Utils.Pipeline (Pipeline)
+import qualified Vulkan.Utils.Pipeline as Pipeline
+import Vulkan.Utils.SpirV.Pipeline (allocateCompute)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
-import Vulkan.Zero (zero)
 
 import qualified Pipeline.Ssao.Shader as Shader
 
@@ -56,14 +45,6 @@ import qualified Pipeline.Ssao.Shader as Shader
 reflectShaderTypesBytes Shader.normalsCode
 reflectShaderTypesBytes Shader.aoCode
 reflectShaderTypesBytes Shader.blurCode
-
-data Pipeline = Pipeline
-  { pipeline :: Vk.Pipeline
-  , layout :: Vk.PipelineLayout
-  , setLayout :: Vk.DescriptorSetLayout
-  , pushSize :: Word32
-  -- ^ Reflected push-constant range size; push exactly this many bytes.
-  }
 
 -- | The normal prepass, the AO gather, and the bilateral blur (used for both axes).
 data Ssao = Ssao
@@ -74,25 +55,17 @@ data Ssao = Ssao
 
 allocateSsao :: Vk.Device -> ResourceT IO Ssao
 allocateSsao dev = do
-  normals <- buildCompute dev Shader.normalsCode
-  ao <- buildCompute dev Shader.aoCode
-  blur <- buildCompute dev Shader.blurCode
+  normals <- allocateCompute dev () Shader.normalsCode
+  ao <- allocateCompute dev () Shader.aoCode
+  blur <- allocateCompute dev () Shader.blurCode
   pure Ssao{normals, ao, blur}
-
-buildCompute :: Vk.Device -> ByteString -> ResourceT IO Pipeline
-buildCompute dev code = do
-  reflected <- reflectBytes code
-  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
-  setLayout <- singleSetLayout reflectedLayout
-  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
-  pure Pipeline{pipeline, layout = reflectedLayout.pipelineLayout, setLayout, pushSize = pushConstantsSize reflected}
 
 {- | The prepass set: the visibility buffer (0), the normal target (1), and the
 DAIS tables — vertices (2), objects (3), meshes (4).
 -}
 allocateNormalsSet :: Vk.Device -> Pipeline -> Vk.ImageView -> Vk.ImageView -> Vk.Buffer -> Vk.Buffer -> Vk.Buffer -> ResourceT IO Vk.DescriptorSet
 allocateNormalsSet dev pl visView normalView verts objects meshes = do
-  set <- allocateSet dev pl [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE 2, Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 3]
+  set <- Pipeline.allocateSet dev pl 0
   Vk.updateDescriptorSets
     dev
     [ imageWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE Vk.IMAGE_LAYOUT_GENERAL visView
@@ -109,7 +82,7 @@ prepass normals (1), and the AO target (2).
 -}
 allocateAoSet :: Vk.Device -> Pipeline -> Vk.Sampler -> Vk.ImageView -> Vk.ImageView -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
 allocateAoSet dev pl sampler pyramidView normalView aoView = do
-  set <- allocateSet dev pl [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1, Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE 2]
+  set <- Pipeline.allocateSet dev pl 0
   Vk.updateDescriptorSets
     dev
     [ combinedImageSamplerWrite set 0 sampler pyramidView Vk.IMAGE_LAYOUT_GENERAL
@@ -125,7 +98,7 @@ source/target images swapped, for the X-then-Y ping-pong.
 -}
 allocateBlurSet :: Vk.Device -> Pipeline -> Vk.ImageView -> Vk.ImageView -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
 allocateBlurSet dev pl normalView srcView dstView = do
-  set <- allocateSet dev pl [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE 3]
+  set <- Pipeline.allocateSet dev pl 0
   Vk.updateDescriptorSets
     dev
     [ imageWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE Vk.IMAGE_LAYOUT_GENERAL normalView
@@ -134,14 +107,3 @@ allocateBlurSet dev pl normalView srcView dstView = do
     ]
     []
   pure set
-
--- | Push a reflected push-constant record (exactly 'pushSize' bytes, COMPUTE stage).
-push :: (Storable a, MonadIO m) => Vk.CommandBuffer -> Pipeline -> a -> m ()
-push cb pl pc =
-  liftIO $ with pc \p ->
-    Vk.cmdPushConstants cb pl.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 pl.pushSize (castPtr p)
-
-allocateSet :: Vk.Device -> Pipeline -> V.Vector Vk.DescriptorPoolSize -> ResourceT IO Vk.DescriptorSet
-allocateSet dev pl poolSizes = do
-  (_, pool) <- Vk.withDescriptorPool dev zero{Vk.maxSets = 1, Vk.poolSizes = poolSizes} Nothing allocate
-  V.head <$> Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [pl.setLayout]}

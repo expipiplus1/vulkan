@@ -18,7 +18,6 @@ import Data.Proxy (Proxy (..))
 import qualified Data.Vector.Storable as VS
 import Data.Word (Word32)
 import Foreign.Marshal.Array (peekArray)
-import Foreign.Marshal.Utils (with)
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
 import Foreign.Storable (poke, sizeOf)
 import Geomancy.UVec2 (uvec2)
@@ -31,6 +30,7 @@ import qualified Vulkan.Core10 as CommandPoolCreateInfo (CommandPoolCreateInfo (
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo (..), getBufferDeviceAddress)
 import Vulkan.Utils.Descriptors (bufferWrite)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -161,25 +161,8 @@ render allocator dev computeQueueFamilyIndex opts = do
 
   pathtracer <- Pathtracer.allocatePipeline dev opts.samples opts.bounces
 
-  (_, descriptorPool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 1
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_UNIFORM_BUFFER 1
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 2
-            ]
-        }
-      Nothing
-      allocate
-  [descriptorSet] <-
-    Vk.allocateDescriptorSets
-      dev
-      zero
-        { Vk.descriptorPool = descriptorPool
-        , Vk.setLayouts = [pathtracer.descriptorSetLayout]
-        }
+  -- One descriptor set, its pool sized from the reflected bindings.
+  descriptorSet <- Pipeline.allocateSet dev pathtracer 0
 
   Vk.updateDescriptorSets
     dev
@@ -229,17 +212,10 @@ render allocator dev computeQueueFamilyIndex opts = do
       bandFrame = frame{rowOffset = fromIntegral row0}
     Vk.resetCommandBuffer cb zero
     Vk.useCommandBuffer cb zero{CommandBufferBeginInfo.flags = Vk.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} do
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pathtracer.pipeline
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pathtracer.pipelineLayout 0 [descriptorSet] []
+      Pipeline.bind cb pathtracer
+      Pipeline.bindSet cb pathtracer 0 descriptorSet
       -- Push the reflected 'Frame' (std430) with this band's row offset.
-      liftIO $ with bandFrame $ \pFrame ->
-        Vk.cmdPushConstants
-          cb
-          pathtracer.pipelineLayout
-          Vk.SHADER_STAGE_COMPUTE_BIT
-          0
-          (fromIntegral (sizeOf bandFrame))
-          (castPtr pFrame)
+      Pipeline.push cb pathtracer bandFrame
       Vk.cmdDispatch
         cb
         (ceiling (realToFrac width / realToFrac @_ @Float workgroup))

@@ -54,7 +54,6 @@ import Data.Maybe (catMaybes)
 import qualified Data.Text as T
 import qualified Data.Vector as V
 import Data.Word (Word32)
-import Foreign.Marshal.Utils (with)
 import Foreign.Ptr (Ptr, castPtr, plusPtr)
 import Foreign.Storable (peek, sizeOf)
 import qualified Fragr as FG
@@ -74,6 +73,8 @@ import Vulkan.Utils.FrameGraph.Buffer (ManagedBuffer)
 import qualified Vulkan.Utils.FrameGraph.Buffer as Buf
 import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedImage, describedMip, describedSlice, importManagedImage, importScratchImage, newManagedImage, transitionImageTo, transitionImagesTo, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
+import Vulkan.Utils.Pipeline (Pipeline)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
 
@@ -360,16 +361,16 @@ data PassOutputs = PassOutputs
 
 -- | The extent-independent pipelines, built once.
 data ScenePipelines = ScenePipelines
-  { mesh :: Mesh.Pipeline
-  , shade :: Shade.Pipeline
-  , luminance :: Luminance.Pipeline
-  , tonemap :: Tonemap.Pipeline
-  , gamma :: Gamma.Pipeline
+  { mesh :: Pipeline
+  , shade :: Pipeline
+  , luminance :: Pipeline
+  , tonemap :: Pipeline
+  , gamma :: Pipeline
   , bloom :: Bloom.Bloom
-  , shadow :: Shadow.Pipeline
-  , generator :: Voxels.ComputePipeline
-  , knot :: Knot.Knot
-  , cull :: Cull.Pipeline
+  , shadow :: Pipeline
+  , generator :: Pipeline
+  , knot :: Pipeline
+  , cull :: Pipeline
   , hiz :: HiZ.HiZ
   , ssao :: Ssao.Ssao
   }
@@ -780,9 +781,9 @@ recordShadows cb pls shadowSet bakedMoments orbMoments depth renderViews depthVi
     Vk.cmdUseRendering cb (shadowRenderingInfo (renderViews V.! l) depthView) do
       Vk.cmdSetViewport cb 0 [Vk.Viewport 0 0 (fromIntegral shadowRes) (fromIntegral shadowRes) 0 1]
       Vk.cmdSetScissor cb 0 [Vk.Rect2D (Vk.Offset2D 0 0) (Vk.Extent2D shadowRes shadowRes)]
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipeline
+      Pipeline.bind cb pls.shadow
       Shadow.pushShadow cb pls.shadow light (fromIntegral l * cubeFaces)
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipelineLayout 0 [shadowSet] []
+      Pipeline.bindSet cb pls.shadow 0 shadowSet
       Vk.cmdDrawIndirect cb indirect Objects.occluderDrawOffset Objects.occluderDrawCount Objects.drawStride
   transitionImagesTo cb [(m, Sampled shadeStage) | m <- momentsSlices]
 
@@ -839,9 +840,9 @@ recordOrbShadows cb pls scene orbShadow t = liftIO do
     Vk.cmdUseRendering cb (shadowRenderingInfo (scene.static.shadowRenderViews V.! fromIntegral light) scene.static.shadowDepthView) do
       Vk.cmdSetViewport cb 0 [Vk.Viewport 0 0 (fromIntegral shadowRes) (fromIntegral shadowRes) 0 1]
       Vk.cmdSetScissor cb 0 [Vk.Rect2D (Vk.Offset2D 0 0) (Vk.Extent2D shadowRes shadowRes)]
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipeline
+      Pipeline.bind cb pls.shadow
       Shadow.pushShadow cb pls.shadow (Lights.orbLight orb t) (light * cubeFaces)
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.shadow.pipelineLayout 0 [scene.static.shadowSet] []
+      Pipeline.bindSet cb pls.shadow 0 scene.static.shadowSet
       Vk.cmdDrawIndirect cb scene.static.indirect.buffer (Objects.orbOccDrawOffset i) Objects.occluderDrawCount Objects.drawStride
   -- Producer-side hand-off to the (possibly async-compute) resolve, like the
   -- geometry pass's: the COLOR_ATTACHMENT_OUTPUT source scope stays on a queue
@@ -951,9 +952,9 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
         applyDynamicStates allDynamicStates cb dyn
         -- Every mesh (glowstones + cave cubes, the knot, the orb sphere) in one
         -- multi-draw: the pipeline pulls geometry + per-object transforms from the tables.
-        Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipeline
-        pushCamera cb pls.mesh.pipelineLayout viewProj
-        Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_GRAPHICS pls.mesh.pipelineLayout 0 [scene.static.meshSet] []
+        Pipeline.bind cb pls.mesh
+        pushCamera cb pls.mesh viewProj
+        Pipeline.bindSet cb pls.mesh 0 scene.static.meshSet
         Vk.cmdDrawIndirect cb scene.static.indirect.buffer Objects.mainDrawOffset Objects.mainDrawCount Objects.drawStride
       -- Producer-side transition for the (possibly async-compute) shade pass:
       -- done here so the COLOR_ATTACHMENT_OUTPUT source stage stays on a queue
@@ -971,8 +972,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
       w <-
         FG.addPass graph (T.pack ("hiz." <> show i)) (hizSetup src dstH) \_ -> do
           cb <- recordingCommandBuffer
-          Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.pipeline
-          Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.reduce.layout 0 [scene.hizSets V.! i] []
+          Pipeline.bind cb pls.hiz.reduce
+          Pipeline.bindSet cb pls.hiz.reduce 0 (scene.hizSets V.! i)
           dispatchMip cb (scene.hizExtents V.! i)
       pure (w, w : ws)
   (hizLast, hizReduced) <- foldM hizPass (depthWritten, []) (V.toList (V.indexed (V.take nReduce hizHs)))
@@ -982,9 +983,9 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
     Just tailSet ->
       FG.addPass graph "hiz.tail" (hizTailSetup hizLast (V.drop nReduce hizHs)) \_ -> do
         cb <- recordingCommandBuffer
-        Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.pipeline
+        Pipeline.bind cb pls.hiz.tail
         HiZ.pushTail cb pls.hiz.tail (fromIntegral (V.length hizHs - nReduce))
-        Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.hiz.tail.layout 0 [tailSet] []
+        Pipeline.bindSet cb pls.hiz.tail 0 tailSet
         Vk.cmdDispatch cb 1 1 1
 
   -- SSAO ("Pipeline.Ssao"), also graphics-queue: resolve half-res DAIS normals
@@ -992,25 +993,25 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   normalsWritten <-
     FG.addPass graph "ssao.normals" (computeSetup [visWritten] normalsH) \_ -> do
       cb <- recordingCommandBuffer
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.normals.pipeline
-      Ssao.push cb pls.ssao.normals Ssao.Prepass{Ssao.viewProj = viewProj}
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.normals.layout 0 [scene.normalsSet] []
+      Pipeline.bind cb pls.ssao.normals
+      Pipeline.push cb pls.ssao.normals Ssao.Prepass{Ssao.viewProj = viewProj}
+      Pipeline.bindSet cb pls.ssao.normals 0 scene.normalsSet
       dispatchMip cb halfExtent
   aoWritten <-
     FG.addPass graph "ssao" (computeSetup (normalsWritten : hizReduced <> hizTail) aoH) \_ -> do
       cb <- recordingCommandBuffer
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.ao.pipeline
+      Pipeline.bind cb pls.ssao.ao
       pushAo cb pls.ssao.ao tweaks eye extent
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.ao.layout 0 [scene.aoSet] []
+      Pipeline.bindSet cb pls.ssao.ao 0 scene.aoSet
       dispatchMip cb halfExtent
   -- Separable cross-bilateral blur: X into the scratch, Y back in place. The
   -- in-place Y write renames the ao handle, ordering it after the X pass's read.
   let blurPass name set axes src dstH =
         FG.addPass graph name (computeSetup [src, normalsWritten] dstH) \_ -> do
           cb <- recordingCommandBuffer
-          Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.blur.pipeline
+          Pipeline.bind cb pls.ssao.blur
           pushBlur cb pls.ssao.blur tweaks axes
-          Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.ssao.blur.layout 0 [set] []
+          Pipeline.bindSet cb pls.ssao.blur 0 set
           dispatchMip cb halfExtent
   aoBlurredX <- blurPass "ssao.blur.x" scene.aoBlurXSet (1, 0) aoWritten aoBlurH
   aoBlurred <- blurPass "ssao.blur.y" scene.aoBlurYSet (0, 1) aoBlurredX aoWritten
@@ -1018,10 +1019,10 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   colorWritten <-
     FG.addPass graph "shade" (shadeSetup visWritten aoBlurred orbMoments colorH) \_ -> do
       cb <- recordingCommandBuffer
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipeline
-      pushResolve cb pls.shade.pipelineLayout pls.shade.cameraPushSize tweaks.tuning viewProj eye debugMode
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.shade.pipelineLayout 0 [scene.shadeSet] []
-      Vk.cmdDispatch cb (groups w) (groups h) 1
+      Pipeline.bind cb pls.shade
+      pushResolve cb pls.shade tweaks.tuning viewProj eye debugMode
+      Pipeline.bindSet cb pls.shade 0 scene.shadeSet
+      Vk.cmdDispatch cb (groups width) (groups height) 1
 
   -- Bloom pyramid: progressively downsample the HDR image through
   -- the mip chain, then additively upsample. Each mip is its own tracked
@@ -1032,9 +1033,9 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
     downPass src i =
       FG.addPass graph (T.pack ("bloom.down." <> show i)) (bloomSetup src (mipHs !! i)) \_ -> do
         cb <- recordingCommandBuffer
-        Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.down.pipeline
-        Bloom.pushDownsample cb pls.bloom.down.pipelineLayout (i == 0)
-        Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.down.pipelineLayout 0 [scene.downSets V.! i] []
+        Pipeline.bind cb pls.bloom.down
+        Bloom.pushDownsample cb pls.bloom.down (i == 0)
+        Pipeline.bindSet cb pls.bloom.down 0 (scene.downSets V.! i)
         dispatchMip cb (scene.bloomExtents V.! i)
     chainDown src i
       | i >= mipCount = pure []
@@ -1044,9 +1045,9 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
     upPass blur i =
       FG.addPass graph (T.pack ("bloom.up." <> show i)) (upSetup blur (downHs !! i)) \_ -> do
         cb <- recordingCommandBuffer
-        Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.up.pipeline
-        Bloom.pushUpsample cb pls.bloom.up.pipelineLayout tweaks.bloomRadius
-        Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.bloom.up.pipelineLayout 0 [scene.upSets V.! i] []
+        Pipeline.bind cb pls.bloom.up
+        Bloom.pushUpsample cb pls.bloom.up tweaks.bloomRadius
+        Pipeline.bindSet cb pls.bloom.up 0 (scene.upSets V.! i)
         dispatchMip cb (scene.bloomExtents V.! i)
     chainUp blur i
       | i < 0 = pure blur
@@ -1059,8 +1060,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   when (debugMode == 0) $
     FG.addPass_ graph "luminance" (luminanceSetup (downHs !! lumMip)) do
       cb <- recordingCommandBuffer
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipeline
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipelineLayout 0 [scene.lumSet] []
+      Pipeline.bind cb pls.luminance
+      Pipeline.bindSet cb pls.luminance 0 scene.lumSet
       Vk.cmdDispatch cb 1 1 1
       -- Make the write host-visible for the CPU readback.
       Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
@@ -1089,10 +1090,10 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   toneWritten <-
     FG.addPass graph "tonemap" (tonemapSetup colorWritten bloom0 toneH) \_ -> do
       cb <- recordingCommandBuffer
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipeline
-      pushTonemap cb pls.tonemap.pipelineLayout exposure tweaks.bloomStrength
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipelineLayout 0 [scene.toneSet] []
-      Vk.cmdDispatch cb (groups w) (groups h) 1
+      Pipeline.bind cb pls.tonemap
+      pushTonemap cb pls.tonemap exposure tweaks.bloomStrength
+      Pipeline.bindSet cb pls.tonemap 0 scene.toneSet
+      Vk.cmdDispatch cb (groups width) (groups height) 1
 
   -- Debug views skip the tonemap: gamma encodes the raw shade output, so reading
   -- @displayOut@ culls the whole bloom/tonemap chain on any swapchain.
@@ -1102,13 +1103,13 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
   displayWritten <-
     FG.addPass graph "gamma" (gammaSetup gammaSrc displayH) \_ -> do
       cb <- recordingCommandBuffer
-      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipeline
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipelineLayout 0 [gammaSet] []
-      Vk.cmdDispatch cb (groups w) (groups h) 1
+      Pipeline.bind cb pls.gamma
+      Pipeline.bindSet cb pls.gamma 0 gammaSet
+      Vk.cmdDispatch cb (groups width) (groups height) 1
 
   pure PassOutputs{colorOut = colorWritten, toneOut = toneWritten, displayOut = displayWritten}
   where
-    Vk.Extent2D w h = extent
+    Vk.Extent2D{width, height} = extent
     halfExtent = halfExtentOf extent
     -- One camera matrix per recorded frame, shared by every DAIS-style push.
     viewProj = viewProjFor eye extent
@@ -1181,7 +1182,8 @@ addScenePasses graph pls tweaks scene computeQueue extent eye t exposure debugMo
     hizTailSetup src dstHs = do
       FG.setSideEffect
       FG.readWith src (usageFlags (StorageRead shadeStage))
-      mapM (\h -> FG.writeWith h (usageFlags (StorageWrite shadeStage))) (V.toList dstHs)
+      forM (V.toList dstHs) \h ->
+        FG.writeWith h (usageFlags (StorageWrite shadeStage))
 
 -- | The point the camera looks at and orbits.
 cameraTarget :: Vec3
@@ -1222,20 +1224,13 @@ projScales (Vk.Extent2D w h) = (sy * fromIntegral h / fromIntegral w, sy)
     sy = recip (tan (cameraFov / 2))
 
 -- | Push the camera view-projection (the mesh pipeline's sole push constant).
-pushCamera :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Mat4.Mat4 -> m ()
-pushCamera cb layout viewProj =
-  liftIO $ with camera \p ->
-    Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_VERTEX_BIT 0 (fromIntegral (sizeOf camera)) (castPtr p)
-  where
-    camera = Mesh.Camera{Mesh.viewProj = viewProj}
+pushCamera :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Mat4.Mat4 -> m ()
+pushCamera cb pl viewProj = Pipeline.push cb pl Mesh.Camera{Mesh.viewProj = viewProj}
 
 -- | Push the resolve's view-projection + eye position (DAIS + specular V) + shading knobs.
-pushResolve :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Word32 -> Shade.Tuning -> Mat4.Mat4 -> Vec3 -> Word32 -> m ()
-pushResolve cb layout pushSize tuning viewProj eyePos debugMode =
-  -- Push the reflected range extent ('pushSize'), which is < the std430 'Storable'
-  -- size (it trailing-pads to 16) — every real field lives below it.
-  liftIO $ with camera \p ->
-    Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 pushSize (castPtr p)
+pushResolve :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Shade.Tuning -> Mat4.Mat4 -> Vec3 -> Word32 -> m ()
+pushResolve cb pl tuning viewProj eyePos debugMode =
+  Pipeline.push cb pl camera
   where
     eye = withVec3 eyePos \x y z -> vec4 x y z 1
     camera =
@@ -1252,9 +1247,9 @@ pushResolve cb layout pushSize tuning viewProj eyePos debugMode =
         }
 
 -- | Push the AO gather's view matrix + unprojection scales + knobs.
-pushAo :: (MonadIO m) => Vk.CommandBuffer -> Ssao.Pipeline -> Tweaks -> Vec3 -> Vk.Extent2D -> m ()
+pushAo :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Tweaks -> Vec3 -> Vk.Extent2D -> m ()
 pushAo cb pl tweaks eye extent =
-  Ssao.push
+  Pipeline.push
     cb
     pl
     Ssao.Ao
@@ -1270,17 +1265,14 @@ pushAo cb pl tweaks eye extent =
     (sx, sy) = projScales extent
 
 -- | Push one axis of the AO blur.
-pushBlur :: (MonadIO m) => Vk.CommandBuffer -> Ssao.Pipeline -> Tweaks -> (Int32, Int32) -> m ()
+pushBlur :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Tweaks -> (Int32, Int32) -> m ()
 pushBlur cb pl tweaks (ax, ay) =
-  Ssao.push cb pl Ssao.Blur{Ssao.sharpness = tweaks.aoSharpness, Ssao.axisX = ax, Ssao.axisY = ay}
+  Pipeline.push cb pl Ssao.Blur{Ssao.sharpness = tweaks.aoSharpness, Ssao.axisX = ax, Ssao.axisY = ay}
 
 -- | Push the tonemap's exposure + bloom strength (COMPUTE stage).
-pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Float -> m ()
-pushTonemap cb layout exposure bloomStrength =
-  liftIO $ with pc \p ->
-    Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral (sizeOf pc)) (castPtr p)
-  where
-    pc = Tonemap.PC{Tonemap.exposure = exposure, Tonemap.bloomStrength = bloomStrength}
+pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Float -> Float -> m ()
+pushTonemap cb pl exposure bloomStrength =
+  Pipeline.push cb pl Tonemap.PC{Tonemap.exposure = exposure, Tonemap.bloomStrength = bloomStrength}
 
 {- | The run-constant shading knobs, threaded from the command line.
 

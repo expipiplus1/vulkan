@@ -10,37 +10,24 @@ combined image sampler (blur source, binding 0) and a storage image (target, bin
 1) — differing only in their push constant.
 -}
 module Pipeline.Bloom
-  ( Pipeline (..)
-  , Bloom (..)
+  ( Bloom (..)
   , allocateBloom
   , allocateSet
   , pushDownsample
   , pushUpsample
   ) where
 
-import Control.Monad.Trans.Resource (ResourceT, allocate)
-import Data.ByteString (ByteString)
-import qualified Data.Vector as V
+import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.Trans.Resource (ResourceT)
 import Data.Word (Word32)
-import Foreign.Ptr (castPtr)
-import Foreign.Storable (Storable, sizeOf)
-import UnliftIO (MonadUnliftIO)
-import UnliftIO.Foreign (with)
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Descriptors (combinedImageSamplerWrite, imageWrite)
-import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
-import qualified Vulkan.Utils.SpirV.Pipeline
-import Vulkan.Utils.SpirV.Reflect (reflectBytes)
-import Vulkan.Zero (zero)
+import Vulkan.Utils.Pipeline (Pipeline)
+import qualified Vulkan.Utils.Pipeline as Pipeline
+import Vulkan.Utils.SpirV.Pipeline (allocateCompute)
 
 import qualified Pipeline.Bloom.Downsample as Downsample
 import qualified Pipeline.Bloom.Upsample as Upsample
-
-data Pipeline = Pipeline
-  { pipeline :: Vk.Pipeline
-  , pipelineLayout :: Vk.PipelineLayout
-  , descriptorSetLayout :: Vk.DescriptorSetLayout
-  }
+import qualified Pipeline.Sets as Sets
 
 data Bloom = Bloom
   { down :: Pipeline
@@ -49,59 +36,24 @@ data Bloom = Bloom
 
 allocateBloom :: Vk.Device -> ResourceT IO Bloom
 allocateBloom dev = do
-  down <- buildCompute dev Downsample.code
-  up <- buildCompute dev Upsample.code
+  down <- allocateCompute dev () Downsample.code
+  up <- allocateCompute dev () Upsample.code
   pure Bloom{down, up}
-
-buildCompute :: Vk.Device -> ByteString -> ResourceT IO Pipeline
-buildCompute dev code = do
-  reflected <- reflectBytes code
-  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
-  descriptorSetLayout <- singleSetLayout reflectedLayout
-  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
-  pure Pipeline{pipeline, pipelineLayout = reflectedLayout.pipelineLayout, descriptorSetLayout}
 
 {- | A descriptor set for one down/upsample step.
 
-The blur source sampled through @sampler@ (binding 0) and the target mip as a storage
-image (binding 1). All views stay in @GENERAL@ (sampling is legal there, so no layout
-churn per mip).
+The blur source sampled through @sampler@ (binding 0) and the target mip as a
+storage image (binding 1).
 -}
 allocateSet :: Vk.Device -> Pipeline -> Vk.Sampler -> Vk.ImageView -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
-allocateSet dev pl sampler srcView dstView = do
-  (_, pool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 1
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE 1
-            ]
-        }
-      Nothing
-      allocate
-  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [pl.descriptorSetLayout]}
-  let set = V.head sets
-  Vk.updateDescriptorSets
-    dev
-    [ combinedImageSamplerWrite set 0 sampler srcView Vk.IMAGE_LAYOUT_GENERAL
-    , imageWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE Vk.IMAGE_LAYOUT_GENERAL dstView
-    ]
-    []
-  pure set
+allocateSet dev pl sampler srcView dstView =
+  Sets.allocateSampledStorage dev pl sampler srcView [dstView]
 
 -- | Push the Karis flag (1 on the first, full-resolution downsample).
-pushDownsample :: (MonadUnliftIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Bool -> m ()
-pushDownsample cb layout karis =
-  pushCompute cb layout (if karis then 1 else 0 :: Word32)
+pushDownsample :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Bool -> m ()
+pushDownsample cb pl karis =
+  Pipeline.push cb pl (if karis then 1 else 0 :: Word32)
 
 -- | Push the upsample tent-filter radius (in the source mip's texture coordinates).
-pushUpsample :: (MonadUnliftIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> m ()
-pushUpsample cb layout radius = pushCompute cb layout radius
-
--- | Push a single scalar to the compute stage at offset 0.
-pushCompute :: (MonadUnliftIO m, Storable a) => Vk.CommandBuffer -> Vk.PipelineLayout -> a -> m ()
-pushCompute cb layout x =
-  with x \p ->
-    Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral $ sizeOf x) (castPtr p)
+pushUpsample :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Float -> m ()
+pushUpsample cb pl radius = Pipeline.push cb pl radius

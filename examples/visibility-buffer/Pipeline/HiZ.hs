@@ -8,12 +8,10 @@
 Wraps the "Pipeline.HiZ.Shader" min-reduces: one dispatch per mip while the levels
 are big, then 'tail' finishes everything from a ≤32×32 level in a single dispatch
 (a serial tail of tiny levels costs a pipeline drain each and no work). The
-finished pyramid feeds the next frame's occlusion test ("Pipeline.Cull"). All
-views stay in @GENERAL@, like the bloom chain.
+finished pyramid feeds the next frame's occlusion test ("Pipeline.Cull").
 -}
 module Pipeline.HiZ
-  ( Pipeline (..)
-  , HiZ (..)
+  ( HiZ (..)
   , allocateHiZ
   , allocateSet
   , allocateTailSet
@@ -26,29 +24,18 @@ module Pipeline.HiZ
   ) where
 
 import Control.Monad (when)
-import Control.Monad.IO.Class (MonadIO, liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Trans.Resource (ResourceT, allocate)
-import Data.ByteString (ByteString)
 import qualified Data.Vector as V
 import Data.Word (Word32)
-import Foreign.Marshal.Utils (with)
-import Foreign.Ptr (castPtr)
-import Foreign.Storable (sizeOf)
-import Vulkan.CStruct.Extends (SomeStruct (..))
 import qualified Vulkan.Core10 as Vk
-import Vulkan.Utils.Descriptors (combinedImageSamplerWrite, imageWrite)
-import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
-import qualified Vulkan.Utils.SpirV.Pipeline
-import Vulkan.Utils.SpirV.Reflect (reflectBytes)
+import Vulkan.Utils.Pipeline (Pipeline)
+import qualified Vulkan.Utils.Pipeline as Pipeline
+import Vulkan.Utils.SpirV.Pipeline (allocateCompute)
 import Vulkan.Zero (zero)
 
 import qualified Pipeline.HiZ.Shader as Shader
-
-data Pipeline = Pipeline
-  { pipeline :: Vk.Pipeline
-  , layout :: Vk.PipelineLayout
-  , setLayout :: Vk.DescriptorSetLayout
-  }
+import qualified Pipeline.Sets as Sets
 
 -- | The per-level reduce and the fused tail.
 data HiZ = HiZ
@@ -58,42 +45,14 @@ data HiZ = HiZ
 
 allocateHiZ :: Vk.Device -> ResourceT IO HiZ
 allocateHiZ dev = do
-  reduce <- buildCompute dev Shader.code
-  tail_ <- buildCompute dev Shader.tailCode
+  reduce <- allocateCompute dev () Shader.code
+  tail_ <- allocateCompute dev () Shader.tailCode
   pure HiZ{reduce, tail = tail_}
-
-buildCompute :: Vk.Device -> ByteString -> ResourceT IO Pipeline
-buildCompute dev code = do
-  reflected <- reflectBytes code
-  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
-  setLayout <- singleSetLayout reflectedLayout
-  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
-  pure Pipeline{pipeline, layout = reflectedLayout.pipelineLayout, setLayout}
 
 -- | A set for one reduce step: the source sampled (0), the target mip stored (1).
 allocateSet :: Vk.Device -> Pipeline -> Vk.Sampler -> Vk.ImageView -> Vk.ImageView -> ResourceT IO Vk.DescriptorSet
-allocateSet dev pl sampler srcView dstView = do
-  (_, pool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 1
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE 1
-            ]
-        }
-      Nothing
-      allocate
-  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [pl.setLayout]}
-  let set = V.head sets
-  Vk.updateDescriptorSets
-    dev
-    [ combinedImageSamplerWrite set 0 sampler srcView Vk.IMAGE_LAYOUT_GENERAL
-    , imageWrite set 1 Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE Vk.IMAGE_LAYOUT_GENERAL dstView
-    ]
-    []
-  pure set
+allocateSet dev pl sampler srcView dstView =
+  Sets.allocateSampledStorage dev pl sampler srcView [dstView]
 
 {- | The fused-tail set: the last reduced level sampled (0), the remaining mips
 stored (1). At most 'tailMax' views; short chains are padded internally (the
@@ -104,40 +63,11 @@ allocateTailSet dev pl sampler srcView views = do
   when (V.length views > tailMax) $
     error ("HiZ.allocateTailSet: " <> show (V.length views) <> " tail mips exceed tailMax")
   let dstViews = views <> V.replicate (tailMax - V.length views) (V.last views)
-  (_, pool) <-
-    Vk.withDescriptorPool
-      dev
-      zero
-        { Vk.maxSets = 1
-        , Vk.poolSizes =
-            [ Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER 1
-            , Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE (fromIntegral (V.length dstViews))
-            ]
-        }
-      Nothing
-      allocate
-  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [pl.setLayout]}
-  let set = V.head sets
-  Vk.updateDescriptorSets
-    dev
-    [ combinedImageSamplerWrite set 0 sampler srcView Vk.IMAGE_LAYOUT_GENERAL
-    , SomeStruct
-        zero
-          { Vk.dstSet = set
-          , Vk.dstBinding = 1
-          , Vk.descriptorCount = fromIntegral (V.length dstViews)
-          , Vk.descriptorType = Vk.DESCRIPTOR_TYPE_STORAGE_IMAGE
-          , Vk.imageInfo = V.map (\v -> zero{Vk.imageView = v, Vk.imageLayout = Vk.IMAGE_LAYOUT_GENERAL}) dstViews
-          }
-    ]
-    []
-  pure set
+  Sets.allocateSampledStorage dev pl sampler srcView dstViews
 
 -- | Push the fused tail's populated-mip count.
 pushTail :: (MonadIO m) => Vk.CommandBuffer -> Pipeline -> Word32 -> m ()
-pushTail cb pl levels =
-  liftIO $ with levels \p ->
-    Vk.cmdPushConstants cb pl.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral (sizeOf levels)) (castPtr p)
+pushTail cb pl levels = Pipeline.push cb pl levels
 
 {- | Does a level fit the fused tail's shared-memory tile?
 

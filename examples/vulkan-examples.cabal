@@ -999,6 +999,7 @@ executable visibility-buffer
       Pipeline.Luminance.Shader
       Pipeline.Mesh
       Pipeline.Mesh.Shader
+      Pipeline.Sets
       Pipeline.Shade
       Pipeline.Shade.Shader
       Pipeline.Shadow

@@ -41,7 +41,9 @@ library
       OverloadedLists
       OverloadedRecordDot
       OverloadedStrings
+      RecordWildCards
       ScopedTypeVariables
+      StrictData
       TypeApplications
       TypeFamilies
   ghc-options: -Wall

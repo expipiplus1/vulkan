@@ -33,6 +33,8 @@ default-extensions:
 - OverloadedLists
 - OverloadedRecordDot
 - OverloadedStrings
+- RecordWildCards
 - ScopedTypeVariables
+- StrictData
 - TypeApplications
 - TypeFamilies

@@ -45,7 +45,7 @@ import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Data.Word (Word32, Word64)
 import qualified Fragr as FG
-import Julia (JuliaPipeline (..), createJuliaDescriptorSets, createJuliaPipeline, juliaWorkgroupX, juliaWorkgroupY)
+import Julia (allocateJuliaDescriptorSets, allocateJuliaPipeline, juliaWorkgroupX, juliaWorkgroupY)
 import Linear.Affine (Point (..))
 import Linear.Metric (norm)
 import Linear.V2
@@ -64,6 +64,8 @@ import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManag
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordGraph, recordingCommandBuffer)
 import Vulkan.Utils.FrameGraph.Swapchain (importSwapchain, newSwapchainImages, presentSwapchain)
 import Vulkan.Utils.Init.SDL2.Window (createWindow, drawableSize, sdl2Adapter, shouldQuit, withSDL)
+import Vulkan.Utils.Pipeline (Pipeline)
+import qualified Vulkan.Utils.Pipeline as Pipeline
 import Vulkan.Utils.QueueAssignment (QueueFamilyIndex (..))
 import Vulkan.Utils.Queues (Queues (..))
 import Vulkan.Utils.Swapchain (Swapchain (..), SwapchainConfig (..), defaultSwapchainConfig, unormEncoding)
@@ -88,7 +90,7 @@ main = prettyError . runResourceT $ do
   (vc, vma, initialSC) <- withWindowedVk windowConfig (sdl2Adapter sdlWindow)
   let dev = vcDevice vc
 
-  juliaPL <- createJuliaPipeline dev
+  juliaPL <- allocateJuliaPipeline dev
 
   -- One startup decision: does compute get its own queue family? If so, the
   -- julia pass runs on QueueId 1 and hands the offscreen image over with a
@@ -205,7 +207,7 @@ data Bindings = Bindings
 allocateBindings
   :: Vk.Device
   -> VMA.Allocator
-  -> JuliaPipeline
+  -> Pipeline
   -> Maybe (Word32, Word32)
   -- ^ (graphics, compute) families to share the offscreen image across, if async.
   -> Swapchain
@@ -218,7 +220,7 @@ allocateBindings dev allocator jp sharedFamilies sc = do
   (viewKey, view) <- Vk.withImageView dev (offscreenViewInfo image) Nothing allocate
 
   (poolKey, juliaSets) <-
-    createJuliaDescriptorSets dev (jpDescriptorSetLayout jp) [view]
+    allocateJuliaDescriptorSets dev jp [view]
 
   offscreen <- newManagedImage image Vk.IMAGE_ASPECT_COLOR_BIT
   swapImages <- newSwapchainImages sc
@@ -291,7 +293,7 @@ colorSubresourceRange =
 
 renderJulia
   :: VulkanContext
-  -> JuliaPipeline
+  -> Pipeline
   -> Maybe AsyncSetup
   -> IORef Float
   -- ^ colour-scheme phase, shared across swapchains so it survives resizes
@@ -529,7 +531,7 @@ colorStep = 0.01
 -- | Bind the Julia pipeline, push the constants, and dispatch over the image.
 dispatchJulia
   :: (MonadUnliftIO m)
-  => JuliaPipeline
+  => Pipeline
   -> Vk.Extent2D
   -> JuliaConstants
   -> Float
@@ -538,18 +540,22 @@ dispatchJulia
   -> Vk.CommandBuffer
   -> m ()
 dispatchJulia jp (Vk.Extent2D imageWidth imageHeight) constants colorPhase descriptorSet cb = do
-  Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE (jpPipeline jp)
+  Pipeline.bind cb jp
 
-  let constantBytes = 4 * (2 + 2 + 2 + 1 + 1) :: Int
-  allocaBytes constantBytes $ \p -> do
+  -- The byte count and stage flags come from the layout's kept range; only the
+  -- field offsets are hand-written (the constants aren't one Storable block).
+  let range = case jp.layout.pushRanges of
+        [r] -> r
+        rs -> error ("dispatchJulia: expected one push range, got " <> show rs)
+  allocaBytes (fromIntegral range.size) $ \p -> do
     liftIO $ poke (p `plusPtr` 0) constants.scale
     liftIO $ poke (p `plusPtr` 8) constants.offset
     liftIO $ poke (p `plusPtr` 16) constants.c
     liftIO $ poke (p `plusPtr` 24) constants.escapeRadius
     liftIO $ poke (p `plusPtr` 28) colorPhase
-    Vk.cmdPushConstants cb (jpPipelineLayout jp) Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral constantBytes) p
+    Vk.cmdPushConstants cb jp.layout.pipelineLayout range.stageFlags 0 range.size p
 
-  Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE (jpPipelineLayout jp) 0 [descriptorSet] []
+  Pipeline.bindSet cb jp 0 descriptorSet
   Vk.cmdDispatch
     cb
     ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)

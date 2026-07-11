@@ -15,56 +15,35 @@ pass into a command buffer the caller submits once; descriptor-set layout and
 push-constant range are reflected from the shader.
 -}
 module Pipeline.Voxels
-  ( ComputePipeline (..)
-  , allocateGenerator
+  ( allocateGenerator
   , GenBuffers (..)
   , allocateGenSets
   , Params (..)
   , recordGenerate
   ) where
 
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Trans.Resource (ResourceT, allocate)
+import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.Trans.Resource (ResourceT)
 import Data.Bits ((.|.))
-import qualified Data.Vector as V
-import Foreign.Marshal.Utils (with)
-import Foreign.Ptr (castPtr)
-import Foreign.Storable (sizeOf)
 import qualified Geomancy
 import Graphics.Gl.Block (Std430 (..))
 import qualified Vulkan.Core10 as MemoryBarrier (MemoryBarrier (..))
 import qualified Vulkan.Core10 as Vk
 import Vulkan.Utils.Descriptors (bufferWrite)
-import Vulkan.Utils.SpirV.Pipeline (allocateComputePipeline, allocateReflectedLayout, singleSetLayout)
-import qualified Vulkan.Utils.SpirV.Pipeline
-import Vulkan.Utils.SpirV.Reflect (reflectBytes)
+import Vulkan.Utils.Pipeline (Pipeline)
+import qualified Vulkan.Utils.Pipeline as Pipeline
+import Vulkan.Utils.SpirV.Pipeline (allocateCompute)
 import Vulkan.Utils.SpirV.TH (reflectShaderTypesBytes)
 import Vulkan.Zero (zero)
 
-import Data.ByteString (ByteString)
 import qualified Pipeline.Voxels.Gen as Gen
 
 -- Generate the @Params@ generation push-constant record.
 reflectShaderTypesBytes Gen.code
 
--- | A compute pipeline plus the layouts reflected for it.
-data ComputePipeline = ComputePipeline
-  { pipeline :: Vk.Pipeline
-  , layout :: Vk.PipelineLayout
-  , setLayout :: Vk.DescriptorSetLayout
-  }
-
 -- | The surface-shell gen pipeline (the whole generator).
-allocateGenerator :: Vk.Device -> ResourceT IO ComputePipeline
-allocateGenerator dev = buildCompute dev Gen.code
-
-buildCompute :: Vk.Device -> ByteString -> ResourceT IO ComputePipeline
-buildCompute dev code = do
-  reflected <- reflectBytes code
-  (_, reflectedLayout) <- allocateReflectedLayout dev [reflected]
-  setLayout <- singleSetLayout reflectedLayout
-  (_, pipeline) <- allocateComputePipeline dev reflectedLayout () (reflected, code)
-  pure ComputePipeline{pipeline, layout = reflectedLayout.pipelineLayout, setLayout}
+allocateGenerator :: Vk.Device -> ResourceT IO Pipeline
+allocateGenerator dev = allocateCompute dev () Gen.code
 
 -- | The device buffers the generator appends into.
 data GenBuffers = GenBuffers
@@ -78,16 +57,9 @@ data GenBuffers = GenBuffers
   -- ^ the occluder instance remap, as 'visMain'.
   }
 
-allocateGenSets :: Vk.Device -> ComputePipeline -> GenBuffers -> ResourceT IO Vk.DescriptorSet
+allocateGenSets :: Vk.Device -> Pipeline -> GenBuffers -> ResourceT IO Vk.DescriptorSet
 allocateGenSets dev gen bufs = do
-  (_, pool) <-
-    Vk.withDescriptorPool
-      dev
-      zero{Vk.maxSets = 1, Vk.poolSizes = [Vk.DescriptorPoolSize Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER 4]}
-      Nothing
-      allocate
-  sets <- Vk.allocateDescriptorSets dev zero{Vk.descriptorPool = pool, Vk.setLayouts = [gen.setLayout]}
-  let set = V.head sets
+  set <- Pipeline.allocateSet dev gen 0
   Vk.updateDescriptorSets
     dev
     [ bufferWrite set 0 Vk.DESCRIPTOR_TYPE_STORAGE_BUFFER bufs.objects
@@ -105,7 +77,7 @@ evaluate-and-appends the surface shell. The draw commands + static objects are
 uploaded by the caller ("Objects") before this; the caller submits @cb@ once and
 waits.
 -}
-recordGenerate :: (MonadIO m) => ComputePipeline -> Vk.DescriptorSet -> Params -> Vk.CommandBuffer -> m ()
+recordGenerate :: (MonadIO m) => Pipeline -> Vk.DescriptorSet -> Params -> Vk.CommandBuffer -> m ()
 recordGenerate gen set params cb = do
   -- Make the uploaded draw commands + static objects visible to the gen's atomic
   -- append (it read-modify-writes the two cube instanceCounts).
@@ -117,10 +89,9 @@ recordGenerate gen set params cb = do
     [zero{MemoryBarrier.srcAccessMask = Vk.ACCESS_TRANSFER_WRITE_BIT, MemoryBarrier.dstAccessMask = Vk.ACCESS_SHADER_READ_BIT .|. Vk.ACCESS_SHADER_WRITE_BIT} :: Vk.MemoryBarrier]
     []
     []
-  Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE gen.pipeline
-  liftIO $ with params \p ->
-    Vk.cmdPushConstants cb gen.layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral (sizeOf params)) (castPtr p)
-  Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE gen.layout 0 [set] []
+  Pipeline.bind cb gen
+  Pipeline.push cb gen params
+  Pipeline.bindSet cb gen 0 set
   Vk.cmdDispatch cb groups groups groups
   where
     groups = (params.gridN + 3) `div` 4

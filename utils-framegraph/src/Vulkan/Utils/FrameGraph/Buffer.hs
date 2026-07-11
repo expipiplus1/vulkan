@@ -55,10 +55,11 @@ data ManagedBuffer = ManagedBuffer
   }
 
 -- | Wrap a buffer, starting from 'freshState'.
+{-# INLINE newManagedBuffer #-}
 newManagedBuffer :: (MonadIO m) => Vk.Buffer -> m ManagedBuffer
-newManagedBuffer buffer = do
-  stateRef <- liftIO (newIORef freshState)
-  queueRef <- liftIO (newIORef (FG.QueueId 0))
+newManagedBuffer buffer = liftIO do
+  stateRef <- newIORef freshState
+  queueRef <- newIORef (FG.QueueId 0)
   pure ManagedBuffer{buffer, stateRef, queueRef, info = ""}
 
 -- | Attach a summary shown next to the resource's name in visualization output.

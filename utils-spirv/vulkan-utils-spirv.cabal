@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.39.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -59,6 +59,7 @@ library
       PatternSynonyms
       RecordWildCards
       ScopedTypeVariables
+      StrictData
       TemplateHaskell
       TupleSections
       TypeApplications
@@ -110,6 +111,7 @@ test-suite spec
       PatternSynonyms
       RecordWildCards
       ScopedTypeVariables
+      StrictData
       TemplateHaskell
       TupleSections
       TypeApplications
