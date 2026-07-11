@@ -72,7 +72,7 @@ import qualified Vulkan.Core13 as RenderingInfo (RenderingInfo (..))
 import qualified Vulkan.Core13 as Vk
 import qualified Vulkan.Utils.DynamicRendering as Dynamic
 import Vulkan.Utils.DynamicState (DynamicState (..), allDynamicStates, applyDynamicStates, dynamicStateFor, fullScissor)
-import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), importManagedImage, newManagedImage, newManagedImageMip, transitionImageTo, transitionImagesTo, usageFlags)
+import Vulkan.Utils.FrameGraph.Image (ManagedImage (..), Usage (..), describedAs, imageInfo, importManagedImage, importScratchImage, newManagedImage, newManagedImageMip, transitionImageTo, transitionImagesTo, usageFlags)
 import Vulkan.Utils.FrameGraph.Recorder (Recorder, recordingCommandBuffer)
 import Vulkan.Zero (zero)
 import qualified VulkanMemoryAllocator as VMA
@@ -307,6 +307,8 @@ data Scene = Scene
   , lumSet :: Vk.DescriptorSet
   , toneSet :: Vk.DescriptorSet
   , gammaSet :: Vk.DescriptorSet
+  , gammaDebugSet :: Vk.DescriptorSet
+  -- ^ Gamma over the raw shade output: debug views skip the tonemap.
   , bloomMips :: V.Vector ManagedImage
   -- ^ One tracked subresource per mip of the single bloom image.
   , bloomExtents :: V.Vector Vk.Extent2D
@@ -330,14 +332,18 @@ data Scene = Scene
   -}
   }
 
-{- | The two graph outputs a driver can consume.
+{- | The graph outputs a driver can consume.
 
-The tonemapped (display-linear) image and the gamma-encoded display image. Reading
-@toneOut@ (windowed, blit into an sRGB swapchain) leaves @displayOut@ unread, so the
-graph culls the gamma pass; reading @displayOut@ (headless PNG) keeps it.
+The passes are always added the same way; the driver picks one output and the
+graph culls whatever nothing demands. @colorOut@ is the raw shade output (the
+debug channels live here). Beauty flows @toneOut@ (tonemapped, display-linear)
+→ @displayOut@ (gamma-encoded); in a debug view the gamma pass encodes
+@colorOut@ directly, so @displayOut@ skips the bloom/tonemap chain and
+@toneOut@ goes undemanded.
 -}
 data PassOutputs = PassOutputs
-  { toneOut :: FG.Handle
+  { colorOut :: FG.Handle
+  , toneOut :: FG.Handle
   , displayOut :: FG.Handle
   }
 
@@ -523,20 +529,21 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   -- SAMPLED so the windowed driver's depth-pyramid build can read it.
   (_, (depthImage, depthView)) <-
     allocateTarget allocator dev depthFormat extent (Vk.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_DEPTH_BIT Nothing "depth"
-  -- The post chain: shade → colorHDR → tone → display. Only tone (windowed blit)
-  -- and display (headless readback) need TRANSFER_SRC.
+  -- The post chain: shade → colorHDR → tone → display. tone (windowed blit),
+  -- display (headless readback) and colorHDR (windowed debug-view blit) are
+  -- presentation sources, so they need TRANSFER_SRC.
   -- colorHDR is sampled by the first bloom downsample, so it needs SAMPLED too.
   (_, (colorHDRImage, colorHDRView)) <-
-    allocateTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "colorHDR"
+    allocateTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "colorHDR"
   (_, (toneImage, toneView)) <-
     allocateTarget allocator dev hdrFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "tone"
   (_, (displayImage, displayView)) <-
     allocateTarget allocator dev colorFormat extent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) Vk.IMAGE_ASPECT_COLOR_BIT Nothing "display"
-  vis <- newManagedImage visImage Vk.IMAGE_ASPECT_COLOR_BIT
-  depth <- newManagedImage depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
-  colorHDR <- newManagedImage colorHDRImage Vk.IMAGE_ASPECT_COLOR_BIT
-  tone <- newManagedImage toneImage Vk.IMAGE_ASPECT_COLOR_BIT
-  display <- newManagedImage displayImage Vk.IMAGE_ASPECT_COLOR_BIT
+  vis <- describedImage visFormat extent visImage Vk.IMAGE_ASPECT_COLOR_BIT
+  depth <- describedImage depthFormat extent depthImage Vk.IMAGE_ASPECT_DEPTH_BIT
+  colorHDR <- describedImage hdrFormat extent colorHDRImage Vk.IMAGE_ASPECT_COLOR_BIT
+  tone <- describedImage hdrFormat extent toneImage Vk.IMAGE_ASPECT_COLOR_BIT
+  display <- describedImage colorFormat extent displayImage Vk.IMAGE_ASPECT_COLOR_BIT
 
   -- Bloom pyramid: one mipped image (base = half the scene extent); each mip is a
   -- tracked subresource and a down/up descriptor set (sharing the static sampler).
@@ -552,7 +559,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
     lumMip = lumMipFor mipCount
   (_, (bloomImage, bloomViews)) <-
     allocateMipChain allocator dev hdrFormat halfExtent (fromIntegral mipCount) bloomUsage "bloom"
-  bloomMips <- V.generateM mipCount \i -> newManagedImageMip bloomImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
+  bloomMips <- V.generateM mipCount \i -> describedMip hdrFormat (bloomExtents V.! i) bloomImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
   -- The luminance probe: a snapshot of the metered mip, taken before the upsample
   -- overwrites it. Written on the compute queue and read back on the graphics one, so
   -- it is CONCURRENT — the graph places plain transitions, never ownership transfers.
@@ -562,7 +569,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       else do
         (_, probeImage) <-
           allocateImage allocator dev hdrFormat (bloomExtents V.! lumMip) (Vk.IMAGE_USAGE_TRANSFER_DST_BIT .|. Vk.IMAGE_USAGE_TRANSFER_SRC_BIT) (fmap (\(g, c) -> [g, c]) sharedFamilies) "lumProbe"
-        Just <$> newManagedImage probeImage Vk.IMAGE_ASPECT_COLOR_BIT
+        Just <$> describedImage hdrFormat (bloomExtents V.! lumMip) probeImage Vk.IMAGE_ASPECT_COLOR_BIT
   downSets <- V.generateM mipCount \i -> Bloom.allocateSet dev pls.bloom.down static.sampler (if i == 0 then colorHDRView else bloomViews V.! (i - 1)) (bloomViews V.! i)
   upSets <- V.generateM (mipCount - 1) \i -> Bloom.allocateSet dev pls.bloom.up static.sampler (bloomViews V.! (i + 1)) (bloomViews V.! i)
 
@@ -579,7 +586,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
     hizTailCount = hizMipCount - hizReduceCount
   (_, (hizImage, hizViews)) <-
     allocateMipChain allocator dev HiZ.format halfExtent (fromIntegral hizMipCount) (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) "hiz"
-  hizMips <- V.generateM hizMipCount \i -> newManagedImageMip hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
+  hizMips <- V.generateM hizMipCount \i -> describedMip HiZ.format (hizAllExtents V.! i) hizImage Vk.IMAGE_ASPECT_COLOR_BIT (fromIntegral i)
   -- The cull samples across levels ('textureLod'), so it gets a whole-chain view.
   hizFullView <- HiZ.allocateChainView dev hizImage hizMipCount
   hizSets <- V.generateM hizReduceCount \i ->
@@ -619,9 +626,9 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
     allocateTarget allocator dev aoFormat halfExtent (Vk.IMAGE_USAGE_STORAGE_BIT .|. Vk.IMAGE_USAGE_SAMPLED_BIT) Vk.IMAGE_ASPECT_COLOR_BIT (fmap (\(g, c) -> [g, c]) sharedFamilies) "ao"
   (_, (aoBlurImage, aoBlurView)) <-
     allocateTarget allocator dev aoFormat halfExtent Vk.IMAGE_USAGE_STORAGE_BIT Vk.IMAGE_ASPECT_COLOR_BIT Nothing "aoBlur"
-  normals <- newManagedImage normalsImage Vk.IMAGE_ASPECT_COLOR_BIT
-  ao <- newManagedImage aoImage Vk.IMAGE_ASPECT_COLOR_BIT
-  aoBlur <- newManagedImage aoBlurImage Vk.IMAGE_ASPECT_COLOR_BIT
+  normals <- describedImage normalsFormat halfExtent normalsImage Vk.IMAGE_ASPECT_COLOR_BIT
+  ao <- describedImage aoFormat halfExtent aoImage Vk.IMAGE_ASPECT_COLOR_BIT
+  aoBlur <- describedImage aoFormat halfExtent aoBlurImage Vk.IMAGE_ASPECT_COLOR_BIT
   normalsSet <- Ssao.allocateNormalsSet dev pls.ssao.normals visView normalsView static.vertexBuffer static.objectsBuffer static.meshTableBuffer
   aoSet <- Ssao.allocateAoSet dev pls.ssao.ao static.nearestSampler hizFullView normalsView aoView
   aoBlurXSet <- Ssao.allocateBlurSet dev pls.ssao.blur normalsView aoView aoBlurView
@@ -631,6 +638,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
   lumSet <- Luminance.allocateSet dev pls.luminance (bloomViews V.! lumMip) static.lumBuffer
   toneSet <- Tonemap.allocateSet dev pls.tonemap colorHDRView toneView static.sampler (bloomViews V.! 0)
   gammaSet <- Gamma.allocateSet dev pls.gamma toneView displayView
+  gammaDebugSet <- Gamma.allocateSet dev pls.gamma colorHDRView displayView
 
   pure
     Scene
@@ -644,6 +652,7 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       , lumSet
       , toneSet
       , gammaSet
+      , gammaDebugSet
       , bloomMips
       , bloomExtents
       , downSets
@@ -656,6 +665,16 @@ allocateTargets allocator dev pls static extent sharedFamilies wantProbe = do
       , cullSet
       , hizPrimed
       }
+
+{- | 'newManagedImage' with the 'imageInfo' description attached, stating the
+allocation's format/extent once.
+-}
+describedImage :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> m ManagedImage
+describedImage format ext image aspect = describedAs (imageInfo format ext) <$> newManagedImage image aspect
+
+-- | 'newManagedImageMip' with the mip's 'imageInfo' description attached.
+describedMip :: (MonadIO m) => Vk.Format -> Vk.Extent2D -> Vk.Image -> Vk.ImageAspectFlags -> Word32 -> m ManagedImage
+describedMip format ext image aspect mip = describedAs (imageInfo format ext) <$> newManagedImageMip image aspect mip
 
 {- | The visibility and depth images after a frame, for headless debug dumps.
 
@@ -903,7 +922,7 @@ oneShot dev (queue, family) record = do
 @geometry@ (raster → vis + depth) → @shade@ (resolve → HDR) → @luminance@
 (auto-exposure readback) → @tonemap@ (exposure + curve) → @gamma@ (sRGB encode).
 @computeQueue@ is the queue the compute passes run on ('FG.defaultQueue' to keep it
-single-queue); @exposure@ scales the tonemap. Returns both post outputs; a driver
+single-queue); @exposure@ scales the tonemap. Returns the 'PassOutputs'; a driver
 reads whichever it presents.
 -}
 addScenePasses
@@ -921,14 +940,18 @@ addScenePasses
   -> ResourceT IO PassOutputs
 addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode = do
   let SceneTargets{vis, visView, depth, depthView, colorHDR, tone, display, normals, ao, aoBlur} = scene.targets
-  visH <- importManagedImage graph "visibility" vis
-  depthH <- importManagedImage graph "depth" depth
-  colorH <- importManagedImage graph "colorHDR" colorHDR
-  toneH <- importManagedImage graph "tone" tone
-  displayH <- importManagedImage graph "display" display
-  normalsH <- importManagedImage graph "normals" normals
-  aoH <- importManagedImage graph "ao" ao
-  aoBlurH <- importManagedImage graph "aoBlur" aoBlur
+  -- vis + depth are read outside the graph (the headless debug dumps), so their
+  -- writers must survive; everything else is scratch — consumed only through the
+  -- graph, so the presentation's demand decides which passes run at all.
+  -- Dotted names group families into one record node in the dot dump.
+  visH <- importManagedImage graph "geometry.vis" vis
+  depthH <- importManagedImage graph "geometry.depth" depth
+  colorH <- importScratchImage graph "post.color" colorHDR
+  toneH <- importScratchImage graph "post.tone" tone
+  displayH <- importScratchImage graph "post.display" display
+  normalsH <- importScratchImage graph "ssao.normals" normals
+  aoH <- importScratchImage graph "ssao.ao" ao
+  aoBlurH <- importScratchImage graph "ssao.blur" aoBlur
 
   (visWritten, depthWritten) <-
     FG.addPass graph "geometry" (geometrySetup visH depthH) \_ -> do
@@ -1016,7 +1039,7 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
   -- Bloom pyramid: progressively downsample the HDR image through
   -- the mip chain, then additively upsample. Each mip is its own tracked
   -- subresource of one image, so the per-mip barriers are intra-image.
-  mipHs <- traverse (\(i, m) -> importManagedImage graph (T.pack ("bloom.mip" <> show i)) m) (zip [0 :: Int ..] (V.toList scene.bloomMips))
+  mipHs <- traverse (\(i, m) -> importScratchImage graph (T.pack ("bloom.mip" <> show i)) m) (zip [0 :: Int ..] (V.toList scene.bloomMips))
   let
     mipCount = length mipHs
     downPass src i =
@@ -1042,18 +1065,21 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       | i < 0 = pure blur
       | otherwise = do hnd <- upPass blur i; chainUp hnd (i - 1)
   -- Auto-exposure: one workgroup reduces a bloom mip to average log-luminance. Taken
-  -- off the downsample chain, before the upsample renames the handle.
+  -- off the downsample chain, before the upsample renames the handle. Not added for
+  -- debug views: the HDR target carries the debug channel then, so metering it would
+  -- pin the downsample chain (the pass is a side effect) only to poison the readback.
   let lumMip = lumMipFor mipCount
-  FG.addPass_ graph "luminance" (luminanceSetup (downHs !! lumMip)) do
-    cb <- recordingCommandBuffer
-    Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipeline
-    Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipelineLayout 0 [scene.lumSet] []
-    Vk.cmdDispatch cb 1 1 1
-    -- Make the write host-visible for the CPU readback.
-    Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
+  when (debugMode == 0) $
+    FG.addPass_ graph "luminance" (luminanceSetup (downHs !! lumMip)) do
+      cb <- recordingCommandBuffer
+      Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipeline
+      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.luminance.pipelineLayout 0 [scene.lumSet] []
+      Vk.cmdDispatch cb 1 1 1
+      -- Make the write host-visible for the CPU readback.
+      Vk.cmdPipelineBarrier cb Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT Vk.PIPELINE_STAGE_HOST_BIT zero [hostVisible] [] []
 
   forM_ scene.probe \probe -> do
-    probeH <- importManagedImage graph "lumProbe" probe
+    probeH <- importManagedImage graph "bloom.probe" probe
     FG.addPass_ graph "lumProbe" (probeSetup (downHs !! lumMip) probeH) do
       cb <- recordingCommandBuffer
       let Vk.Extent2D pw ph = scene.bloomExtents V.! lumMip
@@ -1077,18 +1103,23 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
     FG.addPass graph "tonemap" (tonemapSetup colorWritten bloom0 toneH) \_ -> do
       cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipeline
-      pushTonemap cb pls.tonemap.pipelineLayout exposure tweaks.bloomStrength debugMode
+      pushTonemap cb pls.tonemap.pipelineLayout exposure tweaks.bloomStrength
       Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.tonemap.pipelineLayout 0 [scene.toneSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
+  -- Debug views skip the tonemap: gamma encodes the raw shade output, so reading
+  -- @displayOut@ culls the whole bloom/tonemap chain on any swapchain.
+  let (gammaSrc, gammaSet)
+        | debugMode == 0 = (toneWritten, scene.gammaSet)
+        | otherwise = (colorWritten, scene.gammaDebugSet)
   displayWritten <-
-    FG.addPass graph "gamma" (gammaSetup toneWritten displayH) \_ -> do
+    FG.addPass graph "gamma" (gammaSetup gammaSrc displayH) \_ -> do
       cb <- recordingCommandBuffer
       Vk.cmdBindPipeline cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipeline
-      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipelineLayout 0 [scene.gammaSet] []
+      Vk.cmdBindDescriptorSets cb Vk.PIPELINE_BIND_POINT_COMPUTE pls.gamma.pipelineLayout 0 [gammaSet] []
       Vk.cmdDispatch cb (groups w) (groups h) 1
 
-  pure PassOutputs{toneOut = toneWritten, displayOut = displayWritten}
+  pure PassOutputs{colorOut = colorWritten, toneOut = toneWritten, displayOut = displayWritten}
   where
     Vk.Extent2D w h = extent
     halfExtent = halfExtentOf extent
@@ -1138,9 +1169,9 @@ addScenePasses graph pls tweaks scene computeQueue extent eye exposure debugMode
       FG.readWith colorWritten (usageFlags (StorageRead shadeStage))
       FG.readWith bloom0 (usageFlags (StorageRead shadeStage))
       FG.writeWith toneH (usageFlags (StorageWrite shadeStage))
-    gammaSetup toneWritten displayH = do
+    gammaSetup srcH displayH = do
       FG.setQueue computeQueue
-      FG.readWith toneWritten (usageFlags (StorageRead shadeStage))
+      FG.readWith srcH (usageFlags (StorageRead shadeStage))
       FG.writeWith displayH (usageFlags (StorageWrite shadeStage))
     hizSetup src dstH = do
       FG.setSideEffect
@@ -1242,13 +1273,13 @@ pushBlur :: (MonadIO m) => Vk.CommandBuffer -> Ssao.Pipeline -> Tweaks -> (Int32
 pushBlur cb pl tweaks (ax, ay) =
   Ssao.push cb pl Ssao.Blur{Ssao.sharpness = tweaks.aoSharpness, Ssao.axisX = ax, Ssao.axisY = ay}
 
--- | Push the tonemap's exposure + bloom strength + debug mode (COMPUTE stage).
-pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Float -> Word32 -> m ()
-pushTonemap cb layout exposure bloomStrength debugMode =
+-- | Push the tonemap's exposure + bloom strength (COMPUTE stage).
+pushTonemap :: (MonadIO m) => Vk.CommandBuffer -> Vk.PipelineLayout -> Float -> Float -> m ()
+pushTonemap cb layout exposure bloomStrength =
   liftIO $ with pc \p ->
     Vk.cmdPushConstants cb layout Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral (sizeOf pc)) (castPtr p)
   where
-    pc = Tonemap.PC{Tonemap.exposure = exposure, Tonemap.bloomStrength = bloomStrength, Tonemap.debugMode = debugMode}
+    pc = Tonemap.PC{Tonemap.exposure = exposure, Tonemap.bloomStrength = bloomStrength}
 
 {- | The run-constant shading knobs, threaded from the command line.
 

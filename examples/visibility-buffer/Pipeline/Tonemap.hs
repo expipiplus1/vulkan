@@ -34,7 +34,7 @@ import Vulkan.Zero (zero)
 
 import qualified Pipeline.Tonemap.Shader as Shader
 
--- Generate the @PC@ push-constant record (exposure, bloom strength, debug mode).
+-- Generate the @PC@ push-constant record (exposure, bloom strength).
 reflectShaderTypesBytes Shader.code
 
 data Pipeline = Pipeline

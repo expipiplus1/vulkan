@@ -25,7 +25,7 @@ code =
     layout(set = 0, binding = 1, rgba16f) uniform writeonly image2D outTone;
     layout(set = 0, binding = 2) uniform sampler2D bloomTex;
 
-    layout(push_constant, std430) uniform PC { float exposure; float bloomStrength; uint debugMode; } pc;
+    layout(push_constant, std430) uniform PC { float exposure; float bloomStrength; } pc;
 
     // Uchimura (Gran Turismo) tone curve — piecewise toe/linear/shoulder.
     float uchimura(float x, float P, float a, float m, float l, float c, float b) {
@@ -55,11 +55,6 @@ code =
       if (p.x >= size.x || p.y >= size.y) return;
       vec2 uv = (vec2(p) + 0.5) / vec2(size);
       vec3 hdrC = imageLoad(hdr, p).rgb;
-      // Debug channels bypass exposure/bloom/curve — the gamma pass still encodes.
-      if (pc.debugMode != 0u) {
-        imageStore(outTone, p, vec4(hdrC, 1.0));
-        return;
-      }
       // Composite: mix the whole image toward the bloom pyramid, biased to source.
       vec3 bloomC = texture(bloomTex, uv).rgb;
       vec3 c = mix(hdrC, bloomC, pc.bloomStrength) * pc.exposure;

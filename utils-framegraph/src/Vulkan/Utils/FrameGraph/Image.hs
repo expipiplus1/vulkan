@@ -20,6 +20,9 @@ module Vulkan.Utils.FrameGraph.Image
   , newManagedImageSlice
   , ImageDesc (..)
   , importManagedImage
+  , importScratchImage
+  , describedAs
+  , imageInfo
   , ImageState (..)
   , undefinedState
   , Usage (..)
@@ -37,6 +40,7 @@ import Data.Coerce (coerce)
 import Data.Foldable (traverse_)
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Text (Text)
+import Data.Text qualified as Text
 import Data.Vector qualified as V
 import Data.Word (Word32, Word64)
 
@@ -62,6 +66,10 @@ data ManagedImage = ManagedImage
   , range :: Vk.ImageSubresourceRange
   , stateRef :: IORef ImageState
   , queueRef :: IORef FG.QueueId
+  , info :: Text
+  {- ^ Human-readable summary (format/extent, see 'imageInfo') shown by
+  visualization output; attach with 'describedAs'.
+  -}
   }
 
 -- | Wrap a whole image (all mips + layers, monolithic), starting from 'undefinedState'.
@@ -90,7 +98,18 @@ newManaged :: (MonadIO m) => Vk.Image -> Vk.ImageSubresourceRange -> m ManagedIm
 newManaged image range = do
   stateRef <- liftIO (newIORef undefinedState)
   queueRef <- liftIO (newIORef (FG.QueueId 0))
-  pure ManagedImage{image, range, stateRef, queueRef}
+  pure ManagedImage{image, range, stateRef, queueRef, info = ""}
+
+{- | Attach a summary (e.g. 'imageInfo') shown next to the resource's name
+in visualization output.
+-}
+describedAs :: Text -> ManagedImage -> ManagedImage
+describedAs t mi = mi{info = t}
+
+-- | The conventional 'describedAs' summary: the format (sans prefix) and extent.
+imageInfo :: Vk.Format -> Vk.Extent2D -> Text
+imageInfo format (Vk.Extent2D w h) =
+  Text.pack (drop (Text.length "FORMAT_") (show format) <> " " <> show w <> "x" <> show h)
 
 instance FG.Resource ManagedImage where
   type Desc ManagedImage = ImageDesc
@@ -105,7 +124,7 @@ instance FG.Resource ManagedImage where
   preRead _ flags rec mi = queueTransition rec mi (flagsUsage flags)
   preWrite _ flags rec mi = queueTransition rec mi (flagsUsage flags)
 
-  describeDesc d = d.label
+  describeDesc d = d.info
 
 -- | The synchronization state an image is currently left in.
 data ImageState = ImageState
@@ -326,17 +345,34 @@ nextTransition queue mi usage = liftIO do
           )
     else pure Nothing
 
--- | Descriptor for a 'ManagedImage'; carries a label for visualization output.
-newtype ImageDesc = ImageDesc {label :: Text}
+{- | Descriptor for a 'ManagedImage'; carries the image's 'describedAs'
+summary for visualization output (the resource name travels separately).
+-}
+newtype ImageDesc = ImageDesc {info :: Text}
 
-{- | Import a 'ManagedImage' under @name@, labelling the graph node with the same
-name (so the label never drifts from the handle).
+{- | Import a 'ManagedImage' under @name@, as an observed resource.
 
 Also claims the graph's 'FG.setPreExec' slot for 'flushBarriers', so the
 hook-queued barriers are recorded under any driver — the adapter owns that
 slot; wrap the flush rather than replacing it.
+
+Writers of the image become side effects ('FG.importResource'): right for
+presentables and anything read outside the graph (readbacks, a next-frame
+sampler). For targets only this graph's passes consume, use
+'importScratchImage' so demand culling applies.
 -}
 importManagedImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
 importManagedImage graph name mi = do
   FG.setPreExec graph flushBarriers
-  FG.importResource graph name (ImageDesc name) mi
+  FG.importResource graph name (ImageDesc mi.info) mi
+
+{- | 'importManagedImage' via 'FG.importScratch', keeping writers subject to demand culling.
+
+The image (and its layout tracking) persists between graphs, but its contents
+are only ever consumed through this graph. Passes that feed a between-graphs
+consumer must say 'FG.setSideEffect' themselves.
+-}
+importScratchImage :: (MonadIO m) => FG.FrameGraph Recorder () -> Text -> ManagedImage -> m FG.Handle
+importScratchImage graph name mi = do
+  FG.setPreExec graph flushBarriers
+  FG.importScratch graph name (ImageDesc mi.info) mi

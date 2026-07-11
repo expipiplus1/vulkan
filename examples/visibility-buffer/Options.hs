@@ -12,8 +12,10 @@ before.
 module Options
   ( Options (..)
   , getOptions
+  , debugViews
   ) where
 
+import Data.List (intercalate)
 import Data.Maybe (fromMaybe)
 import Data.Word (Word32)
 import Options.Applicative
@@ -40,6 +42,22 @@ data Options = Options
   }
   deriving (Show)
 
+{- | The presentable views: @--debug-mode@ values with their names.
+
+The one source for the @--debug-mode@ help, the windowed digit keys and their
+console names; the channels themselves live in the shade shader.
+-}
+debugViews :: [(Word32, String)]
+debugViews =
+  [ (0, "beauty")
+  , (1, "albedo")
+  , (2, "metalness")
+  , (3, "roughness")
+  , (4, "normal")
+  , (5, "object id")
+  , (6, "ao")
+  ]
+
 getOptions :: IO Options
 getOptions =
   execParser $
@@ -59,7 +77,7 @@ optionsP =
     <*> option auto (long "size" <> metavar "PX" <> value 256 <> showDefault <> help "Headless render size (square)")
     <*> option auto (long "width" <> metavar "PX" <> value 1024 <> showDefault <> help "Initial window width")
     <*> option auto (long "height" <> metavar "PX" <> value 1024 <> showDefault <> help "Initial window height")
-    <*> option auto (long "debug-mode" <> metavar "N" <> value 0 <> showDefault <> help "Debug view (windowed and the headless PNG): 0 beauty, 1 albedo, 2 metalness, 3 roughness, 4 normal, 5 object id, 6 ao")
+    <*> option auto (long "debug-mode" <> metavar "N" <> value 0 <> showDefault <> help ("Debug view (windowed and the headless PNG): " <> intercalate ", " [show i <> " " <> n | (i, n) <- debugViews]))
     <*> meterP
     <*> tweaksP
   where
