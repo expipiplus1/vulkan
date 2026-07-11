@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoFieldSelectors #-}
 
 {-| Julia-set viewer, driven by a per-frame 'FG.FrameGraph' the same way
 regardless of queue topology.
@@ -93,7 +94,7 @@ main = prettyError . runResourceT $ do
   -- julia pass runs on QueueId 1 and hands the offscreen image over with a
   -- timeline semaphore; otherwise everything stays on the graphics queue.
   topology <- detectTopology vc
-  let sharedFamilies = fmap (\as -> (as.asGraphicsFamily, as.asComputeFamily)) topology
+  let sharedFamilies = fmap (\as -> (as.graphicsFamily, as.computeFamily)) topology
 
   -- Colour phase, advanced once per recompute; global so it survives resizes.
   colorRef <- liftIO (newIORef 0)
@@ -144,12 +145,12 @@ layout. Absent (the frame stays single-queue) when compute shares the graphics
 family.
 -}
 data AsyncSetup = AsyncSetup
-  { asGraphicsFamily :: Word32
-  , asComputeFamily :: Word32
-  , asComputeQueue :: Vk.Queue
-  , asReadyTimeline :: Vk.Semaphore
+  { graphicsFamily :: Word32
+  , computeFamily :: Word32
+  , computeQueue :: Vk.Queue
+  , readyTimeline :: Vk.Semaphore
   -- ^ Compute signals this at the frame index; the graphics blit waits on it.
-  , asLastBlitDone :: IORef Word64
+  , lastBlitDone :: IORef Word64
   {- ^ Frame index of the last blit that read the shared offscreen image; the
   next compute waits for it before overwriting (cross-frame write-after-read).
   -}
@@ -168,11 +169,11 @@ detectTopology vc = do
       pure $
         Just
           AsyncSetup
-            { asGraphicsFamily = graphicsFamily
-            , asComputeFamily = computeFamily
-            , asComputeQueue = snd (qCompute (vcQueues vc))
-            , asReadyTimeline = readyTimeline
-            , asLastBlitDone = lastBlitDone
+            { graphicsFamily
+            , computeFamily
+            , computeQueue = snd (qCompute (vcQueues vc))
+            , readyTimeline
+            , lastBlitDone
             }
 
 -- | The queue the julia pass runs on under an async topology (see 'computeQueueId').
@@ -188,16 +189,16 @@ computeQueueId = maybe FG.defaultQueue (const computeQueue)
 ----------------------------------------------------------------
 
 data Bindings = Bindings
-  { bOffscreen :: ManagedImage
+  { offscreen :: ManagedImage
   {- ^ The single compute target, imported so its tracked layout persists across
   frames (recreated per swapchain because its extent tracks the window).
   -}
-  , bJuliaDescriptorSet :: Vk.DescriptorSet
-  , bSwapImages :: Vector ManagedImage
+  , juliaDescriptorSet :: Vk.DescriptorSet
+  , swapImages :: Vector ManagedImage
   -- ^ One layout-tracked wrapper per swapchain image.
-  , bLastConstants :: IORef (Maybe JuliaConstants)
+  , lastConstants :: IORef (Maybe JuliaConstants)
   -- ^ Fractal parameters last computed; a change makes the frame dirty.
-  , bFreshImages :: IORef IntSet
+  , freshImages :: IORef IntSet
   -- ^ Swapchain image indices that already hold the current fractal.
   }
 
@@ -231,11 +232,11 @@ allocateBindings dev allocator jp sharedFamilies sc = do
 
   pure
     ( Bindings
-        { bOffscreen = offscreen
-        , bJuliaDescriptorSet = V.head juliaSets
-        , bSwapImages = swapImages
-        , bLastConstants = lastConstants
-        , bFreshImages = freshImages
+        { offscreen
+        , juliaDescriptorSet = V.head juliaSets
+        , swapImages
+        , lastConstants
+        , freshImages
         }
     , bindingsKey
     )
@@ -299,11 +300,11 @@ renderJulia
   -> ResourceT IO ()
 renderJulia vc jp topology colorRef bindings f = do
   constants <- computeConstants (sExtent sc)
-  lastConstants <- liftIO (readIORef bindings.bLastConstants)
+  lastConstants <- liftIO (readIORef bindings.lastConstants)
   let dirty = Just constants /= lastConstants
 
   (acquireResult, imageIndex) <- acquireFrameImage vc f
-  freshImages <- liftIO (readIORef bindings.bFreshImages)
+  freshImages <- liftIO (readIORef bindings.freshImages)
   let
     ix = fromIntegral imageIndex :: Int
     -- Compute only on a parameter change; blit unless this image already holds
@@ -311,22 +312,22 @@ renderJulia vc jp topology colorRef bindings f = do
     needBlit = dirty || not (IntSet.member ix freshImages)
 
   graph <- FG.newFrameGraph
-  offscreenH <- importManagedImage graph "offscreen" bindings.bOffscreen
-  (swapchainH, swapManaged) <- importSwapchain graph bindings.bSwapImages imageIndex
+  offscreenH <- importManagedImage graph "offscreen" bindings.offscreen
+  (swapchainH, swapManaged) <- importSwapchain graph bindings.swapImages imageIndex
 
   colorPhase <- liftIO (readIORef colorRef)
   offscreenReady <-
     if dirty
       then FG.addPass graph "julia" (juliaSetup offscreenH) \_written -> do
         cb <- recordingCommandBuffer
-        dispatchJulia jp (sExtent sc) constants colorPhase bindings.bJuliaDescriptorSet cb
+        dispatchJulia jp (sExtent sc) constants colorPhase bindings.juliaDescriptorSet cb
       else pure offscreenH
 
   swapchainReady <-
     if needBlit
       then FG.addPass graph "blit" (blitSetup offscreenReady swapchainH) \_blitted -> do
         cb <- recordingCommandBuffer
-        blitImage (sExtent sc) bindings.bOffscreen.image swapManaged.image cb
+        blitImage (sExtent sc) bindings.offscreen.image swapManaged.image cb
       else pure swapchainH
 
   -- Always present, even when every render pass got culled (an idle re-present).
@@ -338,12 +339,12 @@ renderJulia vc jp topology colorRef bindings f = do
 
   liftIO $ do
     when dirty $ do
-      writeIORef bindings.bLastConstants (Just constants)
+      writeIORef bindings.lastConstants (Just constants)
       -- Advance the colour phase once per recompute, so the palette visibly
       -- rotates exactly on the frames that render (and freezes when idle).
       modifyIORef' colorRef (+ colorStep)
     when needBlit $
-      modifyIORef' bindings.bFreshImages $
+      modifyIORef' bindings.freshImages $
         if dirty then const (IntSet.singleton ix) else IntSet.insert ix
   where
     sc = fSwapchain f
@@ -365,8 +366,8 @@ renderJulia vc jp topology colorRef bindings f = do
 {- | Record the compiled graph across its queues and submit. On a single-queue
 schedule this is one command buffer and one graphics submit; when the julia pass
 landed on a distinct compute queue, the compute work is recorded into its own
-buffer and submitted signalling @asReadyTimeline@, which the graphics submit
-then waits on.
+buffer and submitted signalling the 'AsyncSetup' ready timeline, which the
+graphics submit then waits on.
 
 The command-buffer allocation and the two-submit shape (Layer 2, windowed) plus
 the cross-frame WAR fence (Layer 3, specific to reusing one offscreen image) stay
@@ -394,7 +395,7 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
   computePair <- case topology of
     Just as | dirty -> do
       (_, computePool) <-
-        Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = as.asComputeFamily} Nothing allocate
+        Vk.withCommandPool dev zero{CommandPoolCreateInfo.queueFamilyIndex = as.computeFamily} Nothing allocate
       cb <- beginPrimary dev computePool
       pure (Just (as, cb))
     _ -> pure Nothing
@@ -413,7 +414,7 @@ executeAdaptive vc f imageIndex topology dirty didBlit graph = do
     -- re-blitting a stale swapchain image still reads the offscreen image, and
     -- the next compute waits the timeline only up to the last recorded value.
     for_ topology \as ->
-      when didBlit $ writeIORef as.asLastBlitDone (fIndex f)
+      when didBlit $ writeIORef as.lastBlitDone (fIndex f)
 
 -- | Allocate a primary command buffer from the pool and begin it, one-time-submit.
 beginPrimary :: (MonadResource m, MonadFail m) => Vk.Device -> Vk.CommandPool -> m Vk.CommandBuffer
@@ -441,17 +442,17 @@ submitFrame
 submitFrame vc Frame{..} imageIndex graphicsCb computePair = do
   case computePair of
     Just (as, cb) -> do
-      prevBlitDone <- readIORef as.asLastBlitDone
+      prevBlitDone <- readIORef as.lastBlitDone
       let computeSubmit =
             zero
               { Vk.waitSemaphores = [fHostTimeline]
               , Vk.waitDstStageMask = [Vk.PIPELINE_STAGE_COMPUTE_SHADER_BIT]
               , Vk.commandBuffers = [Vk.commandBufferHandle cb]
-              , Vk.signalSemaphores = [as.asReadyTimeline]
+              , Vk.signalSemaphores = [as.readyTimeline]
               }
               ::& zero{waitSemaphoreValues = [prevBlitDone], signalSemaphoreValues = [fIndex]}
                 :& ()
-      Vk.queueSubmit as.asComputeQueue [SomeStruct computeSubmit] Vk.NULL_HANDLE
+      Vk.queueSubmit as.computeQueue [SomeStruct computeSubmit] Vk.NULL_HANDLE
     Nothing -> pure ()
 
   let
@@ -462,7 +463,7 @@ submitFrame vc Frame{..} imageIndex graphicsCb computePair = do
     -- (render-finished + host timeline) are the same either way.
     (waitSemaphores, waitStages, waitValues) = case computePair of
       Just (as, _) ->
-        ( [rrImageAvailable, as.asReadyTimeline]
+        ( [rrImageAvailable, as.readyTimeline]
         , [Vk.PIPELINE_STAGE_TOP_OF_PIPE_BIT, Vk.PIPELINE_STAGE_TRANSFER_BIT]
         , [0, fIndex]
         )
@@ -486,7 +487,7 @@ submitFrame vc Frame{..} imageIndex graphicsCb computePair = do
   -- timeline when it ran. The blit's WAR fence is the caller's, per frame.
   atomicModifyIORef' fGPUWork (\jobs -> ((fHostTimeline, fIndex) : jobs, ()))
   for_ computePair \(as, _) ->
-    atomicModifyIORef' fGPUWork (\jobs -> ((as.asReadyTimeline, fIndex) : jobs, ()))
+    atomicModifyIORef' fGPUWork (\jobs -> ((as.readyTimeline, fIndex) : jobs, ()))
 
 ----------------------------------------------------------------
 -- Julia dispatch
@@ -494,10 +495,10 @@ submitFrame vc Frame{..} imageIndex graphicsCb computePair = do
 
 -- | The mouse-and-extent-derived fractal parameters pushed to the compute shader.
 data JuliaConstants = JuliaConstants
-  { jcScale :: V2 Float
-  , jcOffset :: V2 Float
-  , jcC :: V2 Float
-  , jcEscapeRadius :: Float
+  { scale :: V2 Float
+  , offset :: V2 Float
+  , c :: V2 Float
+  , escapeRadius :: Float
   }
   deriving stock (Eq)
 
@@ -515,10 +516,10 @@ computeConstants (Vk.Extent2D imageWidth imageHeight) = do
     aspect = pure (recip (min (imageSizeF ^. _x) (imageSizeF ^. _y)))
   pure
     JuliaConstants
-      { jcScale = aspect * 2 * pure r
-      , jcOffset = negate (imageSizeF * aspect) * pure r
-      , jcC = c
-      , jcEscapeRadius = 12
+      { scale = aspect * 2 * pure r
+      , offset = negate (imageSizeF * aspect) * pure r
+      , c
+      , escapeRadius = 12
       }
 
 -- | Palette phase added per recompute; a full colour cycle every @1/colorStep@ renders.
@@ -541,10 +542,10 @@ dispatchJulia jp (Vk.Extent2D imageWidth imageHeight) constants colorPhase descr
 
   let constantBytes = 4 * (2 + 2 + 2 + 1 + 1) :: Int
   allocaBytes constantBytes $ \p -> do
-    liftIO $ poke (p `plusPtr` 0) constants.jcScale
-    liftIO $ poke (p `plusPtr` 8) constants.jcOffset
-    liftIO $ poke (p `plusPtr` 16) constants.jcC
-    liftIO $ poke (p `plusPtr` 24) constants.jcEscapeRadius
+    liftIO $ poke (p `plusPtr` 0) constants.scale
+    liftIO $ poke (p `plusPtr` 8) constants.offset
+    liftIO $ poke (p `plusPtr` 16) constants.c
+    liftIO $ poke (p `plusPtr` 24) constants.escapeRadius
     liftIO $ poke (p `plusPtr` 28) colorPhase
     Vk.cmdPushConstants cb (jpPipelineLayout jp) Vk.SHADER_STAGE_COMPUTE_BIT 0 (fromIntegral constantBytes) p
 
